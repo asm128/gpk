@@ -9,10 +9,10 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SOrbit {
-		float		Radius				= {}; // 57.9	// (10^6 km)	// 7
-		float		AxialTilt			= {}; // degrees
-		float		RotationPeriod		= {}; // in units
-		float		RotationUnit		= {}; // 
+		f2_t		Radius				= {}; // 57.9	// (10^6 km)	// 7
+		f2_t		AxialTilt			= {}; // degrees
+		f2_t		RotationPeriod		= {}; // in units
+		f2_t		RotationUnit		= {}; // 
 		::gpk::AXIS	RotationAxis		= ::gpk::AXIS_Y_POSITIVE; // 
 		::gpk::AXIS	TiltAxis			= ::gpk::AXIS_X_POSITIVE; // 
 	};
@@ -23,11 +23,11 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	sinx	double			degreesToRadians		(double degrees) { return ::gpk::math_2pi / 360.0 * degrees; }
+	sinx	f3_t			degreesToRadians		(f3_t degrees) { return ::gpk::math_2pi / 360.0 * degrees; }
 
 	// Calculate the axial inclination of the planet IN RADIANS
 	tplt<tpnm _tAxis>
-	static ::gpk::err_t	orientationFromEuler	(::gpk::AXIS iAxis, double axialTilt, ::gpk::quat<_tAxis> & orientation) {
+	static gpk::err_t orientationFromEuler	(::gpk::AXIS iAxis, f3_t axialTilt, ::gpk::quat<_tAxis> & orientation) {
 		const _tAxis				rotationValue			= _tAxis(degreesToRadians(axialTilt));
 		switch(iAxis) {
 		case ::gpk::AXIS_X_NEGATIVE: orientation.MakeFromEuler(-rotationValue, 0, 0); break;
@@ -43,7 +43,7 @@ namespace gpk
 
 	// Calculate the rotation velocity of the planet IN EARTH DAYS
 	tplt<tpnm _tAxis, tpnm _tAxisOrientation>
-	static ::gpk::err_t	orbitRotation			(::gpk::AXIS iAxis, double rotation_period, double rotation_unit, const ::gpk::quat<_tAxisOrientation> & orientation, ::gpk::n3<_tAxis> & rotation) {
+	static gpk::err_t orbitRotation			(::gpk::AXIS iAxis, f3_t rotation_period, f3_t rotation_unit, const ::gpk::quat<_tAxisOrientation> & orientation, ::gpk::n3<_tAxis> & rotation) {
 		const _tAxis				rotationValue			= _tAxis(::gpk::math_2pi / rotation_period * rotation_unit);
 		switch(iAxis) {
 		case ::gpk::AXIS_X_NEGATIVE: rotation = {-rotationValue, 0, 0}; break;
@@ -59,7 +59,7 @@ namespace gpk
 
 	// Calculate the rotation velocity of the planet IN EARTH DAYS
 	tplt<tpnm _tAxis, tpnm _tAxisOrientation>
-	static ::gpk::err_t	orbitCenter			(::gpk::AXIS iAxis, double position, ::gpk::n3<_tAxis> & center) {
+	static gpk::err_t orbitCenter			(::gpk::AXIS iAxis, f3_t position, ::gpk::n3<_tAxis> & center) {
 		switch(iAxis) {
 		case ::gpk::AXIS_X_NEGATIVE: center = {-position, 0, 0}; break;
 		case ::gpk::AXIS_X_POSITIVE: center = { position, 0, 0}; break;

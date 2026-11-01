@@ -41,7 +41,7 @@ namespace gpk
 								~SSerial		() { gpk_safe_closehandle(PlatformDetail.Handle); }
 #endif
 
-		::gpk::err_t			Write			(::gpk::vcu0_t dataToSend)	const {
+		gpk::err_t 		Write			(::gpk::vcu0_t dataToSend)	const {
 			u2_t					sizeSent		= (u2_t)-1;
 #ifdef GPK_WINDOWS
 			if_true_vef(-1, 0 == WriteFile(PlatformDetail.Handle, (const void*)dataToSend.begin(), (u2_t)dataToSend.size(), (DWORD*)&sizeSent, 0) , "Failed to write to serial port %s." , GPK_VIEW_ARGS(Port).begin());
@@ -49,7 +49,7 @@ namespace gpk
 			return sizeSent;
 		}
 
-		::gpk::err_t			Read			(::gpk::au0_t & dataReceived)	const {
+		gpk::err_t 		Read			(::gpk::au0_t & dataReceived)	const {
 			u2_t					sizeRead		= (u2_t)-1;
 			if_fail_fe(dataReceived.resize(1024));
 			memset(&dataReceived[0], 0, dataReceived.size());
@@ -59,7 +59,7 @@ namespace gpk
 			return sizeRead; 
 		}
 
-		::gpk::err_t			Open			(::gpk::view<sc_t> port, u2_t baudRate, ::gpk::SERIAL_PARITY parity = ::gpk::SERIAL_PARITY_NONE, ::gpk::SERIAL_STOP_BITS stopBitsZeroToTwo = ::gpk::SERIAL_STOP_BITS_ONE) {
+		gpk::err_t 		Open			(::gpk::view<sc_t> port, u2_t baudRate, ::gpk::SERIAL_PARITY parity = ::gpk::SERIAL_PARITY_NONE, ::gpk::SERIAL_STOP_BITS stopBitsZeroToTwo = ::gpk::SERIAL_STOP_BITS_ONE) {
 			Port					= port;
 #ifdef GPK_WINDOWS
 			if_true_vef(-1, INVALID_HANDLE_VALUE == (PlatformDetail.Handle = CreateFile(port.begin(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0)), "Failed to open serial on %s.", GPK_VIEW_ARGS(Port).begin()); 

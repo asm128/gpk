@@ -439,7 +439,7 @@ namespace gpk
 #define if_true_af if_true_logf_always
 #define if_true_ef if_true_logf_error
 #define if_true_wf if_true_logf_warning
-#define if_truif_true_e if_true_logf_info
+#define if_true_if if_true_logf_info
 #define if_true_vf if_true_logf_verbose
 #define if_fail_af if_fail_logf_always
 #define if_fail_ef if_fail_logf_error

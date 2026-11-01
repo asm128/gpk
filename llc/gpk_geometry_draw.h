@@ -10,7 +10,7 @@
 
 namespace gpk
 {
-	::gpk::err_t	drawTriangle
+	gpk::err_t drawTriangle
 		( ::gpk::g8bgra						targetPixels
 		, const ::gpk::SGeometryBuffers		& geometry
 		, const int							iTriangle

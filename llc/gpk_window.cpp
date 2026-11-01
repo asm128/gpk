@@ -2,7 +2,7 @@
 
 GPK_USING_TYPEINT();
 
-::gpk::err_t			gpk::fullScreenExit			(::gpk::SWindow & window) {
+gpk::err_t 		gpk::fullScreenExit			(::gpk::SWindow & window) {
 	if(false == window.FullScreen)
 		return 0;
 
@@ -22,7 +22,7 @@ GPK_USING_TYPEINT();
 	return 0;
 }
 
-::gpk::err_t			gpk::fullScreenEnter		(::gpk::SWindow & window) {
+gpk::err_t 		gpk::fullScreenEnter		(::gpk::SWindow & window) {
 	if(window.FullScreen)
 		return 1;
 
@@ -55,7 +55,7 @@ GPK_USING_TYPEINT();
 	return 0;
 }
 
-::gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
+gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
 	bool						quit						= false;
 #if defined(GPK_WINDOWS)
 	::MSG						msg							= {};
@@ -74,7 +74,7 @@ GPK_USING_TYPEINT();
 	return quit ? 1 : 0;
 }
 
-::gpk::err_t			gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
+gpk::err_t 		gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
 	displayInstance.EventQueue.clear();
 	displayInstance.Resized	= false;
 	displayInstance.Repaint	= false;
@@ -91,7 +91,7 @@ GPK_USING_TYPEINT();
 }
 
 #if defined(GPK_WINDOWS)
-::gpk::err_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
+gpk::err_t 		drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
 	const u2_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
 	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1();
 	::gpk::n2u1_c				prevSize				= {(u1_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (u1_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
@@ -144,7 +144,7 @@ GPK_USING_TYPEINT();
 }
 #endif // GPK_WINDOWS
 
-::gpk::err_t			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::g8bgra& targetToPresent)		{
+gpk::err_t 		gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::g8bgra& targetToPresent)		{
 	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
 	::HWND					windowHandle								= displayInstance.PlatformDetail.WindowHandle;

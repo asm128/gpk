@@ -7,7 +7,7 @@ GPK_USING_APOD();
 GPK_USING_N2();
 GPK_USING_N3();
 
-static	::gpk::err_t	drawOrderedVertices
+static	gpk::err_t drawOrderedVertices
 	( ::gpk::SNodeRenderer					& renderer
 	, const ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::m4f2_t				matrixWVP
@@ -58,7 +58,7 @@ static	::gpk::err_t	drawOrderedVertices
 	return 0;
 }
 
-::gpk::err_t			gpk::nodeRendererDrawNode
+gpk::err_t 		gpk::nodeRendererDrawNode
 	( ::gpk::SNodeRenderer					& renderer
 	, u2_t								iNode
 	, const ::gpk::m4f2_t			& view
@@ -90,7 +90,7 @@ static	::gpk::err_t	drawOrderedVertices
 	return 0;
 }
 
-::gpk::err_t			gpk::nodeRendererDraw
+gpk::err_t 		gpk::nodeRendererDraw
 	( ::gpk::SNodeRenderer					& renderer
 	, s2_t								iCamera
 	, ::gpk::g8bgra	target_image
@@ -103,7 +103,7 @@ static	::gpk::err_t	drawOrderedVertices
 	::gpk::m4f2_t						matrixView				= ::gpk::m4f2_t::GetIdentity();
 	::gpk::m4f2_t						matrixProjection		= ::gpk::m4f2_t::GetIdentity();
 	::gpk::m4f2_t						matrixVP				= ::gpk::m4f2_t::GetIdentity();
-	const double								aspectRatio				= target_image.metrics().x / (double)target_image.metrics().y;
+	const f3_t								aspectRatio				= target_image.metrics().x / (f3_t)target_image.metrics().y;
 	::gpk::SCamera								& camera				= renderer.Cameras[iCamera];
 	matrixView.LookAt(camera.Position, camera.Target, camera.Up);
 	matrixProjection.FieldOfView(camera.Angle, aspectRatio, camera.ClipPlanes.Min, camera.ClipPlanes.Max);

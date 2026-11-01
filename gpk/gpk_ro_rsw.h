@@ -21,7 +21,7 @@ namespace gpk
 		::gpk::n3<s0_t>	unkchars		;
 		u2_t			minusone		;
 		sc_t				somevals		[8];
-		float				part3			;
+		f2_t				part3			;
 		u0_t				part4			[4];
 	};
 
@@ -30,7 +30,7 @@ namespace gpk
 		sc_t				ToDo			[40];
 		::gpk::n3f2_t		Position 		;
 		::gpk::n3f2_t		Color			;
-		float				ToDo2			;
+		f2_t				ToDo2			;
 	};
 
 	struct SEffectInfoRSW {
@@ -38,11 +38,11 @@ namespace gpk
 		sc_t				nameUnk			[40];
 		::gpk::n3f2_t		position		;
 		int					id				;
-		float				loop			;
-		float				param1			;
-		float				param2			;
-		float				param3			;
-		float				param4			;
+		f2_t				loop			;
+		f2_t				param1			;
+		f2_t				param2			;
+		f2_t				param3			;
+		f2_t				param4			;
 	};
 
 	struct SSoundInfoRSW {
@@ -51,11 +51,11 @@ namespace gpk
 		sc_t				fileName		[40];
 		sc_t				strUnk1			[40];
 		::gpk::n3f2_t		position		;
-		float				vol				;
+		f2_t				vol				;
 		s2_t				width			;
 		s2_t				height			;
-		float				range			;
-		float				cycle			;			// v >= 2.0
+		f2_t				range			;
+		f2_t				cycle			;			// v >= 2.0
 	};
 
 	struct SModelInfoRSW {
@@ -65,7 +65,7 @@ namespace gpk
 		sc_t				RootRSMNode		[40];
 		sc_t				Str4			[40];
 		s2_t				AnimType		;
-		float				AnimSpeed		;
+		f2_t				AnimSpeed		;
 		s2_t				BlockType		;
 		::gpk::n3f2_t		Position		;
 		::gpk::n3f2_t		Rotation		;
@@ -73,11 +73,11 @@ namespace gpk
 	};
 
 	struct SRSWWorldWater {
-		float				Height			;
+		f2_t				Height			;
 		u2_t			Type			;
-		float				Amplitude		;
-		float				Speed			;
-		float				Pitch			;
+		f2_t				Amplitude		;
+		f2_t				Speed			;
+		f2_t				Pitch			;
 		u2_t			TexCycling		;
 	};
 
@@ -86,7 +86,7 @@ namespace gpk
 		s2_t				Latitude		;
 		::gpk::n3f2_t		Diffuse			;
 		::gpk::n3f2_t		Ambient			;
-		float				Intensity		;
+		f2_t				Intensity		;
 	};
 
 	struct SRSWFileContents {
@@ -106,9 +106,9 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcu0_c	& input);
-	::gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, FILE			* input);
-	::gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input);
+	gpk::err_t 	rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcu0_c	& input);
+	gpk::err_t 	rswFileLoad		(::gpk::SRSWFileContents& loaded, FILE			* input);
+	gpk::err_t 	rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input);
 }
 
 #endif // GPK_RO_RSW_H_23627

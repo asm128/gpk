@@ -367,7 +367,7 @@ namespace
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT LoadAudioFromFile(::gpk::view<sc_t> szFileName, _Inout_ ::gpk::au0_t & wavData) noexcept { 
+	HRESULT LoadAudioFromFile(vcst_t szFileName, _Inout_ ::gpk::au0_t & wavData) noexcept { 
 		DWORD								bytesRead		   = 0;
 		::gpk::apod<wchar_t>				wszFileName		 = {};
 		::gpk::mbstowcs(wszFileName, szFileName);
@@ -378,18 +378,18 @@ namespace
 		ScopedHandle						hFile				(safe_handle(CreateFileW(wszFileName.begin(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr)));
 #endif
 
-		if_true_vef(HRESULT_FROM_WIN32(GetLastError()), !hFile, "%s", GPK_VIEW_ARGS(szFileName).begin());
+		if_true_vef(HRESULT_FROM_WIN32(GetLastError()), !hFile, "%.*s", GPK_VIEW_ARGS(szFileName));
 
 		// Get the file size
 		FILE_STANDARD_INFO					fileInfo			= {};
-		if_true_vef(HRESULT_FROM_WIN32(GetLastError()), !GetFileInformationByHandleEx(hFile.get(), FileStandardInfo, &fileInfo, sizeof(fileInfo)), "File not found: '%s'", GPK_VIEW_ARGS(szFileName).begin());
+		if_true_vef(HRESULT_FROM_WIN32(GetLastError()), !GetFileInformationByHandleEx(hFile.get(), FileStandardInfo, &fileInfo, sizeof(fileInfo)), "File not found: '%.*s'", GPK_VIEW_ARGS(szFileName));
 		if_true_vef(E_FAIL, fileInfo.EndOfFile.HighPart > 0, "File is too big (%llu), so reject read", fileInfo.EndOfFile.QuadPart);
 		if_true_vef(E_FAIL, fileInfo.EndOfFile.LowPart < (sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT)), "Need at least %u bytes to have a valid minimal WAV file. Actual size: %u", sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT), fileInfo.EndOfFile.LowPart);
 
 		wavData.resize(fileInfo.EndOfFile.LowPart);
-		if (!ReadFile(hFile.get(), wavData.begin(), fileInfo.EndOfFile.LowPart, &bytesRead, nullptr))
+		if (FALSE == ReadFile(hFile.get(), wavData.begin(), fileInfo.EndOfFile.LowPart, &bytesRead, nullptr)) {
 			return HRESULT_FROM_WIN32(GetLastError());
-
+		}
 		return (bytesRead < fileInfo.EndOfFile.LowPart) ? E_FAIL : bytesRead;
 	}
 }
@@ -407,7 +407,7 @@ HRESULT DirectX::LoadWAVAudioInMemory(::gpk::vcu0_t wavData, _Outptr_ const WAVE
 
 
 //-------------------------------------------------------------------------------------
-HRESULT DirectX::LoadWAVAudioFromFile(::gpk::view<sc_t> szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) noexcept {
+HRESULT DirectX::LoadWAVAudioFromFile(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) noexcept {
 	gpk_hrcall(LoadAudioFromFile(szFileName, wavData));
 
 	bool dpds = true, seek = true;
@@ -427,8 +427,9 @@ HRESULT DirectX::LoadWAVAudioInMemoryEx(::gpk::vcu0_t wavData, DirectX::WAVData 
 	gpk_hrcall(WaveFindFormatAndData(wavData, &result.WaveFormat, result.AudioView, dpds, seek));
 	gpk_hrcall(WaveFindLoopInfo(wavData, &result.LoopStart, &result.LoopLength));
 
-	if (dpds)
+	if (dpds) {
 		gpk_hrcall(WaveFindTable(wavData, FOURCC_XWMA_DPDS, &result.Seek, &result.SeekCount));
+	}
 	else if (seek)
 		gpk_hrcall(WaveFindTable(wavData, FOURCC_XMA_SEEK, &result.Seek, &result.SeekCount));
 
@@ -436,7 +437,7 @@ HRESULT DirectX::LoadWAVAudioInMemoryEx(::gpk::vcu0_t wavData, DirectX::WAVData 
 }
 
 //-------------------------------------------------------------------------------------
-HRESULT DirectX::LoadWAVAudioFromFileEx(::gpk::view<sc_t> szFileName, ::gpk::au0_t & wavData, DirectX::WAVData & result) noexcept {
+HRESULT DirectX::LoadWAVAudioFromFileEx(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, DirectX::WAVData & result) noexcept {
 	DWORD bytesRead = LoadAudioFromFile(szFileName, wavData);
 	if (FAILED(bytesRead))
 		return bytesRead;
@@ -445,8 +446,9 @@ HRESULT DirectX::LoadWAVAudioFromFileEx(::gpk::view<sc_t> szFileName, ::gpk::au0
 	gpk_hrcall(WaveFindFormatAndData(wavData, &result.WaveFormat, result.AudioView, dpds, seek));
 	gpk_hrcall(WaveFindLoopInfo(wavData, &result.LoopStart, &result.LoopLength));
 
-	if (dpds)
+	if (dpds) {
 		gpk_hrcall(WaveFindTable(wavData, FOURCC_XWMA_DPDS, &result.Seek, &result.SeekCount));
+	}
 	else if (seek)
 		gpk_hrcall(WaveFindTable(wavData, FOURCC_XMA_SEEK, &result.Seek, &result.SeekCount));
 

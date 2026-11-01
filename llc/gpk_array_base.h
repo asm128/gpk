@@ -13,7 +13,7 @@ namespace gpk
 	tpl_vtArgs	err_t			clear					(_tArgs&&... args)				nxpt	{ const s2_t results[] = {args.clear()..., 0}; for(cnst s2_t result : results) if(result < 0) rtrn result; rtrn 0; }
 	tpl_vtArgs	err_t			resize					(u2_t newSize, _tArgs&&... args)		{
 		u2_c					oldSizes	[]			= {args.size	()..., 0};
-		const ::gpk::err_t			results		[]			= {args.resize	(newSize)..., 0};
+		const gpk::err_t 		results		[]			= {args.resize	(newSize)..., 0};
 		for(u2_t i = 0; i < ::gpk::size(results); ++i)
 			if_failed(results[i]) {
 				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (s2_t)newSize);
@@ -26,7 +26,7 @@ namespace gpk
 	}
 	tpl_vtArgs	err_t			resize_obj				(u2_t newSize, _tArgs&&... args)		{
 		u2_c					oldSizes	[]			= {args.size	()..., 0};
-		const ::gpk::err_t			results		[]			= {args.resize	(newSize,{})..., 0};
+		const gpk::err_t 		results		[]			= {args.resize	(newSize,{})..., 0};
 		for(u2_t i = 0; i < ::gpk::size(results); ++i)
 			if_failed(results[i]) {
 				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (s2_t)newSize);
@@ -69,7 +69,7 @@ namespace gpk
 		TArray&					oper =				(const TArray &	 other)					= delete;
 		TArray&					oper =				(const TArray && other)					= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		static	::gpk::err_t	alloc_with_reserve		(u2_c newCount, T* & reserved)	noexcept	{ 
+		static	gpk::err_t alloc_with_reserve		(u2_c newCount, T* & reserved)	noexcept	{ 
 			u2_t					newSize					= 0;
 			if_fail_fef(calc_reserve_count(newCount, newSize), "Too large. newCount: %" GPK_FMT_S2 ".", newCount);
 			u2_c				bytesToAllocate			= szof(T) * (newSize + 1);

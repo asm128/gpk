@@ -25,7 +25,7 @@ namespace gpk
 {
 	struct SLight3 {
 		::gpk::n3f2_t	Position;
-		float			Range;
+		f2_t			Range;
 	};
 
 	int				pixelBlend			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color);

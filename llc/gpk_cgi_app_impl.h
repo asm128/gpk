@@ -18,8 +18,8 @@
 #endif
 
 #define GPK_CGI_JSON_APP_IMPL()																\
-	::gpk::err_t			generate_output		(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output);			\
-	::gpk::err_t			cgiMain				(int argc, sc_t** argv, sc_t**envv)		{	\
+	gpk::err_t 		generate_output		(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output);			\
+	gpk::err_t 		cgiMain				(int argc, sc_t** argv, sc_t**envv)		{	\
 		::gpk::SCGIRuntimeValues	runtimeValues;											\
 		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const sc_t**)argv, (u2_t)argc});		\
 		::gpk::apod<sc_t>			output;													\

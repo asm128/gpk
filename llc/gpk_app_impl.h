@@ -5,6 +5,16 @@
 #include "gpk_runtime_module.h"
 #include "gpk_timer.h"
 
+namespace gpk
+{
+	GDEFINE_ENUM_TYPE (APPLICATION_STATE, u0_t);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, NORMAL	, 0);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, EXIT		, 1);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, BUSY		, 2);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, STAY		, 3);
+	GDEFINE_ENUM_VALUE(APPLICATION_STATE, RESTART	, 4);
+}
+
 
 #if defined GPK_AVOID_LOCAL_APPLICATION_MODEL_EXECUTABLE_RUNTIME
 #		define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)
@@ -19,9 +29,9 @@ namespace gpk																								\
 	};																										\
 }																											\
 		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle);											\
-		static	::gpk::err_t	rtMain		(::gpk::SRuntimeValues & runtimeValues);						\
+		static	gpk::err_t rtMain		(::gpk::SRuntimeValues & runtimeValues);						\
 		GPK_OS_ENTRY_POINT(rtMain);																			\
-		::gpk::err_t			rtMain		(::gpk::SRuntimeValues & runtimeValues)	{						\
+		gpk::err_t 		rtMain		(::gpk::SRuntimeValues & runtimeValues)	{						\
 		{																									\
 			GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																\
 			{																								\
@@ -31,7 +41,7 @@ namespace gpk																								\
 				if_fail_fe(::setup(*app));																	\
 				info_printf("%s", "Application instance initialized successfully. Executing main loop...");	\
 				while(true) {																				\
-					::gpk::err_t			updateResult		= ::update(*app, false);					\
+					gpk::err_t 		updateResult		= ::update(*app, false);					\
 					if_true_bi(::gpk::APPLICATION_STATE_EXIT == updateResult);								\
 					if_true_be(::gpk::failed(updateResult));												\
 					if_true_e(::draw(*app));																\
@@ -53,7 +63,7 @@ namespace gpk																								\
 		};																										\
 	}																											\
  	GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle);													\
-	static	::gpk::err_t	rtMain		(::gpk::SRuntimeValues & runtimeValues);								\
+	static	gpk::err_t rtMain		(::gpk::SRuntimeValues & runtimeValues);								\
 	GPK_OS_ENTRY_POINT(rtMain);																				\
 																												\
 	static	void				threadRender		(void * pRuntimeState)	{									\
@@ -68,13 +78,13 @@ namespace gpk																								\
 		info_printf("%s", "Render thread done.");																\
 	}																											\
 																												\
-	static	::gpk::err_t	threadRenderStart	(::gpk::SRuntimeState& runtimeState)	{						\
+	static	gpk::err_t threadRenderStart	(::gpk::SRuntimeState& runtimeState)	{						\
 		_beginthread(threadRender, 0, &runtimeState);															\
 		return 0;																								\
 	}																											\
 																												\
-	static	::gpk::err_t	lrt_Loop			(::gpk::SRuntimeState & runtimeState)	{						\
-		::gpk::err_t				updateResult	= ::update(*runtimeState.Application, false);				\
+	static	gpk::err_t lrt_Loop			(::gpk::SRuntimeState & runtimeState)	{						\
+		gpk::err_t 			updateResult	= ::update(*runtimeState.Application, false);				\
 		if(1 == updateResult || ::gpk::failed(updateResult)) {													\
 			if_true_i(::gpk::APPLICATION_STATE_EXIT == updateResult);											\
 			if_true_e(::gpk::failed(updateResult));																\
@@ -105,7 +115,7 @@ namespace gpk																								\
 		}													\
 		return updateResult;								\
 	}														\
-	sttc	::gpk::err_t	rtMain			(::gpk::SRuntimeValues & runtimeValues)	{	\
+	sttc	gpk::err_t rtMain			(::gpk::SRuntimeValues & runtimeValues)	{	\
 		::gpk::SRuntimeState		runtimeState	= {};								\
 		{																				\
 			if_null_fe(runtimeState.Application.create(runtimeValues));					\

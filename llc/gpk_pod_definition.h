@@ -8,7 +8,7 @@ namespace gpk
 	GDEFINE_ENUM_TYPE(C_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(C_TYPE, unsigned	, 0x00);
 	GDEFINE_ENUM_VALUE(C_TYPE, signed	, 0x10);
-	GDEFINE_ENUM_VALUE(C_TYPE, float	, 0x20);
+	GDEFINE_ENUM_VALUE(C_TYPE, f2_t	, 0x20);
 	GDEFINE_ENUM_VALUE(C_TYPE, sc_t		, 0x41);
 	GDEFINE_ENUM_VALUE(C_TYPE, apod		, 0x80);
 	// 
@@ -39,11 +39,11 @@ namespace gpk
 
 	struct SPODDefinition { 
 		::gpk::au0_t					DefaultData;
-		::gpk::avcsc_t					Labels;
+		::gpk::aobj<vcst_t>					Labels;
 		::gpk::au1_t					Offsets;
 		::gpk::apod<::gpk::C_TYPE>	Types;
 
-		::gpk::err_t				push_any		(const ::gpk::C_TYPE type, const ::gpk::view<sc_t> label, const vcu0_t & defaultValue) { 
+		gpk::err_t 			push_any		(const ::gpk::C_TYPE type, const ::gpk::view<sc_t> label, const vcu0_t & defaultValue) { 
 			if_true_vef(Labels.size() > (u2_t)Labels.find(label), "'%s' already exists.", GPK_VIEW_ARGS(label).begin()); 
 			if_fail_fe(Types.push_back(type));
 			if_fail_fe(Offsets.push_back((u1_t)DefaultData.size()));
@@ -52,23 +52,23 @@ namespace gpk
 		}
 
 		tplt<tpnm _tValue>
-		::gpk::err_t				push_any		(const ::gpk::view<sc_t> label, const _tValue defaultValue) { 
+		gpk::err_t 			push_any		(const ::gpk::view<sc_t> label, const _tValue defaultValue) { 
 			const ::gpk::C_TYPE				type			= ::gpk::toCType(defaultValue); 
 			return push_any(type, label, ::gpk::vcu0_t{(const u0_t*)&defaultValue, type & 0xF}); 
 		}
 
-		::gpk::err_t				push_u8			(::gpk::view<sc_t> label, u0_t    defaultValue = (u0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_u1_t		(::gpk::view<sc_t> label, u1_t   defaultValue = (u1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_u32		(::gpk::view<sc_t> label, u2_t   defaultValue = (u2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_u64		(::gpk::view<sc_t> label, u3_t   defaultValue = (u3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_i8			(::gpk::view<sc_t> label, s0_t    defaultValue = (s0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_i16		(::gpk::view<sc_t> label, s1_t   defaultValue = (s1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_i32		(::gpk::view<sc_t> label, s2_t   defaultValue = (s2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_i64		(::gpk::view<sc_t> label, s3_t   defaultValue = (s3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_f2_t		(::gpk::view<sc_t> label, f2_t   defaultValue = (f2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_f64		(::gpk::view<sc_t> label, f3_t   defaultValue = (f3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_uchar		(::gpk::view<sc_t> label, uc_t defaultValue = (uc_t)::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::err_t				push_char		(::gpk::view<sc_t> label, sc_t  defaultValue = (sc_t )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_u8			(::gpk::view<sc_t> label, u0_t    defaultValue = (u0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_u1_t		(::gpk::view<sc_t> label, u1_t   defaultValue = (u1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_u32		(::gpk::view<sc_t> label, u2_t   defaultValue = (u2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_u64		(::gpk::view<sc_t> label, u3_t   defaultValue = (u3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_i8			(::gpk::view<sc_t> label, s0_t    defaultValue = (s0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_i16		(::gpk::view<sc_t> label, s1_t   defaultValue = (s1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_i32		(::gpk::view<sc_t> label, s2_t   defaultValue = (s2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_i64		(::gpk::view<sc_t> label, s3_t   defaultValue = (s3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_f2_t		(::gpk::view<sc_t> label, f2_t   defaultValue = (f2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_f64		(::gpk::view<sc_t> label, f3_t   defaultValue = (f3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_uchar		(::gpk::view<sc_t> label, uc_t defaultValue = (uc_t)::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		gpk::err_t 			push_char		(::gpk::view<sc_t> label, sc_t  defaultValue = (sc_t )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
 	};
 } // namespace 
 

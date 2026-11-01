@@ -261,6 +261,7 @@ namespace gpk
 	tydf	aview<s1_t>	avs1_t;
 	tydf	aview<s2_t>	avs2_t;
 	tydf	aview<s3_t>	avs3_t;
+
 	tdcs	avuc_t	avuc_c;
 	tdcs	avsc_t	avsc_c;
 	tdcs	avf2_t	avf2_c;
@@ -286,18 +287,19 @@ namespace gpk
 	tydf	aview<s1_c>	avcs1_t;
 	tydf	aview<s2_c>	avcs2_t;
 	tydf	aview<s3_c>	avcs3_t;
-	tdcs	avcuc_t	avcuc_c;
-	tdcs	avcsc_t	avcsc_c;
-	tdcs	avcf2_t	avcf2_c;
-	tdcs	avcf3_t	avcf3_c;
-	tdcs	avcu0_t	avcu0_c;
-	tdcs	avcu1_t	avcu1_c;
-	tdcs	avcu2_t	avcu2_c;
-	tdcs	avcu3_t	avcu3_c;
-	tdcs	avcs0_t	avcs0_c;
-	tdcs	avcs1_t	avcs1_c;
-	tdcs	avcs2_t	avcs2_c;
-	tdcs	avcs3_t	avcs3_c;
+
+	tdcs	avcuc_t		avcuc_c;
+	tdcs	avcsc_t		avcsc_c;
+	tdcs	avcf2_t		avcf2_c;
+	tdcs	avcf3_t		avcf3_c;
+	tdcs	avcu0_t		avcu0_c;
+	tdcs	avcu1_t		avcu1_c;
+	tdcs	avcu2_t		avcu2_c;
+	tdcs	avcu3_t		avcu3_c;
+	tdcs	avcs0_t		avcs0_c;
+	tdcs	avcs1_t		avcs1_c;
+	tdcs	avcs2_t		avcs2_c;
+	tdcs	avcs3_t		avcs3_c;
 
 
 	tplt<tpnm T, tpnm TView>	err_t	split			(view<cnst T> target, cnst T & separator, aobj<TView> & output) {

@@ -8,13 +8,13 @@ namespace gpk
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	tplt<tpnm T> 
 	struct circle { 
-		double			Radius; 
+		f3_t			Radius; 
 		::gpk::n2<T>	Center; 
 
 		GPK_DEFAULT_OPERATOR(circle<T>, Center == other.Center && Radius == other.Radius); 
 	};
-	typedef circle<float>		circlef2_t, circlef;
-	typedef circle<double>		circlef64, circled;
+	typedef circle<f2_t>		circlef2_t, circlef;
+	typedef circle<f3_t>		circlef64, circled;
 	typedef circle<u0_t>		circleu8;
 	typedef circle<u1_t>	circleu1_t;
 	typedef circle<u2_t>	circleu32;

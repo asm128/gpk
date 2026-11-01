@@ -23,7 +23,7 @@ GPK_USING_VIEW();
 GPK_USING_TYPEINT();
 using gpk::string;
 
-::gpk::err_t			gpk::urlDecode					(vcst_t urlToDecode, string & decoded)		{
+gpk::err_t 		gpk::urlDecode					(vcst_t urlToDecode, string & decoded)		{
 	u2_t					decodedCharacters				= 0;
 	for(u2_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
 		const sc_t					currentChar						= urlToDecode[iChar];
@@ -40,7 +40,7 @@ using gpk::string;
 	return decodedCharacters;
 }
 
-static	::gpk::err_t	httpRequestChunkedJoin			(vcst_t body, string & joined)		{
+static	gpk::err_t httpRequestChunkedJoin			(vcst_t body, string & joined)		{
 	u2_t									iBegin							= 0;
 	u2_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -63,7 +63,7 @@ static	::gpk::err_t	httpRequestChunkedJoin			(vcst_t body, string & joined)		{
 	return 0;
 }
 
-static	::gpk::err_t	httpClientRequestConstruct
+static	gpk::err_t httpClientRequestConstruct
 	(	::gpk::HTTP_METHOD	method
 	,	vcst_t				hostName
 	,	vcst_t				path
@@ -161,7 +161,7 @@ gpk::err_t			gpk::httpClientRequest
 		if_true_vef(-1, (totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
 		if(0 == stopOfHeader && totalBytes >= 4) {
-			::gpk::err_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {buf.begin(), totalBytes}, totalBytes - 4);
+			gpk::err_t 						offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {buf.begin(), totalBytes}, totalBytes - 4);
 			if(0 <= offsetStopOfHeader) {
 				// here we should do something in order to detect the content size
 				stopOfHeader						= offsetStopOfHeader;
@@ -197,7 +197,7 @@ gpk::err_t			gpk::httpClientRequest
 			}
 		}
 		//else if(stopOfHeader && totalBytes > stopOfHeader && bChunked) {
-		//	//::gpk::err_t							offsetStopOfChunks				= ::gpk::find_sequence_pod(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
+		//	//gpk::err_t 						offsetStopOfChunks				= ::gpk::find_sequence_pod(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
 		//	//if(0 == offsetStopOfChunks)
 		//	//	break;
 		//}
@@ -256,12 +256,12 @@ gpk::err_t			gpk::httpClientRequest
 		contentReceived							= joined;
 	}
 
-	::gpk::err_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {contentReceived.begin(), contentReceived.size()});
+	gpk::err_t 						offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {contentReceived.begin(), contentReceived.size()});
 	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::vcst_t{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
 	return 0;
 }
 
-::gpk::err_t			gpk::httpClientRequest
+gpk::err_t 		gpk::httpClientRequest
 	(	const SIPv4End	& clientToConnect
 	,	HTTP_METHOD		method
 	,	vcst_t			hostName

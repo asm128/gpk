@@ -8,13 +8,13 @@
 namespace gpk
 {
 #if defined(GPK_WINDOWS)	// These functions exist in order to help with loading some images from a third-party game. Otherwise their use is discouraged in favor of ::gpk::png* functions.
-	::gpk::err_t			bmpFileLoad	(const s0_t		* source	, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView);
-	::gpk::err_t			bmpFileLoad	(FILE				* source	, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView);
-	::gpk::err_t			bmpFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView);
+	gpk::err_t 		bmpFileLoad	(const s0_t		* source	, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView);
+	gpk::err_t 		bmpFileLoad	(FILE				* source	, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView);
+	gpk::err_t 		bmpFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView);
 
-	stin	::gpk::err_t	bmpFileLoad	(const s0_t		* source	, ::gpk::img8bgra & out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	stin	::gpk::err_t	bmpFileLoad	(FILE				* source	, ::gpk::img8bgra & out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	stin	::gpk::err_t	bmpFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::img8bgra & out_Texture)	{ return bmpFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
+	stin	gpk::err_t bmpFileLoad	(const s0_t		* source	, ::gpk::img8bgra & out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
+	stin	gpk::err_t bmpFileLoad	(FILE				* source	, ::gpk::img8bgra & out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
+	stin	gpk::err_t bmpFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::img8bgra & out_Texture)	{ return bmpFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
 #endif
 }
 

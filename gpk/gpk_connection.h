@@ -84,19 +84,19 @@ namespace gpk
 
 	stxp	const u2_t				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
-	::gpk::err_t						connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
-	::gpk::err_t						connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
-	::gpk::err_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au0_t & receiveBuffer);
-	::gpk::err_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu0_t & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0);
-	stin	::gpk::err_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcs0_t & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
+	gpk::err_t 					connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
+	gpk::err_t 					connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
+	gpk::err_t 					connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au0_t & receiveBuffer);
+	gpk::err_t 					connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu0_t & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0);
+	stin	gpk::err_t 			connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcs0_t & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
 		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
-	stin	::gpk::err_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, ::gpk::view<sc_c> & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
+	stin	gpk::err_t 			connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, ::gpk::view<sc_c> & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
 		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 
-	::gpk::err_t						processUDPClientQueueEvents	
+	gpk::err_t 					processUDPClientQueueEvents	
 		( _tWithLoad						& eventCache
 		, u2_t							iClient
 		, ::gpk::vpobj<::gpk::SUDPMessage>	clientQueue
@@ -122,7 +122,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 
-	stin	::gpk::err_t				processUDPClientQueueEvents	
+	stin	gpk::err_t 			processUDPClientQueueEvents	
 		( u2_t							iClient
 		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
 		, _tState							& state
@@ -133,7 +133,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tEvent, tpnm _tState> 
-	::gpk::err_t						processUDPEvents
+	gpk::err_t 					processUDPEvents
 		( ::gpk::view<::gpk::apobj<::gpk::SUDPMessage>>	queueReceived
 		, _tState										& state
 		, const ::std::function<::gpk::err_t (u2_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest

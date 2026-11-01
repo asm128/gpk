@@ -17,7 +17,7 @@ namespace gpk
 		::gpk::SAABBGeometry						AABBSlices		[6]	= {};
 	};
 
-	::gpk::err_t			geometryVoxelModel	(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<u0_t> & voxelMap);
+	gpk::err_t 		geometryVoxelModel	(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<u0_t> & voxelMap);
 
 } // namespace
 

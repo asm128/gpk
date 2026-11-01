@@ -9,30 +9,30 @@
 namespace gpk
 {
 	struct SPlanetarySystemEntityMap {
-		::gpk::aeid				GravityCenters	;
-		::gpk::aeid				Orbits			;
-		::gpk::aeid				Bodies			;
-		::gpk::aeid				Cameras			;
-		::gpk::eid_t			Camera			= ::gpk::EID_INVALID;
-		::gpk::eid_t			Background		= ::gpk::EID_INVALID;
+		aeid		GravityCenters	;
+		aeid		Orbits			;
+		aeid		Bodies			;
+		aeid		Cameras			;
+		eid_t		Camera			= EID_INVALID;
+		eid_t		Background		= EID_INVALID;
 
-		::gpk::err_t			Save			(::gpk::au0_t & output)	const	{ 
-			if_fail_fe(gpk::saveView(output, GravityCenters	));
-			if_fail_fe(gpk::saveView(output, Orbits			));
-			if_fail_fe(gpk::saveView(output, Bodies			));
-			if_fail_fe(gpk::saveView(output, Cameras		));
-			if_fail_fe(gpk::savePOD (output, Camera			));
-			if_fail_fe(gpk::savePOD (output, Background		));
+		err_t		Save			(au0_t & output)	const	{ 
+			if_fail_fe(saveView(output, GravityCenters	));
+			if_fail_fe(saveView(output, Orbits			));
+			if_fail_fe(saveView(output, Bodies			));
+			if_fail_fe(saveView(output, Cameras		));
+			if_fail_fe(savePOD (output, Camera			));
+			if_fail_fe(savePOD (output, Background		));
 			return 0;
 		}
 
-		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			if_fail_fe(gpk::loadView(input, GravityCenters	));
-			if_fail_fe(gpk::loadView(input, Orbits			));
-			if_fail_fe(gpk::loadView(input, Bodies			));
-			if_fail_fe(gpk::loadView(input, Cameras			));
-			if_fail_fe(gpk::loadPOD (input, Camera			));
-			if_fail_fe(gpk::loadPOD (input, Background		));
+		err_t		Load			(vcu0_t & input)	{ 
+			if_fail_fe(loadView(input, GravityCenters	));
+			if_fail_fe(loadView(input, Orbits			));
+			if_fail_fe(loadView(input, Bodies			));
+			if_fail_fe(loadView(input, Cameras			));
+			if_fail_fe(loadPOD (input, Camera			));
+			if_fail_fe(loadPOD (input, Background		));
 			return 0;
 		}
 	};
@@ -41,24 +41,24 @@ namespace gpk
 		SPlanetarySystem			PlanetarySystem;
 		SPlanetarySystemEntityMap	EntityMap;
 
-		::gpk::err_t				Save			(::gpk::au0_t & output)	const	{ 
+		err_t		Save			(au0_t & output)	const	{ 
 			if_fail_fe(PlanetarySystem.Save(output));
 			if_fail_fe(EntityMap.Save(output));
 			return 0;
 		}
 
-		::gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
+		err_t		Load			(vcu0_t & input)	{ 
 			if_fail_fe(PlanetarySystem.Load(input));
 			if_fail_fe(EntityMap.Load(input));
 			return 0;
 		}
 	};
 
-	::gpk::err_t			planetarySystemReset			(const ::gpk::SPlanetarySystem & solarSystem, const ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine, const ::gpk::vc8bgra & colors);
-	::gpk::err_t			planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine);
-	::gpk::err_t			planetarySystemSetup			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine); 
-	::gpk::err_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData);
-	::gpk::err_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::view<sc_t> jsonFilePath);
+	err_t		planetarySystemReset			(const SPlanetarySystem & solarSystem, const SPlanetarySystemEntityMap & entityMap, SEngine & engine, vc8bgra colors);
+	err_t		planetarySystemCreateEntities	(const SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine);
+	err_t		planetarySystemSetup			(const SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine); 
+	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, const SJSONReader & jsonData);
+	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, vcst_t jsonFilePath);
 } // namespace
 
 #endif // GPK_ENGINE_PLANETARY_SYSTEM_H_23701

@@ -15,50 +15,49 @@ struct SRSMHeader {	// Represents the byte layout fou
 #pragma pack(pop)
 
 
-			::gpk::err_t								analyzeArray								(const ::gpk::view<u0_t>& input) {
+			gpk::err_t 							analyzeArray								(const ::gpk::view<u0_t>& input) {
 	info_printf("%s", "---- Analyzing bytes     :");			for(u2_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (u2_t)input[iChar], (s2_t)((s0_t*)input.begin())[iChar], input[iChar]);
 
 	info_printf("%s", "---- Analyzing shorts    :");			for(u2_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((u1_t	*)&input[0])[iChar], (s2_t)((s1_t	*)input.begin())[iChar], ((u1_t	*)input.begin())[iChar]);
 	info_printf("%s", "---- Analyzing ints      :");			for(u2_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12u : %.12i : 0x%.8x"	, ((u2_t	*)&input[0])[iChar], ((s2_t			*)input.begin())[iChar], ((u2_t	*)input.begin())[iChar]);
-	info_printf("%s", "---- Analyzing floats    :");			for(u2_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12f"						, ((float		*)&input[0])[iChar]);
+	info_printf("%s", "---- Analyzing floats    :");			for(u2_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12f"						, ((f2_t		*)&input[0])[iChar]);
 
 	info_printf("%s", "---- Analyzing shifted shorts (1):");	for(u2_t iChar = 0; iChar < (input.size() - 1) / 2; ++iChar)	info_printf(  "%.6u : %.6i : 0x%.4x"	, ((u1_t	*)&input[1])[iChar], (s2_t)((s1_t	*)&input[1])[iChar], ((u1_t	*)&input[1])[iChar]);
 	info_printf("%s", "---- Analyzing shifted ints   (1):");	for(u2_t iChar = 0; iChar < (input.size() - 1) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((u2_t	*)&input[1])[iChar], ((s2_t			*)&input[1])[iChar], ((u2_t	*)&input[1])[iChar]);
-	info_printf("%s", "---- Analyzing shifted floats (1):");	for(u2_t iChar = 0; iChar < (input.size() - 1) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[1])[iChar], ((float			*)&input[1])[iChar]);
+	info_printf("%s", "---- Analyzing shifted floats (1):");	for(u2_t iChar = 0; iChar < (input.size() - 1) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((f2_t		*)&input[1])[iChar], ((f2_t			*)&input[1])[iChar]);
 
 	info_printf("%s", "---- Analyzing shifted ints   (2):");	for(u2_t iChar = 0; iChar < (input.size() - 2) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((u2_t	*)&input[2])[iChar], ((s2_t			*)&input[2])[iChar], ((u2_t	*)&input[2])[iChar]);
-	info_printf("%s", "---- Analyzing shifted floats (2):");	for(u2_t iChar = 0; iChar < (input.size() - 2) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[2])[iChar], ((float			*)&input[2])[iChar]);
+	info_printf("%s", "---- Analyzing shifted floats (2):");	for(u2_t iChar = 0; iChar < (input.size() - 2) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((f2_t		*)&input[2])[iChar], ((f2_t			*)&input[2])[iChar]);
 
 	info_printf("%s", "---- Analyzing shifted ints   (3):");	for(u2_t iChar = 0; iChar < (input.size() - 3) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((u2_t	*)&input[3])[iChar], ((s2_t			*)&input[3])[iChar], ((u2_t	*)&input[3])[iChar]);
-	info_printf("%s", "---- Analyzing shifted floats (3):");	for(u2_t iChar = 0; iChar < (input.size() - 3) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[3])[iChar], ((float			*)&input[3])[iChar]);
+	info_printf("%s", "---- Analyzing shifted floats (3):");	for(u2_t iChar = 0; iChar < (input.size() - 3) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((f2_t		*)&input[3])[iChar], ((f2_t			*)&input[3])[iChar]);
 	return 0;
 }
 
 // Read rotation keyframes. Not sure how they're expressed though.
-static	::gpk::err_t	rsmReadRotationKeyframes									(::gpk::view_stream<const u0_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
+static	gpk::err_t rsmReadRotationKeyframes									(::gpk::view_stream<const u0_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
 	u2_t					keyframeCount												= 0;			// Get the number of keyframe
 	rsm_stream.read_pod(keyframeCount);
 	info_printf("Rotation keyframe count: %u.", keyframeCount);
 	if(keyframeCount) {
 		modelKeyframes.resize(keyframeCount);
-		rsm_stream.read_pod(modelKeyframes.begin(), keyframeCount);
+		if_fail_fe(rsm_stream.read_pod(modelKeyframes));
 	}
 	return 0;
 }
 
 // >= v1.5 Read position keyframes
-static	::gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const u0_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
+static	gpk::err_t rsmReadPositionKeyframes									(::gpk::view_stream<const u0_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
 	u2_t					positionFrameCount											= 0;
-	rsm_stream.read_pod(positionFrameCount);
-	GPK_PLATFORM_CRT_BREAKPOINT();
+	if_fail_fe(rsm_stream.read_pod(positionFrameCount));
 	if(positionFrameCount) {
 		modelKeyframes.resize(positionFrameCount);
-		rsm_stream.read_pod(modelKeyframes.begin(), positionFrameCount);
+		if_fail_fe(rsm_stream.read_pod(modelKeyframes));
 	}
 	return 0;
 }
 
-::gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view<u0_t>	& input)							{
+gpk::err_t 		gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view<u0_t>	& input)							{
 	::gpk::view_stream<const u0_t>							rsm_stream													= {input.begin(), input.size()};
 	SRSMHeader													header														= {};
 	rsm_stream.read_pod(header);
@@ -109,7 +108,7 @@ static	::gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const u
 			if(texMappingCount) {
 				::gpk::apod<s2_t>									& modelTextures												= newNode.TextureIndices;
 				modelTextures.resize(texMappingCount);
-				rsm_stream.read_pod(modelTextures.begin(), texMappingCount);
+				rsm_stream.read_pod(modelTextures);
 			}
 		}
 
@@ -129,7 +128,7 @@ static	::gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const u
 			if(vertexCount) {
 				::gpk::apod<::gpk::n3f2_t>						& modelVertices												= newNode.Vertices;
 				modelVertices.resize(vertexCount);
-				rsm_stream.read_pod(modelVertices.begin(), vertexCount);
+				rsm_stream.read_pod(modelVertices);
 			}
 		}
 		{ // Read vertex attributes (texCoord & ...color?)
@@ -140,7 +139,7 @@ static	::gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const u
 				::gpk::apod<::gpk::SRSMTexCoord>						& modelUNKs													= newNode.UVs;
 				modelUNKs.resize(texVtxCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || header.versionMajor > 1) //{ >= v1.2
-					rsm_stream.read_pod(modelUNKs.begin(), texVtxCount);
+					rsm_stream.read_pod(modelUNKs);
 				else {
 					for( u2_t iVertex = 0; iVertex < texVtxCount; ++iVertex ) {
 						::gpk::SRSMTexCoord											& curTexCoord												= modelUNKs[iVertex];
@@ -159,7 +158,7 @@ static	::gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const u
 				::gpk::apod<SRSMFace>									& modelFaces												= newNode.Faces;
 				modelFaces.resize(faceCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || (header.versionMajor > 1))
-					rsm_stream.read_pod(modelFaces.begin(), faceCount);
+					rsm_stream.read_pod(modelFaces);
 				else {
 					for(u2_t iFace = 0; iFace < faceCount; ++iFace) {
 						::gpk::SRSMFace												& currentFace												= modelFaces[iFace];
@@ -191,12 +190,12 @@ static	::gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const u
 	return rsm_stream.CursorPosition;
 }
 
-::gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, FILE								* input)							{
+gpk::err_t 		gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, FILE								* input)							{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-::gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcst_t	& input)							{
+gpk::err_t 		gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcst_t	& input)							{
 	::gpk::au0_t				fileInMemory												= {};
 	if_fail_fef(gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	u3_t													unk															= *(u3_t*)&fileInMemory[fileInMemory.size() - 8];
@@ -206,7 +205,7 @@ static	::gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const u
 	return rsmFileLoad(loaded, fileInMemory);
 }
 
-::gpk::err_t			gpk::rsmGeometryGenerate					(const ::gpk::SRSMFileContents& rsmData, ::gpk::view<::gpk::SModelNodeRSM>& out_meshes)			{
+gpk::err_t 		gpk::rsmGeometryGenerate					(const ::gpk::SRSMFileContents& rsmData, ::gpk::view<::gpk::SModelNodeRSM>& out_meshes)			{
 	for(u2_t iTex = 0, texCount = rsmData.TextureNames.size(); iTex < texCount; ++iTex) {
 		for(u2_t iNode = 0, countNodes = rsmData.Nodes.size(); iNode < countNodes; ++iNode) {
 			const ::gpk::SRSMNode										& rsmNode													= rsmData.Nodes[iNode];

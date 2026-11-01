@@ -2,9 +2,12 @@
 
 #ifndef GPK_ATMEL
 
-#include <algorithm>
+GPK_USING_TYPEINT();
+GPK_USING_VIEW();
+GPK_USING_APOD();
 
-::gpk::err_t			gpk::pixelBlend			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
+
+gpk::err_t 		gpk::pixelBlend			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
 	if( (position.x >= 0 && position.x < (s2_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (s2_t)pixels.metrics().y)
 	) {
@@ -16,7 +19,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::setPixel			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
+gpk::err_t 		gpk::setPixel			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
 	if( (position.x >= 0 && position.x < (s2_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (s2_t)pixels.metrics().y)
 	) {
@@ -27,7 +30,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::drawRectangle		(::gpk::g8bgra pixels, ::gpk::rect2<s1_t> rectangle, ::gpk::bgra color)	{
+gpk::err_t 		gpk::drawRectangle		(::gpk::g8bgra pixels, ::gpk::rect2<s1_t> rectangle, ::gpk::bgra color)	{
 	s2_t						countPixels				= 0;
 	for(s1_t y = 0; y < (s1_t)rectangle.Size.y; ++y)
 	for(s1_t x = 0; x < (s1_t)rectangle.Size.x; ++x)
@@ -35,7 +38,7 @@
 	return countPixels;
 }
 
-::gpk::err_t			gpk::drawCircle			(::gpk::g8bgra pixels, ::gpk::circle<s1_t> circle, ::gpk::bgra color)	{
+gpk::err_t 		gpk::drawCircle			(::gpk::g8bgra pixels, ::gpk::circle<s1_t> circle, ::gpk::bgra color)	{
 	s2_t						countPixels				= 0;
 	for(s1_t y = (s1_t)-circle.Radius; y < (s1_t)circle.Radius; ++y)
 	for(s1_t x = (s1_t)-circle.Radius; x < (s1_t)circle.Radius; ++x) {
@@ -47,7 +50,7 @@
 }
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-::gpk::err_t			gpk::drawLine       	(::gpk::g8bgra pixels, ::gpk::line2s1_t line, ::gpk::bgra color)	{
+gpk::err_t 		gpk::drawLine       	(::gpk::g8bgra pixels, ::gpk::line2s1_t line, ::gpk::bgra color)	{
 	s2_t						countPixels				= 0;
 	s2_t						dx						= (s2_t)fabs(line.B.x - line.A.x);
 	s2_t						sx						= (s2_t)line.A.x < line.B.x ? 1 : -1;
@@ -75,7 +78,7 @@
 
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-::gpk::err_t			gpk::drawLine       	(const ::gpk::n2u1_t offscreenMetrics, ::gpk::line2s1_t line, ::gpk::apod<::gpk::n2s1_t> & pixelCoords)	{
+gpk::err_t 		gpk::drawLine       	(const ::gpk::n2u1_t offscreenMetrics, ::gpk::line2s1_t line, ::gpk::apod<::gpk::n2s1_t> & pixelCoords)	{
 	s2_t						dx						= (s2_t)fabs(line.B.x - line.A.x);
 	s2_t						sx						= (s2_t)line.A.x < line.B.x ? 1 : -1;
 	s2_t						dy						= (s2_t)-fabs(line.B.y - line.A.y );
@@ -110,7 +113,7 @@
 
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-::gpk::err_t			gpk::drawLine
+gpk::err_t 		gpk::drawLine
 	( const ::gpk::n2u1_t		offscreenMetrics
 	, const ::gpk::line3f2_t		& lineFloat
 	, ::gpk::apod<::gpk::n3f2_t>	& pixelCoords
@@ -131,7 +134,7 @@
 	) {
 		depthBufferRow			= depthBuffer[line.A.y];
 		u2_t					& depthCell				= depthBufferRow[line.A.x];
-		u2_t					intZ					= u2_t((double)0xFFFFFFFU * lineFloat.A.z);
+		u2_t					intZ					= u2_t((f3_t)0xFFFFFFFU * lineFloat.A.z);
 		if( depthCell > intZ ) {
 			depthCell				= intZ;
 			//pixelCoords.push_back({(s2_t)line.A.x, (s2_t)line.A.y});
@@ -140,7 +143,7 @@
 	}
 
 	//bool								outside				= true;
-	const double				factorUnit				= 1.0 / (yAxis ? fabs(yDiff) : xDiff);
+	const f3_t				factorUnit				= 1.0 / (yAxis ? fabs(yDiff) : xDiff);
 	while (true) {   /* loop */
 		if (line.A.x == line.B.x && line.A.y == line.B.y)
 			break;
@@ -152,8 +155,8 @@
 			 && line.A.y >= 0 && line.A.y < (s2_t)offscreenMetrics.y
 			) {
 				depthBufferRow			= depthBuffer[line.A.y];
-				const double				factor					= 1.0 / (yAxis ? factorUnit * line.A.y : factorUnit * line.A.x);
-				const double				finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
+				const f3_t				factor					= 1.0 / (yAxis ? factorUnit * line.A.y : factorUnit * line.A.x);
+				const f3_t				finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
 				if (finalZ <= 0 || finalZ >= 1)
 					continue;
 				const u2_t				intZ					= u2_t(0xFFFFFFFU * finalZ);
@@ -162,7 +165,7 @@
 					continue;
 
 				depthCell				= intZ;
-				pixelCoords.push_back({(float)line.A.x, (float)line.A.y, (float)finalZ});
+				pixelCoords.push_back({(f2_t)line.A.x, (f2_t)line.A.y, (f2_t)finalZ});
 			}
 			//else
 			//	outside							= true;
@@ -174,8 +177,8 @@
 			 && line.A.y >= 0 && line.A.y < (s2_t)offscreenMetrics.y
 			) {
 				depthBufferRow					= depthBuffer[line.A.y];
-				const double				factor					= 1.0 / (yAxis ? factorUnit * line.A.y : factorUnit * line.A.x);
-				const double				finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
+				const f3_t				factor					= 1.0 / (yAxis ? factorUnit * line.A.y : factorUnit * line.A.x);
+				const f3_t				finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
 				if (finalZ <= 0 || finalZ >= 1)
 					continue;
 				const u2_t				intZ					= u2_t(0xFFFFFFFU * finalZ);
@@ -184,7 +187,7 @@
 					continue;
 
 				depthCell				= intZ;
-				pixelCoords.push_back({(float)line.A.x, (float)line.A.y, (float)finalZ});
+				pixelCoords.push_back({(f2_t)line.A.x, (f2_t)line.A.y, (f2_t)finalZ});
 			}
 			//else
 			//	outside					= true;
@@ -195,16 +198,16 @@
 }
 
 //https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
-static	double		orient2d		(const ::gpk::line2s1_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-//static	double		orient2d		(const ::gpk::line3i16 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-//static	double		orient2d		(const ::gpk::line3f2_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-static	double		orient2d		(const ::gpk::line2f2_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-static	double		orient2d		(const ::gpk::n3f2_t & start, const ::gpk::n2f2_t & edge, const ::gpk::n2s1_t & point)	{ return edge.x * (point.y - (double)start.y) - edge.y * (point.x - (double)start.x); }
+static	f3_t		orient2d		(const ::gpk::line2s1_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
+//static	f3_t		orient2d		(const ::gpk::line3i16 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
+//static	f3_t		orient2d		(const ::gpk::line3f2_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
+static	f3_t		orient2d		(const ::gpk::line2f2_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
+static	f3_t		orient2d		(const ::gpk::n3f2_t & start, const ::gpk::n2f2_t & edge, const ::gpk::n2s1_t & point)	{ return edge.x * (point.y - (f3_t)start.y) - edge.y * (point.x - (f3_t)start.x); }
 
 tplt <tpnm _tValue>	_tValue	max3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
 
-::gpk::err_t			gpk::drawTriangle		(::gpk::g8bgra pixels, const ::gpk::tri2<s1_t> & triangle, ::gpk::bgra color){
+gpk::err_t 		gpk::drawTriangle		(::gpk::g8bgra pixels, const ::gpk::tri2<s1_t> & triangle, ::gpk::bgra color){
 	// Compute triangle bounding box
 	s1_t						minX					= ::min3(triangle.A.x, triangle.B.x, triangle.C.x);
 	s1_t						minY					= ::min3(triangle.A.y, triangle.B.y, triangle.C.y);
@@ -223,9 +226,9 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	for (p.y = minY; p.y <= maxY; ++p.y) 
 	for (p.x = minX; p.x <= maxX; ++p.x) {
 		// Determine barycentric coordinates
-		double						w0						= ::orient2d({triangle.B, triangle.C}, p);
-		double						w1						= ::orient2d({triangle.C, triangle.A}, p);
-		double						w2						= ::orient2d({triangle.A, triangle.B}, p);
+		f3_t						w0						= ::orient2d({triangle.B, triangle.C}, p);
+		f3_t						w1						= ::orient2d({triangle.C, triangle.A}, p);
+		f3_t						w2						= ::orient2d({triangle.A, triangle.B}, p);
 		// If p is on or inside all edges, render pixel.
 		if (w0 < 0 || w1 < 0 || w2 < 0)
 			continue;
@@ -234,7 +237,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::err_t			gpk::drawTriangle
+gpk::err_t 		gpk::drawTriangle
 	( const ::gpk::n2u2_t			targetSize
 	, const ::gpk::tri3f2_t			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
@@ -261,22 +264,22 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	for (p.y = minY; p.y <= maxY; ++p.y)
 	for (p.x = minX; p.x <= maxX; ++p.x) {
 		// Determine barycentric coordinates
-		double						w0						= ::orient2d(triangle.B, edgeBC, p);
-		double						w1						= ::orient2d(triangle.C, edgeCA, p);
-		double						w2						= ::orient2d(triangle.A, edgeAB, p);
+		f3_t						w0						= ::orient2d(triangle.B, edgeBC, p);
+		f3_t						w1						= ::orient2d(triangle.C, edgeCA, p);
+		f3_t						w2						= ::orient2d(triangle.A, edgeAB, p);
 		// If p is on or inside all edges, render pixel.
 		if (w0 < 0 || w1 < 0 || w2 < 0)
 			continue;
 
-		double						proportionABC			= w0 + w1 + w2;
+		f3_t						proportionABC			= w0 + w1 + w2;
 		if(proportionABC == 0)
 			continue;
-		double						proportionA				= w0 / proportionABC;
-		double						proportionB				= w1 / proportionABC;
-		double						proportionC				= 1.0 - (proportionA + proportionB);
+		f3_t						proportionA				= w0 / proportionABC;
+		f3_t						proportionB				= w1 / proportionABC;
+		f3_t						proportionC				= 1.0 - (proportionA + proportionB);
 
 		// Calculate interpolated depth
-		double						finalZ					= triangle.A.z * proportionA;
+		f3_t						finalZ					= triangle.A.z * proportionA;
 		finalZ					+= triangle.B.z * proportionB;
 		finalZ					+= triangle.C.z * proportionC;
 		if(finalZ >= 1.0 || finalZ <= 0)
@@ -289,13 +292,13 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 
 		currentDepth			= intZ;
 		pixelCoords.push_back(p.s1());
-		proportions.push_back({(float)proportionA, (float)proportionB, (float)proportionC});
+		proportions.push_back({(f2_t)proportionA, (f2_t)proportionB, (f2_t)proportionC});
 
 	}
 	return 0;
 }
 
-::gpk::err_t			gpk::drawTriangle
+gpk::err_t 		gpk::drawTriangle
 	( const ::gpk::n2u2_t			targetSize
 	, const ::gpk::tri2f2_t			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
@@ -318,28 +321,28 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	for (p.y = minY; p.y <= maxY; ++p.y)
 	for (p.x = minX; p.x <= maxX; ++p.x) {
 		// Determine barycentric coordinates
-		double						w0						= ::orient2d({triangle.B, triangle.C}, p);
-		double						w1						= ::orient2d({triangle.C, triangle.A}, p);
-		double						w2						= ::orient2d({triangle.A, triangle.B}, p);
+		f3_t						w0						= ::orient2d({triangle.B, triangle.C}, p);
+		f3_t						w1						= ::orient2d({triangle.C, triangle.A}, p);
+		f3_t						w2						= ::orient2d({triangle.A, triangle.B}, p);
 		// If p is on or inside all edges, render pixel.
 		if (w0 < 0 || w1 < 0 || w2 < 0)
 			continue;
 
-		double						proportionABC			= w0 + w1 + w2;
+		f3_t						proportionABC			= w0 + w1 + w2;
 		if(proportionABC == 0)
 			continue;
-		double						proportionA				= w0 / proportionABC;
-		double						proportionB				= w1 / proportionABC;
-		double						proportionC				= 1.0 - (proportionA + proportionB);
+		f3_t						proportionA				= w0 / proportionABC;
+		f3_t						proportionB				= w1 / proportionABC;
+		f3_t						proportionC				= 1.0 - (proportionA + proportionB);
 
 		pixelCoords.push_back(p.s1());
-		proportions.push_back({(float)proportionA, (float)proportionB, (float)proportionC});
+		proportions.push_back({(f2_t)proportionA, (f2_t)proportionB, (f2_t)proportionC});
 
 	}
 	return 0;
 }
 
-::gpk::err_t			gpk::drawPixels
+gpk::err_t 		gpk::drawPixels
 	( ::gpk::g8bgra		targetPixels
 	, const ::gpk::tri3f2_t				& triangleWorld
 	, const ::gpk::n3f2_t				& normal
@@ -353,7 +356,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	, const ::gpk::function<::gpk::err_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 	) {
 	const ::gpk::n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
-	double						lightFactorDirectional	= normal.Dot(lightVector);
+	f3_t						lightFactorDirectional	= normal.Dot(lightVector);
 	(void)lightFactorDirectional;
 	s2_t						countPixels				= 0;
 	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
@@ -365,19 +368,19 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 		const u2_t				countLights				= lightPoints.size();
 		const ::gpk::rgbaf			ambientPerLight			= countLights ? texelColor / (10.0 * countLights) : ::gpk::rgbaf{};
 		::gpk::rgbaf				fragmentColor			= {};
-		stxp	double				rangeLight				= 10.0;
-		stxp	double				rangeLightSquared		= rangeLight * rangeLight;
-		stxp	double				rangeUnit				= 1.0 / rangeLightSquared;
+		stxp	f3_t				rangeLight				= 10.0;
+		stxp	f3_t				rangeLightSquared		= rangeLight * rangeLight;
+		stxp	f3_t				rangeUnit				= 1.0 / rangeLightSquared;
 		for(u2_t iLight = 0; iLight < countLights; ++iLight) {
 			const ::gpk::n3f2_t			lightToPoint			= lightPoints[iLight] - position;
-			const double				distanceToLight			= lightToPoint.LengthSquared();
+			const f3_t				distanceToLight			= lightToPoint.LengthSquared();
 			if(distanceToLight > rangeLightSquared)
 				continue;
 			fragmentColor			+= ambientPerLight;
-			const double				lightFactor				= lightToPoint.Dot(normal);
+			const f3_t				lightFactor				= lightToPoint.Dot(normal);
 			if(lightFactor <= 0)
 				continue;
-			const double				invAttenuation			= ::std::max(0.0, 1.0 - (distanceToLight * rangeUnit));
+			const f3_t				invAttenuation			= ::std::max(0.0, 1.0 - (distanceToLight * rangeUnit));
 			fragmentColor			+= (texelColor * lightColors[iLight]) * (invAttenuation);
 		}
 		countPixels += funcSetPixel(targetPixels, pixelCoord, (texelColor * .2 + (texelColor * lightFactorDirectional).Clamp() + fragmentColor.Clamp()).Clamp());
@@ -385,7 +388,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::err_t			gpk::drawPixels
+gpk::err_t 		gpk::drawPixels
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::tri3f2_t			& triangleWorld
 	, const ::gpk::n3f2_t			& normal
@@ -401,7 +404,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return gpk::drawPixels(targetPixels, triangleWorld, normal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, setPixel);
 }
 
-::gpk::err_t			gpk::drawQuadTriangle
+gpk::err_t 		gpk::drawQuadTriangle
 	( const ::gpk::n2u2_t			& targetSize
 	, const ::gpk::tri3f2_t		& triangleScreen
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
@@ -411,7 +414,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawTriangle(targetSize, triangleScreen, pixelCoords, pixelVertexWeights, depthBuffer);
 }
 
-::gpk::err_t			gpk::drawQuadTriangle
+gpk::err_t 		gpk::drawQuadTriangle
 	( const ::gpk::n2u2_t			& targetSize
 	, ::gpk::tri3f2_t				triangle
 	, const ::gpk::m4f2_t			& matrixTransformVP
@@ -428,7 +431,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawQuadTriangle(targetSize, triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 }
 
-::gpk::err_t			gpk::drawQuadTriangle
+gpk::err_t 		gpk::drawQuadTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryQuads	& geometry
 	, const int						iTriangle
@@ -445,7 +448,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawQuadTriangle(targetPixels, geometry, iTriangle, matrixTransform, matrixTransformVP, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, depthBuffer, setPixel);
 }
 
-::gpk::err_t			gpk::drawQuadTriangle
+gpk::err_t 		gpk::drawQuadTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryQuads	& geometry
 	, const int						iTriangle
@@ -470,7 +473,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawPixels(targetPixels, triangleWorld, xnormal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, funcSetPixel);
 }
 
-::gpk::err_t			gpk::drawQuadTriangle
+gpk::err_t 		gpk::drawQuadTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryQuads	& geometry
 	, const int						iTriangle
@@ -492,7 +495,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	)
 		return 0;
 
-	double						lightFactor			= normal.Dot(lightVector);
+	f3_t						lightFactor			= normal.Dot(lightVector);
 
 	s2_t						countPixels			= 0;
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
@@ -503,7 +506,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::err_t			gpk::drawTriangle
+gpk::err_t 		gpk::drawTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryTriangles	& geometry
 	, const int						iTriangle
@@ -531,13 +534,13 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
-		double						lightFactor				= normal.Dot(lightVector);
+		f3_t						lightFactor				= normal.Dot(lightVector);
 		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, color * lightFactor);
 	}
 	return countPixels;
 }
 
-::gpk::err_t			gpk::drawTriangle
+gpk::err_t 		gpk::drawTriangle
 	( const ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryTriangles	& geometry
 	, const int							iTriangle
@@ -568,7 +571,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
 
-		double						lightFactor				= normal.Dot(lightVector);
+		f3_t						lightFactor				= normal.Dot(lightVector);
 
 		::gpk::n2f2_t				texCoord				= triangleTexCoords.A * vertexWeights.A;
 		texCoord				+= triangleTexCoords.B * vertexWeights.B;
@@ -579,7 +582,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::err_t			gpk::drawTriangle
+gpk::err_t 		gpk::drawTriangle
 	( const ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryTriangles	& geometry
 	, const int							iTriangle
@@ -616,7 +619,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
-		double						lightFactorDirectional	= normal.Dot(lightVector);
+		f3_t						lightFactorDirectional	= normal.Dot(lightVector);
 		::gpk::n3f2_t				position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
 		::gpk::n2f2_t				texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
 		::gpk::rgbaf				texelColor				= textureImage[(u2_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(u2_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x];
@@ -628,10 +631,10 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 			::gpk::n3f2_t				lightToPoint			= light.Position - position;
 			::gpk::n3f2_t				vectorToLight			= lightToPoint;
 			vectorToLight.Normalize();
-			double						lightFactorPoint		= vectorToLight.Dot(normal);
+			f3_t						lightFactorPoint		= vectorToLight.Dot(normal);
 			if(lightToPoint.Length() > light.Range || lightFactorPoint <= 0)
 				continue;
-			double						invAttenuation			= ::std::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
+			f3_t						invAttenuation			= ::std::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
 			fragmentColor			+= ::gpk::rgbaf{texelColor * lightColors[iLight] * invAttenuation * .5}.Clamp();
 		}
 		 (void)lightColor;

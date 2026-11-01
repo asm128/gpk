@@ -24,8 +24,8 @@
 #define GPK_MODULE_FUNCTION_NAME(functionName)	GPK_func_##functionName
 
 #define GPK_DECLARE_MODULE_FUNCTION(functionName, ...) 																	\
-	extern "C"	::gpk::err_t		 GPK_STDCALL			functionName									(__VA_ARGS__);	\
-	typedef		::gpk::err_t		(GPK_STDCALL			* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);	\
+	extern "C"	gpk::err_t 	 GPK_STDCALL			functionName									(__VA_ARGS__);	\
+	typedef		gpk::err_t 	(GPK_STDCALL			* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);	\
 
 #if defined(GPK_WINDOWS)
 #	define	GPK_LOAD_MODULE(moduleName)								LoadLibraryA	(moduleName)
@@ -49,8 +49,8 @@
 #endif
 
 /*#define GPK_DECLARE_MODULE_EXPORT_FUNCTION(functionName, ...) 															\
-//	extern "C"	::gpk::err_t		 GPK_MODULE_API_EXPORT	functionName									(__VA_ARGS__);	\
-//	typedef		::gpk::err_t		(GPK_MODULE_API_EXPORT	* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);
+//	extern "C"	gpk::err_t 	 GPK_MODULE_API_EXPORT	functionName									(__VA_ARGS__);	\
+//	typedef		gpk::err_t 	(GPK_MODULE_API_EXPORT	* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);
 */
 namespace gpk
 {

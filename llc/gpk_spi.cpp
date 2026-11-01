@@ -1,16 +1,16 @@
 #include "gpk_spi.h"
 #include "gpk_platform_error.h"
 
-::gpk::err_t	gpk::spiInit	(SSPIDevice & device) {
+gpk::err_t gpk::spiInit	(SSPIDevice & device) {
 	(void)device;
 	return 0;
 }
-::gpk::err_t	gpk::spiLoad	(SSPIDevice & host, u0_t pin, au0_t  & data, u2_t registerIndex, u2_t registerCount, u2_t timeout, BUS_MODE mode) {
+gpk::err_t gpk::spiLoad	(SSPIDevice & host, u0_t pin, au0_t  & data, u2_t registerIndex, u2_t registerCount, u2_t timeout, BUS_MODE mode) {
 	if_fail_fe(data.resize(registerCount));
 	if_fail_fe(spiLoad(host, pin, *(vu0_t*)&data, registerIndex, registerCount, timeout, mode));
 	return 0;
 }
-::gpk::err_t	gpk::spiLoad	(SSPIDevice & host, u0_t pin, vu0_t & data, u2_t registerIndex, u2_t registerCount, u2_t timeout, BUS_MODE mode) {
+gpk::err_t gpk::spiLoad	(SSPIDevice & host, u0_t pin, vu0_t & data, u2_t registerIndex, u2_t registerCount, u2_t timeout, BUS_MODE mode) {
 #ifdef GPK_ST
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {
@@ -26,7 +26,7 @@
 	return -1;
 #endif
 }
-::gpk::err_t	gpk::spiSave		(SSPIDevice & host, u0_t pin, vcu0_c & data, u2_t registerIndex, u2_t timeout, BUS_MODE mode) {
+gpk::err_t gpk::spiSave		(SSPIDevice & host, u0_t pin, vcu0_c & data, u2_t registerIndex, u2_t timeout, BUS_MODE mode) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {

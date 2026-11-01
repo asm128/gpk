@@ -1,6 +1,6 @@
 #include "gpk_geometry_draw.h"
 
-::gpk::err_t			gpk::drawTriangle
+gpk::err_t 		gpk::drawTriangle
 	( const ::gpk::g8bgra				targetPixels
 	, const ::gpk::SGeometryBuffers		& geometry
 	, const int							iTriangle
@@ -48,7 +48,7 @@
 
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
-		double						lightFactorDirectional	= normal.Dot(lightVector);
+		f3_t						lightFactorDirectional	= normal.Dot(lightVector);
 		::gpk::n3f2_t				position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
 		::gpk::n2f2_t				texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
 		::gpk::rgbaf				texelColor				= textureImage[(u2_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(u2_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x];
@@ -60,10 +60,10 @@
 			::gpk::n3f2_t				lightToPoint			= light.Position - position;
 			::gpk::n3f2_t				vectorToLight			= lightToPoint;
 			vectorToLight.Normalize();
-			double						lightFactorPoint		= vectorToLight.Dot(normal);
+			f3_t						lightFactorPoint		= vectorToLight.Dot(normal);
 			if(lightToPoint.Length() > light.Range || lightFactorPoint <= 0)
 				continue;
-			double						invAttenuation			= ::gpk::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
+			f3_t						invAttenuation			= ::gpk::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
 			fragmentColor			+= (texelColor * lightColors[iLight] * invAttenuation).Clamp();
 		}
 		 (void)lightColor;

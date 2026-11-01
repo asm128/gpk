@@ -30,7 +30,7 @@ namespace gpk
 	struct SRenderMaterial {
 		::gpk::SRenderColor		Color			= {};
 		::gpk::n3f2_t			Emission		= {};
-		float					SpecularPower	= {};
+		f2_t					SpecularPower	= {};
 	};
 	stxp size_t		SRENDERMATERIALSIZE = sizeof(SRenderMaterial);
 
@@ -41,7 +41,7 @@ namespace gpk
 		::gpk::m4f2_t			ModelInverse			= ::gpk::m4f2_t::GetIdentity();
 		::gpk::m4f2_t			ModelInverseTranspose	= ::gpk::m4f2_t::GetIdentity();
 		::gpk::n3f2_t			NodeSize				= {}; 
-		float					PaddingC				= 0;
+		f2_t					PaddingC				= 0;
 	};
 	stxp size_t		SRENDERNODECONSTANTSSIZE = sizeof(SRenderNodeConstants);
 
@@ -54,12 +54,12 @@ namespace gpk
 	struct SLightSpot {
 		::gpk::n3f2_t			Direction;
 		::gpk::SRenderColor		Color;
-		float					SpotPower;
-		float					Range;
+		f2_t					SpotPower;
+		f2_t					Range;
 	};
 	struct SLightPoint {
 		::gpk::SRenderColor		Color;
-		float					Range;
+		f2_t					Range;
 	};
 	struct SLightDirectional {
 		::gpk::n3f2_t			Direction;
@@ -90,7 +90,7 @@ namespace gpk
 
 		u2_t							size			()											const	{ return RenderNodes.size(); }
 
-		::gpk::err_t						Save			(::gpk::apod<u0_t> & output) const { 
+		gpk::err_t 					Save			(::gpk::apod<u0_t> & output) const { 
 			if_fail_fe(gpk::saveView(output, RenderNodes	));
 			if_fail_fe(gpk::saveView(output, Flags			));
 			if_fail_fe(gpk::saveView(output, Transforms		));
@@ -115,7 +115,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::err_t						Load			(::gpk::vcu0_t & input) {
+		gpk::err_t 					Load			(::gpk::vcu0_t & input) {
 			if_fail_fe(gpk::loadView(input, RenderNodes		));
 			if_fail_fe(gpk::loadView(input, Flags			));
 			if_fail_fe(gpk::loadView(input, Transforms		));
@@ -156,7 +156,7 @@ namespace gpk
 			}
 			return 0;
 		}
-		::gpk::err_t						Create		()	{
+		gpk::err_t 					Create		()	{
 			if_fail_fe(Transforms		.push_back({}));
 			if_fail_fe(BaseTransforms	.push_back({}));
 			if_fail_fe(Lights			.push_back({}));
@@ -165,7 +165,7 @@ namespace gpk
 			return RenderNodes.push_back({(u2_t)-1});
 		}
 
-		::gpk::err_t						Clone		(u2_t iNode)	{
+		gpk::err_t 					Clone		(u2_t iNode)	{
 			if_fail_fe(Transforms		.push_back(::gpk::SRenderNodeConstants					{Transforms		[iNode]}));
 			if_fail_fe(BaseTransforms	.push_back(::gpk::SRenderNodeConstants					{BaseTransforms	[iNode]}));
 			if_fail_fe(Lights			.push_back(::gpk::pobj<::gpk::apod<::gpk::SLight	>>	{Lights			[iNode]}));
@@ -174,7 +174,7 @@ namespace gpk
 			return RenderNodes.push_back(::gpk::SRenderNode{RenderNodes	[iNode]});
 		}
 
-		::gpk::err_t						Delete		(u2_t indexNode)	{
+		gpk::err_t 					Delete		(u2_t indexNode)	{
 			if_fail_fe(Transforms			.remove_unordered(indexNode));
 			if_fail_fe(BaseTransforms		.remove_unordered(indexNode));
 			if_fail_fe(Lights				.remove_unordered(indexNode));

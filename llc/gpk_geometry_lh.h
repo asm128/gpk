@@ -107,7 +107,7 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct STile {
-		float			Height	[4]	= {};
+		f2_t			Height	[4]	= {};
 		s1_t			Top			= -1;
 		s1_t			Front		= -1;
 		s1_t			Right		= -1;
@@ -125,22 +125,22 @@ namespace gpk
 
 #ifndef GPK_ATMEL
 
-	::gpk::err_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, ::gpk::n3f2_c & scale);
-	::gpk::err_t	geometryBuildGrid		(::gpk::SGeometryQuads & geometry, ::gpk::n2u1_t gridSize, ::gpk::n2f2_t gridCenter, ::gpk::n3f2_c & scale);
+	gpk::err_t geometryBuildCube		(::gpk::SGeometryQuads & geometry, ::gpk::n3f2_c & scale);
+	gpk::err_t geometryBuildGrid		(::gpk::SGeometryQuads & geometry, ::gpk::n2u1_t gridSize, ::gpk::n2f2_t gridCenter, ::gpk::n3f2_c & scale);
 
-	::gpk::err_t	geometryBuildSphere		(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radius, ::gpk::n3f2_c & gridCenter);
-	::gpk::err_t	geometryBuildCylinder	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radiusYMin, float radiusYMax, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
-	::gpk::err_t	geometryBuildHelixHalf	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
-	::gpk::err_t	geometryBuildHelix		(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
-	::gpk::err_t	geometryBuildTender		(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
-	::gpk::err_t	geometryBuildFigure0	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radius, ::gpk::n3f2_c & gridCenter);
-	::gpk::err_t	geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radius, ::gpk::n3f2_c & gridCenter);
+	gpk::err_t geometryBuildSphere		(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter);
+	gpk::err_t geometryBuildCylinder	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radiusYMin, f2_t radiusYMax, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	gpk::err_t geometryBuildHelixHalf	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	gpk::err_t geometryBuildHelix		(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	gpk::err_t geometryBuildTender		(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	gpk::err_t geometryBuildFigure0	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter);
+	gpk::err_t geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter);
 
-	::gpk::err_t	geometryBuildSphere		(::gpk::SGeometryTriangles & geometry, u2_t stacks, u2_t slices, float radius, ::gpk::n3f2_c & gridCenter);
-	::gpk::err_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f2_t & scale, const ::gpk::n3f2_t & translation);
+	gpk::err_t geometryBuildSphere		(::gpk::SGeometryTriangles & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter);
+	gpk::err_t geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f2_t & scale, const ::gpk::n3f2_t & translation);
 
-	::gpk::err_t	geometryBuildTileListFromImage	(::gpk::gc8bgra image, ::gpk::apod<STile> & out_tiles, u2_t imagePitch = 0);
-	::gpk::err_t	geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> image, ::gpk::n2f2_t gridCenter, const ::gpk::n3f2_t & scale);
+	gpk::err_t geometryBuildTileListFromImage	(::gpk::gc8bgra image, ::gpk::apod<STile> & out_tiles, u2_t imagePitch = 0);
+	gpk::err_t geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> image, ::gpk::n2f2_t gridCenter, const ::gpk::n3f2_t & scale);
 
 #endif
 

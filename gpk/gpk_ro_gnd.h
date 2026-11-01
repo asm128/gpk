@@ -11,8 +11,8 @@ namespace gpk
 #pragma pack( push, 1 )
 	// U and V TexCoords follow the same order from GAT format heights
 	struct STileSkinGND {
-		float									u[4]							= { 0, 1, 0, 1 };		//< west->east, north->south ordering; 0=left 1=right
-		float									v[4]							= { 0, 0, 1, 1 };		//< west->east, north->south ordering; 0=up 1=down
+		f2_t									u[4]							= { 0, 1, 0, 1 };		//< west->east, north->south ordering; 0=left 1=right
+		f2_t									v[4]							= { 0, 0, 1, 1 };		//< west->east, north->south ordering; 0=up 1=down
 		s1_t									TextureIndex					= -1			;		//< -1 for none
 		s1_t									LightmapIndex					= -1			;		//< -1 for none?
 		u2_t								dwColor							= 0xFFFFFFFFU	;		// a default color to set to the tile for other kind of representations
@@ -25,7 +25,7 @@ namespace gpk
 	};
 
 	struct STileGeometryGND {
-		float									fHeight[4]						;			// west->east, north->south ordering
+		f2_t									fHeight[4]						;			// west->east, north->south ordering
 		::gpk::STileFaceSkinMapping				SkinMapping						;	// <= -1 for none
 		//s1_t									Flags						= 0;				// GND v <= 1.5 // maybe a color key? a terrain property? We're going to use it to tell if the triangle is inverted.
 	};
@@ -35,7 +35,7 @@ namespace gpk
 	// 2 - Snipable
 	// 3 - Walkable - Snipable
 	struct STileNavigabilityGND {
-		float									fHeight[4]						= {}; // west->east, south->north ordering
+		f2_t									fHeight[4]						= {}; // west->east, south->north ordering
 		u0_t									Type							= 0;
 		u0_t									FlagsTop						= 0;
 		u0_t									FlagsRight						= 0;
@@ -49,15 +49,15 @@ namespace gpk
 
 	struct STiledTerrainMetricsGND {
 		::gpk::n2u2_t							Size							;	// Tile count
-		float									TileScale						;	// The size to expand the tiles
+		f2_t									TileScale						;	// The size to expand the tiles
 	};
 
 	struct STerrainWaterGND {
-		float									fSeaLevel						;	//
+		f2_t									fSeaLevel						;	//
 		s2_t									nWaterType						;	//
-		float									fWaveHeight						;	//
-		float									fWaveSpeed						;	//
-		float									fWavePitch						;	//
+		f2_t									fWaveHeight						;	//
+		f2_t									fWaveSpeed						;	//
+		f2_t									fWavePitch						;	//
 		s2_t									nAnimationSpeed					;	//
 	};
 
@@ -72,9 +72,9 @@ namespace gpk
 	};
 
 	//709655609
-	::gpk::err_t							gndFileLoad						(SGNDFileContents& loaded, ::gpk::vu0_c		& input);
-	::gpk::err_t							gndFileLoad						(SGNDFileContents& loaded, FILE				* input);
-	::gpk::err_t							gndFileLoad						(SGNDFileContents& loaded, ::gpk::vcst_c	& input);
+	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, ::gpk::vu0_c		& input);
+	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, FILE				* input);
+	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, ::gpk::vcst_c	& input);
 
 	struct SModelNodeGND {
 		::gpk::apod<::gpk::n3f2_t>				Normals			;
@@ -130,7 +130,7 @@ namespace gpk
 		, TILE_FACE_FACING_LEFT
 		};
 
-	::gpk::err_t							gndGenerateFaceGeometry
+	gpk::err_t 						gndGenerateFaceGeometry
 		( const ::gpk::apod<STileSkinGND		>	lstTileTextureData
 		, const ::gpk::apod<STileGeometryGND	>	lstTileGeometryData
 		, const ::gpk::STiledTerrainMetricsGND		tileMapMetrics
@@ -140,7 +140,7 @@ namespace gpk
 		, ::gpk::grid<::gpk::STileMapping>			& out_mapping
 		);
 
-	::gpk::err_t							blendGNDNormals		(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
+	gpk::err_t 						blendGNDNormals		(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // namespace

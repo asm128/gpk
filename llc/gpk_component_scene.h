@@ -122,7 +122,7 @@ namespace gpk {
 	};
 
 	struct SBodyVolumeOld {
-		double							Radius							= 0;
+		f3_t							Radius							= 0;
 		minmax<n3f2_t>	Limits							= {{-1, -1, -1}, {1, 1, 1}};
 		n3f2_t					Center							= {0, 0, 0};
 		BOUNDINGPRIMITIVE_TYPE	Type							= BOUNDINGPRIMITIVE_TYPE_SPHERE;
@@ -139,8 +139,8 @@ namespace gpk {
 		rgbaf			Specular						= {};
 		n3f2_t			Position						= {};
 		n3f2_t			Direction						= {};
-		double					Angle							= {};
-		float					RangeSquared					= 1;
+		f3_t					Angle							= {};
+		f2_t					RangeSquared					= 1;
 		u2_t				Type							: 3;
 		u2_t				Disabled						: 1;
 	};
@@ -149,8 +149,8 @@ namespace gpk {
 		n3f2_t			Position						= {};
 		n3f2_t			Target							= {};
 		n3f2_t			Up								= {};
-		minmax<float>	ClipPlanes						= {};
-		double					Angle							= {};
+		minmax<f2_t>	ClipPlanes						= {};
+		f3_t					Angle							= {};
 	};
 
 	struct SMaterial {
@@ -158,8 +158,8 @@ namespace gpk {
 		rgbaf			Diffuse							= {};
 		rgbaf			Specular						= {};
 		rgbaf			Emissive						= {};
-		float					SpecularFactor					= {};
-		float					Transparency					= {};
+		f2_t					SpecularFactor					= {};
+		f2_t					Transparency					= {};
 
 	};
 	struct SRenderNodeTransform {

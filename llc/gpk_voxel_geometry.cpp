@@ -3,7 +3,7 @@
 GPK_USING_TYPEINT();
 
 
-static	::gpk::err_t	geometryVoxelFace
+static	gpk::err_t geometryVoxelFace
 	( ::gpk::SGeometryBuffers						& geometry
 	, const ::gpk::n3f2_t							& voxelPos
 	, const ::gpk::view<const ::gpk::n3f2_t>	& rawVertices
@@ -23,7 +23,7 @@ static	::gpk::err_t	geometryVoxelFace
 	return 0;
 }
 
-::gpk::err_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<u0_t> & voxelMap) {
+gpk::err_t 		gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<u0_t> & voxelMap) {
 	const ::gpk::n3<u0_t>	dimensions				= voxelMap.Dimensions;
 
 	::gpk::SGeometryBuffers	& geometry				= output.Geometry;
@@ -66,12 +66,12 @@ static	::gpk::err_t	geometryVoxelFace
 				if(voxel.ColorIndex != iValue)
 					continue;
 
-				aabbLimits.Min.x = ::gpk::min(aabbLimits.Min.x, (float)voxel.Position.x);
-				aabbLimits.Min.y = ::gpk::min(aabbLimits.Min.y, (float)voxel.Position.y);
-				aabbLimits.Min.z = ::gpk::min(aabbLimits.Min.z, (float)voxel.Position.z);
-				aabbLimits.Max.x = ::gpk::max(aabbLimits.Max.x, (float)voxel.Position.x);
-				aabbLimits.Max.y = ::gpk::max(aabbLimits.Max.y, (float)voxel.Position.y);
-				aabbLimits.Max.z = ::gpk::max(aabbLimits.Max.z, (float)voxel.Position.z);
+				aabbLimits.Min.x = ::gpk::min(aabbLimits.Min.x, (f2_t)voxel.Position.x);
+				aabbLimits.Min.y = ::gpk::min(aabbLimits.Min.y, (f2_t)voxel.Position.y);
+				aabbLimits.Min.z = ::gpk::min(aabbLimits.Min.z, (f2_t)voxel.Position.z);
+				aabbLimits.Max.x = ::gpk::max(aabbLimits.Max.x, (f2_t)voxel.Position.x);
+				aabbLimits.Max.y = ::gpk::max(aabbLimits.Max.y, (f2_t)voxel.Position.y);
+				aabbLimits.Max.z = ::gpk::max(aabbLimits.Max.z, (f2_t)voxel.Position.z);
 
 				::gpk::bgra							color						= rgba[iValue ? iValue - 1 : 0];
 				u0_t								adjacentValue				= {};

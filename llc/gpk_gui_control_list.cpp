@@ -17,7 +17,7 @@
 	return controlId;
 }
 
-::gpk::err_t			gpk::controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
+gpk::err_t 		gpk::controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	menu					= {};
 	if_fail_fe(menu.IdControl = ::gpk::controlCreate(gui));
 	gui.Controls.Placement	[menu.IdControl].Border				= {};
@@ -28,7 +28,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
+gpk::err_t 		gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	const ::gpk::SRasterFont	& selectedFont			= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
 	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const u2_t				idControl				= menu.IdControls[iItem];
@@ -78,7 +78,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::controlListPush	(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcst_t& text, s3_t eventCode)				{
+gpk::err_t 		gpk::controlListPush	(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcst_t& text, s3_t eventCode)				{
 	if(menu.IdControl == -1)
 		if_fail_fe(gpk::controlListInitialize(gui, menu));
 
@@ -96,7 +96,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
+gpk::err_t 		gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
 	const ::gpk::n2f3_t			targetSize					= {256.0, 256.0};
 	palette.IdControl		= ::gpk::controlCreate(gui);
 
@@ -108,7 +108,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::g8bgra& colors)			{
+gpk::err_t 		gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::g8bgra& colors)			{
 	if(-1 == palette.IdControl)
 		if_fail_e(::gpk::paletteGridInitialize(gui, palette));
 

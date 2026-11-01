@@ -12,7 +12,7 @@
 
 namespace gpk
 {
-	stin ::gpk::err_t	fopen_s		(FILE** out_fp, const sc_t* pFilename, const sc_t* mode) {
+	stin gpk::err_t fopen_s		(FILE** out_fp, const sc_t* pFilename, const sc_t* mode) {
 		if_true_vef(-1, 0 == out_fp, "File pointer cannot be a null pointer. File name: %s.", pFilename);
 #if defined(GPK_WINDOWS)
 		return ::fopen_s(out_fp, pFilename, mode);

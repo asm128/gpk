@@ -1,8 +1,13 @@
 #include "gpk_sun.h"
 #include <ctime>
 
-double					gpk::calcSunlightFactor(double daylightRatioExtra, u2_t daylightOffsetMinutes)	{ 
-	const double				sunAngleFactor			= ::gpk::calcSunPosition().Dot(::gpk::n3f2_t{0, 1}.RotateZ(::gpk::SCALE_DAY_MINUTES_TO_RADIANS * daylightOffsetMinutes));
+GPK_USING_TYPEINT	();
+GPK_USING_N2		();
+GPK_USING_N3		();
+
+
+f3_t					gpk::calcSunlightFactor(f3_t daylightRatioExtra, u2_t daylightOffsetMinutes)	{ 
+	const f3_t				sunAngleFactor			= ::gpk::calcSunPosition().Dot(::gpk::n3f2_t{0, 1}.RotateZ(::gpk::SCALE_DAY_MINUTES_TO_RADIANS * daylightOffsetMinutes));
 	return ::gpk::clamped(sunAngleFactor + daylightRatioExtra, 0.0, 1.0);
 }
 

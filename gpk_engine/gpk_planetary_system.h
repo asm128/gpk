@@ -8,21 +8,21 @@
 
 namespace gpk
 {
-	typedef	::gpk::lmpod<::gpk::view<sc_t>, ::gpk::SCelestialBody>	SCelestialBodyMap;
+	typedef	lmpod<vcst_t, SCelestialBody>	SCelestialBodyMap;
 
 	struct SPlanetarySystem {
-		::gpk::SCelestialBodyMap			Body;
-		::gpk::apod<::gpk::CELESTIAL_BODY>	Type;
-		::gpk::as2_t						Parent;
+		SCelestialBodyMap			Body;
+		apod<CELESTIAL_BODY>	Type;
+		as2_t							Parent;
 
-		::gpk::err_t				Save			(::gpk::au0_t & output)	const	{ 
+		err_t				Save			(au0_t & output)	const	{ 
 			if_fail_fe(Body.Save(output));
 			if_fail_fe(gpk::saveView(output, Type));
 			if_fail_fe(gpk::saveView(output, Parent));
 			return 0;
 		}
 
-		::gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
+		err_t				Load			(vcu0_t & input)	{ 
 			if_fail_fe(Body.Load(input));
 			if_fail_fe(gpk::loadView(input, Type));
 			if_fail_fe(gpk::loadView(input, Parent));
@@ -30,8 +30,8 @@ namespace gpk
 		}
 	};
 
-	::gpk::err_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, const ::gpk::SJSONReader & jsonData);
-	::gpk::err_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::view<sc_t> jsonFilePath);
+	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, const SJSONReader & jsonData);
+	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, vcst_t jsonFilePath);
 } // namespace
 
 #endif // GPK_PLANETARY_SYSTEM_H_23701

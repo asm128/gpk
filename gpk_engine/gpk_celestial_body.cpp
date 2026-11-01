@@ -1,7 +1,7 @@
 #include "gpk_celestial_body.h"
 #include "gpk_stdstring.h"
 
-::gpk::err_t			gpk::printStar		(const ::gpk::SDetailStar & body) {
+gpk::err_t 		gpk::printStar		(const ::gpk::SDetailStar & body) {
 	info_printf(
 		" \nGm					: %u"
 		" \nVolume				: %u"
@@ -39,7 +39,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::printPlanet		(const ::gpk::SDetailPlanet & body) {
+gpk::err_t 		gpk::printPlanet		(const ::gpk::SDetailPlanet & body) {
 	info_printf(
 		" \nGravity					: %f"
 		" \nSurfacePressure			: %u"
@@ -131,7 +131,7 @@ gpk::err_t		gpk::loadPlanet		(SDetailPlanet & body, cnst SJSONReader & jsonData,
 	return 0; 
 }
 
-::gpk::err_t			gpk::loadStar		(::gpk::SDetailStar & body, const ::gpk::SJSONReader & jsonData, s2_t jsonIndexStellarBody) { 
+gpk::err_t 		gpk::loadStar		(::gpk::SDetailStar & body, const ::gpk::SJSONReader & jsonData, s2_t jsonIndexStellarBody) { 
 	if_fail_w(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "gm"						, body.Gm					));
 	if_fail_w(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "volume"					, body.Volume				));
 	if_fail_w(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "volumetric_mean_radius"	, body.VolumetricMeanRadius	));
@@ -151,7 +151,7 @@ gpk::err_t		gpk::loadPlanet		(SDetailPlanet & body, cnst SJSONReader & jsonData,
 	return 0; 
 }
 
-::gpk::err_t			gpk::loadCelestialBody(::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, s2_t jsonIndexStellarBody) { 
+gpk::err_t 		gpk::loadCelestialBody(::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, s2_t jsonIndexStellarBody) { 
 	if_fail_w(::gpk::jsonObjectGetAsDecimal(jsonData, jsonIndexStellarBody, "escape_velocity"		, body.EscapeVelocity		));
 	if_fail_w(::gpk::jsonObjectGetAsDecimal(jsonData, jsonIndexStellarBody, "mass"					, body.Mass					));
 	if_fail_w(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "diameter"				, body.Diameter				));

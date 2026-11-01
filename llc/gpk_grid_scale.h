@@ -6,7 +6,7 @@
 namespace gpk
 {
 	tplt<tpnm T>
-	::gpk::err_t					grid_scale_fast				(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const float xFactor, const float yFactor) {
+	gpk::err_t 				grid_scale_fast				(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const f2_t xFactor, const f2_t yFactor) {
 		for(u2_t y = 0; y < dst.metrics().y; ++y)
 		for(u2_t x = 0; x < dst.metrics().x; ++x)
 			dst[y][x]						= src[(u2_t)(y * yFactor)][(u2_t)(x * xFactor)];
@@ -14,14 +14,14 @@ namespace gpk
 	}
 
 	tplt<tpnm T>
-	::gpk::err_t					grid_scale					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src) {
-		const float							xFactor						= src.metrics().x / (float)dst.metrics().x;
-		const float							yFactor						= src.metrics().y / (float)dst.metrics().y;
+	gpk::err_t 				grid_scale					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src) {
+		const f2_t							xFactor						= src.metrics().x / (f2_t)dst.metrics().x;
+		const f2_t							yFactor						= src.metrics().y / (f2_t)dst.metrics().y;
 		return grid_scale_fast(dst, src, xFactor, yFactor);
 	}
 
 	tplt<tpnm T>
-	::gpk::err_t					grid_scale					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const float xFactor, const float yFactor) {
+	gpk::err_t 				grid_scale					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const f2_t xFactor, const f2_t yFactor) {
 		for(u2_t y = 0; y < dst.metrics().y; ++y)
 		for(u2_t x = 0; x < dst.metrics().x; ++x) {
 			const u2_t						xSrc						= (u2_t)(x * yFactor);
@@ -35,12 +35,12 @@ namespace gpk
 	}
 
 	tplt<tpnm T>
-	::gpk::err_t					grid_scale_alpha			(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const ::gpk::n2<s2_t> & dstPos, const ::gpk::n2<s2_t> & dstSize) {
+	gpk::err_t 				grid_scale_alpha			(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const ::gpk::n2<s2_t> & dstPos, const ::gpk::n2<s2_t> & dstSize) {
 		const ::gpk::n2<s2_t>			srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (s2_t)dst.metrics().y); y < yStop; ++y) {
-			::gpk::n2<s2_t>					sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
+			::gpk::n2<s2_t>					sourcePixelCoord			= {0, (int)((y - (f3_t)dstPos.y) / dstSize.y * (f3_t)srcSize.y)};
 			for(int x = dstPos.x, xStop = ::gpk::min(dstPos.x + dstSize.x, (s2_t)dst.metrics().x); x < xStop; ++x) {
-				sourcePixelCoord.x				= (int)((x - (double)dstPos.x) / dstSize.x * (double)srcSize.x);
+				sourcePixelCoord.x				= (int)((x - (f3_t)dstPos.x) / dstSize.x * (f3_t)srcSize.x);
 				T									& colorDst					= dst[y][x];
 				const T								& colorSrc					= src[sourcePixelCoord.y][sourcePixelCoord.x];
 				dst[y][x]						= ::gpk::interpolate_linear(colorDst, colorSrc, colorSrc.a / 255.0);
@@ -50,12 +50,12 @@ namespace gpk
 	}
 
 	tplt<tpnm T>
-	::gpk::err_t					grid_scale					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const ::gpk::n2<s2_t> & dstPos, const ::gpk::n2<s2_t> & dstSize) {
+	gpk::err_t 				grid_scale					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const ::gpk::n2<s2_t> & dstPos, const ::gpk::n2<s2_t> & dstSize) {
 		const ::gpk::n2<s2_t>			srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (s2_t)dst.metrics().y); y < yStop; ++y) {
-			::gpk::n2<s2_t>					sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
+			::gpk::n2<s2_t>					sourcePixelCoord			= {0, (int)((y - (f3_t)dstPos.y) / dstSize.y * (f3_t)srcSize.y)};
 			for(int x = dstPos.x, xStop = ::gpk::min(dstPos.x + dstSize.x, (s2_t)dst.metrics().x); x < xStop; ++x) {
-				sourcePixelCoord.x				= (int)((x - (double)dstPos.x) / dstSize.x * (double)srcSize.x);
+				sourcePixelCoord.x				= (int)((x - (f3_t)dstPos.x) / dstSize.x * (f3_t)srcSize.x);
 				dst[y][x]						= src[sourcePixelCoord.y][sourcePixelCoord.x];
 			}
 		}

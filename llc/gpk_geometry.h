@@ -44,8 +44,8 @@ namespace gpk
 		::gpk::n3f2_t		Origin			= {};
 		::gpk::n2u1_t		CellCount		= {32, 32};
 		bool				Reverse			= false;
-		float				Circumference	= 1.0f;
-		float				Radius			= .5f;
+		f2_t				Circumference	= 1.0f;
+		f2_t				Radius			= .5f;
 		::gpk::quatf2_t		Orientation		= {0, 0, 0, 1};
 	
 		GPK_DEFAULT_OPERATOR_C(SParamsSphere, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius);
@@ -54,8 +54,8 @@ namespace gpk
 	struct SParamsDisc { 
 		::gpk::n3f2_t		Origin			= {};
 		u1_t			Slices			= 16;
-		float				Circumference	= 1.0f;
-		float				Radius			= .5f;
+		f2_t				Circumference	= 1.0f;
+		f2_t				Radius			= .5f;
 		::gpk::quatf2_t		Orientation		= {0, 0, 0, 1};
 	
 		GPK_DEFAULT_OPERATOR_C(SParamsDisc, Origin == other.Origin && Slices == other.Slices && Circumference == other.Circumference && Radius == other.Radius);
@@ -75,7 +75,7 @@ namespace gpk
 		::gpk::n3f2_t		Origin			= {};
 		u1_t			Slices			= 16;
 		bool				Reverse			= false;
-		float				Circumference	= 1.0f;
+		f2_t				Circumference	= 1.0f;
 		::gpk::minmaxf2_t	Radius			= {.45f, .5f};
 		::gpk::quatf2_t		Orientation		= {0, 0, 0, 1};
 	
@@ -86,10 +86,10 @@ namespace gpk
 		::gpk::n3f2_t		Origin			= {};
 		::gpk::n2u1_t		CellCount		= {16, 1};
 		bool				Reverse			= false;
-		float				Circumference	= 1.0f;
+		f2_t				Circumference	= 1.0f;
 		::gpk::minmaxf2_t	RadiusYMin		= {.45f, .5f};
 		::gpk::minmaxf2_t	RadiusYMax		= {.45f, .5f};
-		float				Height			= 1;
+		f2_t				Height			= 1;
 		::gpk::quatf2_t		Orientation		= {0, 0, 0, 1};
 
 		GPK_DEFAULT_OPERATOR_C(SParamsTube, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && RadiusYMin == other.RadiusYMin && RadiusYMax == other.RadiusYMax && Height == other.Height);
@@ -99,9 +99,9 @@ namespace gpk
 		::gpk::n3f2_t		Origin			= {};
 		::gpk::n2u1_t		CellCount		= {16, 2};
 		bool				Reverse			= false;
-		float				Circumference	= 1.0f;
+		f2_t				Circumference	= 1.0f;
 		::gpk::minmaxf2_t	Radius			= {.5f, .5f};
-		float				Height			= 1;
+		f2_t				Height			= 1;
 		::gpk::quatf2_t		Orientation		= {0, 0, 0, 1};
 
 		GPK_DEFAULT_OPERATOR_C(SParamsCylinderWall, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius && Height == other.Height); 
@@ -122,7 +122,7 @@ namespace gpk
 		::gpk::n3f2_t		Origin			= {0, .5f};
 		::gpk::n2u1_t		CellCount		= {9, 9};
 		::gpk::minmaxf2_t	Radius			= {.5f, .5f};	// TODO: Not working
-		float				Length			= 1;
+		f2_t				Length			= 1;
 		::gpk::quatf2_t		Orientation		= {0, 0, 0, 1};
 
 		GPK_DEFAULT_OPERATOR_C(SParamsHelix, Origin == other.Origin && CellCount == other.CellCount && Radius == other.Radius && Length == other.Length); 
@@ -131,19 +131,19 @@ namespace gpk
 #pragma pack(pop)
 
 #ifndef GPK_ATMEL
-	::gpk::err_t		geometryBuildCircleSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle			& params);
-	::gpk::err_t		geometryBuildDisc			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc			& params);
-	::gpk::err_t		geometryBuildBox			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox			& params);
-	::gpk::err_t		geometryBuildSphere			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere			& params);
-	::gpk::err_t		geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
-	::gpk::err_t		geometryBuildCylinder		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
-	::gpk::err_t		geometryBuildGrid			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid			& params);
-	::gpk::err_t		geometryBuildHelixHalf		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);	// TODO: Rewrite
-	::gpk::err_t		geometryBuildHelix			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
-	::gpk::err_t		geometryBuildFigure0		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
-	::gpk::err_t		geometryBuildRingSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
-	::gpk::err_t		geometryBuildRingFlat		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
-	::gpk::err_t		geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube			& params);
+	gpk::err_t 	geometryBuildCircleSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle			& params);
+	gpk::err_t 	geometryBuildDisc			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc			& params);
+	gpk::err_t 	geometryBuildBox			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox			& params);
+	gpk::err_t 	geometryBuildSphere			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere			& params);
+	gpk::err_t 	geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
+	gpk::err_t 	geometryBuildCylinder		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
+	gpk::err_t 	geometryBuildGrid			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid			& params);
+	gpk::err_t 	geometryBuildHelixHalf		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);	// TODO: Rewrite
+	gpk::err_t 	geometryBuildHelix			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
+	gpk::err_t 	geometryBuildFigure0		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
+	gpk::err_t 	geometryBuildRingSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
+	gpk::err_t 	geometryBuildRingFlat		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
+	gpk::err_t 	geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube			& params);
 #endif
 } // namespace
 

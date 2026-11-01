@@ -16,7 +16,7 @@ GPK_USING_TYPEINT();
 //#define GPK_JSON_EXPRESSION_DEBUG
 
 #if defined(GPK_JSON_EXPRESSION_DEBUG)
-static	::gpk::err_t	printNode		(const ::gpk::SExpressionNode* node, const ::gpk::vcst_t & expression)			{
+static	gpk::err_t printNode		(const ::gpk::SExpressionNode* node, const ::gpk::vcst_t & expression)			{
 	const ::gpk::apod<sc_t>					viewPrintable					= ::gpk::string({&expression[node->Token->Span.Begin], node->Token->Span.End - node->Token->Span.Begin});
 	const ::gpk::vcst_t						viewTokenType					= ::gpk::get_value_label(node->Token->Type);
 	info_printf("Entering expression node type: %u (%s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %s", node->Token->Type, viewTokenType.begin(), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, viewPrintable.begin());
@@ -27,7 +27,7 @@ static	::gpk::err_t	printNode		(const ::gpk::SExpressionNode* node, const ::gpk:
 }
 #endif
 
-static	::gpk::err_t	evaluateJSONBool		(const ::gpk::SJSONNode & jsonToEvaluate, ::gpk::vcst_c & boolView)	{
+static	gpk::err_t evaluateJSONBool		(const ::gpk::SJSONNode & jsonToEvaluate, ::gpk::vcst_c & boolView)	{
 	s2_t												evalResult								= -1;
 	if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_NULL)
 		evalResult										= 0;
@@ -51,8 +51,8 @@ static	::gpk::err_t	evaluateJSONBool		(const ::gpk::SJSONNode & jsonToEvaluate, 
 	return evalResult;
 }
 
-static	::gpk::err_t	evaluateBoolResult		(const ::gpk::SJSONNode * jsonToEvaluate, s2_t indexNodeJSON, const ::gpk::vcst_t & boolView)	{
-	::gpk::err_t				evalResult								= -1;
+static	gpk::err_t evaluateBoolResult		(const ::gpk::SJSONNode * jsonToEvaluate, s2_t indexNodeJSON, const ::gpk::vcst_t & boolView)	{
+	gpk::err_t 			evalResult								= -1;
 	if(indexNodeJSON < 0)
 		evalResult										= (0 == boolView.size() || boolView == ::gpk::strZero || boolView == ::gpk::strBool[0] ||  boolView == ::gpk::strNull || boolView == ::gpk::strEmptyObj || boolView == ::gpk::strEmptyArr) ? 0 : 1;
 	else if(indexNodeJSON >= 0)
@@ -60,7 +60,7 @@ static	::gpk::err_t	evaluateBoolResult		(const ::gpk::SJSONNode * jsonToEvaluate
 	return evalResult;
 }
 
-static	::gpk::err_t	evaluateAndClearBoolCarry				(::gpk::SEvaluationStepResult & lastResult, const ::gpk::SJSONNode * jsonToEvaluate, s2_t indexNodeJSON, const ::gpk::vcst_t & boolView)	{
+static	gpk::err_t evaluateAndClearBoolCarry				(::gpk::SEvaluationStepResult & lastResult, const ::gpk::SJSONNode * jsonToEvaluate, s2_t indexNodeJSON, const ::gpk::vcst_t & boolView)	{
 	if(false == lastResult.LastValueCarry)
 		return ::evaluateBoolResult(jsonToEvaluate, (s2_t)indexNodeJSON, boolView);
 	else {
@@ -69,9 +69,9 @@ static	::gpk::err_t	evaluateAndClearBoolCarry				(::gpk::SEvaluationStepResult &
 	}
 }
 
-static	::gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, const ::gpk::u2_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output);
+static	gpk::err_t evaluateExpression						(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, const ::gpk::u2_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output);
 
-static	::gpk::err_t	evaluateExpressionAndBoolResult			(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, ::gpk::u2_t indexExpressionToken, const ::gpk::SJSONReader & jsonInput, const s2_t indexJSONNode)	{
+static	gpk::err_t evaluateExpressionAndBoolResult			(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, ::gpk::u2_t indexExpressionToken, const ::gpk::SJSONReader & jsonInput, const s2_t indexJSONNode)	{
 	::gpk::vcst_t								viewOfExpressionResult					= {};
 	const s2_t										indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, indexExpressionToken, jsonInput, indexJSONNode, viewOfExpressionResult);
 	if_true_fef(-1 == indexOfResolvedSubExpression, "Failed to resolve subexpression: '%s'.", ::gpk::string(readerExpression.View[indexExpressionToken]).begin());
@@ -80,7 +80,7 @@ static	::gpk::err_t	evaluateExpressionAndBoolResult			(::gpk::SJSONExpressionSol
 
 
 // Returns an index pointing to the resulting JSON element, or a -0xF - the index of the resulting expression element.
-static	::gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, const ::gpk::u2_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output)	{
+static	gpk::err_t evaluateExpression						(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, const ::gpk::u2_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output)	{
 	if_true_fef(indexNodeExpression >= readerExpression.Tree.size() || 0 == readerExpression.Tree[indexNodeExpression], "Invalid expression node: %u.", indexNodeExpression);
 	if_true_fef(indexNodeJSON >= inputJSON.Tree.size() || 0 == inputJSON.Tree[indexNodeJSON], "Invalid input json or index node: %u.", indexNodeJSON);
 	const ::gpk::SExpressionNode	* nodeExpression					= readerExpression.Tree[indexNodeExpression];	// Take this
@@ -268,7 +268,7 @@ static	::gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& resul
 	return lastResult.IndexJSONResult;
 }
 
-::gpk::err_t			gpk::jsonExpressionResolve				(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::SJSONExpressionSolver& results, ::gpk::vcst_t & output) {
+gpk::err_t 		gpk::jsonExpressionResolve				(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::SJSONExpressionSolver& results, ::gpk::vcst_t & output) {
 	const ::gpk::aobj<::gpk::vcst_t>	& expressionViews						= reader.View;
 	for(::gpk::u2_t iView = 0; iView < expressionViews.size(); ++iView) {
 		const ::gpk::vcst_t				& viewExpression						= expressionViews[iView];
@@ -298,15 +298,15 @@ static	::gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& resul
 	return jsonNodeResultOfEvaluation;
 }
 
-::gpk::err_t			gpk::jsonExpressionResolve				(::gpk::vcst_t expression, const ::gpk::SJSONReader & inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output)								{
+gpk::err_t 		gpk::jsonExpressionResolve				(::gpk::vcst_t expression, const ::gpk::SJSONReader & inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output)								{
 	::gpk::SExpressionReader	reader;
 	if_fail_fef(gpk::expressionReaderParse(reader, expression), "Failed to read JSONeN expression: '%s'.", ::gpk::string(expression).begin());
 	return ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, output);
 }
 
-::gpk::err_t			gpk::jsonExpressionResolve				(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output){
+gpk::err_t 		gpk::jsonExpressionResolve				(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output){
 	gpk::SJSONExpressionSolver	results;
-	::gpk::err_t				jsonNodeResultOfEvaluation;
+	gpk::err_t 			jsonNodeResultOfEvaluation;
 	jsonNodeResultOfEvaluation = ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, results, output);
 	if_true_fef(-1 == jsonNodeResultOfEvaluation, "%s", "Failed to resolve JSON expression.");
 	for(::gpk::u2_t iResult = 0; iResult < results.Results.size(); ++iResult)
@@ -314,7 +314,7 @@ static	::gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& resul
 	return jsonNodeResultOfEvaluation;
 }
 
-::gpk::err_t			gpk::jsonStringFormat					(::gpk::vcst_t format, const ::gpk::SJSONReader& inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::asc_t & output)					{
+gpk::err_t 		gpk::jsonStringFormat					(::gpk::vcst_t format, const ::gpk::SJSONReader& inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::asc_t & output)					{
 	rtrn ::gpk::expressionStringFormat(format, [&](::gpk::vcst_c & expression, ::gpk::vcst_t & resolved) {
 		rtrn ::gpk::jsonExpressionResolve(expression, inputJSON, indexNodeJSON, resolved);
 	}, output);

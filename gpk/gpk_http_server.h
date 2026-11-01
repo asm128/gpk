@@ -14,8 +14,8 @@ namespace gpk
 		s2_t								Timeout						= 3000000;	// Kill clients timeout
 	};
 
-	::gpk::err_t						serverStart					(::gpk::SHTTPServer& serverInstance, u1_t port);
-	::gpk::err_t						serverStop					(::gpk::SHTTPServer& serverInstance);
+	gpk::err_t 					serverStart					(::gpk::SHTTPServer& serverInstance, u1_t port);
+	gpk::err_t 					serverStop					(::gpk::SHTTPServer& serverInstance);
 
 } // namespace
 

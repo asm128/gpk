@@ -74,13 +74,13 @@ namespace gpk
 		bool								FullScreen				: 1;
 	};
 
-	::gpk::err_t						windowPresentTarget		(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
-	::gpk::err_t						windowUpdate			(::gpk::SWindow & windowInstance);
-	::gpk::err_t						windowUpdateTick		(::gpk::SWindow & windowInstance);
-	::gpk::err_t						fullScreenExit			(::gpk::SWindow & windowInstance);
-	::gpk::err_t						fullScreenEnter			(::gpk::SWindow & windowInstance);
+	gpk::err_t 					windowPresentTarget		(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
+	gpk::err_t 					windowUpdate			(::gpk::SWindow & windowInstance);
+	gpk::err_t 					windowUpdateTick		(::gpk::SWindow & windowInstance);
+	gpk::err_t 					fullScreenExit			(::gpk::SWindow & windowInstance);
+	gpk::err_t 					fullScreenEnter			(::gpk::SWindow & windowInstance);
 
-	stin ::gpk::err_t				fullScreenToggle		(::gpk::SWindow & windowInstance) { 
+	stin gpk::err_t 			fullScreenToggle		(::gpk::SWindow & windowInstance) { 
 		return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); 
 	}
 

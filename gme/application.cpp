@@ -6,8 +6,8 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
-			::gpk::err_t											cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
-			::gpk::err_t											setup						(::gme::SApplication & app)						{
+			gpk::err_t 										cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
+			gpk::err_t 										setup						(::gme::SApplication & app)						{
 	::gpk::STimer															timer;
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SWindow															& mainWindow				= framework.RootWindow;
@@ -28,11 +28,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	timer.Frame();
-	info_printf("Setup time: %f.", (float)timer.LastTimeSeconds);
+	info_printf("Setup time: %f.", (f2_t)timer.LastTimeSeconds);
 	return 0;
 }
 
-::gpk::err_t				draw			(::gme::SApplication & app)						{
+gpk::err_t 			draw			(::gme::SApplication & app)						{
 	//::gpk::STimer															timer;
 	app;
 	::gpk::pobj<::gpk::rtbgra8d32>	target;
@@ -47,19 +47,19 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		app.Offscreen				= target;
 	}
 	//timer.Frame();
-	//info_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
+	//info_printf("Draw time: %f.", (f2_t)timer.LastTimeSeconds);
 	return 0;
 }
 
-::gpk::err_t				update						(::gme::SApplication & app, bool exitSignal)	{
+gpk::err_t 			update						(::gme::SApplication & app, bool exitSignal)	{
 	//::gpk::STimer					timer;
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, exitSignal);
 	{
 		::std::lock_guard				lock					(app.LockRender);
 		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
 	}
 	::gpk::SFramework				& framework					= app.Framework;
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
 
 	::gpk::SGUI						& gui						= *framework.GUI;
 	::gpk::acid						controlsToProcess			= {};
@@ -71,6 +71,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	})) 
 		return 1;
 	//timer.Frame();
-	//info_printf("Update time: %f.", (float)timer.LastTimeSeconds);
+	//info_printf("Update time: %f.", (f2_t)timer.LastTimeSeconds);
 	return 0;
 }

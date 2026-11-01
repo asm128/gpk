@@ -1,6 +1,6 @@
 #include "gpk_runtime_module.h"
 
-::gpk::err_t			gpk::loadRuntimeModule					(::gpk::SRuntimeModule& loadedModule, const ::gpk::vcst_t& moduleName)				{
+gpk::err_t 		gpk::loadRuntimeModule					(::gpk::SRuntimeModule& loadedModule, const ::gpk::vcst_t& moduleName)				{
 	loadedModule.Handle								= GPK_LOAD_MODULE(moduleName.begin());
 	if_true_vef(-1, 0 == loadedModule.Handle, "Cannot load module: %s.", moduleName.begin());
 	typedef ::gpk::SRuntimeModule::TRegistry TRegistry;

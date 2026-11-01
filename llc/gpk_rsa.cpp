@@ -11,7 +11,7 @@ stxp u3_c RSA_ARDELL_KEY	= 1079150697; //117515017//1054987632
 
 
 sttc gpk::err_t	primalityTest	(u3_t number)						{
-	u3_t				j				= (u3_t)sqrt((double)number);
+	u3_t				j				= (u3_t)sqrt((f3_t)number);
 	if(0 == (number & 1))
 		return 0;
 	if(number > 1 && number < 9)
@@ -42,7 +42,7 @@ gpk::err_t		gpk::rsaKeys	(u2_t prime1, u2_t prime2, u2_t offset, u3_t limit, apo
 	for(u3_t i = offset; i < t; ++i) {
 		if(t % i == 0)
 			continue;
-		j					= (u3_t)sqrt((double)i);
+		j					= (u3_t)sqrt((f3_t)i);
 		u2_t				isPrime			= ::primalityTest(i);
 		if(isPrime == 1 && i != prime1 && i != prime2) {
 			if(keys.size() > k)

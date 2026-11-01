@@ -12,24 +12,24 @@ GPK_USING_N2();
 GPK_USING_N3();
 
 tplt<tpnm _tNumber>
-static	::gpk::err_t	jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcst_t in_string, _tNumber & out_value){
+static	gpk::err_t jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcst_t in_string, _tNumber & out_value){
 	readerCache								= {};
 	if_fail_fe(gpk::jsonParse(readerCache, in_string));
 	const ::gpk::SJSONToken						& jsonValue				= *readerCache[1]->Token;
 	if(readerCache[1]->Token->Type == ::gpk::JSON_TYPE_INTEGER) {
 		out_value								= (_tNumber)jsonValue.Value; }
 	else {
-		double										temp					= 0;
-		memcpy(&temp, (const double*)&jsonValue.Value, sizeof(double));
+		f3_t										temp					= 0;
+		memcpy(&temp, (const f3_t*)&jsonValue.Value, sizeof(f3_t));
 		out_value								= (_tNumber)temp;
 	}
 	return 0;
 }
 
-stin	::gpk::err_t			floatRead				(::gpk::SJSONReader & readerCache, ::gpk::vcst_t in_string, float	 & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
-stin	::gpk::err_t			integerRead				(::gpk::SJSONReader & readerCache, ::gpk::vcst_t in_string, s2_t & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
+stin	gpk::err_t 		floatRead				(::gpk::SJSONReader & readerCache, ::gpk::vcst_t in_string, f2_t	 & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
+stin	gpk::err_t 		integerRead				(::gpk::SJSONReader & readerCache, ::gpk::vcst_t in_string, s2_t & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
 
-static	::gpk::err_t			createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFile & stlFile, ::gpk::vcst_t componentName)  {
+static	gpk::err_t 		createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFile & stlFile, ::gpk::vcst_t componentName)  {
 	::gpk::SNodeRenderer						& renderer				= scene.Renderer;
 	s2_t										indexNewNode			= renderer.Nodes.push_back(componentName, {});
 	::gpk::SRenderNode							& newNode				= renderer.Nodes[indexNewNode];
@@ -80,7 +80,7 @@ static	::gpk::err_t			createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SS
 	return scene.Components.push_back(componentName, newComponentGroup);
 }
 
-static	::gpk::err_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcst_t filename, ::gpk::SKeyedArrayPOD<s1_t> & indices)  {
+static	gpk::err_t createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcst_t filename, ::gpk::SKeyedArrayPOD<s1_t> & indices)  {
 	::gpk::string				rawMat					= {};
 	::gpk::fileToMemory(filename, rawMat);
 
@@ -153,7 +153,7 @@ static	::gpk::err_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcst
 	return 0;
 }
 
-static	::gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t filename)  {
+static	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t filename)  {
 	::gpk::string							rawObj					= {};
 	if_fail_fef(gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %.*s.", GPK_VIEW_ARGS(filename));
 

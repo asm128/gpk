@@ -28,7 +28,7 @@ namespace gpk
 	struct SEditorUI {
 		::gpk::pobj<::gpk::SGUI>	GUI					= {};
 		::gpk::SInputBox			InputBox			= {};
-		::gpk::apachar				InputHistory;
+		::gpk::apobj<string>		InputHistory;
 	};
 
 	struct SEditor {
@@ -56,10 +56,10 @@ namespace gpk
 	//	SEditorControlText	EditorControlText	= {};
 	//};
 
-	::gpk::err_t				editorCreate	(::gpk::SEditor & editor);
-	::gpk::err_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
-	//::gpk::err_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
-	//::gpk::err_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
+	gpk::err_t 			editorCreate	(::gpk::SEditor & editor);
+	gpk::err_t 			editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
+	//gpk::err_t 		editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
+	//gpk::err_t 		editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
 } // namespace
 
 #endif // GPK_ENGINE_EXPLORER_H_23627

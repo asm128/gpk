@@ -38,9 +38,9 @@ static	int				threadRenderStart	(::SRuntimeState& runtimeState)										{
 
 static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
 #if defined(GPK_WINDOWS)
-	::gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
+	gpk::err_t 			updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 #else
-	::gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, false);
+	gpk::err_t 			updateResult		= mainModule.Update(mainModule.Application, false);
 #endif
 	if(1 == updateResult || ::gpk::failed(updateResult)) {
 		if_true_i(::gpk::APPLICATION_STATE_EXIT == updateResult);
@@ -64,7 +64,7 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 	}
 	{
 		::gpk::STimer				timer;
-		double						elapsedTime						= 0;
+		f3_t						elapsedTime						= 0;
 		while(-1 != gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, -1, 0)) {		// Wait until the render thread is closed.
 			if(elapsedTime > 5.0f)
 				break;

@@ -17,7 +17,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 		;
 }
 
-::gpk::err_t			jsonTcpipAddress		(::gpk::vcst_t strIP, u2_t & ipv4) {
+gpk::err_t 		jsonTcpipAddress		(::gpk::vcst_t strIP, u2_t & ipv4) {
 	::gpk::SJSONReader			reader					= {};
 	if_fail_fef(gpk::jsonParse(reader, strIP), "Failed to parse ip from string: '%.*s'.", GPK_VIEW_ARGS(strIP));
 	ipv4					= 0;
@@ -28,7 +28,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return 0;
 }
 
-::gpk::err_t			gpk::tcpipAddress		(gpk::vcst_t strIP, u2_t & ipv4)	{
+gpk::err_t 		gpk::tcpipAddress		(gpk::vcst_t strIP, u2_t & ipv4)	{
 	ipv4					= 0;
 	::gpk::ltrim(strIP);
 	if(0 == strIP.size()) 
@@ -62,7 +62,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return iOffset;
 }
 
-::gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, ::gpk::vcst_t strPort, ::gpk::SIPv4End & ipv4) {
+gpk::err_t 		gpk::tcpipAddress		(::gpk::vcst_t strIP, ::gpk::vcst_t strPort, ::gpk::SIPv4End & ipv4) {
 	if(0 == strPort.size()) 
 		return ::gpk::tcpipAddress(strIP, ipv4.IP, ipv4.Port);
 
@@ -79,7 +79,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 #	include <arpa/inet.h>
 #endif
 
-::gpk::err_t			gpk::tcpipInitialize						()							{
+gpk::err_t 		gpk::tcpipInitialize						()							{
 #if defined(GPK_WINDOWS)
 	::WSADATA										w											= {};
 	if_true_vef(-1, ::WSAStartup(0x0202, &w) != 0, "Could not open Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());
@@ -88,7 +88,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return 0;
 }
 
-::gpk::err_t			gpk::tcpipShutdown							()							{
+gpk::err_t 		gpk::tcpipShutdown							()							{
 #if defined(GPK_WINDOWS)
 	if_true_vef(-1, ::WSACleanup() != 0, "Could not shut down Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());		// Open windows connection
 #endif
@@ -96,7 +96,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return 0;
 }
 
-::gpk::err_t			gpk::tcpipAddressFromSockaddr		(const sockaddr_in & sockaddr_ipv4, u2_t & address, u1_t & port) {
+gpk::err_t 		gpk::tcpipAddressFromSockaddr		(const sockaddr_in & sockaddr_ipv4, u2_t & address, u1_t & port) {
 	port 	= (u1_t)ntohs(sockaddr_ipv4.sin_port);
 #ifndef GPK_WINDOWS
 	address	= sockaddr_ipv4.sin_addr.s_addr;
@@ -111,7 +111,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return 0;
 }
 
-::gpk::err_t			gpk::tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr_ipv4, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t * port)	{
+gpk::err_t 		gpk::tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr_ipv4, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t * port)	{
 #if defined(GPK_WINDOWS)
 	gpk_safe_assign(a1, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
 	gpk_safe_assign(a2, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
@@ -126,7 +126,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	gpk_safe_assign(port, (u1_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
 }
-::gpk::err_t			gpk::tcpipAddressToSockaddr		(u2_t address, u1_t port, sockaddr_in & sockaddr_ipv4) {
+gpk::err_t 		gpk::tcpipAddressToSockaddr		(u2_t address, u1_t port, sockaddr_in & sockaddr_ipv4) {
 	sockaddr_ipv4				= {};
 	sockaddr_ipv4.sin_family	= AF_INET;
 	sockaddr_ipv4.sin_port		= port ? htons(port) : (u1_t)0;
@@ -141,7 +141,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return 0;
 }
 
-::gpk::err_t			gpk::tcpipAddressToSockaddr		(u0_t a1, u0_t a2, u0_t a3, u0_t a4, u1_t port, sockaddr_in & sockaddr_ipv4)	{
+gpk::err_t 		gpk::tcpipAddressToSockaddr		(u0_t a1, u0_t a2, u0_t a3, u0_t a4, u1_t port, sockaddr_in & sockaddr_ipv4)	{
 	sockaddr_ipv4				= {};
 	sockaddr_ipv4.sin_family	= AF_INET;
 	sockaddr_ipv4.sin_port		= port ? htons(port) : (u1_t)0;
@@ -156,26 +156,26 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return 0;
 }
 
-::gpk::err_t			gpk::tcpipAddress	(SOCKET socket, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t * port) {
+gpk::err_t 		gpk::tcpipAddress	(SOCKET socket, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t * port) {
 	sockaddr_in					sockaddr_ipv4		= {};
 	socklen_t					len					= sizeof(sockaddr_in);
 	if_true_vef(-1, getsockname(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "%s", "getpeername failed.");
 	return ::gpk::tcpipAddressFromSockaddr(sockaddr_ipv4, a1, a2, a3, a4, port);
 }
 
-::gpk::err_t			gpk::tcpipAddress	(u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4)										{
+gpk::err_t 		gpk::tcpipAddress	(u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4)										{
 	sc_t						host_name[257]								= {};
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
 }
 
-::gpk::err_t			gpk::tcpipAddress	(u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u2_t & address)										{
+gpk::err_t 		gpk::tcpipAddress	(u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u2_t & address)										{
 	sc_t						host_name[257]								= {};
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, address);
 }
 
-::gpk::err_t		gpk::tcpipAddress		(::gpk::vcst_t hostName, u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t* port) { 
+gpk::err_t 	gpk::tcpipAddress		(::gpk::vcst_t hostName, u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t* port) { 
 	::gpk::SIPv4End 		addr; 
 	if_fail_fe(gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, addr.IP, addr.Port));
 	gpk_safe_assign(a1, addr[0]);
@@ -186,7 +186,7 @@ gpk::err_t			gpk::tcpipAddress		(::gpk::vcst_t strIP, u2_t & address, u1_t & por
 	return 0;
 }
 
-::gpk::err_t			gpk::tcpipAddress	(vcst_t szHostName, u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u2_t & address, u1_t & port) {
+gpk::err_t 		gpk::tcpipAddress	(vcst_t szHostName, u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u2_t & address, u1_t & port) {
 	sc_t						portString			[6]					= {};
 	snprintf(portString, ::gpk::size(portString), "%u", portRequested);
 

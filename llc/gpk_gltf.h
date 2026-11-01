@@ -17,7 +17,7 @@ namespace gpk
 
 	};
 
-	::gpk::err_t		gltfLoad		(::gpk::SGeometryBuffers & geometry);
+	gpk::err_t 	gltfLoad		(::gpk::SGeometryBuffers & geometry);
 } // namespace
 
 #endif	// GPK_GLTF_H_23627

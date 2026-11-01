@@ -17,7 +17,7 @@ namespace DirectX
 {
 	usng nmsp gpk;
 	HRESULT					LoadWAVAudioInMemory	(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) noexcept;
-	HRESULT					LoadWAVAudioFromFile	(::gpk::view<sc_t> szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) noexcept;
+	HRESULT					LoadWAVAudioFromFile	(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) noexcept;
 							
 	struct WAVData {		
 		const WAVEFORMATEX		* WaveFormat			= 0;
@@ -29,7 +29,7 @@ namespace DirectX
 	};						
 							
 	HRESULT					LoadWAVAudioInMemoryEx	(::gpk::vcu0_t wavData, WAVData & result) noexcept;
-	HRESULT					LoadWAVAudioFromFileEx	(::gpk::view<sc_t> szFileName, ::gpk::au0_t & wavData, WAVData & result) noexcept;
+	HRESULT					LoadWAVAudioFromFileEx	(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, WAVData & result) noexcept;
 }
 
 #endif // GPK_WINDOWS

@@ -1,7 +1,9 @@
 #include "gpk_engine_d3d_app.h"
 #include "gpk_view_color.h"
 
-::gpk::err_t			gpk::d3dGUIDraw		(::DX::D3DDeviceResources & d3dResources, ::gpk::SD3DGUIResources<::gpk::bgra> & guiStuff)	{
+GPK_USING_TYPEINT();
+
+gpk::err_t	gpk::d3dGUIDraw		(::DX::D3DDeviceResources & d3dResources, SD3DGUIResources<bgra> & guiStuff)	{
 	if(!guiStuff.Texture2D) 
 		return 1;
 	
@@ -9,8 +11,8 @@
 	gpk_hrcall(d3dResources.GetD3DDeviceContext()->Map(guiStuff.Texture2D.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedTexture));
 	if(mappedTexture.pData) {
 		for(u2_t y = 0; y < guiStuff.RenderTarget.metrics().y; ++y) {
-			::gpk::vcbgra			scanLineSrc					= guiStuff.RenderTarget[y];
-			::gpk::vbgra			scanLineDst					= {(::gpk::bgra*)(&((sc_t*)mappedTexture.pData)[y * mappedTexture.RowPitch]), scanLineSrc.size()};
+			vcbgra			scanLineSrc					= guiStuff.RenderTarget[y];
+			vbgra			scanLineDst					= {(bgra*)(&((sc_t*)mappedTexture.pData)[y * mappedTexture.RowPitch]), scanLineSrc.size()};
 			memcpy(scanLineDst.begin(), scanLineSrc.begin(), scanLineSrc.byte_count());
 			//for(u2_t x = 0; x < scanLineDst.size(); ++x)
 			//	 scanLineDst.begin()[x].a	= scanLineDst.begin()[x].a;
@@ -19,12 +21,12 @@
 
 	d3dResources.GetD3DDeviceContext()->Unmap(guiStuff.Texture2D.get(), 0);
 	// Each vertex is one instance of the VertexPositionColor struct.
-	UINT									stride						= sizeof(::gpk::n3f2_t) + sizeof(::gpk::n2f2_t);
+	UINT									stride						= sizeof(n3f2_t) + sizeof(n2f2_t);
 	UINT									offset						= 0;
 
 	ID3D11DeviceContext						* context					= d3dResources.GetD3DDeviceContext();
-	::gpk::pcom<ID3D11Buffer>				vb							= guiStuff.VertexBuffer;
-	::gpk::pcom<ID3D11Buffer>				ib							= guiStuff.IndexBuffer ;
+	pcom<ID3D11Buffer>				vb							= guiStuff.VertexBuffer;
+	pcom<ID3D11Buffer>				ib							= guiStuff.IndexBuffer ;
 	context->IASetVertexBuffers		(0, 1, &vb, &stride, &offset);
 	context->IASetIndexBuffer		(ib, DXGI_FORMAT_R16_UINT, 0);// Each index is one 16-bit unsigned integer (short).
 	context->IASetPrimitiveTopology	(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -41,7 +43,7 @@
 	return 0;
 }
 
-static	::gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeManager, u2_t iNode, const ::gpk::SEngineSceneConstants & constants, ::gpk::SRenderNodeConstants	& nodeConstants) {
+sttc	gpk::err_t	getNodeTransform		(const gpk::SRenderNodeManager & nodeManager, u2_t iNode, const gpk::SEngineSceneConstants & constants, gpk::SRenderNodeConstants & nodeConstants) {
 	nodeConstants			= nodeManager.Transforms[iNode];
 
 	nodeConstants.Model					= nodeManager.BaseTransforms[iNode].Model * nodeConstants.Model;
@@ -57,33 +59,33 @@ static	::gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeMan
 	return 0;
 }
 
-::gpk::err_t			gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u1_t & targetMetrics, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar)	{
-	::gpk::n3f2_t				cameraFront				= (cameraTarget - cameraPosition).Normalize();
+gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEngineScene & engineScene, const n2u1_t & targetMetrics, const n3f2_t & lightPos, const n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar)	{
+	n3f2_t				cameraFront				= (cameraTarget - cameraPosition).Normalize();
 
-	::gpk::SEngineSceneConstants& constants				= d3dScene.ConstantBufferScene;
+	SEngineSceneConstants& constants				= d3dScene.ConstantBufferScene;
 	constants.CameraPosition= cameraPosition;
 	constants.CameraFront	= cameraFront;
 	constants.LightPosition	= lightPos;
 	constants.LightDirection= {0, -1, 0};
 
 	constants.View.LookAt(cameraPosition, cameraTarget, {0, 1, 0});
-	constants.Perspective.FieldOfView(.25 * ::gpk::math_pi, targetMetrics.x / (double)targetMetrics.y, nearFar.Min, nearFar.Max);
+	constants.Perspective.FieldOfView(.25 * math_pi, targetMetrics.x / (f3_t)targetMetrics.y, nearFar.Min, nearFar.Max);
 	constants.Screen.ViewportLH(targetMetrics);
 	constants.VP			= constants.View * constants.Perspective;
 	constants.VPS			= constants.VP * constants.Screen;
 
-	::gpk::au2_t								solid;
-	::gpk::au2_t								alpha;
+	au2_t								solid;
+	au2_t								alpha;
 	for(u2_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
-		const ::gpk::SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
+		const SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
 		if(flags.NoDraw)
 			continue;
 
-		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
+		const SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
 		if(node.Mesh >= engineScene.Graphics->Meshes.size())
 			continue;
 
-		const ::gpk::SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		const SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
 		if(skin.Material.Color.Diffuse.a < 1)
 			alpha.push_back(iNode);
 		else
@@ -91,11 +93,11 @@ static	::gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeMan
 	}
 	for(u2_t iSolid = 0; iSolid < solid.size(); ++iSolid) {
 		u2_t								iNode							= solid[iSolid];
-		::gpk::SRenderNodeConstants				nodeConstants;
+		SRenderNodeConstants				nodeConstants;
 		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
 		
-		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
-		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
+		const SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
+		const SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
 
 		u2_t				indexCount			= 0;
 		if(mesh.GeometryBuffers.size() > 0) {
@@ -103,8 +105,8 @@ static	::gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeMan
 			indexCount			= pindices->Data.size() / pindices->Desc.Format.TotalBytes();
 		}
 
-		const ::gpk::SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
-		const ::gpk::SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : ::gpk::SGeometrySlice{{0, indexCount / 3}};
+		const SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		const SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material				= skin.Material;
 
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
@@ -112,19 +114,19 @@ static	::gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeMan
 	}
 	for(u2_t iAlpha  = 0; iAlpha < alpha.size(); ++iAlpha) {
 		u2_t								iNode							= alpha[iAlpha];
-		::gpk::SRenderNodeConstants				nodeConstants;
+		SRenderNodeConstants				nodeConstants;
 		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
 		
-		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
-		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
+		const SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
+		const SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
 		u2_t				indexCount			= 0;
 		if(mesh.GeometryBuffers.size() > 0) {
 			auto					pindices			= engineScene.Graphics->Buffers[mesh.GeometryBuffers[0]];
 			indexCount			= pindices->Data.size() / pindices->Desc.Format.TotalBytes();
 		}
 
-		const ::gpk::SSkin			& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
-		const ::gpk::SGeometrySlice	slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : ::gpk::SGeometrySlice{{0, indexCount / 3}};
+		const SSkin			& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		const SGeometrySlice	slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material	= skin.Material;
 
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
@@ -132,7 +134,7 @@ static	::gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeMan
 	}
 	return 0;
 }
-::gpk::err_t							gpk::d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar) {
+gpk::err_t					gpk::d3dAppDraw				(SD3DApplication & d3dApp, const SEngineScene & engineScene, const rgbaf & clearColor, const n3f2_t & lightPos, const n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar) {
 	{ // Set up render target for this frame
 		ID3D11DeviceContext3						* context							= d3dApp.DeviceResources->GetD3DDeviceContext();
 		const D3D11_VIEWPORT						viewport							= d3dApp.DeviceResources->GetScreenViewport();	// Reset the viewport to target the whole screen.

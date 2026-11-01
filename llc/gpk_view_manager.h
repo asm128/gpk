@@ -22,7 +22,7 @@ namespace gpk
 
 										~CViewManager				()				{}
 
-		::gpk::err_t					Save						(::gpk::apod<u0_t> & output)	const	{
+		gpk::err_t 				Save						(::gpk::apod<u0_t> & output)	const	{
 			if_fail_fe(gpk::saveView(output, Counts));
 			for(u2_t iArray = 0; iArray < Counts.size(); ++iArray)
 				if_fail_fe(output.append((const u0_t*)Views[iArray], Counts[iArray] * sizeof(T)));
@@ -30,7 +30,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::err_t					Load						(::gpk::vcu0_t & input) {
+		gpk::err_t 				Load						(::gpk::vcu0_t & input) {
 			if_fail_fe(gpk::loadView(input, Counts));
 			::gpk::view<const T>				out_view; 
 			u2_t							offsetByte					= 0;
@@ -46,8 +46,8 @@ namespace gpk
 		}
 
 		inln	::gpk::view<const T>	View		(u2_t index)							const	{ return {Views[index], Counts[index]}; }
-		inln	::gpk::err_t			View		(const T * elements, u1_t count)			{ ::gpk::view<const T> out_view; return View(elements, count, out_view); }
-		::gpk::err_t					Index		(const ::gpk::view<const T> & elements) {
+		inln	gpk::err_t 		View		(const T * elements, u1_t count)			{ ::gpk::view<const T> out_view; return View(elements, count, out_view); }
+		gpk::err_t 				Index		(const ::gpk::view<const T> & elements) {
 			if_true_vef(-1, elements.size() > CViewManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
 
 			for(u2_t iView = 0, countLabels = Views.size(); iView < countLabels; ++iView) {
@@ -61,7 +61,7 @@ namespace gpk
 			return -1;
 		}
 
-		::gpk::err_t					View		(const T * elements, u1_t count, ::gpk::view<const T> & out_view)	{
+		gpk::err_t 				View		(const T * elements, u1_t count, ::gpk::view<const T> & out_view)	{
 			if(0 == count || 0 == elements) {
 				out_view						= {};
 				return -1;

@@ -160,7 +160,7 @@ namespace gpk
 		::gpk::aobj<::gpk::asc_t>	ColorNames				= {};
 	};
 
-	::gpk::err_t			voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::vcu0_t & input) 						{
+	gpk::err_t 		voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::vcu0_t & input) 						{
 		u2_t					bytesRead				= sizeof(u2_t); 
 		const u2_t				dictLength				= *(u2_t*)input.begin(); 
 		input					= {input.begin() + bytesRead, input.size() - bytesRead}; 
@@ -213,7 +213,7 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::err_t				Load					(::gpk::vcu0_t & input) { 
+		gpk::err_t 			Load					(::gpk::vcu0_t & input) { 
 			u2_t												bytesRead				= sizeof(SVOXFileHeader); 
 			Header												= *(const SVOXFileHeader*)input.begin(); 
 			input												= {input.begin() + bytesRead, input.size() - bytesRead}; 

@@ -33,7 +33,7 @@ stxp		int		LOG_PREFIX_BUFFER_SIZE	= 64;
 stxp		int		LOG_PREFIX_BUFFER_SIZE	= 256;
 #endif
 
-::gpk::err_t			gpk::debug_print_prefix				(s0_t severity, const char * path, ::gpk::u2_t line, const char * function) {
+gpk::err_t 		gpk::debug_print_prefix				(s0_t severity, const char * path, ::gpk::u2_t line, const char * function) {
 	stxp sc_c	STR_DEBUG_PREFIX[]					= "%i|%llu|%s(%" GPK_FMT_U2 "){%s}:";
 	char			formatted[::LOG_PREFIX_BUFFER_SIZE]	= {};
 	::gpk::sprintf_s(formatted, STR_DEBUG_PREFIX, severity, ::gpk::timeCurrentInMs(), path, line, function);
@@ -41,17 +41,17 @@ stxp		int		LOG_PREFIX_BUFFER_SIZE	= 256;
 }
 
 #if defined(GPK_WINDOWS)
-static	::gpk::err_t	default_log_write		(const char * text, ::gpk::u2_t textLen) 	{  u2_t iChar = 0; for(; iChar < textLen; ++iChar) { sc_c buf[2] = {text[iChar], 0}; OutputDebugStringA(buf); } return (::gpk::err_t)fprintf(stderr, "%.*s", (int)textLen, text); }
-static	::gpk::err_t	default_log_print		(const char * text)						{ OutputDebugStringA(text); return (::gpk::err_t)fprintf(stderr, "%s", text); }
+static	gpk::err_t default_log_write		(const char * text, ::gpk::u2_t textLen) 	{  u2_t iChar = 0; for(; iChar < textLen; ++iChar) { sc_c buf[2] = {text[iChar], 0}; OutputDebugStringA(buf); } return (::gpk::err_t)fprintf(stderr, "%.*s", (int)textLen, text); }
+static	gpk::err_t default_log_print		(const char * text)						{ OutputDebugStringA(text); return (::gpk::err_t)fprintf(stderr, "%s", text); }
 #elif defined(GPK_ANDROID)
-static	::gpk::err_t	default_log_write		(const char * text, ::gpk::u2_t textLen)	{ LOGI("%.*s", (int)textLen, text); return textLen; }
-static	::gpk::err_t	default_log_print		(const char * text)						{ LOGI("%s", text); return (::gpk::err_t)strlen(text); }
+static	gpk::err_t default_log_write		(const char * text, ::gpk::u2_t textLen)	{ LOGI("%.*s", (int)textLen, text); return textLen; }
+static	gpk::err_t default_log_print		(const char * text)						{ LOGI("%s", text); return (::gpk::err_t)strlen(text); }
 #elif defined(GPK_ARDUINO)
-static	::gpk::err_t	default_log_write		(const char * text, ::gpk::u2_t textLen)	{ return Serial ? Serial.write(text, textLen) : textLen; }
-static	::gpk::err_t	default_log_print		(const char * text)						{ return Serial ? Serial.print(text) : (::gpk::err_t)strlen(text); }
+static	gpk::err_t default_log_write		(const char * text, ::gpk::u2_t textLen)	{ return Serial ? Serial.write(text, textLen) : textLen; }
+static	gpk::err_t default_log_print		(const char * text)						{ return Serial ? Serial.print(text) : (::gpk::err_t)strlen(text); }
 #else
-static	::gpk::err_t	default_log_write		(const char * text, ::gpk::u2_t textLen)	{ return (::gpk::err_t)fprintf(stderr, "%.*s", (int)textLen, text); }
-static	::gpk::err_t	default_log_print		(const char * text)						{ return (::gpk::err_t)fprintf(stderr, "%s", text); }
+static	gpk::err_t default_log_write		(const char * text, ::gpk::u2_t textLen)	{ return (::gpk::err_t)fprintf(stderr, "%.*s", (int)textLen, text); }
+static	gpk::err_t default_log_print		(const char * text)						{ return (::gpk::err_t)fprintf(stderr, "%s", text); }
 #endif
 
 ::gpk::log_write_t		gpk_log_write					= default_log_write;
@@ -63,15 +63,15 @@ static	::gpk::err_t	default_log_print		(const char * text)						{ return (::gpk:
 	return 0;
 }
 
-::gpk::err_t			gpk::log_print					(const char * text)						{ return (gpk_log_print && text) ? ::gpk_log_print(text) : 0; }
-::gpk::err_t			gpk::log_write					(const char * text, ::gpk::u2_t textLen)	{ return (gpk_log_write && text && textLen) ? ::gpk_log_write(text, textLen) : 0; }
+gpk::err_t 		gpk::log_print					(const char * text)						{ return (gpk_log_print && text) ? ::gpk_log_print(text) : 0; }
+gpk::err_t 		gpk::log_write					(const char * text, ::gpk::u2_t textLen)	{ return (gpk_log_write && text && textLen) ? ::gpk_log_write(text, textLen) : 0; }
 #ifdef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-::gpk::err_t			gpk::log_print_P				(const __FlashStringHelper * text)		{ return (Serial && text) ? (::gpk::err_t)Serial.print(text) : 0; }
+gpk::err_t 		gpk::log_print_P				(const __FlashStringHelper * text)		{ return (Serial && text) ? (::gpk::err_t)Serial.print(text) : 0; }
 #endif
 
-::gpk::err_t			gpk::setupDefaultLogCallbacks	()	{ return setupLogCallbacks(default_log_print, default_log_write); }
+gpk::err_t 		gpk::setupDefaultLogCallbacks	()	{ return setupLogCallbacks(default_log_print, default_log_write); }
 
-::gpk::err_t			gpk::setupLogCallbacks
+gpk::err_t 		gpk::setupLogCallbacks
 	( gpk::log_print_t	funcLogPrint
 	, gpk::log_write_t	funcLogWrite
 	) {
@@ -134,7 +134,7 @@ static	::gpk::err_t	default_log_print		(const char * text)						{ return (::gpk:
 
 #ifndef GPK_ARDUINO
 
-static	::gpk::err_t	getSystemErrorAsString			(const u3_t lastError, char* buffer, ::gpk::u2_t bufferSize)			{	// Get the error message, if any.
+static	gpk::err_t getSystemErrorAsString			(const u3_t lastError, char* buffer, ::gpk::u2_t bufferSize)			{	// Get the error message, if any.
 #ifdef GPK_WINDOWS
 	if_true_fe(0 == buffer);
 	return lastError
@@ -155,7 +155,7 @@ void					gpk::_gpk_print_system_errors	(const char* prefix, ::gpk::u2_t prefixLe
 #endif
 	if(lastSystemError) {
 		log_write("\n", 1);
-		::gpk::err_t						stringLength					= ::getSystemErrorAsString((u3_t)lastSystemError, bufferError, ::gpk::size(bufferError));
+		gpk::err_t 					stringLength					= ::getSystemErrorAsString((u3_t)lastSystemError, bufferError, ::gpk::size(bufferError));
 		log_write(prefix, prefixLen);
 		log_write(bufferError, (::gpk::u2_t)stringLength);
 		log_write("\n", 1);

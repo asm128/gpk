@@ -21,7 +21,7 @@
 //#endif
 //}
 //
-//::gpk::err_t			httpstest					()					{
+//gpk::err_t 		httpstest					()					{
 //	init_openssl_library();
 //
 //	const SSL_METHOD			* method					= SSLv23_method();

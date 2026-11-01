@@ -2,48 +2,52 @@
 #include "gpk_stdsocket.h"
 #include "gpk_sync.h"
 
+using namespace gpk;
+
 int main() {
-	::gpk::tcpipInitialize();
+	tcpipInitialize();
 	sockaddr_in				sa_server				= {};
-	::gpk::SIPv4Endpoint			addrLocal				= {{}, 9898};
-	::gpk::tcpipAddress(0, 9898, 1, ::gpk::TRANSPORT_PROTOCOL_UDP, addrLocal);
-	::gpk::tcpipAddressToSockaddr(addrLocal, sa_server);
+	SIPv4Endpoint			addrLocal				= {{}, 9898};
+	tcpipAddress({}, 9898, 1, TRANSPORT_PROTOCOL_UDP, addrLocal);
+	tcpipAddressToSockaddr(addrLocal, sa_server);
 
 	SOCKET					handle					= socket(AF_INET, SOCK_DGRAM, 0);
-	if_true_vef(-1, INVALID_SOCKET == handle, "Failed to create socket.");
-	if_fail_fef(::bind(handle, (sockaddr *)&sa_server, sizeof(sockaddr_in)), "Failed to bind listener to address");
+	if_true_fe(INVALID_SOCKET == handle);
+	if_fail_fef(::bind(handle, (sockaddr *)&sa_server, sizeof(sockaddr_in)), "Failed to bind listener to address %u", (u2_t)addrLocal);
 	info_printf("Server listening on %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(addrLocal));
 	while(true) {
-		::gpk::SIPv4Endpoint			addrLocalClient			= addrLocal;
+		SIPv4Endpoint			addrLocalClient			= addrLocal;
 		addrLocalClient.Port = 0;
 		SOCKET					clientHandle			= socket(AF_INET, SOCK_DGRAM, 0);
 
 		sockaddr_in				sa_server_client		= {AF_INET};
-		::gpk::tcpipAddressToSockaddr(addrLocalClient, sa_server_client);
-		if_fail_fef(::bind(clientHandle, (sockaddr *)&sa_server_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
+		tcpipAddressToSockaddr(addrLocalClient, sa_server_client);
+		if_fail_fef(::bind(clientHandle, (sockaddr *)&sa_server_client, sizeof(sockaddr_in)), "Failed to bind listener to address %u", (u2_t)addrLocalClient);
 
 		sockaddr_in				sa_client				= {AF_INET};
 		int						client_length			= sizeof(sa_client);
 		char					connectReceived			= 0;
-		if_fail_fef(::recvfrom(handle, (char*)&connectReceived, (int)sizeof(char), 0, (sockaddr*)&sa_client, &client_length), "Failed to receive connect request.");
-		::gpk::SIPv4Endpoint			addrRemote;
-		::gpk::tcpipAddressFromSockaddr(sa_client, addrRemote);
+		if_fail_fef(::recvfrom(handle, (char*)&connectReceived, (int)sizeof(char), 0, (sockaddr*)&sa_client, &client_length), "Failed to receive connect request from address %u", (u2_t)addrLocalClient);
+		SIPv4Endpoint			addrRemote;
+		tcpipAddressFromSockaddr(sa_client, addrRemote);
 		info_printf("Received connect request: %c from %u.%u.%u.%u:%u.", connectReceived, GPK_IPV4_EXPAND(addrRemote));
 
 		char					commandToSend			= '2';
-		//::gpk::tcpipAddressFromSockaddr(sa_server, addrLocal);
-		::gpk::tcpipAddress(clientHandle, addrLocal);
+		//tcpipAddressFromSockaddr(sa_server, addrLocal);
+		tcpipAddress(clientHandle, addrLocal);
 		info_printf("Sending connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
-		::gpk::sleep(10);
-		if_true_vef(-1, INVALID_SOCKET == clientHandle, "Failed to create socket.");
+		sleep(10);
+		if_true_fef(INVALID_SOCKET == clientHandle, "Failed to create socket for address %u", (u2_t)addrLocal);
 		while(true) {
-			if_fail_fef(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond.");
-			::gpk::sleep(10);
+			if_fail_fef(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond address %u", (u2_t)addrRemote);
+			sleep(10);
 		}
 		info_printf("Sent connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
-		if(handle != clientHandle)
-			gpk_safe_closesocket(clientHandle);
+		if(handle != clientHandle) {
+			if(clientHandle!= INVALID_SOCKET)
+				closesocket(clientHandle);
+		}
 	}
-	::gpk::tcpipShutdown();
+	tcpipShutdown();
 	return 0;
 }

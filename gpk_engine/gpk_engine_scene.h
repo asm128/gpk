@@ -20,89 +20,89 @@ namespace gpk
 	
 #pragma pack(push, 1)
 	struct SEngineSceneConstants {
-		::gpk::m4f2_t			View					= {}; 
-		::gpk::m4f2_t			Perspective				= {}; 
-		::gpk::m4f2_t			Screen					= {}; 
-		::gpk::m4f2_t			VP						= {}; 
-		::gpk::m4f2_t			VPS						= {}; 
-		::gpk::n3f2_t			CameraPosition			= {};
-		float					CameraAngle				= 0;
-		::gpk::n3f2_t			CameraFront				= {}; 
-		float					Time					= 0;
-		::gpk::n3f2_t			LightDirection			= {}; 
-		float					LightSpotPower			= 0;
-		::gpk::n3f2_t			LightPosition			= {}; 
-		float					PaddingB				= 0;
+		m4f2_t			View					= {}; 
+		m4f2_t			Perspective				= {}; 
+		m4f2_t			Screen					= {}; 
+		m4f2_t			VP						= {}; 
+		m4f2_t			VPS						= {}; 
+		n3f2_t			CameraPosition			= {};
+		f2_t			CameraAngle				= 0;
+		n3f2_t			CameraFront				= {}; 
+		f2_t			Time					= 0;
+		n3f2_t			LightDirection			= {}; 
+		f2_t			LightSpotPower			= 0;
+		n3f2_t			LightPosition			= {}; 
+		f2_t			PaddingB				= 0;
 	};
 	stxp size_t		SENGINESCENECONSTANTSSIZE = sizeof(SEngineSceneConstants);
 
 
 	struct SPSIn {
-		const ::gpk::SRenderNodeConstants & NodeConstants;
-		::gpk::n3f2_t			WeightedPosition	;
-		::gpk::n3f2_t			WeightedNormal		;
-		::gpk::n2f2_t			WeightedUV			;
-		::gpk::SRenderMaterial	Material			;
-		::gpk::gc8bgra			Surface				; 
+		const SRenderNodeConstants & NodeConstants;
+		n3f2_t			WeightedPosition	;
+		n3f2_t			WeightedNormal		;
+		n2f2_t			WeightedUV			;
+		SRenderMaterial	Material			;
+		gc8bgra			Surface				; 
 	};
 
 	stxp size_t		SPSINSIZE = sizeof(SPSIn);
 #pragma pack(pop)
 
-	typedef ::gpk::err_t	(TFuncPixelShader)
-		( const ::gpk::SEngineSceneConstants	& constants
-		, const ::gpk::SPSIn					& inPS
-		, ::gpk::bgra							& outputPixel
+	typedef err_t (TFuncPixelShader)
+		( const SEngineSceneConstants	& constants
+		, const SPSIn					& inPS
+		, bgra							& outputPixel
 		);
 
 	struct SVSCache {
-		::gpk::atrif2_t			TriangleWeights			= {};
-		::gpk::an2s1_t			SolidPixelCoords		= {};
-		::gpk::an3f2_t			WireframePixelCoords	= {};
+		atrif2_t			TriangleWeights			= {};
+		an2s1_t				SolidPixelCoords		= {};
+		an3f2_t				WireframePixelCoords	= {};
 	};
 
 	struct SVSOutput {
-		::gpk::atri3f2_t			PositionsWorld			= {};
-		::gpk::atri3f2_t			PositionsScreen			= {};
-		::gpk::atri3f2_t			Normals					= {};
-		::gpk::atri3f2_t			NormalsScreen			= {};
-		::gpk::atri2f2_t			UVs						= {};
+		atri3f2_t			PositionsWorld			= {};
+		atri3f2_t			PositionsScreen			= {};
+		atri3f2_t			Normals					= {};
+		atri3f2_t			NormalsScreen			= {};
+		atri2f2_t			UVs						= {};
 	};
 
 	struct SEngineRenderCache {
-		::gpk::SVSOutput		VertexShaderOutput		= {};
-		::gpk::SVSCache			VertexShaderCache		= {};
+		SVSOutput			VertexShaderOutput		= {};
+		SVSCache			VertexShaderCache		= {};
 	};
 
 	struct SSkin {
-		::gpk::SRenderMaterial	Material;
-		::gpk::au2_t				Textures;
+		SRenderMaterial		Material;
+		au2_t				Textures;
 
-		::gpk::err_t			Save			(::gpk::au0_t & output) const { 
-			if_fail_fe(gpk::savePOD(output, Material));
-			if_fail_fe(gpk::saveView(output, Textures));
+		err_t 				Save			(au0_t & output) const { 
+			if_fail_fe(savePOD(output, Material));
+			if_fail_fe(saveView(output, Textures));
 			return 0;
 		}
-		::gpk::err_t			Load			(::gpk::vcu0_t & input) {
-			if_fail_fe(gpk::loadPOD(input, Material));
-			if_fail_fe(gpk::loadView(input, Textures));
+		err_t 				Load			(vcu0_t & input) {
+			if_fail_fe(loadPOD(input, Material));
+			if_fail_fe(loadView(input, Textures));
 			return 0;
 		}
 	};
 
-	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSkin>						SSkinManager;
-	typedef	::gpk::gpk_linear_map_pobj<::std::function<TFuncPixelShader>>	SShaderManager;
+	typedef	gpk_linear_map_pobj<SSkin>								SSkinManager;
+	typedef	gpk_linear_map_pobj<function<TFuncPixelShader>>	SShaderManager;
 
 	struct SEngineGraphics {
-		::gpk::SRenderBufferManager	Buffers		= {};
-		::gpk::SSurfaceManager		Surfaces	= {};
-		::gpk::SMeshManager			Meshes		= {};
-		::gpk::SSkinManager			Skins		= {};
+		SRenderBufferManager	Buffers		= {};
+		SSurfaceManager			Surfaces	= {};
+		SMeshManager			Meshes		= {};
+		SSkinManager			Skins		= {};
 
-		::gpk::SShaderManager		Shaders		= {};
-		::gpk::SRasterFontManager	Fonts		= {};
+		SShaderManager			Shaders		= {};
+		SRasterFontManager		Fonts		= {};
 
-		::gpk::err_t				Save		(::gpk::au0_t & output)		const	{
+		err_t 					Save		(au0_t & output)		const	{
 			if_fail_fe(Buffers	.Save(output));
 			if_fail_fe(Surfaces	.Save(output));
 			if_fail_fe(Meshes		.Save(output));
@@ -111,7 +111,7 @@ namespace gpk
 			//if_fail_fe(Fonts	.Save(output));
 			return 0;
 		}
-		::gpk::err_t				Load		(::gpk::vcu0_t & input) {
+		err_t 				Load			(vcu0_t & input) {
 			if_fail_fe(Buffers	.Load(input));
 			if_fail_fe(Surfaces	.Load(input));
 			if_fail_fe(Meshes		.Load(input));
@@ -123,20 +123,20 @@ namespace gpk
 	};
 
 	struct SEngineScene {
-		::gpk::pobj<SEngineGraphics>	Graphics				= {};
-		::gpk::SRenderNodeManager		RenderNodes				= {};
-		::gpk::SEngineRenderCache		RenderCache				= {};
+		pobj<SEngineGraphics>	Graphics				= {};
+		SRenderNodeManager		RenderNodes				= {};
+		SEngineRenderCache		RenderCache				= {};
 
-		::gpk::err_t					CreateRenderNode		(const ::gpk::SGeometryBuffers & geometry, ::gpk::view<sc_c> name, bool createSkin);
+		err_t 				CreateRenderNode		(const SGeometryBuffers & geometry, vcst_t name, bool createSkin);
 
-		::gpk::err_t					Load					(::gpk::vcu0_t & input) {
+		err_t 				Load					(vcu0_t & input) {
 			if_fail_fe(Graphics		->Load(input));
 			if_fail_fe(RenderNodes	 .Load(input));
 			//if_fail_fe(RenderCache	 .Load(input));
 			return 0;
 		}
 
-		::gpk::err_t					Save					(::gpk::au0_t & output)	const	{
+		err_t 				Save					(au0_t & output)	const	{
 			if(Graphics) {
 				if_fail_fe(Graphics->Save(output));
 			}
@@ -148,7 +148,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::err_t					Clone					(u2_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+		err_t 				Clone					(u2_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
 			const u2_t						iNewNode				= RenderNodes.Clone(iRenderNode);
 			const u2_t						idShaderSource			= RenderNodes[iRenderNode].Shader;
 			if(cloneShaders && idShaderSource < Graphics->Shaders.size())
@@ -161,7 +161,7 @@ namespace gpk
 				RenderNodes[iNewNode].Skin		= idSkin;
 				if(cloneSurfaces) {
 					if(Graphics->Skins[idSkin]) {
-						::gpk::SSkin						& newSkin			= *Graphics->Skins[idSkin];
+						SSkin						& newSkin			= *Graphics->Skins[idSkin];
 						for(u2_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
 							newSkin.Textures[iTexture]			= Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
 						}
@@ -173,15 +173,15 @@ namespace gpk
 
 	};
 
-	::gpk::err_t							drawScene
-		( ::gpk::g8bgra				backBufferColors
-		, ::gpk::gu32				backBufferDepth
-		, ::gpk::SEngineRenderCache	& renderCache
-		, const ::gpk::SEngineScene	& scene
-		, const ::gpk::n3f2_t		& cameraPosition
-		, const ::gpk::n3f2_t		& cameraTarget
-		, const ::gpk::n3f2_t		& cameraUp
-		, const ::gpk::minmaxf2_t	& nearFar
+	err_t 						drawScene
+		( g8bgra				backBufferColors
+		, gu2_t				backBufferDepth
+		, SEngineRenderCache	& renderCache
+		, const SEngineScene	& scene
+		, const n3f2_t		& cameraPosition
+		, const n3f2_t		& cameraTarget
+		, const n3f2_t		& cameraUp
+		, const minmaxf2_t	& nearFar
 		);
 
 } // namespace

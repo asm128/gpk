@@ -95,11 +95,11 @@ namespace gpk
 		// Variable, may change at any time during 
 		s2_t				Health			= {};
 		u2_t			AvailableNitros	= {};
-		double				TimePlayed		= {};
+		f3_t				TimePlayed		= {};
 	};
 #pragma pack(pop)
 	tplt<tpnm _tPOD> 
-	::gpk::err_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const u2_t index) { 
+	gpk::err_t 		loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const u2_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
 		if_fail_fef(gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
@@ -163,7 +163,7 @@ namespace gpk
 		}
 
 
-		::gpk::err_t				Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t 			Save				(::gpk::au0_t & output)	const	{ 
 			if_fail_fe(gpk::saveView(output, ShipScores	));
 			if_fail_fe(gpk::saveView(output, ShipCores	));
 			u2_t						totalEntityChildren	= 0;
@@ -187,7 +187,7 @@ namespace gpk
 			}
 			return 0; 
 		}
-		::gpk::err_t				Load				(::gpk::vcu0_t & input) { 
+		gpk::err_t 			Load				(::gpk::vcu0_t & input) { 
 			ShipScores	.clear();
 			ShipCores	.clear();
 			if_fail_fe(gpk::loadView(input, ShipScores	));

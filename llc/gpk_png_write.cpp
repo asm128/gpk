@@ -33,7 +33,7 @@ u2_t				gpk::update_crc			(const ::gpk::vcu0_t & buf, u2_t crc)										{
 	return c;
 }
 
-::gpk::err_t			gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au0_t & out_Bytes)		{
+gpk::err_t 		gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au0_t & out_Bytes)		{
 	stxp	const u0_t		signature	[8]			= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
 	::gpk::au0_t				safe_Bytes				= {};
 	safe_Bytes.append(signature);

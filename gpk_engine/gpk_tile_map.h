@@ -22,13 +22,13 @@ namespace gpk
 		::gpk::apod<TILE_FLAG>	Flags;
 		::gpk::tilegrid			Tiles;
 
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t 		Save				(::gpk::au0_t & output)	const	{ 
 			if_fail_fe(gpk::saveView (output, Flags)); 
 			if_fail_fe(gpk::saveImage(output, Tiles.View)); 
 			return 0;
 		}
 
-		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
+		gpk::err_t 		Load				(::gpk::vcu0_t & input)	{ 
 			if_fail_fe(gpk::loadView (input, Flags )); 
 			if_fail_fe(gpk::loadImage(input, Tiles)); 
 			return 0;
@@ -49,7 +49,7 @@ namespace gpk
 		::gpk::apod<STimestamps>	Stamps;	// 
 		::gpk::apobj<STileBlock>	Blocks;	// 
 	
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t 		Save				(::gpk::au0_t & output)	const	{ 
 			if_fail_fe(gpk::savePOD (output, Config)); 
 			if_fail_fe(gpk::saveView(output, Coords)); 
 			if_fail_fe(gpk::saveView(output, Stamps)); 
@@ -59,7 +59,7 @@ namespace gpk
 			}
 			return 0; 
 		}
-		::gpk::err_t			Load				(::gpk::vcu0_t & input) { 
+		gpk::err_t 		Load				(::gpk::vcu0_t & input) { 
 			if_fail_fe(gpk::loadPOD (input, Config)); 
 			if_fail_fe(gpk::loadView(input, Coords)); 
 			if_fail_fe(gpk::loadView(input, Stamps)); 

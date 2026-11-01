@@ -6,8 +6,8 @@ GPK_USING_APOD();
 GPK_USING_ASTATIC();
 GPK_USING_N2();
 
-::gpk::err_t			gpk_cgi_generate_output					(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output);
-::gpk::err_t			gpk::cgiMain							(::gpk::SRuntimeValues & runtimeValues)	{
+gpk::err_t 		gpk_cgi_generate_output					(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output);
+gpk::err_t 		gpk::cgiMain							(::gpk::SRuntimeValues & runtimeValues)	{
 		SCGIRuntimeValues		cgiRuntimeValues(runtimeValues);
 		cgiRuntimeValuesLoad(cgiRuntimeValues);
 		string					output;

@@ -52,8 +52,8 @@ namespace gpk
 	typedef				::gpk::view_layered<sc_t			>	view3d_char				;
 	typedef				::gpk::view_layered<u0_t			>	view3d_ubyte			;
 	typedef				::gpk::view_layered<s0_t			>	view3d_byte				;
-	typedef				::gpk::view_layered<float			>	view3d_float32			;
-	typedef				::gpk::view_layered<double			>	view3d_float64			;
+	typedef				::gpk::view_layered<f2_t			>	view3d_float32			;
+	typedef				::gpk::view_layered<f3_t			>	view3d_float64			;
 	typedef				::gpk::view_layered<u0_t			>	view3d_uint8			;
 	typedef				::gpk::view_layered<u1_t		>	view3d_uint16			;
 	typedef				::gpk::view_layered<u2_t		>	view3d_uint32			;
@@ -67,8 +67,8 @@ namespace gpk
 	typedef				::gpk::view_layered<const sc_t	>	view3d_const_char		;
 	typedef				::gpk::view_layered<const u0_t	>	view3d_const_ubyte		;
 	typedef				::gpk::view_layered<const s0_t	>	view3d_const_byte		;
-	typedef				::gpk::view_layered<const float		>	view3d_const_float32	;
-	typedef				::gpk::view_layered<const double	>	view3d_const_float64	;
+	typedef				::gpk::view_layered<const f2_t		>	view3d_const_float32	;
+	typedef				::gpk::view_layered<const f3_t	>	view3d_const_float64	;
 	typedef				::gpk::view_layered<const u0_t	>	view3d_const_uint8		;
 	typedef				::gpk::view_layered<const u1_t	>	view3d_const_uint16		;
 	typedef				::gpk::view_layered<const u2_t	>	view3d_const_uint32		;

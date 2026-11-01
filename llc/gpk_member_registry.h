@@ -51,7 +51,7 @@ namespace gpk {
 #	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 
 	tplt<tpnm _tStruct>
-	inline	::gpk::err_t					get_member_registry()	{ return _tStruct::get_member_registry(); }
+	inline	gpk::err_t 				get_member_registry()	{ return _tStruct::get_member_registry(); }
 #pragma pack(pop)
 } // namespace
 

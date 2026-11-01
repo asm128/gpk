@@ -49,8 +49,8 @@ namespace gpk
 		X3DAUDIO_EMITTER		Emitter					= {};
 		X3DAUDIO_CONE			EmitterCone				= {};
 		::gpk::n3f2_t			EmitterPos				= {};
-		float					EmitterAzimuths			[INPUTCHANNELS]                     = {};
-		float					MatrixCoefficients		[INPUTCHANNELS * OUTPUTCHANNELS]    = {};
+		f2_t					EmitterAzimuths			[INPUTCHANNELS]                     = {};
+		f2_t					MatrixCoefficients		[INPUTCHANNELS * OUTPUTCHANNELS]    = {};
 
 		u2_t				ChannelMask				= 0;
 		u2_t				nChannels				= 0;
@@ -93,12 +93,12 @@ namespace gpk
 
 		::gpk::n3f2_t			vListenerPos			= {};
 		::gpk::n3f2_t			vEmitterPos				= {};
-		float					fListenerAngle			= (float)(::gpk::math_pi_2 * .5);
+		f2_t					fListenerAngle			= (f2_t)(::gpk::math_pi_2 * .5);
 		bool					fUseListenerCone		= true;
 		bool					fUseInnerRadius			= true;
 		bool					fUseRedirectToLFE		= 0;
 		bool					Playing					= false;
-		float					FrequencyRatio			= 1.0f;
+		f2_t					FrequencyRatio			= 1.0f;
 #ifdef USING_XAUDIO2_7_DIRECTX
 		u2_t				SampleRateOriginal		= 0;
 		u2_t				SampleRateCurrent		= 0;
@@ -108,14 +108,14 @@ namespace gpk
 		FLOAT32					matrixCoefficients		[INPUTCHANNELS * OUTPUTCHANNELS]    = {};
 
 
-		::gpk::err_t			InitAudio				();
-		::gpk::err_t			PrepareAudio			(::gpk::vcst_t wavname);
-		::gpk::err_t			UpdateAudio				(double fElapsedTime);
-		::gpk::err_t			SetReverb				(int nReverb);
-		::gpk::err_t			PauseAudio				(bool resume);
-		::gpk::err_t			CleanupAudio			();
+		gpk::err_t 		InitAudio				();
+		gpk::err_t 		PrepareAudio			(::gpk::vcst_t wavname);
+		gpk::err_t 		UpdateAudio				(f3_t fElapsedTime);
+		gpk::err_t 		SetReverb				(int nReverb);
+		gpk::err_t 		PauseAudio				(bool resume);
+		gpk::err_t 		CleanupAudio			();
 
-		::gpk::err_t			PlayWave				(::gpk::vcst_t wavname);
+		gpk::err_t 		PlayWave				(::gpk::vcst_t wavname);
 	};
 } // namespace
 #endif // GPK_XAUDIO2_H_23627

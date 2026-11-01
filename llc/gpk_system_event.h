@@ -31,7 +31,7 @@ namespace gpk
 	tydf ::gpk::apobj<::gpk::SEventSystem>				TQueueSystemEvent;
 	
 	template<typename _t>
-	stin	::gpk::err_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::RESULT eventType, _t & eventData)	{ 
+	stin	gpk::err_t eventEnqueueChild	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::RESULT eventType, _t & eventData)	{ 
 		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Device, eventType, eventData); 
 	}
 
@@ -70,10 +70,10 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	//stin	::gpk::err_t	eventEnqueueRuntimeInit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Init			, ::gpk::EVENT_RUNTIME_Init			); }
-	//stin	::gpk::err_t	eventEnqueueRuntimeExit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Exit			, ::gpk::EVENT_RUNTIME_Exit			); }
-	//stin	::gpk::err_t	eventEnqueueRuntimeProcessQueue	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_queue, ::gpk::EVENT_RUNTIME_Process_queue); }
-	//stin	::gpk::err_t	eventEnqueueRuntimeProcessEvent	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_event, ::gpk::EVENT_RUNTIME_Process_event); }
+	//stin	gpk::err_t eventEnqueueRuntimeInit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Init			, ::gpk::EVENT_RUNTIME_Init			); }
+	//stin	gpk::err_t eventEnqueueRuntimeExit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Exit			, ::gpk::EVENT_RUNTIME_Exit			); }
+	//stin	gpk::err_t eventEnqueueRuntimeProcessQueue	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_queue, ::gpk::EVENT_RUNTIME_Process_queue); }
+	//stin	gpk::err_t eventEnqueueRuntimeProcessEvent	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_event, ::gpk::EVENT_RUNTIME_Process_event); }
 } // namespace
 
 #endif // GPK_SYSTEM_EVENT_H_23627

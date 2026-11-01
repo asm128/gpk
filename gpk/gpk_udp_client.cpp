@@ -12,7 +12,7 @@ typedef	int			socklen_t;
 
 GPK_USING_TYPEINT();
 
-static	::gpk::err_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
+static	gpk::err_t clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	client.FirstPing = client.KeyPing							= 0;
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_CONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	/* Data to send */
 	sockaddr_in														sa_server									= {};				/* Information about the server */
@@ -50,7 +50,7 @@ static	::gpk::err_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	return 0;
 }
 
-static	::gpk::err_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
+static	gpk::err_t clientQueueReceive								(::gpk::SUDPClient & client)		{
 	::gpk::au0_t														receiveBuffer;
 	while(client.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED && client.Socket != INVALID_SOCKET) {
 		sockaddr_in														sa_server									= {};				/* Information about the server */
@@ -92,13 +92,13 @@ static	void												threadUpdateClient							(void* pClient)						{
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 }
 
-::gpk::err_t			gpk::clientUpdate							(::gpk::SUDPClient & client)		{
+gpk::err_t 		gpk::clientUpdate							(::gpk::SUDPClient & client)		{
 	if_true_vef(-1, client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected. Current state: %s.", ::gpk::get_value_label(client.State).begin());
 	client.CacheSent.clear(); client.CacheSend.clear();
 	return ::gpk::connectionSendQueue(client, client.CacheSent, client.CacheSend);
 }
 
-::gpk::err_t			gpk::clientDisconnect						(::gpk::SUDPClient & client)		{
+gpk::err_t 		gpk::clientDisconnect						(::gpk::SUDPClient & client)		{
 	int																sa_length									= sizeof(struct sockaddr_in);
 	sockaddr_in														sa_server									= {AF_INET,};
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_server);
@@ -115,7 +115,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 	return 0;
 }
 
-::gpk::err_t			gpk::clientConnect							(::gpk::SUDPClient & client)		{
+gpk::err_t 		gpk::clientConnect							(::gpk::SUDPClient & client)		{
 	u2_t						attempts									= 0;
 	stxp	u2_t												MAX_ATTEMPTS								= 1;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;

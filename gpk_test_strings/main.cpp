@@ -6,6 +6,8 @@
 #include "gpk_log.h"
 #include "gpk_file.h"
 
+using namespace gpk;
+
 // Splits a file into file.split.## parts.
 int									main							(int , char ** )		{
 	const ::gpk::vcst_t text = "habia una vez un bru un brujito en gulubu.\r\n";

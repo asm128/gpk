@@ -2,8 +2,13 @@
 
 #include "WAVFileReader.h"
 
-#include <cstdio>
+GPK_USING_TYPEINT	();
+GPK_USING_VIEW		();
+GPK_USING_APOD		();
+GPK_USING_N2		();
+GPK_USING_N3		();
 
+#include <cstdio>
 
 #define safe_destroyVoice(pVoice) do {						\
 		if(pVoice) { pVoice->DestroyVoice(); pVoice = {}; }	\
@@ -67,7 +72,7 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 //-----------------------------------------------------------------------------------------
 // Initialize the audio by creating the XAudio2 device, mastering voice, etc.
 //-----------------------------------------------------------------------------------------
-::gpk::err_t			gpk::AUDIO_STATE::InitAudio() {
+gpk::err_t 		gpk::AUDIO_STATE::InitAudio() {
 	gpk_hrcall(CoInitializeEx( nullptr, COINIT_MULTITHREADED ));
 
 #ifdef USING_XAUDIO2_7_DIRECTX
@@ -171,11 +176,11 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 
 	// Speaker geometry configuration on the final mix, specifies assignment of channels to speaker positions, defined as per WAVEFORMATEXTENSIBLE.dwChannelMask
 	// SpeedOfSound - speed of sound in user-defined world units/second, used only for doppler calculations, it must be >= FLT_MIN
-	stxp	float				SPEEDOFSOUND		= X3DAUDIO_SPEED_OF_SOUND;
+	stxp	f2_t				SPEEDOFSOUND		= X3DAUDIO_SPEED_OF_SOUND;
 	X3DAudioInitialize(dwChannelMask, SPEEDOFSOUND, x3DInstance);
 
 	vListenerPos			= {};
-	vEmitterPos				= {0, 0, float( ZMAX )};
+	vEmitterPos				= {0, 0, f2_t( ZMAX )};
 
 	fListenerAngle			= 0;
 	fUseListenerCone		= TRUE;
@@ -237,15 +242,15 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 //-----------------------------------------------------------------------------
 // Prepare a looping wave
 //-----------------------------------------------------------------------------
-::gpk::err_t			gpk::AUDIO_STATE::PrepareAudio(::gpk::view<sc_c> & wavname) {
+gpk::err_t 		gpk::AUDIO_STATE::PrepareAudio(vcst_t wavname) {
 	safe_destroySourceVoice(SourceVoice);
 
 	// Read in the wave file
-	const WAVEFORMATEX			* pwfx				= 0;
-	::gpk::vcu0_t					audioView			= {};
+	const WAVEFORMATEX		* pwfx				= 0;
+	vcu0_t					audioView			= {};
 	if_fail_fe(DirectX::LoadWAVAudioFromFile(wavname, WaveData, &pwfx, audioView));
 
-	if_true_vef(-1, pwfx->nChannels != INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
+	if_true_fef(pwfx->nChannels != INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
 
 	// Play the wave using a source voice that sends to both the submix and mastering voices
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};
@@ -274,7 +279,7 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 //-----------------------------------------------------------------------------
 // Perform per-frame update of audio
 //-----------------------------------------------------------------------------
-::gpk::err_t			gpk::AUDIO_STATE::UpdateAudio(double fElapsedTime) {
+gpk::err_t 		gpk::AUDIO_STATE::UpdateAudio(f3_t fElapsedTime) {
 	if( nFrameToApply3DAudio == 0 ) {
 		// Calculate listener orientation in x-z plane
 		if (vListenerPos.x != listener.Position.x
@@ -282,7 +287,7 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 		) {
 			::gpk::n3f2_t				vDelta				= vListenerPos - ::gpk::n3f2_t{listener.Position.x, listener.Position.y, listener.Position.z};
 
-			fListenerAngle			= float( atan2( vDelta.x, vDelta.z ) );
+			fListenerAngle			= f2_t( atan2( vDelta.x, vDelta.z ) );
 
 			vDelta.y				= 0.0f;
 			vDelta.Normalize();
@@ -344,7 +349,7 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 	return S_OK;
 }
 
-::gpk::err_t			gpk::AUDIO_STATE::SetReverb(int nReverb) {
+gpk::err_t 		gpk::AUDIO_STATE::SetReverb(int nReverb) {
 	if( nReverb < 0 || nReverb >= NUM_PRESETS )
 		return E_FAIL;
 
@@ -357,7 +362,7 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 	return S_OK;
 }
 
-::gpk::err_t			gpk::AUDIO_STATE::PauseAudio(bool resume) { 
+gpk::err_t 		gpk::AUDIO_STATE::PauseAudio(bool resume) { 
 	if(resume && false == Playing) 
 		XAudio2->StartEngine();
 	else if(Playing && false == resume) 
@@ -367,7 +372,7 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 	return 0; 
 }
 
-::gpk::err_t			gpk::AUDIO_STATE::CleanupAudio	()					{
+gpk::err_t 		gpk::AUDIO_STATE::CleanupAudio	()					{
 	safe_destroySourceVoice(SourceVoice);	
 	safe_destroyVoice(pSubmixVoice);	
 	safe_destroyVoice(pMasterVoice);
@@ -379,7 +384,7 @@ stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 	return 0;
 }
 
-static	::gpk::err_t	enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<::gpk::AudioDevice> & list) {
+static	gpk::err_t enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<::gpk::AudioDevice> & list) {
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
 	UNREFERENCED_PARAMETER( pXaudio2 );
 
@@ -541,7 +546,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::view<sc_c> & wavname, IXAudio
 
 	// Search for media
 	sc_t						strFilePath[4096]	= {};
-	sprintf_s(strFilePath, "./%s", GPK_VIEW_ARGS(wavname).begin());
+	sprintf_s(strFilePath, "./%.*s", GPK_VIEW_ARGS(wavname));
 	wchar_t						wstrFilePath[4096]	= {};
 	size_t						count				= 0;
 	mbstowcs_s(&count, wstrFilePath, strFilePath, 4095);
@@ -550,7 +555,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::view<sc_c> & wavname, IXAudio
 	const WAVEFORMATEX			* pwfx				= 0;
 	::gpk::vcu0_t				audioView			= {};
 	WaveData.create();
-	gpk_hrcall(DirectX::LoadWAVAudioFromFile(::gpk::vcst_t{strFilePath}, *WaveData, &pwfx, audioView));
+	gpk_hrcall(DirectX::LoadWAVAudioFromFile(strFilePath, *WaveData, &pwfx, audioView));
 
 	// Play the wave using a source voice that sends to both the submix and mastering voices
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};

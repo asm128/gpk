@@ -117,7 +117,7 @@ namespace gpk
 		, 
 		}; 
 
-	stxp	float						VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
+	stxp	f2_t						VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
 
 	tplt<tpnm T, u1_t _width = 16>
 	struct SVoxelLayer {

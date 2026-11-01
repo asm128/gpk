@@ -6,7 +6,7 @@
 namespace gpk
 {
 	struct STypeRegistry {
-		::gpk::avcsc_t				Names;
+		::gpk::aobj<vcst_t>				Names;
 		::gpk::au2_t				MemberCount;
 
 		static	STypeRegistry&	GetGlobalInstance	()	noexcept	{

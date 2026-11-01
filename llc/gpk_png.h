@@ -68,34 +68,34 @@ namespace gpk
 	u2_t				update_crc	(const ::gpk::vcu0_t & buf, u2_t crc)		;
 	stin	u2_t		get_crc		(const ::gpk::vcu0_t & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
 
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::g8bgra	out_View);
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::gu1_t		out_View);
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::gu8		out_View);
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data);
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data, ::gpk::g8bgra & out_View); 
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data, ::gpk::gu1_t   & out_View); 
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data, ::gpk::gu8    & out_View); 
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::img8bgra & out_Image);
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::imgu1_t	& out_Image);
-	::gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::imgu0_t	& out_Image);
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::g8bgra	out_View);
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::gu1_t		out_View);
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::gu8		out_View);
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data);
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data, ::gpk::g8bgra & out_View); 
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data, ::gpk::gu1_t   & out_View); 
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::au0_t	& out_Data, ::gpk::gu8    & out_View); 
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::img8bgra & out_Image);
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::imgu1_t	& out_Image);
+	gpk::err_t 		pngDecode	(::gpk::SPNGData & pngData, ::gpk::imgu0_t	& out_Image);
 	
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	);
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	);
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	, ::gpk::img8bgra & out_Texture)	;
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	, ::gpk::img8bgra & out_Texture)	;
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	;
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	;
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data)	;
-	::gpk::err_t			pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data)	;
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	);
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	);
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	, ::gpk::img8bgra & out_Texture)	;
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	, ::gpk::img8bgra & out_Texture)	;
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	;
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	;
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data)	;
+	gpk::err_t 		pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data)	;
 
-	::gpk::err_t			pngFileWrite(const ::gpk::gc8bgra & out_ImageView, ::gpk::au0_t & out_Bytes);
+	gpk::err_t 		pngFileWrite(const ::gpk::gc8bgra & out_ImageView, ::gpk::au0_t & out_Bytes);
 
-	stin	::gpk::err_t	pngFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::img8bgra & out_Texture)					{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
-	stin	::gpk::err_t	pngFileLoad	(const ::gpk::vcu0_t	& source	, ::gpk::img8bgra & out_Texture)					{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
-	stin	::gpk::err_t	pngFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Data, out_View); }
-	stin	::gpk::err_t	pngFileLoad	(const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Data, out_View); }
-	stin	::gpk::err_t	pngFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data)							{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Data); }
-	stin	::gpk::err_t	pngFileLoad	(const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data)							{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Data); }
+	stin	gpk::err_t pngFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::img8bgra & out_Texture)					{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
+	stin	gpk::err_t pngFileLoad	(const ::gpk::vcu0_t	& source	, ::gpk::img8bgra & out_Texture)					{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
+	stin	gpk::err_t pngFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Data, out_View); }
+	stin	gpk::err_t pngFileLoad	(const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data, ::gpk::g8bgra & out_View)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Data, out_View); }
+	stin	gpk::err_t pngFileLoad	(const ::gpk::vcst_t	& filename	, ::gpk::au0_t & out_Data)							{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Data); }
+	stin	gpk::err_t pngFileLoad	(const ::gpk::vcu0_t	& source	, ::gpk::au0_t & out_Data)							{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Data); }
 } // namespace
 
 #endif // GPK_PNG_H_23627

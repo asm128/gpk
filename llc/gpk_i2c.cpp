@@ -349,12 +349,12 @@
 // // 	}
 // } // namespace
 
-// // ::gpk::err_t	gpk::i2cInit	(SI2CDevice & device) {
+// // gpk::err_t gpk::i2cInit	(SI2CDevice & device) {
 // // 	(void)device;
 // // 	return 0;
 // // }
-// // ::gpk::err_t	gpk::i2cLoad	(SI2CDevice & host, u0_t address, au0_t & data, u1_t howManyBytes, u2_t timeout, BUS_MODE mode) { if_fail_fe(data.resize(howManyBytes)); return i2cLoad(host, address, (vu0_t&)data, howManyBytes, timeout, mode); }
-// // ::gpk::err_t	gpk::i2cLoad	(SI2CDevice & host, u0_t address, vu0_t & data, u1_t howManyBytes, u2_t timeout, BUS_MODE mode) {
+// // gpk::err_t gpk::i2cLoad	(SI2CDevice & host, u0_t address, au0_t & data, u1_t howManyBytes, u2_t timeout, BUS_MODE mode) { if_fail_fe(data.resize(howManyBytes)); return i2cLoad(host, address, (vu0_t&)data, howManyBytes, timeout, mode); }
+// // gpk::err_t gpk::i2cLoad	(SI2CDevice & host, u0_t address, vu0_t & data, u1_t howManyBytes, u2_t timeout, BUS_MODE mode) {
 // // #ifdef GPK_ST
 // // 	HAL_StatusTypeDef result = HAL_ERROR;
 // // 	switch(mode) {
@@ -372,7 +372,7 @@
 // // #endif
 // // 	return 0;
 // // }
-// // ::gpk::err_t	gpk::i2cSave		(SI2CDevice & host, u0_t address, vcu0_c & data, u2_t timeout, BUS_MODE mode) {
+// // gpk::err_t gpk::i2cSave		(SI2CDevice & host, u0_t address, vcu0_c & data, u2_t timeout, BUS_MODE mode) {
 // // #ifdef GPK_ST
 // // 	HAL_StatusTypeDef result = HAL_ERROR;
 // // 	switch(mode) {

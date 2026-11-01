@@ -25,29 +25,29 @@ namespace gpk
 	struct SStageTime {
 		u3_t		Started					= {};	// Timestamp
 		u3_t		Loaded					= {};	// Timestamp
-		double			Played					= {};	// This one represents the real-world time played, incremented on every tick while not paused.
+		f3_t			Played					= {};	// This one represents the real-world time played, incremented on every tick while not paused.
 	};
 
 	struct SRelativeSpeed {
-		float			Current					= -50;
-		float			Target					= 20;
-		float			Step					= 20;
-		float			AccelerationControl		= 0;
+		f2_t			Current					= -50;
+		f2_t			Target					= 20;
+		f2_t			Step					= 20;
+		f2_t			AccelerationControl		= 0;
 
-		float			ClampEpsilon			(double epsilon = 0.0001) {
-			const float			diff					= Target - Current;
+		f2_t			ClampEpsilon			(f3_t epsilon = 0.0001) {
+			const f2_t			diff					= Target - Current;
 			if(fabsf(diff < epsilon))
 				Current			= Target;
 			return diff;
 		}
 
-		float			Update					(double seconds) {
+		f2_t			Update					(f3_t seconds) {
 			if(AccelerationControl)
-				return Current += float(seconds * Step * AccelerationControl);
+				return Current += f2_t(seconds * Step * AccelerationControl);
 
 			const bool			slowdown				= Current > Target;
 			if(slowdown || Current < Target) {
-				Current			+= float(seconds * Step) * (slowdown ? -1 : 1);
+				Current			+= f2_t(seconds * Step) * (slowdown ? -1 : 1);
 				ClampEpsilon();
 			}
 			return Current;
@@ -56,18 +56,18 @@ namespace gpk
 	stxp	size_t SIZE_SRELATIVESPEED = sizeof(SRelativeSpeed);
 
 	struct SRelativeTime {
-		float			Scale					= 1.0f;
-		float			Step					= -.35f;	// the amount in which the scale decreases or increases PER SECOND.
-		double			Seconds					= 0;		// Relative seconds elapsed--could be the real-world time scaled by the `Scale` member. 
+		f2_t			Scale					= 1.0f;
+		f2_t			Step					= -.35f;	// the amount in which the scale decreases or increases PER SECOND.
+		f3_t			Seconds					= 0;		// Relative seconds elapsed--could be the real-world time scaled by the `Scale` member. 
 
-		double			Update					(double realSeconds, float fasting) {
+		f3_t			Update					(f3_t realSeconds, f2_t fasting) {
 			if(Step < 0) {
-				Scale			+= float(realSeconds * Step);
+				Scale			+= f2_t(realSeconds * Step);
 				if(Scale < .1)
 					Step			= fasting;
 			}
 			else if(Scale < .999999) {
-				Scale			+= float(realSeconds * Step);
+				Scale			+= f2_t(realSeconds * Step);
 				if(Scale > 1.0f)
 					Scale			= 1.0f;
 			}

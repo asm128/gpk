@@ -6,7 +6,7 @@
 
 namespace gpk 
 {
-	::gpk::err_t			createBuffers
+	gpk::err_t 		createBuffers
 		( const ::gpk::SGeometryBuffers	& geometry
 		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
 		, ::gpk::pobj<SRenderBuffer>	& pVertices
@@ -14,7 +14,7 @@ namespace gpk
 		, ::gpk::pobj<SRenderBuffer>	& pUV
 		);
 
-	::gpk::err_t			createBuffers
+	gpk::err_t 		createBuffers
 		( SRenderBufferManager			& bufferManager 
 		, const ::gpk::SGeometryBuffers	& geometry
 		, u2_t						& iIndicesVertex

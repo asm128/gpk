@@ -1,6 +1,6 @@
 #include "gpk_engine_renderbuffer.h"
 
-::gpk::err_t			gpk::createBuffers	
+gpk::err_t 		gpk::createBuffers	
 	( u2_t							vertexCount
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices

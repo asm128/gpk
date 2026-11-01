@@ -45,7 +45,7 @@ namespace gpk
 	tplt<tpnm _tEnum>
 	err_t			setupControlListWithRoot	(SGUI & gui, acid & outIds, cid_t parent, const n2u1_t & buttonSize, ALIGN controlAlign, ALIGN textAlign = ALIGN_CENTER)		{
 		cid_t				root						= outIds[outIds.push_back(createScreenLayout(gui, parent))];
-		view<view<sc_c>>			labels						= {get_value_labels<_tEnum>()};
+		view<vcst_c>		labels						= {get_value_labels<_tEnum>()};
 		if_fail_fe(labels.slice(labels, 1));
 
 		return guiCreateControlList(gui, labels, root, buttonSize, {}, controlAlign, textAlign, outIds);

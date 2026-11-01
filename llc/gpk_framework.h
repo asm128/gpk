@@ -67,9 +67,9 @@ namespace gpk
 		}
 	}; // struct
 
-	::gpk::err_t				updateFramework			(::gpk::SFramework & framework);
-	::gpk::err_t				mainWindowCreate		(::gpk::SWindow & mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput> & displayInput);
-	::gpk::err_t				mainWindowDestroy		(::gpk::SWindow & mainWindow);
+	gpk::err_t 			updateFramework			(::gpk::SFramework & framework);
+	gpk::err_t 			mainWindowCreate		(::gpk::SWindow & mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput> & displayInput);
+	gpk::err_t 			mainWindowDestroy		(::gpk::SWindow & mainWindow);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_23627

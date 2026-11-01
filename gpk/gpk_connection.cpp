@@ -10,7 +10,7 @@ GPK_USING_VIEW();
 GPK_USING_ASTATIC();
 GPK_USING_APOD();
 
-::gpk::err_t			gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu0_t & data, bool bEncrypt, bool bCompress, u0_t retryCount) {
+gpk::err_t 		gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu0_t & data, bool bEncrypt, bool bCompress, u0_t retryCount) {
 	if_true_vef(-1, data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "%s", "Invalid payload size.");
 
 	::gpk::pobj<::gpk::SUDPMessage>	message;
@@ -35,7 +35,7 @@ GPK_USING_APOD();
 	return 0;
 }
 
-::gpk::err_t			gpk::connectionPayloadCollect		(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages)	{
+gpk::err_t 		gpk::connectionPayloadCollect		(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages)	{
 	if(0 == client.KeyPing || client.State == ::gpk::UDP_CONNECTION_STATE_HANDSHAKE)
 		return 1;
 
@@ -56,7 +56,7 @@ GPK_USING_APOD();
 stxp	u3_t		hashFromTime						(u3_t currentTime)		noexcept	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
 stxp	u2_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 
-::gpk::err_t			payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & payloadsToSend) {
+gpk::err_t 		payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & payloadsToSend) {
 	if(payloadsToSend.size() < 2)
 		return 0;
 
@@ -123,7 +123,7 @@ stxp	u2_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 	return 0;
 }
 
-::gpk::err_t			payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & payloadsToSend) {
+gpk::err_t 		payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & payloadsToSend) {
 	::gpk::au0_t				messageBytes;
 	sockaddr_in					sa_remote							= {};							// Information about the client
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
@@ -196,7 +196,7 @@ stxp	u2_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 	return 0;
 }
 
-::gpk::err_t			gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSend)				{
+gpk::err_t 		gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSend)				{
 	::gpk::apobj<::gpk::SUDPMessage>	& queueToSend						= client.Queue.Send;
 	sockaddr_in							sa_remote							= {};							// Information about the client
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
@@ -258,7 +258,7 @@ stxp	u2_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 	return 0;
 }
 
-static	::gpk::err_t	handleRequestDISCONNECT					(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client)												{
+static	gpk::err_t handleRequestDISCONNECT					(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client)												{
 	if_true_vef(-1, 0 != command.Packed || 0 != command.Encrypted || 0 != command.Compressed || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State, "Invalid command or client state: 0x%X '%s'.", client.State, ::gpk::get_value_label(client.State).begin());
 	client.FirstPing				=
 	client.KeyPing					= 0;
@@ -269,7 +269,7 @@ static	::gpk::err_t	handleRequestDISCONNECT					(::gpk::SUDPCommand & command, :
 	return 0;
 }
 
-static	::gpk::err_t	handleRequestCONNECT						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client)												{
+static	gpk::err_t handleRequestCONNECT						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client)												{
 	if_true_vef(-1, 1 != command.Packed || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State, "Invalid client state: 0x%X '%s'.", client.State, ::gpk::get_value_label(client.State).begin());
 	client.LastPing					= gpk::timeCurrentInUs();
 	{
@@ -290,7 +290,7 @@ static	::gpk::err_t	handleRequestCONNECT						(::gpk::SUDPCommand & command, ::g
 typedef int socklen_t;
 #endif
 
-static	::gpk::err_t	postConfirmationResponse			(::gpk::SUDPClientQueue & queue, const ::gpk::SUDPCommand command, const u3_t messageId)				{
+static	gpk::err_t postConfirmationResponse			(::gpk::SUDPClientQueue & queue, const ::gpk::SUDPCommand command, const u3_t messageId)				{
 	::gpk::pobj<::gpk::SUDPMessage>		response							= {};
 	response->Command				= command;
 	response->Command.Type			= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
@@ -302,7 +302,7 @@ static	::gpk::err_t	postConfirmationResponse			(::gpk::SUDPClientQueue & queue, 
 	return 0;
 }
 
-static	::gpk::err_t	handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPConnection & client)		{
+static	gpk::err_t handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPConnection & client)		{
 	// Remove from sent queue.
 	::std::lock_guard					lock								(client.Queue.MutexSend);
 	info_printf("Received response to message id: %llx", header.MessageId);
@@ -338,7 +338,7 @@ static	::gpk::err_t	handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader & h
 
 stxp	s3_t			advantage							= 1000000;
 
-static	::gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::au0_t & receiveBuffer)		{
+static	gpk::err_t handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::au0_t & receiveBuffer)		{
 	sockaddr_in					sa_client							= {};						// Information about the client
 	socklen_t					sa_length							= (socklen_t)sizeof(sockaddr_in);	// Length of client struct
 	int							bytes_received						= {};
@@ -459,7 +459,7 @@ static	::gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & he
 	return 0;
 }
 
-static	::gpk::err_t	handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::au0_t & receiveBuffer)		{
+static	gpk::err_t handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::au0_t & receiveBuffer)		{
 	if(::gpk::UDP_CONNECTION_STATE_IDLE != client.State)
 		return 1;
 	::gpk::SUDPPayloadHeader			header								= {};
@@ -479,7 +479,7 @@ static	::gpk::err_t	handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk::SUD
 	}
 }
 
-::gpk::err_t			gpk::connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au0_t & receiveBuffer)		{
+gpk::err_t 		gpk::connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au0_t & receiveBuffer)		{
 	::gpk::vcst_t				labelCommand						= ::gpk::get_value_label(command.Command);
 	::gpk::vcst_t				labelType							= ::gpk::get_value_label(command.Type	);
 	(void)labelCommand	;

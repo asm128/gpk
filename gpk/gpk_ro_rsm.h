@@ -24,7 +24,7 @@ namespace gpk
 		::gpk::n3f2_t							Row2;
 		::gpk::n3f2_t							Offset;
 		::gpk::n3f2_t							Translation;
-		float									Rotation;
+		f2_t									Rotation;
 		::gpk::n3f2_t							RotAxis;
 		::gpk::n3f2_t							Scale;
 	}; //
@@ -65,9 +65,9 @@ namespace gpk
 		sc_t									RootNodeName[40];
 		::gpk::aobj<::gpk::SRSMNode>			Nodes;
 	};
-	::gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vu0_t	& input);
-	::gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, FILE				* input);
-	::gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vcst_t	& input);
+	gpk::err_t 						rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vu0_t	& input);
+	gpk::err_t 						rsmFileLoad			(::gpk::SRSMFileContents & loaded, FILE				* input);
+	gpk::err_t 						rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vcst_t	& input);
 
 	struct SModelNodeRSM {
 		::gpk::apod<::gpk::n3f2_t>				Normals			;
@@ -84,7 +84,7 @@ namespace gpk
 		::gpk::as2_t								IdChildren		;
 	};
 
-	::gpk::err_t							rsmGeometryGenerate	(const ::gpk::SRSMFileContents& input, ::gpk::view<::gpk::SModelNodeRSM>& out_generated);
+	gpk::err_t 						rsmGeometryGenerate	(const ::gpk::SRSMFileContents& input, ::gpk::view<::gpk::SModelNodeRSM>& out_generated);
 } // namespace
 
 #endif // GPK_RSM_H_23627

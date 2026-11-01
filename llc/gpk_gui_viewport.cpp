@@ -1,11 +1,11 @@
 #include "gpk_gui_viewport.h"
 #include "gpk_label.h"
 
-::gpk::err_t			gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & viewport)			{
+gpk::err_t 		gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & viewport)			{
 	const ::gpk::n2u0_t			fontCharSize			= gui.Fonts[gui.SelectedFont]->CharSize;
 	s1_t						heightTitleBar			= fontCharSize.y + 4;
 	u2_t					widthTarget				= 800;
-	const ::gpk::n2f3_t			targetSize				= {(double)widthTarget, widthTarget * (9 / 16.0)};
+	const ::gpk::n2f3_t			targetSize				= {(f3_t)widthTarget, widthTarget * (9 / 16.0)};
 
 	//if(-1 == viewport.IdControl)
 	{

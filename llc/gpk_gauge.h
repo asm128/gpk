@@ -13,10 +13,10 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limit == other.Limit && Value == other.Value); 
 
-		cxpr double				Weight			()		const	noexcept	{ return 1.0 / Limit * Value; }
-		inxp	double				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamped(Value, (T)0, Limit); }
+		cxpr f3_t				Weight			()		const	noexcept	{ return 1.0 / Limit * Value; }
+		inxp	f3_t				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamped(Value, (T)0, Limit); }
 		T							SetClamp		(T value)		noexcept	{ return Value = ::gpk::clamped(value, 0, Limit); }
-		T							SetWeighted		(double weight)	noexcept	{ return SetClamp(T(Limit * weight)); }
+		T							SetWeighted		(f3_t weight)	noexcept	{ return SetClamp(T(Limit * weight)); }
 
 		tplt<tpnm _tOther>
 		gaugemax<_tOther>			Cast		()		const	noexcept	{ return {(_tOther)Limit, (_tOther)Value}; }
@@ -29,8 +29,8 @@ namespace gpk
 		inxp	minmax<s1_t>		s1_t			()		const	noexcept	{ return Cast<s1_t	>(); }
 		inxp	minmax<s2_t>		s2_t			()		const	noexcept	{ return Cast<s2_t	>(); }
 		inxp	minmax<s3_t>		s3_t			()		const	noexcept	{ return Cast<s3_t	>(); }
-		inxp	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
-		inxp	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
+		inxp	minmax<f2_t>		f2_t			()		const	noexcept	{ return Cast<f2_t		>(); }
+		inxp	minmax<f3_t>		f3_t			()		const	noexcept	{ return Cast<f3_t	>(); }
 	};
 
 	tplt<tpnm T> 
@@ -41,10 +41,10 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limits == other.Limits && Value == other.Value); 
 
 		inxp	T					Middle		()		const	noexcept	{ return Limits.Min + Limits.Length() / 2; }
-		cxpr	double				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
-		inxp	double				WeightClamp	()		const	noexcept	{ return Limits.WeightClamp(Value); }
+		cxpr	f3_t				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
+		inxp	f3_t				WeightClamp	()		const	noexcept	{ return Limits.WeightClamp(Value); }
 		T							SetClamp	(T value)		noexcept	{ return Value = Limits.Clamp(value); }
-		T							SetWeighted	(double weight)	noexcept	{ return Set(Limits.Weighted(weight)); }
+		T							SetWeighted	(f3_t weight)	noexcept	{ return Set(Limits.Weighted(weight)); }
 
 		tplt<tpnm _tOther>
 		gaugeminmax<_tOther>		Cast		()		const	noexcept	{ return {Limits.Cast<_tOther>(), (_tOther)Value}; }
@@ -57,14 +57,14 @@ namespace gpk
 		inxp	minmax<s1_t>		s1_t			()		const	noexcept	{ return Cast<s1_t	>(); }
 		inxp	minmax<s2_t>		s2_t			()		const	noexcept	{ return Cast<s2_t	>(); }
 		inxp	minmax<s3_t>		s3_t			()		const	noexcept	{ return Cast<s3_t	>(); }
-		inxp	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
-		inxp	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
+		inxp	minmax<f2_t>		f2_t			()		const	noexcept	{ return Cast<f2_t		>(); }
+		inxp	minmax<f3_t>		f3_t			()		const	noexcept	{ return Cast<f3_t	>(); }
 	};
 #pragma pack(pop)
 	typedef	gaugemax<sc_t		>	gaugemaxchar;
 	typedef	gaugemax<uc_t	>	gaugemaxuchar;
-	typedef gaugemax<float		>	gaugemaxf2_t;
-	typedef gaugemax<double		>	gaugemaxf64;
+	typedef gaugemax<f2_t		>	gaugemaxf2_t;
+	typedef gaugemax<f3_t		>	gaugemaxf64;
 	typedef gaugemax<u0_t	>	gaugemaxu8;
 	typedef gaugemax<u1_t	>	gaugemaxu1_t;
 	typedef gaugemax<u2_t	>	gaugemaxu32;
@@ -76,8 +76,8 @@ namespace gpk
 
 	typedef	gaugeminmax<sc_t	>	gaugeminmaxchar;
 	typedef	gaugeminmax<uc_t	>	gaugeminmaxuchar;
-	typedef gaugeminmax<float	>	gaugeminmaxf2_t;
-	typedef gaugeminmax<double	>	gaugeminmaxf64;
+	typedef gaugeminmax<f2_t	>	gaugeminmaxf2_t;
+	typedef gaugeminmax<f3_t	>	gaugeminmaxf64;
 	typedef gaugeminmax<u0_t	>	gaugeminmaxu8;
 	typedef gaugeminmax<u1_t>	gaugeminmaxu1_t;
 	typedef gaugeminmax<u2_t>	gaugeminmaxu32;

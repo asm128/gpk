@@ -12,24 +12,24 @@ namespace gpk
 {
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
-	::gpk::err_t		line_line_intersect
+	gpk::err_t 	line_line_intersect
 		( const ::gpk::line2<TAxis>	& line1
 		, const ::gpk::line2<TAxis>	& line2
 		, ::gpk::n2<TAxis>		& out_intersect_point
 		)
 	{
-		double					detL1			= ::gpk::determinant(line1);
-		double					detL2			= ::gpk::determinant(line2);
+		f3_t					detL1			= ::gpk::determinant(line1);
+		f3_t					detL2			= ::gpk::determinant(line2);
 
-		double					x1mx2			= line1.A.x - line1.B.x;
-		double					y1my2			= line1.A.y - line1.B.y;
+		f3_t					x1mx2			= line1.A.x - line1.B.x;
+		f3_t					y1my2			= line1.A.y - line1.B.y;
 
-		double					x3mx4			= line2.A.x - line2.B.x;
-		double					y3my4			= line2.A.y - line2.B.y;
+		f3_t					x3mx4			= line2.A.x - line2.B.x;
+		f3_t					y3my4			= line2.A.y - line2.B.y;
 
-		double					xnom			= ::gpk::determinant(detL1, x1mx2, detL2, x3mx4);
-		double					ynom			= ::gpk::determinant(detL1, y1my2, detL2, y3my4);
-		double					denom			= ::gpk::determinant(x1mx2, y1my2, x3mx4, y3my4);
+		f3_t					xnom			= ::gpk::determinant(detL1, x1mx2, detL2, x3mx4);
+		f3_t					ynom			= ::gpk::determinant(detL1, y1my2, detL2, y3my4);
+		f3_t					denom			= ::gpk::determinant(x1mx2, y1my2, x3mx4, y3my4);
 		if(denom == 0.0) { // Lines don't seem to cross
 			out_intersect_point.x	= NAN;
 			out_intersect_point.y	= NAN;
@@ -50,21 +50,21 @@ namespace gpk
 		( const ::gpk::n3<TAxis>		& position
 		, const ::gpk::n3<TAxis>		& direction
 		, const ::gpk::sphere<TAxis>	& sphere
-		, float							& t
+		, f2_t							& t
 		, ::gpk::n3<TAxis>				& q
 		) {
 		const ::gpk::n3<TAxis>	m			= position - sphere.Center;
-		double					b			= m.Dot(direction);
-		double					c			= m.Dot(m) - sphere.Radius * sphere.Radius;
+		f3_t					b			= m.Dot(direction);
+		f3_t					c			= m.Dot(m) - sphere.Radius * sphere.Radius;
 
 		if (c > 0.0f && b > 0.0f)	// Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
 			return 0;
-		double					discr		= b * b - c;
+		f3_t					discr		= b * b - c;
 
 		if (discr < 0.0f)	// A negative discriminant corresponds to ray missing sphere
 			return 0;
 
-		t					= (float)(-b - sqrt(discr));	// Ray now found to intersect sphere, compute smallest t value of intersection
+		t					= (f2_t)(-b - sqrt(discr));	// Ray now found to intersect sphere, compute smallest t value of intersection
 		if (t < 0.0f)	// If t is negative, ray started inside sphere so clamped t to zero
 			t					= 0.0f;
 
@@ -73,7 +73,7 @@ namespace gpk
 	}
 
 	tplt<tpnm TAxis>
-	::gpk::err_t		point_in_segment
+	gpk::err_t 	point_in_segment
 		( const ::gpk::line2<TAxis>	& segment
 		, const ::gpk::n2<TAxis>	& point
 		)
@@ -86,31 +86,31 @@ namespace gpk
 	}
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
-	::gpk::err_t		line_segment_intersect
+	gpk::err_t 	line_segment_intersect
 		( const ::gpk::line2<TAxis>	& line
 		, const ::gpk::line2<TAxis>	& segment
 		, ::gpk::n2<TAxis>			& out_intersect_point
 		)
 	{
-		::gpk::err_t			collision			= line_line_intersect(line, segment, out_intersect_point);
+		gpk::err_t 		collision			= line_line_intersect(line, segment, out_intersect_point);
 		return (1 == collision) ? point_in_segment(segment, out_intersect_point) : collision;
 	}
 
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
-	::gpk::err_t		segment_segment_intersect
+	gpk::err_t 	segment_segment_intersect
 		( const ::gpk::line2<TAxis>	& segment1
 		, const ::gpk::line2<TAxis>	& segment2
 		, ::gpk::n2<TAxis>		& out_intersect_point
 		)
 	{
-		::gpk::err_t			collision			= line_segment_intersect(segment1, segment2, out_intersect_point);
+		gpk::err_t 		collision			= line_segment_intersect(segment1, segment2, out_intersect_point);
 		return (1 == collision) ? point_in_segment(segment1, out_intersect_point) : collision;
 	}
 
 
 	tplt<tpnm TAxis>
-	::gpk::err_t		buildAABBSegments
+	gpk::err_t 	buildAABBSegments
 		( const ::gpk::n2<TAxis>	& center
 		, const TAxis				halfSizeBox
 		, ::gpk::line2<TAxis>		& left
@@ -128,7 +128,7 @@ namespace gpk
 	}
 
 	tplt<tpnm TAxis>
-	::gpk::err_t		buildAABBSegments
+	gpk::err_t 	buildAABBSegments
 		( const ::gpk::rect2<TAxis>	& rect
 		, ::gpk::line2<TAxis>		& left
 		, ::gpk::line2<TAxis>		& top

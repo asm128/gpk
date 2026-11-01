@@ -10,7 +10,7 @@ GPK_USING_TYPEINT();
 GPK_USING_VIEW();
 GPK_USING_N2();
 
-static	::gpk::err_t	controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8bgra & target, bool bDisabled)				{
+static	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8bgra & target, bool bDisabled)				{
 	::gpk::SControlState		& controlState		= gui.Controls.States	[iControl];
 	::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw	[iControl];
 	::gpk::bgra					colorFace			= {0xFF, 0x00, 0xFF, 0xFF};
@@ -70,9 +70,9 @@ static	::gpk::GUI_CONTROL_PALETTE	paletteIndexFromState	(bool disabled, const ::
 		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 		;
 }
-static	::gpk::err_t	fillColorTableBorders3D			(const ::gpk::SControlState & controlState, ::gpk::view<::gpk::bgra> & colors)					{
-	double						bright;
-	double						shaded;
+static	gpk::err_t fillColorTableBorders3D			(const ::gpk::SControlState & controlState, ::gpk::view<::gpk::bgra> & colors)					{
+	f3_t						bright;
+	f3_t						shaded;
 	bright					= controlState.IsPressed() ? 0.4 : controlState.IsHovered() ? 0.8 : 1.2;
 	shaded					= controlState.IsPressed() ? 1.5 : controlState.IsHovered() ? 1.2 : 0.8;
 	::gpk::bgra					colorBackground											= colors[::gpk::GUI_CONTROL_AREA_OLD_CLIENT];
@@ -82,7 +82,7 @@ static	::gpk::err_t	fillColorTableBorders3D			(const ::gpk::SControlState & cont
 	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM	]	= colorBackground * shaded;
 	return 0;					  
 }
-static	::gpk::err_t	fillColorTableNew				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControlState & controlState, const ::gpk::SControlDraw & controlDraw, bool disabled, ::gpk::v8bgra & colors)					{
+static	gpk::err_t fillColorTableNew				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControlState & controlState, const ::gpk::SControlDraw & controlDraw, bool disabled, ::gpk::v8bgra & colors)					{
 	const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>
 								& colorCombo					= gui.Colors->Palettes[controlDraw.Palettes[::paletteIndexFromState(disabled, controlState)]];
 	//colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND	]	= colorCombo[::gpk::UI_CONTROL_AREA_BACKGROUND	];
@@ -96,7 +96,7 @@ static	::gpk::err_t	fillColorTableNew				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MO
 	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM]	= colorCombo[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	];
 	return 0;
 }
-static	::gpk::err_t	fillColorTableOld				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControlState & controlState, const ::gpk::SControlDraw & controlDraw, bool disabled, ::gpk::v8bgra & colors)					{
+static	gpk::err_t fillColorTableOld				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControlState & controlState, const ::gpk::SControlDraw & controlDraw, bool disabled, ::gpk::v8bgra & colors)					{
 	const ::gpk::SControlTheme	& theme							= (*gui.Colors->ControlThemes)[(0 == controlDraw.ColorTheme) ? gui.ThemeDefault : controlDraw.ColorTheme - 1];
 	const ::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>	
 								& colorCombo					= theme.ColorCombos[::paletteIndexFromState(disabled, controlState)];
@@ -111,7 +111,7 @@ static	::gpk::err_t	fillColorTableOld				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MO
 	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM]];
 	return 0;
 }
-static	::gpk::err_t	fillColorTable					(::gpk::SGUI & gui, ::gpk::cid_t iControl, bool disabled, ::gpk::view<::gpk::bgra> colors)					{
+static	gpk::err_t fillColorTable					(::gpk::SGUI & gui, ::gpk::cid_t iControl, bool disabled, ::gpk::view<::gpk::bgra> colors)					{
 	const ::gpk::SControlDraw	& draw							= gui.Controls.Draw		[iControl];
 	const ::gpk::SControlState	& state							= gui.Controls.States	[iControl];
 	::gpk::GUI_COLOR_MODE		colorMode						= (::gpk::GUI_COLOR_MODE)((draw.ColorMode == ::gpk::GUI_COLOR_MODE_Default) ? gui.ColorModeDefault : draw.ColorMode);
@@ -122,7 +122,7 @@ static	::gpk::err_t	fillColorTable					(::gpk::SGUI & gui, ::gpk::cid_t iControl
 
 	return 0;
 }
-static	::gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra & target)					{
+static	gpk::err_t actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra & target)					{
 	::gpk::bgra					colors[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {}; // -- Fill color table
 	const bool					disabled						= ::gpk::controlDisabled(gui, iControl);
 	const ::gpk::SControlArea	& controlMetrics				= gui.Controls.Area[iControl];
@@ -184,7 +184,7 @@ static	::gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iContr
 	if_true_e(::gpk::failed(::controlTextDraw(gui, iControl, target, disabled)));
 	return 0;
 }
-::gpk::err_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra target)								{
+gpk::err_t 		gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra target)								{
 	if_fail_fef(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics16()) {
 		for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
@@ -199,7 +199,7 @@ static	::gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iContr
 	}
 	return 0;
 }
-::gpk::err_t			gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::g8bgra target)													{
+gpk::err_t 		gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::g8bgra target)													{
 	if(gui.LastSize != target.metrics().u1() || gui.LastZoom != gui.Zoom) {
 		for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
 			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);

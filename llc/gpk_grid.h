@@ -44,7 +44,7 @@ namespace gpk
 		inxp	u2_t 				byte_count		()		const	nxpt	{ return area() * sizeof(T); }
 		inxp	u2_t				area			()		const	nxpt	{ return Size.x * Size.y; }
 
-		inln	::gpk::err_t		fill			(const T & value, u2_t offset = 0, u2_t count = 0xFFFFFFFFU) {
+		inln	gpk::err_t 	fill			(const T & value, u2_t offset = 0, u2_t count = 0xFFFFFFFFU) {
 			if_true_vef(-1, (count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);
 			for(u2_t i = offset, actualCount = ::gpk::min(size(), count); i < actualCount; ++i)
 				Data[i]						= value;
@@ -55,7 +55,7 @@ namespace gpk
 #pragma pack(pop)
 
 	tplt<tpnm TDim, tpnm TColor>
-	static	::gpk::err_t		drawRectangle			(::gpk::grid<TColor> & target, const TColor & value, const ::gpk::rect2<TDim> & rectangle)		{
+	static	gpk::err_t 	drawRectangle			(::gpk::grid<TColor> & target, const TColor & value, const ::gpk::rect2<TDim> & rectangle)		{
 		s2_c						xCount					= ::gpk::min((s2_t)target.metrics().x - ::gpk::max((s2_t)rectangle.Offset.x, (s2_t)0), (s2_t)rectangle.Size.x + ::gpk::min((s2_t)rectangle.Offset.x, (s2_t)0));
 		s2_c						yCount					= ::gpk::min((s2_t)target.metrics().y - ::gpk::max((s2_t)rectangle.Offset.y, (s2_t)0), (s2_t)rectangle.Size.y + ::gpk::min((s2_t)rectangle.Offset.y, (s2_t)0));
 		s2_c						yStart					= (s2_t)::gpk::max((s2_t)0, (s2_t)rectangle.Offset.y);
@@ -87,7 +87,7 @@ namespace gpk
 	typedef	::gpk::grid<f3_t>					gf64	;
 	typedef	::gpk::grid<u0_t>					gu8		;
 	typedef	::gpk::grid<u1_t>					gu1_t	;
-	typedef	::gpk::grid<u2_t>					gu32	;
+	typedef	::gpk::grid<u2_t>					gu2_t	;
 	typedef	::gpk::grid<u3_t>					gu64	;
 	typedef	::gpk::grid<s0_t>					gi8		;
 	typedef	::gpk::grid<s1_t>					gi16	;

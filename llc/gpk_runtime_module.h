@@ -46,8 +46,18 @@ namespace gpk
 			);
 	};
 #pragma pack(pop)
+	GDEFINE_ENUM_TYPE (RUNTIME_CALLBACK_ID, u0_t);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, NONE	, 0		);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Title	, 0x01	);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Version	, 0x02	);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Create	, 0x04	);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Delete	, 0x08	);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Setup	, 0x10	);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Cleanup	, 0x20	);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Render	, 0x40	);
+	GDEFINE_ENUM_VALUE(RUNTIME_CALLBACK_ID, Update	, 0x80	);
 
-	::gpk::err_t					loadRuntimeModule				(::gpk::SRuntimeModule& loadedModule, const ::gpk::vcst_t& moduleName);
+	gpk::err_t 				loadRuntimeModule				(::gpk::SRuntimeModule& loadedModule, const ::gpk::vcst_t& moduleName);
 }
 
 #endif // GPK_RUNTIME_MODULE_H_23627

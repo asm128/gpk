@@ -5,7 +5,7 @@
 
 GPK_USING_TYPEINT();
 
-::gpk::err_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
+gpk::err_t 		gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
 	::gpk::au1_t					keys;
 	for(u1_t i = 1; i < 255; ++i) {
 		keys.push_back(i);
@@ -17,7 +17,7 @@ GPK_USING_TYPEINT();
 	return vk.IdRoot;
 }
 
-::gpk::err_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, u0_t rowWidth, ::gpk::vcu1_c & keys) {
+gpk::err_t 		gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, u0_t rowWidth, ::gpk::vcu1_c & keys) {
 	vk.Keys					= keys;
 
 	vk.IdRoot				= ::gpk::controlCreate(gui);
@@ -52,7 +52,7 @@ GPK_USING_TYPEINT();
 	return 0;
 }
 
-::gpk::err_t			gpk::inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
+gpk::err_t 		gpk::inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
 	if_fail_fe(inputBox.IdRoot = ::gpk::controlCreate(gui));
 	gui.Controls.States		[inputBox.IdRoot].Mask		&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};

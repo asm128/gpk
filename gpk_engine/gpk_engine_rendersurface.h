@@ -23,8 +23,8 @@ namespace gpk
 		::gpk::SSurfaceDescription	Desc			= {};
 		::gpk::au0_t				Data			= {};
 
-		::gpk::err_t				Save			(::gpk::au0_t & output)	const	{ if_fail_fe(gpk::savePOD(output, Desc)); return ::gpk::saveView(output, Data); }
-		::gpk::err_t				Load			(::gpk::vcu0_t & input)			{ if_fail_fe(gpk::loadPOD(input, Desc)); return ::gpk::loadView(input, Data); }
+		gpk::err_t 			Save			(::gpk::au0_t & output)	const	{ if_fail_fe(gpk::savePOD(output, Desc)); return ::gpk::saveView(output, Data); }
+		gpk::err_t 			Load			(::gpk::vcu0_t & input)			{ if_fail_fe(gpk::loadPOD(input, Desc)); return ::gpk::loadView(input, Data); }
 	};
 
 	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSurface>	SSurfaceManager;

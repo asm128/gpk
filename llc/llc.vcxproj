@@ -272,6 +272,7 @@
     <ClCompile Include="gpk_component_scene_draw.cpp" />
     <ClCompile Include="gpk_d3d.cpp" />
     <ClCompile Include="gpk_datatype.cpp" />
+    <ClCompile Include="gpk_debug.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
     <ClCompile Include="gpk_file_pack.cpp" />

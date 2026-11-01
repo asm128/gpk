@@ -3,7 +3,7 @@
 
 GPK_USING_TYPEINT();
 
-static	::gpk::err_t	base64SymbolMapValidate						(cnst ::gpk::SBase64SymbolMap & symbolMap) {
+static	gpk::err_t base64SymbolMapValidate						(cnst ::gpk::SBase64SymbolMap & symbolMap) {
 	if(0 == symbolMap.Error)
 		rtrn 0;
 	if(-1 == symbolMap.Error)
@@ -19,7 +19,7 @@ static	::gpk::err_t	base64SymbolMapValidate						(cnst ::gpk::SBase64SymbolMap &
 }
 
 
-static	::gpk::err_t	base64EncodeTriplet							(::gpk::vcst_t base64Symbols, ::gpk::vu0_t inputTriplet, ::gpk::vu0_t out_base64) {
+static	gpk::err_t base64EncodeTriplet							(::gpk::vcst_t base64Symbols, ::gpk::vu0_t inputTriplet, ::gpk::vu0_t out_base64) {
 	for(::gpk::u2_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
 		::gpk::view_bit<u0_t>									inputBits												= {&inputTriplet[iSingleIn], 8};
 		::gpk::reverse_bits(inputBits);
@@ -44,7 +44,7 @@ static	::gpk::err_t	base64EncodeTriplet							(::gpk::vcst_t base64Symbols, ::gp
 	return 0;
 }
 
-::gpk::err_t			gpk::base64Encode								(cnst SBase64SymbolMap & symbolMap, vcu0_c & inputBytes, ::gpk::au0_t & out_base64) {
+gpk::err_t 		gpk::base64Encode								(cnst SBase64SymbolMap & symbolMap, vcu0_c & inputBytes, ::gpk::au0_t & out_base64) {
 	if_fail_fe(::base64SymbolMapValidate(symbolMap));
 	cnst ::gpk::vcst_t	& base64Symbols									= symbolMap.Symbols;
 	cnst char				base64PadSymbol									= symbolMap.Pad;
@@ -74,7 +74,7 @@ static	::gpk::err_t	base64EncodeTriplet							(::gpk::vcst_t base64Symbols, ::gp
 	return 0;
 }
 
-static	::gpk::err_t	base64DecodeQuad								(::gpk::vu0_t inputQuad, ::gpk::vu0_t outputBytes) {
+static	gpk::err_t base64DecodeQuad								(::gpk::vu0_t inputQuad, ::gpk::vu0_t outputBytes) {
 	for(::gpk::u2_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
 		::gpk::view_bit<u0_t>									inputBits												= {&inputQuad[iSingleIn], 6};
 		::gpk::reverse_bits(inputBits);
@@ -94,7 +94,7 @@ static	::gpk::err_t	base64DecodeQuad								(::gpk::vu0_t inputQuad, ::gpk::vu0_
 	return 0;
 }
 
-::gpk::err_t			gpk::base64Decode								(cnst SBase64SymbolMap & symbolMap, vcu0_c & in_base64, ::gpk::au0_t & outputBytes) {
+gpk::err_t 		gpk::base64Decode								(cnst SBase64SymbolMap & symbolMap, vcu0_c & in_base64, ::gpk::au0_t & outputBytes) {
 	if_fail_fe(::base64SymbolMapValidate(symbolMap));
 	cnst ::gpk::u0_t	(&base64SymbolRemap)[256]						= symbolMap.Decode.Storage;
 	cnst char				base64PadSymbol									= symbolMap.Pad;

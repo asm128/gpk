@@ -14,7 +14,7 @@ GPK_USING_N3();
 		::gpk::controlDelete(*Dialog->GUI, IdGUIControl, true); 
 }
 
-static	::gpk::err_t	dialogInitializeColors			(::gpk::SDialogColors & dialogColors, ::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>> & palettes) {
+static	gpk::err_t dialogInitializeColors			(::gpk::SDialogColors & dialogColors, ::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>> & palettes) {
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_NORMAL	]			= (u1_t)palettes.push_back({{::gpk::DARKGRAY			, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85	,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= (u1_t)palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2	,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= (u1_t)palettes.push_back({{::gpk::GRAY	 			, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
@@ -59,7 +59,7 @@ static	::gpk::err_t	dialogInitializeColors			(::gpk::SDialogColors & dialogColor
 	return 0;
 }
 
-static	::gpk::err_t	dialogInitialize				(::gpk::SDialog & dialog) {
+static	gpk::err_t dialogInitialize				(::gpk::SDialog & dialog) {
 	::gpk::SGUI						& gui							= *dialog.GUI; 
 	if_fail_fe(dialog.Root = ::gpk::controlCreate(gui));
 	gui.Controls.Placement		[dialog.Root].Margin				= {};
@@ -155,7 +155,7 @@ gpk::err_t			gpk::sliderSetValue		(::gpk::SDialogSlider & slider, s3_t value)			
 	bool						updateMetrics			= slider.ValueCurrent != newValue;
 	slider.ValueCurrent			= newValue;
 
-	const double				proportion				= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
+	const f3_t				proportion				= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
 	::gpk::SControlPlacement	& controlButton			= controlTable.Placement[slider.IdButton];
 	::gpk::SControlPlacement	& controlSlider			= controlTable.Placement[slider.IdGUIControl];
@@ -317,7 +317,7 @@ gpk::err_t			gpk::viewportFold		(::gpk::SDialogViewport	& control, bool fold)			
 	return one_if(false == control.Settings.Unfolded);
 }
 
-static	::gpk::err_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SControlPlacement & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2s1_t mouseDeltas) {
+static	gpk::err_t viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SControlPlacement & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2s1_t mouseDeltas) {
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
 	control.Settings.Dragging	= true;

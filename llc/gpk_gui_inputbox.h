@@ -10,8 +10,8 @@
 
 namespace gpk
 {
-	::gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, u0_t rowWidth, const ::gpk::vcu1_t & keys);
-	::gpk::err_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
+	gpk::err_t 		virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, u0_t rowWidth, const ::gpk::vcu1_t & keys);
+	gpk::err_t 		virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SInputBox {
 		cid_t					IdRoot				= {};
@@ -22,15 +22,15 @@ namespace gpk
 		bool					Editing				= false;
 
 
-		inline	::gpk::err_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text = text}); }
-		::gpk::err_t			Edit				(::gpk::SGUI & gui, bool editing) {
+		inline	gpk::err_t SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text = text}); }
+		gpk::err_t 		Edit				(::gpk::SGUI & gui, bool editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
 			return one_if(Editing);
 		}
 #ifndef GPK_ATMEL		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::err_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
+		gpk::err_t 		Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
@@ -102,7 +102,7 @@ namespace gpk
 #endif // GPK_ATMEL
 	};
 
-	::gpk::err_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
+	gpk::err_t 		inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
 } // namespace
 
 #endif // GPK_GUI_INPUTBOX_H_23627

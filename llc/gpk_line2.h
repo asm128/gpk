@@ -22,8 +22,8 @@ namespace gpk
 				};
 		}
 	};
-	typedef line2<float>	line2f2_t, line2f;
-	typedef line2<double>	line2f64, line2d;
+	typedef line2<f2_t>	line2f2_t, line2f;
+	typedef line2<f3_t>	line2f64, line2d;
 	typedef line2<u0_t>	line2u8;
 	typedef line2<u1_t>	line2u1_t;
 	typedef line2<u2_t>	line2u32;
@@ -37,12 +37,12 @@ namespace gpk
 	tplt<tpnm T> sinx	T		run			(const ::gpk::line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
 	tplt<tpnm T> sinx	T		slope		(const ::gpk::line2<T> & line)												{ return rise(line) / run(line);	}
 	tplt<tpnm T> stxp	T		orient2d	(const ::gpk::line2<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	tplt<tpnm T> stin	double	determinant	(const ::gpk::line2<T>& line)									noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
+	tplt<tpnm T> stin	f3_t	determinant	(const ::gpk::line2<T>& line)									noexcept	{ return ::gpk::determinant((f3_t)line.A.x, (f3_t)line.A.y, (f3_t)line.B.x, (f3_t)line.B.y); }
 #pragma pack(pop)
 	// ---- Collision
 	//tplt<tpnm T> static	bool	raySegmentIntersect	(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{
-	//	const double	t2		= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
-	//	const double	t1		= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
+	//	const f3_t	t2		= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
+	//	const f3_t	t1		= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
 	//	return (t2 > 0 && 0 < t2 && t2 < 1);
 	//}
 } // namespace

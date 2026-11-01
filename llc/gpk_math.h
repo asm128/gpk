@@ -3,7 +3,7 @@
 #if defined(GPK_ATMEL)
 #	include <math.h>
 #	include <stdlib.h>
-#	include <float.h>
+#	include <f2_t.h>
 #else
 #	include <cmath>
 #	include <cfloat>
@@ -30,7 +30,7 @@ namespace gpk
 	tplt<tpnm _tNumber>
 	sinx	f3_t		sqrt_safe			(_tNumber _valueSquared)					nxpt	{ rtrn _valueSquared ? sqrt(_valueSquared) : 0; }
 	tplt<tpnm _tNumber>
-	cxpr	_tNumber	interpolate_linear	(_tNumber a, _tNumber b, double factor)		nxpt	{ rtrn (_tNumber)(a * (1.0 - factor) + b * factor);	}
+	cxpr	_tNumber	interpolate_linear	(_tNumber a, _tNumber b, f3_t factor)		nxpt	{ rtrn (_tNumber)(a * (1.0 - factor) + b * factor);	}
 
 	stct	SSinCos		{ f3_t Sin, Cos; };
 	stin	SSinCos		getSinCos			(f3_t theta)								nxpt	{ rtrn {sin(theta), cos(theta)}; }

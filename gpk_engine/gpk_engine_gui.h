@@ -33,7 +33,7 @@ namespace gpk
 		
 		inline				SEngineGUI		()	{ Reset(); }
 
-		::gpk::err_t		Reset			()	{
+		gpk::err_t 	Reset			()	{
 			Engine				= {};
 			GUI					= {};
 			Entities.clear();

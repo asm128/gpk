@@ -25,7 +25,7 @@ GPK_USING_TYPEINT();
 	};
 #pragma pack(pop)
 
-::gpk::err_t			gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, ::gpk::vcu0_c & input) {
+gpk::err_t 		gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, ::gpk::vcu0_c & input) {
 	::gpk::view_stream<const u0_t>	rsw_stream			= {input.begin(), input.size()};
 	SRSWHeader							header				= {};//*(SRSWHeader*)input.begin();
 	if_fail_fe(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
@@ -135,8 +135,8 @@ GPK_USING_TYPEINT();
 			loaded.RSWLights.push_back(lightInfo);
 			break;
 		case	3	: // Sound
-			memcpy(&soundInfo, &input[rsw_stream.CursorPosition], sizeof(SSoundInfoRSW) - sizeof(float));
-			rsw_stream.CursorPosition								+= sizeof(SSoundInfoRSW) - sizeof(float);
+			memcpy(&soundInfo, &input[rsw_stream.CursorPosition], sizeof(SSoundInfoRSW) - sizeof(f2_t));
+			rsw_stream.CursorPosition								+= sizeof(SSoundInfoRSW) - sizeof(f2_t);
 			if (header.VersionMajor >= 2)
 				rsw_stream.read_pod(soundInfo.cycle);
 			loaded.RSWSounds.push_back(soundInfo);
@@ -175,12 +175,12 @@ GPK_USING_TYPEINT();
 	return rsw_stream.CursorPosition;
 }
 
-::gpk::err_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, FILE * input)					{
+gpk::err_t 		gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, FILE * input)					{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-::gpk::err_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input)	{
+gpk::err_t 		gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input)	{
 	::gpk::au0_t					fileInMemory				= {};
 	if_fail_fef(gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	u3_t					unk							= *(u3_t*)&fileInMemory[fileInMemory.size() - 8];

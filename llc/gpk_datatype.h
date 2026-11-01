@@ -24,15 +24,15 @@ namespace gpk
 //
 // This was made to represent data types for a variety of hardware and OSs.
 // This system would allow us to represent type sizes up to 1,048,576 elements of 128 bits (16mib total?).
-// as signed/unsigned integer, signed/unsigned float, signed/unsigned normalized integer,
-// signed/unsigned normalized float, all of them in both little or big endianness
+// as signed/unsigned integer, signed/unsigned f2_t, signed/unsigned normalized integer,
+// signed/unsigned normalized f2_t, all of them in both little or big endianness
 //
 // Bits are arranged such that: (right-to-left bit ordering)
 // bits 1 to 7	: element size in bits-1
 // 8th bit		: 0 = no inner padding for elements / 1 = inner padding for elements to next byte size
 // bits 9 to 28	: element count-1
 // 29th bit		: 0 = little endian / 1 = big endian
-// 30th bit		: 0 = int / 1 = float
+// 30th bit		: 0 = int / 1 = f2_t
 // 31th bit		: 0 = Unorm / 1 = Norm
 // 32th bit		: 0 = Signed / 1 = Unsigned
 //

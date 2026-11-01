@@ -35,7 +35,7 @@ namespace gpk
 		u2_t			Stage				= 0;
 		SStageTime			UserTime			= {};
 		bool				Paused				= false;
-		double				CameraSwitchDelay	= 0;
+		f3_t				CameraSwitchDelay	= 0;
 	};
 #pragma pack(pop)
 
@@ -46,14 +46,14 @@ namespace gpk
 		SGameState			State				= {};
 		astagestate			Stages				= {};
 
-		::gpk::err_t		Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t 	Save				(::gpk::au0_t & output)	const	{ 
 			if_fail_fe(gpk::savePOD(output, Setup)); 
 			if_fail_fe(gpk::savePOD(output, State)); 
 			if_fail_fe(gpk::saveView(output, Stages));
 			return 0;
 		}
 
-		::gpk::err_t		Load				(::gpk::vcu0_t & input)	{ 
+		gpk::err_t 	Load				(::gpk::vcu0_t & input)	{ 
 			if_fail_fe(gpk::loadPOD(input, Setup));
 			if_fail_fe(gpk::loadPOD(input, State)); 
 			if_fail_fe(gpk::loadView(input, Stages));

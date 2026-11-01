@@ -47,7 +47,7 @@ GPK_USING_APOD    ();
 #pragma pack(push, 1)
 
 
-static	::gpk::err_t	LoadBitmapFromBMPFile		(const ::gpk::vcst_t & szFileName, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra& out_ImageView, const ::gpk::bgra & alphaKey, bool* out_alphaFound)		{
+static	gpk::err_t LoadBitmapFromBMPFile		(const ::gpk::vcst_t & szFileName, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra& out_ImageView, const ::gpk::bgra & alphaKey, bool* out_alphaFound)		{
 	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, gpk::string(szFileName), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
 	if_true_vef(-1, phBitmap == NULL, "Failed to load bitmap file: %.*s.", GPK_VIEW_ARGS(szFileName));
 
@@ -113,7 +113,7 @@ static	::gpk::err_t	LoadBitmapFromBMPFile		(const ::gpk::vcst_t & szFileName, ::
 	return 0;
 }
 
-::gpk::err_t			gpk::bmpFileLoad			(const ::gpk::vcst_t & filename, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)	{ //
+gpk::err_t 		gpk::bmpFileLoad			(const ::gpk::vcst_t & filename, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)	{ //
 #if defined(GPK_WINDOWS)
 	bool						isAlpha						= false;
 	return ::LoadBitmapFromBMPFile(filename, out_Colors, out_ImageView, {0xFF, 0x00, 0xFF, 0xFF}, &isAlpha);
@@ -158,7 +158,7 @@ struct SHeaderInfoBMP {
 #pragma pack( pop )
 
 // Currently supporting only 24-bit bitmaps
-::gpk::err_t			gpk::bmpFileLoad			(const s0_t * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
+gpk::err_t 		gpk::bmpFileLoad			(const s0_t * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
 	SHeaderFileBMP				& fileHeader				= *(SHeaderFileBMP*)*source;
 	if_true_vef(-1, 0 != memcmp(fileHeader.Type, "BM", 2), "%.*s", 2, fileHeader.Type);
 	SHeaderInfoBMP				& infoHeader				= *(SHeaderInfoBMP*)*(source + sizeof(SHeaderFileBMP));
@@ -210,7 +210,7 @@ struct SHeaderInfoBMP {
 }
 //
 //// Currently supporting only 24-bit bitmaps
-//::gpk::err_t			gpk::bmpFileLoad	(FILE * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
+//gpk::err_t 		gpk::bmpFileLoad	(FILE * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
 //	::SHeaderFileBMP			fileHeader			= {};
 //	::SHeaderInfoBMP			infoHeader			= {};
 //	if_true_vef(-1, sizeof(::SHeaderFileBMP) != fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source), "Failed to read file! File corrupt?");

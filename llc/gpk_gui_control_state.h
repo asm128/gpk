@@ -66,7 +66,7 @@ namespace gpk
 		GUI_CONTROL_FLAG	Set		= {};
 	};
 
-	stin	::gpk::err_t	eventEnqueueGuiControlStateChange(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::cid_t iControl, GUI_CONTROL_FLAG oldState, GUI_CONTROL_FLAG newState) {
+	stin	gpk::err_t eventEnqueueGuiControlStateChange(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::cid_t iControl, GUI_CONTROL_FLAG oldState, GUI_CONTROL_FLAG newState) {
 		SChangeControlState			stateChange				= {iControl};
 		stateChange.Clear		= ::gpk::bit_clear(oldState, newState);
 		stateChange.Set			= ::gpk::bit_clear(newState, oldState);

@@ -94,9 +94,9 @@ sttc	gpk::err_t	expressionReaderCloseTerm							(::gpk::SExpressionReaderState &
 	return 0;
 }
 
-			::gpk::err_t			expressionReaderProcessStringCharacter				(::gpk::SExpressionReaderState & stateReader, ::gpk::apod<::gpk::SExpressionToken> & tokens, const ::gpk::vcst_t & expression)	{
+			gpk::err_t 		expressionReaderProcessStringCharacter				(::gpk::SExpressionReaderState & stateReader, ::gpk::apod<::gpk::SExpressionToken> & tokens, const ::gpk::vcst_t & expression)	{
 	::gpk::SExpressionToken											currentElement										= {};
-	::gpk::err_t							errVal												= 0;
+	gpk::err_t 						errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
 		seterr_break_if(stateReader.CharCurrent < 0x20 || ((u0_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uc_t)stateReader.CharCurrent, stateReader.CharCurrent);
@@ -337,7 +337,7 @@ gpk::err_t			gpk::expressionReaderParseStep			(::gpk::SExpressionReader & reader
 	::gpk::SExpressionReaderState									& stateReader							= reader.StateRead;
 	if_true_fef(stateReader.IndexCurrentChar >= expression.size(), "Invalid expression index: %u. Expression size: %u.", stateReader.IndexCurrentChar, expression.size());
 	stateReader.CharCurrent										= expression[stateReader.IndexCurrentChar];
-	::gpk::err_t															result									= reader.StateRead.InsideString
+	gpk::err_t 														result									= reader.StateRead.InsideString
 		? ::expressionReaderProcessStringCharacter	(stateReader, tokens, expression)
 		: ::expressionReaderProcessDocCharacter		(stateReader, tokens, expression)
 		;

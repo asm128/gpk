@@ -6,7 +6,7 @@
 
 #include <Windows.h>
 //
-//static ::gpk::err_t								metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::n2<int32_t>& output_metrics)												{
+//static gpk::err_t 							metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::n2<int32_t>& output_metrics)												{
 //	uint32_t												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 //		if('x' == input_string[iChar]) {
@@ -28,7 +28,7 @@
 //	return 0;
 //}
 
-::gpk::err_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output){
+gpk::err_t 									genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output){
 	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
 	//char													buffer[4096]					= {};
 	::gpk::SCGIModule										module;
@@ -54,7 +54,7 @@ stxp	const char						html_script	[]			=
 	"\n</script>"
 	;
 
-::gpk::err_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
+gpk::err_t 									processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
 	if(0 == keyVal.Key.size())
 		return -1;
 
@@ -93,7 +93,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<ch
 		::gpk::find(::gpk::vcst_t{"QUERY_STRING"}, framework.RuntimeValues.QueryStringKeyVals, querystring);
 		if(querystring.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
-		const ::gpk::view<::gpk::view<sc_t>>		keyvalviews			= runtimeValues.QueryStringElements;
+		const ::gpk::view<::gpk::vcst_t>		keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
@@ -163,7 +163,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	hInstance, hPrevInstance, szCmdLine, nCmdShow;
 	::gpk::SCGIFramework									framework;
 	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues, {(const char**)__argv, (uint32_t)(__argc)});
-	const ::gpk::array_obj<::gpk::view<sc_t>>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
+	const ::gpk::array_obj<::gpk::vcst_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
 	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 

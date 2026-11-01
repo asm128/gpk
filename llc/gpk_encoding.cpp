@@ -38,19 +38,19 @@ gpk::err_t			gpk::saltDataUnsalt				(vcu0_c & salted, ::gpk::au0_t & binary)				
 	return 0;
 }
 
-static	::gpk::err_t	hexFromByte		(u0_t byteValue, char * hexed)																{
+static	gpk::err_t hexFromByte		(u0_t byteValue, char * hexed)																{
 	hexed[0] = HEX_DIGITS_UPPER[byteValue >> 4];
 	hexed[1] = HEX_DIGITS_UPPER[byteValue & 0xF];
 	return 0;
 }
 
-static	::gpk::err_t	hexToByte		(const char* s, u0_t & byte)															{
+static	gpk::err_t hexToByte		(const char* s, u0_t & byte)															{
 	char						temp [3]		= {s[0], s[1]};
 	if_fail_fe(gpk::parseIntegerHexadecimal(::gpk::vcst_t{temp}, byte));
 	return 0;
 }
 
-static	::gpk::err_t	hexToByte		(const char* s, ::gpk::s0_t & byte)															{
+static	gpk::err_t hexToByte		(const char* s, ::gpk::s0_t & byte)															{
 	char						temp [3]		= {s[0], s[1]};
 	if_fail_fe(gpk::parseIntegerHexadecimal(::gpk::vcst_t{temp}, byte));
 	return 0;

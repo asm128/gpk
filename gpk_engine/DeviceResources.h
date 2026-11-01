@@ -15,26 +15,27 @@
 
 namespace DX 
 {
+	using namespace gpk;
 #if defined(_DEBUG)
 	// Check for SDK Layer support.
-	stin bool	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, nullptr, 0, D3D11_SDK_VERSION, nullptr, nullptr, nullptr)); }
+	stin bool	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice({}, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, {}, 0, D3D11_SDK_VERSION, {}, {}, {})); }
 #endif
 	// Converts a length in device-independent pixels (DIPs) to a length in physical pixels. Round to nearest integer.
-	stin float	ConvertDipsToPixels			(float dips, float dpi)		{ stxp	float dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
+	stin f2_t	ConvertDipsToPixels			(f2_t dips, f2_t dpi)		{ stxp	f2_t dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
 
 	namespace DisplayMetrics
 	{
 		stxp	bool	SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
-		stxp	float	DpiThreshold				= 192.0f;	// 200% of standard desktop display.
-		stxp	float	WidthThreshold				= 1920.f;	// 1080p width.
-		stxp	float	HeightThreshold				= 1080.f;	// 1080p height.
+		stxp	f2_t	DpiThreshold				= 192.0f;	// 200% of standard desktop display.
+		stxp	f2_t	WidthThreshold				= 1920.f;	// 1080p width.
+		stxp	f2_t	HeightThreshold				= 1080.f;	// 1080p height.
 		// The default thresholds that define a "high resolution" display. If the thresholds are exceeded and SupportHighResolutions is false, the dimensions will be scaled by 50%.
 	};
 
 	// Provides an interface for an application that owns DeviceResources to be notified of the device being lost or created.
 	struct IDeviceNotify {
 		virtual void			OnDeviceLost				() = 0;
-		virtual ::gpk::err_t	OnDeviceRestored			() = 0;
+		virtual err_t	OnDeviceRestored			() = 0;
 	};
 
 	// Controls all the DirectX device resources
@@ -45,58 +46,58 @@ namespace DX
 		IDeviceNotify			* m_deviceNotify			= {};	// The IDeviceNotify can be held directly as it owns the DeviceResources.
 
 		// Direct3D objects.
-		::gpk::pcom<ID3D11Device3>				m_d3dDevice;
-		::gpk::pcom<ID3D11DeviceContext3>		m_d3dContext;
-		::gpk::pcom<IDXGISwapChain3>			m_swapChain;
+		pcom<ID3D11Device3>				m_d3dDevice;
+		pcom<ID3D11DeviceContext3>		m_d3dContext;
+		pcom<IDXGISwapChain3>			m_swapChain;
 
 		// Direct3D rendering objects. Required for 3D.
-		::gpk::pcom<ID3D11RenderTargetView1>	m_d3dRenderTargetView;
-		::gpk::pcom<ID3D11DepthStencilView>		m_d3dDepthStencilView;
+		pcom<ID3D11RenderTargetView1>	m_d3dRenderTargetView;
+		pcom<ID3D11DepthStencilView>		m_d3dDepthStencilView;
 		D3D11_VIEWPORT							m_screenViewport			= {};
 
 		// Direct2D drawing components.
-		::gpk::pcom<ID2D1Factory3>				m_d2dFactory;
-		::gpk::pcom<ID2D1Device2>				m_d2dDevice;
-		::gpk::pcom<ID2D1DeviceContext2>		m_d2dContext;
-		::gpk::pcom<ID2D1Bitmap1>				m_d2dTargetBitmap;
+		pcom<ID2D1Factory3>				m_d2dFactory;
+		pcom<ID2D1Device2>				m_d2dDevice;
+		pcom<ID2D1DeviceContext2>		m_d2dContext;
+		pcom<ID2D1Bitmap1>				m_d2dTargetBitmap;
 
 		// DirectWrite drawing components.
-		::gpk::pcom<IDWriteFactory3>			m_dwriteFactory;
-		::gpk::pcom<IWICImagingFactory2>		m_wicFactory;
+		pcom<IDWriteFactory3>			m_dwriteFactory;
+		pcom<IWICImagingFactory2>		m_wicFactory;
 
 		// Cached device properties.
-		D3D_FEATURE_LEVEL						m_d3dFeatureLevel			= D3D_FEATURE_LEVEL_9_1;
-		::gpk::n2f2_t							m_d3dRenderTargetSize		= {};
-		::gpk::n2f2_t							m_outputSize				= {};
-		::gpk::n2f2_t							m_logicalSize				= {};
-		::gpk::GRID_ROTATION					m_nativeOrientation			= ::gpk::GRID_ROTATION_0;
-		::gpk::GRID_ROTATION					m_currentOrientation		= ::gpk::GRID_ROTATION_0;
-		float									m_dpi						= 96.0f;
-		float									m_effectiveDpi				= 96.0f;	// This is the DPI that will be reported back to the app. It takes into account whether the app supports high resolution screens or not.
+		D3D_FEATURE_LEVEL				m_d3dFeatureLevel			= D3D_FEATURE_LEVEL_9_1;
+		n2f2_t							m_d3dRenderTargetSize		= {};
+		n2f2_t							m_outputSize				= {};
+		n2f2_t							m_logicalSize				= {};
+		GRID_ROTATION					m_nativeOrientation			= GRID_ROTATION_0;
+		GRID_ROTATION					m_currentOrientation		= GRID_ROTATION_0;
+		f2_t							m_dpi						= 96.0f;
+		f2_t							m_effectiveDpi				= 96.0f;	// This is the DPI that will be reported back to the app. It takes into account whether the app supports high resolution screens or not.
 
 		// Transforms used for display orientation.
-		D2D1::Matrix3x2F						m_orientationTransform2D	= {};
-		DirectX::XMFLOAT4X4						m_orientationTransform3D	= {};
+		D2D1::Matrix3x2F				m_orientationTransform2D	= {};
+		DirectX::XMFLOAT4X4				m_orientationTransform3D	= {};
 
-		inline	::gpk::err_t					Initialize					()									{
+		inline	err_t					Initialize					()									{
 			if_fail_fe(CreateIndependentResources());
 			if_fail_fe(CreateDeviceResources());
 			return 0;
 		}
 
 		// These resources need to be recreated every time the window size is changed.
-		::gpk::err_t							CreateSizeDependentResources()	{
+		err_t							CreateSizeDependentResources()	{
 			// These resources need to be recreated every time the window size is changed.
 			// Clear the previous window size specific context.
 			ID3D11RenderTargetView						* nullViews	[]				= {{}};
-			m_d3dContext->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
-			m_d3dRenderTargetView					= nullptr;
-			m_d3dDepthStencilView					= nullptr;
+			m_d3dContext->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, {});
+			m_d3dRenderTargetView					= {};
+			m_d3dDepthStencilView					= {};
 
-			m_d2dContext->SetTarget(nullptr);
-			m_d2dTargetBitmap						= nullptr;
+			m_d2dContext->SetTarget({});
+			m_d2dTargetBitmap						= {};
 
-			m_d3dContext->Flush1(D3D11_CONTEXT_TYPE_ALL, nullptr);
+			m_d3dContext->Flush1(D3D11_CONTEXT_TYPE_ALL, {});
 
 			UpdateRenderTargetSize();
 
@@ -108,8 +109,9 @@ namespace DX
 
 			if (m_swapChain) { // If the swap chain already exists, resize it.
 				HRESULT										hr							= m_swapChain->ResizeBuffers(2, lround(m_d3dRenderTargetSize.x), lround(m_d3dRenderTargetSize.y), DXGI_FORMAT_B8G8R8A8_UNORM, 0); // Double-buffered swap chain.
-				if (hr != DXGI_ERROR_DEVICE_REMOVED && hr != DXGI_ERROR_DEVICE_RESET) 
+				if (hr != DXGI_ERROR_DEVICE_REMOVED && hr != DXGI_ERROR_DEVICE_RESET) {
 					gpk_hrcall(hr);
+				}
 				else {
 					if_fail_fe(HandleDeviceLost());	// If the device was removed for any reason, a new device and swap chain will need to be created.
 					return 0;	// Everything is set up now. Do not continue execution of this method. HandleDeviceLost will reenter this method and correctly set up the new device.
@@ -123,7 +125,7 @@ namespace DX
 				swapChainDesc.Format					= DXGI_FORMAT_B8G8R8A8_UNORM;			// This is the most common swap chain format.
 				swapChainDesc.SampleDesc.Count			= 1;									// Don't use multi-sampling.
 				swapChainDesc.BufferUsage				= DXGI_USAGE_RENDER_TARGET_OUTPUT;
-				swapChainDesc.BufferCount				= 2;									// Use double-buffering to minimize latency.
+				swapChainDesc.BufferCount				= 2;									// Use f3_t-buffering to minimize latency.
 				swapChainDesc.SwapEffect				= DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;	// All Microsoft Store apps must use this SwapEffect.
 				swapChainDesc.Scaling					= scaling;
 				swapChainDesc.AlphaMode					= DXGI_ALPHA_MODE_UNSPECIFIED;
@@ -137,14 +139,14 @@ namespace DX
 				//swapChainDescFS.Windowed				= true;
 
 				// This sequence obtains the DXGI factory that was used to create the Direct3D device above.
-				::gpk::pcom<IDXGIDevice3>					dxgiDevice;
-				::gpk::pcom<IDXGIAdapter>					dxgiAdapter;
-				::gpk::pcom<IDXGIFactory4>					dxgiFactory;
-				::gpk::pcom<IDXGISwapChain1>				swapChain;
+				pcom<IDXGIDevice3>					dxgiDevice;
+				pcom<IDXGIAdapter>					dxgiAdapter;
+				pcom<IDXGIFactory4>					dxgiFactory;
+				pcom<IDXGISwapChain1>				swapChain;
 				if_fail_fe(m_d3dDevice.as(&dxgiDevice));
 				gpk_hrcall(dxgiDevice->GetAdapter(&dxgiAdapter));
 				gpk_hrcall(dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)));
-				gpk_hrcall(dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice, m_window, &swapChainDesc, /*&swapChainDescFS*/0, nullptr, &swapChain));
+				gpk_hrcall(dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice, m_window, &swapChainDesc, /*&swapChainDescFS*/0, {}, &swapChain));
 				if_fail_fe(swapChain.as(m_swapChain));
 				gpk_hrcall(dxgiDevice->SetMaximumFrameLatency(1));	// Ensure that DXGI does not queue more than one frame at a time. This both reduces latency and ensures that the application will only render after each VSync, minimizing power consumption.
 			}
@@ -183,21 +185,21 @@ namespace DX
 			}
 			gpk_hrcall(m_swapChain->SetRotation(displayRotation));
 
-			::gpk::pcom<ID3D11Texture2D1>				backBuffer;
+			pcom<ID3D11Texture2D1>				backBuffer;
 			gpk_hrcall(m_swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer)));
-			gpk_hrcall(m_d3dDevice->CreateRenderTargetView1(backBuffer, nullptr, &m_d3dRenderTargetView));	// Create a render target view of the swap chain back buffer.
+			gpk_hrcall(m_d3dDevice->CreateRenderTargetView1(backBuffer, {}, &m_d3dRenderTargetView));	// Create a render target view of the swap chain back buffer.
 	
 			CD3D11_TEXTURE2D_DESC1						depthStencilDesc					(DXGI_FORMAT_D24_UNORM_S8_UINT, lround(m_d3dRenderTargetSize.x), lround(m_d3dRenderTargetSize.y), 1, 1, D3D11_BIND_DEPTH_STENCIL);
-			::gpk::pcom<ID3D11Texture2D1>				depthStencil;
+			pcom<ID3D11Texture2D1>				depthStencil;
 			CD3D11_DEPTH_STENCIL_VIEW_DESC				depthStencilViewDesc				(D3D11_DSV_DIMENSION_TEXTURE2D);
-			gpk_hrcall(m_d3dDevice->CreateTexture2D1(&depthStencilDesc, nullptr, &depthStencil));
+			gpk_hrcall(m_d3dDevice->CreateTexture2D1(&depthStencilDesc, {}, &depthStencil));
 			gpk_hrcall(m_d3dDevice->CreateDepthStencilView(depthStencil, &depthStencilViewDesc, &m_d3dDepthStencilView));		// Create a depth stencil view for use with 3D rendering if needed. This depth stencil view has only one texture. use a single mipmap level
 	
 			m_screenViewport						= CD3D11_VIEWPORT(0.0f, 0.0f, m_d3dRenderTargetSize.x, m_d3dRenderTargetSize.y);
 			m_d3dContext->RSSetViewports(1, &m_screenViewport);	// Set the 3D rendering viewport to target the entire window.
 
 			D2D1_BITMAP_PROPERTIES1						bitmapProperties					= D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW, D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED), m_dpi, m_dpi);
-			::gpk::pcom<IDXGISurface2>					dxgiBackBuffer;
+			pcom<IDXGISurface2>					dxgiBackBuffer;
 			if_fail_w(m_swapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer)));
 			gpk_hrcall(m_d2dContext->CreateBitmapFromDxgiSurface(dxgiBackBuffer, &bitmapProperties, &m_d2dTargetBitmap));	// Create a Direct2D target bitmap associated with the swap chain back buffer and set it as the current target.
 
@@ -212,34 +214,34 @@ namespace DX
 		DXGI_MODE_ROTATION						ComputeDisplayRotation		() {
 			DXGI_MODE_ROTATION							rotation					= DXGI_MODE_ROTATION_UNSPECIFIED;	// Note: NativeOrientation can only be Landscape or Portrait even though the DisplayOrientations enum has other values.
 			switch (m_nativeOrientation) {
-			case ::gpk::GRID_ROTATION_0:
+			case GRID_ROTATION_0:
 				switch (m_currentOrientation) {
-				case ::gpk::GRID_ROTATION_0		: rotation = DXGI_MODE_ROTATION_IDENTITY; break; 
-				case ::gpk::GRID_ROTATION_90	: rotation = DXGI_MODE_ROTATION_ROTATE270; break; 
-				case ::gpk::GRID_ROTATION_180	: rotation = DXGI_MODE_ROTATION_ROTATE180; break; 
-				case ::gpk::GRID_ROTATION_270	: rotation = DXGI_MODE_ROTATION_ROTATE90; break; 
+				case GRID_ROTATION_0		: rotation = DXGI_MODE_ROTATION_IDENTITY; break; 
+				case GRID_ROTATION_90	: rotation = DXGI_MODE_ROTATION_ROTATE270; break; 
+				case GRID_ROTATION_180	: rotation = DXGI_MODE_ROTATION_ROTATE180; break; 
+				case GRID_ROTATION_270	: rotation = DXGI_MODE_ROTATION_ROTATE90; break; 
 				}
 				break;
-			case ::gpk::GRID_ROTATION_90:
+			case GRID_ROTATION_90:
 				switch (m_currentOrientation) {
-				case ::gpk::GRID_ROTATION_0		: rotation = DXGI_MODE_ROTATION_ROTATE90; break;
-				case ::gpk::GRID_ROTATION_90	: rotation = DXGI_MODE_ROTATION_IDENTITY; break; 
-				case ::gpk::GRID_ROTATION_180	: rotation = DXGI_MODE_ROTATION_ROTATE270; break; 
-				case ::gpk::GRID_ROTATION_270	: rotation = DXGI_MODE_ROTATION_ROTATE180; break;
+				case GRID_ROTATION_0		: rotation = DXGI_MODE_ROTATION_ROTATE90; break;
+				case GRID_ROTATION_90	: rotation = DXGI_MODE_ROTATION_IDENTITY; break; 
+				case GRID_ROTATION_180	: rotation = DXGI_MODE_ROTATION_ROTATE270; break; 
+				case GRID_ROTATION_270	: rotation = DXGI_MODE_ROTATION_ROTATE180; break;
 				}
 				break;
 			}
 			return rotation;
 		}
 
-		::gpk::err_t							CreateIndependentResources	() {
+		err_t							CreateIndependentResources	() {
 			D2D1_FACTORY_OPTIONS						options						= {};	// Initialize Direct2D resources.
 		#if defined(_DEBUG)
 			options.debugLevel						= D2D1_DEBUG_LEVEL_INFORMATION;		// If the project is in a debug build, enable Direct2D debugging via SDK Layers.
 		#endif
 			gpk_hrcall(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory3), &options, (void**)&m_d2dFactory));	// Initialize the Direct2D Factory.
 			gpk_hrcall(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory3), (IUnknown**)&m_dwriteFactory));			// Initialize the DirectWrite Factory.
-			gpk_hrcall(CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_wicFactory)));	// Initialize the Windows Imaging Component (WIC) Factory.
+			gpk_hrcall(CoCreateInstance(CLSID_WICImagingFactory2, {}, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_wicFactory)));	// Initialize the Windows Imaging Component (WIC) Factory.
 			return 0;
 		}
 
@@ -247,8 +249,8 @@ namespace DX
 		void									UpdateRenderTargetSize		() {
 			m_effectiveDpi							= m_dpi;
 			if (!DisplayMetrics::SupportHighResolutions && m_dpi > DisplayMetrics::DpiThreshold) {	// To improve battery life on high resolution devices, render to a smaller render target and allow the GPU to scale the output when it is presented.
-				float										width						= DX::ConvertDipsToPixels(m_logicalSize.x, m_dpi);
-				float										height						= DX::ConvertDipsToPixels(m_logicalSize.y, m_dpi);
+				f2_t										width						= DX::ConvertDipsToPixels(m_logicalSize.x, m_dpi);
+				f2_t										height						= DX::ConvertDipsToPixels(m_logicalSize.y, m_dpi);
 				if (std::max(width, height) > DisplayMetrics::WidthThreshold && std::min(width, height) > DisplayMetrics::HeightThreshold)	// When the device is in portrait orientation, height > width. Compare the larger dimension against the width threshold and the smaller dimension against the height threshold.
 					m_effectiveDpi									/= 2.0f;	// To scale the app we change the effective DPI. Logical size does not change.
 			}
@@ -257,9 +259,9 @@ namespace DX
 			m_outputSize.y									= std::max(1.0f, DX::ConvertDipsToPixels(m_logicalSize.y, m_effectiveDpi));
 		}
 
-		::gpk::n2f2_t							GetOutputSize				()	const									{ return m_outputSize; }	// The size of the render target, in pixels.
-		::gpk::n2f2_t							GetLogicalSize				()	const									{ return m_logicalSize; }	// The size of the render target, in dips.
-		float									GetDpi						()	const									{ return m_effectiveDpi; }
+		n2f2_t							GetOutputSize				()	const									{ return m_outputSize; }	// The size of the render target, in pixels.
+		n2f2_t							GetLogicalSize				()	const									{ return m_logicalSize; }	// The size of the render target, in dips.
+		f2_t									GetDpi						()	const									{ return m_effectiveDpi; }
 
 		// D3D Accessors.
 		ID3D11Device3*							GetD3DDevice				()	const									{ return m_d3dDevice.get(); }
@@ -281,14 +283,14 @@ namespace DX
 		D2D1::Matrix3x2F						GetOrientationTransform2D	()	const									{ return m_orientationTransform2D; }
 
 		void									RegisterDeviceNotify		(DX::IDeviceNotify * deviceNotify)			{ m_deviceNotify = deviceNotify; }
-		::gpk::err_t							SetLogicalSize				(const ::gpk::n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			if_fail_fe(CreateSizeDependentResources()); } return 0; } 
-		::gpk::err_t							SetCurrentOrientation		(::gpk::GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	if_fail_fe(CreateSizeDependentResources()); } return 0; } 
-		::gpk::err_t							SetDpi						(float dpi)									{
+		err_t							SetLogicalSize				(const n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			if_fail_fe(CreateSizeDependentResources()); } return 0; } 
+		err_t							SetCurrentOrientation		(GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	if_fail_fe(CreateSizeDependentResources()); } return 0; } 
+		err_t							SetDpi						(f2_t dpi)									{
 			if (dpi != m_dpi) {
 				m_dpi									= dpi;
 				RECT										rect						= {};
 				GetClientRect(m_window, &rect);
-				m_logicalSize							= {float(rect.right - rect.left), float(rect.bottom - rect.top)};	// When the display DPI changes, the logical size of the window (measured in Dips) also changes and needs to be updated.
+				m_logicalSize							= {f2_t(rect.right - rect.left), f2_t(rect.bottom - rect.top)};	// When the display DPI changes, the logical size of the window (measured in Dips) also changes and needs to be updated.
 				m_d2dContext->SetDpi(m_dpi, m_dpi);
 				if_fail_fe(CreateSizeDependentResources());
 			}
@@ -296,72 +298,74 @@ namespace DX
 		}
 
 		// Call this method when the app suspends. It provides a hint to the driver that the app is entering an idle state and that temporary buffers can be reclaimed for use by other apps.
-		::gpk::err_t							Trim						() {
-			::gpk::pcom<IDXGIDevice3>				dxgiDevice;
+		err_t							Trim						() {
+			pcom<IDXGIDevice3>				dxgiDevice;
 			if_fail_fe(m_d3dDevice.as(&dxgiDevice));
 			dxgiDevice->Trim();
 		}
 
 		// Recreate all device resources and set them back to the current state.
-		::gpk::err_t							ValidateDevice				()											{ return ::gpk::d3dDeviceValidate(m_d3dDevice) ? HandleDeviceLost() : 0; }
-		::gpk::err_t							HandleDeviceLost			()											{
-			m_swapChain								= nullptr;
-			if (m_deviceNotify) 
+		err_t							ValidateDevice				()											{ return d3dDeviceValidate(m_d3dDevice) ? HandleDeviceLost() : 0; }
+		err_t							HandleDeviceLost			()											{
+			m_swapChain								= {};
+			if (m_deviceNotify) {
 				m_deviceNotify->OnDeviceLost();
+			}
 			if_fail_fe(CreateDeviceResources());
 			m_d2dContext->SetDpi(m_dpi, m_dpi);
 			if_fail_fe(CreateSizeDependentResources());
-			if (m_deviceNotify) 
+			if (m_deviceNotify) {
 				m_deviceNotify->OnDeviceRestored();
-
+			}
 			return 0;
 		}
 
-		::gpk::err_t							SetWindow					(HWND window)		{
+		err_t							SetWindow					(HWND window)		{
 			m_window								= window;
 
 			RECT										rect						= {};
 			GetClientRect(m_window, &rect);
-			m_logicalSize							= {float(rect.right - rect.left), float(rect.bottom - rect.top)};	// When the display DPI changes, the logical size of the window (measured in Dips) also changes and needs to be updated.
+			m_logicalSize							= {f2_t(rect.right - rect.left), f2_t(rect.bottom - rect.top)};	// When the display DPI changes, the logical size of the window (measured in Dips) also changes and needs to be updated.
 			m_nativeOrientation						= ScreenRotation();
 			m_currentOrientation					= ScreenRotation();
 
 			u2_t									dpi							= GetDpiForWindow(m_window);
-			m_dpi									= float(dpi);
+			m_dpi									= f2_t(dpi);
 			m_d2dContext->SetDpi(m_dpi, m_dpi);
 			if_fail_fe(CreateSizeDependentResources());
 			return 0;
 		}
 
 		// Present the contents of the swap chain to the screen.
-		::gpk::err_t							Present						() {
+		err_t							Present						() {
 			DXGI_PRESENT_PARAMETERS						parameters					= {};
 			HRESULT										hr							= m_swapChain->Present1(1, 0, &parameters);	// The first argument instructs DXGI to block until VSync, putting the application to sleep until the next VSync. This ensures we don't waste any cycles rendering frames that will never be displayed to the screen.
-			m_d3dContext->DiscardView1(m_d3dRenderTargetView, nullptr, 0);	// Discard the contents of the render target. This is a valid operation only when the existing contents will be entirely overwritten. If dirty or scroll rects are used, this call should be removed.
-			m_d3dContext->DiscardView1(m_d3dDepthStencilView, nullptr, 0);	// Discard the contents of the depth stencil.
-			if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+			m_d3dContext->DiscardView1(m_d3dRenderTargetView, {}, 0);	// Discard the contents of the render target. This is a valid operation only when the existing contents will be entirely overwritten. If dirty or scroll rects are used, this call should be removed.
+			m_d3dContext->DiscardView1(m_d3dDepthStencilView, {}, 0);	// Discard the contents of the depth stencil.
+			if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET) {
 				if_fail_fe(HandleDeviceLost());	// If the device was removed either by a disconnection or a driver upgrade, we  must recreate all device resources.
+			}
 			else 
 				gpk_hrcall(hr);
 			return 0;
 		}
 
-		::gpk::GRID_ROTATION					ScreenRotation				()	{
+		GRID_ROTATION					ScreenRotation				()	{
 			DeviceMode								= {sizeof(DEVMODE)};
 			EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &DeviceMode);	// returned rotation is relative to the natural (default) rotation for this display
 
 			switch(DeviceMode.dmDisplayOrientation) {
 			default:
-			case DMDO_DEFAULT	: return ::gpk::GRID_ROTATION_0			;
-			case DMDO_90		: return ::gpk::GRID_ROTATION_90		;
-			case DMDO_180		: return ::gpk::GRID_ROTATION_180		;
-			case DMDO_270		: return ::gpk::GRID_ROTATION_270		;
+			case DMDO_DEFAULT	: return GRID_ROTATION_0			;
+			case DMDO_90		: return GRID_ROTATION_90		;
+			case DMDO_180		: return GRID_ROTATION_180		;
+			case DMDO_270		: return GRID_ROTATION_270		;
 			}
 		}
 
 
 		// Configures the Direct3D device, and stores handles to it and the device context.
-		::gpk::err_t							CreateDeviceResources		() {
+		err_t							CreateDeviceResources		() {
 			// This flag adds support for surfaces with a different color channel ordering than the API default. It is required for compatibility with Direct2D.
 			u2_t									creationFlags				= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 		#if defined(_DEBUG)
@@ -383,19 +387,19 @@ namespace DX
 				};
 
 			// Create the Direct3D 11 API device object and a corresponding context.
-			::gpk::pcom<ID3D11Device>					device;
-			::gpk::pcom<ID3D11DeviceContext>			context;
+			pcom<ID3D11Device>					device;
+			pcom<ID3D11DeviceContext>			context;
 
 			 // If the initialization fails, fall back to the WARP device. For more information on WARP, see: https://go.microsoft.com/fwlink/?LinkId=286690. 
 			if (FAILED(D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, creationFlags, featureLevels, (u2_t)std::size(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context)))
-				gpk_hrcall(D3D11CreateDevice(nullptr,D3D_DRIVER_TYPE_WARP, 0, creationFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context));
+				gpk_hrcall(D3D11CreateDevice({},D3D_DRIVER_TYPE_WARP, 0, creationFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context));
 
 			// Store pointers to the Direct3D 11.3 API device and immediate context.
 			if_fail_fe(device.as(m_d3dDevice));
 			if_fail_fe(context.as(m_d3dContext));
 
 			// Create the Direct2D device object and a corresponding context.
-			::gpk::pcom<IDXGIDevice3>					dxgiDevice;
+			pcom<IDXGIDevice3>					dxgiDevice;
 			if_fail_fe(m_d3dDevice.as(dxgiDevice));
 			gpk_hrcall(m_d2dFactory->CreateDevice(dxgiDevice, &m_d2dDevice));
 			gpk_hrcall(m_d2dDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &m_d2dContext));

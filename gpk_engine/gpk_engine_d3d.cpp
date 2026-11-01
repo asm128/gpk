@@ -4,7 +4,7 @@
 
 #include "gpk_file.h"
 
-::gpk::err_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, const ::gpk::SMeshManager & engineMeshes, const ::gpk::SRenderBufferManager & engineBuffers, ::gpk::array_com<ID3D11Buffer> & indexBuffers, ::gpk::array_com<ID3D11Buffer> & vertexBuffers)	{
+gpk::err_t 		gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, const ::gpk::SMeshManager & engineMeshes, const ::gpk::SRenderBufferManager & engineBuffers, ::gpk::array_com<ID3D11Buffer> & indexBuffers, ::gpk::array_com<ID3D11Buffer> & vertexBuffers)	{
 	for(u2_t iMesh = 0; iMesh < engineMeshes.size(); ++iMesh) {
 		const ::gpk::pobj<::gpk::SGeometryMesh>		& mesh									= engineMeshes[iMesh];
 		if(!mesh)
@@ -67,7 +67,7 @@
 	return 0;
 }
 
-::gpk::err_t			gpk::d3dCreateTexturesFromEngineSurfaces	(ID3D11Device* pDevice, const ::gpk::SSurfaceManager & engineSurfaces, ::gpk::array_com<ID3D11ShaderResourceView> & shaderResourceViews) {
+gpk::err_t 		gpk::d3dCreateTexturesFromEngineSurfaces	(ID3D11Device* pDevice, const ::gpk::SSurfaceManager & engineSurfaces, ::gpk::array_com<ID3D11ShaderResourceView> & shaderResourceViews) {
 	for(u2_t iSurface = 0; iSurface < engineSurfaces.size(); ++iSurface) {
 		const ::gpk::SSurface						& surface			= *engineSurfaces[iSurface];
 		D3D11_TEXTURE2D_DESC						desc				= {surface.Desc.Dimensions.x, surface.Desc.Dimensions.y, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE};
@@ -93,13 +93,13 @@
 }
 
 //
-::gpk::err_t			gpk::d3dCreatePixelShadersFromEngineShaders	(ID3D11Device* pDevice, const ::gpk::SShaderManager & engineShaders, ::gpk::array_com<ID3D11PixelShader> & pixelShaders) {
+gpk::err_t 		gpk::d3dCreatePixelShadersFromEngineShaders	(ID3D11Device* pDevice, const ::gpk::SShaderManager & engineShaders, ::gpk::array_com<ID3D11PixelShader> & pixelShaders) {
 	for(u2_t iShader = 0; iShader < engineShaders.size(); ++iShader) {
-		const ::gpk::view<sc_t>								shaderName				= engineShaders.Names[iShader];
+		vcst_t		shaderName				= engineShaders.Names[iShader];
 
 		// After the pixel shader file is loaded, create the shader.
 		sc_t											shaderFileName	[1024]	= {};
-		sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
+		sprintf_s(shaderFileName, "%.*s.cso", GPK_VIEW_ARGS(shaderName));
 		::gpk::apod<s0_t>						filePS;
 		if_fail_fe(gpk::fileToMemory(::gpk::vcst_t{shaderFileName}, filePS));
 

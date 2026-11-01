@@ -38,7 +38,7 @@ namespace gpk
 
 		inxp	const u2_t&	size			()				const	noexcept	{ return View.size(); }
 
-		::gpk::err_t			resize			(u2_t newSize)		noexcept	{
+		gpk::err_t 		resize			(u2_t newSize)		noexcept	{
 			if_fail_fe(Data.resize(round_up(newSize, View.ELEMENT_BITS)));
 			View					= {Data.begin(), newSize};
 			return 0;

@@ -8,7 +8,7 @@
 namespace gpk
 {
 	tplt<tpnm _tPOD, ::gpk::u2_t _nSize> 
-	::gpk::err_t			loadView					(::gpk::vcu0_t & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
+	gpk::err_t 		loadView					(::gpk::vcu0_t & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
 		::gpk::view<const _tPOD>	readView					= {}; 
 		::gpk::u2_t					bytesRead					= 0;
 		if_fail_fe(bytesRead = ::gpk::viewRead(readView, input)); 
