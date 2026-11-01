@@ -1,0 +1,81 @@
+{ "loaded" : [
+	{ "unique_id"             : 1
+	, "brand"                 : "Kodak"
+	, "material"              : "ABS"
+	, "color"                : "blue"
+	, "density"               : 1.040000
+	, "diameter"              : 2.850000
+	, "spool_size"            : 1000
+	, "max_drying_temperature": 0
+	, "loaded"                : 1619508697
+	, "unloaded"              : 0	  
+	, "dried"                 : 0
+	, "notes"                 : "Polymer Prototype #5"
+	},
+	{ "unique_id"             : 2
+	, "brand"                 : "BASF"
+	, "material"              : "ABS"
+	, "color"                : "green"
+	, "density"               : 1.040000
+	, "diameter"              : 1.750000
+	, "spool_size"            : 1000
+	, "max_drying_temperature": 0
+	, "loaded"                : 1619509497
+	, "unloaded"              : 0
+	, "dried"                 : 1619509697
+	, "notes"                 : ""
+	},
+	{ "unique_id"             : 3
+	, "brand"                 : "Zortrax"
+	, "material"              : "Nylon"
+	, "color"                : "dark magenta"
+	, "density"               : 1.040000
+	, "diameter"              : 1.750000
+	, "spool_size"            : 1000
+	, "max_drying_temperature": 0
+	, "loaded"                : 1619519297
+	, "unloaded"              : 0
+	, "dried"                 : 1619519697
+	, "notes"                 : ""
+	}]
+, "history" : [
+	{ "unique_id"             : 4
+	, "brand"                 : "Kodak"
+	, "material"              : "Nylon"
+	, "color"                : "red"
+	, "density"               : 1.040000
+	, "diameter"              : 1.750000
+	, "spool_size"            : 1000
+	, "max_drying_temperature": 0
+	, "loaded"                : 1619526698
+	, "unloaded"              : 1619526899
+	, "dried"                 : 1619529700
+	, "notes"                 : ""
+	},
+	{ "unique_id"             : 5
+	, "brand"                 : "BASF"
+	, "material"              : "ABS"
+	, "color"                : "white"
+	, "density"               : 1.040000
+	, "diameter"              : 1.750000
+	, "spool_size"            : 1000
+	, "max_drying_temperature": 0
+	, "loaded"                : 1619546699
+	, "unloaded"              : 1619546899
+	, "dried"                 : 1619549797
+	, "notes"                 : ""
+	},
+	{ "unique_id"             : 6
+	, "brand"                 : "Zortrax"
+	, "material"              : "PLA"
+	, "color"                : "black"
+	, "density"               : 1.040000
+	, "diameter"              : 2.850000
+	, "spool_size"            : 1000
+	, "max_drying_temperature": 0
+	, "loaded"                : 1619557700
+	, "unloaded"              : 1619557800
+	, "dried"                 : 1619557797
+	, "notes"                 : ""
+	}]
+}
