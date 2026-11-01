@@ -118,7 +118,7 @@ namespace dry
 		bool								ModalEnabled			= false;
 		::dry::MODAL						ModalSelected			= ::dry::MODAL_CLOSE_DOOR;
 		SCREEN								ScreenSelected			= ::dry::SCREEN_HOME;
-		int32_t								RootControlIndex		= -1;
+		::gpk::cid_t						RootControlIndex		= -1;
 	};
 #pragma pack(push, 1)
 	struct SCommState {
@@ -131,8 +131,8 @@ namespace dry
 	struct SSerialClientQueues {
 		::std::mutex								LockSend;
 		::std::mutex								LockReceive;
-		::gpk::array_obj<::gpk::array_pod<char_t>>	Send;
-		::gpk::array_obj<::gpk::array_pod<char_t>>	Received;
+		::gpk::array_obj<::gpk::array_pod<::gpk::sc_t>>	Send;
+		::gpk::array_obj<::gpk::array_pod<::gpk::sc_t>>	Received;
 	};
 
 	struct SApplication {
@@ -143,7 +143,7 @@ namespace dry
 #endif
 		::dry::SDryer						Dryer					= {};
 		::dry::SSpoolCatalog				Catalog					= {};
-		::gpk::array_static<char_t, 64>		TimeString				= {};
+		::gpk::array_static<::gpk::sc_t, 64>	TimeString				= {};
 
 		::dry::SScreens						Screens					= {};
 		::dry::SCommState					Comms					= {};
@@ -188,11 +188,11 @@ namespace dry
 	static inline ::gpk::error_t		handleControlConfig			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
 
 	// ---- Resize handlers
-	::gpk::error_t						handleResizeScreenHUD		(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSIze);
-	::gpk::error_t						handleResizeScreenMenu		(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSIze);
-	::gpk::error_t						handleResizeScreenModal		(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSIze);
-	::gpk::error_t						handleResizeScreenHome		(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSIze);
-	::gpk::error_t						handleResizeScreenSpoolInfo	(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSIze);
+	::gpk::error_t						handleResizeScreenHUD		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	::gpk::error_t						handleResizeScreenMenu		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	::gpk::error_t						handleResizeScreenModal		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	::gpk::error_t						handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	::gpk::error_t						handleResizeScreenSpoolInfo	(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
 	::gpk::error_t						handleResize				(::dry::SApplication & app);
 
 	// ---- Modals

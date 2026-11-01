@@ -3,57 +3,57 @@
 
 ::gpk::error_t									dry::modalClose				(::dry::SApplication & app) {
 	::gpk::SGUI											& gui						= *app.Framework.GUI;
-	const int32_t										indexDialog					= app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG];
-	gui.Controls.States[indexDialog].Hidden			= true;
+	const ::gpk::cid_t									indexDialog					= app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG];
+	gui.Controls.SetHidden(indexDialog, true);
 	app.Screens.ModalEnabled						= false;
-	gui.Controls.States[app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG]].Hidden	= true;
+	gui.Controls.SetHidden(app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG], true);
 	return 0;
 }
 
 ::gpk::error_t									dry::handleResize			(::dry::SApplication & app)		{
 	auto												& framework					= app.Framework;
-	const ::gpk::SCoord2<int16_t>						newSize						= framework.MainDisplay.Size.Cast<int16_t>();
-	framework.GUI->Controls.Controls[app.Screens.RootControlIndex].Area.Size	= newSize;
-	e_if(errored(::dry::handleResizeScreenHUD		(app, newSize)), "%s", "");
-	e_if(errored(::dry::handleResizeScreenMenu		(app, newSize)), "%s", "");
-	e_if(errored(::dry::handleResizeScreenModal		(app, newSize)), "%s", "");
-	e_if(errored(::dry::handleResizeScreenHome		(app, newSize)), "%s", "");
-	e_if(errored(::dry::handleResizeScreenSpoolInfo	(app, newSize)), "%s", "");
+	const ::gpk::n2s1_t							newSize						= framework.RootWindow.Size.s1_t();
+	framework.GUI->Controls.Placement[app.Screens.RootControlIndex].Area.Size	= newSize;
+	if_fail_e(::gpk::failed(::dry::handleResizeScreenHUD		(app, newSize)));
+	if_fail_e(::gpk::failed(::dry::handleResizeScreenMenu		(app, newSize)));
+	if_fail_e(::gpk::failed(::dry::handleResizeScreenModal		(app, newSize)));
+	if_fail_e(::gpk::failed(::dry::handleResizeScreenHome		(app, newSize)));
+	if_fail_e(::gpk::failed(::dry::handleResizeScreenSpoolInfo	(app, newSize)));
 	return 0;
 }
 
-::gpk::error_t									dry::handleResizeScreenHUD	(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSize)	{
+::gpk::error_t									dry::handleResizeScreenHUD	(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	::gpk::SGUI											& gui						= *app.Framework.GUI;
-	gui.Controls.Controls	[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG	]].Area.Size.x		= newSize.x;
+	gui.Controls.Placement	[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG	]].Area.Size.x		= newSize.x;
 	//gui.Controls.Controls	[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_CALENDAR	]].Area.Offset.x	= gui.Controls.Controls[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG]].Area.Size.x / 2-
 	//gui.Controls.Controls	[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_CALENDAR	]].Area.Size.x / 2;
-	gui.Controls.States		[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG	]].Updated			= false;
+	gui.Controls.SetUpdated(app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG], false);
 	return 0;
 }
 
-::gpk::error_t									dry::handleResizeScreenMenu	(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSize)	{
+::gpk::error_t									dry::handleResizeScreenMenu	(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	::gpk::SGUI											& gui						= *app.Framework.GUI;
-	const int32_t										indexDialog					= app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG];
+	const ::gpk::cid_t									indexDialog					= app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG];
 	if(-1 == indexDialog)
 		return 0;
-	gui.Controls.Controls	[indexDialog].Area.Size.x	= newSize.x;
-	gui.Controls.States		[indexDialog].Updated		= false;
-	::gpk::vi32											dialogChildren				= gui.Controls.Children[indexDialog];
+	gui.Controls.Placement[indexDialog].Area.Size.x	= newSize.x;
+	gui.Controls.SetUpdated(indexDialog, false);
+	::gpk::vcid											dialogChildren				= gui.Controls.Children[indexDialog];
 	int32_t												offsetX						= 0;
 	for(uint32_t iMenuItem = 0, countMneuItems = dialogChildren.size(); iMenuItem < countMneuItems; ++iMenuItem) {
-		const int32_t										indexMenuItem				= dialogChildren[iMenuItem];
-		gui.Controls.Controls[indexMenuItem].Area.Offset.x	= (int16_t)offsetX;
-		offsetX											+= gui.Controls.Controls[indexMenuItem].Area.Size.x;
+		const ::gpk::cid_t									indexMenuItem				= dialogChildren[iMenuItem];
+		gui.Controls.Placement[indexMenuItem].Area.Offset.x	= (int16_t)offsetX;
+		offsetX											+= gui.Controls.Placement[indexMenuItem].Area.Size.x;
 	}
 	return 0;
 }
 
-::gpk::error_t									dry::handleResizeScreenSpoolInfo	(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSize) {
+::gpk::error_t									dry::handleResizeScreenSpoolInfo	(::dry::SApplication & app, ::gpk::n2s1_t newSize) {
 	(void)newSize;
 	::gpk::SGUI											& gui						= *app.Framework.GUI;
 	const ::dry::SScreenSpoolInfo						& screen					= app.Screens.SpoolInfo;
-	::gpk::SRectangle2<int16_t>							& dialogArea				= gui.Controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG]].Area;
-	dialogArea.Size									= gui.Controls.Controls[app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]].Area.Size - ::gpk::SCoord2<int16_t>{4, 64};
+	::gpk::rect2i16									& dialogArea				= gui.Controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG]].Area;
+	dialogArea.Size									= gui.Controls.Placement[app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]].Area.Size - ::gpk::n2s1_t{4, 64};
 	::dry::SCREEN_CONTROL_SPOOL_INFO					idControls	[]				=
 	{	::dry::SCREEN_CONTROL_SPOOL_INFO_TITLE
 	,	::dry::SCREEN_CONTROL_SPOOL_INFO_LABEL_BRAND
@@ -73,23 +73,23 @@
 	};
 	for(uint32_t iControl = 0; iControl < ::gpk::size(idControls); ++iControl) {
 		if(screen.ControlIds[idControls[iControl]] < screen.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_BRAND])
-			gui.Controls.Controls[screen.ControlIds[idControls[iControl]]].Area.Size.x		= dialogArea.Size.x - 2;
+			gui.Controls.Placement[screen.ControlIds[idControls[iControl]]].Area.Size.x		= int16_t(dialogArea.Size.x - 2);
 		else
-			gui.Controls.Controls[screen.ControlIds[idControls[iControl]]].Area.Size.x		= int16_t(dialogArea.Size.x / 4.0 * 3);
-		gui.Controls.States[screen.ControlIds[idControls[iControl]]].Updated = false;
+			gui.Controls.Placement[screen.ControlIds[idControls[iControl]]].Area.Size.x		= int16_t(dialogArea.Size.x / 4.0 * 3);
+		gui.Controls.SetUpdated(screen.ControlIds[idControls[iControl]], false);
 	}
-	gui.Controls.States		[app.Screens.Modal	.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Updated		= false;
-	gui.Controls.States		[screen				.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG	]].Updated		= false;
+	gui.Controls.SetUpdated(app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], false);
+	gui.Controls.SetUpdated(screen.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG], false);
 	return 0;
 }
 
 static	::gpk::error_t				screenSwitch			(::dry::SApplication & app, ::dry::SCREEN oldScreen, ::dry::SCREEN newScreen, int32_t idControl) {
 	::gpk::SGUI								& gui					= *app.Framework.GUI;
-	e_if(::gpk::guiSelect(*app.Framework.GUI, app.Screens.Menu.ControlIds[idControl]), "%s", "");
-	gui.Controls.States[app.Screens.Config		.ControlIds[::dry::SCREEN_CONTROL_CONFIG_DIALOG			]].Hidden = idControl != dry::SCREEN_CONTROL_MENU_CONFIG		;
-	gui.Controls.States[app.Screens.Home		.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG			]].Hidden = idControl != dry::SCREEN_CONTROL_MENU_HOME			;
-	gui.Controls.States[app.Screens.LoadFilament.ControlIds[::dry::SCREEN_CONTROL_LOAD_FILAMENT_DIALOG	]].Hidden = idControl != dry::SCREEN_CONTROL_MENU_LOAD_FILAMENT	;
-	gui.Controls.States[app.Screens.Info		.ControlIds[::dry::SCREEN_CONTROL_INFO_DIALOG			]].Hidden = idControl != dry::SCREEN_CONTROL_MENU_INFO			;
+	if_fail_e(::gpk::guiSelect(*app.Framework.GUI, app.Screens.Menu.ControlIds[idControl]));
+	gui.Controls.SetHidden(app.Screens.Config.ControlIds[::dry::SCREEN_CONTROL_CONFIG_DIALOG], idControl != dry::SCREEN_CONTROL_MENU_CONFIG);
+	gui.Controls.SetHidden(app.Screens.Home.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG], idControl != dry::SCREEN_CONTROL_MENU_HOME);
+	gui.Controls.SetHidden(app.Screens.LoadFilament.ControlIds[::dry::SCREEN_CONTROL_LOAD_FILAMENT_DIALOG], idControl != dry::SCREEN_CONTROL_MENU_LOAD_FILAMENT);
+	gui.Controls.SetHidden(app.Screens.Info.ControlIds[::dry::SCREEN_CONTROL_INFO_DIALOG], idControl != dry::SCREEN_CONTROL_MENU_INFO);
 	if(oldScreen != app.Screens.ScreenSelected) {
 		info_printf("Switching to screen: %s. Previous screen: %s. Modal enabled: %s."
 			, ::gpk::get_value_label(app.Screens.ScreenSelected).begin()
@@ -201,21 +201,21 @@ static	::gpk::error_t				stateSwitch				(::dry::SApplication & app, ::dry::SCREE
 		}
 		break;
 	}
-	e_if(::gpk::guiUpdateMetrics(gui, framework.MainDisplayOffscreen->Color.metrics(), false), "%s", "");
+	if_fail_e(::gpk::guiUpdateMetrics(gui, framework.RootWindow.BackBuffer->Color.metrics().u1_t(), false));
 	return 0;
 }
 
 static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 	::gpk::SGUI								& gui					= *app.Framework.GUI;
-	::gpk::SInput							& input					= *app.Framework.Input;
+	::gpk::SInput							& input					= *app.Framework.RootWindow.Input;
 	bool									running					= true;
-	::gpk::array_pod<uint32_t>				controlsToProcess		= {};
+	::gpk::acid							controlsToProcess		= {};
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 	bool									executed				= false;
 	for(uint32_t iProcessable = 0, countControls = controlsToProcess.size(); iProcessable < countControls; ++iProcessable) {
-		uint32_t								iControl				= controlsToProcess[iProcessable];
-		if(gui.Controls.States[iControl].Execute) {
-			info_printf("Executed %u.", iControl);
+		const ::gpk::cid_t					iControl				= controlsToProcess[iProcessable];
+		if(gui.Controls.IsAction(iControl)) {
+			info_printf("Executed %u.", (uint32_t)iControl);
 			for(uint32_t iScreenControl = 0; iScreenControl < app.Screens.HUD.ControlIds.size(); ++iScreenControl)
 				if(app.Screens.HUD.ControlIds[iScreenControl] == (int32_t)iControl) {
 					info_printf("HUD Control executed: %s", ::gpk::get_value_label((::dry::SCREEN_CONTROL_HUD)iScreenControl).begin());
@@ -265,7 +265,7 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 }
 
 ::gpk::error_t						dry::updateApp			(::dry::SApplication & app) {
-	e_if(errored(::dry::dryerUpdate(app.Dryer, app.Framework.Timer.LastTimeMicroseconds / 1000)), "%s", "");
+	if_fail_e(::gpk::failed(::dry::dryerUpdate(app.Dryer, app.Framework.Timer.LastTimeMicroseconds / 1000)));
 	for(uint32_t iDryerEvent = 0; iDryerEvent < app.Dryer.EventList.size(); ++iDryerEvent) {
 		::dry::DRYER_EVENT						dryerEvent						= app.Dryer.EventList[iDryerEvent];
 		always_printf("Processing dryer event: %s (%u).", ::gpk::get_value_label(dryerEvent).begin(), dryerEvent);
@@ -313,12 +313,12 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 	//	app.Dryer.CommandList.remove(iDryerCommand);
 	//}
 
-	e_if(errored(::dry::updateScreenHUD(app)), "%s", "");
+	if_fail_e(::gpk::failed(::dry::updateScreenHUD(app)));
 	switch(app.Screens.ScreenSelected) {
-	case dry::SCREEN_HOME			:	e_if(errored(::dry::updateScreenHome		(app)), "%s", ""); break;
-	case dry::SCREEN_LOAD_FILAMENT	:	e_if(errored(::dry::updateScreenLoadFilament(app)), "%s", ""); break;
-	case dry::SCREEN_INFO			:	e_if(errored(::dry::updateScreenInfo		(app)), "%s", ""); break;
-	case dry::SCREEN_CONFIG			:	e_if(errored(::dry::updateScreenConfig		(app)), "%s", ""); break;
+	case dry::SCREEN_HOME			:	if_fail_e(::gpk::failed(::dry::updateScreenHome		(app))); break;
+	case dry::SCREEN_LOAD_FILAMENT	:	if_fail_e(::gpk::failed(::dry::updateScreenLoadFilament(app))); break;
+	case dry::SCREEN_INFO			:	if_fail_e(::gpk::failed(::dry::updateScreenInfo		(app))); break;
+	case dry::SCREEN_CONFIG			:	if_fail_e(::gpk::failed(::dry::updateScreenConfig		(app))); break;
 	}
 	bool									running					= ::handleGUI(app) ? false : true;
 	if(false == running)
@@ -328,8 +328,8 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 		::dry::modalClose(app);
 		::dry::modalDisplay(app, ::dry::MODAL_SCAN_SPOOL);
 	}
-	if(app.Framework.MainDisplay.Resized)
-		e_if(errored(::dry::handleResize(app)), "%s", "");
+	if(app.Framework.RootWindow.Resized)
+		if_fail_e(::gpk::failed(::dry::handleResize(app)));
 
 	return 0;
 }

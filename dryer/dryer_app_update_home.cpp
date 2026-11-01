@@ -1,51 +1,51 @@
 #include "dryer_app.h"
 
-::gpk::error_t						dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSize)	{
-	::gpk::SGUIControlTable					& controls						= app.Framework.GUI->Controls;
+::gpk::error_t						dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
+	::gpk::SControlTable						& controls						= app.Framework.GUI->Controls;
 	const ::dry::SScreenHome				& screen						= app.Screens.Home;
-	::gpk::guiUpdateMetrics(*app.Framework.GUI, newSize.Cast<uint32_t>(), false);
-	const uint32_t							heightMenu						= (-1 == app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG])
+	::gpk::guiUpdateMetrics(*app.Framework.GUI, newSize.u1_t(), false);
+	const int16_t							heightMenu						= (-1 == app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG])
 		? 0
-		: controls.Controls[app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]].Area.Size.y;
-	const uint32_t							heightHUD						= controls.Controls[app.Screens.HUD	.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG]].Area.Size.y;
+		: controls.Placement[app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]].Area.Size.y;
+	const int16_t							heightHUD						= controls.Placement[app.Screens.HUD	.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG]].Area.Size.y;
 	const int16_t							finalHeight						= int16_t(newSize.y - (heightMenu + heightHUD));
 
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG		]].Area.Offset.y	= (int16_t)heightHUD;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG		]].Area.Size		= {newSize.x, finalHeight};
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM]].Area.Size.x		=  int16_t(newSize.x / 7.0 * 3);//, finalHeight};
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SESSION]].Area.Size.x		=  int16_t(newSize.x / 7.0 * 3);
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	]].Area.Size.x		=  int16_t(newSize.x / 7.0 * 4);
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SPOOL	]].Area.Size		= {int16_t(newSize.x / 7.0 * 4), int16_t(finalHeight - controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE]].Area.Size.y)};
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG		]].Area.Offset.y	= (int16_t)heightHUD;
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG		]].Area.Size		= {newSize.x, finalHeight};
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM]].Area.Size.x		=  int16_t(newSize.x / 7.0 * 3);//, finalHeight};
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SESSION]].Area.Size.x		=  int16_t(newSize.x / 7.0 * 3);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	]].Area.Size.x		=  int16_t(newSize.x / 7.0 * 4);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SPOOL	]].Area.Size		= {int16_t(newSize.x / 7.0 * 4), int16_t(finalHeight - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE]].Area.Size.y)};
 
-	const int16_t							sessionGroupWidth					= controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SESSION]].Area.Size.x;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_LABEL		]].Area.Size.x	= sessionGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_ELAPSED_TIME_LABEL		]].Area.Size.x	= sessionGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL]].Area.Size.x	= sessionGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL	]].Area.Size.x	= sessionGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL		]].Area.Size.x	= sessionGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_REMAINING_TIME_LABEL		]].Area.Size.x	= sessionGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_LABEL		]].Area.Size.x	= sessionGroupWidth - 2;
+	const int16_t							sessionGroupWidth					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SESSION]].Area.Size.x;
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_LABEL		]].Area.Size.x	= int16_t(sessionGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_ELAPSED_TIME_LABEL		]].Area.Size.x	= int16_t(sessionGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL]].Area.Size.x	= int16_t(sessionGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL	]].Area.Size.x	= int16_t(sessionGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL		]].Area.Size.x	= int16_t(sessionGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_REMAINING_TIME_LABEL		]].Area.Size.x	= int16_t(sessionGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_LABEL		]].Area.Size.x	= int16_t(sessionGroupWidth - 2);
 
-	const int16_t							programGroupWidth					= controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM]].Area.Size.x;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START					]].Area.Size.x	= programGroupWidth - 8;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP						]].Area.Size.x	= programGroupWidth - 8;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_NAME				]].Area.Size.x	= programGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_TEMPERATURE		]].Area.Size.x	= programGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_PRESSURE			]].Area.Size.x	= programGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_PRE_HEATING_TIME	]].Area.Size.x	= programGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_SUBCYCLE_DURATION	]].Area.Size.x	= programGroupWidth - 2;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_SUBCYCLES			]].Area.Size.x	= programGroupWidth - 2;
+	const int16_t							programGroupWidth					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM]].Area.Size.x;
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START					]].Area.Size.x	= int16_t(programGroupWidth - 8);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP						]].Area.Size.x	= int16_t(programGroupWidth - 8);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_NAME				]].Area.Size.x	= int16_t(programGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_TEMPERATURE		]].Area.Size.x	= int16_t(programGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_PRESSURE			]].Area.Size.x	= int16_t(programGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_PRE_HEATING_TIME	]].Area.Size.x	= int16_t(programGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_SUBCYCLE_DURATION	]].Area.Size.x	= int16_t(programGroupWidth - 2);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_SUBCYCLES			]].Area.Size.x	= int16_t(programGroupWidth - 2);
 
-	const ::gpk::SCoord2<int16_t>			spoolGroupSize						= controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SPOOL]].Area.Size;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE	]].Area.Size.x		= spoolGroupSize.x - 4;
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST		]].Area.Size		= {int16_t(spoolGroupSize.x -  4), int16_t(spoolGroupSize.y - controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 4)};
-	::gpk::SCoord2<int16_t>					& scrollableSize					= controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]].Area.Size;
-	scrollableSize						= {int16_t(spoolGroupSize.x - 36), int16_t(spoolGroupSize.y - controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 6)};
-	controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLBAR	]].Area.Size.y		= int16_t(spoolGroupSize.y - controls.Controls[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 8);
-	const ::gpk::vci32						listChildren						= controls.Children[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]];
+	const ::gpk::n2s1_t					spoolGroupSize						= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SPOOL]].Area.Size;
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE	]].Area.Size.x		= spoolGroupSize.x - 4;
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST		]].Area.Size		= {int16_t(spoolGroupSize.x -  4), int16_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 4)};
+	::gpk::n2s1_t						& scrollableSize					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]].Area.Size;
+	scrollableSize						= {int16_t(spoolGroupSize.x - 36), int16_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 6)};
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLBAR	]].Area.Size.y		= int16_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 8);
+	const ::gpk::vcid						listChildren						= controls.Children[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]];
 	for(uint32_t iSpool = 0, countSpools = listChildren.size(); iSpool < countSpools; ++iSpool) {
-		controls.Controls[listChildren[iSpool]].Area.Size.x		= spoolGroupSize.x - 40;
-		controls.States[listChildren[iSpool]].Updated			= false;
+		controls.Placement[listChildren[iSpool]].Area.Size.x		= int16_t(spoolGroupSize.x - 40);
+		controls.SetUpdated(listChildren[iSpool], false);
 	}
 	return 0;
 }
@@ -61,13 +61,13 @@
 	}
 	// The following string comparisons are to refresh the gauge images only if the values changed
 	::gpk::SGUI								& gui						= *app.Framework.GUI;
-	char_t									bufferTemp	[32]			= {};
+	::gpk::sc_t								bufferTemp	[32]			= {};
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%i\xf8\x43", (int32_t)dryerState.Temperature);
 	if(forceUpdate || (::gpk::vcs{bufferTemp} != ::gpk::vcs{screenHome.Strings.DryerTemperature.Storage})) {
 		::gpk::memcpy_s(screenHome.Strings.DryerTemperature.Storage, bufferTemp);
 		::dry::gaugeImageUpdate(screenHome.GaugeDryerSmall.Gauges[::dry::GAUGE_TEMPERATURE]);
-		app.Framework.MainDisplay.Repaint	= true;
-		e_if(errored(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYER_SMALL], screenHome.Strings.DryerTemperature.Storage)), "%s", "");
+		app.Framework.RootWindow.Repaint	= true;
+		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYER_SMALL], screenHome.Strings.DryerTemperature.Storage)));
 	}
 	for(uint32_t iFeeder = 0; iFeeder < ::gpk::size(screenHome.GaugeFeederSmall); ++iFeeder) {
 		snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, iFeeder ? "%i%%" : "%i mbar", int32_t(iFeeder ? dryerState.Humidity : dryerState.Vacuum));
@@ -77,21 +77,21 @@
 				, iFeeder ? ::gpk::CYAN	: ::gpk::DARKGRAY
 				, iFeeder ? ::gpk::BLUE	: ::gpk::LIGHTGRAY
 			);
-			e_if(errored(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL + iFeeder], screenHome.Strings.FeederTemperature[iFeeder].Storage)), "%s", "");
-			app.Framework.MainDisplay.Repaint	= true;
+			if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL + iFeeder], screenHome.Strings.FeederTemperature[iFeeder].Storage)));
+			app.Framework.RootWindow.Repaint	= true;
 		}
 	}
 	return 0;
 }
 
 template<size_t _nSize>
-static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, char_t (&bufferTemp)[_nSize], ::gpk::array_static<char_t, _nSize> & storage, ::dry::SCREEN_CONTROL_HOME idControl) {
+static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::gpk::sc_t (&bufferTemp)[_nSize], ::gpk::array_static<::gpk::sc_t, _nSize> & storage, ::dry::SCREEN_CONTROL_HOME idControl) {
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	if(::gpk::vcs{bufferTemp} != ::gpk::vcs{storage.Storage}) {
 		::gpk::memcpy_s(storage.Storage, bufferTemp);
-		e_if(errored(::gpk::controlTextSet(gui, screenHome.ControlIds[idControl], storage.Storage)), "%s", "");
-		app.Framework.MainDisplay.Repaint	= true;
+		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[idControl], storage.Storage)));
+		app.Framework.RootWindow.Repaint	= true;
 	}
 	return 0;
 }
@@ -100,8 +100,8 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, cha
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	const ::dry::SDryerProgram				& dryerProgram					= app.Dryer.ProgramList[app.Dryer.ProgramSelected];
-	char_t									bufferTemp	[32]				= {};
-	e_if(errored(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_NAME], dryerProgram.Name)), "%s", "");
+	::gpk::sc_t								bufferTemp	[32]				= {};
+	if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_NAME], dryerProgram.Name)));
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%u\xf8\x43"	, dryerProgram.Temperature		); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramTemperature		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_TEMPERATURE		);
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%i mbar"		, dryerProgram.Pressure			); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramPressure			, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_PRESSURE			);
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%u min"		, dryerProgram.PreHeatingTime	); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramPreHeatingTime	, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_PRE_HEATING_TIME	);
@@ -109,37 +109,37 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, cha
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%u"			, dryerProgram.Subcycles		); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramSubcycles			, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_SUBCYCLES			);
 
 	if(app.Dryer.State.RunningPending || app.Dryer.State.Running) {
-		gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_PREV]].Disabled = true;
-		gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_NEXT]].Disabled = true;
+		gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_PREV], true);
+		gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_NEXT], true);
 	}
 	else {
-		gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_PREV]].Disabled = false;
-		gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_NEXT]].Disabled = false;
+		gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_PREV], false);
+		gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_NEXT], false);
 	}
-	app.Framework.MainDisplay.Repaint	= true;
+	app.Framework.RootWindow.Repaint	= true;
 	return 0;
 }
 
 ::gpk::error_t						dry::updateCatalogDisplay		(::dry::SApplication & app) {
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
-	::gpk::error_t							indexSpoolList					= screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE];
+	::gpk::cid_t							indexSpoolList					= screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE];
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
-	::gpk::vci32							menuItemControls				= gui.Controls.Children[indexSpoolList];
+	::gpk::vcid							menuItemControls				= gui.Controls.Children[indexSpoolList];
 	for(uint32_t iSpool = 0, countSpools = app.Catalog.FilamentLoaded.size(); iSpool < countSpools; ++iSpool) {
-		::gpk::error_t							indexControl					= -1;
+		::gpk::cid_t							indexControl					= -1;
 		if(iSpool < menuItemControls.size())
 			indexControl						= menuItemControls[iSpool];
 		else {
 			indexControl						= ::gpk::controlCreate(gui);
 			::gpk::controlSetParent(gui, indexControl, indexSpoolList);
 		}
-		::gpk::SControl							& controlFilament				= gui.Controls.Controls[indexControl];
+		::gpk::SControlPlacement				& controlFilament				= gui.Controls.Placement[indexControl];
 		::gpk::SControlText						& controlText					= gui.Controls.Text[indexControl];
 		controlFilament.Align				= ::gpk::ALIGN_TOP_LEFT;
 		controlFilament.Area.Offset.y		= int16_t(24 * iSpool);
 		controlFilament.Area.Size.y			= 24;
 		controlFilament.Border				= {1, 1, 1, 1};
-		char_t									bufferFormat[4096]				= {};
+		::gpk::sc_t							bufferFormat[4096]				= {};
 		snprintf(bufferFormat, ::gpk::size(bufferFormat), "%s - %s - %s - %.2fmm"
 			, ::gpk::toString(app.Catalog.Material	[app.Catalog.FilamentLoaded[iSpool].Material]).begin()
 			, ::gpk::toString(app.Catalog.Brand		[app.Catalog.FilamentLoaded[iSpool].Brand	]).begin()
@@ -150,13 +150,13 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, cha
 	}
 	for(uint32_t iSpool = app.Catalog.FilamentLoaded.size(), countSpools = menuItemControls.size(); iSpool < countSpools; ++iSpool) {
 		const ::gpk::error_t					indexControl					= menuItemControls[iSpool];
-		::gpk::SControl							& controlFilament				= gui.Controls.Controls[indexControl];
+		::gpk::SControlPlacement				& controlFilament				= gui.Controls.Placement[indexControl];
 		::gpk::SControlText						& controlText					= gui.Controls.Text[indexControl];
 		controlFilament.Border				= {};
 		controlText.Text					= "";
 	}
 
-	::dry::handleResizeScreenHome(app, gui.LastSize.Cast<int16_t>());
+	::dry::handleResizeScreenHome(app, gui.LastSize.s1_t());
 	return 0;
 }
 
@@ -178,7 +178,7 @@ static	::gpk::error_t				formatTimerString				(int64_t timeInMilliseconds, ::gpk
 static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	::dry::SDryerState						& dryerState					= app.Dryer.State;
-	char_t									bufferTemp	[32]				= {};
+	::gpk::sc_t								bufferTemp	[32]				= {};
 	::formatTimerString(dryerState.TimeElapsedTotal				, bufferTemp);	::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ElapsedTimeTotal		, ::dry::SCREEN_CONTROL_HOME_ELAPSED_TIME_TIME);
 	::formatTimerString(dryerState.TimeElapsedCycleDrying		, bufferTemp);	::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ElapsedTimeDrying		, ::dry::SCREEN_CONTROL_HOME_DRYING_TIME_TIME);
 	::formatTimerString(dryerState.TimeElapsedCyclePrePreheating, bufferTemp);	::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ElapsedTimePrePreheating, ::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_TIME);
@@ -197,46 +197,47 @@ static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
 		switch(dryerEvent) {
 		case ::dry::DRYER_EVENT_FINISHED:
 		case ::dry::DRYER_EVENT_STOPPED	:
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP				]].Hidden	= true;
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START				]].Hidden	= false;
+			gui.Controls.SetHidden(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP ], true);
+			gui.Controls.SetHidden(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START], false);
 			//gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_LABEL		]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL			]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL	]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL		]].Disabled	= true;
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL], true);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], true);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], true);
 			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "READY");
 			::dry::updateProgramDisplay(app);
-			app.Framework.MainDisplay.Repaint	= true;
+			app.Framework.RootWindow.Repaint	= true;
 			break;
 		case ::dry::DRYER_EVENT_STARTED	:
 			::dry::modalClose(app);
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_LABEL]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP		]].Hidden	= false;
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START		]].Hidden	= true;
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_LABEL], false);
+			gui.Controls.SetHidden(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP ], false);
+			gui.Controls.SetHidden(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START], true);
 			break;
 		case ::dry::DRYER_EVENT_PRE_PREHEATING_STARTED	:
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL	]].Disabled	= false;
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL			]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL		]].Disabled	= true;
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], false);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL], true);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], true);
 			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "RAISING TEMPERATURE");
 			::dry::updateProgramDisplay(app);
-			app.Framework.MainDisplay.Repaint	= true;
+			app.Framework.RootWindow.Repaint	= true;
 			break;
 		case ::dry::DRYER_EVENT_PREHEATING_STARTED	:
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL		]].Disabled	= false;
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL	]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL			]].Disabled	= true;
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], false);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], true);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL], true);
 			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "PREHEATING");
 			::dry::updateProgramDisplay(app);
-			app.Framework.MainDisplay.Repaint	= true;
+			app.Framework.RootWindow.Repaint	= true;
 			break;
 		case ::dry::DRYER_EVENT_DRYING_STARTED	:
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL			]].Disabled	= gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP ]].Hidden = false;
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL		]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL	]].Disabled	=
-			gui.Controls.States[screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START				]].Hidden = true;
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL], false);
+			gui.Controls.SetHidden(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP], false);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], true);
+			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], true);
+			gui.Controls.SetHidden(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START], true);
 			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "DRYING");
 			::dry::updateProgramDisplay(app);
-			app.Framework.MainDisplay.Repaint	= true;
+			app.Framework.RootWindow.Repaint	= true;
 			break;
 		}
 
@@ -246,9 +247,9 @@ static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
 			break;
 		}
 	}
-	e_if(::updateGaugesFromState(app, false), "%s", "Failed to update gauges.");
+	if_fail_ef(::updateGaugesFromState(app, false), "%s", "Failed to update gauges.");
 	if(app.Dryer.State.Running) { // Update timers text
-		e_if(::updateSessionDisplay(app), "%s", "Failed to update session gui.");
+		if_fail_ef(::updateSessionDisplay(app), "%s", "Failed to update session gui.");
 	}
 	else {
 

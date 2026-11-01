@@ -190,9 +190,13 @@
     <ClCompile Include="filament_catalog.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="filaments.json" />
+    <None Include="filaments.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Makefile" />
-    <None Include="program.json" />
+    <None Include="program.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

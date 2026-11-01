@@ -75,20 +75,20 @@ namespace dry
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HOME, COUNT									, 65);
 
 	struct SStringCache {
-		::gpk::array_static<char_t, 32>	DryerTemperature			= {};
-		::gpk::array_static<char_t, 32>	FeederTemperature	[2]		= {};
-		::gpk::array_static<char_t, 32>	ElapsedTimeTotal			= {};
-		::gpk::array_static<char_t, 32>	ElapsedTimePrePreheating	= {};
-		::gpk::array_static<char_t, 32>	ElapsedTimePreheating		= {};
-		::gpk::array_static<char_t, 32>	ElapsedTimeDrying			= {};
-		::gpk::array_static<char_t, 32>	RemainingTime				= {};
-		::gpk::array_static<char_t, 32>	CurrentCycle				= {};
+		::gpk::array_static<::gpk::sc_t, 32>	DryerTemperature			= {};
+		::gpk::array_static<::gpk::sc_t, 32>	FeederTemperature	[2]		= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ElapsedTimeTotal			= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ElapsedTimePrePreheating	= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ElapsedTimePreheating		= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ElapsedTimeDrying			= {};
+		::gpk::array_static<::gpk::sc_t, 32>	RemainingTime				= {};
+		::gpk::array_static<::gpk::sc_t, 32>	CurrentCycle				= {};
 
-		::gpk::array_static<char_t, 32>	ProgramPressure				= {};
-		::gpk::array_static<char_t, 32>	ProgramTemperature			= {};
-		::gpk::array_static<char_t, 32>	ProgramPreHeatingTime		= {};
-		::gpk::array_static<char_t, 32>	ProgramSubcycleDuration		= {};
-		::gpk::array_static<char_t, 32>	ProgramSubcycles			= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ProgramPressure				= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ProgramTemperature			= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ProgramPreHeatingTime		= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ProgramSubcycleDuration		= {};
+		::gpk::array_static<::gpk::sc_t, 32>	ProgramSubcycles			= {};
 	};
 
 	struct SScreenHome : public ::dry::SScreen<::dry::SCREEN_CONTROL_HOME_COUNT> {

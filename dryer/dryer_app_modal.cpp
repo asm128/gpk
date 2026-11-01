@@ -1,29 +1,32 @@
 #include "dryer_app.h"
 
-::gpk::error_t						dry::handleResizeScreenModal	(::dry::SApplication & app, ::gpk::SCoord2<int16_t> newSize)	{
+::gpk::error_t						dry::handleResizeScreenModal	(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	(void)newSize;
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
-	const int32_t							indexDialog						= app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG];
-	gui.Controls.Controls[indexDialog].Area.Size	= (::dry::MODAL_SCAN_SPOOL == app.Screens.ModalSelected)
-		? ::gpk::SCoord2<int16_t>{448, 288} // {int16_t(newSize.x / 5.0f * 3), int16_t(newSize.y / 2.0f * 1)};
-		: ::gpk::SCoord2<int16_t>{384, 200} // {int16_t(newSize.x / 5.0f * 3), int16_t(newSize.y / 2.0f * 1)};
+	const ::gpk::cid_t						indexDialog						= app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG];
+	gui.Controls.Placement[indexDialog].Area.Size	= (::dry::MODAL_SCAN_SPOOL == app.Screens.ModalSelected)
+		? ::gpk::n2s1_t{448, 288} // {int16_t(newSize.x / 5.0f * 3), int16_t(newSize.y / 2.0f * 1)};
+		: ::gpk::n2s1_t{384, 200} // {int16_t(newSize.x / 5.0f * 3), int16_t(newSize.y / 2.0f * 1)};
 		;
 
-	gui.Controls.States[indexDialog].Updated		= false;
+	gui.Controls.SetUpdated(indexDialog, false);
 	return 0;
 }
 
 static	::gpk::error_t				modalDisplayScanSpool			(::dry::SApplication & app, ::gpk::view_array<const ::dry::SSpoolData> scanned) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
-	gui.Controls.States	[screen.ControlIds					[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Updated	=
-	gui.Controls.States	[screen.ControlIds					[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Hidden	=
-	gui.Controls.States	[app.Screens.SpoolInfo.ControlIds	[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG]].Updated	=
-	gui.Controls.States	[app.Screens.SpoolInfo.ControlIds	[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG]].Hidden	= false;
+	gui.Controls.SetUpdated(screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], false);
+	gui.Controls.SetHidden (screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], false);
+	gui.Controls.SetUpdated(app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG], false);
+	gui.Controls.SetHidden (app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG], false);
 	const bool								isLoaded						= app.Catalog.Exists(scanned[0].UniqueId);
-	gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_LOAD		]].Updated = gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_LOAD		]].Hidden = isLoaded;
-	gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CANCEL	]].Updated = gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CANCEL	]].Hidden = false;
-	gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_UNLOAD	]].Updated = gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_UNLOAD	]].Hidden = false == isLoaded;
+	gui.Controls.SetUpdated(screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_LOAD  ], isLoaded);
+	gui.Controls.SetHidden (screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_LOAD  ], isLoaded);
+	gui.Controls.SetUpdated(screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CANCEL], false);
+	gui.Controls.SetHidden (screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CANCEL], false);
+	gui.Controls.SetUpdated(screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_UNLOAD], false == isLoaded);
+	gui.Controls.SetHidden (screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_UNLOAD], false == isLoaded);
 	if(0 == scanned.size())
 		return 0;
 	const ::dry::SSpoolData					& lastScanned					= scanned[scanned.size() - 1];
@@ -42,48 +45,66 @@ static	::gpk::error_t				modalDisplayDryingStop			(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Stop Drying?");
-	gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Hidden	= gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Updated	=
-	gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_YES			]].Hidden	= gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_YES			]].Updated	=
-	gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_NO			]].Hidden	= gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_NO			]].Updated	=
-	gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_ICON_STOP		]].Hidden	= gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_ICON_STOP	]].Updated	= false;
+	const ::gpk::cid_t controls[] =
+		{ screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]
+		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_YES]
+		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_NO]
+		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_ICON_STOP]
+		};
+	for(const ::gpk::cid_t idControl : controls) {
+		gui.Controls.SetHidden(idControl, false);
+		gui.Controls.SetUpdated(idControl, false);
+	}
 	return 0;
 }
 static	::gpk::error_t				modalDisplayDryingCompleted		(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Drying completed successfully!");
-	gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Hidden	= gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG	]].Updated	=
-	gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE			]].Hidden	= gui.Controls.States[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE	]].Updated	= false;
+	const ::gpk::cid_t controls[] =
+		{ screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]
+		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE]
+		};
+	for(const ::gpk::cid_t idControl : controls) {
+		gui.Controls.SetHidden(idControl, false);
+		gui.Controls.SetUpdated(idControl, false);
+	}
 	return 0;
 }
 static	::gpk::error_t				modalDisplayCloseDoor			(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Close the door correctly to start drying");
-	gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Hidden	= gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG		]].Updated	=
-	gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE		]].Hidden	= gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE		]].Updated	=
-	gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_ICON_START	]].Hidden	= gui.Controls.States	[screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_ICON_START	]].Updated	= false;
+	const ::gpk::cid_t controls[] =
+		{ screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]
+		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE]
+		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_ICON_START]
+		};
+	for(const ::gpk::cid_t idControl : controls) {
+		gui.Controls.SetHidden(idControl, false);
+		gui.Controls.SetUpdated(idControl, false);
+	}
 	return 0;
 }
 ::gpk::error_t						dry::modalDisplay				(::dry::SApplication & app, ::dry::MODAL modal) {
 	::dry::modalClose(app);
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
-	::gpk::vci32							children						= gui.Controls.Children[app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]];
+	::gpk::vcid							children						= gui.Controls.Children[app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]];
 	for(uint32_t iChild = 0; iChild < children.size(); ++iChild) {
-			gui.Controls.States[children[iChild]].Hidden	= true;
+		gui.Controls.SetHidden(children[iChild], true);
 	}
 	switch(modal) {
-	case ::dry::MODAL_CLOSE_DOOR		: ::modalDisplayCloseDoor		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.Cast<int16_t>()); break;
-	case ::dry::MODAL_DRYING_COMPLETE	: ::modalDisplayDryingCompleted	(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.Cast<int16_t>()); break;
-	case ::dry::MODAL_DRYING_STOP		: ::modalDisplayDryingStop		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.Cast<int16_t>()); break;
+	case ::dry::MODAL_CLOSE_DOOR		: ::modalDisplayCloseDoor		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1_t()); break;
+	case ::dry::MODAL_DRYING_COMPLETE	: ::modalDisplayDryingCompleted	(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1_t()); break;
+	case ::dry::MODAL_DRYING_STOP		: ::modalDisplayDryingStop		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1_t()); break;
 	case ::dry::MODAL_SCAN_SPOOL		:
 		::modalDisplayScanSpool(app, app.Scanned);
 		app.Screens.ModalEnabled			= true;
 		app.Screens.ModalSelected			= modal;
-		::dry::handleResizeScreenModal(app, gui.LastSize.Cast<int16_t>());
-		::dry::handleResizeScreenSpoolInfo(app, gui.LastSize.Cast<int16_t>());
+		::dry::handleResizeScreenModal(app, gui.LastSize.s1_t());
+		::dry::handleResizeScreenSpoolInfo(app, gui.LastSize.s1_t());
 		break;
 	}
-	::gpk::guiUpdateMetrics(gui, gui.LastSize.Cast<uint32_t>(), false);
+	::gpk::guiUpdateMetrics(gui, gui.LastSize, false);
 	return 0;
 }

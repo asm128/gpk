@@ -13,9 +13,9 @@ static	::gpk::error_t				addDefaultProgram					(::dry::SDryer & dryer) {
 }
 
 static	::gpk::error_t				dryerProgramListLoad				(::dry::SDryer & dryer, ::gpk::vcst_t programsFilename) {
-	if_fail_ef(::gpk::jsonFileRead(dryer.ProgramFile, programsFilename), "Failed to load programs file: '%.*s'", GPK_VIEW_ARGS(programsFilename))
+	if_fail_ef(::gpk::jsonFileRead(dryer.ProgramFile, programsFilename), "Failed to load programs file: '%.*s'", (int)programsFilename.size(), programsFilename.begin())
 	else {
-		if_zero_ef(dryer.ProgramFile.Reader.Token.size(), "%.*s", GPK_VIEW_ARGS(programsFilename))
+		if_zero_ef(dryer.ProgramFile.Reader.Token.size(), "%.*s", (int)programsFilename.size(), programsFilename.begin())
 		else {
 			::gpk::pnco<::gpk::SJSONNode>		rootArray							= dryer.ProgramFile.Reader[0];
 			::gpk::err_t						programCount						;
@@ -29,12 +29,12 @@ static	::gpk::error_t				dryerProgramListLoad				(::dry::SDryer & dryer, ::gpk::
 				const int32_t							jsonIndexProgramPreHeatingTime		= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "pre_heating_time"	);
 				const int32_t							jsonIndexProgramSubcycleDuration	= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "subcycle_duration"	);
 				const int32_t							jsonIndexProgramSubcycles			= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "subcycles"			);
-				if_fail_ce(jsonIndexProgramName				, "Failed to retrieve program key: '%s'. Skipping program load.", "name"				);
-				if_fail_ce(jsonIndexProgramPressure			, "Failed to retrieve program key: '%s'. Skipping program load.", "pressure"			);
-				if_fail_ce(jsonIndexProgramTemperature		, "Failed to retrieve program key: '%s'. Skipping program load.", "temperature"			);
-				if_fail_ce(jsonIndexProgramPreHeatingTime	, "Failed to retrieve program key: '%s'. Skipping program load.", "pre_heating_time"	);
-				if_fail_ce(jsonIndexProgramSubcycleDuration	, "Failed to retrieve program key: '%s'. Skipping program load.", "subcycle_duration"	);
-				if_fail_ce(jsonIndexProgramSubcycles		, "Failed to retrieve program key: '%s'. Skipping program load.", "subcycles"			);
+				if_fail_cef(jsonIndexProgramName				, "Failed to retrieve program key: '%s'. Skipping program load.", "name"				);
+				if_fail_cef(jsonIndexProgramPressure			, "Failed to retrieve program key: '%s'. Skipping program load.", "pressure"			);
+				if_fail_cef(jsonIndexProgramTemperature		, "Failed to retrieve program key: '%s'. Skipping program load.", "temperature"			);
+				if_fail_cef(jsonIndexProgramPreHeatingTime	, "Failed to retrieve program key: '%s'. Skipping program load.", "pre_heating_time"	);
+				if_fail_cef(jsonIndexProgramSubcycleDuration	, "Failed to retrieve program key: '%s'. Skipping program load.", "subcycle_duration"	);
+				if_fail_cef(jsonIndexProgramSubcycles		, "Failed to retrieve program key: '%s'. Skipping program load.", "subcycles"			);
 				loadedProgram.Name					= dryer.ProgramFile.Reader.View				[jsonIndexProgramName				];
 				loadedProgram.Pressure				= (int32_t)dryer.ProgramFile.Reader.Token	[jsonIndexProgramPressure			].Value;
 				loadedProgram.Temperature			= (int32_t)dryer.ProgramFile.Reader.Token	[jsonIndexProgramTemperature		].Value;
@@ -47,11 +47,11 @@ static	::gpk::error_t				dryerProgramListLoad				(::dry::SDryer & dryer, ::gpk::
 				info_printf("Program PreHeatingTime   : %i min."		, loadedProgram.PreHeatingTime	);
 				info_printf("Program SubcycleDuration : %i min."		, loadedProgram.SubcycleDuration);
 				info_printf("Program Subcycles        : %i."			, loadedProgram.Subcycles		);
-				if_true_ce(false == ::gpk::in_range(loadedProgram.Pressure			, 0U, ::dry::DRYER_MAX_PRESSURE			+ 1U), "Pressure         value '%i' out of range for program '%s'", loadedProgram.Pressure			, ::gpk::string(loadedProgram.Name).begin());
-				if_true_ce(false == ::gpk::in_range(loadedProgram.Temperature		, 0U, ::dry::DRYER_MAX_TEMPERATURE		+ 1U), "Temperature      value '%i' out of range for program '%s'", loadedProgram.Temperature		, ::gpk::string(loadedProgram.Name).begin());
-				if_true_ce(false == ::gpk::in_range(loadedProgram.PreHeatingTime	, 0U, ::dry::DRYER_MAX_TIME_PREHEATING	+ 1U), "PreHeatingTime   value '%i' out of range for program '%s'", loadedProgram.PreHeatingTime	, ::gpk::string(loadedProgram.Name).begin());
-				if_true_ce(false == ::gpk::in_range(loadedProgram.SubcycleDuration	, 0U, ::dry::DRYER_MAX_TIME_SUBCYCLE	+ 1U), "SubcycleDuration value '%i' out of range for program '%s'", loadedProgram.SubcycleDuration	, ::gpk::string(loadedProgram.Name).begin());
-				if_true_ce(false == ::gpk::in_range(loadedProgram.Subcycles			, 0U, ::dry::DRYER_MAX_SUBCYCLES		+ 1U), "Subcycles        value '%i' out of range for program '%s'", loadedProgram.Subcycles			, ::gpk::string(loadedProgram.Name).begin());
+				if_true_cef(false == ::gpk::in_range(loadedProgram.Pressure			, 0U, ::dry::DRYER_MAX_PRESSURE			+ 1U), "Pressure         value '%i' out of range for program '%s'", loadedProgram.Pressure			, ::gpk::string(loadedProgram.Name).begin());
+				if_true_cef(false == ::gpk::in_range(loadedProgram.Temperature		, 0U, ::dry::DRYER_MAX_TEMPERATURE		+ 1U), "Temperature      value '%i' out of range for program '%s'", loadedProgram.Temperature		, ::gpk::string(loadedProgram.Name).begin());
+				if_true_cef(false == ::gpk::in_range(loadedProgram.PreHeatingTime	, 0U, ::dry::DRYER_MAX_TIME_PREHEATING	+ 1U), "PreHeatingTime   value '%i' out of range for program '%s'", loadedProgram.PreHeatingTime	, ::gpk::string(loadedProgram.Name).begin());
+				if_true_cef(false == ::gpk::in_range(loadedProgram.SubcycleDuration	, 0U, ::dry::DRYER_MAX_TIME_SUBCYCLE	+ 1U), "SubcycleDuration value '%i' out of range for program '%s'", loadedProgram.SubcycleDuration	, ::gpk::string(loadedProgram.Name).begin());
+				if_true_cef(false == ::gpk::in_range(loadedProgram.Subcycles			, 0U, ::dry::DRYER_MAX_SUBCYCLES		+ 1U), "Subcycles        value '%i' out of range for program '%s'", loadedProgram.Subcycles			, ::gpk::string(loadedProgram.Name).begin());
 				if(loadedProgram.Name == ::gpk::vcst_t{"default"}) {
 					dryer.ProgramSelected				= dryer.ProgramList.size();
 				}
@@ -142,7 +142,7 @@ static	constexpr	int64_t			cycleTimeInMillisec			(const ::dry::SDryerProgram	& d
 	}
 	else {
 		if(dryerState.RunningPending && dryerState.DoorClosed) {
-			if_fail_ef(dryer.ProgramSelected == -1, "%s", "No program selected")
+			if_true_ef(dryer.ProgramSelected == -1, "%s", "No program selected")
 			else {
 				::dry::SDryerProgram							& programSelected		= dryer.ProgramList[dryer.ProgramSelected];
 				dryer.CurrentProgram						= programSelected;

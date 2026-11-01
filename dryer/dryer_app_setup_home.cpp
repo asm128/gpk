@@ -1,7 +1,7 @@
 #include "dryer_app.h"
 
 static const ::dry::SControlParams	control_list_home[]				=
-	{	{::gpk::GUI_COLOR_MODE_FLAT, ::dry::SCREEN_CONTROL_HOME_DIALOG	, -1								,  true, true}
+	{	{::gpk::GUI_COLOR_MODE_Flat, ::dry::SCREEN_CONTROL_HOME_DIALOG	, -1								,  true, true}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM	, ::dry::SCREEN_CONTROL_HOME_DIALOG,  true, false, true, true	, ::gpk::ALIGN_TOP_LEFT			, {{}, {168, 222}}			, {1, 1, 1, 1}, {0, 0, 0, 2}}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, ::dry::SCREEN_CONTROL_HOME_DIALOG,  true, false, true, true	, ::gpk::ALIGN_TOP_RIGHT		, {{}, {272, 166}}			, {1, 1, 1, 1}, {2, 2, 2, 2}}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_GROUP_SESSION	, ::dry::SCREEN_CONTROL_HOME_DIALOG,  true, false, true, true	, ::gpk::ALIGN_BOTTOM_LEFT		, {{}, {272, 24 * 8 + 2}}	, {1, 1, 1, 1}, {}}
@@ -11,15 +11,15 @@ static const ::dry::SControlParams	control_list_home[]				=
 	//
 	,	{DRY_MENU_COLOR_MODE		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_START			, ::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM	, false, BACKGROUND_3D_ONLY, false, false, ::gpk::ALIGN_CENTER_BOTTOM	, {{}, {176, 72}}, {3, 3, 3, 3}, {0, 8, 0, 8}, "Start Drying", ::gpk::ALIGN_CENTER_BOTTOM}
 	,	{DRY_MENU_COLOR_MODE		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP			, ::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM	, false, BACKGROUND_3D_ONLY, false, false, ::gpk::ALIGN_CENTER_BOTTOM	, {{}, {176, 72}}, {3, 3, 3, 3}, {0, 8, 0, 8}, "Stop Drying", ::gpk::ALIGN_CENTER_BOTTOM}
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_PROGRAM_START_ICON		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_START	,  true, true, false, false, ::gpk::ALIGN_CENTER_TOP					, {{}, { 32, 32}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_play.032.png"}
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP_ICON		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP	,  true, true, false, false, ::gpk::ALIGN_CENTER_TOP					, {{}, { 32, 32}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_stop.032.png"}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_PROGRAM_START_ICON		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_START	,  true, true, false, false, ::gpk::ALIGN_CENTER_TOP					, {{}, { 32, 32}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_play.032.png"}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP_ICON		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP	,  true, true, false, false, ::gpk::ALIGN_CENTER_TOP					, {{}, { 32, 32}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_stop.032.png"}
 	//
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL			, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, false, true, false, false, ::gpk::ALIGN_TOP_LEFT		, {{0,  0}, {112,112}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER}
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_FEEDER_1_SMALL			, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, false, true, false, false, ::gpk::ALIGN_TOP_RIGHT		, {{0,  0}, {112,112}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER}
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_DRYER_SMALL			, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, false, true, false, false, ::gpk::ALIGN_CENTER_BOTTOM	, {{0,  0}, {144,144}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER}
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_LABEL_DRYER_SMALL		, ::dry::SCREEN_CONTROL_HOME_DRYER_SMALL	,  true, true, false, false, ::gpk::ALIGN_CENTER		, {{0,-16}, {128, 32}}, {}, {}, "Temperature"	, ::gpk::ALIGN_CENTER}
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_LABEL_FEEDER_0_SMALL	, ::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL	,  true, true, false, false, ::gpk::ALIGN_CENTER		, {{0,-16}, {128, 32}}, {}, {}, "Pressure"		, ::gpk::ALIGN_CENTER}
-	,	{::gpk::GUI_COLOR_MODE_FLAT	, ::dry::SCREEN_CONTROL_HOME_LABEL_FEEDER_1_SMALL	, ::dry::SCREEN_CONTROL_HOME_FEEDER_1_SMALL	,  true, true, false, false, ::gpk::ALIGN_CENTER		, {{0,-16}, {128, 32}}, {}, {}, "Humidity"		, ::gpk::ALIGN_CENTER}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL			, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, false, true, false, false, ::gpk::ALIGN_TOP_LEFT		, {{0,  0}, {112,112}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_FEEDER_1_SMALL			, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, false, true, false, false, ::gpk::ALIGN_TOP_RIGHT		, {{0,  0}, {112,112}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_DRYER_SMALL			, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, false, true, false, false, ::gpk::ALIGN_CENTER_BOTTOM	, {{0,  0}, {144,144}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_LABEL_DRYER_SMALL		, ::dry::SCREEN_CONTROL_HOME_DRYER_SMALL	,  true, true, false, false, ::gpk::ALIGN_CENTER		, {{0,-16}, {128, 32}}, {}, {}, "Temperature"	, ::gpk::ALIGN_CENTER}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_LABEL_FEEDER_0_SMALL	, ::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL	,  true, true, false, false, ::gpk::ALIGN_CENTER		, {{0,-16}, {128, 32}}, {}, {}, "Pressure"		, ::gpk::ALIGN_CENTER}
+	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HOME_LABEL_FEEDER_1_SMALL	, ::dry::SCREEN_CONTROL_HOME_FEEDER_1_SMALL	,  true, true, false, false, ::gpk::ALIGN_CENTER		, {{0,-16}, {128, 32}}, {}, {}, "Humidity"		, ::gpk::ALIGN_CENTER}
 	//
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_LABEL		, ::dry::SCREEN_CONTROL_HOME_GROUP_SESSION				,  true, true, false, false, ::gpk::ALIGN_TOP_LEFT		, {{0, 24 * 0}, {272, 48}}, {2, 2, 2, 2}, {24, 2, 0, 2}	, "STATUS:"						, ::gpk::ALIGN_CENTER_LEFT	}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_ELAPSED_TIME_LABEL			, ::dry::SCREEN_CONTROL_HOME_GROUP_SESSION				,  true, true, false, false, ::gpk::ALIGN_TOP_LEFT		, {{0, 24 * 2}, {272, 24}}, {1, 1, 1, 1}, {4, 2, 0, 2}	, "Elapsed time (total)"		, ::gpk::ALIGN_CENTER_LEFT	}
@@ -68,12 +68,12 @@ static const ::dry::SControlParams	control_list_home[]				=
 		//, ::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_TIME_LABEL
 		};
 	for(uint32_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
-		const int32_t									indexControl			= app.Screens.Home.ControlIds[controlsToHide[iControl]];
+		const ::gpk::cid_t								indexControl			= app.Screens.Home.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
-		gui.Controls.States[indexControl].Hidden = true;
+		gui.Controls.SetHidden(indexControl, true);
 	}
 	::dry::updateProgramDisplay(app);
 	::dry::updateCatalogDisplay(app);
-	return ::dry::handleResizeScreenHome(app, app.Framework.MainDisplay.Size.Cast<int16_t>());
+	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
 }

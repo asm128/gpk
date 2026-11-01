@@ -5,31 +5,33 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "Dryer v0.1");
 
 ::gpk::error_t					cleanup						(::dry::SApplication & app) {
 #if defined(GPK_WINDOWS)
-	::gpk::mainWindowDestroy(app.Framework.MainDisplay);
+	::gpk::mainWindowDestroy(app.Framework.RootWindow);
 #else
 	app.Framework.MainDisplay.Closed	= true;
 #endif
-	gpk_sync_decrement(app.ThreadClients);
-	{
-		::gpk::STimer						timer;
-		double								elapsedTime					= 0;
-		const double						timeOut						= 10.0;
-		while(-1 != gpk_sync_compare_exchange(app.ThreadClients, -1, 0)) {		// Wait until the serial thread is closed.
-			if(elapsedTime > timeOut) {
-				error_printf("%s", "Thread taking too long to finish. Terminating...");
-				break;
+	if(app.SerialThread.joinable()) {
+		gpk_sync_decrement(app.ThreadClients);
+		{
+			::gpk::STimer						timer;
+			double								elapsedTime					= 0;
+			const double						timeOut						= 10.0;
+			while(-1 != gpk_sync_compare_exchange(app.ThreadClients, -1, 0)) {		// Wait until the serial thread is closed.
+				if(elapsedTime > timeOut) {
+					error_printf("%s", "Thread taking too long to finish. Terminating...");
+					break;
+				}
+				::gpk::sleep(100);
+				timer.Frame();
+				elapsedTime						+= timer.LastTimeSeconds;
 			}
-			::gpk::sleep(100);
-			timer.Frame();
-			elapsedTime						+= timer.LastTimeSeconds;
-		}
 #if defined(GPK_LINUX)
-		if(elapsedTime >= timeOut) // unblocks the thread if it's blocked by an io call and can't read the loop close flag
-			pthread_cancel((pthread_t)app.SerialThread.native_handle());
+			if(elapsedTime >= timeOut) // unblocks the thread if it's blocked by an io call and can't read the loop close flag
+				pthread_cancel((pthread_t)app.SerialThread.native_handle());
 #endif
+		}
+		::gpk::sleep(250);
+		app.SerialThread.join();
 	}
-	::gpk::sleep(250);
-	app.SerialThread.join();
 	info_printf("%s", "bye");
 	return 0;
 }
@@ -37,22 +39,23 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "Dryer v0.1");
 ::gpk::error_t					setup						(::dry::SApplication & app) {
 	auto								& framework					= app.Framework;
 #if defined(GPK_WINDOWS)
-	framework.Input.create();
-	framework.MainDisplay.Size		= {640, 480};//{720, 576};
-	gpk_necall(::gpk::mainWindowCreate(framework.MainDisplay, framework.RuntimeValues.PlatformDetail, framework.Input), "%s", "Failed to initialize framework.");
+	framework.RootWindow.Size		= {640, 480};//{720, 576};
+	gpk_necall(::gpk::mainWindowCreate(framework.RootWindow, framework.RuntimeValues.PlatformDetail, framework.RootWindow.Input), "%s", "Failed to initialize framework.");
 #else
 	gpk_necall(::s3d::mainWindowCreate(framework), "%s", "Failed to initialize framework.");
 #endif
-	framework.MainDisplayOffscreen->resize(framework.MainDisplay.Size, 0xFFFFFFFFU, 0xFFFFFFFFU);
+	framework.RootWindow.BackBuffer->resize(framework.RootWindow.Size.u2_t(), 0xFFFFFFFFU, 0xFFFFFFFFU);
+#if !defined(GPK_WINDOWS)
 	gpk_sync_increment(app.ThreadClients);
-	app.SerialThread				= //::std::thread(&::dry::updateSerial, app);
+	app.SerialThread				=
 		::std::thread([&app]() {
 				::dry::updateSerial(app);
 			});
 	::gpk::sleep(100);
-	e_if(errored(::dry::catalogLoad(app.Catalog, "./filaments.json")), "%s", "Failed to load filament catalog.");
-	e_if(errored(::dry::dryerSetup(app.Dryer)), "%s", "");
-	e_if(errored(::dry::setupGUI(app)), "%s", "");
+#endif
+	if_fail_ef(::gpk::failed(::dry::catalogLoad(app.Catalog, "./filaments.json")), "%s", "Failed to load filament catalog.");
+	if_fail_e(::gpk::failed(::dry::dryerSetup(app.Dryer)));
+	if_fail_e(::gpk::failed(::dry::setupGUI(app)));
 	return 0;
 }
 
@@ -82,12 +85,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "Dryer v0.1");
 
 ::gpk::error_t					draw						(::dry::SApplication & app) {
 	auto								& framework					= app.Framework;
-	if(framework.MainDisplay.Repaint) {
+	if(framework.RootWindow.Repaint) {
 		verbose_printf("%s", "Repainting...");
 		::gpk::SGUI							& gui						= *framework.GUI;
-		::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
-											& guiRenderTarget			= framework.MainDisplayOffscreen;
-		gpk_necall(guiRenderTarget->resize(framework.MainDisplay.Size.Cast<uint32_t>(), ::gpk::SColorBGRA{0x10, 0x04, 0x08, 0xFF}, 0xFFFFFFFFU), "Failed to resize render target to display size: [%u x %u]", framework.MainDisplay.Size.x, framework.MainDisplay.Size.y);
+		::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
+											& guiRenderTarget			= framework.RootWindow.BackBuffer;
+		gpk_necall(guiRenderTarget->resize(framework.RootWindow.Size.u2_t(), ::gpk::bgra{0x10, 0x04, 0x08, 0xFF}, 0xFFFFFFFFU), "Failed to resize render target to display size: [%u x %u]", framework.RootWindow.Size.x, framework.RootWindow.Size.y);
 		::gpk::guiDraw(gui, guiRenderTarget->Color.View);
 	}
 	return 0;

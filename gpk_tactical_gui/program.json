@@ -1,0 +1,36 @@
+[	{	"name"				: "default"
+	,	"pressure"			: 800
+	,	"temperature"		: 45
+	,	"pre_heating_time"	: 10
+	,	"subcycle_duration"	: 20
+	,	"subcycles"			: 3
+	},
+	{	"name"				: "PLA"
+	,	"pressure"			: 600
+	,	"temperature"		: 45
+	,	"pre_heating_time"	: 5
+	,	"subcycle_duration"	: 30
+	,	"subcycles"			: 4
+	},
+	{	"name"				: "ABS"
+	,	"pressure"			: 700
+	,	"temperature"		: 65
+	,	"pre_heating_time"	: 10
+	,	"subcycle_duration"	: 40
+	,	"subcycles"			: 4
+	},
+	{	"name"				: "Nylon"
+	,	"pressure"			: 800
+	,	"temperature"		: 83
+	,	"pre_heating_time"	: 15
+	,	"subcycle_duration"	: 60
+	,	"subcycles"			: 3
+	},
+	{	"name"				: "test"
+	,	"pressure"			: 800
+	,	"temperature"		: 80
+	,	"pre_heating_time"	: 1
+	,	"subcycle_duration"	: 1
+	,	"subcycles"			: 2
+	},
+]
