@@ -54,7 +54,7 @@ int main() {
 				for(uint32_t j=0; j < 10; ++j) {
 				for(uint32_t i=0; i < 64*1024; ++i) {
 					sa_battery.sin_port	= htons((u_short)i);
-					if_fail_fef(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_battery, sa_length), "Failed to send connect request to server.");
+					if_fail_fef(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_battery, sa_length), "%s", "Failed to send connect request to server.");
 					::gpk::sleep(1);
 			}}
 		}
@@ -64,7 +64,8 @@ int main() {
 		::gpk::tcpipAddressFromSockaddr(sa_server, addrRemote);
 		info_printf("Received connect response from server: %c from %u.%u.%u.%u:%u.", connectAcknowledge, GPK_IPV4_EXPAND(addrRemote));
 		::gpk::sleep(1000);
-		gpk_safe_closesocket(handle);
+		if(handle != INVALID_SOCKET)
+			closesocket(handle);
 	}
 	::gpk::tcpipShutdown();
 	return 0;
