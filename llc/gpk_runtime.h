@@ -58,23 +58,29 @@ namespace gpk
 	::gpk::SRuntimeValues		runtimeValues		= {};										\
 	if_fail_fe(::gpk::argsParse(runtimeValues.EntryPointArgs, main_argc, main_argv, main_envp))	//
 
-#define GPK_OS_ENTRY_POINT_ANY(gpk_app_entry_point)												\
+#define GPK_OS_ENTRY_POINT_NOENVP(gpk_app_entry_point)												\
 	int						main				(int argc, char *argv[]) {						\
 		GPK_OS_ENTRY_POINT_COMMON_INIT(gpk_app_entry_point, argc, argv, 0);						\
 		return ::gpk::failed(gpk_app_entry_point(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	\
 	} // main
-#define GPK_OS_ENTRY_POINT_NOENVP(gpk_app_entry_point)											\
+#define GPK_OS_ENTRY_POINT_ENVP(gpk_app_entry_point)											\
 	int						main				(int argc, char *argv[], char *envp[]) {		\
 		GPK_OS_ENTRY_POINT_COMMON_INIT(gpk_app_entry_point, argc, argv, envp);					\
 		return ::gpk::failed(gpk_app_entry_point(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	\
 	} // main 
+
+#if defined(GPK_ARDUINO) || defined(GPK_ANDROID) || defined(GPK_ESP8266) || defined(GPK_ESP32) || defined(GPK_FREERTOS)  || defined(GPK_ESPIDF)  || defined(GPK_ATMEL)  || defined(GPK_ST) 
+#	define GPK_OS_ENTRY_POINT_ANY	GPK_OS_ENTRY_POINT_NOENVP
+#else 
+#	define GPK_OS_ENTRY_POINT_ANY	GPK_OS_ENTRY_POINT_ENVP
+#endif
 
 #ifndef GPK_WINDOWS
 #	define GPK_OS_ENTRY_POINT	GPK_OS_ENTRY_POINT_ANY
 #else // GPK_WINDOWS
 #	define GPK_OS_ENTRY_POINT(gpk_app_entry_point)											\
 	GPK_OS_ENTRY_POINT_ANY(gpk_app_entry_point);											\
-	int	WINAPI				WinMain															\
+ 	int	WINAPI				WinMain															\
 		(	_In_		::HINSTANCE		hInstance											\
 		,	_In_opt_	::HINSTANCE		hPrevInstance										\
 		,	_In_		::LPSTR			lpCmdLine											\

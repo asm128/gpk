@@ -219,7 +219,7 @@ gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, :
 	fseek(fp, 0, SEEK_END);
 	const s3_t				fileSize					= gpk::ftell(fp);
 	gpk_fail_if_lt(GPK_FMT_LT_S3, fileSize, 0);
-	gpk_fail_if_ge(GPK_FMT_GE_U3, offset, (u3_t)fileSize);
+	gpk_fail_if_gt(GPK_FMT_GT_U3, offset, (u3_t)fileSize);
 	u2_c				maxRead				= (::gpk::u2_t)min((s3_t)maxSize, fileSize - (s3_t)offset);
 	gpk_fail_if_ne(GPK_FMT_NE_S3, 0, gpk::fseek(fp, offset, FSEEK_SET));
 	gpk::err_t	result				= 0;

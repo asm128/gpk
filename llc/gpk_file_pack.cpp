@@ -41,7 +41,9 @@ gpk::err_t			gpk::folderPack				(SFolderPackage & output, const vcst_t nameFolde
 	au0_t					tableFiles				;
 	au0_t					contentsPacked			;
 
-	if_fail_fe(gpk::folderLoad(nameFolderSrc, tableFiles, contentsPacked));
+	err_t					totalFileCount			= 0;
+	if_fail_fe(totalFileCount = gpk::folderLoad(nameFolderSrc, tableFiles, contentsPacked));
+	fileHeader.TotalFileCount					= (u2_t)totalFileCount;
 
 	fileHeader.SizeUncompressedTableFiles		= tableFiles		.size();
 	fileHeader.SizeUncompressedContentsPacked	= contentsPacked	.size();
@@ -53,7 +55,6 @@ gpk::err_t			gpk::folderPack				(SFolderPackage & output, const vcst_t nameFolde
 		fileHeader.SizeCompressedTableFiles		= compressedTableFiles		.size();
 		fileHeader.SizeCompressedContentsPacked	= compressedContentsPacked	.size();
 	}
-
 	return 0;
 }
 gpk::err_t			gpk::folderUnpack			(SFolderInMemory & output, vcu0_t rawFileInMemory)		{
@@ -65,15 +66,14 @@ gpk::err_t			gpk::folderUnpack			(SFolderInMemory & output, vcu0_t rawFileInMemo
 	if_fail_fe(gpk::arrayInflate({&rawFileInMemory[0] + szof(SPackHeader)									, header.SizeCompressedTableFiles		}, output.DataInfo	, ::INFLATE_CHUNK_SIZE));
 	if_fail_fe(gpk::arrayInflate({&rawFileInMemory[0] + szof(SPackHeader) + header.SizeCompressedTableFiles, header.SizeCompressedContentsPacked	}, output.DataContents	, ::INFLATE_CHUNK_SIZE));
 	{ // Build access tables.
-		u2_t					offsetInfo					= 0;
+		vcu0_t					tableFiles					= output.DataInfo;
 		for(u2_t iFile = 0; iFile < output.Names.size(); ++iFile) {
-			const rangeu2_t		& fileLocation				= *(const rangeu2_t*)&output.DataInfo[offsetInfo];
-			offsetInfo				+= szof(rangeu2_t);
-			u2_c				lenName						= *(u2_t*)&output.DataInfo[offsetInfo];
-			offsetInfo				+= szof(u2_t);
-			output.Names[iFile]	= {(const char*)&output.DataInfo[offsetInfo], lenName};
-			offsetInfo				+= lenName;
-			output.Contents[iFile]	= {&output.DataContents	[fileLocation.Offset], fileLocation.Count};
+			rangeu2_t		fileLocation				= {};
+			vcst_t			fileName					= {};
+			if_fail_fe(loadPOD(tableFiles, fileLocation));
+			if_fail_fe(loadView(tableFiles, fileName));
+			output.Names[iFile]		= {fileName.begin(), fileName.size()};
+			output.Contents[iFile]	= {fileLocation.Count ? &output.DataContents[fileLocation.Offset] : 0, fileLocation.Count};
 		}
 	}
 	return 0;
@@ -115,7 +115,7 @@ gpk::err_t			gpk::folderToDisk			(const SFolderInMemory & virtualFolder, vcst_t 
 		const vcst_t			& fileName					= virtualFolder.Names		[iFile];
 		vcu0_c			& fileContent				= virtualFolder.Contents	[iFile];
 		finalPathName.clear();
-		 if_fail_fe(append_strings(finalPathName, destinationPath, fileName));
+		if_fail_fe(pathNameCompose(destinationPath, fileName, finalPathName));
 		info_printf("File found (%u):'%s'. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		err_t				indexSlash					= findLastSlash(finalPathName);
 		if(-1 != indexSlash) { // Create path if any specified.

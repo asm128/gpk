@@ -27,7 +27,7 @@
 #endif
 
 #if (!defined(GPK_ST)) && !defined(GPK_CMSIS) && !defined(GPK_ESP32) && !defined(GPK_ATMEL) && !defined(GPK_ARDUINO) && !defined(GPK_WINDOWS) && !defined(GPK_LINUX) && !defined(GPK_ANDROID)
-#	error "Unsupported platform."
+#	warning "Unsupported platform."
 #	define GPK_UNKNOWN
 #endif
 

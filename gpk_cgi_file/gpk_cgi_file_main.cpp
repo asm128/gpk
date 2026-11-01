@@ -23,7 +23,7 @@ static	int				cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	::gpk::SCGIRuntimeValues	cgiRuntimeValues(runtimeValues);
 	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
 	::gpk::apod<char>			html;
-	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
+	if(::gpk::failed(::cgiBootstrap(cgiRuntimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"
 			"\r\n\r\n"

@@ -55,7 +55,7 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SModuleBase {
-						void				* Handle				= 0;
+		void	* Handle	= {};
 	};
 #pragma pack(pop)
 }

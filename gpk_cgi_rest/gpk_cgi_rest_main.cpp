@@ -86,7 +86,7 @@ static	gpk::err_t		cgiMain				(gpk::SRuntimeValues & runtimeValues)	{
 	gpk::SCGIRuntimeValues		cgiRuntimeValues(runtimeValues);
 	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
 	gpk::string					html;
-	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
+	if(::gpk::failed(::cgiBootstrap(cgiRuntimeValues, html))) {
 		fprintf(stdout, "%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"
 			"\r\n\r\n"

@@ -34,7 +34,7 @@ gpk::err_t 							genHTMLModuleOutput				(SCGIFramework & framework, string & ou
 	//char									buffer[4096]					= {};
 	SCGIModule						module;
 	vcst_t							moduleName						= framework.ModuleName;
-	loadCGIModule(module, moduleName);
+	if_fail_fe(loadCGIModule(module, moduleName));
 	module.Create	(&module.Application, &framework);
 	module.Setup	(module.Application);
 	module.Update	(module.Application, false);
@@ -76,7 +76,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 	const SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
 	const ::gpk::view<const ::gpk::kv<::gpk::vcst_t>>	queryStringKeyVals		= runtimeValues.QueryStringKeyVals;
 	if(framework.Bootstrapped) {
-		::genHTMLModuleOutput(framework, output);
+		if_fail_fe(::genHTMLModuleOutput(framework, output));
 	}
 	else {
 		char													buffer[4096]		= {};
@@ -164,7 +164,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 
 static ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	SCGIFramework									framework			= {runtimeValues};
-	cgiRuntimeValuesLoad(framework.RuntimeValues);
+	if_fail_fe(cgiRuntimeValuesLoad(framework.RuntimeValues));
 	const array_obj<vcst_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
 	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
@@ -174,7 +174,7 @@ static ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 		"\nCache-Control: no-store"
 	);
 	string									html;
-	::cgiBootstrap(framework, html);
+	if_fail_fe(::cgiBootstrap(framework, html));
 	html.push_back('\0');
 	OutputDebugStringA(html.begin());
 	printf("%s", html.begin());
