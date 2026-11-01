@@ -136,7 +136,7 @@ namespace gpk
 				value					= ValueLimits.Max;
 			ValueCurrent			= value;
 
-			view<sc_t>				valueString;
+			vcst_t				valueString;
 			FuncValueFormat	(valueString, value, ValueLimits);
 			FuncGetString	(valueString, ValueCurrent, ValueLimits);
 			if_fail_fe(gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString));

@@ -213,7 +213,7 @@ gpk::err_t			gpk::httpClientRequest
 #endif
 	}
 
-	::gpk::view<sc_t>						contentReceived					= {};
+	::gpk::vcst_t						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4) {
 		info_printf("Fixed header %u stop to position %u.", (u2_t)stopOfHeader, buf.size());
 		stopOfHeader							= buf.size();

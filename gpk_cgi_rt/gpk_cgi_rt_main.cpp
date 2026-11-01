@@ -79,21 +79,21 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 	}
 	else {
 		char													buffer[4096]		= {};
-		output.append(buffer, ::sprintf_s(buffer, "%s",
+		output.append(buffer, ::gpk::sprintf_s(buffer, "%s",
 			"<html>"
 			"\n<head>"
 		));
-		output.append(buffer, ::sprintf_s(buffer, html_script, framework.ModuleName.size() ? framework.ModuleName.begin() : "test_cgi_module"));
-		output.append(buffer, ::sprintf_s(buffer, "%s",
+		output.append(buffer, ::gpk::sprintf_s(buffer, html_script, framework.ModuleName.size() ? framework.ModuleName.begin() : "test_cgi_module"));
+		output.append(buffer, ::gpk::sprintf_s(buffer, "%s",
 			"\n<link rel=\"stylesheet\" href=\"./page.css\">"
 			"\n</head>"
 		));
-		output.append(buffer, ::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
+		output.append(buffer, ::gpk::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
+		output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
 		vcst_t							querystring;
 		find("QUERY_STRING", framework.RuntimeValues.QueryStringKeyVals, querystring);
 		if(querystring.size()) {
-			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
+			output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>QueryString (%u): %.*s</h4>", querystring.size(), GPK_VIEW_ARGS(querystring)));
 		}
 		const view<vcst_t>		keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
@@ -109,7 +109,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 		vcst_t			remotePORT	;
 		vcst_t			contentLength;
 		find("CONTENT_TYPE"		, runtimeValues.QueryStringKeyVals, contentype	);
-		find("REMOTE_IP"			, runtimeValues.QueryStringKeyVals, remoteIP	);
+		find("REMOTE_IP"		, runtimeValues.QueryStringKeyVals, remoteIP	);
 		find("REMOTE_PORT"		, runtimeValues.QueryStringKeyVals, remotePORT	);
 		find("CONTENT_LENGTH"	, runtimeValues.QueryStringKeyVals, contentLength);
 		output.append(buffer, formatForSize({contentLength	.begin(), contentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
@@ -163,7 +163,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 
 int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, INT nCmdShow)	{
 	hInstance, hPrevInstance, szCmdLine, nCmdShow;
-	SCGIFramework									framework;
+	SCGIFramework									framework(runtimeValues);
 	cgiRuntimeValuesLoad(framework.RuntimeValues, {(const char**)__argv, (uint32_t)(__argc)});
 	const array_obj<vcst_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
 	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
@@ -173,7 +173,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 		"Content-Type: text/html"
 		"\nCache-Control: no-store"
 	);
-	apod<char>									html;
+	string									html;
 	::cgiBootstrap(framework, html);
 	html.push_back('\0');
 	OutputDebugStringA(html.begin());

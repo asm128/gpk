@@ -111,7 +111,7 @@ gpk::err_t			gpk::folderToDisk			(const SFolderInMemory & virtualFolder, vcst_t 
 	string				finalPathName				= {};
 	FILE						* fp						= 0;
 	for(u2_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
-		gpk_safe_fclose(fp);
+		gpk::safe_fclose(fp);
 		const vcst_t			& fileName					= virtualFolder.Names		[iFile];
 		vcu0_c			& fileContent				= virtualFolder.Contents	[iFile];
 		finalPathName.clear();
@@ -127,7 +127,7 @@ gpk::err_t			gpk::folderToDisk			(const SFolderInMemory & virtualFolder, vcst_t 
 		if_null_cef(fp, "Failed to create file: %s.", finalPathName.begin());
 		if_true_cef(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp), "Failed to write file: %s. Disk full?", finalPathName.begin());
 	}
-	gpk_safe_fclose(fp);
+	gpk::safe_fclose(fp);
 	return 0;
 }
 gpk::err_t			gpk::folderPackToDisk		(vcst_t nameFileDst	 , vcst_t nameFolderSrc)		{

@@ -1,0 +1,883 @@
+Build started 2026-11-01 03:24:24.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (grt target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\grt.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\grt.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\grt.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\grt.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\grt.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\../../obj/x64.Release/grt/grt.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\../../obj/x64.Release/grt/grt.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Link:
+  All outputs are up-to-date.
+  grt.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\grt.exe
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\../../obj/x64.Release/grt/grt.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\../../obj/x64.Release/grt/grt.tlog\grt.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\grt.vcxproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\grt\grt.vcxproj.metaproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (grt target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.60
+Build started 2026-11-01 03:24:30.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_cgi_rest target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.tlog\".
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+MakeDirsForCl:
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\..\..\obj\x64.Release\gpk_cgi_rest\microsoft\STL".
+SetModuleDependencies:
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest_MD.tlog\".
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../gpk/llc /I../../gpk/gpk /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_cgi_rest_main.cpp
+  gpk_cgi_rest_main.cpp
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk_udp_client.h(6,11):
+      see declaration of 'gpk'
+  
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(112,1): error C2668: 'cgiMain': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(84,20):
+      could be 'gpk::err_t cgiMain(gpk::SRuntimeValues &)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_cgi_runtime.h(108,12):
+      or       'gpk::err_t gpk::cgiMain(gpk::SRuntimeValues &)' [found using argument-dependent lookup]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(112,1):
+      while trying to match the argument list '(gpk::SRuntimeValues)'
+  
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_rest target(s)) -- FAILED.
+
+Build FAILED.
+
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_rest target) (1) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (default target) (2) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (default target) (5) ->
+(ClCompile target) -> 
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(112,1): error C2668: 'cgiMain': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+
+    0 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:03.76
+Build started 2026-11-01 03:24:35.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_cgi_file target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/".
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\".
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+MakeDirsForCl:
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\..\..\obj\x64.Release\gpk_cgi_file\microsoft\STL".
+SetModuleDependencies:
+  Creating directory "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file_MD.tlog\".
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../gpk/llc /I../../gpk/gpk /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_cgi_file_main.cpp
+  gpk_cgi_file_main.cpp
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk_udp_client.h(6,11):
+      see declaration of 'gpk'
+  
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(18,3): error C2668: 'gpk::fileFromMemory': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_file.h(25,13):
+      could be 'gpk::err_t gpk::fileFromMemory(gpk::vcst_t,gpk::vcst_t,bool)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_file.h(24,13):
+      or       'gpk::err_t gpk::fileFromMemory(gpk::vcst_t,gpk::vcs0_t,bool)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(18,3):
+      while trying to match the argument list '(char [1024], const gpk::string)'
+  
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(51,1): error C2668: 'cgiMain': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(24,15):
+      could be 'int cgiMain(gpk::SRuntimeValues)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_cgi_runtime.h(108,12):
+      or       'gpk::err_t gpk::cgiMain(gpk::SRuntimeValues &)' [found using argument-dependent lookup]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(51,1):
+      while trying to match the argument list '(gpk::SRuntimeValues)'
+  
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_file target(s)) -- FAILED.
+
+Build FAILED.
+
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_file target) (1) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (default target) (2) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (default target) (5) ->
+(ClCompile target) -> 
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(18,3): error C2668: 'gpk::fileFromMemory': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(51,1): error C2668: 'cgiMain': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+
+    0 Warning(s)
+    4 Error(s)
+
+Time Elapsed 00:00:03.68
+Build started 2026-11-01 03:24:50.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_cgi_rest target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../gpk/llc /I../../gpk/gpk /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_cgi_rest_main.cpp
+  gpk_cgi_rest_main.cpp
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk_udp_client.h(6,11):
+      see declaration of 'gpk'
+  
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_rest target(s)) -- FAILED.
+
+Build FAILED.
+
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_rest target) (1) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (default target) (2) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (default target) (5) ->
+(ClCompile target) -> 
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest_main.cpp(48,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj]
+
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:03.40
+Build started 2026-11-01 03:24:54.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_cgi_file target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../gpk/llc /I../../gpk/gpk /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_cgi_file_main.cpp
+  gpk_cgi_file_main.cpp
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk_udp_client.h(6,11):
+      see declaration of 'gpk'
+  
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(18,3): error C2668: 'gpk::fileFromMemory': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_file.h(25,13):
+      could be 'gpk::err_t gpk::fileFromMemory(gpk::vcst_t,gpk::vcst_t,bool)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_file.h(24,13):
+      or       'gpk::err_t gpk::fileFromMemory(gpk::vcst_t,gpk::vcs0_t,bool)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(18,3):
+      while trying to match the argument list '(char [1024], const gpk::string)'
+  
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_file target(s)) -- FAILED.
+
+Build FAILED.
+
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_file target) (1) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (default target) (2) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (default target) (5) ->
+(ClCompile target) -> 
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C2039: 'environmentBlockFromEnviron': is not a member of 'gpk' [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(15,3): error C3861: 'environmentBlockFromEnviron': identifier not found [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(18,3): error C2668: 'gpk::fileFromMemory': ambiguous call to overloaded function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+
+    0 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:03.67
+Build started 2026-11-01 03:31:12.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_cgi_rest target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../gpk/llc /I../../gpk/gpk /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_cgi_rest_main.cpp
+  gpk_cgi_rest_main.cpp
+Link:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../x64.Release/gpk_cgi_rest.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../x64.Release/ /WX llc.lib gpk.lib ws2_32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../x64.Release/gpk_cgi_rest.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../x64.Release/gpk_cgi_rest.lib" /MACHINE:X64 D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest_main.obj
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 4677 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  gpk_cgi_rest.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk_cgi_rest.exe
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\../../obj/x64.Release/gpk_cgi_rest/gpk_cgi_rest.tlog\gpk_cgi_rest.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_rest\gpk_cgi_rest.vcxproj.metaproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_rest target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:23.23
+Build started 2026-11-01 03:31:36.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_cgi_file target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../gpk/llc /I../../gpk/gpk /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_cgi_file_main.cpp
+  gpk_cgi_file_main.cpp
+D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(49,1): error C2280: 'gpk::SRuntimeValues::SRuntimeValues(const gpk::SRuntimeValues &)': attempting to reference a deleted function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_runtime.h(36,2):
+      compiler has generated 'gpk::SRuntimeValues::SRuntimeValues' here
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_runtime.h(36,2):
+      'gpk::SRuntimeValues::SRuntimeValues(const gpk::SRuntimeValues &)': function was implicitly deleted because a data member invokes a deleted or inaccessible function 'gpk::queue_async<gpk::pobj<gpk::SEventSystem>,gpk::array_obj<gpk::pobj<gpk::SEventSystem>>>::queue_async(const gpk::queue_async<gpk::pobj<gpk::SEventSystem>,gpk::array_obj<gpk::pobj<gpk::SEventSystem>>> &)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_queue_async.h(44,2):
+      'gpk::queue_async<gpk::pobj<gpk::SEventSystem>,gpk::array_obj<gpk::pobj<gpk::SEventSystem>>>::queue_async(const gpk::queue_async<gpk::pobj<gpk::SEventSystem>,gpk::array_obj<gpk::pobj<gpk::SEventSystem>>> &)': function was implicitly deleted because a data member invokes a deleted or inaccessible function 'gpk::mutex::mutex(const gpk::mutex &)'
+      D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_mutex.h(67,2):
+      'gpk::mutex::mutex(const gpk::mutex &)': function was implicitly deleted because a base class invokes a deleted or inaccessible function 'std::mutex::mutex(const std::mutex &)'
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\mutex(102,5):
+      'std::mutex::mutex(const std::mutex &)': function was explicitly deleted
+  
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_file target(s)) -- FAILED.
+
+Build FAILED.
+
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_file target) (1) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (default target) (2) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (default target) (5) ->
+(ClCompile target) -> 
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file_main.cpp(49,1): error C2280: 'gpk::SRuntimeValues::SRuntimeValues(const gpk::SRuntimeValues &)': attempting to reference a deleted function [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:05.86
+Build started 2026-11-01 03:31:58.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_cgi_file target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  gpk.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk.lib
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\../../obj/x64.Release/gpk/gpk.tlog\gpk.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk\gpk.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (5) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../gpk/llc /I../../gpk/gpk /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _WINDOWS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_cgi_file_main.cpp
+  gpk_cgi_file_main.cpp
+Link:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../x64.Release/gpk_cgi_file.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../x64.Release/ /WX llc.lib gpk.lib ws2_32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../x64.Release/gpk_cgi_file.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../x64.Release/gpk_cgi_file.lib" /MACHINE:X64 D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file_main.obj
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2465 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  gpk_cgi_file.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Release\gpk_cgi_file.exe
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\../../obj/x64.Release/gpk_cgi_file/gpk_cgi_file.tlog\gpk_cgi_file.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_cgi_file\gpk_cgi_file.vcxproj.metaproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_cgi_file target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:16.30

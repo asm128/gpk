@@ -10,9 +10,7 @@
 #include "gpk_udp_client.h"
 
 static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
-	::gpk::apod<char>				environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to save to disk.
-		if_fail_fe(gpk::environmentBlockFromEnviron(environmentBlock));
 		char filename[1024] = {};
 		sprintf_s(filename, "la_betty_criminal_at_%llu.jpg", ::gpk::timeCurrent());
 		if_fail_fe(::gpk::fileFromMemory(filename, runtimeValues.Content.Body));
@@ -21,7 +19,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 	return 0;
 }
 
-static	int				cgiMain				(::gpk::SRuntimeValues runtimeValues)	{
+static	int				cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	::gpk::SCGIRuntimeValues	cgiRuntimeValues(runtimeValues);
 	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
 	::gpk::apod<char>			html;
@@ -48,21 +46,5 @@ static	int				cgiMain				(::gpk::SRuntimeValues runtimeValues)	{
 	return 0;
 }
 
-int				main				(int argc, char** argv, char**envv)	{
-	return ::cgiMain(argc, argv, envv);
-}
-
-#ifdef GPK_WINDOWS
-#include <Windows.h>
-
-int WINAPI		WinMain
-	(	_In_		HINSTANCE	hInstance
-	,	_In_opt_	HINSTANCE	hPrevInstance
-	,	_In_		LPSTR		lpCmdLine
-	,	_In_		int			nShowCmd
-	) {
-	(void)hInstance, (void)hPrevInstance, (void)lpCmdLine, (void)nShowCmd;
-	return ::cgiMain(__argc, __argv, environ);
-}
-#endif
+GPK_OS_ENTRY_POINT(::cgiMain);
 // https://articulo.mercadolibre.com.ar/MLA-800947708-lora-sx1276-esp32-bt-wifi-kit-desarrollo-con-display-arduino-_JM

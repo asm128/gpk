@@ -14,15 +14,14 @@ namespace gpk
 	err_t			fileLastWriteTime	(vcst_t fileName, s3_t & modified);
 	err_t			fileDelete			(vcst_t fileName);
 
+	err_t			fileFromMemory		(vcst_t folderPath, vcst_t fileName, vcu0_t fileInMemory, bool append = false);
 	err_t			fileFromMemory		(vcst_t fileName, vcu0_t fileInMemory, bool append = false);
+	stin	err_t	fileFromMemory		(vcst_t fileName, vcst_t fileInMemory, bool append = false)									{ rtrn fileFromMemory	(fileName, vcu0_t{(u0_c*)fileInMemory.begin(), fileInMemory.size()}, append); }
+
 	err_t			fileToMemory		(vcst_t fileName, au0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
 	err_t			fileToMemory		(vcst_t folderPath, vcst_t fileName, au0_t & fileBytes, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
-	err_t			fileFromMemory		(vcst_t folderPath, vcst_t fileName, vcu0_t fileInMemory, bool append = false);
-
 	stin	err_t	fileToMemory		(vcst_t fileName, as0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
 	stin	err_t	fileToMemory		(vcst_t fileName, string & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
-	stin	err_t	fileFromMemory		(vcst_t fileName, vcs0_t fileInMemory, bool append = false)									{ rtrn fileFromMemory	(fileName, vcu0_t{(u0_c*)fileInMemory.begin(), fileInMemory.size()}, append); }
-	stin	err_t	fileFromMemory		(vcst_t fileName, vcst_t fileInMemory, bool append = false)									{ rtrn fileFromMemory	(fileName, vcu0_t{(u0_c*)fileInMemory.begin(), fileInMemory.size()}, append); }
 
 	GDEFINE_ENUM_TYPE(OPEN_MODE, u2_t);
 	GDEFINE_ENUM_VALUE(OPEN_MODE, CLOSE		, 0);

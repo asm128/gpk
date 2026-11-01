@@ -113,17 +113,17 @@ gpk::err_t 		gpk::tcpipAddressFromSockaddr		(const sockaddr_in & sockaddr_ipv4, 
 
 gpk::err_t 		gpk::tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr_ipv4, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t * port)	{
 #if defined(GPK_WINDOWS)
-	gpk_safe_assign(a1, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
-	gpk_safe_assign(a2, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
-	gpk_safe_assign(a3, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
-	gpk_safe_assign(a4, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
+	safe_assign(a1, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
+	safe_assign(a2, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
+	safe_assign(a3, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
+	safe_assign(a4, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
 #else
-	gpk_safe_assign(a1, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 0));
-	gpk_safe_assign(a2, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 1));
-	gpk_safe_assign(a3, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 2));
-	gpk_safe_assign(a4, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 3));
+	safe_assign(a1, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 0));
+	safe_assign(a2, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 1));
+	safe_assign(a3, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 2));
+	safe_assign(a4, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 3));
 #endif
-	gpk_safe_assign(port, (u1_t)ntohs(sockaddr_ipv4.sin_port));
+	safe_assign(port, (u1_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
 }
 gpk::err_t 		gpk::tcpipAddressToSockaddr		(u2_t address, u1_t port, sockaddr_in & sockaddr_ipv4) {
@@ -178,11 +178,11 @@ gpk::err_t 		gpk::tcpipAddress	(u1_t portRequested, u2_t adapterIndex, TRANSPORT
 gpk::err_t 	gpk::tcpipAddress		(::gpk::vcst_t hostName, u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t* port) { 
 	::gpk::SIPv4End 		addr; 
 	if_fail_fe(gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, addr.IP, addr.Port));
-	gpk_safe_assign(a1, addr[0]);
-	gpk_safe_assign(a2, addr[1]);
-	gpk_safe_assign(a3, addr[2]);
-	gpk_safe_assign(a4, addr[3]);	
-	gpk_safe_assign(port, addr.Port);		
+	safe_assign(a1, addr[0]);
+	safe_assign(a2, addr[1]);
+	safe_assign(a3, addr[2]);
+	safe_assign(a4, addr[3]);	
+	safe_assign(port, addr.Port);		
 	return 0;
 }
 

@@ -165,8 +165,8 @@ namespace gpk
 		const u2_t				dictLength				= *(u2_t*)input.begin(); 
 		input					= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		for(u2_t iLength = 0; iLength < dictLength; ++iLength) {
-			::gpk::view<sc_t>					readKey					= {};
-			::gpk::view<sc_t>					readVal					= {};
+			::gpk::vcst_t					readKey					= {};
+			::gpk::vcst_t					readVal					= {};
 			bytesRead = ::gpk::viewReadLegacy(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 			bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 			attributes.push_back({readKey, readVal});
@@ -340,8 +340,8 @@ namespace gpk
 							::gpk::SVOXTransformFrame							newFrame	= {};
 							bytesRead = sizeof(u2_t	); const u2_t dictLength = *(u2_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 							for(u2_t iLength = 0; iLength < dictLength; ++iLength) {
-								::gpk::view<sc_t>							readKey		= {};
-								::gpk::view<sc_t>							readVal		= {};
+								::gpk::vcst_t							readKey		= {};
+								::gpk::vcst_t							readVal		= {};
 								bytesRead = ::gpk::viewReadLegacy(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 								bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 

@@ -19,7 +19,7 @@ using namespace gpk;
 	( ::gpk::img8bgra			& imageCache
 	, ::gpk::img8bgra			& verticalAtlas
 	, ::gpk::imgmonou3_t			& fontTexture
-	, ::gpk::view<sc_t>				filenameOutput
+	, ::gpk::vcst_t				filenameOutput
 	, const ::gpk::n2u2_t		fontCharSize
 	, bool						negateBit
 	) {
@@ -64,29 +64,29 @@ using namespace gpk;
 }
 
 int						main					() {
-	::gpk::aobj<::gpk::asc_t>	fontFiles				= {};
+	::gpk::aobj<::gpk::string>	fontFiles				= {};
 	::gpk::vcst_t					pathToSearch			= {"../gpk_data/fonts/cp437"};
-	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", GPK_VIEW_ARGS(pathToSearch).begin());
+	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
 	::gpk::SPNGData				pngCache				= {};
 	::gpk::img8bgra				imageCache				= {};
 	::gpk::img8bgra				imageFixed				= {};
 	::gpk::img8bgra				verticalAtlas			= {};
 	::gpk::imgmonou3_t			fontTexture				= {};
 	::gpk::string				filenameOutput			= {};
-	::gpk::view<sc_t>				extension				= {};
+	::gpk::vcst_t				extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
-		::gpk::view<sc_t>				filenameInput			= fontFiles[iFile];
-		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", GPK_VIEW_ARGS(filenameInput).begin());
-		::gpk::apod<char>			lowercaseExtension		= GPK_VIEW_ARGS(extension);
+		::gpk::vcst_t				filenameInput			= fontFiles[iFile];
+		if_fail_cif(filenameInput.slice(extension, filenameInput.size() - 4, 4), "Skipping '%.*s'", GPK_VIEW_ARGS(filenameInput));
+		::gpk::string			lowercaseExtension		= extension;
 		::gpk::tolower(lowercaseExtension);
-		if(lowercaseExtension != ::gpk::vcst_t{".png"})
+		if(lowercaseExtension != ".png")
 			continue;
-		cef_if(::gpk::failed(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
+		if_fail_ce(::gpk::pngFileLoad(pngCache, filenameInput, imageCache));
 		filenameOutput			= filenameInput;
 		filenameOutput.append_string("fix.png");
-		::gpk::aobj<::gpk::view<sc_t>>		splitFileName;
+		::gpk::aobj<::gpk::vcst_t>		splitFileName;
 		::gpk::split(filenameInput, '_', splitFileName);
-		::gpk::aobj<::gpk::view<sc_t>>		splitFontMetrics;
+		::gpk::aobj<::gpk::vcst_t>		splitFontMetrics;
 		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
 		::gpk::n2u2_t				fontCharSize			= {};
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], fontCharSize.x);

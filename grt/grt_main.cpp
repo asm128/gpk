@@ -75,10 +75,6 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 }
 
 static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
-	globalRuntimeValues;
-#if defined(GPK_WINDOWS)
-	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-#endif
 	SRuntimeState					runtimeState					= {};
 	{
 		::gpk::vcst_t						fileName						= "gme";
@@ -108,41 +104,4 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 	return 0;
 }
 
-#if defined(GPK_WINDOWS)
-int WINAPI					WinMain
-	( _In_		HINSTANCE		hInstance
-	, _In_opt_	HINSTANCE		hPrevInstance
-	, _In_		LPSTR			lpCmdLine
-	, _In_		INT				nShowCmd
-	) {
-	const uint32_t					argc							= __argc;
-	const char						** argv							= (const char**)__argv;
-	const char						** envp							= (const char**)_environ;
-	if_true_vef(-1, 65535 < argc, "Invalid parameter count: %u.", argc);
-	::gpk::STypeRegistry			& typeRegistry						= ::gpk::STypeRegistry::GetGlobalInstance();
-	for(uint32_t iType = 0; iType < typeRegistry.Names.size(); ++iType)
-		info_printf("Type at index %u: '%s'.", iType, typeRegistry.Names[iType].begin());
-
-	::gpk::SRuntimeValues			runtimeValues					= {};
-	runtimeValues.PlatformDetail.hInstance		= hInstance		;
-	runtimeValues.PlatformDetail.hPrevInstance	= hPrevInstance	;
-	runtimeValues.PlatformDetail.lpCmdLine		= lpCmdLine		;
-	runtimeValues.PlatformDetail.nShowCmd			= nShowCmd		;
-	runtimeValues.EntryPointArgs	= {argv, argc};
-	(void)envp;
-	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
-	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;
-}
-#endif // defined(GPK_WINDOWS)
-
-int							main		(int argc, char *argv[], char *envp[])			{
-	if_true_vef(-1, 65535 < argc, "Invalid parameter count: %u.", argc);
-	::gpk::SRuntimeValues			runtimeValues					= {};
-#if defined(GPK_WINDOWS)
-	runtimeValues.PlatformDetail.EntryPointArgsWin					= {GetModuleHandle(NULL), 0, 0, SW_SHOW};
-#endif // defined(GPK_WINDOWS)
-	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {(const char**)argv, (uint32_t)argc};
-	(void)envp;
-	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
-	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;
-}
+GPK_OS_ENTRY_POINT(grt_Main);

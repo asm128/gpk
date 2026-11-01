@@ -57,7 +57,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger	(u2_t base, vcst_t symbolList, vcst_
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	gpk_safe_assign(number_, number);
+	safe_assign(number_, number);
 	return totalCharsProcessed;
 }
 gpk::err_t			stripLiteralsParseToken			(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, ::gpk::vcst_t in_format)		{

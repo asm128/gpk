@@ -86,7 +86,7 @@ namespace gpk
 
 		gpk::err_t 					Load							(::gpk::vcu0_t & input);
 		gpk::err_t 					Save							(::gpk::au0_t & output)	const;
-		inline	gpk::err_t 			Load							(::gpk::view<sc_t> & input)			{ return Load(*((::gpk::vcu0_t*)&input)); }
+		inline	gpk::err_t 			Load							(::gpk::vcst_t & input)			{ return Load(*((::gpk::vcu0_t*)&input)); }
 		inline	gpk::err_t 			Save							(::gpk::as0_t & output)	const	{ return Save(*((::gpk::apod<u0_t>*)&output)); }
 
 		s2_t 							ZeroCenters						()	{ return Centers.fill({}); }

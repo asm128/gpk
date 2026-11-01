@@ -35,7 +35,7 @@ namespace gpk
 
 	struct SSerial {
 		SSerialPlaftormDetail	PlatformDetail	= {};
-		::gpk::view<sc_t>				Port			= "";
+		::gpk::vcst_t				Port			= "";
 
 #ifdef GPK_WINDOWS
 								~SSerial		() { gpk_safe_closehandle(PlatformDetail.Handle); }
@@ -59,7 +59,7 @@ namespace gpk
 			return sizeRead; 
 		}
 
-		gpk::err_t 		Open			(::gpk::view<sc_t> port, u2_t baudRate, ::gpk::SERIAL_PARITY parity = ::gpk::SERIAL_PARITY_NONE, ::gpk::SERIAL_STOP_BITS stopBitsZeroToTwo = ::gpk::SERIAL_STOP_BITS_ONE) {
+		gpk::err_t 		Open			(::gpk::vcst_t port, u2_t baudRate, ::gpk::SERIAL_PARITY parity = ::gpk::SERIAL_PARITY_NONE, ::gpk::SERIAL_STOP_BITS stopBitsZeroToTwo = ::gpk::SERIAL_STOP_BITS_ONE) {
 			Port					= port;
 #ifdef GPK_WINDOWS
 			if_true_vef(-1, INVALID_HANDLE_VALUE == (PlatformDetail.Handle = CreateFile(port.begin(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0)), "Failed to open serial on %s.", GPK_VIEW_ARGS(Port).begin()); 

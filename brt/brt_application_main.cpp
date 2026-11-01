@@ -24,7 +24,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	::gpk::SFramework			& framework					= app.Framework;
 	::gpk::SWindow				& mainWindow				= framework.RootWindow;
 	mainWindow.Size			= {320, 200};
-	ef_if(::gpk::failed(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
+	if_fail_fe(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 	::gpk::SGUI					& gui						= *framework.GUI;
 	app.IdExit				= ::gpk::controlCreate(gui);
 	::gpk::SControlPlacement	& controlExit				= gui.Controls.Placement[app.IdExit];
@@ -43,21 +43,21 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	uint64_t					port						= 9998;
 	uint64_t					adapter						= 0;
 	{ // load port from config file
-		::gpk::view<sc_t>				jsonPort					= {};
+		::gpk::vcst_t				jsonPort					= {};
 		const ::gpk::SJSONReader	& jsonReader				= framework.JSONConfig.Reader;
-		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.brt"}, jsonReader, 0, app.ProcessFileName);
-		wf_if(::gpk::failed(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
+		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, app.ProcessFileName);
+		if_true_wf(::gpk::failed(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
 		else {
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.executable_path"		}, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_app_name"}, jsonReader, indexObjectApp, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_params"	}, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"					}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			if_fail_wf(gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessFileName	));
+			if_fail_wf(gpk::jsonExpressionResolve("process.command_line_app_name"	, jsonReader, indexObjectApp, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessMockPath	));
+			if_fail_wf(gpk::jsonExpressionResolve("process.command_line_params"		, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessParams		));
+			if_fail_wf(gpk::jsonExpressionResolve("listen_port"						, jsonReader, indexObjectApp, jsonPort				)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(jsonPort));
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, port);
 				info_printf("Port to listen on: %u.", (uint32_t)port);
 			}
 			jsonPort = "";
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, adapter);
 				info_printf("Adapter: %u.", (uint32_t)adapter);
@@ -117,7 +117,7 @@ static	::gpk::err_t	createChildProcess
 static	::gpk::err_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcu0_t chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD						dwWritten				= 0;
 	bool						bSuccess				= false;
-	ef_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
+	if_true_ef(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
 	if_true_vef(-1, false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
 	return bSuccess ? 0 : -1;
 }

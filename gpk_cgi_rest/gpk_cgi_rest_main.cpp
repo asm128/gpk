@@ -45,7 +45,7 @@ sttc	gpk::err_t	initClient			(gpk::SUDPClient & bestClient)										{
 static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
 	::gpk::apod<char>				environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
-		if_fail_fe(gpk::environmentBlockFromEnviron(environmentBlock));
+		if_fail_fe(gpk::environmentBlock(environmentBlock, runtimeValues.RuntimeValues.EntryPointArgs.Environment));
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
 		environmentBlock.push_back(0);
 	}
@@ -109,21 +109,5 @@ static	gpk::err_t		cgiMain				(gpk::SRuntimeValues & runtimeValues)	{
 	return 0;
 }
 
-int				main				(int argc, char** argv, char**envv)	{
-	return ::cgiMain(argc, argv, envv);
-}
-
-#ifdef GPK_WINDOWS
-#include <Windows.h>
-
-int WINAPI		WinMain
-	(	_In_		HINSTANCE	hInstance
-	,	_In_opt_	HINSTANCE	hPrevInstance
-	,	_In_		LPSTR		lpCmdLine
-	,	_In_		int			nShowCmd
-	) {
-	(void)hInstance, (void)hPrevInstance, (void)lpCmdLine, (void)nShowCmd;
-	return ::cgiMain(__argc, __argv, environ);
-}
-#endif
+GPK_OS_ENTRY_POINT(::cgiMain);
 // https://articulo.mercadolibre.com.ar/MLA-800947708-lora-sx1276-esp32-bt-wifi-kit-desarrollo-con-display-arduino-_JM
