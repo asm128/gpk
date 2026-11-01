@@ -197,7 +197,7 @@ gpk::err_t			gpk::httpClientRequest
 			}
 		}
 		//else if(stopOfHeader && totalBytes > stopOfHeader && bChunked) {
-		//	//gpk::err_t 						offsetStopOfChunks				= ::gpk::find_sequence_pod(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
+		//	//gpk::err_t 						offsetStopOfChunks				= ::gpk::find_string(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
 		//	//if(0 == offsetStopOfChunks)
 		//	//	break;
 		//}

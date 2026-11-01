@@ -37,10 +37,10 @@ int main() {
 		sa_server.sin_port	= 0;
 		while(true) {
 			connectAcknowledge	= 0;
-			if_fail_fef(::recvfrom(handle, (char*)&connectAcknowledge, (int)1, MSG_PEEK, (sockaddr *)&sa_server, &sa_length)
+			if_true_fef(failed(::recvfrom(handle, (char*)&connectAcknowledge, 1, MSG_PEEK, (sockaddr *)&sa_server, &sa_length))
 				&& WSAGetLastError() != WSAEMSGSIZE
 				&& WSAGetLastError() != WSAEWOULDBLOCK
-				"WSAGetLastError(): 0x%X(%i)"
+				, "WSAGetLastError(): 0x%X(%i)"
 				, GPKREP1(WSAGetLastError())
 				);
 

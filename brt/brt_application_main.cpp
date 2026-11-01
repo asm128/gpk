@@ -8,6 +8,8 @@
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
+using namespace gpk;
+
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 
 ::gpk::err_t	cleanup	(::brt::SApplication & app)	{
@@ -200,7 +202,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				process.ProcessInfo.hProcess	= INVALID_HANDLE_VALUE;
 				process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
 				::gpk::vcu0_t					payload					= (*(receivedPerClient[iClient]))[iMessage]->Payload;
-				::gpk::err_t				contentOffset			= ::gpk::find_sequence_pod(::gpk::vcu0_t{(const uint8_t*)"\0", 1}, payload);
+				::gpk::err_t					contentOffset			= payload.find((gpk::u0_t)0U);
 				if_fail_cef(contentOffset, "%s", "Failed to find environment block stop code.");
 				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
 					if_fail_ef(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2}), "%s", "Failed to write request content to process' stdin.");

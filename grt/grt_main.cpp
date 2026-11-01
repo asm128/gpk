@@ -82,8 +82,8 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 	SRuntimeState					runtimeState					= {};
 	{
 		::gpk::vcst_t						fileName						= "gme";
-		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine.size() > 1)
-			fileName					= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1], (uint32_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1])};
+		if(globalRuntimeValues.EntryPointArgs.Positionals.size())
+			fileName					= {globalRuntimeValues.EntryPointArgs.Positionals[0], (uint32_t)strlen(globalRuntimeValues.EntryPointArgs.Positionals[0])};
 		char							mainModuleName	[512]			= {};
 		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule			mainModule						= {};
@@ -95,7 +95,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 		info_printf("%s", "Initializing application instance.");
 		if(::gpk::failed(mainModule.Setup(app))) {
 			error_printf("%s", "Setup() Failed!");
-			if_fail_fef(mainModule.Delete(&app), "Failed to create main module. %s.");
+			if_fail_fef(mainModule.Delete(&app), "Failed to create main module. %s.", mainModuleName);
 			return -1;
 		}
 		runtimeState.MainModule		= &mainModule;
@@ -103,7 +103,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 		info_printf("%s", "Cleaning up application instance...");
 		if_true_e(::gpk::failed(mainModule.Cleanup(app)));
 		info_printf("%s", "Application instance destroyed.");
-		if_fail_fef(mainModule.Delete(&app), "");
+		if_fail_fe(mainModule.Delete(&app));
 	}
 	return 0;
 }
@@ -124,11 +124,11 @@ int WINAPI					WinMain
 		info_printf("Type at index %u: '%s'.", iType, typeRegistry.Names[iType].begin());
 
 	::gpk::SRuntimeValues			runtimeValues					= {};
-	runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance		= hInstance		;
-	runtimeValues.PlatformDetail.EntryPointArgsWin.hPrevInstance	= hPrevInstance	;
-	runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine		= lpCmdLine		;
-	runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd			= nShowCmd		;
-	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {argv, argc};
+	runtimeValues.PlatformDetail.hInstance		= hInstance		;
+	runtimeValues.PlatformDetail.hPrevInstance	= hPrevInstance	;
+	runtimeValues.PlatformDetail.lpCmdLine		= lpCmdLine		;
+	runtimeValues.PlatformDetail.nShowCmd			= nShowCmd		;
+	runtimeValues.EntryPointArgs	= {argv, argc};
 	(void)envp;
 	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
 	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;

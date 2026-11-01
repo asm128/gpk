@@ -17,7 +17,7 @@ namespace gpk
 
 
 #if defined GPK_AVOID_LOCAL_APPLICATION_MODEL_EXECUTABLE_RUNTIME
-#		define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)
+#	define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)
 #else
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)										\
 namespace gpk																								\
