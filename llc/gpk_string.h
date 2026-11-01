@@ -27,8 +27,8 @@ namespace gpk
 #endif
         inln        b8_t    oper==      (cnst vcst_t & other)   cnst    { rtrn asc_t::oper==(other); }
         inln        b8_t    oper!=      (cnst vcst_t & other)   cnst    { rtrn asc_t::oper!=(other); }
-        tplN2uinln  b8_t    oper==      (sc_c (&other)[N])      cnst    { rtrn asc_t::oper==(other); }
-        tplN2uinln  b8_t    oper!=      (sc_c (&other)[N])      cnst    { rtrn asc_t::oper!=(other); }
+        tplN2uinln  b8_t    oper==      (sc_c (&other)[N])      cnst    { rtrn oper==(vcst_t{other}); }
+        tplN2uinln  b8_t    oper!=      (sc_c (&other)[N])      cnst    { rtrn oper!=(vcst_t{other}); }
 
         ndin        oper    vcst_t      ()                      cnst    { return {Data, Count}; }
         ndin        oper    vstr_t      ()                              { return {Data, Count}; }
