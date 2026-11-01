@@ -332,7 +332,7 @@ static int					REM_tmain1			() {
 	si							= {sizeof(STARTUPINFOA)};
 	stxp	bool		isUnicodeEnv			= false;
 	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
-	::gpk::apod<char>				bufferAppName			= ::gpk::toString(szAppName);
+	::gpk::apod<char>				bufferAppName			= GPK_VIEW_ARGS(szAppName);
 	if_true_vef(-1, FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
 	WaitForSingleObject(pi.hProcess, INFINITE);
 	// - Restore the original environment variable.

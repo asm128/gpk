@@ -36,8 +36,8 @@ static	::gpk::err_t								createChildProcess
 
 	gpk_safe_closehandle(process.ProcessInfo.hProcess);
 	bSuccess											= CreateProcessA
-		( ::gpk::toString(appPath		).begin()	// Create the child process.
-		, ::gpk::toString(commandLine	).begin()		// command line
+		( GPK_VIEW_ARGS(appPath		).begin()	// Create the child process.
+		, GPK_VIEW_ARGS(commandLine	).begin()		// command line
 		, nullptr					// process security attributes
 		, nullptr					// primary thread security attributes
 		, true						// handles are inherited
@@ -47,7 +47,7 @@ static	::gpk::err_t								createChildProcess
 		, &process.StartInfo		// STARTUPINFO pointer
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION
-	if_true_vef(-1, false == bSuccess, "Failed to create process'%s'.", ::gpk::toString(appPath).begin());
+	if_true_vef(-1, false == bSuccess, "Failed to create process'%s'.", GPK_VIEW_ARGS(appPath).begin());
 
 	::gpk::au0_t						popupTitle						= {};
 	{
@@ -164,7 +164,7 @@ static	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read 
 		GetExitCodeProcess(process.ProcessInfo.hProcess, &exitCode);
 		if(STILL_ACTIVE != exitCode && 0 == handleReadable(handles.ChildStd_OUT_Read))
 			break;
-		//info_printf("Process output: %s", ::gpk::toString({chBuf.begin(), chBuf.size()}).begin());
+		//info_printf("Process output: %s", GPK_VIEW_ARGS({chBuf.begin(), chBuf.size()}).begin());
 		if(0 == readBytes[readBytes.size() - 1])
 			break;
 	}

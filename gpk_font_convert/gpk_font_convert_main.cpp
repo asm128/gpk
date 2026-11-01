@@ -13,10 +13,12 @@
 #include "gpk_file.h"
 #include "gpk_string.h"
 
-::gpk::error_t				pngToFont
+using namespace gpk;
+
+::gpk::err_t				pngToFont
 	( ::gpk::img8bgra			& imageCache
 	, ::gpk::img8bgra			& verticalAtlas
-	, ::gpk::imgmonou64			& fontTexture
+	, ::gpk::imgmonou3_t			& fontTexture
 	, ::gpk::view<sc_t>				filenameOutput
 	, const ::gpk::n2u2_t		fontCharSize
 	, bool						negateBit
@@ -54,7 +56,7 @@
 	::gpk::base64Encode({(const uint8_t*)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
 	FILE						* fp = 0;
 	const int nul = 0;
-	fopen_s(&fp, ::gpk::toString(filenameOutput).begin(), "wb");
+	if_fail_fe(gpk::fopen_s(fp, filenameOutput, "wb"));
 	fwrite(encoded.begin(), 1, encoded.size(), fp);
 	fwrite(&nul, 1, 1, fp);
 	fclose(fp);
@@ -64,18 +66,18 @@
 int						main					() {
 	::gpk::aobj<::gpk::asc_t>	fontFiles				= {};
 	::gpk::vcst_t					pathToSearch			= {"../gpk_data/fonts/cp437"};
-	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
+	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", GPK_VIEW_ARGS(pathToSearch).begin());
 	::gpk::SPNGData				pngCache				= {};
 	::gpk::img8bgra				imageCache				= {};
 	::gpk::img8bgra				imageFixed				= {};
 	::gpk::img8bgra				verticalAtlas			= {};
-	::gpk::imgmonou64			fontTexture				= {};
+	::gpk::imgmonou3_t			fontTexture				= {};
 	::gpk::string				filenameOutput			= {};
 	::gpk::view<sc_t>				extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
 		::gpk::view<sc_t>				filenameInput			= fontFiles[iFile];
-		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
-		::gpk::apod<char>			lowercaseExtension		= ::gpk::toString(extension);
+		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", GPK_VIEW_ARGS(filenameInput).begin());
+		::gpk::apod<char>			lowercaseExtension		= GPK_VIEW_ARGS(extension);
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcst_t{".png"})
 			continue;
