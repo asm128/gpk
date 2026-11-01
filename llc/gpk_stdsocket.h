@@ -28,17 +28,17 @@ namespace gpk
 	struct auto_socket_close : public ::gpk::auto_handler<SOCKET, INVALID_SOCKET>					{
 		using			TWrapper						::auto_handler;
 		inline											~auto_socket_close					()	noexcept	{ close(); }
-		inline			void							close								()	noexcept	{ gpk_safe_closesocket(Handle); }
+		inline			void							close								()	noexcept	{ if(Handle != INVALID_SOCKET) { closesocket(Handle); Handle = INVALID_SOCKET; } }
 	};
 
-	::gpk::error_t			tcpipAddressToSockaddr		(uint8_t a1, uint8_t a2, uint8_t a3, uint8_t a4, uint16_t port, sockaddr_in & sockaddr);
-	::gpk::error_t			tcpipAddressToSockaddr		(uint32_t address, uint16_t port, sockaddr_in & sockaddr);
+	::gpk::err_t			tcpipAddressToSockaddr		(u0_t a1, u0_t a2, u0_t a3, u0_t a4, u1_t port, sockaddr_in & sockaddr);
+	::gpk::err_t			tcpipAddressToSockaddr		(u2_t address, u1_t port, sockaddr_in & sockaddr);
 
-	::gpk::error_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
-	::gpk::error_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, uint32_t & address, uint16_t & port);
-	::gpk::error_t			tcpipAddress				(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
+	::gpk::err_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4, u1_t* port);
+	::gpk::err_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, u2_t & address, u1_t & port);
+	::gpk::err_t			tcpipAddress				(SOCKET socket, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4, u1_t* port);
 
-	stainli	::gpk::error_t	tcpipAddressToSockaddr		(const ::gpk::SIPv4End & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		
+	stin	::gpk::err_t	tcpipAddressToSockaddr		(const ::gpk::SIPv4End & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		
 		( ::gpk::byte_at(addr.IP, 0)
 		, ::gpk::byte_at(addr.IP, 1)
 		, ::gpk::byte_at(addr.IP, 2)
@@ -46,8 +46,8 @@ namespace gpk
 		, addr.Port, sockaddr
 		); 
 	}
-	stainli	::gpk::error_t	tcpipAddressFromSockaddr	(const sockaddr_in& sockaddr, ::gpk::SIPv4End & address)	{ uint8_t addr[4] = {}; gpk_necs(tcpipAddressFromSockaddr	(sockaddr	, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
-	stainli	::gpk::error_t	tcpipAddress				(SOCKET socket, ::gpk::SIPv4End & address)					{ uint8_t addr[4] = {}; gpk_necs(tcpipAddress				(socket		, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
+	stin	::gpk::err_t	tcpipAddressFromSockaddr	(const sockaddr_in& sockaddr, ::gpk::SIPv4End & address)	{ u0_t addr[4] = {}; if_fail_fe(tcpipAddressFromSockaddr	(sockaddr	, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
+	stin	::gpk::err_t	tcpipAddress				(SOCKET socket, ::gpk::SIPv4End & address)					{ u0_t addr[4] = {}; if_fail_fe(tcpipAddress				(socket		, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
 } // namespace
 
 

@@ -7,39 +7,34 @@
 
 namespace gpk
 {
-#pragma pack(push, 1)
-	typedef	::gpk::view<::gpk::tri3char	>	vtri3c	, vtri3char ;
-	typedef	::gpk::view<::gpk::tri3uchar>	vtri3uc	, vtri3uchar;
-	typedef	::gpk::view<::gpk::tri3f32	>	vtri3f32;
-	typedef	::gpk::view<::gpk::tri3f64	>	vtri3f64;
-	typedef	::gpk::view<::gpk::tri3u8	>	vtri3u8 ;
-	typedef	::gpk::view<::gpk::tri3u16	>	vtri3u16;
-	typedef	::gpk::view<::gpk::tri3u32	>	vtri3u32;
-	typedef	::gpk::view<::gpk::tri3u64	>	vtri3u64;
-	typedef	::gpk::view<::gpk::tri3i8	>	vtri3i8 ;
-	typedef	::gpk::view<::gpk::tri3i16	>	vtri3i16;
-	typedef	::gpk::view<::gpk::tri3i32	>	vtri3i32;
-	typedef	::gpk::view<::gpk::tri3i64	>	vtri3i64;
+	tplT using	vtri3	= ::gpk::view<::gpk::tri3<T>>;
+	tplT using	vctri3	= ::gpk::view<cnst ::gpk::tri3<T>>;
 
-	typedef	::gpk::view<const ::gpk::tri3char	>	vctri3c		;
-	typedef	::gpk::view<const ::gpk::tri3uchar	>	vctri3uc	;
-	typedef	::gpk::view<const ::gpk::tri3f32	>	vctri3f32	;
-	typedef	::gpk::view<const ::gpk::tri3f64	>	vctri3f64	;
-	typedef	::gpk::view<const ::gpk::tri3u8		>	vctri3u8	;
-	typedef	::gpk::view<const ::gpk::tri3u16	>	vctri3u16	;
-	typedef	::gpk::view<const ::gpk::tri3u32	>	vctri3u32	;
-	typedef	::gpk::view<const ::gpk::tri3u64	>	vctri3u64	;
-	typedef	::gpk::view<const ::gpk::tri3i8		>	vctri3i8	;
-	typedef	::gpk::view<const ::gpk::tri3i16	>	vctri3i16	;
-	typedef	::gpk::view<const ::gpk::tri3i32	>	vctri3i32	;
-	typedef	::gpk::view<const ::gpk::tri3i64	>	vctri3i64	;
+	tydf	::gpk::vtri3<sc_t>	vtri3sc_t;	tdcs	vtri3sc_t	vtri3sc_c;
+	tydf	::gpk::vtri3<uc_t>	vtri3uc_t;	tdcs	vtri3uc_t	vtri3uc_c;
+	tydf	::gpk::vtri3<u0_t>	vtri3u0_t;	tdcs	vtri3u0_t	vtri3u0_c;
+	tydf	::gpk::vtri3<u1_t>	vtri3u1_t;	tdcs	vtri3u1_t	vtri3u1_c;
+	tydf	::gpk::vtri3<u2_t>	vtri3u2_t;	tdcs	vtri3u2_t	vtri3u2_c;
+	tydf	::gpk::vtri3<u3_t>	vtri3u3_t;	tdcs	vtri3u3_t	vtri3u3_c;
+	tydf	::gpk::vtri3<s0_t>	vtri3s0_t;	tdcs	vtri3s0_t	vtri3s0_c;
+	tydf	::gpk::vtri3<s1_t>	vtri3s1_t;	tdcs	vtri3s1_t	vtri3s1_c;
+	tydf	::gpk::vtri3<s2_t>	vtri3s2_t;	tdcs	vtri3s2_t	vtri3s2_c;
+	tydf	::gpk::vtri3<s3_t>	vtri3s3_t;	tdcs	vtri3s3_t	vtri3s3_c;
+	tydf	::gpk::vtri3<f2_t>	vtri3f2_t;	tdcs	vtri3f2_t	vtri3f2_c;
+	tydf	::gpk::vtri3<f3_t>	vtri3f3_t;	tdcs	vtri3f3_t	vtri3f3_c;
 
-	tplt<tpnm _tDimension>	
-	using	vtri3	= ::gpk::view<::gpk::tri3<_tDimension>>;
-
-	tplt<tpnm _tDimension>	
-	using	vctri3	= ::gpk::view<const ::gpk::tri3<_tDimension>>;
-#pragma pack(pop)
+	tydf	::gpk::vctri3<sc_t>	vctri3sc_t;	tdcs	vctri3sc_t	vctri3sc_c;
+	tydf	::gpk::vctri3<uc_t>	vctri3uc_t;	tdcs	vctri3uc_t	vctri3uc_c;
+	tydf	::gpk::vctri3<u0_t>	vctri3u0_t;	tdcs	vctri3u0_t	vctri3u0_c;
+	tydf	::gpk::vctri3<u1_t>	vctri3u1_t;	tdcs	vctri3u1_t	vctri3u1_c;
+	tydf	::gpk::vctri3<u2_t>	vctri3u2_t;	tdcs	vctri3u2_t	vctri3u2_c;
+	tydf	::gpk::vctri3<u3_t>	vctri3u3_t;	tdcs	vctri3u3_t	vctri3u3_c;
+	tydf	::gpk::vctri3<s0_t>	vctri3s0_t;	tdcs	vctri3s0_t	vctri3s0_c;
+	tydf	::gpk::vctri3<s1_t>	vctri3s1_t;	tdcs	vctri3s1_t	vctri3s1_c;
+	tydf	::gpk::vctri3<s2_t>	vctri3s2_t;	tdcs	vctri3s2_t	vctri3s2_c;
+	tydf	::gpk::vctri3<s3_t>	vctri3s3_t;	tdcs	vctri3s3_t	vctri3s3_c;
+	tydf	::gpk::vctri3<f2_t>	vctri3f2_t;	tdcs	vctri3f2_t	vctri3f2_c;
+	tydf	::gpk::vctri3<f3_t>	vctri3f3_t;	tdcs	vctri3f3_t	vctri3f3_c;
 } // namespace
 
 #endif // GPK_VIEW_TRI3_2973498273423617

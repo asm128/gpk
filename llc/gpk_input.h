@@ -12,20 +12,20 @@ namespace gpk
 	struct SInputJoystick {
 		::gpk::n2s1_t				Position			= {};
 		::gpk::n3s1_t				Deltas				= {};
-		uint32_t					ButtonState			= 0;
+		u2_t					ButtonState			= 0;
 	};
 	struct SInputMouse {
 		::gpk::n2s1_t				Position			= {};
 		::gpk::n3s1_t				Deltas				= {};
-		::gpk::astu8 <32>			ButtonState			= {};
-		::gpk::astf64<32>			ButtonTime			= {};
-		::gpk::asti64<32>			ButtonStrength		= {};
+		::gpk::astu0_t <32>			ButtonState			= {};
+		::gpk::astf3_t<32>			ButtonTime			= {};
+		::gpk::asts3_t<32>			ButtonStrength		= {};
 	};
 
 	struct SInputKeyboard {
-		::gpk::astu8 <256>			KeyState			= {};
-		::gpk::astf64<256>			KeyTime				= {};
-		::gpk::asti64<256>			KeyStrength			= {};
+		::gpk::astu0_t <256>			KeyState			= {};
+		::gpk::astf3_t<256>			KeyTime				= {};
+		::gpk::asts3_t<256>			KeyStrength			= {};
 	};
 #pragma pack(pop)
 	struct SInput {
@@ -42,10 +42,10 @@ namespace gpk
 		SInputMouse					MousePrevious		= {};
 		SInputMouse					MouseCurrent		= {};
 
-		bool						ButtonUp			(uint8_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
-		bool						ButtonDown			(uint8_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
-		bool						KeyUp				(uint8_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
-		bool						KeyDown				(uint8_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
+		bool						ButtonUp			(u0_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
+		bool						ButtonDown			(u0_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
+		bool						KeyUp				(u0_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
+		bool						KeyDown				(u0_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
 	};
 } // namespace
 

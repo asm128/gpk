@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE(MATCH_TYPE, uint8_t);
+	GDEFINE_ENUM_TYPE(MATCH_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Free			, 0);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Survival		, 1);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Campaign		, 2);
@@ -14,17 +14,17 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SStageSetup {
-		uint64_t		Seed					= {};
-		uint16_t		Players					= {};
+		u3_t		Seed					= {};
+		u1_t		Players					= {};
 		MATCH_TYPE		MatchType				= {};
-		uint8_t			Padding1				= {};
-		uint32_t		Padding4				= {};
+		u0_t			Padding1				= {};
+		u2_t		Padding4				= {};
 	};
-	stacxpr	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
+	stxp	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
 
 	struct SStageTime {
-		uint64_t		Started					= {};	// Timestamp
-		uint64_t		Loaded					= {};	// Timestamp
+		u3_t		Started					= {};	// Timestamp
+		u3_t		Loaded					= {};	// Timestamp
 		double			Played					= {};	// This one represents the real-world time played, incremented on every tick while not paused.
 	};
 
@@ -53,7 +53,7 @@ namespace gpk
 			return Current;
 		}
 	};
-	stacxpr	size_t SIZE_SRELATIVESPEED = sizeof(SRelativeSpeed);
+	stxp	size_t SIZE_SRELATIVESPEED = sizeof(SRelativeSpeed);
 
 	struct SRelativeTime {
 		float			Scale					= 1.0f;
@@ -75,7 +75,7 @@ namespace gpk
 			return realSeconds * Scale;
 		}
 	};
-	stacxpr	size_t SIZE_SRELATIVETIME = sizeof(SRelativeTime);
+	stxp	size_t SIZE_SRELATIVETIME = sizeof(SRelativeTime);
 
 	struct SStageState {
 		SStageSetup		Constants				= {};	// This sets up the root/default game mode
@@ -83,7 +83,7 @@ namespace gpk
 		SRelativeTime	SimulatedTime			= {};	// this one represents the elapsed virtual-reality time. It gets scaled by special effects.
 		SRelativeSpeed	BackgroundSpeed			= {};	// this one represents the speed in which the background planets and stars move. 
 	};
-	stacxpr	size_t SIZE_SSTAGESTATE = sizeof(SStageState);
+	stxp	size_t SIZE_SSTAGESTATE = sizeof(SStageState);
 #pragma pack(pop)
 } // namespace
 

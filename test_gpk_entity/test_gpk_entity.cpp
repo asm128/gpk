@@ -24,7 +24,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "GPK Entity Test v0.1");
 	app.D3DApp.Shutdown();
 #endif
 
-	gpk_necs(gpk::mainWindowDestroy(mainWindow));
+	if_fail_fe(gpk::mainWindowDestroy(mainWindow));
 	return 0;
 }
 
@@ -33,9 +33,9 @@ static	::gpk::error_t	updateSizeDependentResources(::SApplication & app)								
 	const ::gpk::n2u16			newSize					= mainWindow.Size;
 #if !defined(DISABLE_D3D11)
 	mainWindow.BackBuffer	= {};
-	gpk_necs(app.D3DApp.SetWindowSize(newSize));
+	if_fail_fe(app.D3DApp.SetWindowSize(newSize));
 #else
-	gpk_necs(mainWindow.BackBuffer->resize(newSize, ::gpk::bgra{0, 0, 0, 0}, 0xFFFFFFFF));
+	if_fail_fe(mainWindow.BackBuffer->resize(newSize, ::gpk::bgra{0, 0, 0, 0}, 0xFFFFFFFF));
 #endif
 	mainWindow.Resized		= false;
 	return 0;
@@ -46,10 +46,10 @@ static	::gpk::error_t	processScreenEvent		(::SApplication & app, const ::gpk::SE
 	default: break;
 	case ::gpk::EVENT_SCREEN_Create:
 #if !defined(DISABLE_D3D11)
-		gpk_necs(app.D3DApp.Initialize(app.Framework.RootWindow.PlatformDetail.WindowHandle, app.Engine.Scene->Graphics));
+		if_fail_fe(app.D3DApp.Initialize(app.Framework.RootWindow.PlatformDetail.WindowHandle, app.Engine.Scene->Graphics));
 #endif
 	case ::gpk::EVENT_SCREEN_Resize: 
-		gpk_necs(::updateSizeDependentResources(app));
+		if_fail_fe(::updateSizeDependentResources(app));
 		break;
 	}
 	return 0;
@@ -83,7 +83,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::SWindow				& mainWindow			= framework.RootWindow;
 	mainWindow.Size			= {1280, 720};
-	gpk_necs(gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
+	if_fail_fe(gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 
 	return 0;
 }
@@ -96,28 +96,28 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 	bool						systemExit				= false;
 
 	::gpk::apobj<::gpk::SEventSystem>	eventsToProcess	= mainWindow.EventQueue;
-	gpk_necs(eventsToProcess.append(gui.Controls.EventQueue));
-	gpk_necs(eventsToProcess.for_each([&app, &systemExit](const ::gpk::pobj<::gpk::SEventSystem> & sysEvent) { 
+	if_fail_fe(eventsToProcess.append(gui.Controls.EventQueue));
+	if_fail_fe(eventsToProcess.for_each([&app, &systemExit](const ::gpk::pobj<::gpk::SEventSystem> & sysEvent) { 
 		::gpk::error_t				result; 
-		gpk_necs(result = ::processSystemEvent(app, *sysEvent)); 
+		if_fail_fe(result = ::processSystemEvent(app, *sysEvent)); 
 		if(result == 1) 
 			systemExit				= true; 
 		return result;
 	}));
 
-	rvi_if(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::bool2char(systemExit), ::gpk::bool2char(systemRequestedExit));
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::bool2char(systemExit), ::gpk::bool2char(systemRequestedExit));
 
 	::gpk::SFrameInfo			& frameInfo				= framework.FrameInfo;
 	{
 		::gpk::STimer				timer					= {};
-		gpk_necs(app.Engine.Update(frameInfo.Seconds.LastFrame));
+		if_fail_fe(app.Engine.Update(frameInfo.Seconds.LastFrame));
 		timer.Frame();
 		//info_printf("Update engine in %f seconds", timer.LastTimeSeconds);
 	}
 
 #if !defined(DISABLE_D3D11)
 	if(app.D3DApp.Scene.IndexBuffer.size() < app.Engine.Scene->Graphics->Meshes.size() || !app.D3DApp.GUIStuff.IndexBuffer) {
-		gpk_necs(app.D3DApp.CreateDeviceResources(*app.Engine.Scene->Graphics));
+		if_fail_fe(app.D3DApp.CreateDeviceResources(*app.Engine.Scene->Graphics));
 	}
 	app.D3DApp.Text.Update(frameInfo.Seconds.LastFrame, frameInfo.Seconds.Total, (uint32_t)frameInfo.FrameMeter.FramesPerSecond);
 #endif
@@ -164,7 +164,7 @@ static	::gpk::error_t	sceneDraw
 
 	::gpk::an3f32				& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 	for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord) {
-		::gpk::n3i16				coord		= wireframePixelCoords[iCoord].i16();
+		::gpk::n3i16				coord		= wireframePixelCoords[iCoord].s1_t();
 		::gpk::rgbaf				color		= 
 			{ (float)(totalSeconds - iCoord / 1.0f / totalSeconds)
 			, (float)(totalSeconds - iCoord / 2.0f / totalSeconds)
@@ -193,15 +193,15 @@ static	::gpk::error_t	sceneDraw
 #if !defined(DISABLE_D3D11) 
 	memset(app.D3DApp.GUIStuff.RenderTarget.begin(), 0, app.D3DApp.GUIStuff.RenderTarget.byte_count());
 	
-	gpk_necs(gpk::guiDraw(*app.Framework.GUI, app.D3DApp.GUIStuff.RenderTarget));
+	if_fail_fe(gpk::guiDraw(*app.Framework.GUI, app.D3DApp.GUIStuff.RenderTarget));
 
-	gpk_necs(gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, {.01f, 1000.0f}));
+	if_fail_fe(gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, {.01f, 1000.0f}));
 #else 
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::prtbgra8d32			backBuffer				= framework.RootWindow.BackBuffer;
 	backBuffer->resize(framework.RootWindow.BackBuffer->Color.metrics(), clearColor, (uint32_t)-1);
 	::sceneDraw(engineScene, app.Engine.Scene->RenderCache, *backBuffer, cameraSelected.Position, cameraSelected.Target, {0, 1}, 0);
-	gpk_necs(gpk::guiDraw(*app.Framework.GUI, backBuffer->Color));
+	if_fail_fe(gpk::guiDraw(*app.Framework.GUI, backBuffer->Color));
 	memcpy(framework.RootWindow.BackBuffer->Color.View.begin(), backBuffer->Color.View.begin(), backBuffer->Color.View.byte_count());
 	//::gpk::grid_mirror_y(framework.RootWindow.BackBuffer->Color.View, backBuffer->Color.View);
 	//framework.RootWindow.BackBuffer		= backBuffer;

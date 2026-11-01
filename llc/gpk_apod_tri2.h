@@ -1,4 +1,4 @@
-/// Copyright 2009-2023 - asm138
+/// Copyright 2009-2024 - ogarnd
 #include "gpk_tri2.h"
 #include "gpk_array_pod.h"
 
@@ -8,21 +8,20 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	typedef	::gpk::apod<::gpk::tri2char	>	atri2c	, atri2char		;
-	typedef	::gpk::apod<::gpk::tri2uchar>	atri2uc	, atri2uchar		;
-	typedef	::gpk::apod<::gpk::tri2f32	>	atri2f32	;
-	typedef	::gpk::apod<::gpk::tri2f64	>	atri2f64	;
-	typedef	::gpk::apod<::gpk::tri2u8	>	atri2u8		;
-	typedef	::gpk::apod<::gpk::tri2u16	>	atri2u16	;
-	typedef	::gpk::apod<::gpk::tri2u32	>	atri2u32	;
-	typedef	::gpk::apod<::gpk::tri2u64	>	atri2u64	;
-	typedef	::gpk::apod<::gpk::tri2i8	>	atri2i8		;
-	typedef	::gpk::apod<::gpk::tri2i16	>	atri2i16	;
-	typedef	::gpk::apod<::gpk::tri2i32	>	atri2i32	;
-	typedef	::gpk::apod<::gpk::tri2i64	>	atri2i64	;
+	tplT using	atri2	= ::gpk::apod<::gpk::tri2<T>>;
 
-	tplt<tpnm _tDimension>	
-	using		atri2	= ::gpk::apod<::gpk::tri2<_tDimension>>;
+	tydf	::gpk::atri2<sc_t>	atri2sc_t;	tdcs	atri2sc_t	atri2sc_c;
+	tydf	::gpk::atri2<uc_t>	atri2uc_t;	tdcs	atri2uc_t	atri2uc_c;
+	tydf	::gpk::atri2<u0_t>	atri2u0_t;	tdcs	atri2u0_t	atri2u0_c;
+	tydf	::gpk::atri2<u1_t>	atri2u1_t;	tdcs	atri2u1_t	atri2u1_c;
+	tydf	::gpk::atri2<u2_t>	atri2u2_t;	tdcs	atri2u2_t	atri2u2_c;
+	tydf	::gpk::atri2<u3_t>	atri2u3_t;	tdcs	atri2u3_t	atri2u3_c;
+	tydf	::gpk::atri2<s0_t>	atri2s0_t;	tdcs	atri2s0_t	atri2s0_c;
+	tydf	::gpk::atri2<s1_t>	atri2s1_t;	tdcs	atri2s1_t	atri2s1_c;
+	tydf	::gpk::atri2<s2_t>	atri2s2_t;	tdcs	atri2s2_t	atri2s2_c;
+	tydf	::gpk::atri2<s3_t>	atri2s3_t;	tdcs	atri2s3_t	atri2s3_c;
+	tydf	::gpk::atri2<f2_t>	atri2f2_t;	tdcs	atri2f2_t	atri2f2_c;
+	tydf	::gpk::atri2<f3_t>	atri2f3_t;	tdcs	atri2f3_t	atri2f3_c;
 #pragma pack(pop)
 } // namespace
 

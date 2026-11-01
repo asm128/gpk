@@ -13,34 +13,34 @@
 namespace gpk
 {
 	struct SASCIITarget {
-		::gpk::imgu8			Characters			= {};
-		::gpk::imgu16			Colors				= {};
+		::gpk::imgu0_t			Characters			= {};
+		::gpk::imgu1_t			Colors				= {};
 
 		inxp	::gpk::n2u2_t	metrics				()	const	noexcept	{ return Characters.metrics(); }
 	};
 
-	::gpk::error_t			asciiTargetClear	(::gpk::SASCIITarget & target, uint8_t character = ' ', uint16_t color = ASCII_COLOR_WHITE);
+	::gpk::err_t			asciiTargetClear	(::gpk::SASCIITarget & target, u0_t character = ' ', u1_t color = ASCII_COLOR_WHITE);
 
 	// ------------------------------------------------------
 #pragma pack(push, 1)
 	struct SASCIICell {
-		uint8_t					Character	;
-		uint16_t				Color		;
+		u0_t					Character	;
+		u1_t				Color		;
 	};
 #pragma pack(pop)
 
-	stin	::gpk::error_t	drawRectangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::rect2<int32_t>& rectangle)	{
-		for(s2_t y = ::gpk::max((int32_t)0, (int32_t)rectangle.Offset.y), yStop = ::gpk::min((int32_t)(rectangle.Offset.y + rectangle.Size.y), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
-		for(s2_t x = ::gpk::max((int32_t)0, (int32_t)rectangle.Offset.x), xStop = ::gpk::min((int32_t)(rectangle.Offset.x + rectangle.Size.x), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
+	stin	::gpk::err_t	drawRectangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::rect2<s2_t>& rectangle)	{
+		for(s2_t y = ::gpk::max((s2_t)0, (s2_t)rectangle.Offset.y), yStop = ::gpk::min((s2_t)(rectangle.Offset.y + rectangle.Size.y), (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
+		for(s2_t x = ::gpk::max((s2_t)0, (s2_t)rectangle.Offset.x), xStop = ::gpk::min((s2_t)(rectangle.Offset.x + rectangle.Size.x), (s2_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			asciiTarget.Characters	[y][x]											= value.Character;
 			asciiTarget.Colors		[y][x]											= value.Color;
 		}
 		return 0;
 	}
 
-	stin	::gpk::error_t	drawCircle			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::circlei32 & circle)			{
-		for(s2_t y = ::gpk::max((int32_t)0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
-		for(s2_t x = ::gpk::max((int32_t)0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
+	stin	::gpk::err_t	drawCircle			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::circlei32 & circle)			{
+		for(s2_t y = ::gpk::max((s2_t)0, (s2_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((s2_t)(circle.Center.y + circle.Radius), (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
+		for(s2_t x = ::gpk::max((s2_t)0, (s2_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((s2_t)(circle.Center.x + circle.Radius), (s2_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			::gpk::n2s2_c				cellCurrent			= {x, y};
 			double						distance			= (cellCurrent - circle.Center).Length();
 			if(distance < circle.Radius) {
@@ -53,7 +53,7 @@ namespace gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	tplt<tpnm _tCoord>
-	stainli	::gpk::error_t	drawTriangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::tri2<_tCoord>& triangle)		{
+	stin	::gpk::err_t	drawTriangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::tri2<_tCoord>& triangle)		{
 		::gpk::n2s2_c			areaMin				= {(s2_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (s2_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::n2s2_c			areaMax				= {(s2_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (s2_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		for(s2_t y = ::gpk::max((s2_t)areaMin.y, (s2_t)0), yStop = ::gpk::min(areaMax.y, (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
@@ -74,7 +74,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord>
-	static	::gpk::error_t	drawLine			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::line2<_tCoord>& line)				{
+	static	::gpk::err_t	drawLine			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::line2<_tCoord>& line)				{
 		float						x1					= (float)line.A.x
 			,						y1					= (float)line.A.y
 			,						x2					= (float)line.B.x
@@ -93,11 +93,11 @@ namespace gpk
 		const float			dy					= fabs(y2 - y1);
 		float				error				= dx / 2.0f;
 		s2_c				ystep				= (y1 < y2) ? 1 : -1;
-		s2_t				y					= (int32_t)y1;
+		s2_t				y					= (s2_t)y1;
 		if(steep) {
-			for(s2_t x = (s2_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
-				if( false == ::gpk::in_range(x, (int32_t)0, (int32_t)asciiTarget.metrics().y)
-				 || false == ::gpk::in_range(y, (int32_t)0, (int32_t)asciiTarget.metrics().x)
+			for(s2_t x = (s2_t)x1, xStop = (s2_t)x2; x < xStop; ++x) {
+				if( false == ::gpk::in_range(x, (s2_t)0, (s2_t)asciiTarget.metrics().y)
+				 || false == ::gpk::in_range(y, (s2_t)0, (s2_t)asciiTarget.metrics().x)
 				 )
 					continue;
 				asciiTarget.Characters	[x][y]	= value.Character;

@@ -675,9 +675,6 @@
     <ClInclude Include="gpk_gtl_command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_log_level.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_log_core.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -764,6 +761,33 @@
     </ClInclude>
     <ClInclude Include="gpk_packed_int.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_swap.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyval_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_args.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_lifecycle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block_container.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_file_pack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_mutex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_matrix3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_matrix2.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -938,9 +962,6 @@
     <ClCompile Include="gpk_xml_reader.cpp">
       <Filter>xml</Filter>
     </ClCompile>
-    <ClCompile Include="llc_header_checkingg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_gltf.cpp">
       <Filter>models</Filter>
     </ClCompile>
@@ -989,7 +1010,10 @@
     <ClCompile Include="gpk_args.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_keyval_old.cpp">
+    <ClCompile Include="gpk_keyval_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_file_pack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

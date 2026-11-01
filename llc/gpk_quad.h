@@ -3,33 +3,34 @@
 #ifndef GPK_QUAD_H_23627
 #define GPK_QUAD_H_23627
 
-namespace gpk 
+namespace gpk
 {
-#pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	tplt<tpnm _tVertex> 
-	struct quad	{
-		typedef _tVertex	T;
-		typedef quad<T>		TQuad;
+#pragma pack(push, 1)
+	tplt<tpnm T>
+	struct quad {
+		T	A, B, C, D;
 
-		T					A, B, C, D;
+		cxpr	quad	()											= default;
+		cxpr	quad	(cnst quad<T> & other)						= default;
+		cxpr	quad	(cnst T & a, cnst T & b, cnst T & c, cnst T & d)
+			: A(a), B(b), C(c), D(d) {}
 
-		cnstxpr		quad	()									= default;
-		cnstxpr		quad	(const TQuad & other)				= default;
-		cnstxpr		quad	(const T & a, const T & b, const T & c, const T & d)	: A(a), B(b), C(c), D(d)	{}
-
-		GPK_DEFAULT_OPERATOR(TQuad, A == other.A && B == other.B && C == other.C && D == other.D);
+		GPK_DEFAULT_OPERATOR(quad<T>, A == other.A && B == other.B && C == other.C && D == other.D);
 	};
-	typedef quad<float>		quadf32, quadf;
-	typedef quad<double>	quadf64, quadd;
-	typedef quad<uint8_t>	quadu8;
-	typedef quad<uint16_t>	quadu16;
-	typedef quad<uint32_t>	quadu32;
-	typedef quad<uint64_t>	quadu64;
-	typedef quad<int8_t>	quadi8;
-	typedef quad<int16_t>	quadi16;
-	typedef quad<int32_t>	quadi32;
-	typedef quad<int64_t>	quadi64;
 #pragma pack(pop)
+
+	tydf quad<uc_t>	quaduc_t;	tdcs quaduc_t	quaduc_c;
+	tydf quad<sc_t>	quadsc_t;	tdcs quadsc_t	quadsc_c;
+	tydf quad<u0_t>	quadu0_t;	tdcs quadu0_t	quadu0_c;
+	tydf quad<u1_t>	quadu1_t;	tdcs quadu1_t	quadu1_c;
+	tydf quad<u2_t>	quadu2_t;	tdcs quadu2_t	quadu2_c;
+	tydf quad<u3_t>	quadu3_t;	tdcs quadu3_t	quadu3_c;
+	tydf quad<s0_t>	quads0_t;	tdcs quads0_t	quads0_c;
+	tydf quad<s1_t>	quads1_t;	tdcs quads1_t	quads1_c;
+	tydf quad<s2_t>	quads2_t;	tdcs quads2_t	quads2_c;
+	tydf quad<s3_t>	quads3_t;	tdcs quads3_t	quads3_c;
+	tydf quad<f2_t>	quadf2_t;	tdcs quadf2_t	quadf2_c;
+	tydf quad<f3_t>	quadf3_t;	tdcs quadf3_t	quadf3_c;
 }
 
 #endif // GPK_QUAD_H_23627

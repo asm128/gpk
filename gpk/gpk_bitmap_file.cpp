@@ -3,7 +3,11 @@
 #include "gpk_png.h"
 #include "gpk_file.h"
 
-using ::gpk::sc_t;
+GPK_USING_TYPEINT ();
+GPK_USING_VIEW    ();
+GPK_USING_ASTATIC ();
+GPK_USING_APOD    ();
+
 
 #if defined(GPK_WINDOWS)
 
@@ -43,19 +47,19 @@ using ::gpk::sc_t;
 #pragma pack(push, 1)
 
 
-static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra& out_ImageView, const ::gpk::bgra & alphaKey, bool* out_alphaFound)		{
-	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, ::gpk::toString(szFileName).begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
-	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", ::gpk::toString(szFileName).begin());
+static	::gpk::err_t	LoadBitmapFromBMPFile		(const ::gpk::vcst_t & szFileName, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra& out_ImageView, const ::gpk::bgra & alphaKey, bool* out_alphaFound)		{
+	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, gpk::string(szFileName), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
+	if_true_vef(-1, phBitmap == NULL, "Failed to load bitmap file: %.*s.", GPK_VIEW_ARGS(szFileName));
 
 	BITMAP						bm							= {};
 	GetObject(phBitmap, sizeof(BITMAP), &bm);		// Get the color depth of the DIBSection
-	gpk_necall(out_Colors.resize(bm.bmWidth * bm.bmHeight), "Out of memory? Requested size: {x: %i, y: %i}", (int32_t)bm.bmWidth, (int32_t)bm.bmHeight);
-	out_ImageView			= {out_Colors.begin(), {(uint32_t)bm.bmWidth, (uint32_t)bm.bmHeight}};
+	if_fail_fef(out_Colors.resize(bm.bmWidth * bm.bmHeight), "Out of memory? Requested size: {x: %i, y: %i}", (s2_t)bm.bmWidth, (s2_t)bm.bmHeight);
+	out_ImageView			= {out_Colors.begin(), {(u2_t)bm.bmWidth, (u2_t)bm.bmHeight}};
 	HDC							hMemDC						= CreateCompatibleDC(NULL);
 	HBITMAP						hOldBitmap;
 	hOldBitmap				= (HBITMAP)SelectObject(hMemDC, phBitmap);
-	for(uint32_t y = 0; y < out_ImageView.metrics().y; ++y)
-	for(uint32_t x = 0; x < out_ImageView.metrics().x; ++x) {
+	for(u2_t y = 0; y < out_ImageView.metrics().y; ++y)
+	for(u2_t x = 0; x < out_ImageView.metrics().x; ++x) {
 		const COLORREF				colpix						= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
 		const ::gpk::bgra			toWrite						= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
 		out_ImageView[y][x]		= toWrite;
@@ -109,7 +113,7 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::g
 	return 0;
 }
 
-::gpk::error_t			gpk::bmpFileLoad			(const ::gpk::vcs & filename, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)	{ //
+::gpk::err_t			gpk::bmpFileLoad			(const ::gpk::vcst_t & filename, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)	{ //
 #if defined(GPK_WINDOWS)
 	bool						isAlpha						= false;
 	return ::LoadBitmapFromBMPFile(filename, out_Colors, out_ImageView, {0xFF, 0x00, 0xFF, 0xFF}, &isAlpha);
@@ -133,44 +137,46 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::g
 
 // BMP File header
 struct SHeaderFileBMP {
-	uint8_t			Type[2]		;	// Identifier, must be BM
-	uint32_t		Size		;	// Size of BMP file
-	uint32_t		Reserved	;	// 0
-	uint32_t		Offset		;	//
+	u0_t			Type[2]		;	// Identifier, must be BM
+	u2_t		Size		;	// Size of BMP file
+	u2_t		Reserved	;	// 0
+	u2_t		Offset		;	//
 };
 
 // BMP Information Header
 struct SHeaderInfoBMP {
-	uint32_t		Size		;	// Number of bytes in structure
+	u2_t		Size		;	// Number of bytes in structure
 	::gpk::n2s2_t	Metrics		;	// Width and Height of Image
-	uint16_t		Planes		;	// Always 1
-	uint16_t		Bpp			;	// Bits Per Pixel (must be 24 for now)
-	uint32_t		Compression	;	// Must be 0 (uncompressed)
+	u1_t		Planes		;	// Always 1
+	u1_t		Bpp			;	// Bits Per Pixel (must be 24 for now)
+	u2_t		Compression	;	// Must be 0 (uncompressed)
 	::gpk::n2s2_t	PPM			;	// Pixels Per Meter
-	uint32_t		ClrUsed		;	// 0 for 24 bpp bmps
-	uint32_t		ClrImp		;	// 0
-	uint32_t		Dunno		;	// 0
+	u2_t		ClrUsed		;	// 0 for 24 bpp bmps
+	u2_t		ClrImp		;	// 0
+	u2_t		Dunno		;	// 0
 };
 #pragma pack( pop )
 
 // Currently supporting only 24-bit bitmaps
-::gpk::error_t			gpk::bmpFileLoad			(const int8_t * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
+::gpk::err_t			gpk::bmpFileLoad			(const s0_t * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
 	SHeaderFileBMP				& fileHeader				= *(SHeaderFileBMP*)*source;
-	ree_if(0 != memcmp(fileHeader.Type, "BM", 2), "Invalid magic number for BMP file.");
+	if_true_vef(-1, 0 != memcmp(fileHeader.Type, "BM", 2), "%.*s", 2, fileHeader.Type);
 	SHeaderInfoBMP				& infoHeader				= *(SHeaderInfoBMP*)*(source + sizeof(SHeaderFileBMP));
-	ree_if(infoHeader.Bpp != 24
+	if_true_vef(-1, infoHeader.Bpp != 24
 		&& infoHeader.Bpp != 32
 		&& infoHeader.Bpp != 8
-		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
-	uint32_t					nPixelCount					= infoHeader.Metrics.x * infoHeader.Metrics.y;
-	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
+		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported. Bits per pixel: %i", infoHeader.Bpp);
+	u2_t					nPixelCount					= infoHeader.Metrics.x * infoHeader.Metrics.y;
+	if_true_vef(-1, 0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
 	out_Colors.resize(nPixelCount);
-	uint8_t						* srcBytes					= (uint8_t*)(source + sizeof(SHeaderFileBMP) + sizeof(SHeaderInfoBMP));
+	u0_t						* srcBytes					= (u0_t*)(source + sizeof(SHeaderFileBMP) + sizeof(SHeaderInfoBMP));
 	bool						b32Bit						= false;
-	uint32_t					colorSize					= 0;
-	int32_t						x, y, linearIndexSrc;
+	u2_t					colorSize					= 0;
+	s2_t						x, y, linearIndexSrc;
 	switch(infoHeader.Bpp) {
-	default: error_printf("Unsupported BMP file! The image is not 24 bit."); return -1;
+	default:
+		error_printf("Unsupported BMP file! Bits per pixel: %i", infoHeader.Bpp);
+		return -1;
 	case 32:
 		b32Bit					= true;
 	case 24:
@@ -182,7 +188,7 @@ struct SHeaderInfoBMP {
 				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
-				, uint8_t(b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU)
+				, u0_t(b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU)
 				};
 		}
 		break;
@@ -199,79 +205,79 @@ struct SHeaderInfoBMP {
 		}
 		break;
 	}
-	out_ImageView			= {out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
+	out_ImageView			= {out_Colors.begin(), (u2_t)infoHeader.Metrics.x, (u2_t)infoHeader.Metrics.y};
 	return 0;
 }
-
-// Currently supporting only 24-bit bitmaps
-::gpk::error_t			gpk::bmpFileLoad	(FILE * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
-	::SHeaderFileBMP			fileHeader			= {};
-	::SHeaderInfoBMP			infoHeader			= {};
-	ree_if(fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source) != sizeof(::SHeaderFileBMP), "Failed to read file! File corrupt?");
-	ree_if(fread(&infoHeader, 1, sizeof(::SHeaderInfoBMP), source) != sizeof(::SHeaderInfoBMP), "Failed to read file! File corrupt?");
-	uint32_t					nPixelCount			= infoHeader.Metrics.x * infoHeader.Metrics.y;
-	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
-	ree_if(infoHeader.Compression != BI_RGB, "Unsupported bmp compression!");
-	ree_if(infoHeader.Bpp != 24
-		&& infoHeader.Bpp != 32
-		&& infoHeader.Bpp != 8
-		&& infoHeader.Bpp != 1
-		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
-	uint32_t					pixelSize			= infoHeader.Bpp == 1 ? 1 : infoHeader.Bpp / 8;
-	::gpk::au0_t				srcBytes			= {};
-	gpk_necall(srcBytes.resize(nPixelCount * pixelSize), "Out of memory?");
-	size_t						readResult			= fread(&srcBytes[0], pixelSize, nPixelCount, source);
-	ree_if(readResult != (size_t)nPixelCount, "Failed to read file! File corrupt?");
-	gpk_necall(out_Colors.resize(nPixelCount), "Out of memory?");
-	bool						b32Bit				= false;
-	uint32_t					colorSize			= 0;
-	int32_t						x, y, linearIndexSrc;
-	switch(infoHeader.Bpp) {
-	default: error_printf("Unsupported BMP file! The image is not 24 bit."); return -1;
-	case 32:
-		b32Bit					= true;
-	case 24:
-		colorSize				= b32Bit ? 4 : 3;
-		for(y = 0; y < infoHeader.Metrics.y; ++y)
-		for(x = 0; x < infoHeader.Metrics.x; ++x) {
-			linearIndexSrc								= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
-			out_Colors[y * infoHeader.Metrics.x + x]	=
-				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
-				, srcBytes[linearIndexSrc + 1]
-				, srcBytes[linearIndexSrc + 2]
-				, uint8_t(b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU)
-				};
-		}
-		break;
-	case 8 :
-		for(y = 0; y < infoHeader.Metrics.y; ++y)
-		for(x = 0; x < infoHeader.Metrics.x; ++x) {
-			linearIndexSrc				= y * infoHeader.Metrics.x + x;
-			out_Colors[linearIndexSrc]	=
-				::gpk::bgra{ srcBytes[linearIndexSrc]
-				, srcBytes[linearIndexSrc]
-				, srcBytes[linearIndexSrc]
-				, 0xFFU
-				};
-		}
-		break;
-	case 1 :
-		for(y = 0; y < infoHeader.Metrics.y; ++y)
-		for(x = 0; x < infoHeader.Metrics.x; ++x) {
-			linearIndexSrc				= y * (infoHeader.Metrics.x / 8) + x / 8;
-			int32_t							linearIndexDst		= y *  infoHeader.Metrics.x + x;
-			out_Colors[linearIndexDst]	=
-				::gpk::bgra{ srcBytes[linearIndexSrc] & (1U << (x % 8))
-				, srcBytes[linearIndexSrc] & (1U << (x % 8))
-				, srcBytes[linearIndexSrc] & (1U << (x % 8))
-				, 0xFFU
-				};
-		}
-		break;
-	}
-	out_ImageView			= {out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
-	return 0;
-}
+//
+//// Currently supporting only 24-bit bitmaps
+//::gpk::err_t			gpk::bmpFileLoad	(FILE * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
+//	::SHeaderFileBMP			fileHeader			= {};
+//	::SHeaderInfoBMP			infoHeader			= {};
+//	if_true_vef(-1, sizeof(::SHeaderFileBMP) != fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source), "Failed to read file! File corrupt?");
+//	if_true_vef(-1, sizeof(::SHeaderInfoBMP) != fread(&infoHeader, 1, sizeof(::SHeaderInfoBMP), source), "Failed to read file! File corrupt?");
+//	u2_t					nPixelCount			= infoHeader.Metrics.x * infoHeader.Metrics.y;
+//	if_true_vef(-1, 0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
+//	if_true_vef(-1, infoHeader.Compression != BI_RGB, "Unsupported bmp compression!");
+//	if_true_vef(-1, infoHeader.Bpp != 24
+//		&& infoHeader.Bpp != 32
+//		&& infoHeader.Bpp != 8
+//		&& infoHeader.Bpp != 1
+//		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
+//	u2_t					pixelSize			= infoHeader.Bpp == 1 ? 1 : infoHeader.Bpp / 8;
+//	::gpk::au0_t				srcBytes			= {};
+//	if_fail_fef(srcBytes.resize(nPixelCount * pixelSize), "Out of memory?");
+//	size_t						readResult			= fread(&srcBytes[0], pixelSize, nPixelCount, source);
+//	if_true_vef(-1, readResult != (size_t)nPixelCount, "Failed to read file! File corrupt?");
+//	if_fail_fef(out_Colors.resize(nPixelCount), "Out of memory?");
+//	bool						b32Bit				= false;
+//	u2_t					colorSize			= 0;
+//	s2_t						x, y, linearIndexSrc;
+//	switch(infoHeader.Bpp) {
+//	default: error_printf("Unsupported BMP file! The image is not 24 bit."); return -1;
+//	case 32:
+//		b32Bit					= true;
+//	case 24:
+//		colorSize				= b32Bit ? 4 : 3;
+//		for(y = 0; y < infoHeader.Metrics.y; ++y)
+//		for(x = 0; x < infoHeader.Metrics.x; ++x) {
+//			linearIndexSrc								= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
+//			out_Colors[y * infoHeader.Metrics.x + x]	=
+//				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
+//				, srcBytes[linearIndexSrc + 1]
+//				, srcBytes[linearIndexSrc + 2]
+//				, u0_t(b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU)
+//				};
+//		}
+//		break;
+//	case 8 :
+//		for(y = 0; y < infoHeader.Metrics.y; ++y)
+//		for(x = 0; x < infoHeader.Metrics.x; ++x) {
+//			linearIndexSrc				= y * infoHeader.Metrics.x + x;
+//			out_Colors[linearIndexSrc]	=
+//				::gpk::bgra{ srcBytes[linearIndexSrc]
+//				, srcBytes[linearIndexSrc]
+//				, srcBytes[linearIndexSrc]
+//				, 0xFFU
+//				};
+//		}
+//		break;
+//	case 1 :
+//		for(y = 0; y < infoHeader.Metrics.y; ++y)
+//		for(x = 0; x < infoHeader.Metrics.x; ++x) {
+//			linearIndexSrc				= y * (infoHeader.Metrics.x / 8) + x / 8;
+//			s2_t							linearIndexDst		= y *  infoHeader.Metrics.x + x;
+//			out_Colors[linearIndexDst]	=
+//				::gpk::bgra{ srcBytes[linearIndexSrc] & (1U << (x % 8))
+//				, srcBytes[linearIndexSrc] & (1U << (x % 8))
+//				, srcBytes[linearIndexSrc] & (1U << (x % 8))
+//				, 0xFFU
+//				};
+//		}
+//		break;
+//	}
+//	out_ImageView			= {out_Colors.begin(), (u2_t)infoHeader.Metrics.x, (u2_t)infoHeader.Metrics.y};
+//	return 0;
+//}
 
 #endif // defined(GPK_WINDOWS)
 

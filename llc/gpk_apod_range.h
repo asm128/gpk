@@ -6,21 +6,20 @@
 
 namespace gpk
 {
-	tplt<tpnm _tDimension>	
-	using	arange	= ::gpk::apod<::gpk::range<_tDimension>>;
+	tplT using	arange	= ::gpk::apod<::gpk::range<T>>;
 
-	typedef	::gpk::arange<sc_t		>	arangec		, arangechar;
-	typedef	::gpk::arange<uc_t	>	arangeuc	, arangeuchar;
-	typedef	::gpk::arange<float		>	arangef32	;
-	typedef	::gpk::arange<double	>	arangef64	;
-	typedef	::gpk::arange<uint8_t	>	arangeu8	;
-	typedef	::gpk::arange<uint16_t	>	arangeu16	;
-	typedef	::gpk::arange<uint32_t	>	arangeu32	;
-	typedef	::gpk::arange<uint64_t	>	arangeu64	;
-	typedef	::gpk::arange<int8_t	>	arangei8	;
-	typedef	::gpk::arange<int16_t	>	arangei16	;
-	typedef	::gpk::arange<int32_t	>	arangei32	;
-	typedef	::gpk::arange<int64_t	>	arangei64	;
+	tydf	::gpk::arange<sc_t>	arangesc_t;	tdcs	arangesc_t	arangesc_c;
+	tydf	::gpk::arange<uc_t>	arangeuc_t;	tdcs	arangeuc_t	arangeuc_c;
+	tydf	::gpk::arange<u0_t>	arangeu0_t;	tdcs	arangeu0_t	arangeu0_c;
+	tydf	::gpk::arange<u1_t>	arangeu1_t;	tdcs	arangeu1_t	arangeu1_c;
+	tydf	::gpk::arange<u2_t>	arangeu2_t;	tdcs	arangeu2_t	arangeu2_c;
+	tydf	::gpk::arange<u3_t>	arangeu3_t;	tdcs	arangeu3_t	arangeu3_c;
+	tydf	::gpk::arange<s0_t>	aranges0_t;	tdcs	aranges0_t	aranges0_c;
+	tydf	::gpk::arange<s1_t>	aranges1_t;	tdcs	aranges1_t	aranges1_c;
+	tydf	::gpk::arange<s2_t>	aranges2_t;	tdcs	aranges2_t	aranges2_c;
+	tydf	::gpk::arange<s3_t>	aranges3_t;	tdcs	aranges3_t	aranges3_c;
+	tydf	::gpk::arange<f2_t>	arangef2_t;	tdcs	arangef2_t	arangef2_c;
+	tydf	::gpk::arange<f3_t>	arangef3_t;	tdcs	arangef3_t	arangef3_c;
 }
 
 #endif // GPK_APOD_RANGE_H

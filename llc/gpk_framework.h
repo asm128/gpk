@@ -32,7 +32,7 @@ namespace gpk
 									SFrameworkDetail		() {
 			if(0 == XCBConnection) {
 				XCBConnection				= xcb_connect(NULL, NULL);
-				gthrow_if(0 == XCBConnection, "%s", "Failed to connect to X Server!");
+				if_true_tef(0 == XCBConnection, "%s", "Failed to connect to X Server!");
 				XCBScreen					= xcb_setup_roots_iterator(xcb_get_setup(XCBConnection)).data;
 			}
 		}
@@ -47,7 +47,7 @@ namespace gpk
 
 	struct SFramework : gpk::SFrameTimer {
 		::gpk::SRuntimeValues		& RuntimeValues			;
-		::gpk::vcs					FileNameJSONConfig		= "gpk_config.json";
+		::gpk::vcst_t				FileNameJSONConfig		= "gpk_config.json";
 		::gpk::pobj<::gpk::SGUI>	GUI						= {};
 		::gpk::SFrameworkDetail		PlatformDetail			= {};
 		::gpk::SWindow				RootWindow				= {};
@@ -58,18 +58,18 @@ namespace gpk
 		::std::mutex				LockGUI;
 #endif
 
-		inline						SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcs fileNameJSONConfig = "gpk_config.json")
+		inline						SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcst_t fileNameJSONConfig = "gpk_config.json")
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig) {
 			RootWindow.Input.create();
 			GUI.create();
 			if(fileNameJSONConfig.size())	// Attempt to load config file.
-				if_if(failed(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig)), "File name: '%s'.", fileNameJSONConfig.begin());
+				if_fail_w(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig));
 		}
 	}; // struct
 
-	::gpk::error_t				updateFramework			(::gpk::SFramework & framework);
-	::gpk::error_t				mainWindowCreate		(::gpk::SWindow & mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput> & displayInput);
-	::gpk::error_t				mainWindowDestroy		(::gpk::SWindow & mainWindow);
+	::gpk::err_t				updateFramework			(::gpk::SFramework & framework);
+	::gpk::err_t				mainWindowCreate		(::gpk::SWindow & mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput> & displayInput);
+	::gpk::err_t				mainWindowDestroy		(::gpk::SWindow & mainWindow);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_23627

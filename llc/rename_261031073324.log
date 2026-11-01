@@ -1,0 +1,16 @@
+Root: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc"
+Source prefix: "llc_"
+Target prefix: "gpk_"
+
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_error.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_error.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_event.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_event.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_event_input.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_event_input.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_event_raster.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_event_raster.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_event_screen.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_event_screen.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_event_storage.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_event_storage.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_linear_map_pobj.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_linear_map_pobj.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_linear_map_pod.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_linear_map_pod.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_runtime.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_runtime.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_error.cpp" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_error.cpp"
+
+Renamed: 5 file(s). Skipped: 5 file(s). Errors: 5.

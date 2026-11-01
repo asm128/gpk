@@ -34,9 +34,9 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 		::gpk::aobj<::brt::SProcess>					ClientProcesses;
 		::gpk::aobj<::brt::SProcessHandles>				ClientIOHandles;
 
-		::gpk::vcsc_t			ProcessFileName						= "";
-		::gpk::vcsc_t			ProcessMockPath						= "";
-		::gpk::vcsc_t			ProcessParams						= "";
+		::gpk::view<sc_t>			ProcessFileName						= "";
+		::gpk::view<sc_t>			ProcessMockPath						= "";
+		::gpk::view<sc_t>			ProcessParams						= "";
 		SECURITY_ATTRIBUTES	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
 		::gpk::string			szCmdlineApp						= "";

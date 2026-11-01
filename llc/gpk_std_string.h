@@ -1,21 +1,21 @@
-#include "gpk_label.h"
-#include "gpk_array_pod.h"
+#include "llc_label.h"
+#include "llc_string.h"
 
 #include <string>
 
-#ifndef GPK_STD_STRING_H
-#define GPK_STD_STRING_H
+#ifndef LLC_STD_STRING_H
+#define LLC_STD_STRING_H
 
-namespace gpk
+namespace llc
 {
-	nodstin	::gpk::vcc		tovcc   (const std::string & srcstr)							{ return srcstr.size() ? ::gpk::vcc{&srcstr[0], srcstr.size()} : ::gpk::vcs{}; }
-	stainli	::gpk::error_t	tovcc   (::gpk::vcc		& output, const std::string & srcstr)	{ return (output = ::gpk::tovcc(srcstr)).size(); }
-	stainli	::gpk::error_t	tolabel (::gpk::vcc		& output, const std::string & srcstr)	{ return (output = ::gpk::label(::gpk::tovcc(srcstr))).size(); }
-	stainli	::gpk::error_t	toachar (::gpk::achar	& output, const std::string & srcstr)	{ gpk_necs(output.reserve(srcstr.length())); return (output = ::gpk::tovcc(srcstr)).size(); }
-	stainli	::gpk::error_t	append 	(::gpk::achar	& output, const std::string & srcstr)	{ return output.append(::gpk::tovcc(srcstr)); }
+	ndsi	vcst_t	tovcc   (const std::string & srcstr)					{ return {srcstr.data(), (::llc::u2_t)srcstr.size()}; }
+	stin	err_t	tovcc   (vcst_t	& output, const std::string & srcstr)	{ return (output = tovcc(srcstr)).size(); }
+	stin	err_t	tolabel (vcst_t	& output, const std::string & srcstr)	{ return (output = label(tovcc(srcstr))).size(); }
+	stin	err_t	toachar (string	& output, const std::string & srcstr)	{ if_fail_fe(output.reserve((::llc::u2_t)srcstr.length())); return (output = tovcc(srcstr)).size(); }
+	stin	err_t	append 	(string	& output, const std::string & srcstr)	{ return output.append(tovcc(srcstr)); }
 
-	nodstin	::gpk::vcc		tolabel (const std::string & srcstr) 		{ return ::gpk::label(::gpk::tovcc(srcstr)); }
-	nodstin	::gpk::achar	toachar (const std::string & srcstr) 		{ return ::gpk::tovcc(srcstr); }
-} // namespace gpk
+	ndsi	vcst_t	tolabel (const std::string & srcstr) 					{ return label(tovcc(srcstr)); }
+	ndsi	string	toachar (const std::string & srcstr) 					{ return tovcc(srcstr); }
+} // namespace llc
 
-#endif // GPK_STD_STRING_H
+#endif // LLC_STD_STRING_H

@@ -9,7 +9,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (SHIP_GEOMETRY, uint8_t);
+	GDEFINE_ENUM_TYPE (SHIP_GEOMETRY, u0_t);
 	GDEFINE_ENUM_VALUE(SHIP_GEOMETRY, Line			, 0);
 	GDEFINE_ENUM_VALUE(SHIP_GEOMETRY, Triangle		, 1);
 	GDEFINE_ENUM_VALUE(SHIP_GEOMETRY, Rectangle		, 2);
@@ -33,7 +33,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SHIP_GEOMETRY, Shred			, 110);
 	GDEFINE_ENUM_VALUE(SHIP_GEOMETRY, Nitro			, 111);
 
-	GDEFINE_ENUM_TYPE(SHIP_PART_TYPE, uint8_t);
+	GDEFINE_ENUM_TYPE(SHIP_PART_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(SHIP_PART_TYPE, Cargo		, 0);
 	GDEFINE_ENUM_VALUE(SHIP_PART_TYPE, Cannon		, 1);
 	GDEFINE_ENUM_VALUE(SHIP_PART_TYPE, Wafer		, 2);
@@ -45,7 +45,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SHIP_PART_TYPE, Silo			, 8);
 	GDEFINE_ENUM_VALUE(SHIP_PART_TYPE, Tractor		, 9);
 
-	GDEFINE_ENUM_TYPE (SHIP_ACTION, uint8_t);
+	GDEFINE_ENUM_TYPE (SHIP_ACTION, u0_t);
 	GDEFINE_ENUM_VALUE(SHIP_ACTION, Spawn		, 0);
 	GDEFINE_ENUM_VALUE(SHIP_ACTION, MoveLeft	, 1);
 	GDEFINE_ENUM_VALUE(SHIP_ACTION, MoveRight	, 2);
@@ -70,41 +70,41 @@ namespace gpk
 	struct SSpaceshipOrbiter {
 		SHIP_PART_TYPE		Type			= SHIP_PART_TYPE_Cargo;
 		::gpk::gaugemaxi32	Health			= {};
-		uint32_t			Weapon			= (uint32_t)-1;
-		uint32_t			ActiveAction	= ~0U;
+		u2_t			Weapon			= (u2_t)-1;
+		u2_t			ActiveAction	= ~0U;
 	};
 
 	struct SSpaceshipScore {
-		uint64_t			Score			= 0;
-		uint64_t			Hits			= 0;
-		uint64_t			Shots			= 0;
-		uint64_t			Bullets			= 0;
-		uint64_t			DamageDone		= 0;
-		uint64_t			DamageReceived	= 0;
-		uint64_t			HitsSurvived	= 0;
-		uint32_t			OrbitersLost	= 0;
-		uint32_t			KilledShips		= 0;
-		uint32_t			KilledOrbiters	= 0;
+		u3_t			Score			= 0;
+		u3_t			Hits			= 0;
+		u3_t			Shots			= 0;
+		u3_t			Bullets			= 0;
+		u3_t			DamageDone		= 0;
+		u3_t			DamageReceived	= 0;
+		u3_t			HitsSurvived	= 0;
+		u2_t			OrbitersLost	= 0;
+		u2_t			KilledShips		= 0;
+		u2_t			KilledOrbiters	= 0;
 	};
 
 	struct SSpaceshipCore {
 		// Generally constants, little or no variation during level gameplay
-		int32_t				Team			= {};
-		::gpk::gaugemaxf32	Nitro			= {};
+		s2_t				Team			= {};
+		::gpk::gaugemaxf2_t	Nitro			= {};
 
 		// Variable, may change at any time during 
-		int32_t				Health			= {};
-		uint32_t			AvailableNitros	= {};
+		s2_t				Health			= {};
+		u2_t			AvailableNitros	= {};
 		double				TimePlayed		= {};
 	};
 #pragma pack(pop)
 	tplt<tpnm _tPOD> 
-	::gpk::error_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
+	::gpk::err_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const u2_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
-		gpk_necall(gpk::loadView(input, viewToLoad), "index: %i", index);
+		if_fail_fef(gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
 			if(index >= output.size()) 
-				gpk_necall(output.resize(index + 1), "index: %i", index);
+				if_fail_fef(output.resize(index + 1), "index: %i", index);
 			else {
 				::gpk::papod<_tPOD>			& block				= output[index];
 				if(block)
@@ -115,7 +115,7 @@ namespace gpk
 			if(index >= output.size()) {
 				::gpk::papod<_tPOD>			block;
 				*block.create()			= viewToLoad;
-				gpk_necall(output.push_back(block), "index: %i", index);
+				if_fail_fef(output.push_back(block), "index: %i", index);
 			}
 			else {
 				::gpk::papod<_tPOD>			& block				= output[index];
@@ -135,41 +135,41 @@ namespace gpk
 		::gpk::apod<::gpk::SSpaceshipOrbiter>	Orbiters					= {};	// One per orbiter	
 		::gpk::apapod<::gpk::SHIP_ACTION	>	ShipOrbiterActionQueue		= {};
 
-		int32_t						Clear				()	{
+		s2_t						Clear				()	{
 			::gpk::clear(ShipScores, ShipCores, ShipParts, Orbiters, ShipOrbiterActionQueue);
 			return 0;
 		}
 
-		int32_t						GetShipHealth		(uint32_t iShipCore)				{ 
-			int32_t							totalHealth			= 0;
+		s2_t						GetShipHealth		(u2_t iShipCore)				{ 
+			s2_t							totalHealth			= 0;
 			::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
-			for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart)
+			for(u2_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart)
 				totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 
 			return totalHealth;
 		}
 
-		int32_t						GetTeamHealth		(int32_t teamId) {
-			int32_t							totalHealth			= 0;
-			for(uint32_t iShipCore = 0, countShips = ShipCores.size(); iShipCore < countShips; ++iShipCore) {
+		s2_t						GetTeamHealth		(s2_t teamId) {
+			s2_t							totalHealth			= 0;
+			for(u2_t iShipCore = 0, countShips = ShipCores.size(); iShipCore < countShips; ++iShipCore) {
 				if(ShipCores[iShipCore].Team != teamId) 
 					continue;
 
 				::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
-				for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart) 
+				for(u2_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart) 
 					totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 			}
 			return totalHealth;
 		}
 
 
-		::gpk::error_t				Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(gpk::saveView(output, ShipScores	));
-			gpk_necs(gpk::saveView(output, ShipCores	));
-			uint32_t						totalEntityChildren	= 0;
-			for(uint32_t iShipCore = 0; iShipCore < ShipCores.size(); ++iShipCore) {
+		::gpk::err_t				Save				(::gpk::au0_t & output)	const	{ 
+			if_fail_fe(gpk::saveView(output, ShipScores	));
+			if_fail_fe(gpk::saveView(output, ShipCores	));
+			u2_t						totalEntityChildren	= 0;
+			for(u2_t iShipCore = 0; iShipCore < ShipCores.size(); ++iShipCore) {
 				::gpk::vcu1_t					v		{ShipParts[iShipCore]};
-				gpk_necall(gpk::saveView(output, v), "iPart: %i", iShipCore);
+				if_fail_fef(gpk::saveView(output, v), "iPart: %i", iShipCore);
 				totalEntityChildren += v.size();
 			}
 
@@ -177,30 +177,30 @@ namespace gpk
 			info_printf("Saved %s, %i", "ShipCores	", ShipCores	.size());
 	
 			// Orbiters
-			gpk_necs(gpk::saveView(output, Orbiters));
+			if_fail_fe(gpk::saveView(output, Orbiters));
 			info_printf("Saved %s, %i", "Orbiters", Orbiters.size());
-			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
+			for(u2_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
 				if(ShipOrbiterActionQueue[iShipOrbiter] && ShipOrbiterActionQueue[iShipOrbiter]->size())
-					gpk_necall(gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
+					if_fail_fef(gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
 				else
-					gpk_necall(gpk::saveView(output, ::gpk::vc3f32{}), "iShipOrbiter: %i", iShipOrbiter);
+					if_fail_fef(gpk::saveView(output, ::gpk::vc3f2_t{}), "iShipOrbiter: %i", iShipOrbiter);
 			}
 			return 0; 
 		}
-		::gpk::error_t				Load				(::gpk::vcu0_t & input) { 
+		::gpk::err_t				Load				(::gpk::vcu0_t & input) { 
 			ShipScores	.clear();
 			ShipCores	.clear();
-			gpk_necs(gpk::loadView(input, ShipScores	));
-			gpk_necs(gpk::loadView(input, ShipCores	));
-			gpk_necs(ShipParts.resize(ShipCores.size()));
-			for(uint32_t iPart = 0; iPart < ShipParts.size(); ++iPart) 
-				gpk_necall(gpk::loadView(input, ShipParts[iPart]), "iPart: %i", iPart);
+			if_fail_fe(gpk::loadView(input, ShipScores	));
+			if_fail_fe(gpk::loadView(input, ShipCores	));
+			if_fail_fe(ShipParts.resize(ShipCores.size()));
+			for(u2_t iPart = 0; iPart < ShipParts.size(); ++iPart) 
+				if_fail_fef(gpk::loadView(input, ShipParts[iPart]), "iPart: %i", iPart);
 
 			Orbiters.clear();
-			gpk_necs(gpk::loadView(input, Orbiters));
-			gpk_necs(ShipOrbiterActionQueue.reserve(Orbiters.size()));
-			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
-				gpk_necs(gpk::loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
+			if_fail_fe(gpk::loadView(input, Orbiters));
+			if_fail_fe(ShipOrbiterActionQueue.reserve(Orbiters.size()));
+			for(u2_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
+				if_fail_fe(gpk::loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
 			}
 			return 0; 
 		}

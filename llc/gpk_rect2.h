@@ -8,42 +8,47 @@ namespace gpk
 #pragma pack(push, 1)
 	tplt<tpnm T>
 	struct rect2 {
-		::gpk::n2<T>			Offset, Size;
+		n2<T>			Offset, Size;
 
 		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
-		tplt <tpnm _t>
-		inlcxpr	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
+		tpl_t	
+		inxp	rect2<_t>	Cast		()	const	noexcept	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
 
-		inlcxpr	rect2<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	rect2<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	rect2<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	rect2<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	rect2<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	rect2<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	rect2<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	rect2<int64_t>	s3_t			()	const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	rect2<float>	f2_t			()	const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	rect2<double>	f3_t			()	const	noexcept	{ return Cast<double	>(); }
+		inxp	rect2<uc_t>	uc			()	const	noexcept	{ return Cast<uc_t>(); }
+		inxp	rect2<sc_t>	sc			()	const	noexcept	{ return Cast<sc_t>(); }
+		inxp	rect2<u0_t>	u0			()	const	noexcept	{ return Cast<u0_t>(); }
+		inxp	rect2<u1_t>	u1			()	const	noexcept	{ return Cast<u1_t>(); }
+		inxp	rect2<u2_t>	u2			()	const	noexcept	{ return Cast<u2_t>(); }
+		inxp	rect2<u3_t>	u3			()	const	noexcept	{ return Cast<u3_t>(); }
+		inxp	rect2<s0_t>	s0			()	const	noexcept	{ return Cast<s0_t>(); }
+		inxp	rect2<s1_t>	s1			()	const	noexcept	{ return Cast<s1_t>(); }
+		inxp	rect2<s2_t>	s2			()	const	noexcept	{ return Cast<s2_t>(); }
+		inxp	rect2<s3_t>	s3			()	const	noexcept	{ return Cast<s3_t>(); }
+		inxp	rect2<f2_t>	f2			()	const	noexcept	{ return Cast<f2_t>(); }
+		inxp	rect2<f3_t>	f3			()	const	noexcept	{ return Cast<f3_t>(); }
 
-		inline	::gpk::n2<T>	Limit		()	const	noexcept	{ return Offset + Size; }
+		inline	n2<T>		Limit		()	const	noexcept	{ return Offset + Size; }
 	};
-	typedef rect2<float>	rect2f32, rect2f;
-	typedef rect2<double>	rect2f64, rect2d;
-	typedef rect2<uint8_t>	rect2u8;
-	typedef rect2<uint16_t>	rect2u16;
-	typedef rect2<uint32_t>	rect2u32;
-	typedef rect2<uint64_t>	rect2u64;
-	typedef rect2<int8_t>	rect2i8;
-	typedef rect2<int16_t>	rect2i16;
-	typedef rect2<int32_t>	rect2i32;
-	typedef rect2<int64_t>	rect2i64;
+	tydf rect2<uc_t>	rect2uc_t;	tydf	const rect2uc_t	rect2uc_c;	
+	tydf rect2<sc_t>	rect2sc_t;	tydf	const rect2sc_t	rect2sc_c;	
+	tydf rect2<u0_t>	rect2u0_t;	tydf	const rect2u0_t	rect2u0_c;	
+	tydf rect2<u1_t>	rect2u1_t;	tydf	const rect2u1_t	rect2u1_c;	
+	tydf rect2<u2_t>	rect2u2_t;	tydf	const rect2u2_t	rect2u2_c;	
+	tydf rect2<u3_t>	rect2u3_t;	tydf	const rect2u3_t	rect2u3_c;	
+	tydf rect2<s0_t>	rect2s0_t;	tydf	const rect2s0_t	rect2s0_c;	
+	tydf rect2<s1_t>	rect2s1_t;	tydf	const rect2s1_t	rect2s1_c;	
+	tydf rect2<s2_t>	rect2s2_t;	tydf	const rect2s2_t	rect2s2_c;	
+	tydf rect2<s3_t>	rect2s3_t;	tydf	const rect2s3_t	rect2s3_c;	
+	tydf rect2<f2_t>	rect2f2_t;	tydf	const rect2f2_t	rect2f2_c;	
+	tydf rect2<f3_t>	rect2f3_t;	tydf	const rect2f3_t	rect2f3_c;	
+
 #pragma pack(pop)
 
 	tplt<tpnm T>
-	stacxpr	bool	in_range	(const ::gpk::n2<T>& pointToTest, const ::gpk::rect2<T>& area)	noexcept	{
-		return	::gpk::in_range(pointToTest.x, area.Offset.x, (T)(area.Offset.x + area.Size.x))
-			&&	::gpk::in_range(pointToTest.y, area.Offset.y, (T)(area.Offset.y + area.Size.y))
+	stxp	bool	in_range	(const n2<T>& pointToTest, const rect2<T>& area)	noexcept	{
+		return	in_range(pointToTest.x, area.Offset.x, (T)(area.Offset.x + area.Size.x))
+			&&	in_range(pointToTest.y, area.Offset.y, (T)(area.Offset.y + area.Size.y))
 			;
 	}
 } // namespace

@@ -2,12 +2,12 @@
 
 namespace gpk
 {
-    stxp vcs PREPENDED_QUOT = GPK_CXS(",\"");
-    stxp vcs NOPREPDED_QUOT = GPK_CXS("\"");
+    stxp vcst_t PREPENDED_QUOT = ",\"";
+    stxp vcst_t NOPREPDED_QUOT = "\"";
 
-    err_t   appendOpenKey   (asc_t & output, vcs k       , bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":")              ; }
-    err_t   appendKeyValue  (asc_t & output, vcs k, vcs v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", v)           ; }
-    err_t   appendKeyString (asc_t & output, vcs k, vcs v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", '"',  v, '"'); }
-    err_t   appendKeyList   (asc_t & output, vcs k, vcs v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", '[',  v, ']'); }
-    err_t   appendKeyObject (asc_t & output, vcs k, vcs v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", '{',  v, '}'); }
+    err_t   appendOpenKey   (string & output, vcst_t k       , bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":")              ; }
+    err_t   appendKeyValue  (string & output, vcst_t k, vcst_t v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", v)           ; }
+    err_t   appendKeyString (string & output, vcst_t k, vcst_t v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", '"',  v, '"'); }
+    err_t   appendKeyList   (string & output, vcst_t k, vcst_t v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", '[',  v, ']'); }
+    err_t   appendKeyObject (string & output, vcst_t k, vcst_t v, bool prepSep)  { return append_strings(output, prepSep ? PREPENDED_QUOT : NOPREPDED_QUOT, k, "\":", '{',  v, '}'); }
 }

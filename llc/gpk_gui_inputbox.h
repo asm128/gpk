@@ -10,46 +10,46 @@
 
 namespace gpk
 {
-	::gpk::error_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu1_t & keys);
-	::gpk::error_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
+	::gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, u0_t rowWidth, const ::gpk::vcu1_t & keys);
+	::gpk::err_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SInputBox {
 		cid_t					IdRoot				= {};
 		cid_t					IdText				= {};
 		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
 		::gpk::asc_t			Text				= {};
-		uint32_t				MaxLength			= 16;
+		u2_t				MaxLength			= 16;
 		bool					Editing				= false;
 
 
-		inline	::gpk::error_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
-		::gpk::error_t			Edit				(::gpk::SGUI & gui, bool editing) {
+		inline	::gpk::err_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text = text}); }
+		::gpk::err_t			Edit				(::gpk::SGUI & gui, bool editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
 			return one_if(Editing);
 		}
 #ifndef GPK_ATMEL		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
+		::gpk::err_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
 			cid_t						handledControl;
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
-			gpk_necs(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](::gpk::cid_t iControl) {
+			if_fail_fe(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](::gpk::cid_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
-					return ::gpk::error_t(handledControl = iControl);
+					return ::gpk::err_t(handledControl = iControl);
 
 				return 0;
 			}));
 
 			::gpk::apobj<::gpk::SEventSystem>	sysEvents			= frameEvents;
-			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
+			for(u2_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:
 					if(Text.size() < MaxLength) {
 						Text.push_back((sc_t)vkEvents[iEvent].ScanCode);
-						::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+						::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text});
 					}
 					break;
 				case ::gpk::VK_EVENT_EDIT:
@@ -68,7 +68,7 @@ namespace gpk
 						if(Text.size() < MaxLength)
 							if(cev.Data[0] >= 0x20 && cev.Data[0] <= 0x7F) {
 								Text.push_back(cev.Data[0]);
-								::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+								::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text});
 							}
 						return 0;
 					});
@@ -81,13 +81,13 @@ namespace gpk
 							case ::gpk::SYSTEM_KEY_Enter		: enterKeyPressed = true;	break; 
 							case ::gpk::SYSTEM_KEY_Backspace	: 
 								if(Text.size()) {
-									gpk_necs(Text.pop_back());
-									gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+									if_fail_fe(Text.pop_back());
+									if_fail_fe(gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text})); 
 								}
 								break;
 							case ::gpk::SYSTEM_KEY_Clear		: 
 								Text.clear();				
-								gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+								if_fail_fe(gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text})); 
 								break;
 							}
 						}
@@ -102,7 +102,7 @@ namespace gpk
 #endif // GPK_ATMEL
 	};
 
-	::gpk::error_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
+	::gpk::err_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
 } // namespace
 
 #endif // GPK_GUI_INPUTBOX_H_23627

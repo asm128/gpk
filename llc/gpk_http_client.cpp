@@ -1,6 +1,8 @@
 #include "gpk_http_client.h"
 #include "gpk_parse.h"
 #include "gpk_stdstring.h"
+#include "gpk_enum.h"
+#include "gpk_keyval_view.h"
 
 #ifndef GPK_ATMEL		
 
@@ -15,71 +17,75 @@
 #	include <ctype.h>
 #endif
 
-using gpk::sc_t;
+GPK_USING_ASTATIC();
+GPK_USING_APOD();
+GPK_USING_VIEW();
+GPK_USING_TYPEINT();
+using gpk::string;
 
-::gpk::error_t			gpk::urlDecode					(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded)		{
-	uint32_t					decodedCharacters				= 0;
-	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
+::gpk::err_t			gpk::urlDecode					(vcst_t urlToDecode, string & decoded)		{
+	u2_t					decodedCharacters				= 0;
+	for(u2_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
 		const sc_t					currentChar						= urlToDecode[iChar];
 		if('%' != currentChar) {
-			gpk_necs(decoded.push_back((sc_t)(uint8_t)currentChar));
+			if_fail_fe(decoded.push_back((sc_t)(u0_t)currentChar));
 			continue;
 		}
-		uint64_t					decodedByte						= 0;
-		gpk_necs(gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, decodedByte));
-		gpk_necs(decoded.push_back((sc_t)(uint8_t)decodedByte));
+		u3_t					decodedByte						= 0;
+		if_fail_fe(gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, decodedByte));
+		if_fail_fe(decoded.push_back((sc_t)(u0_t)decodedByte));
 		++iChar;
 		++decodedCharacters;
 	}
 	return decodedCharacters;
 }
 
-static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcsc_t & body, ::gpk::apod<sc_t> & joined)		{
-	uint32_t									iBegin							= 0;
-	uint32_t									iStop							= 0;
+static	::gpk::err_t	httpRequestChunkedJoin			(vcst_t body, string & joined)		{
+	u2_t									iBegin							= 0;
+	u2_t									iStop							= 0;
 	while(iBegin < body.size()) {
 		iBegin									= iStop;
-		iStop									= (uint32_t)::gpk::find('\n', body, iBegin);
+		iStop									= (u2_t)::gpk::find('\n', body, iBegin);
 		++iStop;	// skip \n
-		::gpk::vcs					strSize;
+		::gpk::vcst_t					strSize;
 		if(iStop <= body.size())
-			strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
+			strSize								= {&body[iBegin], (u2_t)iStop - iBegin};
 		else
 			break;
-		uint64_t									sizeChunk						= 0;
+		u3_t									sizeChunk						= 0;
 		::gpk::parseIntegerHexadecimal(strSize, sizeChunk);
 		if(0 == sizeChunk)
 			break;
-		joined.append({&body[iStop], (uint32_t)sizeChunk});
-		iStop									+= (uint32_t)sizeChunk;
+		joined.append({&body[iStop], (u2_t)sizeChunk});
+		iStop									+= (u2_t)sizeChunk;
 		iStop									+= 2;	// skip \n
 	}
 	return 0;
 }
 
-static	::gpk::error_t	httpClientRequestConstruct
-	(	::gpk::HTTP_METHOD		method
-	,	const ::gpk::vcs		& hostName
-	,	const ::gpk::vcs		& path
-	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcsc_t		& body
-	,	::gpk::apod<sc_t>		& out_request
+static	::gpk::err_t	httpClientRequestConstruct
+	(	::gpk::HTTP_METHOD	method
+	,	vcst_t				hostName
+	,	vcst_t				path
+	,	vcst_t				contentType
+	,	vcst_t				body
+	,	string				& out_request
 	) {
-	::gpk::vcsc_t						strMethod						= ::gpk::get_value_label(method);
+	vcst_t						strMethod				= ::gpk::get_value_label(method);
 	out_request					= strMethod;
 	out_request.push_back(' ');
 	out_request.append(path);
-	out_request.append(::gpk::vcs{
+	out_request.append(::gpk::vcst_t{
 		" HTTP/1.1"
 		//"\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)"
 		"\r\nHost: "
 		});
 	out_request.append(hostName);
 	if((method != ::gpk::HTTP_METHOD_GET) && contentType.size()) {
-		out_request.append(::gpk::vcs{"\r\nContent-Type: "});
+		out_request.append("\r\nContent-Type: ");
 		out_request.append(contentType);// 		application/x-www-form-urlencoded
 	}
-	out_request.append(::gpk::vcs{
+	out_request.append(::gpk::vcst_t{
 		"\r\nAccept-Language: en-us"
 		//"\r\nAccept-Encoding: gzip, deflate"
 		//"\r\nConnection: Keep-Alive"
@@ -92,18 +98,18 @@ static	::gpk::error_t	httpClientRequestConstruct
 
 // get sockaddr, IPv4 or IPv6:
 void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
-::gpk::error_t			gpk::httpClientRequest
-	(	const ::gpk::SIPv4End		& clientToConnect
-	,	::gpk::HTTP_METHOD		method
-	,	const ::gpk::vcs		& hostName
-	,	const ::gpk::vcs		& path
-	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcsc_t		& body
-	,	::gpk::SHTTPResponse	& out_received
+gpk::err_t			gpk::httpClientRequest
+	(	const SIPv4End		& clientToConnect
+	,	HTTP_METHOD			method
+	,	vcst_t				hostName
+	,	vcst_t				path
+	,	vcst_t				contentType
+	,	vcst_t				body
+	,	SHTTPResponse		& out_received
 	) {
-	::gpk::asc_t				bytesRequest;
-	gpk_necall(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest), "%s", "unknown error");
-	const ::gpk::SIPv4End		& address						= clientToConnect;
+	string				bytesRequest;
+	if_fail_fe(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest));
+	const SIPv4End		& address						= clientToConnect;
 
 	addrinfo					hints							= {};
     hints.ai_family			= AF_UNSPEC;
@@ -113,26 +119,26 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	snprintf(addr, ::gpk::size(addr) - 2, "%u.%u.%u.%u", GPK_IPV4_EXPAND_IP(address));
 	snprintf(port, ::gpk::size(port) - 2, "%u", (0 == address.Port) ? 80 : address.Port);
 	addrinfo					* servinfo						= 0;
-    int32_t						rv								= getaddrinfo(addr, port, &hints, &servinfo);
+    s2_t						rv								= getaddrinfo(addr, port, &hints, &servinfo);
 #if defined(GPK_ESP32) || defined(GPK_ARDUINO)
-	ree_if(0 != rv, "getaddrinfo: %i.", rv);
+	if_true_vef(-1, 0 != rv, "getaddrinfo: %i.", rv);
 #else
-	ree_if(0 != rv, "getaddrinfo: %i-%s.", rv, gai_strerror(rv));
+	if_true_vef(-1, 0 != rv, "getaddrinfo: %i-%s.", rv, gai_strerror(rv));
 #endif
 	::gpk::auto_socket_close	sockfd;
 
     // loop through all the results and connect to the first we can
 	addrinfo									* currentServinfo				= 0;
     for(currentServinfo = servinfo; currentServinfo != NULL; currentServinfo = currentServinfo->ai_next) {
-        ce_if(INVALID_SOCKET == (sockfd.Handle = socket(currentServinfo->ai_family, currentServinfo->ai_socktype, currentServinfo->ai_protocol)));
+        if_true_ce(INVALID_SOCKET == (sockfd.Handle = socket(currentServinfo->ai_family, currentServinfo->ai_socktype, currentServinfo->ai_protocol)));
         if(-1 == connect(sockfd, currentServinfo->ai_addr, (int)currentServinfo->ai_addrlen)) {
-            gpk_safe_closesocket(sockfd.Handle);
+            sockfd.close();
             error_printf("%s", "client: connect");
             continue;
         }
         break;
     }
-    ree_if(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address))
+    if_true_vef(-1, 0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address))
 	else
 		info_printf("Connected to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
 
@@ -141,42 +147,42 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
     freeaddrinfo(servinfo); // all done with this structure
 
     int											numbytes						= 0;
-	info_printf("Sending request: \n%s", ::gpk::toString(bytesRequest).begin());
-    gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
+	info_printf("Sending request: \n%.*s", GPK_VIEW_ARGS(bytesRequest));
+    if_fail_fef(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "sockfd:%i", sockfd.Handle);
 
-	::gpk::apod<sc_t>						buf								= {};
-	gpk_necall(buf.resize(1024*1024*16, 0), "%s", "Failed to resize buffer. Out of memory?");
-	uint32_t									totalBytes						= 0;
-	uint32_t									stopOfHeader					= 0;
-	uint32_t									contentLength					= 0;
+	::gpk::string						buf								= {};
+	if_fail_fef(buf.resize(1024*1024*16, 0), "%s", "Failed to resize buffer. Out of memory?");
+	u2_t									totalBytes						= 0;
+	u2_t									stopOfHeader					= 0;
+	u2_t									contentLength					= 0;
 	bool										bChunked						= false;
-	//const ::gpk::vcs				viewEndOfChunk					= "\r\n0\r\n\r\n";
+	//const ::gpk::vcst_t				viewEndOfChunk					= "\r\n0\r\n\r\n";
     while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], ::gpk::min(buf.size() - totalBytes - 1, 1U), 0)) && 0 != numbytes) {
-		ree_if((totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
+		if_true_vef(-1, (totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
 		if(0 == stopOfHeader && totalBytes >= 4) {
-			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {buf.begin(), totalBytes}, totalBytes - 4);
+			::gpk::err_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {buf.begin(), totalBytes}, totalBytes - 4);
 			if(0 <= offsetStopOfHeader) {
 				// here we should do something in order to detect the content size
 				stopOfHeader						= offsetStopOfHeader;
-				info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
+				info_printf("Header stop at position %u.", (u2_t)stopOfHeader);
 
-				for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
-					buf[iByte]							= (int8_t)::tolower(buf[iByte]);
+				for(u2_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
+					buf[iByte]							= (s0_t)::tolower(buf[iByte]);
 
-				bChunked							= 0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, {buf.begin(), totalBytes});
+				bChunked							= 0 <= ::gpk::find_string("chunked", {buf.begin(), totalBytes});
 
-				int32_t									offsetContentLength				= ::gpk::find_string("content-length", {buf.begin(), totalBytes});
+				s2_t									offsetContentLength				= ::gpk::find_string("content-length", {buf.begin(), totalBytes});
 				if(-1 == offsetContentLength) // no content
 					continue;
-				int32_t									offsetCristobal					= (uint32_t)::gpk::find(':', {buf.begin(), totalBytes}, offsetContentLength);
-				int32_t									offsetEndLine					= (uint32_t)::gpk::find('\r', {buf.begin(), totalBytes}, offsetCristobal);
+				s2_t									offsetCristobal					= (u2_t)::gpk::find(':', {buf.begin(), totalBytes}, offsetContentLength);
+				s2_t									offsetEndLine					= (u2_t)::gpk::find('\r', {buf.begin(), totalBytes}, offsetCristobal);
 				if(0 > offsetEndLine)
-					offsetEndLine						= (uint32_t)::gpk::find('\n', {buf.begin(), totalBytes}, offsetCristobal);
+					offsetEndLine						= (u2_t)::gpk::find('\n', {buf.begin(), totalBytes}, offsetCristobal);
 
-				int32_t digitsLengthStart	= 0;
-				int32_t digitsLengthStop	= offsetEndLine;
-				for(int32_t iOffset = offsetCristobal + 1; iOffset < offsetEndLine; ++iOffset) {
+				s2_t digitsLengthStart	= 0;
+				s2_t digitsLengthStop	= offsetEndLine;
+				for(s2_t iOffset = offsetCristobal + 1; iOffset < offsetEndLine; ++iOffset) {
 					if(buf[iOffset] == ' ') {
 						if(0 == digitsLengthStart)
 							continue;
@@ -186,12 +192,12 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 					if(0 == digitsLengthStart)
 						digitsLengthStart	= iOffset;
 				}
-				::gpk::vcs				strContentLength				= {&buf[digitsLengthStart], (uint32_t)(digitsLengthStop - digitsLengthStart)};
+				::gpk::vcst_t				strContentLength				= {&buf[digitsLengthStart], (u2_t)(digitsLengthStop - digitsLengthStart)};
 				::gpk::parseIntegerDecimal(strContentLength, contentLength);
 			}
 		}
 		//else if(stopOfHeader && totalBytes > stopOfHeader && bChunked) {
-		//	//::gpk::error_t							offsetStopOfChunks				= ::gpk::find_sequence_pod(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
+		//	//::gpk::err_t							offsetStopOfChunks				= ::gpk::find_sequence_pod(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
 		//	//if(0 == offsetStopOfChunks)
 		//	//	break;
 		//}
@@ -207,34 +213,34 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 #endif
 	}
 
-	::gpk::vcsc_t						contentReceived					= {};
+	::gpk::view<sc_t>						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4) {
-		info_printf("Fixed header %u stop to position %u.", (uint32_t)stopOfHeader, buf.size());
+		info_printf("Fixed header %u stop to position %u.", (u2_t)stopOfHeader, buf.size());
 		stopOfHeader							= buf.size();
 	}
 
-	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
-		buf[iByte]								= (int8_t)::tolower(buf[iByte]);
+	for(u2_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
+		buf[iByte]								= (s0_t)::tolower(buf[iByte]);
 
-	::gpk::aobj<::gpk::vcsc_t>			headerLines;
-	out_received.HeaderData					= {buf.begin(), (uint32_t)stopOfHeader};
+	aobj<vcst_t>					headerLines;
+	out_received.HeaderData		= ::gpk::vcst_t{buf.begin(), (u2_t)stopOfHeader};
 
-	::gpk::split(::gpk::vcsc_t{out_received.HeaderData}, '\n', headerLines);
-	bChunked						= false;
+	::gpk::split(::gpk::vcst_t{out_received.HeaderData}, '\n', headerLines);
+	bChunked					= false;
 	out_received.Headers.resize(headerLines.size());
-	for(uint32_t iLine = 0; iLine < headerLines.size(); ++iLine) {
-		::gpk::TKeyValConstString					& header						= out_received.Headers[iLine];
+	for(u2_t iLine = 0; iLine < headerLines.size(); ++iLine) {
+		::gpk::kv<vcst_t>					& header						= out_received.Headers[iLine];
 		if(-1 == ::gpk::token_split(':', headerLines[iLine], header)) {
-			header.Key								= {headerLines[iLine].begin(), headerLines[iLine].size()};
+			header.Key								= headerLines[iLine];
 			//::gpk::view_char							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};
 			//::gpk::tolower(strLine);
 		}
 		else {
-			::gpk::view<sc_t>							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};
+			::gpk::string		strLine							= header.Key;
 			::gpk::tolower(strLine);
-			info_printf("\n%s", ::gpk::toString(strLine).begin());
-			if(::gpk::vcs{"transfer-encoding"} == header.Key) {
-				if(0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, header.Val))
+			info_printf("\n%.*s", GPK_VIEW_ARGS(strLine));
+			if(header.Key == "transfer-encoding") {
+				if(0 <= ::gpk::find_string("chunked", header.Val))
 					bChunked								= true;
 			}
 		}
@@ -243,29 +249,29 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	if(stopOfHeader < buf.size())
 		contentReceived							= {&buf[stopOfHeader], totalBytes - stopOfHeader};
 
-	::gpk::apod<sc_t>					joined;
+	::gpk::string					joined;
 	if(bChunked) {
 		info_printf("\nChunked: %s", bChunked ? "true" : "false");
 		::httpRequestChunkedJoin({&contentReceived[4], contentReceived.size()-4}, joined);
 		contentReceived							= joined;
 	}
 
-	::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
-	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::vcsc_t{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
+	::gpk::err_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {contentReceived.begin(), contentReceived.size()});
+	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::vcst_t{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
 	return 0;
 }
 
-::gpk::error_t			gpk::httpClientRequest
-	(	const ::gpk::SIPv4End	& clientToConnect
-	,	::gpk::HTTP_METHOD	method
-	,	const ::gpk::vcs	& hostName
-	,	const ::gpk::vcs	& path
-	,	const ::gpk::vcs	& contentType
-	,	const ::gpk::vcsc_t	& body
-	,	::gpk::apod<sc_t>	& out_received
+::gpk::err_t			gpk::httpClientRequest
+	(	const SIPv4End	& clientToConnect
+	,	HTTP_METHOD		method
+	,	vcst_t			hostName
+	,	vcst_t			path
+	,	vcst_t			contentType
+	,	vcst_t			body
+	,	string			& out_received
 	) {
 	::gpk::SHTTPResponse						response;
-	gpk_necall(gpk::httpClientRequest
+	if_fail_fe(gpk::httpClientRequest
 		( clientToConnect
 		, method
 		, hostName
@@ -273,7 +279,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 		, contentType
 		, body
 		, response
-		), "%s", "Request failed.");
+		));
 	out_received							= response.Body;
 	return 0;
 }

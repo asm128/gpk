@@ -18,8 +18,8 @@ namespace gpk
 
 #pragma pack(push, 1)
 	stct SAESLevelProperties {
-		int32_t						KeyLength ;
-		int32_t						KeyExpSize;
+		s2_t						KeyLength ;
+		s2_t						KeyExpSize;
 	};
 #pragma pack(pop)
 
@@ -29,12 +29,12 @@ namespace gpk
 		, {32, 240}
 		};
 
-	stxp	u2_t				AES_SIZEBLOCK					= 16; // Block length in bytes AES is 128b block only
-	stxp	u2_t				AES_SIZEIV						= 16;
+	stxp	u2_t			AES_SIZEBLOCK					= 16; // Block length in bytes AES is 128b block only
+	stxp	u2_t			AES_SIZEIV						= 16;
 
 	stct SAESContext {
 		AES_LEVEL					Level							= {};
-		au0_t						RoundKey						= {};
+		au0_t					RoundKey						= {};
 		u0_t						Iv			[AES_SIZEBLOCK]		= {};
 	};
 
@@ -58,45 +58,25 @@ namespace gpk
 	// NOTES: you need to set IV in ctx with aesInitCtxIV() or aesCtxSetIV() no IV should ever be reused with the same key
 	void						aesCTRXCryptBuffer				(SAESContext * ctx, u0_t * buf, u2_t length);
 
-	err_t						aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted);
-	err_t						aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted);
-	err_t						aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted);
-	err_t						aesDecode		(vcu0_c & messageEncrypted, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted);
+	err_t				aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted);
+	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted);
+	err_t				aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted);
+	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted);
 
-	stin	err_t				aesEncode		(u0_c * messageToEncrypt, u2_t dataLength, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode({messageToEncrypt, dataLength}, encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(u0_c * messageEncrypted, u2_t dataLength, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)							{ return aesDecode({messageEncrypted, dataLength}, encryptionKey, level, outputDecrypted); }
-	stin	err_t				aesEncode		(u0_c * messageToEncrypt, u2_t dataLength, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode({messageToEncrypt, dataLength}, iv, encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(u0_c * messageEncrypted, u2_t dataLength, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)	{ return aesDecode({messageEncrypted, dataLength}, iv, encryptionKey, level, outputDecrypted); }
+	stin	err_t		aesEncode		(u0_c * messageToEncrypt, u2_t dataLength, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode({messageToEncrypt, dataLength}, encryptionKey, level, outputEncrypted); }
+	stin	err_t		aesDecode		(u0_c * messageEncrypted, u2_t dataLength, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)							{ return aesDecode({messageEncrypted, dataLength}, encryptionKey, level, outputDecrypted); }
+	stin	err_t		aesEncode		(u0_c * messageToEncrypt, u2_t dataLength, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode({messageToEncrypt, dataLength}, iv, encryptionKey, level, outputEncrypted); }
+	stin	err_t		aesDecode		(u0_c * messageEncrypted, u2_t dataLength, vcu0_c & iv, vcu0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)	{ return aesDecode({messageEncrypted, dataLength}, iv, encryptionKey, level, outputDecrypted); }
 
-	stin	err_t				aesEncode		(vcu0_c & messageToEncrypt, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(messageToEncrypt, *(vcu0_c*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, outputDecrypted); }
-	stin	err_t				aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(messageToEncrypt, iv, *(vcu0_c*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, outputDecrypted); }
+	stin	err_t		aesEncode		(vcu0_c & messageToEncrypt, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(messageToEncrypt, *(vcu0_c*)&encryptionKey, level, outputEncrypted); }
+	stin	err_t		aesDecode		(vcu0_c & messageEncrypted, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, outputDecrypted); }
+	stin	err_t		aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(messageToEncrypt, iv, *(vcu0_c*)&encryptionKey, level, outputEncrypted); }
+	stin	err_t		aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, outputDecrypted); }
 
-	stin	err_t				aesEncode		(vcs0_c & messageToEncrypt, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(*(vcu0_c*)&messageToEncrypt, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcs0_c & encryptionKey, AES_LEVEL level, as0_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
-	stin	err_t				aesEncode		(vcs0_c & messageToEncrypt, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(*(vcu0_c*)&messageToEncrypt, iv, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, as0_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
-
-	stin	err_t				aesEncode		(vcsc_c & messageToEncrypt, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(*(vcu0_c*)&messageToEncrypt, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcs0_c & encryptionKey, AES_LEVEL level, asc_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
-	stin	err_t				aesEncode		(vcsc_c & messageToEncrypt, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(*(vcu0_c*)&messageToEncrypt, iv, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, asc_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
-
-	stin	err_t				aesEncode		(vcu0_c & messageToEncrypt, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(messageToEncrypt, *(vcu0_c*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, outputDecrypted); }
-	stin	err_t				aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(messageToEncrypt, iv, *(vcu0_c*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, outputDecrypted); }
-
-	stin	err_t				aesEncode		(vcs0_c & messageToEncrypt, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(*(vcu0_c*)&messageToEncrypt, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcsc_c & encryptionKey, AES_LEVEL level, as0_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
-	stin	err_t				aesEncode		(vcs0_c & messageToEncrypt, vcu0_c & iv, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(*(vcu0_c*)&messageToEncrypt, iv, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcsc_c & encryptionKey, AES_LEVEL level, as0_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
-
-	stin	err_t				aesEncode		(vcsc_c & messageToEncrypt, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(*(vcu0_c*)&messageToEncrypt, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcsc_c & encryptionKey, AES_LEVEL level, asc_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
-	stin	err_t				aesEncode		(vcsc_c & messageToEncrypt, vcu0_c & iv, vcsc_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(*(vcu0_c*)&messageToEncrypt, iv, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
-	stin	err_t				aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcsc_c & encryptionKey, AES_LEVEL level, asc_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
+	stin	err_t		aesEncode		(vcs0_c & messageToEncrypt, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)							{ return aesEncode(*(vcu0_c*)&messageToEncrypt, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
+	stin	err_t		aesDecode		(vcu0_c & messageEncrypted, vcs0_c & encryptionKey, AES_LEVEL level, as0_t & outputDecrypted)							{ return aesDecode(messageEncrypted, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
+	stin	err_t		aesEncode		(vcs0_c & messageToEncrypt, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, au0_t & outputEncrypted)	{ return aesEncode(*(vcu0_c*)&messageToEncrypt, iv, *(vcu0_t*)&encryptionKey, level, outputEncrypted); }
+	stin	err_t		aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcs0_c & encryptionKey, AES_LEVEL level, as0_t & outputDecrypted)	{ return aesDecode(messageEncrypted, iv, *(vcu0_c*)&encryptionKey, level, *(au0_t*)&outputDecrypted); }
 }
 
 #endif // GPK_AES_H_23627

@@ -10,7 +10,7 @@
 #endif
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE(ERRNO, int32_t);
+	GDEFINE_ENUM_TYPE(ERRNO, s2_t);
 	GDEFINE_ENUM_VALUED(ERRNO, OK              ,    0, "No error"                                          );
 	GDEFINE_ENUM_VALUED(ERRNO, EPERM           , -  1, "Operation not permitted"                           );
 	GDEFINE_ENUM_VALUED(ERRNO, ENOENT          , -  2, "No such file or directory"                         );

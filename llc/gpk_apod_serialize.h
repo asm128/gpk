@@ -1,7 +1,4 @@
 #include "gpk_array_pod.h"
-
-#include "gpk_keyval_old.h"
-
 #include "gpk_view_serialize.h"
 
 #ifndef GPK_APOD_SERIALIZE_H_23627
@@ -20,7 +17,7 @@ namespace gpk
 	tplT			err_t	saveView					(au0_t & output, cnst view<T> & viewToSerialize)	{
 		cnst packedu32				counterValue				= viewToSerialize.size();
 		if_fail_fe(savePacked(output, counterValue));
-		if_fail_fe(output.append(viewToSerialize.cu8()));
+		if_fail_fe(output.append(view<u0_c>{(u0_c*)viewToSerialize.begin(), viewToSerialize.size()}));
 		return counterValue.ValueWidth() + viewToSerialize.byte_count();
 	}
 	//tplT			err_t	saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
@@ -39,7 +36,7 @@ namespace gpk
 	//tplt<>	inln	err_t	saveView	<u3_c>	(au0_t & output, vcu3_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
 
 	tplTstin		err_t	saveView					(as0_t & output, cnst view<T> & headerToWrite)	{ return saveView(*(au0_t*)&output, headerToWrite); }
-	tplT			err_t	savePOD						(au0_t & output, cnst T & input)				{ if_fail_fe(output.append((cnst uint8_t*)&input, szof(T))); return szof(T); }
+	tplT			err_t	savePOD						(au0_t & output, cnst T & input)				{ if_fail_fe(output.append((cnst u0_t*)&input, szof(T))); return szof(T); }
 	tplTstin		err_t	savePOD						(as0_t & output, cnst T & input)				{ return savePOD(*(au0_t*)&output, input); }
 	tplT			err_t	saveUInt					(au0_t & output, cnst T & input)				{ 
 		cnst packed_uint<T>			packedInput					= input; 
@@ -54,9 +51,8 @@ namespace gpk
 		return 0;
 	}
 	tplTstin		err_t	loadView					(vcs0_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
-	tplTstin		err_t	loadView					(vcsc_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
 
-	err_t					keyValConstStringSerialize	(cnst view<cnst TKeyValConstString> & keyVals, const view<vcsc_c> & keysToSave, au0_t & output);
+	//err_t					keyValConstStringSerialize	(view<cnst keyval<vcst_t>> keyVals, view<cnst vcst_t> keysToSave, au0_t & output);
 } // namespace
 
 #endif // GPK_APOD_SERIALIZE_H_23627

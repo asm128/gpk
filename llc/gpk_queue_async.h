@@ -3,7 +3,7 @@
 #include "gpk_ptr_pod.h"
 #include "gpk_ptr_obj.h"
 
-#include <mutex>
+#include "gpk_mutex.h"
 
 #ifndef GPK_QUEUE_ASYNC_H
 #define GPK_QUEUE_ASYNC_H
@@ -12,32 +12,32 @@ namespace gpk
 {
 	tplt<tpnm _t, tpnm _tContainer>
 	struct queue_async {
-		typedef	_t	 		T;
-		typedef	_tContainer	TContainer;
+		tydf	_t	 		T;
+		tydf	_tContainer	TContainer;
 
 		TContainer				Queue	= {};
-		::std::mutex			Lock	= {};
+		::gpk::mutex			Lock	= {};
 
-		inline	::gpk::error_t 	Size	()						{ ::std::lock_guard locked(Lock); return Queue.size(); }
-		inline	::gpk::error_t	Clear	()						{ ::std::lock_guard	locked(Lock); return Queue.clear(); }
-		inline	::gpk::error_t	Post	(const T & item) 		{ ::std::lock_guard locked(Lock); return Queue.push_back(item); }
+		inline	err_t 	Size	()						{ ::gpk::lock_guard locked(Lock); return Queue.size(); }
+		inline	err_t	Clear	()						{ ::gpk::lock_guard	locked(Lock); return Queue.clear(); }
+		inline	err_t	Post	(const T & item) 		{ ::gpk::lock_guard locked(Lock); return Queue.push_back(item); }
 		// Appends to the `output` container all the messages from the queue
-		inline	::gpk::error_t	Read	(TContainer & output, bool clearQueue = true) {
-			::std::lock_guard		locked(Lock);
-			gpk_necs(output.append(Queue));
+		inline	err_t	Read	(TContainer & output, bool clearQueue = true) {
+			::gpk::lock_guard		locked(Lock);
+			if_fail_fe(output.append(Queue));
 			if(clearQueue) {
 				Queue.clear();
 			}
 			return 0;
 		}
 		// Returns 1 + the amount of messages remaining in the queue
-		::gpk::error_t			Next	(T & output) {
-			::gpk::error_t	left;
+		err_t			Next	(T & output) {
+			err_t	left;
 			{
 				::std::lock_guard	locked(Lock);
-				rnis_if(0 == Queue.size());
+				if_true_vi(0, 0 == Queue.size());
 				output	= Queue[0];
-				gpk_necs(left = Queue.remove(0));
+				if_fail_fe(left = Queue.remove(0));
 			}
 			return 1 + left;
 		}

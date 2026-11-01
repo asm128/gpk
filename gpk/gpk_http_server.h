@@ -11,11 +11,11 @@ namespace gpk
 		::std::mutex						Mutex;
 		::gpk::SIPv4End				Address						= {};
 		bool								Listen						= false;
-		int32_t								Timeout						= 3000000;	// Kill clients timeout
+		s2_t								Timeout						= 3000000;	// Kill clients timeout
 	};
 
-	::gpk::error_t						serverStart					(::gpk::SHTTPServer& serverInstance, uint16_t port);
-	::gpk::error_t						serverStop					(::gpk::SHTTPServer& serverInstance);
+	::gpk::err_t						serverStart					(::gpk::SHTTPServer& serverInstance, u1_t port);
+	::gpk::err_t						serverStop					(::gpk::SHTTPServer& serverInstance);
 
 } // namespace
 

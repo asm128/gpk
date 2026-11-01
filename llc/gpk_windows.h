@@ -1,4 +1,5 @@
 #include "gpk_array.h"
+#include "gpk_string.h"
 
 #ifndef GPK_WINDOWS_H
 #define GPK_WINDOWS_H
@@ -6,9 +7,9 @@
 namespace gpk
 {
 #ifdef GPK_WINDOWS
-	::gpk::apod<sc_t>	getWindowsErrorAsString	(const int32_t lastError); // Get the error message, if any.
-	::gpk::error_t		wcstombs				(::gpk::apod<sc_t> & output, const ::gpk::view<wchar_t> input);
-	::gpk::error_t		mbstowcs				(::gpk::apod<wchar_t> & output, ::gpk::vcsc_c input);
+	string		getWindowsErrorAsString	(s2_t lastError); // Get the error message, if any.
+	err_t		wcstombs				(string & output, view<const wchar_t> input);
+	err_t		mbstowcs				(apod<wchar_t> & output, vcst_t input);
 #endif
 } // namespace
 

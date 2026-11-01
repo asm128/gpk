@@ -7,34 +7,34 @@
 
 namespace gpk
 {
-	tplt<tpnm T> using papod	= ::gpk::pobj<::gpk::apod<T>>;
-	tplt<tpnm T> using apapod	= ::gpk::aobj<::gpk::papod<T>>;
+	tplt<tpnm T> usng		papod		= pobj<apod<T>>;
+	tplt<tpnm T> usng		apapod		= aobj<papod<T>>;
 
-	typedef	::gpk::papod<uc_t	>	pauchar;
-	typedef	::gpk::papod<sc_t		>	pachar;
-	typedef	::gpk::papod<float		>	paf32;
-	typedef	::gpk::papod<double		>	paf64;
-	typedef	::gpk::papod<uint8_t	>	pau8;
-	typedef	::gpk::papod<uint16_t	>	pau16;
-	typedef	::gpk::papod<uint32_t	>	pau32;
-	typedef	::gpk::papod<uint64_t	>	pau64;
-	typedef	::gpk::papod<int8_t		>	pai8;
-	typedef	::gpk::papod<int16_t	>	pai16;
-	typedef	::gpk::papod<int32_t	>	pai32;
-	typedef	::gpk::papod<int64_t	>	pai64;
+	tydf	papod<uc_t>		pauc_t;
+	tydf	papod<sc_t>		pasc_t;
+	tydf	papod<u0_t>		pau0_t;
+	tydf	papod<u1_t>		pau1_t;
+	tydf	papod<u2_t>		pau2_t;
+	tydf	papod<u3_t>		pau3_t;
+	tydf	papod<s0_t>		pas0_t;
+	tydf	papod<s1_t>		pas1_t;
+	tydf	papod<s2_t>		pas2_t;
+	tydf	papod<s3_t>		pas3_t;
+	tydf	papod<f2_t>		paf2_t;
+	tydf	papod<f3_t>		paf3_t;
 
-	typedef	::gpk::aobj<::gpk::pauchar	>	apauchar;
-	typedef	::gpk::aobj<::gpk::pachar	>	apachar;
-	typedef	::gpk::aobj<::gpk::paf32	>	apaf32;
-	typedef	::gpk::aobj<::gpk::paf64	>	apaf64;
-	typedef	::gpk::aobj<::gpk::pau8		>	apau8;
-	typedef	::gpk::aobj<::gpk::pau16	>	apau16;
-	typedef	::gpk::aobj<::gpk::pau32	>	apau32;
-	typedef	::gpk::aobj<::gpk::pau64	>	apau64;
-	typedef	::gpk::aobj<::gpk::pai8		>	apai8;
-	typedef	::gpk::aobj<::gpk::pai16	>	apai16;
-	typedef	::gpk::aobj<::gpk::pai32	>	apai32;
-	typedef	::gpk::aobj<::gpk::pai64	>	apai64;
+	tydf	aobj<pauc_t>	apauc_t;
+	tydf	aobj<pasc_t>	apasc_t;
+	tydf	aobj<pau0_t>	apau0_t;
+	tydf	aobj<pau1_t>	apau1_t;
+	tydf	aobj<pau2_t>	apau2_t;
+	tydf	aobj<pau3_t>	apau3_t;
+	tydf	aobj<pas0_t>	apas0_t;
+	tydf	aobj<pas1_t>	apas1_t;
+	tydf	aobj<pas2_t>	apas2_t;
+	tydf	aobj<pas3_t>	apas3_t;
+	tydf	aobj<paf2_t>	apaf2_t;
+	tydf	aobj<paf3_t>	apaf3_t;
 } // namespace
 
 #endif // GPK_ARRAY_PTR_H_23627

@@ -1,17 +1,17 @@
 #include "application.h"
 #include "gpk_bitmap_file.h"
 
-#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
+//#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
-			::gpk::error_t											cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
-			::gpk::error_t											setup						(::gme::SApplication & app)						{
+			::gpk::err_t											cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
+			::gpk::err_t											setup						(::gme::SApplication & app)						{
 	::gpk::STimer															timer;
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SWindow															& mainWindow				= framework.RootWindow;
-	ef_if(::gpk::failed(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
+	if_true_ef(::gpk::failed(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
 	::gpk::SGUI																& gui						= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
@@ -32,7 +32,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-::gpk::error_t				draw			(::gme::SApplication & app)						{
+::gpk::err_t				draw			(::gme::SApplication & app)						{
 	//::gpk::STimer															timer;
 	app;
 	::gpk::pobj<::gpk::rtbgra8d32>	target;
@@ -51,15 +51,15 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-::gpk::error_t				update						(::gme::SApplication & app, bool exitSignal)	{
+::gpk::err_t				update						(::gme::SApplication & app, bool exitSignal)	{
 	//::gpk::STimer					timer;
-	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
 		::std::lock_guard				lock					(app.LockRender);
 		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
 	}
 	::gpk::SFramework				& framework					= app.Framework;
-	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 
 	::gpk::SGUI						& gui						= *framework.GUI;
 	::gpk::acid						controlsToProcess			= {};

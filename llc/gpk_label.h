@@ -9,32 +9,28 @@ namespace gpk
 	struct label_statics;
 
 	class CLabelManager;
-	class label : public vcsc_t {
+	class label : public vcst_t {
 		CLabelManager		* LabelManager	= 0;
 	public:
-		inxp				label			()								noexcept	= default;
-							label			(const label & other)			noexcept	= default;
-							label			(const char* str, uint32_t len)	noexcept;
+		usng	vcst_t		::oper==	;
 
-		label&				oper=		(const label & other)			noexcept	= default;
+		inxp				label		()										nxpt	= dflt;
+							label		(cnst label & other)					nxpt	= dflt;
+							label		(vcst_c & other)						;
+		tplN2uinln 			label		(sc_c (&str)[N], u2_t count = (u2_t)-1)	: label(vcst_t(str, count))	{}
 
-		tplt<size_t _stringLength>
-		inline 				label			(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)	noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
-		inline 				label			(const ::gpk::vcst_t & other)											noexcept	: label(other.begin(), other.size())							{}
+				label &		oper=		(cnst label & other)					= dflt;
 
-		inline	oper	::gpk::vcst_t		()								const				{ return {Data, Count}; }
-
-				bool		oper==		(const ::gpk::vcst_t & other)		const	noexcept;
-				bool		oper==		(const label & other)			const	noexcept;
-		inline	bool		oper!=		(const label & other)			const	noexcept	{ return !oper==(other); }
+				b8_t		oper==		(cnst label & other)					csnx;
+		inln	b8_t		oper!=		(cnst label & other)					csnx	{ rtrn !oper==(other); }
 	};
 
-	stin ::gpk::error_t	loadLabel		(::gpk::vcu0_t & input, ::gpk::vcsc_t & output) { 
-		uint32_t					bytesRead		= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
-		gpk_necs(input.slice(input, bytesRead));
-		output					= ::gpk::label(output);
-		return bytesRead;
+	stin err_t			loadLabel	(vcu0_t & input, vcst_t & output) { 
+		u2_t					bytesRead		= 0;
+		if_fail_fe(bytesRead = viewRead(output, input)); 
+		if_fail_fe(input.slice(input, bytesRead));
+		output					= label(output);
+		rtrn bytesRead;
 	}
 }
 

@@ -18,11 +18,11 @@ namespace gpk
 		sc_t				uf0				[4];
 		sc_t				somePath		[16];
 		sc_t				unkstr			[12];
-		::gpk::n3<int8_t>	unkchars		;
-		uint32_t			minusone		;
+		::gpk::n3<s0_t>	unkchars		;
+		u2_t			minusone		;
 		sc_t				somevals		[8];
 		float				part3			;
-		uint8_t				part4			[4];
+		u0_t				part4			[4];
 	};
 
 	struct SLightInfoRSW {
@@ -52,8 +52,8 @@ namespace gpk
 		sc_t				strUnk1			[40];
 		::gpk::n3f2_t		position		;
 		float				vol				;
-		int32_t				width			;
-		int32_t				height			;
+		s2_t				width			;
+		s2_t				height			;
 		float				range			;
 		float				cycle			;			// v >= 2.0
 	};
@@ -64,9 +64,9 @@ namespace gpk
 		sc_t				Str2			[40];
 		sc_t				RootRSMNode		[40];
 		sc_t				Str4			[40];
-		int32_t				AnimType		;
+		s2_t				AnimType		;
 		float				AnimSpeed		;
-		int32_t				BlockType		;
+		s2_t				BlockType		;
 		::gpk::n3f2_t		Position		;
 		::gpk::n3f2_t		Rotation		;
 		::gpk::n3f2_t		Scale			;
@@ -74,16 +74,16 @@ namespace gpk
 
 	struct SRSWWorldWater {
 		float				Height			;
-		uint32_t			Type			;
+		u2_t			Type			;
 		float				Amplitude		;
 		float				Speed			;
 		float				Pitch			;
-		uint32_t			TexCycling		;
+		u2_t			TexCycling		;
 	};
 
 	struct SRSWWorldLight {
-		int32_t				Longitude		;
-		int32_t				Latitude		;
+		s2_t				Longitude		;
+		s2_t				Latitude		;
 		::gpk::n3f2_t		Diffuse			;
 		::gpk::n3f2_t		Ambient			;
 		float				Intensity		;
@@ -106,9 +106,9 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcu0_c	& input);
-	::gpk::error_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, FILE			* input);
-	::gpk::error_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input);
+	::gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcu0_c	& input);
+	::gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, FILE			* input);
+	::gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input);
 }
 
 #endif // GPK_RO_RSW_H_23627

@@ -5,15 +5,15 @@
 
 namespace gpk
 {
-	gpk::err_t	appendXmlAttr		(::gpk::asc_t & output, ::gpk::vcst_t attrName, ::gpk::vcst_t attrValue = {});
-	gpk::err_t	appendXmlOpenTag	(::gpk::asc_t & output, ::gpk::vcst_t tagName);
-	gpk::err_t	appendXmlTagVoid	(::gpk::asc_t & output, ::gpk::vcst_t tagName, ::gpk::vcst_t tagAttributes = {});
-	gpk::err_t	appendXmlTagOpening	(::gpk::asc_t & output, ::gpk::vcst_t tagName, ::gpk::vcst_t tagAttributes = {});
-	gpk::err_t	appendXmlTagClosing	(::gpk::asc_t & output, ::gpk::vcst_t tagName);
-	gpk::err_t	appendXmlTag		(::gpk::asc_t & output, ::gpk::vcst_t tagName, ::gpk::vcst_t tagAttributes = {}, ::gpk::vcst_t innerHtml = {});
-	gpk::err_t	appendXmlTag		(::gpk::asc_t & output, ::gpk::vcst_t tagName, ::gpk::vcst_t tagAttributes, const FAppend & funcAppend);
-	gpk::err_t	appendXmlTag		(::gpk::asc_t & output, ::gpk::vcst_t tagName, ::gpk::vcst_t tagAttributes, const ::gpk::function<gpk::err_t()> & funcAppend);
-	gpk::err_t	appendXmlTag		(::gpk::asc_t & output, ::gpk::vcst_t tagName, const ::gpk::function<gpk::err_t()> & funcAppendAttributes, const ::gpk::function<gpk::err_t()> & funcAppend);
+	err_t	appendXmlAttr		(string & output, vcst_t attrName, vcst_t attrValue = {});
+	err_t	appendXmlOpenTag	(string & output, vcst_t tagName);
+	err_t	appendXmlTagVoid	(string & output, vcst_t tagName, vcst_t tagAttributes = {});
+	err_t	appendXmlTagOpening	(string & output, vcst_t tagName, vcst_t tagAttributes = {});
+	err_t	appendXmlTagClosing	(string & output, vcst_t tagName);
+	err_t	appendXmlTag		(string & output, vcst_t tagName, vcst_t tagAttributes = {}, vcst_t innerHtml = {});
+	err_t	appendXmlTag		(string & output, vcst_t tagName, vcst_t tagAttributes, cnst FAppend & funcAppend);
+	err_t	appendXmlTag		(string & output, vcst_t tagName, vcst_t tagAttributes, cnst function<err_t()> & funcAppend);
+	err_t	appendXmlTag		(string & output, vcst_t tagName, cnst function<err_t()> & funcAppendAttributes, const function<err_t()> & funcAppend);
 
 } // namespace 
 

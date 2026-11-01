@@ -1,0 +1,15 @@
+Root: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc"
+Source prefix: "llc_"
+Target prefix: "gpk_"
+
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_error.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_error.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_math.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_math.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_matrix.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_matrix.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_matrix2.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_matrix2.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_matrix3.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_matrix3.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_n2.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_n2.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_n3.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_n3.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_runtime.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_runtime.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_error.cpp" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_error.cpp"
+
+Renamed: 6 file(s). Skipped: 3 file(s). Errors: 3.

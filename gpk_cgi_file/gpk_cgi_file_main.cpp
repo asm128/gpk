@@ -12,19 +12,19 @@
 static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
 	::gpk::apod<char>				environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to save to disk.
-		gpk_necs(gpk::environmentBlockFromEnviron(environmentBlock));
+		if_fail_fe(gpk::environmentBlockFromEnviron(environmentBlock));
 		char filename[1024] = {};
 		sprintf_s(filename, "la_betty_criminal_at_%llu.jpg", ::gpk::timeCurrent());
-		gpk_necs(::gpk::fileFromMemory(filename, runtimeValues.Content.Body));
+		if_fail_fe(::gpk::fileFromMemory(filename, runtimeValues.Content.Body));
 	}
-	gpk_necs(output.append_string("{\"code\":200, \"message\": \"OK\"}"));
+	if_fail_fe(output.append_string("{\"code\":200, \"message\": \"OK\"}"));
 	return 0;
 }
 
 static	int				cgiMain				(int argc, char** argv, char**envv)	{
 	(void)(envv);
 	::gpk::SCGIRuntimeValues	runtimeValues;
-	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
+	if_fail_fef(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::gpk::apod<char>			html;
 	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"

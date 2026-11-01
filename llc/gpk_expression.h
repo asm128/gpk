@@ -1,13 +1,15 @@
 #include "gpk_enum.h"
 #include "gpk_array_ptr.h"
 #include "gpk_slice.h"
+#include "gpk_parse.h"
+#include "gpk_functional.h"
 
 #ifndef GPK_EXPRESSION_H_23627
 #define GPK_EXPRESSION_H_23627
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (EXPRESSION_READER_TYPE, int8_t);
+	GDEFINE_ENUM_TYPE (EXPRESSION_READER_TYPE, s0_t);
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, TERM_ANY		,  0);
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, TERM_KEY		,  1);
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, TERM_INDEX	,  2);
@@ -23,42 +25,46 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SExpressionToken {
-		int32_t							ParentIndex;
-		EXPRESSION_READER_TYPE			Type;
-		::gpk::sliceu2_t				Span;
-		bool							ClosingCondition				= false;
+		s2_t					ParentIndex;
+		EXPRESSION_READER_TYPE	Type;
+		sliceu2_t				Span;
+		bool					ClosingCondition				= false;
 	};
 
 	struct SExpressionReaderState {
-		uint32_t						IndexCurrentChar				= 0;
-		int32_t							IndexCurrentElement				= -1;
-		::gpk::SExpressionToken			* CurrentElement				= 0;
-		int32_t							NestLevel						= 0;
-		sc_t							CharCurrent						= 0;
-		bool							Escaping						= false;
-		bool							ExpectsSeparator				= false;
-		bool							InsideString					= false;
-		sc_t							ClosingQuotes					= '0';
+		u2_t					IndexCurrentChar				= 0;
+		s2_t					IndexCurrentElement				= -1;
+		SExpressionToken		* CurrentElement				= 0;
+		s2_t					NestLevel						= 0;
+		sc_t					CharCurrent						= 0;
+		bool					Escaping						= false;
+		bool					ExpectsSeparator				= false;
+		bool					InsideString					= false;
+		sc_t					ClosingQuotes					= '0';
 	};
 #pragma pack(pop)
 
 	struct SExpressionNode {
-		SExpressionToken				* Token							= 0;
-		SExpressionNode					* Parent						= 0;
-		::gpk::apobj<SExpressionNode>	Children						= {};
-		int32_t							ObjectIndex						= -1;
+		SExpressionToken		* Token							= 0;
+		SExpressionNode			* Parent						= 0;
+		apobj<SExpressionNode>	Children						= {};
+		s2_t					ObjectIndex						= -1;
 	};
 
 	struct SExpressionReader {
-		::gpk::apod<::gpk::SExpressionToken>	Token;
-		::gpk::aobj<::gpk::vcsc_t>				View;
-		::gpk::apobj<::gpk::SExpressionNode>	Tree;
-		::gpk::SExpressionReaderState			StateRead;
-		::gpk::pobj<::gpk::SExpressionReader>	SubExpressionCache;
+		apod<SExpressionToken>	Token;
+		aobj<vcst_t>			View;
+		apobj<SExpressionNode>	Tree;
+		SExpressionReaderState	StateRead;
+		pobj<SExpressionReader>	SubExpressionCache;
 	};
 
-	::gpk::error_t					expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
-	::gpk::error_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
+	err_t					expressionReaderParse			(SExpressionReader & reader, vcst_t expression);
+	err_t					expressionReaderParseStep		(SExpressionReader & reader, vcst_t expression);
+
+	// Token spans refer to format. Resolved views must survive the callback until the formatter copies them.
+	err_t					expressionStringFormat		(vcst_t format, view<cnst SStripLiteralType> tokens, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
+	err_t					expressionStringFormat		(vcst_t format, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
 } // namespace
 
 #endif // GPK_EXPRESSION_H_23627

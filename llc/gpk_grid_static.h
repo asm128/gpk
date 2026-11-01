@@ -11,26 +11,26 @@ namespace gpk
 		typedef	T			TCell;
 		typedef	grid<T>		TGridView;
 
-		stacxpr	uint32_t	Width									= (uint32_t)_sizeWidth;
-		stacxpr	uint32_t	Depth									= (uint32_t)_sizeDepth;
+		stxp	u2_t	Width									= (u2_t)_sizeWidth;
+		stxp	u2_t	Depth									= (u2_t)_sizeDepth;
 
 				TCell		Cells	[_sizeDepth][_sizeWidth]		= {};
 
-		inlcxpr				grid_static								()																		: grid<T>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
+		inxp				grid_static								()																		: grid<T>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
-		::gpk::error_t		read					(const int8_t* input, uint32_t* inout_bytesRead)						{
-			ree_if(0 == input, "%s", "Invalid input pointer!");
+		::gpk::err_t		read					(const s0_t* input, u2_t* inout_bytesRead)						{
+			if_true_vef(-1, 0 == input, "%s", "Invalid input pointer!");
 			TGridView															inputGrid								= {(T*)input, Width, Depth};
 			*inout_bytesRead												+= sizeof(T) * Width * Depth;
-			for(uint32_t y = 0; y < Depth; ++y) {
-				for(uint32_t x = 0; x < Width; ++x)
+			for(u2_t y = 0; y < Depth; ++y) {
+				for(u2_t x = 0; x < Width; ++x)
 					::gpk::podcpy(&Cells[y][x], inputGrid[y][x]);
 			}
 			return 0;
 		}
 
-		::gpk::error_t		write									(int8_t* output, uint32_t* inout_bytesWritten)		const				{
-			ree_if(0 == output && 0 == inout_bytesWritten, "%s", "Invalid input!");
+		::gpk::err_t		write									(s0_t* output, u2_t* inout_bytesWritten)		const				{
+			if_true_vef(-1, 0 == output && 0 == inout_bytesWritten, "%s", "Invalid input!");
 			if(0 != inout_bytesWritten)
 				*inout_bytesWritten												+= sizeof(T) * Width * Depth;	// Just return the size required to store this.
 
@@ -38,8 +38,8 @@ namespace gpk
 				return 0;
 
 			TGridView															newStorage								= {(T*)output, Width, Depth};
-			for(uint32_t y = 0; y < Depth; ++y) {
-				for(uint32_t x = 0; x < Width; ++x)
+			for(u2_t y = 0; y < Depth; ++y) {
+				for(u2_t x = 0; x < Width; ++x)
 					::gpk::podcpy(output[y * Width + x], &Cells[y][x]);
 			}
 			return 0;

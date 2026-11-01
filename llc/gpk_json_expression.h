@@ -6,43 +6,40 @@
 
 namespace gpk
 {
-	static const ::gpk::vcs					strEmptyObj				= "{}"		;
-	static const ::gpk::vcs					strEmptyArr				= "[]"		;
-	stacxpr	::gpk::vcsc_t					strNull					= VCC_NULL	;
-	stacxpr	::gpk::vcsc_t					strBool		[2]			= {VCC_FALSE, VCC_TRUE};
-	static const ::gpk::vcs					strZero					= "0"		;
-#pragma pack(push, 1)
+	stxp	vcst_c			strEmptyObj				= "{}";
+	stxp	vcst_c			strEmptyArr				= "[]";
+	stxp	vcst_c			strNull					= "null";
+	stxp	vcst_c			strBool		[2]			= {"false", "true"};
+	stxp	vcst_c			strZero					= "0";
 	struct SEvaluationStepResult {
-		uint32_t							IndexRootJSONNode		;
-		int32_t								IndexJSONResult			;
-		uint64_t							LastValue				;
-		::gpk::pobj<::gpk::SJSONReader>		JSONReader				;
-		::gpk::vcsc_t						Output					;
-		::gpk::vcsc_t						Expression				;
-		bool								LastValueCarry			;
+		u2_t					IndexRootJSONNode		;
+		s2_t					IndexJSONResult			;
+		u3_t					LastValue				;
+		vcst_t					Output					;
+		vcst_t					Expression				;
+		bool					LastValueCarry			;
 
-		::gpk::error_t						SetBoolCarry			(bool evalResult, ::gpk::vcsc_t & output)	{
-			IndexJSONResult						= -5;
-			LastValueCarry						= true	;
-			LastValue							= evalResult ? 1 : 0;
-			output								= ::gpk::strBool[LastValue];
+		err_t					SetBoolCarry			(bool evalResult, vcst_t & output)	{
+			IndexJSONResult			= -5;
+			LastValueCarry			= true	;
+			LastValue				= evalResult ? 1 : 0;
+			output					= strBool[LastValue];
 			return 0;
 		}
 	};
 
 	struct SJSONExpressionSolver {
-		::gpk::aobj<SEvaluationStepResult>	Results;
+		aobj<SEvaluationStepResult>	Results;
 	};
-#pragma pack(pop)
 
-			::gpk::error_t		jsonExpressionResolve		(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::SJSONExpressionSolver& results, ::gpk::vcsc_t & output);
-			::gpk::error_t		jsonExpressionResolve		(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::vcsc_t & output);
-	stainli	::gpk::error_t		jsonExpressionResolve		(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON)	{ ::gpk::vcsc_t dead; return ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, dead); }
+			err_t		jsonExpressionResolve		(const SExpressionReader & reader, const SJSONReader & inputJSON, u2_t indexNodeJSON, SJSONExpressionSolver & results, vcst_t & output);
+			err_t		jsonExpressionResolve		(const SExpressionReader & reader, const SJSONReader & inputJSON, u2_t indexNodeJSON, vcst_t & output);
+	stin	err_t		jsonExpressionResolve		(const SExpressionReader & reader, const SJSONReader & inputJSON, u2_t indexNodeJSON)	{ vcst_t dead; return jsonExpressionResolve(reader, inputJSON, indexNodeJSON, dead); }
 
-			::gpk::error_t		jsonExpressionResolve		(::gpk::vcst_c & expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::vcsc_t & output);
-	stainli	::gpk::error_t		jsonExpressionResolve		(::gpk::vcst_c & expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON) { ::gpk::vcsc_t dead; return ::gpk::jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
+			err_t		jsonExpressionResolve		(vcst_t expression, const SJSONReader & inputJSON, u2_t indexNodeJSON, vcst_t & output);
+	stin	err_t		jsonExpressionResolve		(vcst_t expression, const SJSONReader & inputJSON, u2_t indexNodeJSON) { vcst_t dead; return jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
 
-			::gpk::error_t		jsonStringFormat			(::gpk::vcst_c & format	, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::apod<sc_t>& output);
+			err_t		jsonStringFormat			(vcst_t format, const SJSONReader & inputJSON, u2_t indexNodeJSON, asc_t & output);
 } // namespace
 
 #endif // GPK_JSON_EXPRESSION_9238749283744

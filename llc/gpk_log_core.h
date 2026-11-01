@@ -16,24 +16,21 @@
 
 namespace gpk
 {
-	tydf	error_t	(*log_print_t)		(const char * text);
-	error_t			_base_log_print		(const char * text);
-	tydf	error_t	(*log_write_t)		(const char * text, u2_t textLen);
-	error_t			_base_log_write		(const char * text, u2_t textLen);
-	stin	error_t	base_log_write		(const char* text, u2_t textLen)	{ rtrn _base_log_write(text, textLen); }
-	stin	error_t	base_log_print		(const char* text)					{ rtrn _base_log_print(text); }
+	tydf	err_t	(*log_print_t)		(const char * text);
+	err_t			log_print			(const char * text);
+	tydf	err_t	(*log_write_t)		(const char * text, u2_t textLen);
+	err_t			log_write			(const char * text, u2_t textLen);
 
 #ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-	stin	error_t	base_log_print_P	(const char* text)	{ rtrn base_log_print(text); }
-	stin	error_t	base_log_print_F	(const char* text)	{ rtrn base_log_print(text); }
+	stin	err_t	log_print_P			(const char * text)	{ rtrn log_print(text); }
+	stin	err_t	log_print_F			(const char * text)	{ rtrn log_print(text); }
 #else
-	tydf	error_t	(*log_print_P_t)	(const __FlashStringHelper * text);
-			error_t	_base_log_print_P	(const __FlashStringHelper * text);
-	stin	error_t	base_log_print_P	(const __FlashStringHelper * text)	{ rtrn _base_log_print_P(text); }
-	stin	error_t	base_log_print_F	(const __FlashStringHelper * text)	{ rtrn base_log_print_P(F(text)); }
+	err_t			log_print_P			(const __FlashStringHelper * text);
+#	define log_print_F(text) ::gpk::log_print_P(F(text))
 #endif
-	error_t			setupDefaultLogCallbacks();
-	error_t			setupLogCallbacks
+	err_t			setupDefaultLogCallbacks();
+	err_t			getLogCallbacks(log_print_t & funcLogPrint, log_write_t & funcLogWrite);
+	err_t			setupLogCallbacks
 		( log_print_t	funcLogPrint
 		, log_write_t	funcLogWrite
 		);
@@ -66,11 +63,11 @@ namespace gpk
 
 // - Conditional log formatted.
 #ifndef if_true_logf
-#	ifdef GPK_WINDOWS					
+#	ifdef GPK_WINDOWS
 #		define if_true_logf(gpk_logFunction, condition, format, ...)						if(condition) { gpk_logFunction(#condition "->" format, __VA_ARGS__); }					// - Log condition and custom formatted string args if (condition) == true.
 #		define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)		if(condition) block_logf(gpk_logFunction, statement, #condition "->" format, __VA_ARGS__)	// - Conditional block with custom statement preceded by a log call with custom formatted string args.
 #	else
-#		ifdef GPK_ATMEL																																																											
+#		ifdef GPK_ATMEL
 #			define if_true_logf(gpk_logFunction, condition, format, ...)					if_true_log			(gpk_logFunction, condition)				// - Log condition and custom formatted string args if (condition) == true.
 #			define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)	if_true_block_log	(gpk_logFunction, condition, statement) 	// - Conditional block with custom statement preceded by a log call with custom formatted string args.
 #		else

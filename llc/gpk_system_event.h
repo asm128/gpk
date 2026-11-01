@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE(SYSTEM_EVENT, uint8_t);
+	GDEFINE_ENUM_TYPE(SYSTEM_EVENT, u0_t);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Runtime	, 0);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Screen		, 1);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Keyboard	, 2);
@@ -31,11 +31,11 @@ namespace gpk
 	tydf ::gpk::apobj<::gpk::SEventSystem>				TQueueSystemEvent;
 	
 	template<typename _t>
-	stin	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::RESULT eventType, _t & eventData)	{ 
+	stin	::gpk::err_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::RESULT eventType, _t & eventData)	{ 
 		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Device, eventType, eventData); 
 	}
 
-	//GDEFINE_ENUM_TYPE (EVENT_RUNTIME, uint8_t);
+	//GDEFINE_ENUM_TYPE (EVENT_RUNTIME, u0_t);
 	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Init			, 0);
 	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Exit			, 1);
 	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Process_queue	, 2);
@@ -44,36 +44,36 @@ namespace gpk
 #pragma pack(push, 1)
 	stct SDeviceResult {
 		const ::gpk::SYSTEM_EVENT	SystemEvent 	= {};
-		const uint8_t				TailWidth		: 2;
-		const uint8_t				Multiplier		: 6;
+		const u0_t				TailWidth		: 2;
+		const u0_t				Multiplier		: 6;
 		::gpk::RESULT				DeviceEvent		= {};
 
 		cxpr						SDeviceResult	(::gpk::RESULT deviceEvent = ::gpk::RESULT_Error)
 			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
-			, TailWidth   {::gpk::uint_tail_width<uint32_t>((uint32_t)szof(::gpk::RESULT))}
-			, Multiplier  {::gpk::uint_tail_multiplier<uint32_t>((uint32_t)szof(::gpk::RESULT))}
+			, TailWidth   {::gpk::uint_tail_width<u2_t>((u2_t)szof(::gpk::RESULT))}
+			, Multiplier  {::gpk::uint_tail_multiplier<u2_t>((u2_t)szof(::gpk::RESULT))}
 			, DeviceEvent {deviceEvent}
 			{}
 	};
 	stct SDeviceCommand {
 		const ::gpk::SYSTEM_EVENT	SystemEvent 	= {};
-		const uint8_t				TailWidth		: 2;
-		const uint8_t				Multiplier		: 6;
+		const u0_t				TailWidth		: 2;
+		const u0_t				Multiplier		: 6;
 		::gpk::COMMAND				DeviceEvent		= {};
 
 		cxpr						SDeviceCommand	(::gpk::COMMAND deviceEvent = ::gpk::COMMAND_Ok)
 			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
-			, TailWidth   {::gpk::uint_tail_width<uint32_t>((uint32_t)szof(::gpk::COMMAND))}
-			, Multiplier  {::gpk::uint_tail_multiplier<uint32_t>((uint32_t)szof(::gpk::COMMAND))}
+			, TailWidth   {::gpk::uint_tail_width<u2_t>((u2_t)szof(::gpk::COMMAND))}
+			, Multiplier  {::gpk::uint_tail_multiplier<u2_t>((u2_t)szof(::gpk::COMMAND))}
 			, DeviceEvent {deviceEvent}
 			{}
 	};
 #pragma pack(pop)
 
-	//stin	::gpk::error_t	eventEnqueueRuntimeInit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Init			, ::gpk::EVENT_RUNTIME_Init			); }
-	//stin	::gpk::error_t	eventEnqueueRuntimeExit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Exit			, ::gpk::EVENT_RUNTIME_Exit			); }
-	//stin	::gpk::error_t	eventEnqueueRuntimeProcessQueue	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_queue, ::gpk::EVENT_RUNTIME_Process_queue); }
-	//stin	::gpk::error_t	eventEnqueueRuntimeProcessEvent	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_event, ::gpk::EVENT_RUNTIME_Process_event); }
+	//stin	::gpk::err_t	eventEnqueueRuntimeInit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Init			, ::gpk::EVENT_RUNTIME_Init			); }
+	//stin	::gpk::err_t	eventEnqueueRuntimeExit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Exit			, ::gpk::EVENT_RUNTIME_Exit			); }
+	//stin	::gpk::err_t	eventEnqueueRuntimeProcessQueue	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_queue, ::gpk::EVENT_RUNTIME_Process_queue); }
+	//stin	::gpk::err_t	eventEnqueueRuntimeProcessEvent	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_event, ::gpk::EVENT_RUNTIME_Process_event); }
 } // namespace
 
 #endif // GPK_SYSTEM_EVENT_H_23627

@@ -7,17 +7,17 @@
 
 namespace gpk
 {
-	struct SEditorRigidBody		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorImage			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorMesh			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorScene			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorBuffer		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorSurface		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorPalette		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorControl		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorControlText	{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorLayout		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorSettings		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorRigidBody		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorImage			{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorMesh			{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorScene			{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorBuffer		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorSurface		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorPalette		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorControl		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorControlText	{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorLayout		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
+	struct SEditorSettings		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
 
 
 	struct SEditorProject {
@@ -56,10 +56,10 @@ namespace gpk
 	//	SEditorControlText	EditorControlText	= {};
 	//};
 
-	::gpk::error_t				editorCreate	(::gpk::SEditor & editor);
-	::gpk::error_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
-	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
-	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
+	::gpk::err_t				editorCreate	(::gpk::SEditor & editor);
+	::gpk::err_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
+	//::gpk::err_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
+	//::gpk::err_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
 } // namespace
 
 #endif // GPK_ENGINE_EXPLORER_H_23627

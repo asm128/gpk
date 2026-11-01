@@ -14,7 +14,7 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(minmax<T>, Max == other.Max && Min == other.Min);
 
-		sinx	TMinMax			from		(T value)			nxpt	{ return {value, value}; }
+		sinx	TMinMax			from		(T value)		nxpt	{ return {value, value}; }
 		inxp	T				Length		()				csnx	{ return T(Max - Min); }
 		inxp	T				Middle		()				csnx	{ return Min + Length() / 2; }
 		inxp	T				Clamp		(T value)		csnx	{ return ::gpk::clamped(value, Min, Max); }
@@ -25,8 +25,6 @@ namespace gpk
 		tpl_t2
 		inxp	minmax<_t2> 	Cast		()				csnx	{ return{(_t2)Min, (_t2)Max}; } 
 
-		inxp	minmax<uc_t> 	uc			()				csnx	{ return Cast<uc_t>(); }
-		inxp	minmax<sc_t> 	sc			()				csnx	{ return Cast<sc_t>(); }
 		inxp	minmax<u0_t> 	u0			()				csnx	{ return Cast<u0_t>(); }
 		inxp	minmax<u1_t> 	u1			()				csnx	{ return Cast<u1_t>(); }
 		inxp	minmax<u2_t> 	u2			()				csnx	{ return Cast<u2_t>(); }
@@ -38,8 +36,8 @@ namespace gpk
 		inxp	minmax<f2_t> 	f2			()				csnx	{ return Cast<f2_t>(); }
 		inxp	minmax<f3_t> 	f3			()				csnx	{ return Cast<f3_t>(); }
 
-		inline	TMinMax&		Set			(T value)			nxpt	{ Min = Max = value; return *this; }
-		inline	TMinMax&		From		(T value)			nxpt	{ Min = Max = value; return *this; }
+		inline	TMinMax&		Set			(T value)		nxpt	{ Min = Max = value; return *this; }
+		inline	TMinMax&		From		(T value)		nxpt	{ Min = Max = value; return *this; }
 	};
 #pragma pack(pop)
 	tydf	minmax<uc_t>	minmaxuc_t;	tdcs	minmaxuc_t	minmaxuc_c;

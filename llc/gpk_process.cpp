@@ -1,46 +1,100 @@
-#include "gpk_process.h"
-#include "gpk_keyval.h"
+#include "gpk_process_internal.h"
 
-#ifdef GPK_WINDOWS
-#	include <Windows.h>
-#else
-#	include <unistd.h>
-#endif
+#if defined(GPK_WINDOWS) || defined(GPK_LINUX)
+namespace gpk {
+tplt<tpnm T>
+err_t SProcessManager<T>::Redirect(u2_t id) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	SProcess & record = KnownProcesses[id];
+	if_true_fe(record.State.Started);
+	if(record.State.Redirected) rtrn 0;
+	if_fail_vef(-1, result = process_detail::processRedirect(PlatformState[id]), "(%" GPK_FMT_S2 ")", result);
+	record.State.Redirected = true;
+	rtrn 0;
+}
 
-::gpk::error_t			gpk::environmentBlockViews		(const ::gpk::vcsc_t & environmentBlock, ::gpk::aobj<::gpk::TKeyValConstString> & out_Views)	{
-	uint32_t					offsetEndVar					= 0;
-	while(offsetEndVar < environmentBlock.size() - 1) {
-		uint32_t					offsetBeginVar					= offsetEndVar + (offsetEndVar ? 1 : 0);
-		if(environmentBlock.size() - 1 == (offsetEndVar = ::gpk::find('\0', environmentBlock, offsetBeginVar)))
-			break;
-		::gpk::vcsc_t					viewEnvironVar					= {}; // {&environmentBlock[offsetBeginVar], offsetEndVar - offsetBeginVar};
-		gpk_necs(environmentBlock.slice(viewEnvironVar, offsetBeginVar, offsetEndVar - offsetBeginVar));
-		::gpk::TKeyValConstString	newKeyVal						= {};
-		if(-1 != ::gpk::keyval_split({viewEnvironVar.begin(), viewEnvironVar.size()}, newKeyVal))
-			out_Views.push_back(newKeyVal);
-		else if(viewEnvironVar.size()) {
-			newKeyVal.Key			= {viewEnvironVar.begin(), viewEnvironVar.size()};
-			out_Views.push_back(newKeyVal);
-			break;
-		}
-		else
-			break;
+tplt<tpnm T>
+err_t SProcessManager<T>::Launch(u2_t id) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	SProcess & record = KnownProcesses[id];
+	if_true_fe(record.State.Started);
+	u2_t creationFlags = 0;
+	::gpk::cpycst(creationFlags, record.CreationFlags);
+	// Native launch may have succeeded before a parent-end cleanup failed.
+	process_detail::SProcessNativeScope<T> rollback{PlatformState[id], &record.State};
+	if_fail_vef(result, result = process_detail::processCreate(PlatformState[id], record.Application, record.CommandLine, record.Environment, creationFlags), "(%" GPK_FMT_S2 ")", result);
+	record.State.Started = true;
+	rollback.Inactive = true;
+	rtrn 0;
+}
+
+tplt<tpnm T>
+err_t SProcessManager<T>::Write(u2_t id, vcu0_t input) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	if_true_fe(!KnownProcesses[id].State.Started || !KnownProcesses[id].State.Redirected);
+	if_fail_vef(result, result = process_detail::processWrite(PlatformState[id], input), "(%" GPK_FMT_S2 ")", result);
+	rtrn result;
+}
+
+tplt<tpnm T>
+err_t SProcessManager<T>::Read(u2_t id, au0_t & output) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	if_true_fe(!KnownProcesses[id].State.Started || !KnownProcesses[id].State.Redirected);
+	if_fail_vef(result, result = process_detail::processRead(PlatformState[id], output), "(%" GPK_FMT_S2 ")", result);
+	rtrn result;
+}
+
+tplt<tpnm T>
+err_t SProcessManager<T>::Communicate(u2_t id, vcu0_t input, au0_t & output) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	cnst auto & state = KnownProcesses[id].State;
+	if_true_fe(!state.Started || !state.Redirected || state.Finished);
+	if_fail_vef(result, result = process_detail::processCommunicate(PlatformState[id], input, output), "(%" GPK_FMT_S2 ")", result);
+	rtrn result;
+}
+
+tplt<tpnm T>
+err_t SProcessManager<T>::Wait(u2_t id, u2_t & exitCode) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	SProcess & record = KnownProcesses[id];
+	if_true_fe(!record.State.Started);
+	if(!record.State.Finished) {
+		if_fail_vef(-1, result = process_detail::processWait(PlatformState[id], record.ExitCode), "(%" GPK_FMT_S2 ")", result);
+		record.State.Finished = true;
 	}
-	return 0;
+	exitCode = record.ExitCode;
+	rtrn 0;
 }
 
-::gpk::error_t			gpk::environmentBlockFromEnviron(::gpk::apod<sc_t> & environmentBlock)	{
-#ifndef GPK_ATMEL
-    for (sc_t **env = environ; *env; ++env)
-		environmentBlock.append(*env, (uint32_t)strlen(*env) + 1);
+tplt<tpnm T>
+err_t SProcessManager<T>::Execute(u2_t id, vcu0_t input, au0_t & output, u2_t & exitCode) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	if_true_fe(KnownProcesses[id].State.Started);
+	if_fail_vef(-1, result = Redirect(id), "(%" GPK_FMT_S2 ")", result);
+	if_fail_vef(-1, result = Launch(id), "(%" GPK_FMT_S2 ")", result);
+	if_fail_vef(result, result = Communicate(id, input, output), "(%" GPK_FMT_S2 ")", result);
+	if_fail_vef(result, result = Wait(id, exitCode), "(%" GPK_FMT_S2 ")", result);
+	rtrn result;
+}
+
+tplt<tpnm T>
+err_t SProcessManager<T>::Close(u2_t id) {
+	err_t result;
+	if_fail_vef(-1, result = Validate(id), "(%" GPK_FMT_S2 ")", result);
+	if_fail_vef(result, result = process_detail::processClose(PlatformState[id]), "(%" GPK_FMT_S2 ")", result);
+	// Keep the slot as a tombstone: an old id must never identify a later child.
+	KnownProcesses[id] = {};
+	KnownProcesses[id].State.Closed = true;
+	rtrn result;
+}
+
+template struct SProcessManager<SProcessPlatform>;
+}
 #endif
-	environmentBlock.push_back(0);
-
-	// The following function retrieves the process's environment block using GetEnvironmentStrings and adds it to the environmentBlock parameter.
-	//sc_t						* lpvEnv						= GetEnvironmentStringsA();	// Get a pointer to the environment block.
-	//ree_if(lpvEnv == NULL, "GetEnvironmentStringsA failed (%x)\n", (uint32_t)GetLastError());
-	//int32_t						lengthEnvStrings				= ::gpk::find_sequence_pod(::gpk::view<const sc_t>{"\0", 2U}, ::gpk::view<const sc_t>{(const sc_t*)lpvEnv, (uint32_t)-1});
-	//environmentBlock		= ::gpk::view<const sc_t>{lpvEnv, (uint32_t)lengthEnvStrings + 2U};
-	//FreeEnvironmentStringsA(lpvEnv);
-	return 0;
-}

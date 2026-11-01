@@ -11,16 +11,16 @@ namespace gpk
 
 	typedef	::gpk::agauge<sc_t		>	agaugec		, agaugechar;
 	typedef	::gpk::agauge<uc_t	>	agaugeuc	, agaugeuchar;
-	typedef	::gpk::agauge<float		>	agaugef32	;
+	typedef	::gpk::agauge<float		>	agaugef2_t	;
 	typedef	::gpk::agauge<double	>	agaugef64	;
-	typedef	::gpk::agauge<uint8_t	>	agaugeu8	;
-	typedef	::gpk::agauge<uint16_t	>	agaugeu16	;
-	typedef	::gpk::agauge<uint32_t	>	agaugeu32	;
-	typedef	::gpk::agauge<uint64_t	>	agaugeu64	;
-	typedef	::gpk::agauge<int8_t	>	agaugei8	;
-	typedef	::gpk::agauge<int16_t	>	agaugei16	;
-	typedef	::gpk::agauge<int32_t	>	agaugei32	;
-	typedef	::gpk::agauge<int64_t	>	agaugei64	;
+	typedef	::gpk::agauge<u0_t	>	agaugeu8	;
+	typedef	::gpk::agauge<u1_t	>	agaugeu1_t	;
+	typedef	::gpk::agauge<u2_t	>	agaugeu32	;
+	typedef	::gpk::agauge<u3_t	>	agaugeu64	;
+	typedef	::gpk::agauge<s0_t	>	agaugei8	;
+	typedef	::gpk::agauge<s1_t	>	agaugei16	;
+	typedef	::gpk::agauge<s2_t	>	agaugei32	;
+	typedef	::gpk::agauge<s3_t	>	agaugei64	;
 }
 
 #endif // GPK_APOD_GAUGE_H

@@ -15,18 +15,18 @@ namespace gpk
 		::gpk::rangeu2_t						Slice;
 	};
 
-	GDEFINE_ENUM_TYPE(NORMAL_MODE, uint8_t);
+	GDEFINE_ENUM_TYPE(NORMAL_MODE, u0_t);
 	GDEFINE_ENUM_VALUE(NORMAL_MODE, Point			, 0);
 	GDEFINE_ENUM_VALUE(NORMAL_MODE, Line			, 1);
 	GDEFINE_ENUM_VALUE(NORMAL_MODE, Triangle		, 2);
 	GDEFINE_ENUM_VALUE(NORMAL_MODE, Quad			, 3);
 
-	GDEFINE_ENUM_TYPE(MESH_MODE, uint8_t);
+	GDEFINE_ENUM_TYPE(MESH_MODE, u0_t);
 	GDEFINE_ENUM_VALUE(MESH_MODE, List				, 0);
 	GDEFINE_ENUM_VALUE(MESH_MODE, Strip				, 1);
 	GDEFINE_ENUM_VALUE(MESH_MODE, Fan				, 2);
 
-	GDEFINE_ENUM_TYPE(GEOMETRY_TYPE, uint8_t);
+	GDEFINE_ENUM_TYPE(GEOMETRY_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(GEOMETRY_TYPE, Point			, 0);
 	GDEFINE_ENUM_VALUE(GEOMETRY_TYPE, Line			, 1);
 	GDEFINE_ENUM_VALUE(GEOMETRY_TYPE, Triangle		, 2);
@@ -45,18 +45,18 @@ namespace gpk
 		::gpk::au2_t						ConstantBuffers;
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
-		::gpk::error_t						Save			(::gpk::au0_t & output) const { 
-			gpk_necs(gpk::savePOD(output, Desc));
-			gpk_necs(gpk::saveView(output, GeometryBuffers));
-			gpk_necs(gpk::saveView(output, ConstantBuffers));
-			gpk_necs(gpk::saveView(output, GeometrySlices));
+		::gpk::err_t						Save			(::gpk::au0_t & output) const { 
+			if_fail_fe(gpk::savePOD(output, Desc));
+			if_fail_fe(gpk::saveView(output, GeometryBuffers));
+			if_fail_fe(gpk::saveView(output, ConstantBuffers));
+			if_fail_fe(gpk::saveView(output, GeometrySlices));
 			return 0;
 		}
-		::gpk::error_t						Load			(::gpk::vcu0_t & input) {
-			gpk_necs(gpk::loadPOD(input, Desc));
-			gpk_necs(gpk::loadView(input, GeometryBuffers));
-			gpk_necs(gpk::loadView(input, ConstantBuffers));
-			gpk_necs(gpk::loadView(input, GeometrySlices));
+		::gpk::err_t						Load			(::gpk::vcu0_t & input) {
+			if_fail_fe(gpk::loadPOD(input, Desc));
+			if_fail_fe(gpk::loadView(input, GeometryBuffers));
+			if_fail_fe(gpk::loadView(input, ConstantBuffers));
+			if_fail_fe(gpk::loadView(input, GeometrySlices));
 			return 0;
 		}
 	};	

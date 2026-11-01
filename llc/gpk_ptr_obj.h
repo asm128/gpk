@@ -6,23 +6,23 @@
 namespace gpk
 {
 	tplt<tpnm _tOBJ>
-	class pobj : public ::gpk::pnco<_tOBJ> {
+	class pobj : public pnco<_tOBJ> {
 	public:
-		typedef _tOBJ			T;
-		typedef	::gpk::pnco<T>	TNCOPtr;
-		typedef	::gpk::pobj<T>	TOBJPtr;
-		typedef	::gpk::gref<T>	TRef;
+		tydf	_tOBJ			T;
+		tydf	pnco<T>			TNCOPtr;
+		tydf	pobj<T>			TOBJPtr;
+		tydf	gref<T>			TRef;
 
-		using	TNCOPtr			::Reference;
+		usng	TNCOPtr			::Reference;
 
-		inline	const T*		operator->	()		const	noexcept	{ return Reference->Instance;														}
-		inline	T*				operator->	()				noexcept	{ return (0 == Reference) ? ::gpk::ref_create(&Reference) : Reference->Instance;	}
+		inln	cnst T*			oper->	()												csnx	{ return Reference->Instance;														}
+		inln	T*				oper->	()												nxpt	{ return (0 == Reference) ? ref_create(&Reference) : Reference->Instance;	}
 
 		tplt<tpnm... _tArgsConstructor>
-		inline	T*				create		(_tArgsConstructor &&... argsConstructor)	noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
-		inline	T*				allocate	()											noexcept	{ return ::gpk::ref_allocate(&Reference);											}
+		inln	T*				create		(_tArgsConstructor &&... argsConstructor)	nxpt	{ return ref_create(&Reference, argsConstructor...);							}
+		inln	T*				allocate	()											nxpt	{ return ref_allocate(&Reference);											}
 	};
-	tplt<tpnm T> using po	= ::gpk::pobj<T>; 
+	tplt<tpnm T> usng po	= pobj<T>; 
 } // namespace
 
 #endif // GPK_PTR_OBJ_H_23627

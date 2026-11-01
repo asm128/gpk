@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	enum VIEWPORT_CONTROL : int8_t
+	enum VIEWPORT_CONTROL : s0_t
 		{ VIEWPORT_CONTROL_RESIZE_LEFT				= 0
 		, VIEWPORT_CONTROL_RESIZE_TOP
 		, VIEWPORT_CONTROL_RESIZE_RIGHT
@@ -21,7 +21,7 @@ namespace gpk
 		, VIEWPORT_CONTROL_COUNT
 		};
 
-	enum GUI_CONTROL_TYPE : int8_t
+	enum GUI_CONTROL_TYPE : s0_t
 		{ GUI_CONTROL_TYPE_Viewport					= 0
 		, GUI_CONTROL_TYPE_PaletteGrid
 		, GUI_CONTROL_TYPE_ControlList
@@ -29,13 +29,13 @@ namespace gpk
 		};
 
 	struct SViewport {
-		cid_t					IdControl			= (int32_t)-1;
+		cid_t					IdControl			= (s2_t)-1;
 		::gpk::astcid<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};
-		cid_t					IdDesktopElement	= (int32_t)-1;
+		cid_t					IdDesktopElement	= (s2_t)-1;
 		GUI_CONTROL_TYPE		ControlType			= (GUI_CONTROL_TYPE)-1;
 	};
 
-	::gpk::error_t			viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
+	::gpk::err_t			viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
 #pragma pack(pop)
 }
 

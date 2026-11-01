@@ -1,15 +1,17 @@
 #include "gpk_cgi_runtime.h"
 
-using gpk::sc_t;
+GPK_USING_TYPEINT();
+GPK_USING_VIEW();
+GPK_USING_APOD();
+GPK_USING_ASTATIC();
+GPK_USING_N2();
 
-::gpk::error_t			gpk_cgi_generate_output					(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<sc_t> & output);
-::gpk::error_t			gpk::cgiMain							(int argc, sc_t** argv, sc_t**envv)	{
-		(void)(envv);
-		::gpk::SCGIRuntimeValues								runtimeValues;
-		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const sc_t**)argv, (uint32_t)argc});
-		::gpk::apod<sc_t>								output;
-		::gpk_cgi_generate_output(runtimeValues, output);
-		output.push_back('\0');
-		printf("%s", output.begin());
+::gpk::err_t			gpk_cgi_generate_output					(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output);
+::gpk::err_t			gpk::cgiMain							(::gpk::SRuntimeValues & runtimeValues)	{
+		SCGIRuntimeValues		cgiRuntimeValues(runtimeValues);
+		cgiRuntimeValuesLoad(cgiRuntimeValues);
+		string					output;
+		::gpk_cgi_generate_output(cgiRuntimeValues, output);
+		fprintf(stdout, "%.*s", GPK_VIEW_ARGS(output));
 		return 0;
 }

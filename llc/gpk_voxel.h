@@ -11,7 +11,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	stacxpr	::gpk::astatic<::gpk::bgra, 256>	VOXEL_PALETTE = {
+	stxp	::gpk::astatic<::gpk::bgra, 256>	VOXEL_PALETTE = {
 		0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
 		0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,
 		0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,
@@ -30,12 +30,12 @@ namespace gpk
 		0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111
 	};
 
-	stacxpr	::gpk::n3f2_t				VOXEL_VERTICES		[8]		= 
+	stxp	::gpk::n3f2_t				VOXEL_VERTICES		[8]		= 
 			{ {0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1} // Top
 			, {0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1} // Bottom
 			}; 
 														
-	GDEFINE_ENUM_TYPE(VOXEL_FACE, uint8_t);
+	GDEFINE_ENUM_TYPE(VOXEL_FACE, u0_t);
 	GDEFINE_ENUM_VALUE(VOXEL_FACE, Bottom	, 0);
 	GDEFINE_ENUM_VALUE(VOXEL_FACE, Back		, 1);
 	GDEFINE_ENUM_VALUE(VOXEL_FACE, Left		, 2);
@@ -52,7 +52,7 @@ namespace gpk
 		bool		 Right			: 1;
 	};
 
-	stacxpr	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_VERTICES			= {
+	stxp	::gpk::astatic<::gpk::quad3f2_t, 6>	VOXEL_FACE_VERTICES			= {
 		{ {{0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}}  // Top		(y = 1)
 		, {{1, 0, 0}, {1, 1, 0}, {1, 0, 1}, {1, 1, 1}}	// Front	(x = 1)
 		, {{0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}}	// Right	(z = 1)
@@ -61,7 +61,7 @@ namespace gpk
 		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}	// Left		(z = 0)
 		}}; 
 
-	stacxpr	::gpk::astatic<::gpk::quad2f32, 6>	VOXEL_FACE_UV	= {
+	stxp	::gpk::astatic<::gpk::quad2f2_t, 6>	VOXEL_FACE_UV	= {
 		{ {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Top		
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Front	
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Right	
@@ -70,7 +70,7 @@ namespace gpk
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Left		
 		}};
 
-	stacxpr	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_NORMALS	= {
+	stxp	::gpk::astatic<::gpk::quad3f2_t, 6>	VOXEL_FACE_NORMALS	= {
 		{ {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}	// Top		
 		, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0}}	// Front	
 		, {{0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}}	// Right	
@@ -79,8 +79,8 @@ namespace gpk
 		, {{0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}}	// Left		
 		}};
 
-	stacxpr	::gpk::n3f2_t				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
-	stacxpr	::gpk::quadu8				VOXEL_FACE_NORMAL_INDICES	[6]		= 
+	stxp	::gpk::n3f2_t				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
+	stxp	::gpk::quadu0_t				VOXEL_FACE_NORMAL_INDICES	[6]		= 
 		{ {0, 0, 0, 0}	// Top		
 		, {1, 1, 1, 1}	// Front	
 		, {2, 2, 2, 2}	// Right	
@@ -89,7 +89,7 @@ namespace gpk
 		, {5, 5, 5, 5}	// Left		
 		};
 
-	stacxpr	::gpk::n3s0_t				VOXEL_DELTAS				[6]		= 
+	stxp	::gpk::n3s0_t				VOXEL_DELTAS				[6]		= 
 		{ { 0, 1, 0} // Top		(y = 1)
 		, { 1, 0, 0} // Front	(x = 1)
 		, { 0, 0, 1} // Right	(z = 1)
@@ -98,7 +98,7 @@ namespace gpk
 		, { 0, 0,-1} // Left	(z = -1)
 		};
 
-	stacxpr	uint8_t						VOXEL_FACE_INDICES		[6][6]	= 
+	stxp	u0_t						VOXEL_FACE_INDICES		[6][6]	= 
 		{ {0, 2, 1, 1, 2, 3} // Top
 		, {0, 1, 2, 1, 3, 2}
 		, {0, 1, 2, 1, 3, 2}
@@ -107,7 +107,7 @@ namespace gpk
 		, {0, 2, 1, 1, 2, 3}
 		}; 
 
-	stacxpr	uint16_t					VOXEL_FACE_INDICES_16	[6][6]	= 
+	stxp	u1_t					VOXEL_FACE_INDICES_16	[6][6]	= 
 		{ {4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 1, 4 * 3 + 3, 4 * 3 + 2} // Bottom
 		, {4 * 4 + 0, 4 * 4 + 2, 4 * 4 + 1, 4 * 4 + 1, 4 * 4 + 2, 4 * 4 + 3}
 		, {4 * 5 + 0, 4 * 5 + 2, 4 * 5 + 1, 4 * 5 + 1, 4 * 5 + 2, 4 * 5 + 3}
@@ -117,14 +117,14 @@ namespace gpk
 		, 
 		}; 
 
-	stacxpr	float						VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
+	stxp	float						VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
 
-	tplt<tpnm T, uint16_t _width = 16>
+	tplt<tpnm T, u1_t _width = 16>
 	struct SVoxelLayer {
-		stacxpr	uint32_t					WIDTH						= _width;
-		stacxpr	uint32_t					DEPTH						= WIDTH;
+		stxp	u2_t					WIDTH						= _width;
+		stxp	u2_t					DEPTH						= WIDTH;
 
-		uint16_t										Y							= {};
+		u1_t										Y							= {};
 		T											Cells	[DEPTH][WIDTH]		= {};
 	};
 
@@ -157,29 +157,29 @@ namespace gpk
 	struct SVoxelMap {
 		::gpk::n3u0_t							Dimensions;
 		::gpk::a8bgra			Palette;
-		::gpk::apod<::gpk::SVoxel<uint8_t>>	Voxels;
+		::gpk::apod<::gpk::SVoxel<u0_t>>	Voxels;
 		::gpk::aobj<::gpk::SVoxelChunk<T>>	Chunks;
 		::gpk::apod<::gpk::n2u0_t>			ChunkPositions;
 
-		int32_t										GetChunk					(const ::gpk::n2u0_t & chunkCoords) const	{ 
+		s2_t										GetChunk					(const ::gpk::n2u0_t & chunkCoords) const	{ 
 			return ::gpk::find(chunkCoords, ::gpk::view<const ::gpk::n2u0_t>{ChunkPositions}); 
 		}
 
-		int32_t											GetChunkForVoxel			(const ::gpk::n3u0_t & voxelPosition) const	{ 
+		s2_t											GetChunkForVoxel			(const ::gpk::n3u0_t & voxelPosition) const	{ 
 			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			return GetChunk({floor.x, floor.z}); 
 		}
 
-		int32_t											SetValue					(const ::gpk::n3u0_t & voxelPosition, const T & cellValue) 	{ 
+		s2_t											SetValue					(const ::gpk::n3u0_t & voxelPosition, const T & cellValue) 	{ 
 			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
-			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
+			s2_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) {
 				indexChunk										= Chunks.push_back({});
 				ChunkPositions.push_back({floor.x, floor.z});
 			}
 
 			::gpk::SVoxelChunk<T>							& chunk						= Chunks[indexChunk];
-			if(chunk.Layers.size() < uint32_t(voxelPosition.y) + 1)
+			if(chunk.Layers.size() < u2_t(voxelPosition.y) + 1)
 				chunk.Layers.resize(voxelPosition.y + 1);
 
 			T												& cell						= chunk.Layers[voxelPosition.y]
@@ -188,9 +188,9 @@ namespace gpk
 				if(0 == cell) 
 					Voxels.push_back({voxelPosition.x, voxelPosition.y, voxelPosition.z, cellValue});
 				else {
-					uint32_t											foundVoxel					= (uint32_t)-1;
-					for(uint32_t iVoxel = 0; iVoxel < Voxels.size(); ++iVoxel) {
-						::gpk::SVoxel<uint8_t>								& voxel						= Voxels[iVoxel];
+					u2_t											foundVoxel					= (u2_t)-1;
+					for(u2_t iVoxel = 0; iVoxel < Voxels.size(); ++iVoxel) {
+						::gpk::SVoxel<u0_t>								& voxel						= Voxels[iVoxel];
 						if(voxel.Position == voxelPosition) {
 							if(0 == cellValue)
 								Voxels.remove_unordered(foundVoxel);
@@ -203,7 +203,7 @@ namespace gpk
 
 					}
 					if(foundVoxel >= Voxels.size()) {
-						warning_printf("Voxel not found! Voxel value: %i", (int32_t)cellValue);
+						warning_printf("Voxel not found! Voxel value: %i", (s2_t)cellValue);
 						Voxels.push_back({{voxelPosition.x, voxelPosition.y, voxelPosition.z}, cellValue});
 					}
 				}
@@ -212,9 +212,9 @@ namespace gpk
 			return indexChunk;
 		}
 
-		int32_t											GetValue					(const ::gpk::n3u0_t & voxelPosition, T & cellValue) const	{ 
+		s2_t											GetValue					(const ::gpk::n3u0_t & voxelPosition, T & cellValue) const	{ 
 			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
-			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
+			s2_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) 
 				return -1;
 

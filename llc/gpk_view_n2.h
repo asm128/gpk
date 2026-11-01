@@ -7,39 +7,34 @@
 
 namespace gpk
 {
-#pragma pack(push, 1)
-	typedef	::gpk::view<::gpk::n2sc_t>	vn2c	, vn2char	;
-	typedef	::gpk::view<::gpk::n2uc_t>	vn2uc	, vn2uchar	;
-	typedef	::gpk::view<::gpk::n2f2_t>	vn2f32	;
-	typedef	::gpk::view<::gpk::n2f3_t>	vn2f64	;
-	typedef	::gpk::view<::gpk::n2u0_t>	vn2u8	;
-	typedef	::gpk::view<::gpk::n2u1_t>	vn2u16	;
-	typedef	::gpk::view<::gpk::n2u2_t>	vn2u32	;
-	typedef	::gpk::view<::gpk::n2u3_t>	vn2u64	;
-	typedef	::gpk::view<::gpk::n2s0_t>	vn2i8	;
-	typedef	::gpk::view<::gpk::n2s1_t>	vn2i16	;
-	typedef	::gpk::view<::gpk::n2s2_t>	vn2i32	;
-	typedef	::gpk::view<::gpk::n2s3_t>	vn2i64	;
+	tplT using	vn2		= ::gpk::view<::gpk::n2<T>>;
+	tplT using	vcn2	= ::gpk::view<cnst ::gpk::n2<T>>;
 
-	typedef	::gpk::view<const ::gpk::n2sc_t>	vc2c	;
-	typedef	::gpk::view<const ::gpk::n2uc_t>	vc2uc	;
-	typedef	::gpk::view<const ::gpk::n2f2_t>	vc2f32	;
-	typedef	::gpk::view<const ::gpk::n2f3_t>	vc2f64	;
-	typedef	::gpk::view<const ::gpk::n2u0_t>	vc2u8	;
-	typedef	::gpk::view<const ::gpk::n2u1_t>	vc2u16	;
-	typedef	::gpk::view<const ::gpk::n2u2_t>	vc2u32	;
-	typedef	::gpk::view<const ::gpk::n2u3_t>	vc2u64	;
-	typedef	::gpk::view<const ::gpk::n2s0_t>	vc2i8	;
-	typedef	::gpk::view<const ::gpk::n2s1_t>	vc2i16	;
-	typedef	::gpk::view<const ::gpk::n2s2_t>	vc2i32	;
-	typedef	::gpk::view<const ::gpk::n2s3_t>	vc2i64	;
+	tydf	::gpk::vn2<sc_t>	vn2sc_t;	tdcs	vn2sc_t	vn2sc_c;
+	tydf	::gpk::vn2<uc_t>	vn2uc_t;	tdcs	vn2uc_t	vn2uc_c;
+	tydf	::gpk::vn2<u0_t>	vn2u0_t;	tdcs	vn2u0_t	vn2u0_c;
+	tydf	::gpk::vn2<u1_t>	vn2u1_t;	tdcs	vn2u1_t	vn2u1_c;
+	tydf	::gpk::vn2<u2_t>	vn2u2_t;	tdcs	vn2u2_t	vn2u2_c;
+	tydf	::gpk::vn2<u3_t>	vn2u3_t;	tdcs	vn2u3_t	vn2u3_c;
+	tydf	::gpk::vn2<s0_t>	vn2s0_t;	tdcs	vn2s0_t	vn2s0_c;
+	tydf	::gpk::vn2<s1_t>	vn2s1_t;	tdcs	vn2s1_t	vn2s1_c;
+	tydf	::gpk::vn2<s2_t>	vn2s2_t;	tdcs	vn2s2_t	vn2s2_c;
+	tydf	::gpk::vn2<s3_t>	vn2s3_t;	tdcs	vn2s3_t	vn2s3_c;
+	tydf	::gpk::vn2<f2_t>	vn2f2_t;	tdcs	vn2f2_t	vn2f2_c;
+	tydf	::gpk::vn2<f3_t>	vn2f3_t;	tdcs	vn2f3_t	vn2f3_c;
 
-	tplt<tpnm _tDimension>	
-	using	vn2		= ::gpk::view<::gpk::n2<_tDimension>>;
-
-	tplt<tpnm _tDimension>	
-	using	vcn2	= ::gpk::view<const ::gpk::n2<_tDimension>>;
-#pragma pack(pop)
+	tydf	::gpk::vcn2<sc_t>	vcn2sc_t;	tdcs	vcn2sc_t	vcn2sc_c;
+	tydf	::gpk::vcn2<uc_t>	vcn2uc_t;	tdcs	vcn2uc_t	vcn2uc_c;
+	tydf	::gpk::vcn2<u0_t>	vcn2u0_t;	tdcs	vcn2u0_t	vcn2u0_c;
+	tydf	::gpk::vcn2<u1_t>	vcn2u1_t;	tdcs	vcn2u1_t	vcn2u1_c;
+	tydf	::gpk::vcn2<u2_t>	vcn2u2_t;	tdcs	vcn2u2_t	vcn2u2_c;
+	tydf	::gpk::vcn2<u3_t>	vcn2u3_t;	tdcs	vcn2u3_t	vcn2u3_c;
+	tydf	::gpk::vcn2<s0_t>	vcn2s0_t;	tdcs	vcn2s0_t	vcn2s0_c;
+	tydf	::gpk::vcn2<s1_t>	vcn2s1_t;	tdcs	vcn2s1_t	vcn2s1_c;
+	tydf	::gpk::vcn2<s2_t>	vcn2s2_t;	tdcs	vcn2s2_t	vcn2s2_c;
+	tydf	::gpk::vcn2<s3_t>	vcn2s3_t;	tdcs	vcn2s3_t	vcn2s3_c;
+	tydf	::gpk::vcn2<f2_t>	vcn2f2_t;	tdcs	vcn2f2_t	vcn2f2_c;
+	tydf	::gpk::vcn2<f3_t>	vcn2f3_t;	tdcs	vcn2f3_t	vcn2f3_c;
 } // namespace
 
 #endif // GPK_VIEW_N2_2973498273423617

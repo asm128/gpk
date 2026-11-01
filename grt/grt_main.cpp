@@ -22,7 +22,7 @@ struct SRuntimeState {
 static	void			threadRender		(void* pRuntimeState)												{
 	::SRuntimeState				& runtimeState		= *(::SRuntimeState*)pRuntimeState;
 	::gpk::SRuntimeModule		* runtimeModule		= runtimeState.MainModule;
-	re_if(0 == runtimeModule, "Main module is null!");
+	if_true_ref(0 == runtimeModule, "Main module is null!");
 	gpk_sync_increment(runtimeState.RenderThreadUsers);
 	int32_t						result				= 0;
 	while(result = gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1) - 1 && result != -1) {
@@ -38,17 +38,17 @@ static	int				threadRenderStart	(::SRuntimeState& runtimeState)										{
 
 static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
 #if defined(GPK_WINDOWS)
-	::gpk::error_t				updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
+	::gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 #else
-	::gpk::error_t				updateResult		= mainModule.Update(mainModule.Application, false);
+	::gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, false);
 #endif
 	if(1 == updateResult || ::gpk::failed(updateResult)) {
-		is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);
-		es_if(::gpk::failed(updateResult));
+		if_true_i(::gpk::APPLICATION_STATE_EXIT == updateResult);
+		if_true_e(::gpk::failed(updateResult));
 	}
 	else {
 		gpk_sync_increment(runtimeState.RenderThreadUsers);	// Report we're alive
-		gpk_necall(::threadRenderStart(runtimeState), "%s", "Unknown error");
+		if_fail_fef(::threadRenderStart(runtimeState), "%s", "Unknown error");
 		info_printf("%s", "Application instance initialized successfully. Executing main loop...");
 		while(true) {
 #if defined(GPK_WINDOWS)
@@ -56,9 +56,9 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 #else
 			updateResult			= mainModule.Update(mainModule.Application, false);
 #endif
-			break_ginfo_if(1 == updateResult, "Application requested termination.");
-			break_gerror_if(::gpk::failed(updateResult), "update() returned error.");
-			//ef_if(mainModule.Render(app), "Why would this ever happen?");
+			if_true_bif(1 == updateResult, "Application requested termination.");
+			if_true_bef(::gpk::failed(updateResult), "update() returned error.");
+			//if_true_ef(mainModule.Render(app), "Why would this ever happen?");
 		}
 		gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done
 	}
@@ -83,29 +83,29 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 #endif
 	SRuntimeState					runtimeState					= {};
 	{
-		::gpk::vcs						fileName						= "gme";
+		::gpk::vcst_t						fileName						= "gme";
 		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine.size() > 1)
 			fileName					= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1], (uint32_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1])};
 		char							mainModuleName	[512]			= {};
 		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule			mainModule						= {};
-		gpk_necall(gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
+		if_fail_fef(gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
 		info_printf("Created main module: '%s'.", mainModuleName);
 		void							* app;
-		gpk_necall(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
+		if_fail_fef(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
 		mainModule.Application		= app;
 		info_printf("%s", "Initializing application instance.");
 		if(::gpk::failed(mainModule.Setup(app))) {
 			error_printf("%s", "Setup() Failed!");
-			gpk_necall(mainModule.Delete(&app), "Failed to create main module. %s.");
+			if_fail_fef(mainModule.Delete(&app), "Failed to create main module. %s.");
 			return -1;
 		}
 		runtimeState.MainModule		= &mainModule;
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
-		es_if(::gpk::failed(mainModule.Cleanup(app)));
+		if_true_e(::gpk::failed(mainModule.Cleanup(app)));
 		info_printf("%s", "Application instance destroyed.");
-		gpk_necall(mainModule.Delete(&app), "");
+		if_fail_fef(mainModule.Delete(&app), "");
 	}
 	return 0;
 }
@@ -120,7 +120,7 @@ int WINAPI					WinMain
 	const uint32_t					argc							= __argc;
 	const char						** argv							= (const char**)__argv;
 	const char						** envp							= (const char**)_environ;
-	ree_if(65535 < argc, "Invalid parameter count: %u.", argc);
+	if_true_vef(-1, 65535 < argc, "Invalid parameter count: %u.", argc);
 	::gpk::STypeRegistry			& typeRegistry						= ::gpk::STypeRegistry::GetGlobalInstance();
 	for(uint32_t iType = 0; iType < typeRegistry.Names.size(); ++iType)
 		info_printf("Type at index %u: '%s'.", iType, typeRegistry.Names[iType].begin());
@@ -138,7 +138,7 @@ int WINAPI					WinMain
 #endif // defined(GPK_WINDOWS)
 
 int							main		(int argc, char *argv[], char *envp[])			{
-	ree_if(65535 < argc, "Invalid parameter count: %u.", argc);
+	if_true_vef(-1, 65535 < argc, "Invalid parameter count: %u.", argc);
 	::gpk::SRuntimeValues			runtimeValues					= {};
 #if defined(GPK_WINDOWS)
 	runtimeValues.PlatformDetail.EntryPointArgsWin					= {GetModuleHandle(NULL), 0, 0, SW_SHOW};

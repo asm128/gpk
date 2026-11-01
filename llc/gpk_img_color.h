@@ -14,10 +14,10 @@ namespace gpk
 	typedef	img<::gpk::rgba >	img8rgba;
 	typedef	img<::gpk::rgbaf>	imgfrgba;
 
-	typedef rt<::gpk::bgra, uint32_t>	rtbgra8d32;
-	typedef rt<::gpk::rgba, uint32_t>	rtrgba8d32;
-	typedef rt<::gpk::bgra, uint8_t>	rtbgra8s8;
-	typedef rt<::gpk::rgba, uint8_t>	rtrgba8s8;
+	typedef rt<::gpk::bgra, u2_t>	rtbgra8d32;
+	typedef rt<::gpk::rgba, u2_t>	rtrgba8d32;
+	typedef rt<::gpk::bgra, u0_t>	rtbgra8s8;
+	typedef rt<::gpk::rgba, u0_t>	rtrgba8s8;
 
 	typedef	pobj<::gpk::img8bgr		>		pimg8bgr ;
 	typedef	pobj<::gpk::img8rgb		>		pimg8rgb ;

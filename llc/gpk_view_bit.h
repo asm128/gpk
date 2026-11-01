@@ -79,11 +79,11 @@ namespace gpk
 		bit_proxy<T>		oper[]		(u2_t index)			{ if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count); u2_c offsetRow = index / ELEMENT_BITS, offsetBit = index % ELEMENT_BITS; return {Data[offsetRow], (u0_t)offsetBit}; }
 		bool				oper[]		(u2_t index)	cnst	{ if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count); u2_c offsetRow = index / ELEMENT_BITS, offsetBit = index % ELEMENT_BITS; return Data[offsetRow] & (1ULL << offsetBit); }
 		// Methods
-		inln	TIter		begin			()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIter{}; }
-		inln	TIter		end				()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIter{}; }
+		inln	TIter		begin			()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIter{}; }
+		inln	TIter		end				()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIter{}; }
 		//
-		inxp	TIterConst	begin			()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIterConst{}; }
-		inxp	TIterConst	end				()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIterConst{}; }
+		inxp	TIterConst	begin			()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIterConst{}; }
+		inxp	TIterConst	end				()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIterConst{}; }
 
 		inxp	u2_c&		size			()	cnst	nxpt	{ return Count; }
 	};
@@ -91,7 +91,7 @@ namespace gpk
 
 	tplT	using					vbit		= ::gpk::view_bit<T>;
 	tydf	::gpk::view_bit<u0_t>	vbitu0_t, vbitu8	;
-	tydf	::gpk::view_bit<u1_t>	vbitu1_t, vbitu16	;
+	tydf	::gpk::view_bit<u1_t>	vbitu1_t, vbitu1_t	;
 	tydf	::gpk::view_bit<u2_t>	vbitu2_t, vbitu32	;
 	tydf	::gpk::view_bit<u3_t>	vbitu3_t, vbitu64	;
 	tplT	err_t		reverse_bits		(::gpk::view_bit<T> toReverse)											{

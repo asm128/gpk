@@ -1,4 +1,4 @@
-/// Copyright 2009-2023 - asm128
+/// Copyright 2009-2024 - ogarnd
 #include "gpk_n2.h"
 #include "gpk_array_pod.h"
 
@@ -8,21 +8,20 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	tplt<tpnm _tDimension>	
-	using		an2		= ::gpk::apod<::gpk::n2<_tDimension>>;
+	tplT using	an2	= ::gpk::apod<::gpk::n2<T>>;
 
-	typedef	::gpk::an2<sc_t	>	an2c	, an2char		;
-	typedef	::gpk::an2<uc_t >	an2uc	, an2uchar		;
-	typedef	::gpk::an2<f2_t	>	an2f32	;
-	typedef	::gpk::an2<f3_t	>	an2f64	;
-	typedef	::gpk::an2<u0_t	>	an2u8	;
-	typedef	::gpk::an2<u1_t	>	an2u16	;
-	typedef	::gpk::an2<u2_t	>	an2u32	;
-	typedef	::gpk::an2<u3_t	>	an2u64	;
-	typedef	::gpk::an2<s0_t	>	an2i8	;
-	typedef	::gpk::an2<s1_t	>	an2i16	;
-	typedef	::gpk::an2<s2_t	>	an2i32	;
-	typedef	::gpk::an2<s3_t	>	an2i64	;
+	tydf	::gpk::an2<sc_t>	an2sc_t;	tdcs	an2sc_t	an2sc_c;
+	tydf	::gpk::an2<uc_t>	an2uc_t;	tdcs	an2uc_t	an2uc_c;
+	tydf	::gpk::an2<u0_t>	an2u0_t;	tdcs	an2u0_t	an2u0_c;
+	tydf	::gpk::an2<u1_t>	an2u1_t;	tdcs	an2u1_t	an2u1_c;
+	tydf	::gpk::an2<u2_t>	an2u2_t;	tdcs	an2u2_t	an2u2_c;
+	tydf	::gpk::an2<u3_t>	an2u3_t;	tdcs	an2u3_t	an2u3_c;
+	tydf	::gpk::an2<s0_t>	an2s0_t;	tdcs	an2s0_t	an2s0_c;
+	tydf	::gpk::an2<s1_t>	an2s1_t;	tdcs	an2s1_t	an2s1_c;
+	tydf	::gpk::an2<s2_t>	an2s2_t;	tdcs	an2s2_t	an2s2_c;
+	tydf	::gpk::an2<s3_t>	an2s3_t;	tdcs	an2s3_t	an2s3_c;
+	tydf	::gpk::an2<f2_t>	an2f2_t;	tdcs	an2f2_t	an2f2_c;
+	tydf	::gpk::an2<f3_t>	an2f3_t;	tdcs	an2f3_t	an2f3_c;
 #pragma pack(pop)
 } // namespace
 

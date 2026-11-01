@@ -7,18 +7,11 @@
 #   include <cstddef>
 #endif
 
-// Uncomment these to toggle behavior
-#ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
-#	define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
-#endif
-//#define GPK_KEEP_SYSTEM_ERROR_ON_ERROR_LOG
-
 #ifndef GPK_DEBUG_H
 #define GPK_DEBUG_H
 
 #ifndef GPK_DEBUG_ENABLED
-namespace gpk { stxp size_t DEBUG_BUILD = 0; } 
-#	define GPK_PLATFORM_CRT_BREAKPOINT()		do {} while(0)
+namespace gpk { stxp size_t DEBUG_BUILD = 0; }
 #	define GPK_PLATFORM_CRT_CHECK_MEMORY()		do {} while(0)
 //#	ifndef ARDUINOJSON_ENABLE_COMMENTS
 #		define GPK_ERROR_PRINTF_ENABLED
@@ -28,28 +21,19 @@ namespace gpk { stxp size_t DEBUG_BUILD = 0; }
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
 //#	define GPK_VERBOSE_PRINTF_ENABLED	// Uncomment as needed
 #else
-namespace gpk { stxp size_t DEBUG_BUILD = (size_t)-1; } 
+namespace gpk { stxp size_t DEBUG_BUILD = (size_t)-1; }
 #	define GPK_ERROR_PRINTF_ENABLED
 #	define GPK_WARNING_PRINTF_ENABLED
 #	define GPK_INFO_PRINTF_ENABLED
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
 //#	define GPK_VERBOSE_PRINTF_ENABLED
-#	ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
-#		define GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
-#	endif
 #	ifndef GPK_KEEP_SYSTEM_ERROR_ON_ERROR_LOG
 #		define GPK_CLEAR_SYSTEM_ERROR_ON_ERROR_LOG
 #	endif
 #	ifdef GPK_WINDOWS
 #		include <crtdbg.h>
-#		if defined GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
-#			define GPK_PLATFORM_CRT_BREAKPOINT		(void)_CrtDbgBreak
-#		else
-#			define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
-#		endif
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0) // (void)_CrtCheckMemory
 #	else // GPK_WINDOWS
-#		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #		ifndef GPK_ESP32
 #		    ifdef GPK_ESP8266
 #			    include <user_interface.h>
@@ -66,4 +50,11 @@ namespace gpk { stxp size_t DEBUG_BUILD = (size_t)-1; }
 #	endif // GPK_WINDOWS
 #endif // GPK_DEBUG_ENABLED
 
+namespace gpk
+{
+	int	debugBreakEnabled	()						nxpt;
+	int	debugBreak			()						nxpt;
+	int	debugBreakEnable	(int enabled = true)	nxpt;
+	int	debugBreakDisable	()						nxpt;
+} // namespace
 #endif // GPK_DEBUG_H

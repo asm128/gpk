@@ -15,20 +15,21 @@
 
 namespace DirectX
 {
+	usng nmsp gpk;
 	HRESULT					LoadWAVAudioInMemory	(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) noexcept;
-	HRESULT					LoadWAVAudioFromFile	(::gpk::vcsc_t szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) noexcept;
+	HRESULT					LoadWAVAudioFromFile	(::gpk::view<sc_t> szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) noexcept;
 							
 	struct WAVData {		
 		const WAVEFORMATEX		* WaveFormat			= 0;
 		::gpk::vcu0_t				AudioView				= {};
-		uint32_t				LoopStart				= 0;
-		uint32_t				LoopLength				= 0;
-		const uint32_t			* Seek					= 0;	// Note: XMA Seek data is Big-Endian
-		uint32_t				SeekCount				= 0;
+		u2_t				LoopStart				= 0;
+		u2_t				LoopLength				= 0;
+		const u2_t			* Seek					= 0;	// Note: XMA Seek data is Big-Endian
+		u2_t				SeekCount				= 0;
 	};						
 							
 	HRESULT					LoadWAVAudioInMemoryEx	(::gpk::vcu0_t wavData, WAVData & result) noexcept;
-	HRESULT					LoadWAVAudioFromFileEx	(::gpk::vcsc_t szFileName, ::gpk::au0_t & wavData, WAVData & result) noexcept;
+	HRESULT					LoadWAVAudioFromFileEx	(::gpk::view<sc_t> szFileName, ::gpk::au0_t & wavData, WAVData & result) noexcept;
 }
 
 #endif // GPK_WINDOWS

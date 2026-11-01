@@ -51,13 +51,13 @@ namespace gpk
 			Texture2D				= {};
 		}
 
-		::gpk::error_t			CreateSizeDependentResources(ID3D11Device3 * d3dDevice, ::gpk::n2u1_t windowSize)	{
-			gpk_necs(RenderTarget.resize(windowSize.u2_t(), {0, 0, 0, 0}));
-			gpk_necs(gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, ShaderResourceView, RenderTarget));
+		::gpk::err_t			CreateSizeDependentResources(ID3D11Device3 * d3dDevice, ::gpk::n2u1_t windowSize)	{
+			if_fail_fe(RenderTarget.resize(windowSize.u2(), {0, 0, 0, 0}));
+			if_fail_fe(gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, ShaderResourceView, RenderTarget));
 			return 0;
 		}
 
-		::gpk::error_t			CreateDeviceResources		(ID3D11Device3 * d3dDevice)	{
+		::gpk::err_t			CreateDeviceResources		(ID3D11Device3 * d3dDevice)	{
 			{		
 				::gpk::pcom<ID3D11Buffer>	constantBuffer;
 				D3D11_BUFFER_DESC			constantBufferDesc			= {sizeof(::gpk::SRenderNodeConstants)};
@@ -77,16 +77,16 @@ namespace gpk
 				::gpk::pcom<ID3D11InputLayout>	inputLayout	;
 				::gpk::pcom<ID3D11VertexShader>	vertexShader;
 
-				::gpk::vcs					shaderName					= "vsGUI";
+				::gpk::vcst_t					shaderName					= "vsGUI";
 				sc_t						shaderFileName	[1024]		= {};
-				cnstxpr	D3D11_INPUT_ELEMENT_DESC	vertexDesc []		=
+				cxpr	D3D11_INPUT_ELEMENT_DESC	vertexDesc []		=
 					{ { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					, { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					};
 				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
 
 				::gpk::as0_t				fileVS;
-				gpk_necs(gpk::fileToMemory(::gpk::vcs{shaderFileName}, fileVS));
+				if_fail_fe(gpk::fileToMemory(::gpk::vcst_t{shaderFileName}, fileVS));
 				// After the vertex shader file is loaded, create the shader and input layout.
 				gpk_hrcall(d3dDevice->CreateVertexShader(&fileVS[0], fileVS.size(), nullptr, &vertexShader));
 				gpk_hrcall(d3dDevice->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileVS[0], fileVS.size(), &inputLayout)); 
@@ -99,7 +99,7 @@ namespace gpk
 				::gpk::pcom<ID3D11PixelShader>	pixelShader;
 				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
 				::gpk::as0_t					filePS;
-				gpk_necs(gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
+				if_fail_fe(gpk::fileToMemory(::gpk::vcst_t{shaderFileName}, filePS));
 
 				gpk_hrcall(d3dDevice->CreatePixelShader(&filePS[0], filePS.size(), nullptr, &pixelShader));
 				PixelShader					= pixelShader;
@@ -121,9 +121,9 @@ namespace gpk
 				VertexBuffer				= d3dBuffer;
 			}
 			{
-				constexpr uint16_t			indices[]							= {0, 1, 2, 1, 3, 2};
+				constexpr u1_t			indices[]							= {0, 1, 2, 1, 3, 2};
 				D3D11_SUBRESOURCE_DATA		vertexBufferData					= {indices};
-				D3D11_BUFFER_DESC			vertexBufferDesc					= {sizeof(uint16_t) * 6};
+				D3D11_BUFFER_DESC			vertexBufferDesc					= {sizeof(u1_t) * 6};
 				vertexBufferDesc.BindFlags	= D3D11_BIND_INDEX_BUFFER;
 				::gpk::pcom<ID3D11Buffer>	d3dBuffer;
 				gpk_hrcall(d3dDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &d3dBuffer));
@@ -203,7 +203,7 @@ namespace gpk
 
 	};
 
-	::gpk::error_t			d3dGUIDraw				(::DX::D3DDeviceResources & d3dResources, ::gpk::SD3DGUIResources<::gpk::bgra> & guiStuff);
+	::gpk::err_t			d3dGUIDraw				(::DX::D3DDeviceResources & d3dResources, ::gpk::SD3DGUIResources<::gpk::bgra> & guiStuff);
 
 	struct SD3DApplication : DX::IDeviceNotify {
 		::gpk::pobj<::gpk::SEngineGraphics>		EngineGraphics;
@@ -214,9 +214,9 @@ namespace gpk
 		::gpk::SD3DGUIResources<::gpk::bgra>	GUIStuff				;
 	
 		virtual void			OnDeviceLost			() { return ReleaseDeviceResources(); }
-		virtual ::gpk::error_t	OnDeviceRestored		() { return CreateDeviceResources(*EngineGraphics); }
+		virtual ::gpk::err_t	OnDeviceRestored		() { return CreateDeviceResources(*EngineGraphics); }
 
-		::gpk::error_t			Shutdown				()	{
+		::gpk::err_t			Shutdown				()	{
 			DeviceResources->m_swapChain->SetFullscreenState(FALSE, 0);
 			ReleaseDeviceResources();
 			Scene			= {};
@@ -225,14 +225,14 @@ namespace gpk
 			DeviceResources	= {};
 			return 0;
 		}
-		::gpk::error_t			Initialize				(HWND hWnd, const ::gpk::pobj<::gpk::SEngineGraphics> & engineGraphics)	{
+		::gpk::err_t			Initialize				(HWND hWnd, const ::gpk::pobj<::gpk::SEngineGraphics> & engineGraphics)	{
 			EngineGraphics			= engineGraphics;
 
-			gpk_necs(DeviceResources->Initialize());
-			gpk_necs(DeviceResources->SetWindow(hWnd));
+			if_fail_fe(DeviceResources->Initialize());
+			if_fail_fe(DeviceResources->SetWindow(hWnd));
 			DeviceResources->RegisterDeviceNotify(this);
-			gpk_necs(Scene.Initialize(DeviceResources));
-			gpk_necs(Text .Initialize(DeviceResources));
+			if_fail_fe(Scene.Initialize(DeviceResources));
+			if_fail_fe(Text .Initialize(DeviceResources));
 			return 0;
 		}
 
@@ -244,36 +244,36 @@ namespace gpk
 		}
 		// Notifies renderers that device resources may now be recreated.
 
-		::gpk::error_t			CreateDeviceDependentEngineResources(ID3D11Device3 * d3dDevice,  const ::gpk::SEngineGraphics & engineGraphics)	{
-			gpk_necs(gpk::d3dCreateBuffersFromEngineMeshes		(d3dDevice, engineGraphics.Meshes	, engineGraphics.Buffers, Scene.IndexBuffer, Scene.VertexBuffer));
-			gpk_necs(gpk::d3dCreateTexturesFromEngineSurfaces		(d3dDevice, engineGraphics.Surfaces	, Scene.ShaderResourceView));
-			gpk_necs(gpk::d3dCreatePixelShadersFromEngineShaders	(d3dDevice, engineGraphics.Shaders	, Scene.PixelShader));
+		::gpk::err_t			CreateDeviceDependentEngineResources(ID3D11Device3 * d3dDevice,  const ::gpk::SEngineGraphics & engineGraphics)	{
+			if_fail_fe(gpk::d3dCreateBuffersFromEngineMeshes		(d3dDevice, engineGraphics.Meshes	, engineGraphics.Buffers, Scene.IndexBuffer, Scene.VertexBuffer));
+			if_fail_fe(gpk::d3dCreateTexturesFromEngineSurfaces		(d3dDevice, engineGraphics.Surfaces	, Scene.ShaderResourceView));
+			if_fail_fe(gpk::d3dCreatePixelShadersFromEngineShaders	(d3dDevice, engineGraphics.Shaders	, Scene.PixelShader));
 			return 0;
 		}
-		::gpk::error_t			CreateDeviceResources	(const ::gpk::SEngineGraphics & engineGraphics)	{
+		::gpk::err_t			CreateDeviceResources	(const ::gpk::SEngineGraphics & engineGraphics)	{
 			ID3D11Device3				* pd3dDevice			= DeviceResources->GetD3DDevice();
-			gpk_necs(Scene		.CreateDeviceResources(pd3dDevice));
-			gpk_necs(Text		.CreateDeviceResources(DeviceResources->GetD2DDeviceContext()));
-			gpk_necs(GUIStuff	.CreateDeviceResources(pd3dDevice));
-			gpk_necs(CreateDeviceDependentEngineResources(pd3dDevice, engineGraphics));
+			if_fail_fe(Scene		.CreateDeviceResources(pd3dDevice));
+			if_fail_fe(Text		.CreateDeviceResources(DeviceResources->GetD2DDeviceContext()));
+			if_fail_fe(GUIStuff	.CreateDeviceResources(pd3dDevice));
+			if_fail_fe(CreateDeviceDependentEngineResources(pd3dDevice, engineGraphics));
 			return 0; 
 		}
 
-		::gpk::error_t			CreateSizeDependentResources(::gpk::n2u1_t windowSize)	{
-			gpk_necs(Scene		.CreateSizeDependentResources(DeviceResources->GetOutputSize(), DeviceResources->GetOrientationTransform3D()));
-			gpk_necs(GUIStuff	.CreateSizeDependentResources(DeviceResources->GetD3DDevice(), windowSize));
+		::gpk::err_t			CreateSizeDependentResources(::gpk::n2u1_t windowSize)	{
+			if_fail_fe(Scene		.CreateSizeDependentResources(DeviceResources->GetOutputSize(), DeviceResources->GetOrientationTransform3D()));
+			if_fail_fe(GUIStuff	.CreateSizeDependentResources(DeviceResources->GetD3DDevice(), windowSize));
 			return 0;
 		}
 
-		::gpk::error_t			SetWindowSize			(::gpk::n2u1_t windowSize)	{
-			gpk_necs(DeviceResources->SetLogicalSize(windowSize.f2_t()));
-			gpk_necs(CreateSizeDependentResources(windowSize));
+		::gpk::err_t			SetWindowSize			(::gpk::n2u1_t windowSize)	{
+			if_fail_fe(DeviceResources->SetLogicalSize(windowSize.f2()));
+			if_fail_fe(CreateSizeDependentResources(windowSize));
 			return 0;
 		}
 	};
 
-	::gpk::error_t			d3dDrawEngineScene		(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u1_t & targetMetrics, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar);
-	::gpk::error_t			d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar);
+	::gpk::err_t			d3dDrawEngineScene		(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u1_t & targetMetrics, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar);
+	::gpk::err_t			d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar);
 };
 
 #endif // GPK_ENGINE_D3D_APP_H_28903749823

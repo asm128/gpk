@@ -1,12 +1,12 @@
-#include "gpk_typeint.h"	// for uint16_t and uint32_t
+#include "gpk_typeint.h"	// for u1_t and u2_t
 
 #ifndef GPK_ASCII_COLOR_H_23627
 #define GPK_ASCII_COLOR_H_23627
 
 namespace gpk
 {
-	// This type is used to represent the palette array of the ASCII console. Having : uint16_t here makes ASCII_COLOR_INDEX to have the same memory footprint as an unsigned short.
-	enum ASCII_COLOR_INDEX : uint32_t
+	// This type is used to represent the palette array of the ASCII console. Having : u1_t here makes ASCII_COLOR_INDEX to have the same memory footprint as an unsigned short.
+	enum ASCII_COLOR_INDEX : u2_t
 		{	ASCII_COLOR_INDEX_0			= 0x000000		// BLACK
 		,	ASCII_COLOR_INDEX_1 		= 0x800000	 	// DARKBLUE
 		,	ASCII_COLOR_INDEX_2 		= 0x008000	 	// DARKGREEN
@@ -26,7 +26,7 @@ namespace gpk
 		,	ASCII_COLOR_INDEX_COUNT		= 16			// COUNT
 		};
 
-	stacxpr	uint32_t ASCII_PALETTE [] = 
+	stxp	u2_t ASCII_PALETTE [] = 
 		{	0xFF000000		// BLACK
 		,	0xFF800000	 	// DARKBLUE
 		,	0xFF008000	 	// DARKGREEN
@@ -48,7 +48,7 @@ namespace gpk
 	// 3-Channel color array with a max value of 0xFF each. This means we use 24 bit for each color but as there is no fundamental type of 24-bit in C++ we gpkose the next larger, in this case an unsigned int of 32-bit size.
 	// This particular channel arrangement has the red channel stored in the first 8 bits (the first byte), the green channel in the next 8 bits (the second byte), and the blue channel in the last 8 bits (the third byte) of the channel array.
 	// The remaining 8 bits must be set to 0 and I don't remember if they have an actual meaning for the console system. More complex graphics systems may use those remaining bits to represent transparency (the alpha channel) or other rendering-related information.
-	enum ASCII_COLOR : uint16_t
+	enum ASCII_COLOR : u1_t
 		{	ASCII_COLOR_BLACK			=  0
 		,	ASCII_COLOR_DARKBLUE
 		,	ASCII_COLOR_DARKGREEN
@@ -69,7 +69,7 @@ namespace gpk
 		};
 
 	// Swaps the background color and the font color.
-	inlcxpr	ASCII_COLOR			ascii_color_invert		(const ASCII_COLOR color)				{ return ASCII_COLOR(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
+	inxp	ASCII_COLOR			ascii_color_invert		(const ASCII_COLOR color)				{ return ASCII_COLOR(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
 }
 
 // BLINK	128

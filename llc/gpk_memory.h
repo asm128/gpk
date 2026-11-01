@@ -1,4 +1,4 @@
-/// Copyright 2010-2017 - asm128
+/// Copyright 2010-2017 - ogarnd
 #include "gpk_eval.h"
 #if defined(GPK_ATMEL)
 #	include <stdlib.h>
@@ -11,15 +11,6 @@
 #ifndef GPK_MEMORY_H__92836409283642038462309846
 #define GPK_MEMORY_H__92836409283642038462309846
 
-#ifndef GPK_MALLOC_CUSTOM_ALIGN
-#	define GPK_MALLOC_CUSTOM_ALIGN	16
-#endif
-#ifdef GPK_MALLOC_CUSTOM_ALIGN
-#	define GPK_MALLOC_ALIGN			GPK_MALLOC_CUSTOM_ALIGN
-#else
-#	define GPK_MALLOC_ALIGN			sizeof(void*)
-#endif
-
 //#define	gpk_calc_align_address		(alignment, address)	((alignment - ((alignment - 1) & (uintptr_t)address)) & (alignment - 1))	// returns the difference between an origin address and the next aligned addres. The alignment must always be a power of two.
 //#define	gpk_calc_align_address_4	(address)				gpk_calc_align_address( 4, address)	// (0x04 - (0x03 & (uintptr_t)address) & 0x03)
 //#define	gpk_calc_align_address_8	(address)				gpk_calc_align_address( 8, address)	// (0x08 - (0x07 & (uintptr_t)address) & 0x07)
@@ -29,102 +20,81 @@
 
 namespace gpk
 {
-	stacxpr	const uintptr_t				calc_align_address			(uintptr_t alignment, uintptr_t address)	noexcept	{ return (alignment - ((alignment - 1) & address)) & (alignment - 1); }
-	stincxp	const uintptr_t				calc_align_address_4		(uintptr_t address)							noexcept	{ return calc_align_address( 4, address); }
-	stincxp	const uintptr_t				calc_align_address_8		(uintptr_t address)							noexcept	{ return calc_align_address( 8, address); }
-	stincxp	const uintptr_t				calc_align_address_16		(uintptr_t address)							noexcept	{ return calc_align_address(16, address); }
-	stincxp	const uintptr_t				calc_align_address_32		(uintptr_t address)							noexcept	{ return calc_align_address(32, address); }
-	stincxp	const uintptr_t				calc_align_address_64		(uintptr_t address)							noexcept	{ return calc_align_address(64, address); }
-
-#if defined(GPK_WINDOWS)
-	stainli	void						gpk_free					(void* ptr)									noexcept	{ _aligned_free(ptr);									}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
-#elif defined(GPK_NEWLIB)
-	stainli	void						gpk_free					(void* ptr)									noexcept	{
-		::free(ptr);
-	}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{
-		int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1);
-		return p;
-	}
-#elif defined(GPK_ATMEL)
-	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::malloc(size + 1); return p; }
+	stxp	u1_c		MALLOC_CUSTOM_ALIGN		= 16;
+	stxp	u1_c		MALLOC_ALIGN			= 
+#ifdef GPK_MALLOC_CUSTOM_ALIGN
+		MALLOC_CUSTOM_ALIGN;
 #else
-	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
+		szof(void*);
 #endif
 
-	tplt<tpnm _typePtr>
-	stainli	void						safe_gpk_free				(_typePtr &p)								noexcept	{
-		_typePtr								_pepe						= p;
-		p									= 0;
-		gpk_free((void*)_pepe);
-	}
+	ndsx	uintptr_t	calc_align_address		(uintptr_t alignment, uintptr_t address)	nxpt	{ const uintptr_t amask = alignment - 1; return (alignment - (amask & address)) & amask; }
+	nsix	uintptr_t	calc_align_address_4	(uintptr_t address)							nxpt	{ return calc_align_address( 4, address); }
+	nsix	uintptr_t	calc_align_address_8	(uintptr_t address)							nxpt	{ return calc_align_address( 8, address); }
+	nsix	uintptr_t	calc_align_address_16	(uintptr_t address)							nxpt	{ return calc_align_address(16, address); }
+	nsix	uintptr_t	calc_align_address_32	(uintptr_t address)							nxpt	{ return calc_align_address(32, address); }
+	nsix	uintptr_t	calc_align_address_64	(uintptr_t address)							nxpt	{ return calc_align_address(64, address); }
 
-	struct auto_gpk_free : public ::gpk::auto_handler<void*, nullptr>	{ using TWrapper::auto_handler; inline ~auto_gpk_free() noexcept { close(); } inline void close() noexcept { safe_gpk_free(Handle); } };
+#if defined(GPK_WINDOWS)
+	stin		void*	gpk_free				(void* ptr)					nxpt	{ _aligned_free(ptr); rtrn 0; }
+	stin		void*	gpk_malloc				(size_t size)				nxpt	{ s0_t* p = (s0_t*)_aligned_malloc(size + 1, MALLOC_ALIGN); return p; }
+#elif defined(GPK_NEWLIB)
+	stin		void*	gpk_free				(void* ptr)					nxpt	{ ::free(ptr); rtrn 0; }
+	stin		void*	gpk_malloc				(size_t size)				nxpt	{ u0_t* p = (u0_t*)::memalign(MALLOC_ALIGN, size + 1); return p; }
+#elif defined(GPK_ATMEL) || defined(ESP8266)	
+	stin		void*	gpk_free				(void * ptr)				nxpt	{ ::free(ptr); rtrn 0; }
+	stin		void*	gpk_malloc				(size_t size)				nxpt	{ u0_t* p = (u0_t*)::malloc(size + 1); return p; }
+#else
+	stin		void*	gpk_free				(void * ptr)				nxpt	{ ::free(ptr); rtrn 0; }
+	stin		void*	gpk_malloc				(size_t size)				nxpt	{ u0_t* p = (u0_t*)::memalign(MALLOC_ALIGN, size + 1); return p; }
+#endif
+	tplTstin	T*&		malloc					(T* & newRef)				nxpt	{ rtrn newRef = (T*)gpk_malloc(szof(T)); }
+	tplTstin	T*&		malloc					(T* & newRef, u2_t count)	nxpt	{ rtrn newRef = (T*)gpk_malloc(szof(T) * count); }
+	tplTstin	void*	safe_gpk_free			(T & p)						nxpt	{ T _pepe = p; p = 0; rtrn gpk_free(_pepe); }
 
-#define GREF_PAGE_SIZE_MAX (4096)
-	tplt<tpnm _tBase>	stincxp	uint32_t	get_page_size				()							noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };
-	tplt<tpnm _tBase>	stincxp	uint32_t	get_type_size				()							noexcept	{ return (uint32_t) sizeof(_tBase); }
-	tplt<tpnm _tBase>	stincxp	uint32_t	get_type_size				(const _tBase&)				noexcept	{ return (uint32_t) sizeof(_tBase); }
-	tplt<tpnm _tBase>	stincxp	uint32_t	get_type_size_padded		(uint32_t paddingInBytes)	noexcept	{ return paddingInBytes ? (uint32_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes : sizeof(_tBase); }
-	tplt<tpnm _tBase>	stincxp	uint32_t	get_type_align				()							noexcept	{
-		return (uint32_t)
-			(	(0 == (sizeof(_tBase) % 32))	? 32
-			:	(0 == (sizeof(_tBase) % 16))	? 16
-			:	(0 == (sizeof(_tBase) % 8 ))	? 8
-			:	(0 == (sizeof(_tBase) % 4 ))	? 4
-			:	(0 == (sizeof(_tBase) % 2 ))	? 2
+	struct auto_free : public auto_handler<void*, nullptr>	{ using TWrapper::auto_handler; inline ~auto_free() nxpt { close(); } inline void close() nxpt { safe_gpk_free(Handle); } };
+
+	stxp		u2_t	GREF_PAGE_SIZE_MAX 		= 4096;
+	tplTsinx	u2_t	get_page_size			()							nxpt	{ rtrn (u2_t)(szof(T) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/szof(T) : 1; };
+	tplTsinx	u2_t	get_type_size			()							nxpt	{ rtrn (u2_t) szof(T); }
+	tplTsinx	u2_t	get_type_size			(const T&)					nxpt	{ rtrn (u2_t) szof(T); }
+	tplTsinx	u2_t	get_type_size_padded	(u2_t paddingInBytes)		nxpt	{ rtrn paddingInBytes ? (u2_t) ( (szof(T) / paddingInBytes) + one_if(szof(T) % paddingInBytes) ) * paddingInBytes : szof(T); }
+	tplTsinx	u2_t	get_type_align			()							nxpt	{
+		return (u2_t)
+			(	(0 == (szof(T) % 32))	? 32
+			:	(0 == (szof(T) % 16))	? 16
+			:	(0 == (szof(T) % 8 ))	? 8
+			:	(0 == (szof(T) % 4 ))	? 4
+			:	(0 == (szof(T) % 2 ))	? 2
 			:	1
 			);
 	}
-
-	tplt <tpnm _tBase>	stincxp	uint32_t	get_type_align_multiplier	()							noexcept	{
-		return (uint32_t)
-			(	(0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
-			:	(0 == (sizeof(_tBase) % 16)) ? sizeof(_tBase) / 16
-			:	(0 == (sizeof(_tBase) %  8)) ? sizeof(_tBase) /  8
-			:	(0 == (sizeof(_tBase) %  4)) ? sizeof(_tBase) /  4
-			:	(0 == (sizeof(_tBase) %  2)) ? sizeof(_tBase) /  2
-			:	sizeof(_tBase)
+	tplTsinx	u2_t	get_type_align_factor	()							nxpt	{
+		return (u2_t)
+			(	(0 == (szof(T) % 32)) ? szof(T) / 32
+			:	(0 == (szof(T) % 16)) ? szof(T) / 16
+			:	(0 == (szof(T) %  8)) ? szof(T) /  8
+			:	(0 == (szof(T) %  4)) ? szof(T) /  4
+			:	(0 == (szof(T) %  2)) ? szof(T) /  2
+			:	szof(T)
 			);
 	}
-
-	tplt <tpnm _tBase>	stainli	int32_t		podcmp		(const _tBase* pA, const _tBase* pB)							noexcept	{
+	tplTstin	s2_t	podcmp					(cnst T * pA, cnst T * pB)	nxpt	{
 		if(0 == pA)
 			return (0 == pB) ? 0 : 0x7FFFFFFF;
 		else if(0 == pB)
 			return 0x7FFFFFFF;
 
-		return memcmp(pA, pB, sizeof(_tBase));
+		return memcmp(pA, pB, szof(T));
+	}	
+	tplt<tpnm T, size_t _len>
+				T*		memcpy_s				(T (&dest)[_len], cnst T (&src)[_len])	nxpt	{ ::memcpy(dest, src, szof(T) * _len); rtrn dest; }
+	// Copy the representation between non-overlapping POD objects of equal footprint.
+	tplt<tpnm TDst, tpnm TSrc>
+	stin TDst &			cpycst					(TDst & dst, cnst TSrc & src) nxpt {
+		static_assert(sizeof(TDst) == sizeof(TSrc), "cpycst requires equal footprints.");
+		rtrn *(TDst*)::memcpy(&dst, &src, sizeof(TDst));
 	}
-
-	tplt <tpnm _tBase>	stainli	_tBase*		chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		noexcept	{
-			for (uint32_t i = 0; i < count; ++i)
-				if (destination[i] != source[i])
-					destination[i]  = source[i];
-			return destination;
-	}
-
-	tplt <tpnm _tBase>			_tBase*		podcpy						(_tBase* dest, const _tBase* source)							noexcept	{
-		stacxpr	const uint32_t													dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
-		stacxpr	const uint32_t													typeAlign					= (uint32_t)get_type_align<_tBase>();
-		switch (typeAlign) {
-		case 32: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 4);	break;
-		case 16: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 2);	break;
-		case  8: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier);		break;
-		case  4: chkcpy((uint32_t*)dest, (const uint32_t*)source, dataMultiplier);		break;
-		case  2: chkcpy((uint16_t*)dest, (const uint16_t*)source, dataMultiplier);		break;
-		default:
-			if( memcmp(dest, source, sizeof(_tBase)) )
-				memcpy(dest, source, sizeof(_tBase));
-			break;
-		}
-		return dest;
-	}
-
-	tplt <tpnm _t, size_t _len>	_t*			memcpy_s					(_t (&dest)[_len], const _t (&src)[_len])				noexcept	{ ::memcpy(dest, src, sizeof(_t) * _len); return dest; }
 }	// namespace
 
 #endif // GPK_MEMORY_H__92836409283642038462309846

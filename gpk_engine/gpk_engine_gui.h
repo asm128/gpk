@@ -6,14 +6,14 @@
 
 namespace gpk 
 {
-	GDEFINE_ENUM_TYPE(GUI_ENTITY, uint8_t);
+	GDEFINE_ENUM_TYPE(GUI_ENTITY, u0_t);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Label	, 0);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Button	, 1);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Menu		, 2);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Viewport	, 3);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Palette	, 4);
 
-	GDEFINE_ENUM_TYPE(UI3D_CONTROL_AREA, uint8_t);
+	GDEFINE_ENUM_TYPE(UI3D_CONTROL_AREA, u0_t);
 	GDEFINE_ENUM_VALUE(UI3D_CONTROL_AREA, Total		, 0);
 	GDEFINE_ENUM_VALUE(UI3D_CONTROL_AREA, Client	, 1);
 	GDEFINE_ENUM_VALUE(UI3D_CONTROL_AREA, Left		, 0x80 + ::gpk::ALIGN_LEFT		);
@@ -33,7 +33,7 @@ namespace gpk
 		
 		inline				SEngineGUI		()	{ Reset(); }
 
-		::gpk::error_t		Reset			()	{
+		::gpk::err_t		Reset			()	{
 			Engine				= {};
 			GUI					= {};
 			Entities.clear();
@@ -42,15 +42,15 @@ namespace gpk
 			params.CellCount	= {4, 4};
 			params.Origin		= {1, 1};
 			params.Size			= {2, 2};
-			gpk_necs(Entities.resize(::gpk::get_value_count<GUI_ENTITY>()));
-			gpk_necs(Entities[GUI_ENTITY_Label]		= Engine.CreateGrid(params));
-			gpk_necs(Entities[GUI_ENTITY_Button]	= Engine.CreateGrid(params));
+			if_fail_fe(Entities.resize(::gpk::get_value_count<GUI_ENTITY>()));
+			if_fail_fe(Entities[GUI_ENTITY_Label]		= Engine.CreateGrid(params));
+			if_fail_fe(Entities[GUI_ENTITY_Button]	= Engine.CreateGrid(params));
 
-			gpk_necs(Entities[GUI_ENTITY_Menu]		= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
-			gpk_necs(Entities[GUI_ENTITY_Viewport]	= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
-			gpk_necs(Entities[GUI_ENTITY_Palette]	= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
+			if_fail_fe(Entities[GUI_ENTITY_Menu]		= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
+			if_fail_fe(Entities[GUI_ENTITY_Viewport]	= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
+			if_fail_fe(Entities[GUI_ENTITY_Palette]	= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
 
-			rees_if(0 != ::gpk::controlCreate(GUI));
+			if_true_ve(-1, 0 != ::gpk::controlCreate(GUI));
 			return 0;
 		}
 

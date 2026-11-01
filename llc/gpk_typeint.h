@@ -1,16 +1,5 @@
 #include "gpk_debug.h"
-
-#ifdef GPK_WINDOWS
-#	include <cstdint>
-#else
-#	if defined(GPK_ATMEL)
-#		include <stddef.h>
-#		include <stdint.h>
-#	else
-#		include <cstddef>
-#		include <cstdint>
-#	endif
-#endif
+	
 
 #ifdef GPK_ATMEL
 //#	include "initializer_list.h"
@@ -23,22 +12,35 @@
 
 namespace gpk
 {
-	tydf		bool		b8_t, b8u_t;
-	tydf		char		sc_t, c0s_t;
-	tydf		int8_t		s0_t, i0s_t;
-	tydf		int16_t		s1_t, i1s_t;
-	tydf		int32_t		s2_t, i2s_t;
-	tydf		int64_t		s3_t, i3s_t;
-	tydf		unsd char	uc_t, c0u_t;
-	tydf		uint8_t		u0_t, i0u_t;
-	tydf		uint16_t	u1_t, i1u_t;
-	tydf		uint32_t	u2_t, i2u_t;
-	tydf		uint64_t	u3_t, i3u_t;
-	tydf		float		f2_t, f2s_t;
-	tydf		double		f3_t, f3s_t;
-	tydf		size_t		uP_t, iPu_t;
-	tydf		intptr_t	sP_t, iPs_t;
-	tydf		void*		uV_t, iVu_t;
+	tydf	bool							b8_t;
+	tydf	char							sc_t, s0_t;
+	tydf	unsd char						uc_t, u0_t;
+	tydf	short							s1_t;
+	tydf	unsd short						u1_t;
+	tydf	long long						s3_t;
+	tydf	unsd long long					u3_t;
+	tydf	decltype(sizeof(0))				uP_t;
+	tydf	decltype((sc_t*)0 - (sc_t*)0)	sP_t;
+	tydf	void*							uV_t;
+	tydf	float							f2_t;
+
+#if defined(GPK_ATMEL)
+	tydf	long							s2_t;
+	tydf	unsd long						u2_t;
+	tydf	long double						f3_t;
+#	if !defined(__SIZEOF_LONG_DOUBLE__) || (__SIZEOF_LONG_DOUBLE__ != (1 << 3))
+#		warning No native 8-byte floating-point type available; f3_t falls back to f3_t.
+#	endif
+#else
+	tydf	int								s2_t;
+	tydf	unsd int						u2_t;
+	tydf	double							f3_t;
+#endif
+
+	tplt<tpnm... T>	stct type_pack			{};
+	tplt<tpnm T>	stct type_tag			{ usng type = T; };
+	usng			type_pack_unsigned		= type_pack<u0_t, u1_t, u2_t, u3_t>;
+	usng			type_pack_integers		= type_pack<u0_t, u1_t, u2_t, u3_t, s0_t, s1_t, s2_t, s3_t>;
 
 //	tplt<size_t _size>
 //	sinx auto szof() nxpt {
@@ -53,20 +55,20 @@ namespace gpk
 	: ::gpk::u0_t(sizeof(type) & 0xFFU)											\
 	)
 #define bcof(type) (szof(type) * 8U)
-	tdcs		b8_t	b8_c, b8u_c;
-	tdcs		uc_t	uc_c, c0u_c;
-	tdcs		sc_t	sc_c, c0s_c;
-	tdcs		u0_t	u0_c, i0u_c;
-	tdcs		u1_t	u1_c, i1u_c;
-	tdcs		u2_t	u2_c, i2u_c;
-	tdcs		u3_t	u3_c, i3u_c;
-	tdcs		s0_t	s0_c, i0s_c;
-	tdcs		s1_t	s1_c, i1s_c;
-	tdcs		s2_t	s2_c, i2s_c;
-	tdcs		s3_t	s3_c, i3s_c;
-	tdcs		f2_t	f2_c, f2s_c;
-	tdcs		f3_t	f3_c, f3s_c;
-	tdcs		uP_t	uP_c, iPu_c;
+	tdcs		b8_t	b8_c;
+	tdcs		uc_t	uc_c;
+	tdcs		sc_t	sc_c;
+	tdcs		u0_t	u0_c;
+	tdcs		u1_t	u1_c;
+	tdcs		u2_t	u2_c;
+	tdcs		u3_t	u3_c;
+	tdcs		s0_t	s0_c;
+	tdcs		s1_t	s1_c;
+	tdcs		s2_t	s2_c;
+	tdcs		s3_t	s3_c;
+	tdcs		f2_t	f2_c;
+	tdcs		f3_t	f3_c;
+	tdcs		uP_t	uP_c;
 
 	tplTsinx	T			printf_arg		(T value)			nxpt	{ rtrn value; }
 	tplTsinx	void*		printf_arg		(T * value)			nxpt	{ rtrn value; }
@@ -99,6 +101,8 @@ namespace gpk
 #define tplN2usinx	tplN2u	sinx
 #define tplN2ustxp	tplN2u	stxp
 #define tplN2unsix	tplN2u	nsix
+#define tplN2undin	tplN2u	ndin
+#define tplN2undix	tplN2u	ndix
 #define tplTN2stct	tplTN2	stct
 #define tplTN2sttc	tplTN2	sttc
 #define tplTN2inln	tplTN2	inln
@@ -107,6 +111,7 @@ namespace gpk
 #define tplTN2sinx	tplTN2	sinx
 #define tplTN2stxp	tplTN2	stxp
 #define tplTN2nsix	tplTN2	nsix
+
 #if defined(GPK_ANDROID) || defined(GPK_CLANG)
 #	pragma clang diagnostic push
 #	pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
@@ -118,7 +123,11 @@ namespace gpk
 #endif
 	stxp	b8_c	flse			= false;
 	stxp	u0_c	BYTE_SIZE		= 8;
+#if defined(GPK_WINDOWS) && !defined(_WIN64) && !defined(WIN64)
+	tydf	long		refcount_t;
+#else
 	tydf	intptr_t	refcount_t;
+#endif
 	tdcs	refcount_t	refcount_c;
 	tdvl	refcount_t	refcount_vl;
 
@@ -142,6 +151,7 @@ namespace gpk
 #define tydfTCnst(type)		tdcs		gpk_rmcnst(type)	TCnst
 #define tdfTTCnst(type)		tdfT(type);	tydfTCnst(type)
 
+	tplTOutTIn	sinx	TOut	truncate	(TIn value)				nxpt	{ rtrn TOut(u3_t(value)); }
 	tplTOutTIn	sinx	TOut	dim2		(TIn value)				nxpt	{ rtrn {value, value}; }
 	tplTOutTIn	sinx	TOut	dim3		(TIn value)				nxpt	{ rtrn {value, value, value}; }
 	tplT		nsix	u0_t	byte_at		(T value, u0_t index)	nxpt	{ rtrn u0_t((value & (T(0xFFU) << (8 * index))) >> (8 * index)); }
@@ -151,19 +161,19 @@ namespace gpk
 	tpl_tstct srcdst { tdfTTCnst(_t); T src, dst; }; 
 	tpl_tstct dstsrc { tdfTTCnst(_t); T dst, src; };
 #define GPK_USING_TYPEINT()				\
-	using	::gpk::b8_t, ::gpk::b8_c, ::gpk::b8u_t, ::gpk::b8u_c	\
-		,	::gpk::uc_t, ::gpk::uc_c, ::gpk::c0u_t, ::gpk::c0u_c	\
-		,	::gpk::sc_t, ::gpk::sc_c, ::gpk::c0s_t, ::gpk::c0s_c	\
-		,	::gpk::u0_t, ::gpk::u0_c, ::gpk::i0u_t, ::gpk::i0u_c	\
-		,	::gpk::u1_t, ::gpk::u1_c, ::gpk::i1u_t, ::gpk::i1u_c	\
-		,	::gpk::u2_t, ::gpk::u2_c, ::gpk::i2u_t, ::gpk::i2u_c	\
-		,	::gpk::u3_t, ::gpk::u3_c, ::gpk::i3u_t, ::gpk::i3u_c	\
-		,	::gpk::s0_t, ::gpk::s0_c, ::gpk::i0s_t, ::gpk::i0s_c	\
-		,	::gpk::s1_t, ::gpk::s1_c, ::gpk::i1s_t, ::gpk::i1s_c	\
-		,	::gpk::s2_t, ::gpk::s2_c, ::gpk::i2s_t, ::gpk::i2s_c	\
-		,	::gpk::s3_t, ::gpk::s3_c, ::gpk::i3s_t, ::gpk::i3s_c	\
-		,	::gpk::f2_t, ::gpk::f2_c, ::gpk::f2s_t, ::gpk::f2s_c	\
-		,	::gpk::f3_t, ::gpk::f3_c, ::gpk::f3s_t, ::gpk::f3s_c	\
+	using	::gpk::b8_t, ::gpk::b8_c	\
+		,	::gpk::uc_t, ::gpk::uc_c	\
+		,	::gpk::sc_t, ::gpk::sc_c	\
+		,	::gpk::u0_t, ::gpk::u0_c	\
+		,	::gpk::u1_t, ::gpk::u1_c	\
+		,	::gpk::u2_t, ::gpk::u2_c	\
+		,	::gpk::u3_t, ::gpk::u3_c	\
+		,	::gpk::s0_t, ::gpk::s0_c	\
+		,	::gpk::s1_t, ::gpk::s1_c	\
+		,	::gpk::s2_t, ::gpk::s2_c	\
+		,	::gpk::s3_t, ::gpk::s3_c	\
+		,	::gpk::f2_t, ::gpk::f2_c	\
+		,	::gpk::f3_t, ::gpk::f3_c	\
 		,	::gpk::uP_t, ::gpk::uP_c
 
 } // namespace
@@ -174,10 +184,10 @@ namespace gpk
 #	define GPK_DEFAULT_OPERATOR_IC(rightOperand, statement)	inxp	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }
 #	define GPK_DEFAULT_OPERATOR_D(rightOperand, statement)	bool			oper==(cnst rightOperand & other) csnx { rtrn statement; }
 #else
-#	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inln	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
-#	define GPK_DEFAULT_OPERATOR_C(rightOperand, statement)	cxpr	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	cxpr	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
-#	define GPK_DEFAULT_OPERATOR_IC(rightOperand, statement)	inxp	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inxp	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
-#	define GPK_DEFAULT_OPERATOR_D(rightOperand, statement)	bool			oper==(cnst rightOperand & other) csnx { rtrn statement; }			bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inln	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_C(rightOperand, statement)	cxpr	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	cxpr	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_IC(rightOperand, statement)	inxp	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inxp	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_D(rightOperand, statement)	bool			oper==(cnst rightOperand & other) csnx { rtrn statement; }			bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
 #endif // GPK_ANDROID
 
 #define GPK_DEFAULT_OPERATOR GPK_DEFAULT_OPERATOR_IC

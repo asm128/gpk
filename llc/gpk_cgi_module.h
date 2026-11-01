@@ -7,18 +7,14 @@
 #ifndef GPK_RUNTIME_MODULE_H_23627
 #define GPK_RUNTIME_MODULE_H_23627
 
-#if defined(GPK_LINUX) || defined(GPK_ANDROID)
-#	include <dlfcn.h>
-#endif
-
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleTitle		, ::gpk::sc_t* outputBuffer, uint8_t* outputBufferLength		);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleVersion	, uint32_t* version												);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCreate	, void** customApplication, ::gpk::SCGIFramework * framework	);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleDelete	, void** customApplication										);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleSetup		, void*	 customApplication										);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCleanup	, void*	 customApplication										);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void*	 customApplication, ::gpk::apod<::gpk::sc_t> & output	);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void*	 customApplication, bool requestedExit					);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleTitle		, ::gpk::sc_t * outputBuffer, ::gpk::u0_t * outputBufferLength	);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleVersion	, ::gpk::u2_t* version											);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCreate	, void*	* customApplication, ::gpk::SCGIFramework * framework	);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleDelete	, void*	* customApplication										);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleSetup		, void	* customApplication										);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCleanup	, void	* customApplication										);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void	* customApplication, ::gpk::string & output	);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void	* customApplication, bool requestedExit					);
 
 namespace gpk
 {
@@ -47,7 +43,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t			loadCGIModule				(::gpk::SCGIModule & loadedModule, ::gpk::vcsc_c & moduleName);
+	err_t	loadCGIModule		(SCGIModule & loadedModule, vcst_t moduleName);
 
 
 }

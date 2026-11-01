@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (SYSTEM_KEY, uint8_t);
+	GDEFINE_ENUM_TYPE (SYSTEM_KEY, u0_t);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, LButton                         , 0x01); 
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, RButton                         , 0x02); 
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Cancel                          , 0x03); 

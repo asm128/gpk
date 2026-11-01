@@ -7,7 +7,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	enum DIALOG_CONTROL : int8_t
+	enum DIALOG_CONTROL : s0_t
 		{ DIALOG_CONTROL_Label			= 0
 		, DIALOG_CONTROL_Button
 		, DIALOG_CONTROL_ListBox
@@ -23,18 +23,18 @@ namespace gpk
 		SDialog					* Dialog			= 0;
 		cid_t					IdGUIControl		= (cid_t)-1;
 		cid_t					IdParent			= (cid_t)-1;
-		uint64_t				DeleteControl		: 1;
+		u3_t				DeleteControl		: 1;
 
 		constexpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();
 
-		virtual	::gpk::error_t	Resize				(const ::gpk::n2<uint16_t> & newSize)				{ (void)newSize; return 0; }
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn)	= 0;
+		virtual	::gpk::err_t	Resize				(const ::gpk::n2<u1_t> & newSize)				{ (void)newSize; return 0; }
+		virtual	::gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn)	= 0;
 	};
 	//tplt<tpnm _TDialogControl>
-	//::gpk::error_t				dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
+	//::gpk::err_t				dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
 	//	::gpk::gpk_ref<_TDialogControl>								* newRef							= 0;
-	//	ree_if(0 == ::gpk::ref_create(&newRef));
+	//	if_true_vef(-1, 0 == ::gpk::ref_create(&newRef));
 	//	createdControl.set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);
 	//	createdControl->Dialog									= this;
 	//	createdControl->IdGUIControl							= ::gpk::controlCreate(gui);
@@ -43,12 +43,12 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SDialogColors {
-		::gpk::apod<::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType	= {};
-		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					Control			= {};
-		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					Button			= {};
-		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					CheckBox		= {};
-		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					Viewport		= {};
-		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					ViewportTitle	= {};
+		::gpk::apod<::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType	= {};
+		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					Control			= {};
+		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					Button			= {};
+		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					CheckBox		= {};
+		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					Viewport		= {};
+		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					ViewportTitle	= {};
 	};
 
 	struct SDialog {
@@ -69,16 +69,16 @@ namespace gpk
 		::gpk::pobj<::gpk::SGUI>					GUI				= {};
 		::gpk::aobj<::gpk::pnco<IDialogControl>>	Controls		= {};
 		::gpk::img<::gpk::bgra>						ImageCrossBGRA	= {};
-		::gpk::imgmonou64							ImageCross		= {};
+		::gpk::imgmonou3_t							ImageCross		= {};
 
 								SDialog			(const ::gpk::pobj<::gpk::SGUI> & gui);
 								SDialog			(::gpk::pobj<::gpk::SGUI> & gui);
 								SDialog			();
 
-		inline	::gpk::error_t	Focused			()	const	noexcept	{ return FocusedCurrent; }
+		inline	::gpk::err_t	Focused			()	const	noexcept	{ return FocusedCurrent; }
 
-		::gpk::error_t			Focus			(cid_t iControl)		{ 
-			ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
+		::gpk::err_t			Focus			(cid_t iControl)		{ 
+			if_true_vef(-1, Controls.size() <= (u2_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
 			FocusedPrevious	= FocusedCurrent; 
 			FocusedCurrent	= iControl; 
 			return 0; 
@@ -90,25 +90,25 @@ namespace gpk
 				GUI.create();
 			::gpk::SGUI				& gui				= *GUI;
 			cid_t					index				= (cid_t)-1;
-			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
+			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl].get_ref()) {
 					index				= (cid_t)iControl;
 					break;
 				}
 
 			if(-1 == index)
-				gpk_necs(index = (::gpk::cid_t)Controls.push_back({}));
+				if_fail_fe(index = (::gpk::cid_t)Controls.push_back({}));
 
 			//::gpk::dialogCreate(createdControl);
 			//Controls[index]	= createdControl;
 			::gpk::gref<_TDialogControl>	* newRef	= 0;
-			rees_if(0 == ::gpk::ref_create(&newRef));
+			if_true_ve(-1, 0 == ::gpk::ref_create(&newRef));
 			Controls[index].set_ref((::gpk::gref<::gpk::IDialogControl>*)newRef);
 			Controls[index]->Dialog	= this;
-			const uint32_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
+			const u2_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
 			gui.Controls.Draw[idGUIControl].UseNewPalettes	= true;
 			::gpk::memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
-			//gpk_necall(gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
+			//if_fail_fef(gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;
 		}
@@ -119,12 +119,12 @@ namespace gpk
 			return index;
 		}
 
-		::gpk::error_t			Update			()		{
+		::gpk::err_t			Update			()		{
 			if(0 == GUI.get_ref())
 				GUI.create();
 
 			::gpk::SGUI					& gui			= *GUI;
-			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) {
+			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl) {
 				if(0 == Controls[iControl].get_ref() || ::gpk::controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
 					Controls.remove_unordered(iControl);
 					--iControl;
@@ -132,13 +132,13 @@ namespace gpk
 				}
 			}
 			if(LastSize != gui.LastSize) {
-				for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
+				for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)
 					Controls[iControl]->Resize(gui.LastSize);
 				LastSize				= gui.LastSize;
 			}
 			//if(0 != Input)
-			//	gpk_necall(gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
-			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
+			//	if_fail_fef(gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
+			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
 					Controls[iControl]->Update(gui.Controls.EventQueue);
 

@@ -8,29 +8,29 @@
 
 #include "gpk_udp_client.h"
 
-static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										{
+sttc	gpk::err_t	initClient			(gpk::SUDPClient & bestClient)										{
 	bestClient.AddressConnect	= {};
 	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);	// If loading the remote IP from the json fails, we fall back to the local address.
-	::gpk::apod<char>			fileJSONConfig					= {};
+	::gpk::string				fileJSONConfig					= {};
 	::gpk::SJSONReader			jsonConfig						= {};
 	{	// Attempt to load config file.
-		::gpk::vcs					fileNameJSONConfig				= "gpk_config.json";
-		rew_if(::gpk::failed(::gpk::fileToMemory(fileNameJSONConfig, fileJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
-		wf_if(::gpk::jsonParse(jsonConfig, {fileJSONConfig.begin(), fileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
+		::gpk::vcst_t					fileNameJSONConfig				= "gpk_config.json";
+		if_fail_fw(::gpk::fileToMemory(fileNameJSONConfig, fileJSONConfig));
+		if_fail_w(::gpk::jsonParse(jsonConfig, fileJSONConfig));
 	}
 	{ // attempt to load address from config file.
 		{ //
-			::gpk::vcs					jsonIP							= {};
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
+			::gpk::vcst_t					jsonIP							= {};
+			if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP))
 			else {
 				info_printf("Remote IP: %s.", jsonIP.begin());
-				ef_if(::gpk::failed(::gpk::tcpipAddress(jsonIP, {}, bestClient.AddressConnect)), "Failed to read IP address from JSON config file: %s.", jsonIP.begin());	// turn the string into a SIPv4Endpoint struct.
+				if_fail_e(::gpk::tcpipAddress(jsonIP, {}, bestClient.AddressConnect));	// turn the string into a SIPv4Endpoint struct.
 			}
 		}
 		{ // load port from config file
 			bestClient.AddressConnect.Port	= 9998;
-			::gpk::vcs					jsonPort							= {};
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_port"}, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			::gpk::vcst_t					jsonPort							= {};
+			if_fail_w(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_port", jsonConfig, 0, jsonPort))
 			else {
 				uint64_t					port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, port);
@@ -45,7 +45,7 @@ static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										
 static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
 	::gpk::apod<char>				environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
-		gpk_necs(gpk::environmentBlockFromEnviron(environmentBlock));
+		if_fail_fe(gpk::environmentBlockFromEnviron(environmentBlock));
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
 		environmentBlock.push_back(0);
 	}
@@ -53,15 +53,15 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 		::gpk::SUDPClient				bestClient				= {};
 		{	// setup and connect
 			bestClient.AddressConnect	= {};
-			gpk_necs(::initClient(bestClient));
-			gpk_necs(gpk::clientConnect(bestClient));
+			if_fail_fe(::initClient(bestClient));
+			if_fail_fe(gpk::clientConnect(bestClient));
 		}
 		::gpk::au0_t						responseRemote;
 		{	// Send the request data to the connected service.
-			ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			gpk_necs(gpk::connectionPushData(bestClient, bestClient.Queue, {(const uint8_t*)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
+			if_true_vef(-1, bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
+			if_fail_fe(gpk::connectionPushData(bestClient, bestClient.Queue, {(const uint8_t*)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
-				gpk_necs(gpk::clientUpdate(bestClient));
+				if_fail_fe(gpk::clientUpdate(bestClient));
 				::gpk::apobj<::gpk::SUDPMessage>	received;
 				{	// pick up messages for later processing
 					::std::lock_guard				lockRecv					(bestClient.Queue.MutexReceive);
@@ -75,20 +75,19 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 			}
 		}
 		//info_printf("Remote CGI answer: %s.", responseRemote.begin());
-		gpk_necs(gpk::clientDisconnect(bestClient));
+		if_fail_fe(gpk::clientDisconnect(bestClient));
 		output					= {(char*)responseRemote.begin(), responseRemote.size()};
 	}
 	return 0;
 }
 
-static	int				cgiMain				(int argc, char** argv, char**envv)	{
-	(void)(envv);
-	gpk_necall(gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
-	::gpk::SCGIRuntimeValues	runtimeValues;
-	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
-	::gpk::apod<char>			html;
+static	gpk::err_t		cgiMain				(gpk::SRuntimeValues & runtimeValues)	{
+	if_fail_fef(gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
+	gpk::SCGIRuntimeValues		cgiRuntimeValues(runtimeValues);
+	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
+	gpk::string					html;
 	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
-		printf("%s\r\n", "Content-Type: text/html"
+		fprintf(stdout, "%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"
 			"\r\n\r\n"
 			"<html><head><title>Internal server error</title></head><body>Failed to process request.</body></html>"
@@ -97,16 +96,16 @@ static	int				cgiMain				(int argc, char** argv, char**envv)	{
 		);
 	}
 	else {
-		printf("%s\r\n", "Content-Type: application/json"
+		fprintf(stdout, "%s\r\n", "Content-Type: application/json"
 			"\r\nCache-Control: no-store"
 		);
 		html.push_back('\0');
-		printf("%s", html.begin());
+		fprintf(stdout, "%.*s", GPK_VIEW_ARGS(html));
 #ifdef GPK_WINDOWS
 		OutputDebugStringA(html.begin());
 #endif
 	}
-	gpk_necall(gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why!?");
+	if_fail_fef(gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why!?");
 	return 0;
 }
 

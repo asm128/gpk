@@ -7,59 +7,56 @@ namespace gpk
 {
 	class CLabelManager	{
 #if defined(GPK_ARDUINO)
-		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 >> 1;
+		stxp	const u2_t	BLOCK_SIZE	= 1024 >> 1;
 #elif defined(GPK_ESP32)
-		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 4;
+		stxp	const u2_t	BLOCK_SIZE	= 1024 * 4;
 #else
-		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
+		stxp	const u2_t	BLOCK_SIZE	= 1024 * 64;
 #endif
-		::gpk::block_container_nts<BLOCK_SIZE>	Characters;
-		::gpk::vcsc_t						Empty;
+		block_container_nts<BLOCK_SIZE>	Characters;
+		vcst_t							Empty;
 
 	public:	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		::gpk::au2_t						Counts;
-		::gpk::apod<const sc_t*>			Texts;
+		au2_t							Counts;
+		apod<sc_c*>						Texts;
 
-											~CLabelManager				()																{
-			for(uint32_t iText = 0; iText < Texts.size(); ++iText)
+										~CLabelManager				() {
+			for(u2_t iText = 0; iText < Texts.size(); ++iText)
 				verbose_printf("Label found: %s.", Texts[iText]);
 		}
-		inline								CLabelManager				()																{ 
+		inln							CLabelManager				() { 
 			Characters	.push_sequence("", 0U, Empty); 
 			Counts		.push_back(0); 
 			Texts		.push_back(Empty.begin()); 
 		}
 
-		::gpk::error_t						Save		(::gpk::au0_t & output)						const	{
-			gpk_necs(gpk::saveView(output, Counts));
-			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
-				gpk_necs(output.append((const uint8_t*)Texts[iArray], Counts[iArray]));
-
+		inln	err_t					Size						()					csnx	{ return Texts.size(); }
+		inln	vcst_t					View						(u2_t index)		cnst	{ return {Texts[index], Counts[index]}; }
+		err_t							Save						(au0_t & output)	cnst	{
+			if_fail_fe(gpk::saveView(output, Counts));
+			for(u2_t iArray = 0; iArray < Counts.size(); ++iArray) {
+				if_fail_fe(output.append((const u0_t*)Texts[iArray], Counts[iArray]));
+			}
 			return 0;
 		}
-
-		::gpk::error_t						Load		(::gpk::vcu0_t & input) {
-			gpk_necs(gpk::loadView(input, Counts));
-			::gpk::vcsc_t				out_view; 
-			uint32_t					offsetByte					= 0;
-			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray) {
-				uint32_t					elementCount				= Counts[iArray];
-				gpk_necs(Characters.push_sequence((const sc_t*)&input[offsetByte], elementCount, out_view));
+		err_t							Load						(vcu0_t & input)			{
+			if_fail_fe(gpk::loadView(input, Counts));
+			vcst_t					out_view; 
+			u2_t					offsetByte					= 0;
+			for(u2_t iArray = 0; iArray < Counts.size(); ++iArray) {
+				u2_t					elementCount				= Counts[iArray];
+				if_fail_fe(Characters.push_sequence((const sc_t*)&input[offsetByte], elementCount, out_view));
 				offsetByte				+= elementCount;
-				gpk_necs(Texts.push_back(out_view.begin()));
+				if_fail_fe(Texts.push_back(out_view.begin()));
 			}
 			input					= {input.begin(), input.size() - offsetByte};
 			return 0;
 		}
 
-		inline	::gpk::error_t				Size		()					const	noexcept	{ return Texts.size(); }
-		inline	::gpk::vcsc_t				View		(uint32_t index)	const				{ return {Texts[index], Counts[index]}; }
-		inline	::gpk::error_t				View		(const sc_t* elements, uint16_t count)	{ ::gpk::vcsc_t out_view; return View(elements, count, out_view); }
+		err_t							Index		(const vcst_t & elements) {
+			if_true_vef(-1, elements.size() >= CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
 
-		::gpk::error_t						Index		(const ::gpk::vcsc_t & elements) {
-			ree_if(elements.size() >= CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
-
-			for(uint32_t iView = 0, countLabels = Texts.size(); iView < countLabels; ++iView) {
+			for(u2_t iView = 0, countLabels = Texts.size(); iView < countLabels; ++iView) {
 				if(elements.size() != Counts[iView])
 					continue;
 
@@ -70,26 +67,25 @@ namespace gpk
 			return -1;
 		}
 
-		::gpk::error_t						View		(const sc_t* text, uint32_t textLen, ::gpk::vcsc_t & out_view)		{
-			if(0 == textLen || 0 == text || 0 == text[0]) {
-				out_view							= Empty;
+		err_t							View		(vcst_t & inout_view)		{
+			if(0 == inout_view.size()) {
 				return 0;
 			}
 
-			uint32_t								ntslen						= 0;
-			for(const uint32_t countChars = ::gpk::min(textLen, CLabelManager::BLOCK_SIZE - 1); ntslen < countChars; ++ntslen)
-				if(0 == text[ntslen])
+			u2_t								ntslen						= 0;
+			for(const u2_t countChars = min(inout_view.size(), CLabelManager::BLOCK_SIZE - 1); ntslen < countChars; ++ntslen) {
+				if(0 == inout_view[ntslen])
 					break;
-
-			const uint32_t							viewIndex					= (uint32_t)Index({text, ntslen});
-			if(viewIndex < Texts.size()) {
-				out_view							= {Texts[viewIndex], Counts[viewIndex]};
-				return viewIndex;
 			}
 
-			gpk_necs(Characters	.push_sequence(text, ntslen, out_view));
-			gpk_necs(Texts		.push_back(out_view.begin()));
-			return Counts		.push_back((uint16_t)out_view.size());
+			const u2_t							viewIndex					= (u2_t)Index({inout_view.begin(), ntslen});
+			if(viewIndex < Texts.size()) {
+				inout_view				= {Texts[viewIndex], Counts[viewIndex]};
+				return viewIndex;
+			}
+			if_fail_fe(Characters.push_sequence(inout_view, ntslen, inout_view));
+			if_fail_fe(Texts.push_back(inout_view.begin()));
+			return Counts.push_back((u1_t)inout_view.size());
 		}
 	};
 }

@@ -8,35 +8,35 @@
 
 // Splits a file into file.split.## parts.
 int									main							(int , char ** )		{
-	const ::gpk::vcs text = "habia una vez un bru un brujito en gulubu.\r\n";
-	const ::gpk::vcs text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
-	const ::gpk::vcs words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
+	const ::gpk::vcst_t text = "habia una vez un bru un brujito en gulubu.\r\n";
+	const ::gpk::vcst_t text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
+	const ::gpk::vcst_t words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
 	info_printf("%u:%s.", text.size(), text.begin());
 	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
-		const ::gpk::vcsc_t word = words[iWord];
+		const ::gpk::view<sc_t> word = words[iWord];
 
-		::gpk::vcsc_t left, right;
+		::gpk::view<sc_t> left, right;
 		const int32_t iPos = ::gpk::split(word, text, left, right);
-		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
-		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
+		info_printf("Word (%u): '%s'. Position: %i.", iWord, GPK_VIEW_ARGS(word).begin(), iPos);
+		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), GPK_VIEW_ARGS(left).begin(), right.size(), GPK_VIEW_ARGS(right).begin());
 	}
 
 	info_printf("%u:%s.", text1.size(), text1.begin());
 	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
-		const ::gpk::vcsc_t word = words[iWord];
+		const ::gpk::view<sc_t> word = words[iWord];
 
-		::gpk::vcsc_t left, right;
+		::gpk::view<sc_t> left, right;
 		const int32_t iPos = ::gpk::split(word, text1, left, right);
-		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
-		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
+		info_printf("Word (%u): '%s'. Position: %i.", iWord, GPK_VIEW_ARGS(word).begin(), iPos);
+		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), GPK_VIEW_ARGS(left).begin(), right.size(), GPK_VIEW_ARGS(right).begin());
 	}
 
-	::gpk::vcsc_t trimmed;
-	::gpk::rtrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::ltrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::trim (trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::rtrim(trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::ltrim(trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::trim (trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
+	::gpk::view<sc_t> trimmed;
+	::gpk::rtrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), GPK_VIEW_ARGS(trimmed).begin());
+	::gpk::ltrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), GPK_VIEW_ARGS(trimmed).begin());
+	::gpk::trim (trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), GPK_VIEW_ARGS(trimmed).begin());
+	::gpk::rtrim(trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), GPK_VIEW_ARGS(trimmed).begin());
+	::gpk::ltrim(trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), GPK_VIEW_ARGS(trimmed).begin());
+	::gpk::trim (trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), GPK_VIEW_ARGS(trimmed).begin());
 	return 0;
 }

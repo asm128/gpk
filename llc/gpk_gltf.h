@@ -6,9 +6,9 @@
 namespace gpk
 {
 	struct SGLTFHeader {
-		uint32_t				Magic			= {};
-		uint32_t				Version			= {};
-		uint32_t				Length			= {};
+		u2_t				Magic			= {};
+		u2_t				Version			= {};
+		u2_t				Length			= {};
 	};
 
 	struct SGLTF {
@@ -17,7 +17,7 @@ namespace gpk
 
 	};
 
-	::gpk::error_t		gltfLoad		(::gpk::SGeometryBuffers & geometry);
+	::gpk::err_t		gltfLoad		(::gpk::SGeometryBuffers & geometry);
 } // namespace
 
 #endif	// GPK_GLTF_H_23627

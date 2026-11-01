@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE(HTTP_METHOD, int8_t);
+	GDEFINE_ENUM_TYPE(HTTP_METHOD, s0_t);
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, UNKNOWN		, 0);	// ???
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, GET			, 1);	// The GET method is used to retrieve information from the given server using a given URI. Requests using GET should only retrieve data and should have no other effect on the data.
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, HEAD		, 2);	// Same as GET, but transfers the status line and header section only.
@@ -25,7 +25,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, VIEW		,16);	//
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, PURGE		,17);	//
 
-	GDEFINE_ENUM_TYPE(HTTP_STATUS, uint16_t);
+	GDEFINE_ENUM_TYPE(HTTP_STATUS, u1_t);
 	// 1xx Informational response			An informational response indicates that the request was received and understood. It is issued on a provisional basis while request processing continues. It alerts the client to wait for a final response. The message consists only of the status line and optional header fields, and is terminated by an empty line. As the HTTP/1.0 standard did not define any 1xx status codes, servers must not[note 1] send a 1xx response to an HTTP/1.0 compliant client except under experimental conditions.[4]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, UNKNOWN									, 0);	// ???
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, CONTINUE								, 100);		// The server, has received the request headers and the client should proceed to send the request body (in the case of a request for which a body needs to be sent; for example, a POST request). Sending a large request body to a server after a request has been rejected for inappropriate headers would be inefficient. To have a server check the request's headers, a client must send Expect: 100-continue as a header in its initial request and receive a 100 Continue status code in response before sending the body. If the client receives an error code such as 403 (Forbidden) or 405 (Method Not Allowed) then it shouldn't send the request's body. The response 417 Expectation Failed indicates that the request should be repeated without the Expect header as it indicates that the server doesn't support expectations (this is the case, for example, of HTTP/1.0 servers).[5]
@@ -151,16 +151,16 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SHTTPAPIRequest {
-		::gpk::aobj<::gpk::vcsc_t>				QueryStringElements			= {};
-		::gpk::aobj<::gpk::TKeyValConstString>	QueryStringKeyVals			= {};
-		::gpk::vcsc_t							Ip							= {};
-		::gpk::vcsc_t							Port						= {};
-		::gpk::vcsc_t							Script						= {};
-		::gpk::vcsc_t							Path						= {};
-		::gpk::vcsc_t							QueryString					= {};
-		::gpk::vcsc_t							ContentBody					= {};
-		::gpk::HTTP_METHOD						Method						= {};
-		bool									IsCGIEnviron				= false;
+		aobj<vcst_t>		QueryStringElements			= {};
+		aobj<kv<vcst_t>>	QueryStringKeyVals			= {};
+		vcst_t				Ip							= {};
+		vcst_t				Port						= {};
+		vcst_t				Script						= {};
+		vcst_t				Path						= {};
+		vcst_t				QueryString					= {};
+		vcst_t				ContentBody					= {};
+		HTTP_METHOD			Method						= {};
+		bool				IsCGIEnviron				= {};
 	};
 #pragma pack(pop)
 } // namespace

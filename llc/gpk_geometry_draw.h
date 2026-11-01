@@ -10,20 +10,20 @@
 
 namespace gpk
 {
-	::gpk::error_t	drawTriangle
+	::gpk::err_t	drawTriangle
 		( ::gpk::g8bgra						targetPixels
 		, const ::gpk::SGeometryBuffers		& geometry
 		, const int							iTriangle
-		, const ::gpk::m4f32				& matrixTransform
-		, const ::gpk::m4f32				& matrixTransformView
+		, const ::gpk::m4f2_t				& matrixTransform
+		, const ::gpk::m4f2_t				& matrixTransformView
 		, const ::gpk::n3f2_t				& lightVector
 		, const ::gpk::rgbaf				& lightColor
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::SLight3>		& lightPoints
 		, ::gpk::apod<::gpk::rgbaf>			& lightColors
-		, ::gpk::grid<uint32_t>			depthBuffer
+		, ::gpk::grid<u2_t>			depthBuffer
 		);
 }
 

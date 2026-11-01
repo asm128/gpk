@@ -1,113 +1,159 @@
 #include "gpk_args.h"
-#include "gpk_enum.h"
+#include "gpk_keyval_view.h"
 
-gpk::err_t			gpk::viewsFromEnvp(gpk::aobj<vcst_t> & outputViews, char * envp[]) {
+GPK_USING_TYPEINT();
+
+gpk::err_t		gpk::environmentBlock		(as0_t & output)	{
+	aobj<kv<vcst_t>>	venv						= {};
+	if_fail_fe(viewsFromEnvp(venv, environ));
+	return environmentBlock(output, venv);
+}
+gpk::err_t		gpk::environmentBlock		(as0_t & output, view<cnst kv<vcst_t>> inputEnvp)	{
+	for(cnst kv<vcst_t> & venvValue : inputEnvp) {
+		if_fail_fe(output.append(venvValue.Key));
+		if_fail_fe(output.push_back('='));
+		if_fail_fe(output.append(venvValue.Val));
+		if_fail_fe(output.push_back(0));
+	}
+	if_fail_fe(output.push_back(0));
+	return 0;
+}
+gpk::err_t		gpk::environmentBlockViews	(vcs0_t environmentBlock, aobj<kv<vcst_t>> & out_Views)	{
+	aobj<kv<vcst_t>>	views						= {};
+	for(u2_t offsetBeginVar = 0; offsetBeginVar < environmentBlock.size(); ) {
+		cnst err_t			offsetEndVar					= find('\0', environmentBlock, offsetBeginVar);
+		if_true_fef(0 > offsetEndVar, "Unterminated environment variable at offset:%u.", offsetBeginVar);
+		if((u2_t)offsetEndVar == offsetBeginVar)
+			break;
+		vcst_t					viewEnvironVar					= {};
+		if_fail_fe(environmentBlock.slice(viewEnvironVar, offsetBeginVar, offsetEndVar - offsetBeginVar));
+		keyval<vcst_t>	newKeyVal						= {};
+		if(-1 != keyval_split(viewEnvironVar, newKeyVal)) {
+			if_fail_fe(views.push_back(newKeyVal));
+		}
+		else {
+			newKeyVal.Key			= {viewEnvironVar.begin(), viewEnvironVar.size()};
+			if_fail_fe(views.push_back(newKeyVal));
+		}
+		offsetBeginVar				= offsetEndVar + 1;
+	}
+	if_fail_fe(out_Views.append(views));
+	return 0;
+}
+gpk::err_t		gpk::viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, char * envp[]) {
 	if_null_fe(envp);
-	u2_t iVar = 0;
-	for (; envp[iVar]; ++iVar) {
-		if_fail_fe(outputViews.push_back({envp[iVar], (u2_t)-1}));
+	u2_t				iVar					= 0;
+	for(; envp[iVar]; ++iVar) {
+		const vcst_t		environmentEntry		= {envp[iVar], (u2_t)-1};
+		kv<vcst_t>			keyVal					= {};
+		if(-1 == keyval_split(environmentEntry, keyVal))
+			keyVal.Key								= environmentEntry;
+		if_fail_fe(outputViews.push_back(keyVal));
 	}
 	rtrn iVar;
 }
-
-gpk::err_t			gpk::viewsFromArgv(gpk::aobj<vcst_t> & outputViews, u2_t argc, char * argv[]) {
+gpk::err_t		gpk::viewsFromArgv		(aobj<vcst_t> & outputViews, u2_t argc, char * argv[]) {
 	if_zero_vi(0, argc);
 	if_null_fe(argv);
-	u2_t iArg = 0;
+	u2_t				iArg					= 0;
 	for(; iArg < argc; ++iArg) {
 		if_fail_fe(outputViews.push_back({argv[iArg], (u2_t)-1}));
 	}
 	rtrn iArg;
 }
-gpk::err_t			gpk::argsOptionValue	(const SCommandLineArgs & input, vcst_t key, vcst_t & output)	{
-	err_c 					optionIndex			= argsOptionIndex(input, key);
-	if(0 <= optionIndex) { // success!
-		output = input.Options[optionIndex].Val;
-		return optionIndex;
-	}
-	gpk::string				possibleKeys		= {};
-	for(u2_t iKey = 0; iKey < input.Options.size(); ++iKey) {
-		if_fail_fe(gpk::append_strings(possibleKeys, iKey ? str(", ") : str(""), '"', input.Options[iKey].Key, '"'));
-	}
-	warning_printf("{%s} contains no [\"%.*s\"]", possibleKeys.begin(), key.size(), key.begin());
-	return -1;
+gpk::err_t		gpk::argsOptionValue	(const SCommandLineArgs & input, vcst_t key, vcst_t & output)	{
+	//output			= {};
+	err_c				optionIndex				= argsOptionIndex(input, key);
+	if_fail_fwf(optionIndex, "Option not found:'%.*s'.", (int)key.size(), key.begin());
+	if_true_vef(-2, 0 <= argsOptionIndex(input, key, (u2_t)optionIndex + 1), "Option has multiple values:'%.*s'.", (int)key.size(), key.begin());
+	output			= input.Options[optionIndex].Val;
+	rtrn optionIndex;
 }
 
-namespace gpk 
-{
-	GDEFINE_ENUM_TYPE(ARGS_STATE, gpk::u0_t);
-	GDEFINE_ENUM_VALUE(ARGS_STATE, ARGUMENT		, 0);
-	GDEFINE_ENUM_VALUE(ARGS_STATE, OPTION_VALUE	, 1);
-	GDEFINE_ENUM_VALUE(ARGS_STATE, POSITIONAL	, 2);
-} // namespace
+gpk::err_t		gpk::argsOptionValues	(const SCommandLineArgs & input, vcst_t key, aobj<vcst_t> & output)	{
+	u2_c				outputStart				= output.size();
+	for(const kvvcst_t<vcst_t> & option : input.Options)
+		if(option.Key == key)
+			if_fail_fe(output.push_back(option.Val));
+	rtrn output.size() - outputStart;
+}
 
-sttc ::gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::gpk::vcst_t> & option) {
+sttc gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::gpk::vcst_t> & option) {
 	if_zero_fw(argument.size());
-	::gpk::b8_c				isDoubleDash		= argument.size() > 1 && '-' == argument[1];
-	::gpk::u0_c				prefixLen			= isDoubleDash ? 2U : 1U;
-	::gpk::u2_t				iChar				= prefixLen;
+	b8_c				isDoubleDash			= argument.size() > 1 && '-' == argument[1];
+	u0_c				prefixLen				= isDoubleDash ? 2U : 1U;
+	u2_t				iChar					= prefixLen;
 	for(; iChar < argument.size() && argument[iChar] != '='; ++iChar) 
 		continue;
 
-	option.Key			= {&argument[prefixLen], iChar - prefixLen};
+	if_fail_fe(argument.slice(option.Key, prefixLen, iChar - prefixLen));
+	if_zero_fef(option.Key.size(), "Option has no name:'%.*s'.", (int)argument.size(), argument.begin());
 
-	gpk::b8_c				hasValue			= iChar < argument.size(); // If we found an '=' character, then the option has a value.
-	if(not hasValue) 
-		return 0;
-
-	option.Val			=  {&argument[iChar + 1], argument.size() - iChar - 1};
-	rtrn option.Val.size();
+	b8_c				hasValue				= iChar < argument.size(); // If we found an '=' character, then the option has a value.
+	if(hasValue) {
+		if_fail_fe(argument.slice(option.Val, iChar + 1));
+	}
+	rtrn hasValue;
 }
 
 
-::gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp) {
-	gpk::aobj<gpk::vcst_t> arguments, envvars;											
+gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp) {
+	aobj<vcst_t>		arguments;
+	aobj<kv<vcst_t>>	envvars;											
 	if_fail_fe(viewsFromArgv(arguments, argc, argv));
-	if(envp)
+	if(envp) {
 		if_fail_fe(viewsFromEnvp(envvars, envp));
+	}
 	return argsParse(output, arguments, envvars);
 }
 
-::gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_t> argv, ::gpk::view<vcst_t> envp) {
+gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, view<cnst vcst_t> argv, view<cnst kv<vcst_t>> envp) {
+	output				= {};
 	output.Environment	= envp;
 	if_zero_vw(0, argv.size()); // Exit early if no argv: nothing to do
 
-	output.ProgramName	= argv[0];
+	output.ProgramName				= argv[0];
 
-	ARGS_STATE				state				= ARGS_STATE_ARGUMENT;
 	kvvcst_t<vcst_t>		option				= {};
+	bool					hasOptionValues		= false;
+	bool					positionalOnly		= false;
 	for(u2_t iArg = 1; iArg < argv.size(); ++iArg) {
-		vcst_t					argument			= {argv[iArg], (u2_t)-1};
-		if_zero_cwf(argument.size(), "iArg:(%" GPK_FMT_U2  ")", iArg);
-		if(state != ARGS_STATE_ARGUMENT) {
-				 if(state == ARGS_STATE_POSITIONAL)		{ if_fail_fe(output.Positionals.push_back(argument)); }
-			else if(state != ARGS_STATE_OPTION_VALUE)	{ warning_printf("Unrecognized state! 0x%X(%s)", (u2_t)state, gpk::get_value_namep(state)); }
-			else { // state == ARGS_STATE_OPTION_VALUE, obviously
-				option.Val			= argument; // The value of the current option is the next argument
-				if_fail_fe(output.Options.push_back(option));
-				state				= ARGS_STATE_ARGUMENT;
-			}
-			continue;
-		}
-		if(argument[0] != '-') {
+		vcst_t					argument			= argv[iArg];
+		if(positionalOnly) {
 			if_fail_fe(output.Positionals.push_back(argument));
 			continue;
 		}
-		if(argument == vcsc_t{"--", 2}) {
-			state				= ARGS_STATE_POSITIONAL;
+		if(argument == "--") {
+			if(option.Key.size() && false == hasOptionValues) {
+				if_fail_fe(output.Options.push_back(option));
+			}
+			option				= {};
+			positionalOnly		= true;
 			continue;
 		}
-		err_t				hasValue;
+		if(1 >= argument.size() || '-' != argument[0]) {
+			if(0 == option.Key.size()) {
+				if_fail_fe(output.Positionals.push_back(argument));
+			}
+			else {
+				if_fail_fe(output.Options.emplace_back(option.Key, argument));
+				hasOptionValues	= true;
+			}
+			continue;
+		}
+		if(option.Key.size() && false == hasOptionValues) {
+			if_fail_fe(output.Options.push_back(option));
+		}
+		option				= {};
+		hasOptionValues		= false;
+		err_t					hasValue			= {};
 		if_fail_fe(hasValue = argsOptionName(argument, option));
-		if(not hasValue) 
-			state				= ARGS_STATE_OPTION_VALUE;
-		else {
+		if(hasValue) {
 			if_fail_fe(output.Options.push_back(option));
 			option				= {};
 		}
 	}
-	if(state == ARGS_STATE_OPTION_VALUE) {
+	if(option.Key.size() && false == hasOptionValues)
 		if_fail_fe(output.Options.push_back(option));
-	}
 	rtrn output.Options.size() + output.Positionals.size();
 }

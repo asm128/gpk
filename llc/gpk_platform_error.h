@@ -6,9 +6,9 @@
 namespace gpk
 {
 #if defined(GPK_ST)
-	::gpk::error_t error_t_from_st_hal_status(HAL_StatusTypeDef halStatus);
+	::gpk::err_t error_t_from_st_hal_status(HAL_StatusTypeDef halStatus);
 #else 
-	::gpk::error_t error_t_from_st_hal_status(int32_t status);
+	::gpk::err_t error_t_from_st_hal_status(s2_t status);
 #endif
 } // namespace
 

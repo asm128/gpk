@@ -8,32 +8,32 @@ GPK_USING_TYPEINT();
 #pragma pack(push, 1)
 	struct SRSWHeader {
 		sc_t										Filecode[4];
-		uint8_t										VersionMajor;
-		uint8_t										VersionMinor;
+		u0_t										VersionMajor;
+		u0_t										VersionMinor;
 	};
 
 	struct SRSWWorldInfo {
 		//::gpk::SRange;
-		int32_t										Top				;
-		int32_t										Bottom			;
-		int32_t										Left			;
-		int32_t										Right			;
-		uint32_t									ObjectCount;
+		s2_t										Top				;
+		s2_t										Bottom			;
+		s2_t										Left			;
+		s2_t										Right			;
+		u2_t									ObjectCount;
 		//uc_t								Unknown2	[8];
 		//uc_t								UnknownStr	[40];
-		//uint32_t									UnknownInts	[2];
+		//u2_t									UnknownInts	[2];
 	};
 #pragma pack(pop)
 
-::gpk::error_t			gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, ::gpk::vcu0_c & input) {
-	::gpk::view_stream<const uint8_t>	rsw_stream			= {input.begin(), input.size()};
+::gpk::err_t			gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, ::gpk::vcu0_c & input) {
+	::gpk::view_stream<const u0_t>	rsw_stream			= {input.begin(), input.size()};
 	SRSWHeader							header				= {};//*(SRSWHeader*)input.begin();
-	gpk_necs(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
+	if_fail_fe(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
 	info_printf("RSW magic number: %.4s.", header.Filecode);
-	info_printf("RSW version: %u.%u.", (uint32_t)header.VersionMajor, (uint32_t)header.VersionMinor);
-	info_printf("RSW version major: 0x%x.", (uint32_t)header.VersionMajor);
-	info_printf("RSW version minor: 0x%x.", (uint32_t)header.VersionMinor);
-	const uint32_t						promoted			= *(uint16_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
+	info_printf("RSW version: %u.%u.", (u2_t)header.VersionMajor, (u2_t)header.VersionMinor);
+	info_printf("RSW version major: 0x%x.", (u2_t)header.VersionMajor);
+	info_printf("RSW version minor: 0x%x.", (u2_t)header.VersionMinor);
+	const u2_t						promoted			= *(u1_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
 	info_printf("RSW version number: 0x%x.", promoted);
 	(void)promoted;
 	//info_printf("RSW version: 0x%x.", header.Version);
@@ -88,7 +88,7 @@ GPK_USING_TYPEINT();
 	SEffectInfoRSW												effectInfo;
 	SSoundInfoRSW												soundInfo;
 	while(rsw_stream.CursorPosition < input.size()) {
-		int32_t														objectType											= -1;
+		s2_t														objectType											= -1;
 		rsw_stream.read_pod(objectType);
 		if(-1 == objectType)
 			break;
@@ -175,15 +175,15 @@ GPK_USING_TYPEINT();
 	return rsw_stream.CursorPosition;
 }
 
-::gpk::error_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, FILE * input)					{
+::gpk::err_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, FILE * input)					{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-::gpk::error_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input)	{
+::gpk::err_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input)	{
 	::gpk::au0_t					fileInMemory				= {};
-	gpk_necall(gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
-	uint64_t					unk							= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
+	if_fail_fef(gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
+	u3_t					unk							= *(u3_t*)&fileInMemory[fileInMemory.size() - 8];
 	(void)unk;
 	info_printf("Unk64: 0x%llX.", unk);
 	info_printf("Parsing RSW file: %s.", input.begin());

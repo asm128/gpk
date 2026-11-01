@@ -7,9 +7,9 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SModelMatrices {
-		::gpk::m4f32	Scale		;
-		::gpk::m4f32	Rotation	;
-		::gpk::m4f32	Position	;
+		::gpk::m4f2_t	Scale		;
+		::gpk::m4f2_t	Rotation	;
+		::gpk::m4f2_t	Position	;
 	};
 
 	struct SModel3 {

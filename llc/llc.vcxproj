@@ -36,6 +36,7 @@
     <ClInclude Include="gpk_append_xml.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_arduino_string.h" />
+    <ClInclude Include="gpk_args.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_base.h" />
     <ClInclude Include="gpk_array_bit.h" />
@@ -59,6 +60,7 @@
     <ClInclude Include="gpk_bit.h" />
     <ClInclude Include="gpk_bitmap_target.h" />
     <ClInclude Include="gpk_block.h" />
+    <ClInclude Include="gpk_block_container.h" />
     <ClInclude Include="gpk_block_container_nts.h" />
     <ClInclude Include="gpk_broker.h" />
     <ClInclude Include="gpk_camera.h" />
@@ -85,11 +87,13 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
+    <ClInclude Include="gpk_file_pack.h" />
     <ClInclude Include="gpk_gpio.h" />
     <ClInclude Include="gpk_i2c.h" />
     <ClInclude Include="gpk_keyed_bit_array.h" />
+    <ClInclude Include="gpk_keyval_view.h" />
+    <ClInclude Include="gpk_lifecycle.h" />
     <ClInclude Include="gpk_linear_map_pobj.h" />
-    <ClInclude Include="gpk_log_level.h" />
     <ClInclude Include="gpk_event_input.h" />
     <ClInclude Include="gpk_event_screen.h" />
     <ClInclude Include="gpk_gauge.h" />
@@ -111,9 +115,12 @@
     <ClInclude Include="gpk_line3.h" />
     <ClInclude Include="gpk_linear_map_pod.h" />
     <ClInclude Include="gpk_log_core.h" />
+    <ClInclude Include="gpk_matrix2.h" />
+    <ClInclude Include="gpk_matrix3.h" />
     <ClInclude Include="gpk_minmax.h" />
     <ClInclude Include="gpk_minmax_n2.h" />
     <ClInclude Include="gpk_minmax_n3.h" />
+    <ClInclude Include="gpk_mutex.h" />
     <ClInclude Include="gpk_n3.h" />
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_platform_error.h" />
@@ -132,6 +139,7 @@
     <ClInclude Include="gpk_std_initializer_list.h" />
     <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_string_compose.h" />
+    <ClInclude Include="gpk_swap.h" />
     <ClInclude Include="gpk_system_event.h" />
     <ClInclude Include="gpk_system_key.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
@@ -266,13 +274,14 @@
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
+    <ClCompile Include="gpk_file_pack.cpp" />
     <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_geometry_draw.cpp" />
     <ClCompile Include="gpk_gltf.cpp" />
     <ClCompile Include="gpk_gui_inputbox.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
     <ClCompile Include="gpk_i2c.cpp" />
-    <ClCompile Include="gpk_keyval_old.cpp" />
+    <ClCompile Include="gpk_keyval_view.cpp" />
     <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_path.cpp" />
     <ClCompile Include="gpk_spi.cpp" />
@@ -315,7 +324,6 @@
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
-    <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />

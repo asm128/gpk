@@ -41,21 +41,21 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	uint64_t					port						= 9998;
 	uint64_t					adapter						= 0;
 	{ // load port from config file
-		::gpk::vcsc_t				jsonPort					= {};
+		::gpk::view<sc_t>				jsonPort					= {};
 		const ::gpk::SJSONReader	& jsonReader				= framework.JSONConfig.Reader;
-		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve(::gpk::vcs{"application.brt"}, jsonReader, 0, app.ProcessFileName);
+		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.brt"}, jsonReader, 0, app.ProcessFileName);
 		wf_if(::gpk::failed(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
 		else {
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"process.executable_path"		}, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_app_name"}, jsonReader, indexObjectApp, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_params"	}, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"listen_port"					}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.executable_path"		}, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_app_name"}, jsonReader, indexObjectApp, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_params"	}, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"					}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, port);
 				info_printf("Port to listen on: %u.", (uint32_t)port);
 			}
 			jsonPort = "";
-			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, adapter);
 				info_printf("Adapter: %u.", (uint32_t)adapter);
@@ -71,13 +71,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	szCmdlineFinal.push_back(0);
 	szCmdlineApp.push_back(0);
 
-	gpk_necall(gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (uint32_t)port);
+	if_fail_fef(gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (uint32_t)port);
 	return 0;
 }
 
 static	::gpk::error_t	createChildProcess
 	(	::brt::SProcess					& process
-	,	::gpk::vu8						environmentBlock
+	,	::gpk::vu0_t						environmentBlock
 	,	::gpk::vcst_t					appPath
 	,	::gpk::vsc_t					commandLine
 	,	bool							debugMessageBox			= false
@@ -85,8 +85,8 @@ static	::gpk::error_t	createChildProcess
 	::gpk::vcst_t				szCmdlineApp			= appPath;
 	::gpk::vstr_t				szCmdlineFinal			= commandLine;
 	bool						bSuccess				= false;
-	stacxpr	bool				isUnicodeEnv			= false;
-	stacxpr	uint32_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stxp	bool				isUnicodeEnv			= false;
+	stxp	uint32_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 	
 	if(INVALID_HANDLE_VALUE != process.ProcessInfo.hProcess	){ CloseHandle(process.ProcessInfo.hProcess	); }
 	bSuccess				= CreateProcessA(szCmdlineApp	// Create the child process.
@@ -100,7 +100,7 @@ static	::gpk::error_t	createChildProcess
 		, &process.StartInfo		// STARTUPINFO pointer
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION
-	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
+	if_true_vef(-1, false == bSuccess, "Failed to create process, because... '%s'.", "???");
 	if(debugMessageBox) {
 		::gpk::apod<char>			userMessage				= {};
 		userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
@@ -116,14 +116,14 @@ static	::gpk::error_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::
 	DWORD						dwWritten				= 0;
 	bool						bSuccess				= false;
 	ef_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
-	ree_if(false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
+	if_true_vef(-1, false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
 	return bSuccess ? 0 : -1;
 }
 
 
 static	::gpk::error_t	readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	static	::gpk::au0_t		chBuf;
-	stacxpr	uint32_t			BUFSIZE					= 1024 * 1024 * 50;
+	stxp	uint32_t			BUFSIZE					= 1024 * 1024 * 50;
 	chBuf.resize(BUFSIZE);
 	for (;;) {
 		uint32_t					dwRead					= 0;
@@ -145,24 +145,24 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES			saAttr;
 	saAttr.bInheritHandle	= TRUE;		// Set the bInheritHandle flag so pipe handles are inherited.
 	saAttr.lpSecurityDescriptor = NULL;
-	ree_if(false == (bool)CreatePipe			(&handles.ChildStd_OUT_Read, &handles.ChildStd_OUT_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
-	ree_if(false == (bool)SetHandleInformation	(handles.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
-	ree_if(false == (bool)CreatePipe			(&handles.ChildStd_ERR_Read, &handles.ChildStd_ERR_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
-	ree_if(false == (bool)SetHandleInformation	(handles.ChildStd_ERR_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
-	ree_if(false == (bool)CreatePipe			(&handles.ChildStd_IN_Read, &handles.ChildStd_IN_Write, &saAttr, 0)		, "Stdin CreatePipe: '%s'."				, "Failed to create a pipe for the child process's STDIN.");
-	ree_if(false == (bool)SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0)						, "Stdin SetHandleInformation: '%s'."	, "Failed to ensure the write handle to the pipe for STDIN is not inherited.");
+	if_true_vef(-1, false == (bool)CreatePipe			(&handles.ChildStd_OUT_Read, &handles.ChildStd_OUT_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
+	if_true_vef(-1, false == (bool)SetHandleInformation	(handles.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
+	if_true_vef(-1, false == (bool)CreatePipe			(&handles.ChildStd_ERR_Read, &handles.ChildStd_ERR_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
+	if_true_vef(-1, false == (bool)SetHandleInformation	(handles.ChildStd_ERR_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
+	if_true_vef(-1, false == (bool)CreatePipe			(&handles.ChildStd_IN_Read, &handles.ChildStd_IN_Write, &saAttr, 0)		, "Stdin CreatePipe: '%s'."				, "Failed to create a pipe for the child process's STDIN.");
+	if_true_vef(-1, false == (bool)SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0)						, "Stdin SetHandleInformation: '%s'."	, "Failed to ensure the write handle to the pipe for STDIN is not inherited.");
 	return 0;	// The remaining open handles are cleaned up when this process terminates. To avoid resource leaks in a larger application, close handles explicitly.
 }
 
 ::gpk::error_t			update						(::brt::SApplication & app, bool exitSignal)	{
 	::gpk::STimer				timer;
-	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
 		::std::lock_guard			lock						(app.LockRender);
 		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
 	}
 	::gpk::SFramework			& framework					= app.Framework;
-	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 	::gpk::SGUI					& gui						= *framework.GUI;
 	::gpk::acid					controlsToProcess			= {};
 	::gpk::guiProcessControls(gui, [&app](::gpk::cid_t iControl) {
@@ -191,7 +191,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 			::brt::SProcess				& process				= app.ClientProcesses[iClient];
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, (*(receivedPerClient[iClient]))[iMessage]->Payload.begin());
-				::gpk::vu8					environmentBlock		= (*(receivedPerClient[iClient]))[iMessage]->Payload;
+				::gpk::vu0_t					environmentBlock		= (*(receivedPerClient[iClient]))[iMessage]->Payload;
 				// llamar proceso
 				if_fail_ce(::initHandles(iohandles));
 				process.StartInfo.hStdError		= iohandles.ChildStd_ERR_Write;
@@ -274,19 +274,19 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 // Example 1
 // By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
 static int					REM_tmain0							()		{
-	stacxpr	uint32_t	BUFSIZE					= 4096;
+	stxp	uint32_t	BUFSIZE					= 4096;
 	char							environmentBlock2Set	[BUFSIZE]	= {};
 	int32_t							charsWritten						= 0;
 	DWORD							dwFlags								= 0;
 	stxp	::gpk::vcst_c			szAppName	[]						= GPK_CXS("ex3.exe");
 	PROCESS_INFORMATION				pi									= {};
-	gpk_necall(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
-	gpk_necall(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
+	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
+	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
 	// Create the child process, specifying a new environment block.
 	STARTUPINFOA						si									= {sizeof(STARTUPINFOA)};
-	stacxpr	bool		isUnicodeEnv						= false;
+	stxp	bool		isUnicodeEnv						= false;
 	dwFlags						= dwFlags | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
-	ree_if(FALSE == CreateProcessA(szAppName, NULL, NULL, NULL, TRUE, dwFlags, (void*)environmentBlock2Set, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError());
+	if_true_vef(-1, FALSE == CreateProcessA(szAppName, NULL, NULL, NULL, TRUE, dwFlags, (void*)environmentBlock2Set, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError());
 	WaitForSingleObject(pi.hProcess, INFINITE);
 	return TRUE;
 }
@@ -297,7 +297,7 @@ static int					REM_tmain0							()		{
 #define VARNAME "MyVariable"
 
 static int					REM_tmain1			() {
-	stacxpr	const uint32_t			BUFSIZE					= 4096;
+	stxp	const uint32_t			BUFSIZE					= 4096;
 	stxp	::gpk::vcst_c			szAppName			= GPK_CXS("ex3.exe");
 	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
 	PROCESS_INFORMATION				pi					= {};
@@ -306,7 +306,7 @@ static int					REM_tmain1			() {
 	// Retrieves the current value of the variable if it exists.
 	// Sets the variable to a new value, creates a child process, then uses SetEnvironmentVariable to restore the original value or delete it if it did not exist previously.
 	char							* pszOldVal			= (char*)malloc(BUFSIZE * 4);
-	ree_if(nullptr == pszOldVal, "%s", "Out of memory\n");
+	if_true_vef(-1, nullptr == pszOldVal, "%s", "Out of memory\n");
 	DWORD							dwRet				= GetEnvironmentVariableA(VARNAME, pszOldVal, BUFSIZE * 4);
 	if(0 == dwRet) {
 		DWORD							dwErr				= GetLastError();
@@ -316,26 +316,26 @@ static int					REM_tmain1			() {
 		}
 	}
 	else if(BUFSIZE < dwRet) {
-		ree_if(nullptr == (pszOldVal = (char*)realloc(pszOldVal, dwRet * 4)), "%s", "Out of memory\n");
+		if_true_vef(-1, nullptr == (pszOldVal = (char*)realloc(pszOldVal, dwRet * 4)), "%s", "Out of memory\n");
 
 		dwRet						= GetEnvironmentVariableA(VARNAME, pszOldVal, dwRet);
-		ree_if(FALSE == dwRet, "GetEnvironmentVariable failed (%d)\n", GetLastError());
+		if_true_vef(-1, FALSE == dwRet, "GetEnvironmentVariable failed (%d)\n", GetLastError());
 		fExist						= TRUE;
 	}
 	else
 		fExist						= TRUE;
 
-	ree_if(FALSE == SetEnvironmentVariableA(VARNAME, "Test"), "SetEnvironmentVariable failed (%d)\n", GetLastError());		// Set a value for the child process to inherit.
+	if_true_vef(-1, FALSE == SetEnvironmentVariableA(VARNAME, "Test"), "SetEnvironmentVariable failed (%d)\n", GetLastError());		// Set a value for the child process to inherit.
 	// ---- Create a child process.
 	si							= {sizeof(STARTUPINFOA)};
-	stacxpr	bool		isUnicodeEnv			= false;
+	stxp	bool		isUnicodeEnv			= false;
 	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
 	::gpk::apod<char>				bufferAppName			= ::gpk::toString(szAppName);
-	ree_if(FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
+	if_true_vef(-1, FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
 	WaitForSingleObject(pi.hProcess, INFINITE);
 	// - Restore the original environment variable.
 	if(fExist) {
-		ree_if(FALSE == SetEnvironmentVariableA(VARNAME, pszOldVal), "SetEnvironmentVariable failed (%d)\n", GetLastError());
+		if_true_vef(-1, FALSE == SetEnvironmentVariableA(VARNAME, pszOldVal), "SetEnvironmentVariable failed (%d)\n", GetLastError());
 	}
 	else
 		SetEnvironmentVariableA(VARNAME, NULL);

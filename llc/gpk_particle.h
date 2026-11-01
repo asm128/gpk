@@ -15,13 +15,13 @@ namespace gpk
 	struct SParticle2Forces {
 		typedef	::gpk::n2<_tElement>	TCoord;
 
-		stacxpr	const _tElement		VelocityEpsilon				= 0.0001f;
+		stxp	const _tElement		VelocityEpsilon				= 0.0001f;
 
 		TCoord						AccumulatedForce			= {};
 		TCoord						Acceleration				= {};	// A vector representing the speed in a given direction
 		TCoord						Velocity					= {};	// A vector representing the speed in a given direction
 
-		inlcxpr	bool				VelocityDepleted			()				const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
+		inxp	bool				VelocityDepleted			()				const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
 		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
 		void						IntegrateAccumulatedForce	(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			noexcept	{
 			Acceleration				+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
@@ -41,8 +41,8 @@ namespace gpk
 		_tElement					Damping						= .99f;	// A vector representing the speed in a given direction
 
 		inline	void				SetMass						(const double mass)																			noexcept	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
-		inlcxpr	double				GetMass						()				const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
-		inlcxpr	bool				HasFiniteMass				()				const	noexcept	{ return InverseMass >= 0.0f;								}
+		inxp	double				GetMass						()				const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
+		inxp	bool				HasFiniteMass				()				const	noexcept	{ return InverseMass >= 0.0f;								}
 	};
 
 	// This compact structure allows to define all the boolean states of the particle packed in a single byte.
@@ -50,12 +50,12 @@ namespace gpk
 		bool					Unused						: 1;
 		bool					Active						: 1;
 
-		inlcxpr	bool			RequiresProcessing			()				const	noexcept	{ return (false == Unused) && Active; }
+		inxp	bool			RequiresProcessing			()				const	noexcept	{ return (false == Unused) && Active; }
 	};
 #pragma pack(pop)
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
 	tplt<tpnm _tElement>
-	stainli	void			particleIntegratePosition
+	stin	void			particleIntegratePosition
 		(	const ::gpk::n2<_tElement>	& velocity
 		,	const double				timeElapsed
 		,	const double				timeElapsedHalfSquared
@@ -66,8 +66,8 @@ namespace gpk
 	}
 
 	tplt<tpnm _tElement>
-	::gpk::error_t			integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
-		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
+	::gpk::err_t			integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
+		for(u2_t iParticle = 0, particleCount = (u2_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next
 				::gpk::particleIntegratePosition(particleNext.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particleNext.Position);
@@ -87,14 +87,14 @@ namespace gpk
 		::gpk::apod<TParticle>					Particle									= {};
 		::gpk::apod<TParticle>					ParticleNext								= {};
 		// -----------------------------------------------------	---
-		inline	::gpk::error_t					Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
-		::gpk::error_t							Integrate									(::gpk::view<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
+		inline	::gpk::err_t					Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
+		::gpk::err_t							Integrate									(::gpk::view<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
 		// --------------------------------------------------------
-		::gpk::error_t							AddParticle					(const TParticle& particleData)																			{
-			const uint32_t								particleCount								= (uint32_t)ParticleState.size();
-			stacxpr	const ::gpk::SParticle2State		initialParticleState						= {false, true};
+		::gpk::err_t							AddParticle					(const TParticle& particleData)																			{
+			const u2_t								particleCount								= (u2_t)ParticleState.size();
+			stxp	const ::gpk::SParticle2State		initialParticleState						= {false, true};
 
-			for(uint32_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
+			for(u2_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {
 					ParticleState	[iBody]													= initialParticleState;
 					Particle		[iBody]													=
@@ -127,11 +127,11 @@ namespace gpk
 		typedef	_tParticleType	TParticleType;
 
 		TParticleType			Binding										= {};
-		int32_t					IndexParticlePhysics						= -1;
+		s2_t					IndexParticlePhysics						= -1;
 	};
 
 	tplt<tpnm _tParticleType, tpnm _tCoord>
-	::gpk::error_t			addParticle
+	::gpk::err_t			addParticle
 		(	const _tParticleType										& particleType
 		,	::gpk::apod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
 		,	::gpk::SParticle2Integrator<_tCoord>						& particleIntegrator
@@ -140,7 +140,7 @@ namespace gpk
 	{
 		::gpk::SParticleBinding<_tParticleType>	newInstance									= {};
 		newInstance.Binding		= particleType;
-		gpk_necs(newInstance.IndexParticlePhysics = particleIntegrator.AddParticle(particleDefinition));
+		if_fail_fe(newInstance.IndexParticlePhysics = particleIntegrator.AddParticle(particleDefinition));
 		return particleInstances.push_back(newInstance);
 	}
 
@@ -154,24 +154,24 @@ namespace gpk
 	};
 
 	tplt<tpnm _tParticleType, tpnm _tCoord>
-	stainli	::gpk::error_t			addParticle					(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
+	stin	::gpk::err_t			addParticle					(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}
 
 	// simple particle force integrator
 	struct SParticles3 {
-		::gpk::an3f32					OldPosition			= {};
-		::gpk::an3f32					Position			= {};
-		::gpk::an3f32					Direction			= {};
+		::gpk::an3f2_t					OldPosition			= {};
+		::gpk::an3f2_t					Position			= {};
+		::gpk::an3f2_t					Direction			= {};
 		::gpk::af2_t					Speed				= {};
 
-		::gpk::error_t					IntegrateSpeed		(double secondsLastFrame);
+		::gpk::err_t					IntegrateSpeed		(double secondsLastFrame);
 
-		::gpk::error_t					Create				(n3f2_c & position, n3f2_c & direction, float speed);
-		::gpk::error_t					Remove				(int32_t iParticle);
+		::gpk::err_t					Create				(n3f2_c & position, n3f2_c & direction, float speed);
+		::gpk::err_t					Remove				(s2_t iParticle);
 
-		::gpk::error_t					Load				(::gpk::vcu0_t & input);
-		::gpk::error_t					Save				(::gpk::au0_t & output)	const;
+		::gpk::err_t					Load				(::gpk::vcu0_t & input);
+		::gpk::err_t					Save				(::gpk::au0_t & output)	const;
 	};
 } // namespace
 

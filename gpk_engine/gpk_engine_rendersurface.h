@@ -11,10 +11,10 @@ namespace gpk
 #pragma pack(push, 1)
 	struct SSurfaceDescription {
 		::gpk::COLOR_TYPE			ColorType			= {};
-		int8_t						BitDepth			= {};
-		int8_t						MethodCompression	= {};
-		int8_t						MethodFilter		= {};
-		int8_t						MethodInterlace		= {};
+		s0_t						BitDepth			= {};
+		s0_t						MethodCompression	= {};
+		s0_t						MethodFilter		= {};
+		s0_t						MethodInterlace		= {};
 		::gpk::n2u1_t				Dimensions			= {};
 	};
 #pragma pack(pop)
@@ -23,8 +23,8 @@ namespace gpk
 		::gpk::SSurfaceDescription	Desc			= {};
 		::gpk::au0_t				Data			= {};
 
-		::gpk::error_t				Save			(::gpk::au0_t & output)	const	{ gpk_necs(gpk::savePOD(output, Desc)); return ::gpk::saveView(output, Data); }
-		::gpk::error_t				Load			(::gpk::vcu0_t & input)			{ gpk_necs(gpk::loadPOD(input, Desc)); return ::gpk::loadView(input, Data); }
+		::gpk::err_t				Save			(::gpk::au0_t & output)	const	{ if_fail_fe(gpk::savePOD(output, Desc)); return ::gpk::saveView(output, Data); }
+		::gpk::err_t				Load			(::gpk::vcu0_t & input)			{ if_fail_fe(gpk::loadPOD(input, Desc)); return ::gpk::loadView(input, Data); }
 	};
 
 	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSurface>	SSurfaceManager;

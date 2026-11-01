@@ -17,7 +17,7 @@
 	( ::gpk::img8bgra			& imageCache
 	, ::gpk::img8bgra			& verticalAtlas
 	, ::gpk::imgmonou64			& fontTexture
-	, ::gpk::vcsc_t				filenameOutput
+	, ::gpk::view<sc_t>				filenameOutput
 	, const ::gpk::n2u2_t		fontCharSize
 	, bool						negateBit
 	) {
@@ -36,7 +36,7 @@
 		}
 	}
 	const ::gpk::n2<uint32_t>								& textureFontMetrics	= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
-	gpk_necall(fontTexture.resize(textureFontMetrics), "%s", "");
+	if_fail_fef(fontTexture.resize(textureFontMetrics), "%s", "");
 	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
 		const ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];//app.TextureFont.View[y][x];
@@ -63,28 +63,28 @@
 
 int						main					() {
 	::gpk::aobj<::gpk::asc_t>	fontFiles				= {};
-	::gpk::vcs					pathToSearch			= {"../gpk_data/fonts/cp437"};
-	gpk_necall(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
+	::gpk::vcst_t					pathToSearch			= {"../gpk_data/fonts/cp437"};
+	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
 	::gpk::SPNGData				pngCache				= {};
 	::gpk::img8bgra				imageCache				= {};
 	::gpk::img8bgra				imageFixed				= {};
 	::gpk::img8bgra				verticalAtlas			= {};
 	::gpk::imgmonou64			fontTexture				= {};
 	::gpk::string				filenameOutput			= {};
-	::gpk::vcsc_t				extension				= {};
+	::gpk::view<sc_t>				extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
-		::gpk::vcsc_t				filenameInput			= fontFiles[iFile];
+		::gpk::view<sc_t>				filenameInput			= fontFiles[iFile];
 		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
 		::gpk::apod<char>			lowercaseExtension		= ::gpk::toString(extension);
 		::gpk::tolower(lowercaseExtension);
-		if(lowercaseExtension != ::gpk::vcs{".png"})
+		if(lowercaseExtension != ::gpk::vcst_t{".png"})
 			continue;
 		cef_if(::gpk::failed(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
 		filenameOutput			= filenameInput;
 		filenameOutput.append_string("fix.png");
-		::gpk::aobj<::gpk::vcsc_t>		splitFileName;
+		::gpk::aobj<::gpk::view<sc_t>>		splitFileName;
 		::gpk::split(filenameInput, '_', splitFileName);
-		::gpk::aobj<::gpk::vcsc_t>		splitFontMetrics;
+		::gpk::aobj<::gpk::view<sc_t>>		splitFontMetrics;
 		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
 		::gpk::n2u2_t				fontCharSize			= {};
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], fontCharSize.x);

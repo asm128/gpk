@@ -6,10 +6,10 @@
 #include "gpk_deflate.h"
 
 int								main							(int argc, char ** argv)						{
-	ree_if(2 > argc, "Usage:\n\t%s [input file name] [output folder (optional)]", argv[0]);
-	ree_if(65535 < argc, "Invalid parameter count: %u.", (uint32_t)argc);
+	if_true_vef(-1, 2 > argc, "Usage:\n\t%s [input file name] [output folder (optional)]", argv[0]);
+	if_true_vef(-1, 65535 < argc, "Invalid parameter count: %u.", (uint32_t)argc);
 	::gpk::apod<char>					namePathDst						= {};
-	::gpk::vcs							nameFileSrc						= {argv[0], (uint32_t)-1};
+	::gpk::vcst_t							nameFileSrc						= {argv[0], (uint32_t)-1};
 	if(2 < argc)
 		namePathDst						= ::gpk::toString({argv[2], (uint32_t)-1});
 	else if(2 == argc) {
@@ -20,7 +20,7 @@ int								main							(int argc, char ** argv)						{
 			namePathDst[indexSequence + 1]	= 0;
 		}
 	}
-	gpk_necall(gpk::folderUnpackToDisk({namePathDst.begin(), namePathDst.size()}, nameFileSrc), "Failed to unpack file '%s' to folder '%s'.", ::gpk::toString(nameFileSrc).begin(), namePathDst.begin());
+	if_fail_fef(gpk::folderUnpackToDisk({namePathDst.begin(), namePathDst.size()}, nameFileSrc), "Failed to unpack file '%s' to folder '%s'.", ::gpk::toString(nameFileSrc).begin(), namePathDst.begin());
 	for(int32_t iArg = 3; iArg < argc; ++iArg)
 		info_printf("Unknown parameter: %s.", argv[iArg]);
 

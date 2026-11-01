@@ -1,0 +1,9 @@
+Root: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc"
+Source prefix: "llc_"
+Target prefix: "gpk_"
+
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_error.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_error.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_runtime.h" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_runtime.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\llc_error.cpp" -> "D:\enterprise\programming_sciences\codebases\Pablo\bundle_galaxy_hell\gpk\llc\gpk_error.cpp"
+
+Renamed: 0 file(s). Skipped: 3 file(s). Errors: 3.

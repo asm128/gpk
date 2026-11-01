@@ -1,50 +1,53 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "gpk_cgi_runtime.h"
 #include "gpk_process.h"
 #include "gpk_parse.h"
+#include "gpk_keyval_view.h"
 
-using ::gpk::sc_c;
+GPK_USING_TYPEINT();
+GPK_USING_APOD();
+GPK_USING_VIEW();
+GPK_USING_ASTATIC();
 
-::gpk::error_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
-	const ::gpk::aobj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
-	::gpk::vcsc_t									remoteAddr;
-	const bool										isCGIEnviron					= -1 != ::gpk::find(::gpk::vcs{"REMOTE_ADDR"}, environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
-	requestReceived.IsCGIEnviron				= isCGIEnviron;
+gpk::err_t			gpk::httpRequestInit			(SHTTPAPIRequest & requestReceived, cnst SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
+	view<cnst kv<vcst_t>>			environViews			= runtimeValues.RuntimeValues.EntryPointArgs.Environment;
+	vcst_t							remoteAddr;
+	const bool						isCGIEnviron					= -1 != ::gpk::find("REMOTE_ADDR", environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
+	requestReceived.IsCGIEnviron	= isCGIEnviron;
 	if(bLogCGIEnviron && isCGIEnviron)
-		::gpk::writeCGIEnvironToFile(environViews);
+		writeCGIEnvironToFile(environViews);
 
 	{	// Try to load query from querystring and request body
-		const int32_t								offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
-		::gpk::apod<sc_t>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
-		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
-		if(-1 == (int8_t)requestReceived.Method)
-			requestReceived.Method							= ::gpk::HTTP_METHOD_GET;
-		::gpk::find(::gpk::vcs{"SCRIPT_NAME"	}, environViews, requestReceived.Script);
-		::gpk::find(::gpk::vcs{"PATH_INFO"		}, environViews, requestReceived.Path);
-		::gpk::find(::gpk::vcs{"QUERY_STRING"	}, environViews, requestReceived.QueryString);
-		::gpk::find(::gpk::vcs{"REMOTE_ADDR"	}, environViews, requestReceived.Ip);
-		::gpk::find(::gpk::vcs{"REMOTE_IP"		}, environViews, requestReceived.Port);
+		const s2_t						offset				= ::gpk::find("REQUEST_METHOD", ::gpk::view<const ::gpk::kv<vcst_t>>{environViews.begin(), environViews.size()});
+		::gpk::string					enumValue			= (-1 == offset) ? vcst_t("GET") : environViews[offset].Val;
+		requestReceived.Method		= get_value<HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
+		if(-1 == (s0_t)requestReceived.Method)
+			requestReceived.Method							= HTTP_METHOD_GET;
+		::gpk::find("SCRIPT_NAME", environViews, requestReceived.Script);
+		::gpk::find("PATH_INFO", environViews, requestReceived.Path);
+		::gpk::find("QUERY_STRING", environViews, requestReceived.QueryString);
+		::gpk::find("REMOTE_ADDR", environViews, requestReceived.Ip);
+		::gpk::find("REMOTE_IP", environViews, requestReceived.Port);
 
 		requestReceived.ContentBody						= runtimeValues.Content.Body;
 		requestReceived.QueryStringElements				= runtimeValues.QueryStringElements;
 		requestReceived.QueryStringKeyVals				= runtimeValues.QueryStringKeyVals;
 	}
-	if(false == isCGIEnviron && runtimeValues.EntryPointArgs.ArgsCommandLine.size() > 1) {	// Get query from command line instead of CGI environ
-		requestReceived.Path							= ::gpk::vcs{runtimeValues.EntryPointArgs.ArgsCommandLine[1], (uint32_t)-1};
+	if(false == isCGIEnviron && runtimeValues.RuntimeValues.EntryPointArgs.Positionals.size()) {	// Get query from command line instead of CGI environ
+		requestReceived.Path							= runtimeValues.RuntimeValues.EntryPointArgs.Positionals[0];
 		if(requestReceived.Path.size() > 2) {
 			if('"' == requestReceived.Path[0])
 				requestReceived.Path							= {&requestReceived.Path[1], requestReceived.Path.size() - 2};
 
-			const int32_t										queryStringStart					= ::gpk::find('?', requestReceived.Path);
+			const s2_t										queryStringStart					= ::gpk::find('?', requestReceived.Path);
 			if(0 <= queryStringStart) {
-				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (uint32_t)queryStringStart - 1};
-				requestReceived.Path							= {&requestReceived.Path[0], (uint32_t)queryStringStart};
+				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (u2_t)queryStringStart - 1};
+				requestReceived.Path							= {&requestReceived.Path[0], (u2_t)queryStringStart};
 
-				//::gpk::vcs								querystring;
+				//::gpk::vcst_t								querystring;
 				::gpk::querystring_split(requestReceived.QueryString, requestReceived.QueryStringElements);
 				requestReceived.QueryStringKeyVals.resize(requestReceived.QueryStringElements.size());
-				for(uint32_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
-					::gpk::TKeyValConstString								& keyValDst				= requestReceived.QueryStringKeyVals[iKeyVal];
+				for(u2_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
+					::gpk::kv<vcst_t>								& keyValDst				= requestReceived.QueryStringKeyVals[iKeyVal];
 					::gpk::keyval_split(requestReceived.QueryStringElements[iKeyVal], keyValDst);
 				}
 			}
@@ -55,36 +58,36 @@ using ::gpk::sc_c;
 	return isCGIEnviron ? 1 : 0;
 }
 
-static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<::gpk::sc_c> & strContentType)	{
-	ree_if(0 == strContentType.size(), "%s", "No input string");
-	static	::gpk::vcsc_c					content_types []			=
-		{ ::gpk::vcs{"application/javascript"													}
-		, ::gpk::vcs{"application/json"															}
-		, ::gpk::vcs{"application/x-www-form-urlencoded"										}
-		, ::gpk::vcs{"application/xml"															}
-		, ::gpk::vcs{"application/zip"															}
-		, ::gpk::vcs{"application/pdf"															}
-		, ::gpk::vcs{"application/sql"															}
-		, ::gpk::vcs{"application/graphql"														}
-		, ::gpk::vcs{"application/ld+json"														}
-		, ::gpk::vcs{"application/msword"														}
-		, ::gpk::vcs{"application/vnd.openxmlformats-officedocument.wordprocessingml.document"	}
-		, ::gpk::vcs{"application/vnd.ms-excel"													}
-		, ::gpk::vcs{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"		}
-		, ::gpk::vcs{"application/vnd.ms-powerpoint"											}
-		, ::gpk::vcs{"application/vnd.openxmlformats-officedocument.presentationml.presentation"}
-		, ::gpk::vcs{"application/vnd.oasis.opendocument.text"									}
-		, ::gpk::vcs{"audio/mpeg"																}
-		, ::gpk::vcs{"audio/ogg"																}
-		, ::gpk::vcs{"multipart/form-data"														}
-		, ::gpk::vcs{"text/css"																	}
-		, ::gpk::vcs{"text/html"																}
-		, ::gpk::vcs{"text/xml"																	}
-		, ::gpk::vcs{"text/csv"																	}
-		, ::gpk::vcs{"text/plain"																}
-		, ::gpk::vcs{"image/png"																}
-		, ::gpk::vcs{"image/jpeg"																}
-		, ::gpk::vcs{"image/gif"																}
+static	::gpk::err_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<::gpk::sc_c> & strContentType)	{
+	if_true_vef(-1, 0 == strContentType.size(), "%s", "No input string");
+	static	::gpk::view<sc_c>					content_types []			=
+		{ "application/javascript"
+		, "application/json"
+		, "application/x-www-form-urlencoded"
+		, "application/xml"
+		, "application/zip"
+		, "application/pdf"
+		, "application/sql"
+		, "application/graphql"
+		, "application/ld+json"
+		, "application/msword"
+		, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+		, "application/vnd.ms-excel"
+		, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+		, "application/vnd.ms-powerpoint"
+		, "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+		, "application/vnd.oasis.opendocument.text"
+		, "audio/mpeg"
+		, "audio/ogg"
+		, "multipart/form-data"
+		, "text/css"
+		, "text/html"
+		, "text/xml"
+		, "text/csv"
+		, "text/plain"
+		, "image/png"
+		, "image/jpeg"
+		, "image/gif"
 		};
 
 	::gpk::CGI_MEDIA_TYPE									val;
@@ -118,15 +121,15 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort) {
+static	::gpk::err_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::view<sc_c> & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort) {
 	remoteIP.Port			= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
 	if(strRemoteIP.size()) {
-		uint32_t					iOffset			= 0;
-		uint32_t					iEnd			= 0;
+		u2_t					iOffset			= 0;
+		u2_t					iEnd			= 0;
 		remoteIP.IP				= 0;
-		for(uint8_t iVal = 0; iVal < 4; ++iVal) {
+		for(u0_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
 				::gpk::sc_c curChar = strRemoteIP[iEnd];
 				if( curChar == '.'
@@ -137,27 +140,27 @@ static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & 
 					break;
 				++iEnd;
 			}
-			uint8_t			valueRead	= 0;
+			u0_t			valueRead	= 0;
 			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, valueRead);
 
-			remoteIP.IP	|= ::gpk::byte_to<uint32_t>(valueRead, iVal);
+			remoteIP.IP	|= ::gpk::byte_to<u2_t>(valueRead, iVal);
 
 			iOffset		= iEnd + 1;
 			iEnd		= iOffset;
 		}
 		if(0 == strRemotePort.size() && iOffset < strRemoteIP.size()) {
-			gpk_necs(gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
+			if_fail_fe(gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
 		}
 	}
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<::gpk::sc_c> & strContent)	{
+static	::gpk::err_t	cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<::gpk::sc_c> & strContent)	{
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<::gpk::sc_c> & strContent)	{
+static	::gpk::err_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<::gpk::sc_c> & strContent)	{
 	switch(contentType) {
 	default: break;
 	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA:
@@ -167,47 +170,44 @@ static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, 
 	return 0;
 }
 
-::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<::gpk::sc_c*> & argv)	{
-	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine	= argv;
-	::gpk::aobj<::gpk::TKeyValConstString>	& environViews	= cgiRuntimeValues.EnvironViews;
-	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
-	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
-	//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
-	//	info_printf("CGI Environ (original): '%s = %s'.", ::gpk::toString(environViews[iEnviron].Key).begin(), ::gpk::toString(environViews[iEnviron].Val).begin());
+::gpk::err_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues)	{
+	::gpk::view<cnst ::gpk::kv<vcst_t>>	environViews			= cgiRuntimeValues.RuntimeValues.EntryPointArgs.Environment;
+	//for(u2_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
+	//	info_printf("CGI Environ (original): '%s = %s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key).begin(), GPK_VIEW_ARGS(environViews[iEnviron].Val).begin());
 
 	{
-		::gpk::vcs					querystring;
-		::gpk::find(::gpk::vcs{"QUERY_STRING"}, environViews, querystring);
+		::gpk::vcst_t					querystring;
+		::gpk::find("QUERY_STRING", environViews, querystring);
 		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
 		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
-		for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
-			::gpk::TKeyValConstString	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
+		for(u2_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
+			::gpk::kv<vcst_t>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
 			::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
 		}
 	}
 	{
-		::gpk::vcs					contentype;
-		::gpk::find(::gpk::vcs{"CONTENT_TYPE"}, environViews, contentype);
+		::gpk::vcst_t					contentype;
+		::gpk::find("CONTENT_TYPE", environViews, contentype);
 		if(contentype.size())
 			::cgiLoadContentType(cgiRuntimeValues.Content.Type, contentype);
 	}
 	{
-		::gpk::vcs					remoteIP	;
-		::gpk::vcs					remotePORT	;
-		::gpk::find(::gpk::vcs{"REMOTE_IP"	}, environViews, remoteIP	);
-		::gpk::find(::gpk::vcs{"REMOTE_PORT"}, environViews, remotePORT	);
+		::gpk::vcst_t					remoteIP	;
+		::gpk::vcst_t					remotePORT	;
+		::gpk::find("REMOTE_IP", environViews, remoteIP	);
+		::gpk::find("REMOTE_PORT", environViews, remotePORT	);
 		::cgiLoadAddr(cgiRuntimeValues.RemoteIP, remoteIP, remotePORT);
 	}
 	{
-		::gpk::vcs								contentLength;
-		::gpk::find(::gpk::vcs{"CONTENT_LENGTH"}	, environViews, contentLength);
+		::gpk::vcst_t								contentLength;
+		::gpk::find("CONTENT_LENGTH"	, environViews, contentLength);
 		cgiRuntimeValues.Content.Length						= 0;
 		::gpk::parseIntegerDecimal(contentLength, cgiRuntimeValues.Content.Length);
 	}
 	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
 	fread(cgiRuntimeValues.Content.Body.begin(), 1, cgiRuntimeValues.Content.Length, stdin);
 	//memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());
-	//uint32_t												iChar							= 0;
+	//u2_t												iChar							= 0;
 	//int														iArg							= 0;
 	//while(iChar < cgiRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
 	//	cgiRuntimeValues.Content.Body[iChar++]				= (sc_t)iArg;

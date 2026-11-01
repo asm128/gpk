@@ -1,43 +1,16 @@
-#include "gpk_typeint.h"
+#include "gpk_error.h"
 
 #ifndef GPK_SAFE_H_23627
 #define GPK_SAFE_H_23627
 
-#ifndef gpk_safe_free
-#	define gpk_safe_free(p) do { if(p) { free(p); p = 0; } } while(0)
-#endif // gpk_safe_free
-
-#ifndef gpk_safe_delete
-#	define gpk_safe_delete(p) do { if(p) { delete(p); p = 0; } } while(0)
-#endif // gpk_safe_delete
-
-#ifndef gpk_safe_assign
-#	define gpk_safe_assign(p, val) do { if(p) (*p) = (val); } while(0)
-#endif // gpk_safe_assign
-
-#ifndef gpk_safe_podcpy
-#	define gpk_safe_podcpy(oldValue, val) do { if((oldValue) && (val)) ::gpk::podcpy((oldValue), (val)); } while(0)
-#endif // gpk_safe_podcpy
-
-#ifndef gpk_safe_fclose
-#	define gpk_safe_fclose(p) do { if(p) { fclose(p); p = 0; } } while(0)
-#endif // gpk_safe_fclose
-
-#ifndef gpk_safe_closesocket
-#	if defined(GPK_WINDOWS)
-#		define gpk_safe_closesocket(p) do { if((p) != 0 && (p) != INVALID_SOCKET) { closesocket(p); (p) = INVALID_SOCKET; } } while(0)
-#	else
-#		define gpk_safe_closesocket(p) do { if((p) != 0 && (p) != -1) { ::close(p); (p) = -1; } } while(0)
-#	endif
+namespace gpk 
+{
+	tplT	err_t	gpk_safe_assign			(T* & handle, const T & value)	{ if(0			== handle) return -1; *handle = value; return 0; }
+	tplT	err_t	gpk_safe_free			(T* & handle)					{ if(0			== handle) return -1; ::free		(handle); handle = {}; return 0; }
+	tplT	err_t	gpk_safe_fclose			(T  & handle)					{ if(0			== handle) return -1; ::fclose		(handle); handle = {}; return 0; }
+#ifdef GPK_WINDOWS
+	tplT	err_t	gpk_safe_closehandle	(T  & handle)					{ if(T(-1LL)	== handle) return -1; ::CloseHandle	(handle); handle = T(-1LL); return 0; }
 #endif
-
-
-#if defined(GPK_WINDOWS)
-#	ifndef gpk_safe_closehandle
-#		define WIN32_LEAN_AND_MEAN
-#		include <Windows.h>
-#		define gpk_safe_closehandle(p) do { if(INVALID_HANDLE_VALUE != (p)) { CloseHandle(p); (p) = INVALID_HANDLE_VALUE; } } while(0)
-#	endif
-#endif
+} // namespace 
 
 #endif // GPK_SAFE_H_23627

@@ -12,7 +12,7 @@ namespace gpk
 {
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
-	::gpk::error_t		line_line_intersect
+	::gpk::err_t		line_line_intersect
 		( const ::gpk::line2<TAxis>	& line1
 		, const ::gpk::line2<TAxis>	& line2
 		, ::gpk::n2<TAxis>		& out_intersect_point
@@ -37,7 +37,7 @@ namespace gpk
 		}
 		out_intersect_point.x	= (TAxis)(xnom / denom);
 		out_intersect_point.y	= (TAxis)(ynom / denom);
-		ree_if(!isfinite(out_intersect_point.x)
+		if_true_vef(-1, !isfinite(out_intersect_point.x)
 			|| !isfinite(out_intersect_point.y)
 			, "%s", "Probably a numerical issue.");
 		return 1; //All OK
@@ -46,7 +46,7 @@ namespace gpk
 	// Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
 	// returns t value of intersection and intersection point q
 	tplt<tpnm TAxis>
-	int32_t				intersectRaySphere
+	s2_t				intersectRaySphere
 		( const ::gpk::n3<TAxis>		& position
 		, const ::gpk::n3<TAxis>		& direction
 		, const ::gpk::sphere<TAxis>	& sphere
@@ -57,7 +57,7 @@ namespace gpk
 		double					b			= m.Dot(direction);
 		double					c			= m.Dot(m) - sphere.Radius * sphere.Radius;
 
-		if (c > 0.0f && b > 0.0f)	// Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
+		if (c > 0.0f && b > 0.0f)	// Exit if râ€™s origin outside s (c > 0) and r pointing away from s (b > 0)
 			return 0;
 		double					discr		= b * b - c;
 
@@ -73,7 +73,7 @@ namespace gpk
 	}
 
 	tplt<tpnm TAxis>
-	::gpk::error_t		point_in_segment
+	::gpk::err_t		point_in_segment
 		( const ::gpk::line2<TAxis>	& segment
 		, const ::gpk::n2<TAxis>	& point
 		)
@@ -86,31 +86,31 @@ namespace gpk
 	}
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
-	::gpk::error_t		line_segment_intersect
+	::gpk::err_t		line_segment_intersect
 		( const ::gpk::line2<TAxis>	& line
 		, const ::gpk::line2<TAxis>	& segment
 		, ::gpk::n2<TAxis>			& out_intersect_point
 		)
 	{
-		::gpk::error_t			collision			= line_line_intersect(line, segment, out_intersect_point);
+		::gpk::err_t			collision			= line_line_intersect(line, segment, out_intersect_point);
 		return (1 == collision) ? point_in_segment(segment, out_intersect_point) : collision;
 	}
 
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
-	::gpk::error_t		segment_segment_intersect
+	::gpk::err_t		segment_segment_intersect
 		( const ::gpk::line2<TAxis>	& segment1
 		, const ::gpk::line2<TAxis>	& segment2
 		, ::gpk::n2<TAxis>		& out_intersect_point
 		)
 	{
-		::gpk::error_t			collision			= line_segment_intersect(segment1, segment2, out_intersect_point);
+		::gpk::err_t			collision			= line_segment_intersect(segment1, segment2, out_intersect_point);
 		return (1 == collision) ? point_in_segment(segment1, out_intersect_point) : collision;
 	}
 
 
 	tplt<tpnm TAxis>
-	::gpk::error_t		buildAABBSegments
+	::gpk::err_t		buildAABBSegments
 		( const ::gpk::n2<TAxis>	& center
 		, const TAxis				halfSizeBox
 		, ::gpk::line2<TAxis>		& left
@@ -128,7 +128,7 @@ namespace gpk
 	}
 
 	tplt<tpnm TAxis>
-	::gpk::error_t		buildAABBSegments
+	::gpk::err_t		buildAABBSegments
 		( const ::gpk::rect2<TAxis>	& rect
 		, ::gpk::line2<TAxis>		& left
 		, ::gpk::line2<TAxis>		& top

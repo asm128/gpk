@@ -17,18 +17,18 @@ int main() {
 #if defined GPK_WINDOWS
 		u_long				iMode				= 1;
 		int					iResult				= ioctlsocket(handle, FIONBIO, &iMode);
-		gpk_necall(iResult, "could not set file flags");
+		if_fail_fef(iResult, "could not set file flags");
 #else
 		int					flags				= fcntl(socket_fd, F_GETFL);
-		gpk_necall(flags, "could not get file flags");
-		gpk_necall(fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK), "could not set file flags");
+		if_fail_fef(flags, "could not get file flags");
+		if_fail_fef(fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK), "could not set file flags");
 #endif
-		ree_if(INVALID_SOCKET == handle, "Failed to create socket.");
+		if_true_vef(-1, INVALID_SOCKET == handle, "Failed to create socket.");
 		sockaddr_in			sa_client			= {AF_INET};
-		gpk_necall(::bind(handle, (sockaddr *)&sa_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
+		if_fail_fef(::bind(handle, (sockaddr *)&sa_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
 		char				commandToSend		= '1';
 		int					sa_length			= sizeof(sa_server);
-		gpk_necall(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_server, sa_length), "Failed to send connect request to server.");
+		if_fail_fef(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_server, sa_length), "Failed to send connect request to server.");
 		::gpk::tcpipAddressFromSockaddr(sa_server, addrRemote);
 		info_printf("Sent connect request to server: %c to %u.%u.%u.%u:%u", commandToSend, GPK_IPV4_EXPAND(addrRemote));
 
@@ -36,7 +36,7 @@ int main() {
 		sa_server.sin_port	= 0;
 		while(true) {
 			connectAcknowledge	= 0;
-			ree_if(-1 == ::recvfrom(handle, (char *)&connectAcknowledge, (int)1, MSG_PEEK, (sockaddr *)&sa_server, &sa_length) && WSAGetLastError() != WSAEMSGSIZE && WSAGetLastError() != WSAEWOULDBLOCK, "Failed to receive response from server");
+			if_true_vef(-1, -1 == ::recvfrom(handle, (char *)&connectAcknowledge, (int)1, MSG_PEEK, (sockaddr *)&sa_server, &sa_length) && WSAGetLastError() != WSAEMSGSIZE && WSAGetLastError() != WSAEWOULDBLOCK, "Failed to receive response from server");
 
 			if('2' == connectAcknowledge) {
 				info_printf("Connected!");
@@ -48,7 +48,7 @@ int main() {
 				for(uint32_t j=0; j < 10; ++j) {
 				for(uint32_t i=0; i < 64*1024; ++i) {
 					sa_battery.sin_port	= htons((u_short)i);
-					gpk_necall(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_battery, sa_length), "Failed to send connect request to server.");
+					if_fail_fef(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_battery, sa_length), "Failed to send connect request to server.");
 					::gpk::sleep(1);
 			}}
 		}

@@ -1,4 +1,4 @@
-#ifdef LLC_ATMEL
+#ifdef GPK_ATMEL
 
 // std::initializer_list support -*- C++ -*-
 

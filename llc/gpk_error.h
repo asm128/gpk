@@ -8,8 +8,8 @@ namespace gpk
 	tydf		s2_t	err_t;
 	tdcs		err_t	err_c;
 
-	tydf		s2_t	error_t;
-	tdcs		error_t	error_c;
+	tydf		s2_t	err_t;
+	tdcs		err_t	error_c;
 
 	tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
 	tplTnsix	bool	not_failed	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
@@ -89,9 +89,9 @@ namespace gpk
 #endif
 
 #ifdef GPK_ESP32
-#	define GPK_CRASH()	do { ::gpk::u3_t * _tasdas = 0; for(::gpk::u2_t i = 0; i < 0xFFFFFFFF; ++i) { for(::gpk::u2_t j = 0; j < 1000; ++j) delay(1); base_log_print("I had to do something with this.\n"); } } while(0)	// No throw? Just crash.
+#	define GPK_CRASH()	do { ::gpk::u3_t * _tasdas = 0; for(::gpk::u2_t i = 0; i < 0xFFFFFFFF; ++i) { for(::gpk::u2_t j = 0; j < 1000; ++j) delay(1); log_print("I had to do something with this.\n"); } } while(0)	// No throw? Just crash.
 #elif defined(GPK_ARDUINO) 
-#	define GPK_CRASH()	do { ::gpk::u3_t * _tasdas = 0; for(::gpk::u2_t i = 0; i < 0xFFFFFFFF; ++i) { for(::gpk::u2_t j = 0; j < 1000; ++j) delay(1); base_log_print_F("I had to do something with this.\n"); } } while(0)	// No throw? Just crash.
+#	define GPK_CRASH()	do { ::gpk::u3_t * _tasdas = 0; for(::gpk::u2_t i = 0; i < 0xFFFFFFFF; ++i) { for(::gpk::u2_t j = 0; j < 1000; ++j) delay(1); log_print_F("I had to do something with this.\n"); } } while(0)	// No throw? Just crash.
 #else
 #	define GPK_CRASH()	do { ::gpk::u3_t * _tasdas = 0; for(::gpk::u2_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; } while(0)	// No throw? Just crash.
 #endif

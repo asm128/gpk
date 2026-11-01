@@ -16,23 +16,23 @@ namespace gpk
 		::gpk::eid_t			Camera			= ::gpk::EID_INVALID;
 		::gpk::eid_t			Background		= ::gpk::EID_INVALID;
 
-		::gpk::error_t			Save			(::gpk::au0_t & output)	const	{ 
-			gpk_necs(gpk::saveView(output, GravityCenters	));
-			gpk_necs(gpk::saveView(output, Orbits			));
-			gpk_necs(gpk::saveView(output, Bodies			));
-			gpk_necs(gpk::saveView(output, Cameras		));
-			gpk_necs(gpk::savePOD (output, Camera			));
-			gpk_necs(gpk::savePOD (output, Background		));
+		::gpk::err_t			Save			(::gpk::au0_t & output)	const	{ 
+			if_fail_fe(gpk::saveView(output, GravityCenters	));
+			if_fail_fe(gpk::saveView(output, Orbits			));
+			if_fail_fe(gpk::saveView(output, Bodies			));
+			if_fail_fe(gpk::saveView(output, Cameras		));
+			if_fail_fe(gpk::savePOD (output, Camera			));
+			if_fail_fe(gpk::savePOD (output, Background		));
 			return 0;
 		}
 
-		::gpk::error_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(gpk::loadView(input, GravityCenters	));
-			gpk_necs(gpk::loadView(input, Orbits			));
-			gpk_necs(gpk::loadView(input, Bodies			));
-			gpk_necs(gpk::loadView(input, Cameras			));
-			gpk_necs(gpk::loadPOD (input, Camera			));
-			gpk_necs(gpk::loadPOD (input, Background		));
+		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
+			if_fail_fe(gpk::loadView(input, GravityCenters	));
+			if_fail_fe(gpk::loadView(input, Orbits			));
+			if_fail_fe(gpk::loadView(input, Bodies			));
+			if_fail_fe(gpk::loadView(input, Cameras			));
+			if_fail_fe(gpk::loadPOD (input, Camera			));
+			if_fail_fe(gpk::loadPOD (input, Background		));
 			return 0;
 		}
 	};
@@ -41,24 +41,24 @@ namespace gpk
 		SPlanetarySystem			PlanetarySystem;
 		SPlanetarySystemEntityMap	EntityMap;
 
-		::gpk::error_t				Save			(::gpk::au0_t & output)	const	{ 
-			gpk_necs(PlanetarySystem.Save(output));
-			gpk_necs(EntityMap.Save(output));
+		::gpk::err_t				Save			(::gpk::au0_t & output)	const	{ 
+			if_fail_fe(PlanetarySystem.Save(output));
+			if_fail_fe(EntityMap.Save(output));
 			return 0;
 		}
 
-		::gpk::error_t				Load			(::gpk::vcu0_t & input)	{ 
-			gpk_necs(PlanetarySystem.Load(input));
-			gpk_necs(EntityMap.Load(input));
+		::gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
+			if_fail_fe(PlanetarySystem.Load(input));
+			if_fail_fe(EntityMap.Load(input));
 			return 0;
 		}
 	};
 
-	::gpk::error_t			planetarySystemReset			(const ::gpk::SPlanetarySystem & solarSystem, const ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine, const ::gpk::vc8bgra & colors);
-	::gpk::error_t			planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine);
-	::gpk::error_t			planetarySystemSetup			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine); 
-	::gpk::error_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData);
-	::gpk::error_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcsc_t jsonFilePath);
+	::gpk::err_t			planetarySystemReset			(const ::gpk::SPlanetarySystem & solarSystem, const ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine, const ::gpk::vc8bgra & colors);
+	::gpk::err_t			planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine);
+	::gpk::err_t			planetarySystemSetup			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine); 
+	::gpk::err_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData);
+	::gpk::err_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::view<sc_t> jsonFilePath);
 } // namespace
 
 #endif // GPK_ENGINE_PLANETARY_SYSTEM_H_23701

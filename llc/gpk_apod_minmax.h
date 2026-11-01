@@ -6,21 +6,20 @@
 
 namespace gpk
 {
-	tplt<tpnm _tDimension>	
-	using	aminmax	= ::gpk::apod<::gpk::minmax<_tDimension>>;
+	tplT using	aminmax	= ::gpk::apod<::gpk::minmax<T>>;
 
-	typedef	::gpk::aminmax<sc_t		>	aminmaxc	, aminmaxchar;
-	typedef	::gpk::aminmax<uc_t	>	aminmaxuc	, aminmaxuchar;
-	typedef	::gpk::aminmax<float	>	aminmaxf32	;
-	typedef	::gpk::aminmax<double	>	aminmaxf64	;
-	typedef	::gpk::aminmax<uint8_t	>	aminmaxu8	;
-	typedef	::gpk::aminmax<uint16_t	>	aminmaxu16	;
-	typedef	::gpk::aminmax<uint32_t	>	aminmaxu32	;
-	typedef	::gpk::aminmax<uint64_t	>	aminmaxu64	;
-	typedef	::gpk::aminmax<int8_t	>	aminmaxi8	;
-	typedef	::gpk::aminmax<int16_t	>	aminmaxi16	;
-	typedef	::gpk::aminmax<int32_t	>	aminmaxi32	;
-	typedef	::gpk::aminmax<int64_t	>	aminmaxi64	;
-}
+	tydf	::gpk::aminmax<sc_t>	aminmaxsc_t;	tdcs	aminmaxsc_t	aminmaxsc_c;
+	tydf	::gpk::aminmax<uc_t>	aminmaxuc_t;	tdcs	aminmaxuc_t	aminmaxuc_c;
+	tydf	::gpk::aminmax<u0_t>	aminmaxu0_t;	tdcs	aminmaxu0_t	aminmaxu0_c;
+	tydf	::gpk::aminmax<u1_t>	aminmaxu1_t;	tdcs	aminmaxu1_t	aminmaxu1_c;
+	tydf	::gpk::aminmax<u2_t>	aminmaxu2_t;	tdcs	aminmaxu2_t	aminmaxu2_c;
+	tydf	::gpk::aminmax<u3_t>	aminmaxu3_t;	tdcs	aminmaxu3_t	aminmaxu3_c;
+	tydf	::gpk::aminmax<s0_t>	aminmaxs0_t;	tdcs	aminmaxs0_t	aminmaxs0_c;
+	tydf	::gpk::aminmax<s1_t>	aminmaxs1_t;	tdcs	aminmaxs1_t	aminmaxs1_c;
+	tydf	::gpk::aminmax<s2_t>	aminmaxs2_t;	tdcs	aminmaxs2_t	aminmaxs2_c;
+	tydf	::gpk::aminmax<s3_t>	aminmaxs3_t;	tdcs	aminmaxs3_t	aminmaxs3_c;
+	tydf	::gpk::aminmax<f2_t>	aminmaxf2_t;	tdcs	aminmaxf2_t	aminmaxf2_c;
+	tydf	::gpk::aminmax<f3_t>	aminmaxf3_t;	tdcs	aminmaxf3_t	aminmaxf3_c;
+} // namespace gpk
 
 #endif // GPK_APOD_MINMAX_H

@@ -1,4 +1,4 @@
-﻿#include "DeviceResources.h"
+#include "DeviceResources.h"
 #include "gpk_engine_scene.h"
 
 #include "gpk_file.h"
@@ -34,10 +34,10 @@ namespace gpk
 		
 												~Sample3DSceneRenderer			() { ReleaseDeviceResources(); }
 
-		::gpk::error_t							Initialize		(const ::gpk::pobj<DX::D3DDeviceResources> & deviceResources) {
+		::gpk::err_t							Initialize		(const ::gpk::pobj<DX::D3DDeviceResources> & deviceResources) {
 			DeviceResources							= deviceResources;
-			gpk_necs(CreateDeviceResources(DeviceResources->GetD3DDevice()));
-			gpk_necs(CreateSizeDependentResources(DeviceResources->GetLogicalSize(), DeviceResources->GetOrientationTransform3D()));
+			if_fail_fe(CreateDeviceResources(DeviceResources->GetD3DDevice()));
+			if_fail_fe(CreateSizeDependentResources(DeviceResources->GetLogicalSize(), DeviceResources->GetOrientationTransform3D()));
 			return 0;
 		}
 
@@ -55,7 +55,7 @@ namespace gpk
 			DepthStencilState	.clear();
 		}
 
-		void									Render							(uint32_t iMesh, ::gpk::rangeu2_t indexRange, uint32_t iTexture, uint32_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
+		void									Render							(u2_t iMesh, ::gpk::rangeu2_t indexRange, u2_t iTexture, u2_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
 			auto										context							= DeviceResources->GetD3DDeviceContext();
 			context->UpdateSubresource1(ConstantBuffer[0], 0, NULL, &constantBufferModel, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
 			context->UpdateSubresource1(ConstantBuffer[1], 0, NULL, &ConstantBufferScene, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
@@ -92,7 +92,7 @@ namespace gpk
 			context->DrawIndexed(indexRange.Count, indexRange.Offset, 0);	// Draw the objects.
 		}
 
-		::gpk::error_t							CreateSizeDependentResources	(const ::gpk::n2f2_t & outputSize, const DirectX::XMFLOAT4X4 & orientation) {
+		::gpk::err_t							CreateSizeDependentResources	(const ::gpk::n2f2_t & outputSize, const DirectX::XMFLOAT4X4 & orientation) {
 			const float									aspectRatio						= outputSize.x / outputSize.y;
 			float										fovAngleY						= 70.0f * DirectX::XM_PI / 180.0f;
 
@@ -109,13 +109,13 @@ namespace gpk
 
 			// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
 			const	DirectX::XMVECTORF32			eye								= { 0.0f, (float)sin(TotalSecondsElapsed) * 5, 5.5f, 0.0f };
-			stacxpr	DirectX::XMVECTORF32			at								= { 0.0f, -0.1f, 0.0f, 0.0f };
-			stacxpr	DirectX::XMVECTORF32			up								= { 0.0f, 1.0f, 0.0f, 0.0f };
+			stxp	DirectX::XMVECTORF32			at								= { 0.0f, -0.1f, 0.0f, 0.0f };
+			stxp	DirectX::XMVECTORF32			up								= { 0.0f, 1.0f, 0.0f, 0.0f };
 			DirectX::XMStoreFloat4x4((DirectX::XMFLOAT4X4*)&ConstantBufferScene.View, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtLH(eye, at, up)));
 			return 0;
 		}
 
-		::gpk::error_t							CreateDeviceResources			(ID3D11Device3 * d3dDevice)	{
+		::gpk::err_t							CreateDeviceResources			(ID3D11Device3 * d3dDevice)	{
 			ReleaseDeviceResources();
 			{	// Create a point sampler state for fonts 
 				D3D11_SAMPLER_DESC							samDesc						= {};
@@ -150,9 +150,9 @@ namespace gpk
 				::gpk::pcom<ID3D11InputLayout>				inputLayout;
 				::gpk::pcom<ID3D11VertexShader>				vertexShader;
 
-				::gpk::apod<int8_t>							fileVS;
-				gpk_necs(gpk::fileToMemory("SampleVertexShader.cso", fileVS));
-				stacxpr	D3D11_INPUT_ELEMENT_DESC			vertexDesc []			=
+				::gpk::apod<s0_t>							fileVS;
+				if_fail_fe(gpk::fileToMemory("SampleVertexShader.cso", fileVS));
+				stxp	D3D11_INPUT_ELEMENT_DESC			vertexDesc []			=
 					{	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					,	{ "NORMAL"	, 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					,	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }

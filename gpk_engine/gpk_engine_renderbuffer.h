@@ -8,7 +8,7 @@
 
 namespace gpk 
 {
-	GDEFINE_ENUM_TYPE(BUFFER_USAGE, uint8_t);
+	GDEFINE_ENUM_TYPE(BUFFER_USAGE, u0_t);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Position			,  0);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Index				,  1);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Color				,  2);
@@ -24,7 +24,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, RasterDestination	, 12);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Bitfield			, 100);
 
-	GDEFINE_ENUM_TYPE(ELEMENT_FREQUENCY, uint8_t);
+	GDEFINE_ENUM_TYPE(ELEMENT_FREQUENCY, u0_t);
 	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, Element			,  0, "Each element of the buffer matches to an element of the indexed buffer");
 	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, Instance			,  1, "Each elements of the buffer matches to a whole primitive instance of the indexed buffer. "
 		"This means that for drawing a triangle, three indexed elements will be used while only one of the instance buffer will be used.");
@@ -37,30 +37,30 @@ namespace gpk
 	struct SRenderBufferDescription {
 		::gpk::SDataTypeID			Format			= {};
 		BUFFER_USAGE				Usage			= {};
-		uint8_t						PitchStride		= {};
-		uint16_t					PitchRow		: 15;
-		uint16_t					Frequency		: 1;
+		u0_t						PitchStride		= {};
+		u1_t					PitchRow		: 15;
+		u1_t					Frequency		: 1;
 	};
 #pragma pack(pop)
 	struct SRenderBuffer {
 		SRenderBufferDescription	Desc			= {};
 		::gpk::au0_t				Data			= {};
 
-		::gpk::error_t				Save			(::gpk::apod<uint8_t> & output)	const	{ 			
-			gpk_necs(gpk::savePOD	(output, Desc));
-			gpk_necs(gpk::saveView(output, Data));
+		::gpk::err_t				Save			(::gpk::apod<u0_t> & output)	const	{ 			
+			if_fail_fe(gpk::savePOD	(output, Desc));
+			if_fail_fe(gpk::saveView(output, Data));
 			return 0; 
 		}
 
-		::gpk::error_t				Load			(::gpk::vcu0_t & input)	{ 
-			gpk_necs(gpk::loadPOD (input, Desc));
-			gpk_necs(gpk::loadView(input, Data));
+		::gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
+			if_fail_fe(gpk::loadPOD (input, Desc));
+			if_fail_fe(gpk::loadView(input, Data));
 			return 0;
 		}
 	};
 
-	::gpk::error_t				createBuffers
-		( uint32_t						vertexCount
+	::gpk::err_t				createBuffers
+		( u2_t						vertexCount
 		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
 		, ::gpk::pobj<SRenderBuffer>	& pVertices
 		, ::gpk::pobj<SRenderBuffer>	& pNormals

@@ -21,16 +21,16 @@ namespace gpk
 
 	tplt<tpnm ..._tArgs>					using	FVoid				= ::gpk::function<void(_tArgs&&...)>;
 	tplt<tpnm ..._tArgs>					using	FBool				= ::gpk::function<bool(_tArgs&&...)>;
-	tplt<tpnm ..._tArgs>					using	FError				= ::gpk::function<::gpk::error_t(_tArgs&&...)>;
+	tplt<tpnm ..._tArgs>					using	FError				= ::gpk::function<::gpk::err_t(_tArgs&&...)>;
 	tplt<tpnm T, tpnm ..._tArgs>			using	FTransform			= ::gpk::function<T(_tArgs&&...)>;
 
 	tplt<tpnm T>							using	TFuncForEach		= FError<T&>;
 	tplt<tpnm T>							using	TFuncForEachConst	= FError<const T&>;
-	tplt<tpnm T, tpnm tCount = uint32_t>	using	TFuncEnumerate		= FError<tCount&, T&>;
-	tplt<tpnm T, tpnm tCount = uint32_t>	using	TFuncEnumerateConst	= FError<tCount&, const T&>;
+	tplt<tpnm T, tpnm tCount = ::gpk::u2_t>	using	TFuncEnumerate		= FError<tCount&, T&>;
+	tplt<tpnm T, tpnm tCount = ::gpk::u2_t>	using	TFuncEnumerateConst	= FError<tCount&, const T&>;
 
-	tplt<tpnm TSource, tpnm TTarget>		using	TFuncAppend 		= function<::gpk::error_t(TTarget 	& output, const TSource & origin)>;
-	tplt<tpnm TIO>							using	TFuncSize			= function<::gpk::error_t(const TIO & origin)>;
+	tplt<tpnm TSource, tpnm TTarget>		using	TFuncAppend 		= function<::gpk::err_t(TTarget 	& output, const TSource & origin)>;
+	tplt<tpnm TIO>							using	TFuncSize			= function<::gpk::err_t(const TIO & origin)>;
 } // namespace
 
 #endif // GPK_FUNCTIONAL_H_23627
