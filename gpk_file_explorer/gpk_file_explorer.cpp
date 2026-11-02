@@ -14,6 +14,35 @@ sttc ::gpk::s2_t explorerExpanded(const ::gfe::SApplication & app, ::gpk::vcst_t
 	return -1;
 }
 
+sttc ::gpk::err_t explorerScroll(::gfe::SApplication & app) {
+	::gpk::SGUI					& gui					= *app.Framework.GUI;
+	::gpk::pobj<::gpk::SDialogViewport>	viewport				= {};
+	app.DialogMain.Controls[app.Viewport].as(viewport);
+	if_null_fe(viewport);
+	const ::gpk::s3_t			rowHeight				= app.ExplorerControls.IdControls.size() ? gui.Controls.Placement[app.ExplorerControls.IdControls[0]].Area.Size.y : 1;
+	const ::gpk::s3_t			clientHeight			= gui.Controls.Placement[viewport->IdClient].Area.Size.y;
+	const ::gpk::u2_t			pageSize				= (::gpk::u2_t)::gpk::max((::gpk::s3_t)1, clientHeight / ::gpk::max((::gpk::s3_t)1, rowHeight));
+	const ::gpk::s3_t			scrollMax				= ::gpk::max((::gpk::s3_t)0, (::gpk::s3_t)app.ExplorerControls.IdControls.size() - pageSize);
+	gui.Controls.SetHidden(app.ScrollY->IdGUIControl, 0 == scrollMax);
+	if(scrollMax) {
+		app.ScrollY->ValueLimits						= {0, scrollMax};
+		if_fail_fe(::gpk::sliderSetValue(*app.ScrollY, app.ScrollY->ValueCurrent));
+	}
+	else
+		app.ScrollY->ValueCurrent					= 0;
+	if(app.ExplorerOffset != app.ScrollY->ValueCurrent || app.ExplorerPageSize != pageSize || app.ExplorerScrollMax != scrollMax) {
+		app.ExplorerOffset							= app.ScrollY->ValueCurrent;
+		app.ExplorerPageSize						= pageSize;
+		app.ExplorerScrollMax						= scrollMax;
+		gui.Controls.Placement[app.ExplorerControls.IdControl].Area.Offset.y = (::gpk::s1_t)(-app.ExplorerOffset * rowHeight);
+		for(::gpk::u2_t iControl = 0; iControl < app.ExplorerControls.IdControls.size(); ++iControl)
+			gui.Controls.SetHidden(app.ExplorerControls.IdControls[iControl], iControl < (::gpk::u2_t)app.ExplorerOffset || iControl >= (::gpk::u2_t)app.ExplorerOffset + pageSize);
+		if_fail_fe(::gpk::controlMetricsInvalidate(gui, app.ExplorerControls.IdControl));
+		if_fail_fe(::gpk::controlMetricsInvalidate(gui, app.ScrollY->IdGUIControl));
+	}
+	return 0;
+}
+
 sttc ::gpk::err_t explorerRefresh(::gfe::SApplication & app) {
 	::gpk::SGUI					& gui					= *app.Framework.GUI;
 	if(-1 != app.ExplorerControls.IdControl)
@@ -48,6 +77,9 @@ sttc ::gpk::err_t explorerRefresh(::gfe::SApplication & app) {
 	}
 	if_fail_fe(::gpk::controlListInitialize(gui, app.ExplorerControls));
 	app.ExplorerControls.Orientation					= ::gpk::DIRECTION_DOWN;
+	app.ExplorerPageSize							= 0;
+	app.ExplorerOffset								= -1;
+	app.ExplorerScrollMax							= -1;
 
 	::gpk::pobj<::gpk::SDialogViewport>	viewport				= {};
 	app.DialogMain.Controls[app.Viewport].as(viewport);
@@ -140,6 +172,15 @@ sttc ::gpk::err_t explorerActivate(::gfe::SApplication & app, ::gpk::cid_t idCon
 	if_fail_fe(app.Viewport = ::gpk::viewportCreate(app.DialogMain, viewport));
 	gui.Controls.Placement[viewport->IdGUIControl].Area	= {{96, 64}, {1024, 576}};
 	gui.Controls.Placement[viewport->IdGUIControl].Align	= ::gpk::ALIGN_CENTER;
+	if_fail_fe(::gpk::sliderCreate(app.DialogMain, app.ScrollY));
+	app.ScrollY->Vertical							= true;
+	gui.Controls.Placement[app.ScrollY->IdGUIControl].Area.Offset = {0, 20};
+	gui.Controls.Placement[app.ScrollY->IdGUIControl].Area.Size = {8, 556};
+	gui.Controls.Constraints[app.ScrollY->IdGUIControl].DockToControl.Top = viewport->IdGUIControl;
+	gui.Controls.Constraints[app.ScrollY->IdGUIControl].DockToControl.Right = viewport->IdGUIControl;
+	viewport->Settings.ScrollBarY					= true;
+	viewport->IdScrollBarY							= app.ScrollY->IdGUIControl;
+	if_fail_fe(::gpk::sliderSetValue(*app.ScrollY, 0));
 
 	::gpk::string					absolutePath			= {};
 	::gpk::vcst_t					rootPath					= {};
@@ -174,6 +215,15 @@ sttc ::gpk::err_t explorerActivate(::gfe::SApplication & app, ::gpk::cid_t idCon
 	if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
 
 	::gpk::SGUI					& gui					= *app.Framework.GUI;
+	::gpk::SInput					& input					= *app.Framework.RootWindow.Input;
+	::gpk::s3_t					scrollValue				= app.ScrollY->ValueCurrent;
+	if(input.MouseCurrent.Deltas.z)
+		scrollValue								-= input.MouseCurrent.Deltas.z / WHEEL_DELTA;
+	if(input.KeyDown(VK_DOWN))					++scrollValue;
+	if(input.KeyDown(VK_UP))					--scrollValue;
+	if(input.KeyDown(VK_NEXT))					scrollValue += app.ExplorerPageSize;
+	if(input.KeyDown(VK_PRIOR))					scrollValue -= app.ExplorerPageSize;
+	if_fail_fe(::gpk::sliderSetValue(*app.ScrollY, scrollValue));
 	::gpk::cid_t					explorerControl			= -1;
 	if_fail_fe(::gpk::guiProcessControls(gui, app.ExplorerControls.IdControls, [&explorerControl](::gpk::cid_t idControl) { explorerControl = idControl; return 0; }));
 	if(-1 != explorerControl)
@@ -181,5 +231,6 @@ sttc ::gpk::err_t explorerActivate(::gfe::SApplication & app, ::gpk::cid_t idCon
 	if(::gpk::guiProcessControls(gui, [&app](::gpk::cid_t idControl) { return idControl == app.IdExit ? 1 : 0; }))
 		return ::gpk::APPLICATION_STATE_EXIT;
 	if_fail_fe(app.DialogMain.Update());
+	if_fail_fe(::explorerScroll(app));
 	return 0;
 }
