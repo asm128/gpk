@@ -82,8 +82,7 @@ sttc ::gpk::err_t explorerRefresh(::gfe::SApplication & app) {
 	app.ExplorerScrollMax							= -1;
 
 	::gpk::pobj<::gpk::SDialogViewport>	viewport				= {};
-	app.DialogMain.Controls[app.Viewport].as(viewport);
-	if_null_fe(viewport);
+	if_null_fe(app.DialogMain.Controls[app.Viewport].as(viewport));
 	if_fail_fe(::gpk::controlSetParent(gui, app.ExplorerControls.IdControl, viewport->IdClient));
 	gui.Controls.Placement[app.ExplorerControls.IdControl].Align = ::gpk::ALIGN_TOP_LEFT;
 
