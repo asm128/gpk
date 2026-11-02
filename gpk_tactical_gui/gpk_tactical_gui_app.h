@@ -1,6 +1,7 @@
 #include "gpk_tactical_gui.h"
 #include "gpk_tactical_gui_gauge.h"
 #include "gpk_tactical_gui_screen_home.h"
+#include "gpk_tactical_gui_screen_tactical.h"
 #include "gpk_tactical_gui_filament_catalog.h"
 #include "s3d_serial.h"
 
@@ -27,7 +28,8 @@ namespace dry
 	GDEFINE_ENUM_VALUE(SCREEN, LOAD_FILAMENT						, 6);
 	GDEFINE_ENUM_VALUE(SCREEN, INFO									, 7);
 	GDEFINE_ENUM_VALUE(SCREEN, CONFIG								, 8);
-	GDEFINE_ENUM_VALUE(SCREEN, COUNT								, 9);
+	GDEFINE_ENUM_VALUE(SCREEN, TACTICAL							, 9);
+	GDEFINE_ENUM_VALUE(SCREEN, COUNT								, 10);
 
 	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_MENU, uint8_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MENU, DIALOG					, 0);
@@ -109,6 +111,7 @@ namespace dry
 		::dry::SScreenHUD					HUD;
 		::dry::SScreenModal					Modal;
 		::dry::SScreenHome					Home;
+		::dry::SScreenTactical				Tactical;
 		::dry::SScreenSpoolInfo				SpoolInfo;
 
 		::dry::SScreenInfo					Info;
@@ -117,7 +120,7 @@ namespace dry
 
 		bool								ModalEnabled			= false;
 		::dry::MODAL						ModalSelected			= ::dry::MODAL_CLOSE_DOOR;
-		SCREEN								ScreenSelected			= ::dry::SCREEN_HOME;
+		SCREEN								ScreenSelected			= ::dry::SCREEN_TACTICAL;
 		::gpk::cid_t						RootControlIndex		= -1;
 	};
 #pragma pack(push, 1)
@@ -164,6 +167,7 @@ namespace dry
 	// ----
 	::gpk::error_t						setupGUI					(::dry::SApplication & app);
 	::gpk::error_t						setupScreenHome				(::dry::SApplication & app);
+	::gpk::error_t						setupScreenTactical			(::dry::SApplication & app);
 	// TODO:
 	::gpk::error_t						setupScreenLoadFilament		(::dry::SApplication & app);
 	::gpk::error_t						setupScreenInfo				(::dry::SApplication & app);
@@ -175,6 +179,7 @@ namespace dry
 	// ----
 	::gpk::error_t						updateScreenHUD				(::dry::SApplication & app);
 	::gpk::error_t						updateScreenHome			(::dry::SApplication & app);
+	::gpk::error_t						updateScreenTactical		(::dry::SApplication & app);
 	// TODO:
 	static inline ::gpk::error_t		updateScreenInfo			(::dry::SApplication & /*app*/) { return 0; }
 	static inline ::gpk::error_t		updateScreenLoadFilament	(::dry::SApplication & /*app*/) { return 0; }
@@ -182,6 +187,7 @@ namespace dry
 
 	// ----
 	::gpk::error_t						handleControlHome			(::dry::SApplication & app, int32_t idControl);
+	::gpk::error_t						handleControlTactical		(::dry::SApplication & app, int32_t idControl);
 	// TODO: Nothing to do here yet
 	static inline ::gpk::error_t		handleControlInfo			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
 	static inline ::gpk::error_t		handleControlLoadFilament	(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
@@ -192,6 +198,7 @@ namespace dry
 	::gpk::error_t						handleResizeScreenMenu		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
 	::gpk::error_t						handleResizeScreenModal		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
 	::gpk::error_t						handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	::gpk::error_t						handleResizeScreenTactical	(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
 	::gpk::error_t						handleResizeScreenSpoolInfo	(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
 	::gpk::error_t						handleResize				(::dry::SApplication & app);
 

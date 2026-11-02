@@ -30,6 +30,9 @@
     <ClInclude Include="gpk_tactical_gui_screen_home.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+	<ClInclude Include="gpk_tactical_gui_screen_tactical.h">
+	  <Filter>Header Files</Filter>
+	</ClInclude>
     <ClInclude Include="gpk_tactical_gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -59,12 +62,18 @@
     <ClCompile Include="gpk_tactical_gui_app_update_home.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+	<ClCompile Include="gpk_tactical_gui_app_update_tactical.cpp">
+	  <Filter>Source Files</Filter>
+	</ClCompile>
     <ClCompile Include="gpk_tactical_gui_app_update_hud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_tactical_gui_app_setup_home.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+	<ClCompile Include="gpk_tactical_gui_app_setup_tactical.cpp">
+	  <Filter>Source Files</Filter>
+	</ClCompile>
     <ClCompile Include="gpk_tactical_gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

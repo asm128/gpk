@@ -160,6 +160,7 @@ static	::gpk::error_t						setupScreens				(::dry::SApplication & app)	{
 	if_fail_e(::gpk::failed(::setupScreenHUD				(app)));
 	if_fail_e(::gpk::failed(::setupScreenMenu				(app)));
 	if_fail_e(::gpk::failed(::dry::setupScreenHome			(app)));
+	if_fail_e(::gpk::failed(::dry::setupScreenTactical		(app)));
 	if_fail_e(::gpk::failed(::dry::setupScreenLoadFilament	(app)));
 	if_fail_e(::gpk::failed(::dry::setupScreenInfo			(app)));
 	if_fail_e(::gpk::failed(::dry::setupScreenConfig			(app)));

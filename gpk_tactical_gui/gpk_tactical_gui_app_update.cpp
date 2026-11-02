@@ -18,6 +18,7 @@
 	if_fail_e(::gpk::failed(::dry::handleResizeScreenMenu		(app, newSize)));
 	if_fail_e(::gpk::failed(::dry::handleResizeScreenModal		(app, newSize)));
 	if_fail_e(::gpk::failed(::dry::handleResizeScreenHome		(app, newSize)));
+	if_fail_e(::gpk::failed(::dry::handleResizeScreenTactical	(app, newSize)));
 	if_fail_e(::gpk::failed(::dry::handleResizeScreenSpoolInfo	(app, newSize)));
 	return 0;
 }
@@ -145,6 +146,7 @@ static	::gpk::error_t				stateSwitch				(::dry::SApplication & app, ::dry::SCREE
 	switch(screen) {
 	default: break;
 	case ::dry::SCREEN_HOME			: ::dry::handleControlHome			(app, idControl); break;
+	case ::dry::SCREEN_TACTICAL		: ::dry::handleControlTactical		(app, idControl); break;
 	case ::dry::SCREEN_INFO			: ::dry::handleControlInfo			(app, idControl); break;
 	case ::dry::SCREEN_LOAD_FILAMENT: ::dry::handleControlLoadFilament	(app, idControl); break;
 	case ::dry::SCREEN_CONFIG		: ::dry::handleControlConfig		(app, idControl); break;
@@ -255,6 +257,15 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 					}
 				if(executed)
 					break;
+				for(uint32_t iScreenControl = 0; iScreenControl < app.Screens.Tactical.ControlIds.size(); ++iScreenControl)
+					if(app.Screens.Tactical.ControlIds[iScreenControl] == (int32_t)iControl) {
+						info_printf("Tactical Control executed: %s", ::gpk::get_value_label((::dry::SCREEN_CONTROL_TACTICAL)iScreenControl).begin());
+						::stateSwitch(app, ::dry::SCREEN_TACTICAL, iScreenControl);
+						executed				= true;
+						break;
+					}
+				if(executed)
+					break;
 			}
 		}
 	}
@@ -315,6 +326,7 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 
 	if_fail_e(::gpk::failed(::dry::updateScreenHUD(app)));
 	switch(app.Screens.ScreenSelected) {
+	case dry::SCREEN_TACTICAL		: if_fail_e(::gpk::failed(::dry::updateScreenTactical	(app))); break;
 	case dry::SCREEN_HOME			:	if_fail_e(::gpk::failed(::dry::updateScreenHome		(app))); break;
 	case dry::SCREEN_LOAD_FILAMENT	:	if_fail_e(::gpk::failed(::dry::updateScreenLoadFilament(app))); break;
 	case dry::SCREEN_INFO			:	if_fail_e(::gpk::failed(::dry::updateScreenInfo		(app))); break;
