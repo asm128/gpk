@@ -43,7 +43,7 @@ namespace gpk
 		inln	_tNCO*		as		(_tNCOOther* * other)		nxpt	{ return *other = (Reference ? (_tNCOOther*)(Reference->Instance) : 0); }
 
 		tpl(_tNCOOther)
-		inln	_tNCO*		as		(pnco<_tNCOOther> & other)	nxpt	{ other = {(gref<_tNCOOther>*)ref_acquire(Reference)}; return Reference ? Reference->Instance; }
+		inln	_tNCO*		as		(pnco<_tNCOOther> & other)	nxpt	{ other = {(gref<_tNCOOther>*)ref_acquire(Reference)}; return Reference ? Reference->Instance : 0; }
 	};
 	tplt <tpnm T> usng pn	= pnco<T>; 
 	tplt <tpnm T> usng pi	= pnco<T>; 
