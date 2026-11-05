@@ -63,7 +63,7 @@ namespace gpk
 	err_t					expressionReaderParseStep		(SExpressionReader & reader, vcst_t expression);
 
 	// Token spans refer to format. Resolved views must survive the callback until the formatter copies them.
-	err_t					expressionStringFormat		(vcst_t format, view<cnst SStripLiteralType> tokens, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
+	err_t					expressionStringFormat		(vcst_t format, view<cnst SStripLiteralToken> tokens, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
 	err_t					expressionStringFormat		(vcst_t format, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
 } // namespace
 

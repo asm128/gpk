@@ -7,7 +7,7 @@ namespace gpk
 {
 	// Local calendar bindings: yy, MM, dd, hh, mm, ss, ff (hundredths), all two digits.
 	err_t	timeStringFormat	(vcst_t format, s3_t timeInMs, asc_t & output);
-	err_t	timeStringFormat	(vcst_t format, view<cnst SStripLiteralType> tokens, s3_t timeInMs, asc_t & output);
+	err_t	timeStringFormat	(vcst_t format, view<cnst SStripLiteralToken> tokens, s3_t timeInMs, asc_t & output);
 }
 
 

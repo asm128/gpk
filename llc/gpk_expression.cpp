@@ -388,10 +388,10 @@ gpk::err_t			gpk::expressionReaderParse			(::gpk::SExpressionReader & reader, ::
 	return 0;
 }
 
-::gpk::err_t gpk::expressionStringFormat(::gpk::vcst_t format, ::gpk::view<cnst ::gpk::SStripLiteralType> tokens, cnst ::gpk::FError<::gpk::vcst_c &, ::gpk::vcst_t &> & resolve, ::gpk::asc_t & output) {
+::gpk::err_t gpk::expressionStringFormat(::gpk::vcst_t format, ::gpk::view<cnst ::gpk::SStripLiteralToken> tokens, cnst ::gpk::FError<::gpk::vcst_c &, ::gpk::vcst_t &> & resolve, ::gpk::asc_t & output) {
 	::gpk::asc_t					formatted;
 	for(::gpk::u2_t iType = 0; iType < tokens.size(); ++iType) {
-		cnst ::gpk::SStripLiteralType	& type			= tokens[iType];
+		cnst ::gpk::SStripLiteralToken	& type			= tokens[iType];
 		cnst bool						isToken			= ::gpk::STRIP_LITERAL_TYPE_TOKEN == type.Type;
 		if_true_fef(type.Span.Begin > type.Span.End || type.Span.End > format.size(), "Invalid format span: %u..%u, size:%u.", type.Span.Begin, type.Span.End, format.size());
 		if_true_fef(isToken && type.Span.End - type.Span.Begin < 2, "Invalid token span: %u..%u.", type.Span.Begin, type.Span.End);
@@ -412,7 +412,7 @@ gpk::err_t			gpk::expressionReaderParse			(::gpk::SExpressionReader & reader, ::
 }
 
 ::gpk::err_t gpk::expressionStringFormat(::gpk::vcst_t format, cnst ::gpk::FError<::gpk::vcst_c &, ::gpk::vcst_t &> & resolve, ::gpk::asc_t & output) {
-	::gpk::apod<::gpk::SStripLiteralType>	tokens;
+	::gpk::apod<::gpk::SStripLiteralToken>	tokens;
 	::gpk::SStripLiteralState				state;
 	if_fail_fef(::gpk::stripLiteralParse(state, tokens, format), "%.*s", GPK_VIEW_ARGS(format));
 	rtrn ::gpk::expressionStringFormat(format, tokens, resolve, output);

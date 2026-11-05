@@ -33,7 +33,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, COUNT	, 2);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, UNKNOWN	, -1);
 #pragma pack(push, 1)
-	stct SStripLiteralType {
+	stct SStripLiteralToken {
 		s2_t				ParentIndex;
 		STRIP_LITERAL_TYPE	Type;
 		sliceu2_t			Span;
@@ -42,7 +42,7 @@ namespace gpk
 	stct SStripLiteralState {
 		u2_t				IndexCurrentChar				= 0;
 		s2_t				IndexCurrentElement				= -1;
-		SStripLiteralType	* CurrentElement				= 0;
+		SStripLiteralToken	* CurrentElement				= 0;
 		s2_t				NestLevel						= 0;
 		char				CharCurrent						= 0;
 		bool				Escaping						= false;
@@ -50,11 +50,11 @@ namespace gpk
 		s2_t				BracketsToSkip					= 0;
 	};
 #pragma pack(pop)
-	err_t				stripLiteralParse				(SStripLiteralState	& stateReading	, apod<SStripLiteralType> & out_types, vcst_t in_format);
-	err_t				stripLiteralParseStep			(SStripLiteralState	& work_state	, apod<SStripLiteralType> & out_types, vcst_t in_format);
-	err_t				stripLiteralGetViews			(aobj<vcst_t>	& out_views, const view<const SStripLiteralType> & in_resultOfParser, vcst_t in_format);
+	err_t				stripLiteralParse				(SStripLiteralState	& stateReading	, apod<SStripLiteralToken> & out_types, vcst_t in_format);
+	err_t				stripLiteralParseStep			(SStripLiteralState	& work_state	, apod<SStripLiteralToken> & out_types, vcst_t in_format);
+	err_t				stripLiteralGetViews			(aobj<vcst_t>	& out_views, cnst view<cnst SStripLiteralToken> & in_resultOfParser, vcst_t in_format);
 
-	bool				isSpaceCharacter				(const char characterToTest);
+	bool				isSpaceCharacter				(cnst char characterToTest);
 	err_t				skipToNextCharacter				(u2_t & indexCurrentChar, vcst_t expression);
 
 } // namespace

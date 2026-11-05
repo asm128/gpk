@@ -2,13 +2,13 @@
 #include "gpk_expression.h"
 
 gpk::err_t	gpk::timeStringFormat	(vcst_t format, s3_t timeInMs, asc_t & output) {
-	apod<SStripLiteralType> tokens;
+	apod<SStripLiteralToken> tokens;
 	SStripLiteralState		state;
 	if_fail_fe(stripLiteralParse(state, tokens, format));
 	rtrn timeStringFormat(format, tokens, timeInMs, output);
 }
 
-gpk::err_t	gpk::timeStringFormat	(vcst_t format, view<cnst SStripLiteralType> tokens, s3_t timeInMs, asc_t & output) {
+gpk::err_t	gpk::timeStringFormat	(vcst_t format, view<cnst SStripLiteralToken> tokens, s3_t timeInMs, asc_t & output) {
 	s3_t			seconds					= timeInMs / 1000
 		,			milliseconds			= timeInMs % 1000
 		;
