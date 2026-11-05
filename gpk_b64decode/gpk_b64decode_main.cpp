@@ -14,7 +14,7 @@ static ::gpk::err_t b64DecodeMain(::gpk::SRuntimeValues & runtimeValues) {
 	if_fail_fef(gpk::fileToMemory(in_filename, in_b64), "Failed to load file: %s", in_filename.begin());
 	if_fail_fef(gpk::base64Decode(in_b64, out_data), "Failed to encode file contents! %s.", "Out of memory?");
 
-	::gpk::apod<char>		out_filename	= in_filename;
+	::gpk::string		out_filename	= in_filename;
 	out_filename.append(".b64.decoded");
 	if_fail_fef(gpk::fileFromMemory({out_filename.begin(), out_filename.size()}, out_data), "Failed to save file: %s", out_filename.begin());
 	return 0;

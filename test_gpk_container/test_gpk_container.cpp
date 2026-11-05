@@ -5,10 +5,10 @@
 static	const char				test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};
 
 int test_array_pod() {
-	static	const ::gpk::apod<char>	aconst_0			= ::gpk::vcst_t{"Hello"};
-	static	const ::gpk::apod<char>	aconst_1			{test_chars};
-	::gpk::apod<char>			atest_0				= "Again ";
-	::gpk::apod<char>			atest_1				= {'L', 'a', 't', 'e', 'r'};
+	static	const ::gpk::asc_t	aconst_0			= ::gpk::vcst_t{"Hello"};
+	static	const ::gpk::asc_t	aconst_1			{test_chars};
+	::gpk::asc_t			atest_0				= "Again ";
+	::gpk::asc_t			atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 
 	always_printf("test_chars: %u, %u, %s", (uint32_t)strlen(test_chars), (uint32_t)::gpk::size(test_chars), test_chars);

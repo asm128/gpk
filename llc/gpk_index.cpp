@@ -19,14 +19,33 @@ GPK_USING_N2();
 
 using namespace gpk;
 
-using gpk::sprintf_s;
-
 //GPK_CGI_JSON_APP_IMPL();
 
+namespace gpk
+{
+	stxp vcst_c		DEFAULT_LANGUAGE	= "es";
+	stxp vcst_c		DEFAULT_CATEGORIES	=  R"CATEGORIES(
+{ "en":
+	{ "categories"	:
+		[ "Tourism"	
+		, "Meals"		
+		, "Shopping"	
+		, "Shows"		
+		]
+	}
+, "es":
+	{ "categories"	:
+		[ "Turismo"	
+		, "Comidas"	
+		, "Comercios"	
+		, "Espectáculos"
+		]
+	}
+}
+)CATEGORIES"; 
+} // namespace
 
-
-
-sttc	err_t	pageCatalog						(vcst_t contentFileName, vcst_t pathScript, n2u2_c sizeScreen, vcst_t pathStyles, const AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output);
+//sttc	err_t	pageCatalog						(vcst_t contentFileName, vcst_t pathScript, n2u2_c sizeScreen, vcst_t pathStyles, const AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output);
 
 err_t			gpk_cgi_generate_output			(SCGIRuntimeValues & runtimeValues, string & output)	{
 	SHTTPAPIRequest		requestReceived					= {};
@@ -47,49 +66,44 @@ err_t			gpk_cgi_generate_output			(SCGIRuntimeValues & runtimeValues, string & o
 			//if_fail_fef(output.append(cookie));
 		}
 		else {
-			if_fail_fe(output.append_string("\r\n\r\n"));
+			if_fail_fe(append_strings(output, "\r\n\r\n"));
 			//if_fail_fef(::ntl::sessionFileLoad(cookie, sessionFileContents, cookieValues), "%s", "Failed to load session!");
 		}
 		//if_fail_fef(output.append_string("\r\nSet-Cookie: "));
 		//if_fail_fef(output.append(cookie));
 
-		vcst_t		methodsValid	[]		= {"GET", "POST"};
+		stxp vcst_c		methodsValid	[]	= {"GET", "POST"};
 		if(-1 == gpk::keyValVerify(runtimeValues.RuntimeValues.EntryPointArgs.Environment, "REQUEST_METHOD", methodsValid)) {
 			output.append_string("{ \"status\" : 403, \"description\" :\"forbidden\" }\r\n");
 			return 1;
 		}
 	}
-	//::ntl::SNTLArgs											qsArgs;
-	//::ntl::loadNTLArgs(qsArgs, requestReceived.QueryStringKeyVals);
-
-	//::ntl::SHTMLEndpoint									programState;
-	vcst_t								configFileName					= "./neutralizer.json";
-	//if_fail_fef(jsonFileRead(programState.Config, configFileName), "Failed to load configuration file: %s.", configFileName);
+	AD_SHOP_CATEGORY		category						= AD_SHOP_CATEGORY_shops;//{}get_value<::AD_SHOP_CATEGORY>(qsArgs.Module);
 	{
-		vcst_t								rootNode;
-		//const err_t									indexRoot						= jsonExpressionResolve(vcst_t{"tuobelisco"}, programState.Config.Reader, 0, rootNode);
-		//::ntl::frontConfigLoad(programState, indexRoot);
+		SJSONReader categoryML;
+		if_fail_fef(jsonParse(categoryML, gpk::DEFAULT_CATEGORIES), "\n%.*s", GPK_VIEW_ARGS(DEFAULT_CATEGORIES));
+		vcst_t	qsArgsLanguage	= gpk::DEFAULT_LANGUAGE;
+		vcst_t	categoryName	= {};
+		{
+			vcst_t	rootNode;
+			s2_t	indexRoot;
+			if_fail_fe(indexRoot = jsonExpressionResolve(qsArgsLanguage, categoryML, category, categoryName));
+		}
 	}
-	vcst_t								title;
-
-	::AD_SHOP_CATEGORY								category						= {};//{}get_value<::AD_SHOP_CATEGORY>(qsArgs.Module);
-	//if(enum_definition<::AD_SHOP_CATEGORY>::INVALID_VALUE == category)
-		category = ::AD_SHOP_CATEGORY_tours;
-	vcst_t qsArgsLanguage = "es";
-	switch(category) {
-	case ::AD_SHOP_CATEGORY_tours: title = (qsArgsLanguage == vcst_t{"es"}) ? (vcst_t{ "Turismo"		}) : (vcst_t{"Tourism"	}); break;
-	case ::AD_SHOP_CATEGORY_shops: title = (qsArgsLanguage == vcst_t{"es"}) ? (vcst_t{ "Comercios"		}) : (vcst_t{"Shopping"	}); break;
-	case ::AD_SHOP_CATEGORY_meals: title = (qsArgsLanguage == vcst_t{"es"}) ? (vcst_t{ "Comidas"		}) : (vcst_t{"Meals"	}); break;
-	case ::AD_SHOP_CATEGORY_shows: title = (qsArgsLanguage == vcst_t{"es"}) ? (vcst_t{ "Espectáculos"	}) : (vcst_t{"Shows"	}); break;
-	default: break;
-	}
+	// switch(category) {
+	// case ::AD_SHOP_CATEGORY_tours: title = (qsArgsLanguage == "es") ? vcst_t("Turismo"		) : vcst_t("Tourism"	); break;
+	// case ::AD_SHOP_CATEGORY_meals: title = (qsArgsLanguage == "es") ? vcst_t("Comidas"		) : vcst_t("Meals"		); break;
+	// case ::AD_SHOP_CATEGORY_shops: title = (qsArgsLanguage == "es") ? vcst_t("Comercios"	) : vcst_t("Shopping"	); break;
+	// case ::AD_SHOP_CATEGORY_shows: title = (qsArgsLanguage == "es") ? vcst_t("Espectáculos"	) : vcst_t("Shows"		); break;
+	// default: break;
+	// }
 
 	n2<vcst_t>							renderTargetMetrics	= {"", ""};
 	n2u2_t								sizeScreen						= {};
 	parseIntegerDecimal(renderTargetMetrics.x, sizeScreen.x);
 	parseIntegerDecimal(renderTargetMetrics.y, sizeScreen.y);
 
-	//::pageCatalog(vcst_t{"ads.json"}, programState.Path.Script, sizeScreen, programState.Path.Style, category, title, qsArgs.Language.size() ? qsArgs.Language : vcst_t{"es"}, output);
+	//::pageCatalog("ads.json", programState.Path.Script, sizeScreen, programState.Path.Style, category, title, qsArgs.Language.size() ? qsArgs.Language : "es", output);
 
 	if(output.size()) {
 		OutputDebugStringA(output.begin());
@@ -252,7 +266,7 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 	if_fail_fe(append_strings(output, "];"
 		, "\nvar idList=["));
 	for(u2_t iArticle = 0; iArticle < indicesToDisplay.size(); ++iArticle) {
-		if_fail_fe(append_strings(output, str(iArticle)));
+		if_fail_fe(append_strings(output, iArticle));
 		if(iArticle < (indicesToDisplay.size() - 1))
 			if_fail_fe(output.push_back(','));
 	}
@@ -260,15 +274,15 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 		, "\nvar barrioIdMap=["));
 	for(u2_t iArticle = 0; iArticle < indicesToDisplay.size(); ++iArticle) {
 		const SItemViews		& ad			= indicesToDisplay[iArticle];
-		output.push_back('[');
+		if_fail_fe(output.push_back('['));
 		for(u2_t iBarrio = 0; iBarrio < ad.Barrio.size(); ++iBarrio) {
-			if_fail_fe(append_strings(output, str(ad.Barrio[iBarrio])));
+			if_fail_fe(append_strings(output, ad.Barrio[iBarrio]));
 			if(iBarrio < (ad.Barrio.size() - 1))
-				output.push_back(',');
+				if_fail_fe(output.push_back(','));
 		}
-		output.push_back(']');
+		if_fail_fe(output.push_back(']'));
 		if(iArticle < (indicesToDisplay.size() - 1))
-			output.push_back(',');
+			if_fail_fe(output.push_back(','));
 	}
 	if_fail_fe(append_strings(output, "];"));
 	return 0;
@@ -307,15 +321,15 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //				output.append_string("\n<td style=\"background-color:lightgrey;border-radius:8px;text-align:left;vertical-align:top;\">");
 //				//
 //				string pTitle;
-//				//::ntl::htmlTag("h3", views.Title, vcst_t{"style=\"text-align:left;\""}, pTitle);
-//				//::ntl::htmlHRefLink({pTitle.begin(), pTitle.size()}, views.URL, vcst_t{"style=\"text-decoration:none;font-weight:bold;\""}, output);
+//				//::ntl::htmlTag("h3", views.Title, "style=\"text-align:left;\"", pTitle);
+//				//::ntl::htmlHRefLink({pTitle.begin(), pTitle.size()}, views.URL, "style=\"text-decoration:none;font-weight:bold;\"", output);
 //				output.append_string("\n</td>");
 //				output.append_string("\n</tr>");
 //				output.append_string("\n<tr>");
 //				output.append_string("\n<td style=\"vertical-align:top;height:100%;text-align:left;font-size:");
 //				output.append(fontSize);
 //				output.append_string("px;\">");
-//				//::ntl::htmlTag("h3", views.Text, vcst_t{"style=\" font-weight:normal;text-align:left;\""}, output);
+//				//::ntl::htmlTag("h3", views.Text, "style=\" font-weight:normal;text-align:left;\"", output);
 //				//
 //				output.append_string("\n</td>");
 //				output.append_string("\n</tr>");
@@ -352,7 +366,7 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //						output.append_string("\n<a target=\"blank\" style=\"margin:4px;\" href=\"");
 //						output.append(views.MapURL);
 //						output.append_string("\" >");
-//						if(lang == vcst_t{"es"})
+//						if(lang == "es")
 //							output.append_string("Localización");
 //						else
 //							output.append_string("Location");
@@ -425,7 +439,7 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //	output.append_string("\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=0.5\" />");
 //	output.append_string("\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />");
 //	string								fileStyle			;
-//	//::ntl::httpPath(pathStyles, vcst_t{"blankstyle"}, vcst_t{"css"}, fileStyle);
+//	//::ntl::httpPath(pathStyles, "blankstyle", "css", fileStyle);
 //	//::ntl::htmlHeaderTitle		(title, output);
 //	//::ntl::htmlHeaderStyleLink	({fileStyle.begin(), fileStyle.size()}, output);
 //	output.append_string("\n</head>");
@@ -459,7 +473,7 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //	output.append_string(fontSize);
 //	output.append_string("px;\" >");
 //
-//	const vcst_t							textSearch							= (lang == vcst_t{"es"}) ? "Buscar" : "Search";
+//	const vcst_t							textSearch							= (lang == "es") ? "Buscar" : "Search";
 //	//::ntl::htmlTag("h5", textSearch, {}, output);
 //
 //	output.append_string(
@@ -487,11 +501,11 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //	output.append_string("px;\" >");
 //
 //	SJSONFile										jsonBarrios;
-//	jsonFileRead(jsonBarrios, vcst_t{"barrios.json"});
+//	jsonFileRead(jsonBarrios, "barrios.json");
 //	const err_t									countBarrios					= jsonArraySize(*jsonBarrios.Reader[0]);
 //	char													tempBarrioOption[256]			= {};
 //	vcst_t								barrioName;
-//	if(lang == vcst_t{"es"})
+//	if(lang == "es")
 //		output.append_string("\n<option value=\"-1\" style=\"\">Todos</option>");
 //	else
 //		output.append_string("\n<option value=\"-1\" style=\"\">All</option>");
@@ -530,14 +544,14 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //		"\n</div>"
 //		);
 //
-//	::htmlBoardGenerate(indicesToDisplay, vcst_t{fontSize}, title, lang, output);
+//	::htmlBoardGenerate(indicesToDisplay, fontSize}, title, lang, output);
 //
 //	output.append_string("\n<script charset=\"iso-8859-1\">");
 //	::outputSearchScript(indicesToDisplay, output);
 //	output.append_string("\n</script>");
 //
 //	string								fileScriptMenu;
-//	//::ntl::httpPath(pathScript, vcst_t{"filter"}, vcst_t{"js"}, fileScriptMenu);
+//	//::ntl::httpPath(pathScript, "filter", "js", fileScriptMenu);
 //	//::ntl::htmlHeaderScriptFile({fileScriptMenu.begin(), fileScriptMenu.size()}, output);
 //
 //	output.append_string(

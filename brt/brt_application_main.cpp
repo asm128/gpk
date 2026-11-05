@@ -4,8 +4,9 @@
 #include "gpk_process.h"
 
 #include "gpk_parse.h"
+#include "gpk_string_compose.h"
 
-//#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
+//#define GPK_AVOID_LOCAL_APPLICATION_MODULE_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
 using namespace gpk;
@@ -64,8 +65,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 			}
 		}
 	}
-	::gpk::apod<char>			& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
-	::gpk::apod<char>			& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
+	::gpk::string			& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
+	::gpk::string			& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
 	if(app.ProcessParams.size()) {
 		szCmdlineFinal.push_back(' ');
 		szCmdlineFinal.append(app.ProcessParams);
@@ -77,12 +78,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	return 0;
 }
 
-static	::gpk::err_t	createChildProcess
-	(	::brt::SProcess					& process
-	,	::gpk::vu0_t						environmentBlock
-	,	::gpk::vcst_t					appPath
-	,	::gpk::vsc_t					commandLine
-	,	bool							debugMessageBox			= false
+sttc	::gpk::err_t	createChildProcess
+	(	::brt::SProcess		& process
+	,	::gpk::vu0_t		environmentBlock
+	,	::gpk::vcst_t		appPath
+	,	::gpk::vsc_t		commandLine
+	,	bool				debugMessageBox			= false
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	::gpk::vcst_t				szCmdlineApp			= appPath;
 	::gpk::vstr_t				szCmdlineFinal			= commandLine;
@@ -104,9 +105,8 @@ static	::gpk::err_t	createChildProcess
 		) ? true : false;  // receives PROCESS_INFORMATION
 	if_true_vef(-1, false == bSuccess, "Failed to create process, because... '%s'.", "???");
 	if(debugMessageBox) {
-		::gpk::apod<char>			userMessage				= {};
-		userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
-		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdlineApp.begin());
+		::gpk::string			userMessage				= {};
+		if_fail_fe(gpk::append_strings(userMessage, "Attach your debugger to '", szCmdlineApp, "' and press OK to initiate the process' main thread."));
 		MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
 	}
 	info_printf("Creating process '%s' with command line '%s'", szCmdlineApp.begin(), szCmdlineFinal.begin());
@@ -332,7 +332,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 //	si							= {sizeof(STARTUPINFOA)};
 //	stxp	bool		isUnicodeEnv			= false;
 //	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
-//	::gpk::apod<char>				bufferAppName			= GPK_VIEW_ARGS(szAppName);
+//	::gpk::string				bufferAppName			= GPK_VIEW_ARGS(szAppName);
 //	if_true_vef(-1, FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
 //	WaitForSingleObject(pi.hProcess, INFINITE);
 //	// - Restore the original environment variable.

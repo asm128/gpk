@@ -85,8 +85,8 @@ namespace gpk
 
 
 	tplTN2sinx	err_t	find		(cnst T & element, cnst astatic<T, N> & target, u2_t offset = 0)		{ rtrn ::gpk::find(element, ::gpk::view<cnst T>{target.begin(), target.size()}, offset); }
-	tplN2ustin	vstr_t	str			(astsc_t<N> & arg)		{ rtrn arg.Storage; }
-	tplN2ustin	vcst_t	str			(cnst astsc_t<N> & arg)	{ rtrn arg.Storage; }
+	tplN2ustin	vstr_t	str			(astsc_t<N> & arg)	{ rtrn arg.Storage; }
+	tplN2ustin	vcst_t	str			(astsc_c<N> & arg)	{ rtrn arg.Storage; }
 	stin astsc_t< 7>	str			(u1_t arg)	{ astsc_t< 7> dest = {}; sprintf_s(dest.Storage, "%u" , arg); rtrn dest; }
 	stin astsc_t<12>	str			(u2_t arg)	{ astsc_t<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U2, arg); rtrn dest; }
 	stin astsc_t<22>	str			(u3_t arg)	{ astsc_t<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U3, arg); rtrn dest; }

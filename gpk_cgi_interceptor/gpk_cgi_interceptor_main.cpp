@@ -189,15 +189,15 @@ static ::gpk::err_t						initHandles				(::brt::SProcessHandles & handles) {
 	return 0;	// The remaining open handles are cleaned up when this process terminates. To avoid resource leaks in a larger application, close handles explicitly.
 }
 
-static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::SThreadStateRead & appState)										{
-	::gpk::apod<char>								environmentBlock		= {};
+sttc gpk::err_t	cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::SThreadStateRead & appState)										{
+	::gpk::string								environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
 		if_true_vef(-1, ::gpk::failed(::gpk::environmentBlock(environmentBlock, runtimeValues.RuntimeValues.EntryPointArgs.Environment)), "%s", "Failed");
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
 		environmentBlock.push_back(0);
 	}
-	::gpk::apod<char>								szCmdlineApp;
-	::gpk::apod<char>								szCmdlineFinal;
+	::gpk::string								szCmdlineApp;
+	::gpk::string								szCmdlineFinal;
 	{
 		::loadConfig(szCmdlineApp, szCmdlineFinal);
 	}
@@ -210,13 +210,13 @@ static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValue
 		appState.Process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
 		::gpk::vcst_t									content_body			= {runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size()};
 		if(content_body.size())
-			if_true_ef(::gpk::failed(::writeToPipe(appState.IOHandles, content_body)), "%s", "Failed to write request content to process' stdin.");
-		if_true_ef(::gpk::failed(::createChildProcess(appState.Process, environmentBlock, szCmdlineApp, szCmdlineFinal)), "Failed to create child process: %s.", szCmdlineApp.begin());	// Create the child process.
-		_beginthread(::threadReadFromPipe, 0, &appState);
+			if_fail_ef(::writeToPipe(appState.IOHandles, content_body), "%s", "Failed to write request content to process' stdin.");
+		if_fail_ef(::createChildProcess(appState.Process, environmentBlock, szCmdlineApp, szCmdlineFinal), "Failed to create child process: %.*s.", GPK_VIEW_ARGS(szCmdlineApp));	// Create the child process.
+		::_beginthread(::threadReadFromPipe, 0, &appState);
 		SThreadStateRead							state;
 		while(false == gpk_sync_compare_exchange(state.DoneReading, true, true)) {
 			DWORD										exitCode				= 0;
-			GetExitCodeProcess(appState.Process.ProcessInfo.hProcess, &exitCode);
+			::GetExitCodeProcess(appState.Process.ProcessInfo.hProcess, &exitCode);
 			if(STILL_ACTIVE != exitCode)
 				break;
 			::gpk::sleep(5);

@@ -324,11 +324,11 @@ namespace gpk
 	tydf		apod<f2_t>	af2_t;	tdcs	af2_t	af2_c;
 	tydf		apod<f3_t>	af3_t;	tdcs	af3_t	af3_c;
 
-	stin	vstr_t		str		(asc_t & arg)	{ rtrn {arg.begin(), arg.size()}; }
+	stin	vstr_t	str		(asc_t & arg)	{ rtrn {arg.begin(), arg.size()}; }
 	stin	vcst_t	str		(asc_c & arg)	{ rtrn {arg.begin(), arg.size()}; }
 
 	tplt<tpnm T, tpnm TView>
-	err_t	join		(array_pod<T> & output, cnst T & separator, view<cnst TView> fields) {
+	err_t			join		(array_pod<T> & output, cnst T & separator, view<cnst TView> fields) {
 		err_t			appended		= 0;
 		for(u2_t iField = 0; iField < fields.size(); ++iField) {
 			if(iField) {

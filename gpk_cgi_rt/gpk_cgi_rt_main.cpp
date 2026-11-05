@@ -11,8 +11,8 @@ using namespace gpk;
 //	uint32_t												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 //		if('x' == input_string[iChar]) {
-//			apod<char>									sx						= {};
-//			apod<char>									sy						= {};
+//			asc_t									sx						= {};
+//			asc_t									sy						= {};
 //			sy.append((char*)input_string.begin(), iChar);
 //			sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
 //			try {
@@ -127,7 +127,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 		//for(int32_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
-			apod<char>	content_body			= {};
+			asc_t	content_body			= {};
 			content_body.resize(runtimeValues.Content.Length);
 			uint32_t			iChar					= 0;
 			char				iArg					= 0;

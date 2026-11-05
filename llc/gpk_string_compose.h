@@ -6,10 +6,7 @@
 
 namespace gpk
 {
-	tplTstin	err_t	append_string			(asc_t & output, cnst T & arg)			{ rtrn output.append_string(arg); }
-	tplN2ustin	err_t	append_string			(asc_t & output, vcst_t arg)			{ rtrn output.append_string(arg); }
-	tplN2ustin	err_t	append_string			(asc_t & output, cnst astsc_t<N> & arg)	{ rtrn output.append_string(arg.Storage); }
-	stin		err_t	append_string			(asc_t & output, asc_c & arg)			{ rtrn output.append_string({arg.begin(), arg.size()}); }
+	tplTstin	err_t	append_string			(asc_t & output, cnst T & arg)			{ rtrn output.append_string(vcst_t(str(arg))); }
 	tpl_vtArgs	err_t	append_strings			(asc_t & output, _tArgs&&... args)	{ 
 		err_t					err			= 0;
 		s2_c					results[]	= {err = (failed(err) ? -1 : append_string(output, args))..., 0}; 
@@ -18,7 +15,7 @@ namespace gpk
 	tplT_vtArgs	err_t	append_strings_separated	(asc_t & output, T separator, _tArgs&&... args)	{
 		err_t					err			= 0;
 		u2_t					len			= 0;
-		s2_c					results[]	= {len = err = ((0 == len) ? append_string(output, args) : failed(err) ? -1 : append_string(output, separator) + append_string(output, args))..., 0}; 
+		s2_c					results[]	= {len = err = ((0 == len) ? append_string(output, args) : failed(err) ? -1 : append_string(output, separator, args))..., 0}; 
 		rtrn failed(err) ? err : ::gpk::sum(vcs2_t{results}); 
 	}
 				err_t	appendNclosd			(string & output, vcst_t textToEnclose);

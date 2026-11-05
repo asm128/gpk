@@ -4,7 +4,7 @@
 static ::gpk::err_t				unpakMain						(::gpk::SRuntimeValues & runtimeValues)	{
 	const ::gpk::SCommandLineArgs	& args							= runtimeValues.EntryPointArgs;
 	if_true_vef(-1, 1 > args.Positionals.size(), "Usage:\n\t%.*s [input file name] [output folder (optional)]", GPK_VIEW_ARGS(args.ProgramName));
-	::gpk::apod<char>					namePathDst						= {};
+	::gpk::string					namePathDst						= {};
 	::gpk::vcst_t							nameFileSrc						= args.Positionals[0];
 	if(1 < args.Positionals.size()) {
 		namePathDst						= args.Positionals[1];

@@ -70,11 +70,11 @@ namespace gpk
 	tdcs		f3_t	f3_c;
 	tdcs		uP_t	uP_c;
 
-	tplTsinx	T			printf_arg		(T value)			nxpt	{ rtrn value; }
-	tplTsinx	void*		printf_arg		(T * value)			nxpt	{ rtrn value; }
-	tplTsinx	cnst void*	printf_arg		(cnst T * value)	nxpt	{ rtrn value; }
-	sinx		sc_t*		printf_arg		(sc_t * value)		nxpt	{ rtrn value; }
-	sinx		sc_c*		printf_arg		(sc_c * value)		nxpt	{ rtrn value; }
+	tplTsinx	T			printf_arg	(T value)			nxpt	{ rtrn value; }
+	tplTsinx	void*		printf_arg	(T * value)			nxpt	{ rtrn value; }
+	tplTsinx	cnst void*	printf_arg	(cnst T * value)	nxpt	{ rtrn value; }
+	sinx		sc_t*		printf_arg	(sc_t * value)		nxpt	{ rtrn value; }
+	sinx		sc_c*		printf_arg	(sc_c * value)		nxpt	{ rtrn value; }
 
 #define tplN0u		tplt<::gpk::u0_t N>
 #define tplN1u		tplt<::gpk::u1_t N>

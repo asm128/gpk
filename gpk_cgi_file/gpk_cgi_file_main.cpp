@@ -9,7 +9,7 @@
 
 #include "gpk_udp_client.h"
 
-static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
+static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
 	{	// Prepare CGI environment and request content packet to save to disk.
 		char filename[1024] = {};
 		sprintf_s(filename, "la_betty_criminal_at_%llu.jpg", ::gpk::timeCurrent());
@@ -19,10 +19,10 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 	return 0;
 }
 
-static	int				cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
+sttc gpk::err_t		cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	::gpk::SCGIRuntimeValues	cgiRuntimeValues(runtimeValues);
 	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
-	::gpk::apod<char>			html;
+	::gpk::asc_t			html;
 	if(::gpk::failed(::cgiBootstrap(cgiRuntimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"

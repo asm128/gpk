@@ -247,7 +247,6 @@ namespace gpk
 	
 	struct view_const_string : view<sc_c> {
 		inxp				view_const_string		()										nxpt	= dflt;
-		inxp				view_const_string		(cnst view<sc_t> & other)				nxpt	: view(other)			{}
 		inxp				view_const_string		(cnst view<sc_c> & other)				nxpt	: view(other)			{}
 							view_const_string		(sc_c * storage, u2_t length)					: view(storage, length)	{ Count = (length == (u2_t)-1) ? (u2_t)strlen(storage) : length; }
 		tplN2u		inxp	view_const_string		(sc_c (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{

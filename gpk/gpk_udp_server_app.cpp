@@ -33,7 +33,7 @@ gpk::err_t			gpk::serverStart	(SServer & server, SGUI & gui) {
 	sc_t						buf [64]			= {};
 	strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 	server.UI.TextTimeStarted	= vcst_t(buf);
-	return controlTextSet(gui, server.UI.Info[UI_SERVER_INFO_TimeStarted], {server.UI.TextTimeStarted});
+	return controlTextSet(gui, server.UI.Info[UI_SERVER_INFO_TimeStarted], server.UI.TextTimeStarted);
 }
 
 
@@ -50,7 +50,7 @@ static	gpk::err_t	updateGUI		(gpk::SServer & server, gpk::SGUI & gui)		{
 
 		sprintf_s(buf, "Clients: %i", clientCount);	
 		server.UI.TextClientCount	= gpk::vcst_t(buf);
-		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[gpk::UI_SERVER_INFO_ClientCount], {server.UI.TextClientCount}));
+		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[gpk::UI_SERVER_INFO_ClientCount], server.UI.TextClientCount));
 	}
 	{ // update datetime field
 		time_t						timeInt			= time(0);
@@ -58,7 +58,7 @@ static	gpk::err_t	updateGUI		(gpk::SServer & server, gpk::SGUI & gui)		{
 		localtime_s(&timeptr, &timeInt);
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 		server.UI.TextDateTime	= gpk::vcst_t(buf);
-		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[gpk::UI_SERVER_INFO_DateTime], {server.UI.TextDateTime})); 
+		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[gpk::UI_SERVER_INFO_DateTime], server.UI.TextDateTime)); 
 	}
 
 	return 0;
