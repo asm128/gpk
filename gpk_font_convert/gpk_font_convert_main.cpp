@@ -1,8 +1,3 @@
-#define GPK_STDOUT_LOG_ENABLED
-#define GPK_ERROR_PRINTF_ENABLED
-#define GPK_WARNING_PRINTF_ENABLED
-#define GPK_INFO_PRINTF_ENABLED
-
 #include "gpk_png.h"
 #include "gpk_base64.h"
 #include "gpk_parse.h"

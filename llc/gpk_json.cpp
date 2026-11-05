@@ -14,8 +14,21 @@ GPK_USING_TYPEINT();
 #define json_info_printf(...) // info_printf
 #define json_error_printf error_printf
 
-gpk::err_t			gpk::jsonCompareObject		(cnst gpk::SJSONNode & node, gpk::view<cnst vcst_t> views, cnst gpk::SJSONNode & other, gpk::view<cnst vcst_t> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; for(u2_t iChild = 0; iChild < node.Children.size(); iChild += 2)	if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
-gpk::err_t			gpk::jsonCompareNumber		(cnst gpk::SJSONNode & node, gpk::view<cnst vcst_t> views, cnst gpk::SJSONNode & other, gpk::view<cnst vcst_t> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
+gpk::err_t			gpk::jsonCompareObject		(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; for(u2_t iChild = 0; iChild < node.Children.size(); iChild += 2)	if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
+gpk::err_t			gpk::jsonCompareNumber		(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
+//gpk::err_t			gpk::jsonArrayEnumerate		(cnst SJSONNode & node, FError<cnst SJSONNode &> funcEnumerate) { rtrn iElem}
+gpk::err_t			gpk::jsonArrayForEach		(cnst SJSONNode & node, FError<cnst SJSONNode &> funcForEach) {
+		s2_t				iElement = 0;
+		for(s2_t elementCount = node.Children.size(); iElement < elementCount; ++iElement ) {
+			err_t result;
+			if_fail_fef(result = funcForEach(*node.Children[iElement]), "iElement=%" GPK_FMT_S2, iElement)
+			else if(result)
+				return iElement + 1;
+		}
+		rtrn iElement;
+	}	// returns the index of the JSON element corresponding to the index provided as parameter.
+
+
 
 gpk::err_t			gpk::jsonMapToFields
 (	gpk::as2_t											& indicesOfFields

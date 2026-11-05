@@ -110,8 +110,6 @@ namespace gpk
 	err_t			jsonTreeInvalidate	(SJSONReader & reader);
 	err_t			jsonTreeEnsure		(SJSONReader & reader);
 
-	nsix	err_t	jsonArraySize		(cnst SJSONNode & node)												nxpt	{ rtrn node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
-	nsix	err_t	jsonObjectKeyCount	(cnst SJSONNode & node)												nxpt	{ rtrn node.Children.size() / 2; }
 	err_t			jsonArrayValueGet	(cnst SJSONNode & node, u2_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
 	err_t			jsonObjectValueGet	(cnst SJSONNode & node, view<cnst vcst_t> views, vcst_t key);
 	err_t			jsonObjectKeyList	(cnst SJSONNode & node, as2_t & indices);
@@ -121,7 +119,10 @@ namespace gpk
 	err_t			jsonCompareArray	(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews);
 	err_t			jsonCompareObject	(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews);
 
-
+	nsix	err_t	jsonArraySize		(cnst SJSONNode & node)												nxpt	{ rtrn node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
+	nsix	err_t	jsonObjectKeyCount	(cnst SJSONNode & node)												nxpt	{ rtrn node.Children.size() / 2; }
+	err_t			jsonArrayForEach	(cnst SJSONNode & node, FError<cnst SJSONNode &> funcForEach);
+	//err_t			jsonArrayEnumerate	(cnst SJSONNode & node, FError<cnst SJSONNode &, u2_t index> funcEnumerate);
 	// Access functions: Iterate over children looking for keys or values.
 	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)											{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonArraySize(*reader.Tree[iNode]); }
 	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)											{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyCount(*reader.Tree[iNode]); }
@@ -208,6 +209,7 @@ namespace gpk
 	err_t			jsonMapToFields			(as2_t & indicesOfFields, view<cnst SJSONFieldBinding> fields, view<cnst keyval<vcst_t>> fieldMaps);
 	err_t			jsonFieldsToMap			(as2_t & indicesOfFields, view<cnst SJSONFieldBinding> fields, view<cnst keyval<vcst_t>> fieldMaps);
 	err_t			jsonToCodePoint			(vcst_t input, u2_t & unicode);
+
 } // namespace
 
 #endif // GPK_JSON_H_23627

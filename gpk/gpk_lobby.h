@@ -181,13 +181,13 @@ namespace gpk
 			{
 				::std::lock_guard								lockRecv					(Client.Queue.MutexReceive);
 				for(u2_t iMessage = 0; iMessage < Client.Queue.Received.size(); ++iMessage) {
-					if_fail_fef(MessagesToProcess.push_back(Client.Queue.Received[iMessage]), "%s", "Out of memory?");
+					if_fail_fe(MessagesToProcess.push_back(Client.Queue.Received[iMessage]));
 				}
 				Client.Queue.Received.clear();
 			}
 			for(u2_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
 				vcu0_t							viewPayload					= MessagesToProcess[iMessage]->Payload;
-				info_printf("Client received: %s.", viewPayload.begin());
+				info_printf("Client received: %.*s.", GPK_VIEW_ARGS(viewPayload));
 			}
 			return 0;
 		}
