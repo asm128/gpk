@@ -36,26 +36,12 @@ gpk::err_t 		gpk::SRigidBodyIntegrator::Save	(au0_t & output) const {
 	return 0; 
 }
 
-void			gpk::transformInertiaTensor	(m3f2_t & iitWorld, const m3f2_t & iitBody, const m4f2_t & rotmat)		{
-	const f2_t					t4							= rotmat._11*iitBody._11 + rotmat._21*iitBody._12 + rotmat._31*iitBody._13;
-	const f2_t					t9							= rotmat._11*iitBody._21 + rotmat._21*iitBody._22 + rotmat._31*iitBody._23;
-	const f2_t					t14							= rotmat._11*iitBody._31 + rotmat._21*iitBody._32 + rotmat._31*iitBody._33;
-	const f2_t					t28							= rotmat._12*iitBody._11 + rotmat._22*iitBody._12 + rotmat._32*iitBody._13;
-	const f2_t					t33							= rotmat._12*iitBody._21 + rotmat._22*iitBody._22 + rotmat._32*iitBody._23;
-	const f2_t					t38							= rotmat._12*iitBody._31 + rotmat._22*iitBody._32 + rotmat._32*iitBody._33;
-	const f2_t					t52							= rotmat._13*iitBody._11 + rotmat._23*iitBody._12 + rotmat._33*iitBody._13;
-	const f2_t					t57							= rotmat._13*iitBody._21 + rotmat._23*iitBody._22 + rotmat._33*iitBody._23;
-	const f2_t					t62							= rotmat._13*iitBody._31 + rotmat._23*iitBody._32 + rotmat._33*iitBody._33;
-
-	iitWorld._11			= t4 *rotmat._11 + t9 *rotmat._21 + t14*rotmat._31;
-	iitWorld._21			= t4 *rotmat._12 + t9 *rotmat._22 + t14*rotmat._32;
-	iitWorld._31			= t4 *rotmat._13 + t9 *rotmat._23 + t14*rotmat._33;
-	iitWorld._12			= t28*rotmat._11 + t33*rotmat._21 + t38*rotmat._31;
-	iitWorld._22			= t28*rotmat._12 + t33*rotmat._22 + t38*rotmat._32;
-	iitWorld._32			= t28*rotmat._13 + t33*rotmat._23 + t38*rotmat._33;
-	iitWorld._13			= t52*rotmat._11 + t57*rotmat._21 + t62*rotmat._31;
-	iitWorld._23			= t52*rotmat._12 + t57*rotmat._22 + t62*rotmat._32;
-	iitWorld._33			= t52*rotmat._13 + t57*rotmat._23 + t62*rotmat._33;
+void			gpk::transformInertiaTensor	(m3a3f2_t & iitWorld, const m3a3f2_t & iitBody, const m4f2_t & rotmat)		{
+	m3a3f2_t					rotation						= {};
+	for(u0_t row = 0; row < 3; ++row)
+		for(u0_t column = 0; column < 3; ++column)
+			rotation.MathElement(row, column) = rotmat.MathElement(row, column);
+	iitWorld					= rotation.GetTranspose() * iitBody * rotation;
 }
 
 void					gpk::updateTransform	(SBodyCenter & bodyTransform, m4f2_t & transformLocal)	{

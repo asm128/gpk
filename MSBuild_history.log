@@ -6449,3 +6449,522 @@ Build FAILED.
     102 Error(s)
 
 Time Elapsed 00:02:52.60
+Build started 2026-11-01 08:01:29.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_font_convert target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Release|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../zlib /Zi /nologo /W4 /WX /diagnostics:column /sdl /O2 /Oi /GL /D GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG /D NDEBUG /D _LIB /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Zc:rvalueCast /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Release/llc/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../x64.Release/llc.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_adam7.cpp gpk_aes.cpp gpk_append_css.cpp gpk_append_html.cpp gpk_append_js.cpp gpk_append_json.cpp gpk_append_tcpip.cpp gpk_append_xml.cpp gpk_args.cpp gpk_array.cpp gpk_ascii_target.cpp gpk_base64.cpp gpk_block.cpp gpk_broker.cpp gpk_cgi.cpp gpk_cgi_main.cpp gpk_cgi_module.cpp gpk_cgi_runtime.cpp gpk_chrono.cpp gpk_component_scene.cpp gpk_component_scene_draw.cpp gpk_crc.cpp gpk_d3d.cpp gpk_datatype.cpp gpk_debug.cpp gpk_deflate.cpp gpk_dialog.cpp gpk_encoding.cpp gpk_expression.cpp gpk_file.cpp gpk_file_pack.cpp gpk_font.cpp gpk_framework.cpp gpk_geometry.cpp gpk_geometry_draw.cpp gpk_geometry_lh.cpp gpk_gltf.cpp gpk_gui.cpp gpk_gui_control_list.cpp gpk_gui_desktop.cpp gpk_gui_draw.cpp gpk_gui_inputbox.cpp gpk_gui_viewport.cpp gpk_http_client.cpp gpk_json.cpp gpk_json_expression.cpp gpk_keyval_view.cpp gpk_label.cpp gpk_log.cpp gpk_mapblock.cpp gpk_noise.cpp gpk_parse.cpp gpk_particle.cpp gpk_path.cpp gpk_platform_error.cpp gpk_png.cpp gpk_png_write.cpp gpk_process.cpp gpk_process_linux.cpp gpk_process_win32.cpp gpk_raster_lh.cpp gpk_rsa.cpp gpk_runtime_module.cpp gpk_scene.cpp gpk_spi.cpp gpk_stdstring.cpp gpk_stl.cpp gpk_string_compose.cpp gpk_string_helper.cpp gpk_tcpip.cpp gpk_timer.cpp gpk_typeint.cpp gpk_view.cpp gpk_virtual_keyboard.cpp gpk_voxel_geometry.cpp gpk_window.cpp gpk_windows.cpp gpk_xml_reader.cpp
+  gpk_adam7.cpp
+  gpk_aes.cpp
+  gpk_append_css.cpp
+  gpk_append_html.cpp
+  gpk_append_js.cpp
+  gpk_append_json.cpp
+  gpk_append_tcpip.cpp
+  gpk_append_xml.cpp
+  gpk_args.cpp
+  gpk_array.cpp
+  gpk_ascii_target.cpp
+  gpk_base64.cpp
+  gpk_block.cpp
+  gpk_broker.cpp
+  gpk_cgi.cpp
+  gpk_cgi_main.cpp
+  gpk_cgi_module.cpp
+  gpk_cgi_runtime.cpp
+  gpk_chrono.cpp
+  gpk_component_scene.cpp
+  Compiling...
+  gpk_component_scene_draw.cpp
+  gpk_crc.cpp
+  gpk_d3d.cpp
+  gpk_datatype.cpp
+  gpk_debug.cpp
+  gpk_deflate.cpp
+  gpk_dialog.cpp
+  gpk_encoding.cpp
+  gpk_expression.cpp
+  gpk_file.cpp
+  gpk_file_pack.cpp
+  gpk_font.cpp
+  gpk_framework.cpp
+  gpk_geometry.cpp
+  gpk_geometry_draw.cpp
+  gpk_geometry_lh.cpp
+  gpk_gltf.cpp
+  gpk_gui.cpp
+  gpk_gui_control_list.cpp
+  gpk_gui_desktop.cpp
+Build started 2026-11-01 08:03:27.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_font_convert target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Debug|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX86\x64\CL.exe /c /I../../zlib /ZI /JMC /nologo /W4 /WX /diagnostics:column /sdl /Od /D GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG /D _DEBUG /D _LIB /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Zc:rvalueCast /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../x64.Debug/llc.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_adam7.cpp gpk_aes.cpp gpk_append_tcpip.cpp gpk_append_css.cpp gpk_append_html.cpp gpk_append_js.cpp gpk_append_json.cpp gpk_append_xml.cpp gpk_args.cpp gpk_array.cpp gpk_ascii_target.cpp gpk_base64.cpp gpk_block.cpp gpk_broker.cpp gpk_cgi.cpp gpk_cgi_main.cpp gpk_cgi_module.cpp gpk_cgi_runtime.cpp gpk_chrono.cpp gpk_component_scene.cpp gpk_component_scene_draw.cpp gpk_crc.cpp gpk_d3d.cpp gpk_datatype.cpp gpk_debug.cpp gpk_deflate.cpp gpk_dialog.cpp gpk_file_pack.cpp gpk_geometry.cpp gpk_geometry_draw.cpp gpk_gltf.cpp gpk_gui_inputbox.cpp gpk_gui_viewport.cpp gpk_i2c.cpp gpk_keyval_view.cpp gpk_particle.cpp gpk_path.cpp gpk_platform_error.cpp gpk_process_linux.cpp gpk_process_win32.cpp gpk_spi.cpp gpk_string_compose.cpp gpk_typeint.cpp gpk_virtual_keyboard.cpp gpk_voxel_geometry.cpp gpk_window.cpp gpk_framework.cpp gpk_gui_control_list.cpp gpk_gui_desktop.cpp gpk_raster_lh.cpp gpk_encoding.cpp gpk_expression.cpp gpk_scene.cpp gpk_geometry_lh.cpp gpk_gui.cpp gpk_gui_draw.cpp gpk_https_client.cpp gpk_http_client.cpp gpk_json.cpp gpk_json_expression.cpp gpk_label.cpp gpk_log.cpp gpk_mapblock.cpp gpk_noise.cpp gpk_parse.cpp gpk_png.cpp gpk_png_write.cpp gpk_process.cpp gpk_rsa.cpp gpk_runtime_module.cpp gpk_stdstring.cpp gpk_stl.cpp gpk_file.cpp gpk_string_helper.cpp gpk_tcpip.cpp gpk_timer.cpp gpk_view.cpp gpk_windows.cpp gpk_xml_reader.cpp gpk_font.cpp
+  gpk_adam7.cpp
+  gpk_aes.cpp
+  gpk_append_tcpip.cpp
+  gpk_append_css.cpp
+  gpk_append_html.cpp
+  gpk_append_js.cpp
+  gpk_append_json.cpp
+  gpk_append_xml.cpp
+  gpk_args.cpp
+  gpk_array.cpp
+  gpk_ascii_target.cpp
+  gpk_base64.cpp
+  gpk_block.cpp
+  gpk_broker.cpp
+  gpk_cgi.cpp
+  gpk_cgi_main.cpp
+  gpk_cgi_module.cpp
+  gpk_cgi_runtime.cpp
+  gpk_chrono.cpp
+  gpk_component_scene.cpp
+  Generating Code...
+  Compiling...
+  gpk_component_scene_draw.cpp
+  gpk_crc.cpp
+  gpk_d3d.cpp
+  gpk_datatype.cpp
+  gpk_debug.cpp
+  gpk_deflate.cpp
+  gpk_dialog.cpp
+  gpk_file_pack.cpp
+  gpk_geometry.cpp
+  gpk_geometry_draw.cpp
+  gpk_gltf.cpp
+  gpk_gui_inputbox.cpp
+  gpk_gui_viewport.cpp
+  gpk_i2c.cpp
+  gpk_keyval_view.cpp
+  gpk_particle.cpp
+C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppCommon.targets(790,5): error MSB6006: "CL.exe" exited with code 1. [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj]
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (default targets) -- FAILED.
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_font_convert target(s)) -- FAILED.
+
+Build FAILED.
+
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_font_convert target) (1) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (default target) (2) ->
+"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default target) (3) ->
+(ClCompile target) -> 
+  C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppCommon.targets(790,5): error MSB6006: "CL.exe" exited with code 1. [D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:02:02.88
+Build started 2026-11-01 08:11:36.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_font_convert target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Debug|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Debug\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Link:
+  All outputs are up-to-date.
+  gpk_font_convert.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Debug\gpk_font_convert.exe
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\gpk_font_convert.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_font_convert target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.08
+Build started 2026-11-01 08:12:31.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_font_convert target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Debug|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  All outputs are up-to-date.
+Lib:
+  All outputs are up-to-date.
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Debug\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /I../../gpk/llc /ZI /JMC /nologo /W4 /WX /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_font_convert_main.cpp
+  gpk_font_convert_main.cpp
+Link:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/gpk_font_convert.exe" /INCREMENTAL /ILK:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.ilk" /NOLOGO /LIBPATH:D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/ /WX llc.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/gpk_font_convert.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/gpk_font_convert.lib" /MACHINE:X64 D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert_main.obj
+  gpk_font_convert.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Debug\gpk_font_convert.exe
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\gpk_font_convert.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_font_convert target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:04.89
+Build started 2026-11-01 08:15:47.
+
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" on node 1 (gpk_font_convert target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Debug|x64".
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (1) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) on node 1 (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (3) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /I../../zlib /ZI /JMC /nologo /W4 /WX /diagnostics:column /sdl /Od /D GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG /D _DEBUG /D _LIB /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Zc:rvalueCast /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../x64.Debug/llc.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_aes.cpp gpk_append_css.cpp gpk_append_html.cpp gpk_append_js.cpp gpk_append_json.cpp gpk_append_tcpip.cpp gpk_append_xml.cpp gpk_args.cpp gpk_base64.cpp gpk_cgi.cpp gpk_cgi_main.cpp gpk_cgi_module.cpp gpk_cgi_runtime.cpp gpk_chrono.cpp gpk_component_scene.cpp gpk_component_scene_draw.cpp gpk_crc.cpp gpk_d3d.cpp gpk_deflate.cpp gpk_dialog.cpp gpk_encoding.cpp gpk_expression.cpp gpk_file.cpp gpk_file_pack.cpp gpk_font.cpp gpk_framework.cpp gpk_geometry.cpp gpk_geometry_draw.cpp gpk_geometry_lh.cpp gpk_gui.cpp gpk_gui_control_list.cpp gpk_gui_desktop.cpp gpk_gui_draw.cpp gpk_gui_inputbox.cpp gpk_gui_viewport.cpp gpk_http_client.cpp gpk_json.cpp gpk_json_expression.cpp gpk_keyval_view.cpp gpk_log.cpp gpk_parse.cpp gpk_path.cpp gpk_png.cpp gpk_png_write.cpp gpk_process.cpp gpk_process_linux.cpp gpk_process_win32.cpp gpk_raster_lh.cpp gpk_rsa.cpp gpk_runtime_module.cpp gpk_scene.cpp gpk_spi.cpp gpk_stdstring.cpp gpk_stl.cpp gpk_string_compose.cpp gpk_string_helper.cpp gpk_tcpip.cpp gpk_virtual_keyboard.cpp gpk_voxel_geometry.cpp gpk_window.cpp gpk_windows.cpp gpk_xml_reader.cpp
+  gpk_aes.cpp
+  gpk_append_css.cpp
+  gpk_append_html.cpp
+  gpk_append_js.cpp
+  gpk_append_json.cpp
+  gpk_append_tcpip.cpp
+  gpk_append_xml.cpp
+  gpk_args.cpp
+  gpk_base64.cpp
+  gpk_cgi.cpp
+  gpk_cgi_main.cpp
+  gpk_cgi_module.cpp
+  gpk_cgi_runtime.cpp
+  gpk_chrono.cpp
+  gpk_component_scene.cpp
+  gpk_component_scene_draw.cpp
+  gpk_crc.cpp
+  gpk_d3d.cpp
+  gpk_deflate.cpp
+  gpk_dialog.cpp
+  Generating Code...
+  Compiling...
+  gpk_encoding.cpp
+  gpk_expression.cpp
+  gpk_file.cpp
+  gpk_file_pack.cpp
+  gpk_font.cpp
+  gpk_framework.cpp
+  gpk_geometry.cpp
+  gpk_geometry_draw.cpp
+  gpk_geometry_lh.cpp
+  gpk_gui.cpp
+  gpk_gui_control_list.cpp
+  gpk_gui_desktop.cpp
+  gpk_gui_draw.cpp
+  gpk_gui_inputbox.cpp
+  gpk_gui_viewport.cpp
+  gpk_http_client.cpp
+  gpk_json.cpp
+  gpk_json_expression.cpp
+  gpk_keyval_view.cpp
+  gpk_log.cpp
+  Generating Code...
+  Compiling...
+  gpk_parse.cpp
+  gpk_path.cpp
+  gpk_png.cpp
+  gpk_png_write.cpp
+  gpk_process.cpp
+  gpk_process_linux.cpp
+  gpk_process_win32.cpp
+  gpk_raster_lh.cpp
+  gpk_rsa.cpp
+  gpk_runtime_module.cpp
+  gpk_scene.cpp
+  gpk_spi.cpp
+  gpk_stdstring.cpp
+  gpk_stl.cpp
+  gpk_string_compose.cpp
+  gpk_string_helper.cpp
+  gpk_tcpip.cpp
+  gpk_virtual_keyboard.cpp
+  gpk_voxel_geometry.cpp
+  gpk_window.cpp
+  Generating Code...
+  Compiling...
+  gpk_windows.cpp
+  gpk_xml_reader.cpp
+  Generating Code...
+Lib:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\Lib.exe /OUT:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../x64.Debug/llc.lib" /NOLOGO /WX /MACHINE:X64 D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_adam7.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_aes.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_append_tcpip.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_append_css.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_append_html.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_append_js.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_append_json.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_append_xml.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_args.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_array.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_ascii_target.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_base64.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_block.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_broker.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_cgi.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_cgi_main.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_cgi_module.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_cgi_runtime.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_chrono.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_component_scene.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_component_scene_draw.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_crc.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_d3d.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_datatype.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_debug.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_deflate.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_dialog.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_file_pack.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_geometry.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_geometry_draw.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_gltf.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_gui_inputbox.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_gui_viewport.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_i2c.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_keyval_view.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_particle.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_path.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_platform_error.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_process_linux.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_process_win32.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_spi.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_string_compose.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_typeint.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_virtual_keyboard.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_voxel_geometry.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_window.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_framework.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_gui_control_list.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_gui_desktop.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_raster_lh.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_encoding.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_expression.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_scene.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_geometry_lh.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_gui.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_gui_draw.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_https_client.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_http_client.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_json.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_json_expression.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_label.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_log.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_mapblock.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_noise.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_parse.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_png.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_png_write.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_process.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_rsa.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_runtime_module.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_stdstring.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_stl.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_file.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_string_helper.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_tcpip.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_timer.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_view.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_windows.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_xml_reader.obj
+  D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/gpk_font.obj
+  llc.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Debug\llc.lib
+PostBuildEvent:
+  copy_gpk_config.bat
+  :VCEnd
+  A subdirectory or file ..\..\Win32.Release already exists.
+  A subdirectory or file ..\..\Win32.Debug already exists.
+  A subdirectory or file ..\..\x64.Release already exists.
+  A subdirectory or file ..\..\x64.Debug already exists.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+  character_codes.json
+  country_coords.json
+  gpk_cgi_interceptor.json
+  gpk_config.json
+          4 file(s) copied.
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\../../obj/x64.Debug/llc/llc.tlog\llc.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc.vcxproj" (default targets).
+Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (2) is building "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj" (4) on node 1 (default targets).
+PrepareForBuild:
+  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+InitializeBuildStatus:
+  Creating "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Reading library manifest file 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\modules.json' which provides data for library 'microsoft/STL'.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.ixx' from library 'microsoft/STL' to be built with this project.
+  Adding module source 'C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\modules\std.compat.ixx' from library 'microsoft/STL' to be built with this project.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\CL.exe /c /I../../gpk/llc /ZI /JMC /nologo /W4 /WX /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/" /Fd"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/vc145.pdb" /external:W4 /Gd /TP /FC /errorReport:queue gpk_font_convert_main.cpp
+  gpk_font_convert_main.cpp
+Link:
+  C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/gpk_font_convert.exe" /INCREMENTAL /ILK:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.ilk" /NOLOGO /LIBPATH:D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/ /WX llc.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/gpk_font_convert.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../x64.Debug/gpk_font_convert.lib" /MACHINE:X64 D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert_main.obj
+  gpk_font_convert.vcxproj -> D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\x64.Debug\gpk_font_convert.exe
+FinalizeBuildStatus:
+  Deleting file "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\unsuccessfulbuild".
+  Touching "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\../../obj/x64.Debug/gpk_font_convert/gpk_font_convert.tlog\gpk_font_convert.lastbuildstate".
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk_font_convert\gpk_font_convert.vcxproj.metaproj" (default targets).
+Done Building Project "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\gpk.sln" (gpk_font_convert target(s)).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:03:25.11

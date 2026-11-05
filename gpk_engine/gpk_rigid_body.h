@@ -24,7 +24,7 @@ namespace gpk
 		f2_t				LinearDamping					= 1.0f;
 		f2_t				AngularDamping					= 1.0f;
 		f2_t				InverseMass						= 0;
-		::gpk::m3f2_t		InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
+		::gpk::m3a3f2_t		InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
 
 		inxp	f3_t		GetMass							()	{
 			return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass; 
@@ -54,7 +54,7 @@ namespace gpk
 	};
 
 	struct SBodyFrame {
-		::gpk::m3f2_t		InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
+		::gpk::m3a3f2_t		InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
 		::gpk::n3f2_t		LastFrameAcceleration			= {0, 0, 0};
 		::gpk::n3f2_t		AccumulatedForce				= {0, 0, 0};
 		::gpk::n3f2_t		AccumulatedTorque				= {0, 0, 0};
@@ -69,7 +69,7 @@ namespace gpk
 	void				updateTransform					(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f2_t & transformLocal);
 	s2_t				integrateForces					(f3_t duration, ::gpk::SBodyFrame & bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass);
 	s2_t				integratePosition				(f3_t duration, f3_t durationHalfSquared, ::gpk::SBodyFlags & bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces);
-	void				transformInertiaTensor			(::gpk::m3f2_t & iitWorld, const ::gpk::m3f2_t & iitBody, const ::gpk::m4f2_t &rotmat);
+	void				transformInertiaTensor			(::gpk::m3a3f2_t & iitWorld, const ::gpk::m3a3f2_t & iitBody, const ::gpk::m4f2_t &rotmat);
 
 
 	struct SRigidBodyIntegrator {
@@ -82,7 +82,7 @@ namespace gpk
 		::gpk::apod<::gpk::m4f2_t		>	TransformsLocal					= {};
 
 		stxp	::gpk::m4f2_t				MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
-		stxp	::gpk::m3f2_t				MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
+		stxp	::gpk::m3a3f2_t				MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
 
 		gpk::err_t 					Load							(::gpk::vcu0_t & input);
 		gpk::err_t 					Save							(::gpk::au0_t & output)	const;

@@ -44,9 +44,10 @@ namespace gpk
 		xcb_gcontext_t						GC							= {};
 		xcb_drawable_t						IdDrawable					= {};
 		xcb_drawable_t						IdDrawableBackPixmap		= {};
+		xcb_atom_t							WMDelete					= {};
 
 											~SWindowPlatformDetail		()	{
-			if(u2_t(-1) != GC) {
+			if(GC) {
 				xcb_free_gc(Connection, GC);
 				info_printf("%s.", "Window graphics context freed");
 			}

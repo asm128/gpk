@@ -13,8 +13,6 @@
 #	include <joystickapi.h>
 #	include <xinput.h>
 #	pragma warning(disable: 4995)
-#elif defined(GPK_XCB)
-#	include <xcb/xcb_image.h>
 #endif
 
 GPK_USING_TYPEINT();
@@ -75,69 +73,13 @@ gpk::err_t 		gpk::updateFramework						(::gpk::SFramework& framework)											
 	::gpk::STimer								& timer										= framework.Timer;
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, (u3_t)200000));
-#if defined(GPK_XCB)
-	::gpk::pobj<::gpk::rt<::gpk::bgra, u2_t>>
-												& guiRenderTarget			= framework.RootWindow.BackBuffer;
-	if(mainWindow.Repaint) {
-		xcb_screen_t								* xcbScreen					= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;
-		const xcb_image_format_t					format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
-		const ::gpk::n2<u2_t>				& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
-		xcb_image_t									* image						= xcb_image_create_native
-			( mainWindow.PlatformDetail.Connection
-			, guiRenderTargetMetrics.x
-			, guiRenderTargetMetrics.y
-			, format
-			, xcbScreen->root_depth
-			, (u0_t*)guiRenderTarget->Color.View.begin()
-			, guiRenderTarget->Color.View.size() * 4
-			, (u0_t*)guiRenderTarget->Color.View.begin()
-			);
-		xcb_image_put(mainWindow.PlatformDetail.Connection, mainWindow.PlatformDetail.IdDrawable, mainWindow.PlatformDetail.GC, image, 0, 0, 0);
-		image->base						= 0;
-		xcb_image_destroy(image);
-		xcb_flush(mainWindow.PlatformDetail.Connection);
-		framework.RootWindow.Repaint	= false;
-	}
-	while (xcb_generic_event_t * ev = xcb_poll_for_event(mainWindow.PlatformDetail.Connection)) {
-		switch (ev->response_type & ~0x80) {
-		default					: break;
-		case XCB_EXPOSE			: {
-			//xcb_expose_event_t												* x					= (xcb_expose_event_t *)ev;
-			mainWindow.Repaint	= true;
-			break;
-		}
-		case XCB_KEY_PRESS		: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Down"	, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 1; break;	}
-		case XCB_KEY_RELEASE	: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Up"		, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 0; break;	}
-		case XCB_BUTTON_PRESS	: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Down"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 1; break;	}
-		case XCB_BUTTON_RELEASE	: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Up"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 0; break;	}
-		case XCB_MOTION_NOTIFY	: {
-			xcb_motion_notify_event_t			* mev				= (xcb_motion_notify_event_t*)ev;
-			s2_t								xPos				= mev->same_screen ? mev->event_x : mev->root_x;
-			s2_t								yPos				= mev->same_screen ? mev->event_y : mev->root_y;
-			input.MouseCurrent.Position.x	= ::gpk::clamped(xPos, 0, (s2_t)mainWindow.Size.x);
-			input.MouseCurrent.Position.y	= ::gpk::clamped(yPos, 0, (s2_t)mainWindow.Size.y);
-			input.MouseCurrent.Deltas.x		= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
-			input.MouseCurrent.Deltas.y		= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
-			//info_printf("Mouse position: %i, %i", input.MouseCurrent.Position.x, input.MouseCurrent.Position.y);
-			framework.RootWindow.Repaint	= true;
-			break;
-		}
-		}
-	}
-	gpk::err_t 			updateResult		= 0;
-#else
 	gpk::err_t 			updateResult		= ::gpk::windowUpdate(mainWindow);
-#endif
 	if_true_ve(-1, gpk::failed(updateResult));
 	if_true_vi(1, mainWindow.Closed);
 	if_true_vi(1, 1 == updateResult);
 	::gpk::pobj<::gpk::SWindow::TOffscreen>	offscreen	= framework.RootWindow.BackBuffer;
-#if defined(GPK_WINDOWS)
-	if(mainWindow.PlatformDetail.WindowHandle) {
-		if(offscreen && offscreen->Color.Texels.size())
-			if_true_e(gpk::failed(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
-	}
-#endif
+	if(offscreen && offscreen->Color.Texels.size())
+		if_true_e(gpk::failed(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
 	::gpk::SGUI						& gui				= *framework.GUI;
 	{
 		::std::lock_guard				lock										(framework.LockGUI);
@@ -377,7 +319,16 @@ static	gpk::err_t xcbWindowCreate								(::gpk::SWindow & window) {
 			, mask, values								// masks
 			);
 		xcb_map_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable);
+		xcb_intern_atom_reply_t * protocols = xcb_intern_atom_reply(window.PlatformDetail.Connection, xcb_intern_atom(window.PlatformDetail.Connection, 0, 12, "WM_PROTOCOLS"), 0);
+		xcb_intern_atom_reply_t * deleteWindow = xcb_intern_atom_reply(window.PlatformDetail.Connection, xcb_intern_atom(window.PlatformDetail.Connection, 0, 16, "WM_DELETE_WINDOW"), 0);
+		if(protocols && deleteWindow) {
+			window.PlatformDetail.WMDelete = deleteWindow->atom;
+			xcb_change_property(window.PlatformDetail.Connection, XCB_PROP_MODE_REPLACE, window.PlatformDetail.IdDrawable, protocols->atom, XCB_ATOM_ATOM, 32, 1, &window.PlatformDetail.WMDelete);
+		}
+		free(protocols);
+		free(deleteWindow);
 	}
+	xcb_flush(window.PlatformDetail.Connection);
 	return 0;
 }
 #endif
@@ -387,7 +338,17 @@ gpk::err_t 		gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
 	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle);
 	::gpk::windowUpdate(mainWindow);
 #elif defined(GPK_XCB)
-
+	::gpk::SWindowPlatformDetail & detail = mainWindow.PlatformDetail;
+	if(detail.Connection) {
+		if(detail.IdDrawable) xcb_destroy_window(detail.Connection, detail.IdDrawable);
+		if(detail.IdDrawableBackPixmap) xcb_free_pixmap(detail.Connection, detail.IdDrawableBackPixmap);
+		if(detail.GC) xcb_free_gc(detail.Connection, detail.GC);
+		xcb_flush(detail.Connection);
+		xcb_disconnect(detail.Connection);
+		detail.Connection = {};
+		detail.IdDrawable = detail.IdDrawableBackPixmap = detail.GC = detail.WMDelete = {};
+	}
+	mainWindow.Closed = true;
 #else
 	(void)mainWindow;
 #endif
@@ -397,9 +358,9 @@ gpk::err_t 		gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
 gpk::err_t 		gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
 	if(0 == displayInput.get_ref())
 		displayInput.create();
+	::gpk::SWindowPlatformDetail	& displayDetail			= mainWindow.PlatformDetail;
 
 #if defined(GPK_WINDOWS)
-	::gpk::SWindowPlatformDetail	& displayDetail			= mainWindow.PlatformDetail;
 	HINSTANCE						hInstance				= runtimeValues.hInstance;
 	::initWndClass(hInstance, ::gpk::SWindowPlatformDetail::DefaultRootWindowClassName.begin(), ::mainWndProc, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
