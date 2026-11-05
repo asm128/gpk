@@ -9,7 +9,7 @@
 
 #include "gpk_udp_client.h"
 
-static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
+sttc gpk::err_t		cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
 	{	// Prepare CGI environment and request content packet to save to disk.
 		char filename[1024] = {};
 		sprintf_s(filename, "la_betty_criminal_at_%llu.jpg", ::gpk::timeCurrent());

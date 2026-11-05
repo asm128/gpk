@@ -21,6 +21,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gme", "gme\gme.vcxproj", "{
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_file_explorer", "gpk_file_explorer\gpk_file_explorer.vcxproj", "{5842B8C0-45CD-4089-B0E3-7C25D2F97D51}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_cgi_rt", "gpk_cgi_rt\gpk_cgi_rt.vcxproj", "{F211404A-FD89-4403-AB7E-D4CAA4A26605}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -116,6 +119,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_cgi_file", "gpk_cgi_fil
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_applock", "gpk_applock\gpk_applock.vcxproj", "{FADF1066-B23E-434A-91B7-5277E0D9BDD5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

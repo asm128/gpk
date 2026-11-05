@@ -141,6 +141,7 @@
     <ClInclude Include="gpk_std_initializer_list.h" />
     <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_string_compose.h" />
+    <ClInclude Include="gpk_string_time.h" />
     <ClInclude Include="gpk_swap.h" />
     <ClInclude Include="gpk_system_event.h" />
     <ClInclude Include="gpk_system_key.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="gpk_process_win32.cpp" />
     <ClCompile Include="gpk_spi.cpp" />
     <ClCompile Include="gpk_string_compose.cpp" />
+    <ClCompile Include="gpk_string_time.cpp" />
     <ClCompile Include="gpk_typeint.cpp" />
     <ClCompile Include="gpk_virtual_keyboard.cpp" />
     <ClCompile Include="gpk_voxel_geometry.cpp" />

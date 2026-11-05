@@ -179,7 +179,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 		receivedPerClient.resize(app.Server.Clients.size());
 		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
 			::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
-			::std::lock_guard					lockRecv					(conn->Queue.MutexReceive);
+			::gpk::lock_guard					lockRecv					(conn->Queue.MutexReceive);
 			*(receivedPerClient[iClient])	= app.Server.Clients[iClient]->Queue.Received;
 			app.Server.Clients[iClient]->Queue.Received.clear();
 		}

@@ -16,9 +16,6 @@ namespace gpk
 	s3_t					timeCurrentInMs		();
 	s3_t					timeCurrentInUs		();
 #endif
-	// Local calendar bindings: yy, MM, dd, hh, mm, ss, ff (hundredths), all two digits.
-	err_t					timeStringFormat	(vcst_t format, s3_t timeInMs, asc_t & output);
-	err_t					timeStringFormat	(vcst_t format, view<cnst SStripLiteralType> tokens, s3_t timeInMs, asc_t & output);
 #pragma pack(push, 1)
 	stct STimestamps {	
 		u3_t				Created				= 0;
