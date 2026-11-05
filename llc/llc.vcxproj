@@ -155,6 +155,7 @@
     <ClInclude Include="gpk_rect3.h" />
     <ClInclude Include="gpk_rect_align.h" />
     <ClInclude Include="gpk_ref.h" />
+    <ClInclude Include="gpk_test_core.h" />
     <ClInclude Include="gpk_tri.h" />
     <ClInclude Include="gpk_tri2.h" />
     <ClInclude Include="gpk_tri3.h" />
@@ -296,6 +297,7 @@
     <ClCompile Include="gpk_spi.cpp" />
     <ClCompile Include="gpk_string_compose.cpp" />
     <ClCompile Include="gpk_string_time.cpp" />
+    <ClCompile Include="gpk_test_core.cpp" />
     <ClCompile Include="gpk_typeint.cpp" />
     <ClCompile Include="gpk_virtual_keyboard.cpp" />
     <ClCompile Include="gpk_voxel_geometry.cpp" />
