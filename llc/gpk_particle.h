@@ -160,9 +160,9 @@ namespace gpk
 
 	// simple particle force integrator
 	struct SParticles3 {
-		::gpk::an3f2_t					OldPosition			= {};
-		::gpk::an3f2_t					Position			= {};
-		::gpk::an3f2_t					Direction			= {};
+		::gpk::a3f2_t					OldPosition			= {};
+		::gpk::a3f2_t					Position			= {};
+		::gpk::a3f2_t					Direction			= {};
 		::gpk::af2_t					Speed				= {};
 
 		gpk::err_t 				IntegrateSpeed		(f3_t secondsLastFrame);

@@ -364,7 +364,7 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 	if(isFloat) { // The number begins with a dot and we already skipped it so calculate decimal places for the fractional part.
 		f3_t						valuef64					= currentElement.Value / f3_t(gpk::powui(10, numString.size()));
 		if(isNegative) {
-			valuef64 	*= -1;
+			valuef64	*= -1;
 		}
 		memcpy(&(currentElement.Value = 0), &valuef64, szof(u3_t));
 		json_info_printf("Decimal read: %f.", valuef64);

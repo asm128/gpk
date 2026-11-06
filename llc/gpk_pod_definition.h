@@ -8,34 +8,34 @@ namespace gpk
 	GDEFINE_ENUM_TYPE(C_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(C_TYPE, unsigned	, 0x00);
 	GDEFINE_ENUM_VALUE(C_TYPE, signed	, 0x10);
-	GDEFINE_ENUM_VALUE(C_TYPE, f2_t	, 0x20);
-	GDEFINE_ENUM_VALUE(C_TYPE, sc_t		, 0x41);
+	GDEFINE_ENUM_VALUE(C_TYPE, float	, 0x20);
+	GDEFINE_ENUM_VALUE(C_TYPE, char		, 0x41);
 	GDEFINE_ENUM_VALUE(C_TYPE, apod		, 0x80);
 	// 
-	GDEFINE_ENUM_VALUE(C_TYPE, u0_t	, C_TYPE_unsigned	| 1);
-	GDEFINE_ENUM_VALUE(C_TYPE, u1_t	, C_TYPE_unsigned	| 2);
-	GDEFINE_ENUM_VALUE(C_TYPE, u2_t	, C_TYPE_unsigned	| 4);
-	GDEFINE_ENUM_VALUE(C_TYPE, u3_t	, C_TYPE_unsigned	| 8);
-	GDEFINE_ENUM_VALUE(C_TYPE, s0_t	, C_TYPE_signed		| 1);
-	GDEFINE_ENUM_VALUE(C_TYPE, s1_t	, C_TYPE_signed		| 2);
-	GDEFINE_ENUM_VALUE(C_TYPE, s2_t	, C_TYPE_signed		| 4);
-	GDEFINE_ENUM_VALUE(C_TYPE, s3_t	, C_TYPE_signed		| 8);
-	GDEFINE_ENUM_VALUE(C_TYPE, f2_t	, C_TYPE_float		| 4);
-	GDEFINE_ENUM_VALUE(C_TYPE, f3_t	, C_TYPE_float		| 8);
+	GDEFINE_ENUM_VALUE(C_TYPE, u0_t, C_TYPE_unsigned	| 1);
+	GDEFINE_ENUM_VALUE(C_TYPE, u1_t, C_TYPE_unsigned	| 2);
+	GDEFINE_ENUM_VALUE(C_TYPE, u2_t, C_TYPE_unsigned	| 4);
+	GDEFINE_ENUM_VALUE(C_TYPE, u3_t, C_TYPE_unsigned	| 8);
+	GDEFINE_ENUM_VALUE(C_TYPE, s0_t, C_TYPE_signed		| 1);
+	GDEFINE_ENUM_VALUE(C_TYPE, s1_t, C_TYPE_signed		| 2);
+	GDEFINE_ENUM_VALUE(C_TYPE, s2_t, C_TYPE_signed		| 4);
+	GDEFINE_ENUM_VALUE(C_TYPE, s3_t, C_TYPE_signed		| 8);
+	GDEFINE_ENUM_VALUE(C_TYPE, f2_t, C_TYPE_float		| 4);
+	GDEFINE_ENUM_VALUE(C_TYPE, f3_t, C_TYPE_float		| 8);
 	GDEFINE_ENUM_VALUE(C_TYPE, uc_t, C_TYPE_char		| C_TYPE_unsigned);
 
-	sinx	C_TYPE	toCType	(u0_t		)	{ return ::gpk::C_TYPE_u8   ; } 
-	sinx	C_TYPE	toCType	(u1_t	)	{ return ::gpk::C_TYPE_u1_t  ; } 
-	sinx	C_TYPE	toCType	(u2_t	)	{ return ::gpk::C_TYPE_u32  ; } 
-	sinx	C_TYPE	toCType	(u3_t	)	{ return ::gpk::C_TYPE_u64  ; } 
-	sinx	C_TYPE	toCType	(s0_t		)	{ return ::gpk::C_TYPE_i8   ; } 
-	sinx	C_TYPE	toCType	(s1_t	)	{ return ::gpk::C_TYPE_i16  ; } 
-	sinx	C_TYPE	toCType	(s2_t	)	{ return ::gpk::C_TYPE_i32  ; } 
-	sinx	C_TYPE	toCType	(s3_t	)	{ return ::gpk::C_TYPE_i64  ; } 
-	sinx	C_TYPE	toCType	(f2_t	)	{ return ::gpk::C_TYPE_f2_t  ; } 
-	sinx	C_TYPE	toCType	(f3_t	)	{ return ::gpk::C_TYPE_f64  ; } 
-	sinx	C_TYPE	toCType	(sc_t	)	{ return ::gpk::C_TYPE_char ; } 
-	sinx	C_TYPE	toCType	(uc_t	)	{ return ::gpk::C_TYPE_uchar; } 
+	sinx	C_TYPE	toCType	(u0_t)	{ return ::gpk::C_TYPE_u0_t; } 
+	sinx	C_TYPE	toCType	(u1_t)	{ return ::gpk::C_TYPE_u1_t; } 
+	sinx	C_TYPE	toCType	(u2_t)	{ return ::gpk::C_TYPE_u2_t; } 
+	sinx	C_TYPE	toCType	(u3_t)	{ return ::gpk::C_TYPE_u3_t; } 
+	sinx	C_TYPE	toCType	(s0_t)	{ return ::gpk::C_TYPE_s0_t; } 
+	sinx	C_TYPE	toCType	(s1_t)	{ return ::gpk::C_TYPE_s1_t; } 
+	sinx	C_TYPE	toCType	(s2_t)	{ return ::gpk::C_TYPE_s2_t; } 
+	sinx	C_TYPE	toCType	(s3_t)	{ return ::gpk::C_TYPE_s3_t; } 
+	sinx	C_TYPE	toCType	(f2_t)	{ return ::gpk::C_TYPE_f2_t; } 
+	sinx	C_TYPE	toCType	(f3_t)	{ return ::gpk::C_TYPE_f3_t; } 
+	sinx	C_TYPE	toCType	(sc_t)	{ return ::gpk::C_TYPE_sc_t; } 
+	sinx	C_TYPE	toCType	(uc_t)	{ return ::gpk::C_TYPE_uc_t; } 
 
 	struct SPODDefinition { 
 		::gpk::au0_t					DefaultData;

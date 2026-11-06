@@ -7,9 +7,9 @@
 namespace gpk
 {
 	struct SGeometryBuffers {
-		::gpk::an3f2_t	Positions;
-		::gpk::an3f2_t	Normals;
-		::gpk::an2f2_t	TextureCoords;
+		::gpk::a3f2_t	Positions;
+		::gpk::a3f2_t	Normals;
+		::gpk::a2f2_t	TextureCoords;
 		::gpk::au2_t	Colors;
 		::gpk::au2_t	PositionIndices;
 	};

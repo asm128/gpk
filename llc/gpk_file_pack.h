@@ -7,11 +7,11 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	stct SPackHeader {
-		::gpk::u2_t				TotalFileCount					;
-		::gpk::u2_t				SizeCompressedTableFiles		;
-		::gpk::u2_t				SizeCompressedContentsPacked	;
-		::gpk::u2_t				SizeUncompressedTableFiles		;
-		::gpk::u2_t				SizeUncompressedContentsPacked	;
+		u2_t				TotalFileCount					;
+		u2_t				SizeCompressedTableFiles		;
+		u2_t				SizeCompressedContentsPacked	;
+		u2_t				SizeUncompressedTableFiles		;
+		u2_t				SizeUncompressedContentsPacked	;
 	};
 #pragma pack(pop)
 

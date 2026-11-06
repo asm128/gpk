@@ -92,18 +92,18 @@ namespace gpk
 	tplt<tpnm T, u2_t _maxCount> using acir			= array_circular<T, _maxCount>;
 	tplt<tpnm T, u2_t _maxCount> using acircular	= acir<T, _maxCount>;
 	
-	tplt<u2_t _maxCount>	using acirc		= acir<char     , _maxCount>; tplt<u2_t _maxCount>	using acirchar	= acir<char    , _maxCount>;
-	tplt<u2_t _maxCount>	using aciruc 	= acir<uc_t  , _maxCount>; tplt<u2_t _maxCount>	using aciruchar	= acir<uc_t , _maxCount>;
-	tplt<u2_t _maxCount>	using aciru8 	= acir<u0_t  , _maxCount>; 
-	tplt<u2_t _maxCount>	using aciru1_t	= acir<u1_t , _maxCount>; 
-	tplt<u2_t _maxCount>	using aciru32	= acir<u2_t , _maxCount>; 
-	tplt<u2_t _maxCount>	using aciru64	= acir<u3_t , _maxCount>; 
-	tplt<u2_t _maxCount>	using aciri8 	= acir<s0_t   , _maxCount>; 
-	tplt<u2_t _maxCount>	using aciri16	= acir<s1_t  , _maxCount>; 
-	tplt<u2_t _maxCount>	using aciri32	= acir<s2_t  , _maxCount>; 
-	tplt<u2_t _maxCount>	using aciri64	= acir<s3_t  , _maxCount>; 
-	tplt<u2_t _maxCount>	using acirf2_t	= acir<f2s_t, _maxCount>; 
-	tplt<u2_t _maxCount>	using acirf64	= acir<f3s_t, _maxCount>; 
+	tplt<u2_t _maxCount>	using acirsc_t	= acir<sc_t, _maxCount>;
+	tplt<u2_t _maxCount>	using aciruc_t	= acir<uc_t, _maxCount>;
+	tplt<u2_t _maxCount>	using aciru0_t 	= acir<u0_t, _maxCount>;
+	tplt<u2_t _maxCount>	using aciru1_t	= acir<u1_t, _maxCount>;
+	tplt<u2_t _maxCount>	using aciru2_t	= acir<u2_t, _maxCount>;
+	tplt<u2_t _maxCount>	using aciru3_t	= acir<u3_t, _maxCount>;
+	tplt<u2_t _maxCount>	using acirs0_t	= acir<s0_t, _maxCount>;
+	tplt<u2_t _maxCount>	using acirs1_t	= acir<s1_t, _maxCount>;
+	tplt<u2_t _maxCount>	using acirs2_t	= acir<s2_t, _maxCount>;
+	tplt<u2_t _maxCount>	using acirs3_t	= acir<s3_t, _maxCount>;
+	tplt<u2_t _maxCount>	using acirf2_t	= acir<f2_t, _maxCount>;
+	tplt<u2_t _maxCount>	using acirf3_t	= acir<f3_t, _maxCount>;
 } // namespace 
 
 #endif // GPK_ARRAY_CIRCULAR_H

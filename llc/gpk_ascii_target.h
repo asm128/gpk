@@ -38,7 +38,7 @@ namespace gpk
 		return 0;
 	}
 
-	stin	gpk::err_t drawCircle			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::circlei32 & circle)			{
+	stin	gpk::err_t drawCircle			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::circle<s2_t> & circle)			{
 		for(s2_t y = ::gpk::max((s2_t)0, (s2_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((s2_t)(circle.Center.y + circle.Radius), (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(s2_t x = ::gpk::max((s2_t)0, (s2_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((s2_t)(circle.Center.x + circle.Radius), (s2_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			::gpk::n2s2_c				cellCurrent			= {x, y};

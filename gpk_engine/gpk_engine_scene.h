@@ -57,8 +57,8 @@ namespace gpk
 
 	struct SVSCache {
 		atrif2_t			TriangleWeights			= {};
-		an2s1_t				SolidPixelCoords		= {};
-		an3f2_t				WireframePixelCoords	= {};
+		a2s1_t				SolidPixelCoords		= {};
+		a3f2_t				WireframePixelCoords	= {};
 	};
 
 	struct SVSOutput {

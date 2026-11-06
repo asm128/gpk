@@ -9,25 +9,25 @@
 
 namespace gpk 
 {
-	tydf	aobj<an3sc_t>	aan3sc_t; tdcs aan3sc_t aan3sc_c;
-	tydf	aobj<an3uc_t>	aan3uc_t; tdcs aan3uc_t aan3uc_c;
-	tydf	aobj<an3f2_t>	aan3f2_t; tdcs aan3f2_t aan3f2_c;
-	tydf	aobj<an3f3_t>	aan3f3_t; tdcs aan3f3_t aan3f3_c;
-	tydf	aobj<an3u0_t>	aan3u0_t; tdcs aan3u0_t aan3u0_c;
-	tydf	aobj<an3u1_t>	aan3u1_t; tdcs aan3u1_t aan3u1_c;
-	tydf	aobj<an3u2_t>	aan3u2_t; tdcs aan3u2_t aan3u2_c;
-	tydf	aobj<an3u3_t>	aan3u3_t; tdcs aan3u3_t aan3u3_c;
-	tydf	aobj<an3s0_t>	aan3s0_t; tdcs aan3s0_t aan3s0_c;
-	tydf	aobj<an3s1_t>	aan3s1_t; tdcs aan3s1_t aan3s1_c;
-	tydf	aobj<an3s2_t>	aan3s2_t; tdcs aan3s2_t aan3s2_c;
-	tydf	aobj<an3s3_t>	aan3s3_t; tdcs aan3s3_t aan3s3_c;
+	tydf	aobj<a3sc_t>	aa3sc_t; tdcs aa3sc_t aa3sc_c;
+	tydf	aobj<a3uc_t>	aa3uc_t; tdcs aa3uc_t aa3uc_c;
+	tydf	aobj<a3f2_t>	aa3f2_t; tdcs aa3f2_t aa3f2_c;
+	tydf	aobj<a3f3_t>	aa3f3_t; tdcs aa3f3_t aa3f3_c;
+	tydf	aobj<a3u0_t>	aa3u0_t; tdcs aa3u0_t aa3u0_c;
+	tydf	aobj<a3u1_t>	aa3u1_t; tdcs aa3u1_t aa3u1_c;
+	tydf	aobj<a3u2_t>	aa3u2_t; tdcs aa3u2_t aa3u2_c;
+	tydf	aobj<a3u3_t>	aa3u3_t; tdcs aa3u3_t aa3u3_c;
+	tydf	aobj<a3s0_t>	aa3s0_t; tdcs aa3s0_t aa3s0_c;
+	tydf	aobj<a3s1_t>	aa3s1_t; tdcs aa3s1_t aa3s1_c;
+	tydf	aobj<a3s2_t>	aa3s2_t; tdcs aa3s2_t aa3s2_c;
+	tydf	aobj<a3s3_t>	aa3s3_t; tdcs aa3s3_t aa3s3_c;
 
 	struct SShots	{
-		aan3f2_t			DistanceToTargets	= {};
+		aa3f2_t			DistanceToTargets	= {};
 		af2_t				Lifetime			= {};
 		af2_t				Brightness			= {};
-		an3f2_t				PositionDraw		= {};
-		an3f2_t				PositionPrev		= {};
+		a3f2_t				PositionDraw		= {};
+		a3f2_t				PositionPrev		= {};
 		SParticles3			Particles			= {};
 
 		int					Remove				(u2_t iShot)			{
@@ -248,7 +248,7 @@ namespace gpk
 	struct SWeaponManager {
 		apod<SWeapon>	Weapons			= {};	// 
 		aobj<SShots >	Shots			= {};	// One per weapon
-		apobj<an3f2_t>	WeaponTargets	= {};	// One per weapon
+		apobj<a3f2_t>	WeaponTargets	= {};	// One per weapon
 
 		s2_t						Clear					()		{ clear(Weapons, Shots, WeaponTargets); return 0; }
 		gpk::err_t 			Save					(au0_t & output)	const	{ 

@@ -190,7 +190,7 @@ sttc	gpk::err_t	textureNumber			(gpk::g8bgra view, u2_t number, const gpk::SRast
 		{ {s1_t(view.metrics().x / 2 - (font.CharSize.x * strlen(strNumber)) / 2), s1_t(view.metrics().y / 2 - font.CharSize.y / 2)}
 		, font.CharSize.s1()
 		};
-	gpk::an2u1_t		coords;
+	gpk::a2u1_t		coords;
 	textLineRaster(view.metrics(), font.CharSize, targetRect, font.Texture, strNumber, coords);
 	for(u2_t iCoord = 0; iCoord < coords.size(); ++iCoord) {
 		const n2u1_t			coord						= coords[iCoord];

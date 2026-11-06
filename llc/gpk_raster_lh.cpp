@@ -199,7 +199,7 @@ gpk::err_t 		gpk::drawLine
 
 //https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 static	f3_t		orient2d		(const ::gpk::line2s1_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
-//static	f3_t		orient2d		(const ::gpk::line3i16 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
+//static	f3_t		orient2d		(const ::gpk::line3s1_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
 //static	f3_t		orient2d		(const ::gpk::line3f2_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
 static	f3_t		orient2d		(const ::gpk::line2f2_t & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
 static	f3_t		orient2d		(const ::gpk::n3f2_t & start, const ::gpk::n2f2_t & edge, const ::gpk::n2s1_t & point)	{ return edge.x * (point.y - (f3_t)start.y) - edge.y * (point.x - (f3_t)start.x); }

@@ -119,7 +119,7 @@ static	gpk::err_t drawBuffers
 	, const ::std::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
 	::gpk::atrif2_t				& triangleWeights			= cacheVS.TriangleWeights		;
-	::gpk::an2s1_t				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
+	::gpk::a2s1_t				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
 	const ::gpk::n2u1_t			offscreenMetrics			= backBufferColors.metrics().u1();
 	const ::gpk::n3f2_t			lightDirectionNormalized	= ::gpk::n3f2_t{constants.LightDirection}.Normalize();
 	::gpk::SPSIn				inPS						= {nodeConstants};
