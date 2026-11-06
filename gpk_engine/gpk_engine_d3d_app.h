@@ -3,6 +3,7 @@
 #include "DeviceResources.h"
 
 #include "gpk_engine_d3d.h"
+#include "gpk_window.h"
 
 #include "gpk_image.h"
 #include "gpk_file.h"
@@ -235,6 +236,7 @@ namespace gpk
 			if_fail_fe(Text .Initialize(DeviceResources));
 			return 0;
 		}
+		gpk::err_t 		Initialize				(::gpk::SWindow & window, const ::gpk::pobj<::gpk::SEngineGraphics> & engineGraphics)	{ return Initialize(window.PlatformDetail.WindowHandle, engineGraphics); }
 
 		// Notifies renderers that device resources need to be released.
 		void					ReleaseDeviceResources	()	{

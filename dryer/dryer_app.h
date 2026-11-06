@@ -4,11 +4,7 @@
 #include "filament_catalog.h"
 #include "s3d_serial.h"
 
-#if defined(GPK_WINDOWS)
-#	include "gpk_framework.h"
-#else
-#	include "s3d_xcb_framework.h"
-#endif
+#include "gpk_framework.h"
 
 #include <thread>
 
@@ -136,11 +132,7 @@ namespace dry
 	};
 
 	struct SApplication {
-#ifndef GPK_WINDOWS
-		::s3d::SXCBFramework				Framework;
-#else
 		::gpk::SFramework					Framework;
-#endif
 		::dry::SDryer						Dryer					= {};
 		::dry::SSpoolCatalog				Catalog					= {};
 		::gpk::array_static<::gpk::sc_t, 64>	TimeString				= {};

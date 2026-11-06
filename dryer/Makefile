@@ -1,5 +1,5 @@
 IncDir			:= ../../smart/smart ../../gpk/llc
-Libs			:= smart.a llc.a zlibvc.a 
+Libs			:= smart.a llc.a
 GccLibs			:= xcb xcb-image pthread
 Platform		:= Linux.x64
 ProjectName		:= dryer

@@ -6,11 +6,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "Dryer v0.1");
 usns gpk;
 
 ::gpk::err_t					cleanup						(::dry::SApplication & app) {
-#if defined(GPK_WINDOWS)
 	::gpk::mainWindowDestroy(app.Framework.RootWindow);
-#else
-	app.Framework.MainDisplay.Closed	= true;
-#endif
 	if(app.SerialThread.joinable()) {
 		gpk_sync_decrement(app.ThreadClients);
 		{
@@ -40,12 +36,8 @@ usns gpk;
 
 ::gpk::err_t					setup						(::dry::SApplication & app) {
 	auto								& framework					= app.Framework;
-#if defined(GPK_WINDOWS)
 	framework.RootWindow.Size		= {640, 480};//{720, 576};
 	{ if_fail_fef(::gpk::mainWindowCreate(framework.RootWindow, framework.RuntimeValues.PlatformDetail, framework.RootWindow.Input), "%s", "Failed to initialize framework."); }
-#else
-	{ if_fail_fef(::s3d::mainWindowCreate(framework), "%s", "Failed to initialize framework."); }
-#endif
 	framework.RootWindow.BackBuffer->resize(framework.RootWindow.Size.u2(), 0xFFFFFFFFU, 0xFFFFFFFFU);
 #if !defined(GPK_WINDOWS)
 	gpk_sync_increment(app.ThreadClients);
@@ -63,11 +55,7 @@ usns gpk;
 
 ::gpk::err_t					update						(::dry::SApplication & app, bool requestedExit) {
 	if_true_vif(::gpk::APPLICATION_STATE_EXIT, requestedExit, "%s", "Exit requested by system.");
-#if defined(GPK_WINDOWS)
 	if_true_vif(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
-#else
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::s3d::frameworkUpdate(app.Framework), "%s", "Exit requested by framework update.");
-#endif
 #if defined(GPK_LINUX)
 	if((time(0) - app.TimeLastSerial) > app.SERIAL_TIMEOUT) {
 		pthread_cancel(app.SerialThread.native_handle());

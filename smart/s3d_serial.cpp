@@ -82,7 +82,7 @@ usns gpk;
 		int							rtcd					= tcdrain(serial.Handle);
 		printf("Waiting until UART buffer clears: %i\n", rtcd);
 		int							readBytes;
-		);  // read a char at a time
+		// read a char at a time
 		if_fail_fe(readBytes = read(serial.Handle, &byte, 1));
 #else
 		DWORD						readBytes				= (DWORD)0;
