@@ -2,7 +2,7 @@
 #include "gpk_module.h"
 #include "gpk_ptr_obj.h"
 #include "gpk_process.h"
-#include "gpk_runtime_module.h"
+#include "gpk_framework_module.h"
 #include "gpk_timer.h"
 
 #if defined GPK_AVOID_LOCAL_APPLICATION_MODEL_EXECUTABLE_RUNTIME

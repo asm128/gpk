@@ -87,7 +87,7 @@
 #include "gpk_color.h"
 #include "gpk_n2.h"
 #include "gpk_coord.h"
-#include "gpk_runtime_module.h"
+#include "gpk_framework_module.h"
 #include "gpk_safe.h"
 #include "gpk_size.h"
 #include "gpk_stdsocket.h"

@@ -1,7 +1,7 @@
-#include "gpk_runtime_module.h"
+#include "gpk_framework_module.h"
 #include "gpk_string_compose.h"
 
-gpk::err_t gpk::unloadRuntimeModule(SRuntimeModule & loadedModule) {
+gpk::err_t gpk::frameworkModuleUnload(SRuntimeModule & loadedModule) {
 	if_true_ve(OS_BUSY, loadedModule.Application);
 	if(0 == loadedModule.Handle)
 		rtrn 0;
@@ -10,7 +10,7 @@ gpk::err_t gpk::unloadRuntimeModule(SRuntimeModule & loadedModule) {
 	loadedModule = {};
 	rtrn 0;
 }
-gpk::err_t gpk::loadRuntimeModule(SRuntimeModule & loadedModule, cnst vcst_t & moduleName) {
+gpk::err_t gpk::frameworkModuleLoad(SRuntimeModule & loadedModule, cnst vcst_t & moduleName) {
 	if_true_ve(OS_BUSY, loadedModule.Handle);
 	string strModuleName;
 	if_fail_fe(append_strings(strModuleName, moduleName));

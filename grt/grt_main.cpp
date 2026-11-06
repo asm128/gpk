@@ -1,4 +1,4 @@
-#include "gpk_runtime_module.h"
+#include "gpk_framework_module.h"
 #include "gpk_type_registry.h"
 #include "gpk_sync.h"
 #include "gpk_timer.h"
@@ -77,16 +77,17 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 	SRuntimeState					runtimeState					= {};
 	{
-		::gpk::vcst_t						fileName						= "gme";
+		::gpk::vcst_t					fileName						= "gme";
 		if(globalRuntimeValues.EntryPointArgs.Positionals.size())
 			fileName					= {globalRuntimeValues.EntryPointArgs.Positionals[0], (u2_t )strlen(globalRuntimeValues.EntryPointArgs.Positionals[0])};
 		char							mainModuleName	[512]			= {};
-		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
+		::gpk::vcst_t					extension						= (GPK_MODULE_EXTENSION);
+		::gpk::sprintf_s(mainModuleName,  "%.*s.%.*s", GPK_VIEW_ARGS(fileName), GPK_VIEW_ARGS(extension));
 		::gpk::SRuntimeModule			mainModule						= {};
-		if_fail_fef(gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
+		if_fail_fef(::gpk::frameworkModuleLoad(mainModule, mainModuleName), "Failed to create main module. %.*s.", mainModuleName);
 		info_printf("Created main module: '%s'.", mainModuleName);
 		void							* app;
-		if_fail_fef(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
+		if_fail_fef(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %.*s.", mainModuleName);
 		mainModule.Application		= app;
 		info_printf("%s", "Initializing application instance.");
 		if(::gpk::failed(mainModule.Setup(app))) {
@@ -97,7 +98,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 		runtimeState.MainModule		= &mainModule;
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
-		if_true_e(::gpk::failed(mainModule.Cleanup(app)));
+		if_fail_e(mainModule.Cleanup(app));
 		info_printf("%s", "Application instance destroyed.");
 		if_fail_fe(mainModule.Delete(&app));
 	}
