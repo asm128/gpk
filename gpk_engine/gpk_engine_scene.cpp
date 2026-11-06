@@ -18,9 +18,9 @@ tplt <tpnm _tIndex>
 static	gpk::err_t transformTriangles					
 	( ::gpk::SVSOutput		& output
 	, ::gpk::view<cnst _tIndex>	indices			
-	, ::gpk::vcn3f2_t			positions	
-	, ::gpk::vcn3f2_t			normals		
-	, ::gpk::vcn2f2_t			uv			
+	, ::gpk::vc3f2_t			positions	
+	, ::gpk::vc3f2_t			normals		
+	, ::gpk::vc2f2_t			uv			
 	, const ::gpk::m4f2_t	& projection		
 	, const ::gpk::m4f2_t	& worldTransform	
 	, const ::gpk::n3f2_t	& cameraFront
@@ -81,9 +81,9 @@ static	gpk::err_t transformTriangles
 		gpk::SRenderNodeConstants	transforms				= scene.RenderNodes.Transforms[iRenderNode];
 		const gpk::m4f2_t			& worldTransform		= transforms.Model;
 
-		gpk::vcn3f2_c			positions				= (mesh.GeometryBuffers.size() > 1) ? gpk::vcn3f2_t{(gpk::n3f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / (u0_t)sizeof(gpk::n3f2_t)}	: gpk::vcn3f2_t{};
-		gpk::vcn3f2_c			normals					= (mesh.GeometryBuffers.size() > 2) ? gpk::vcn3f2_t{(gpk::n3f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / (u0_t)sizeof(gpk::n3f2_t)}	: gpk::vcn3f2_t{};
-		gpk::vcn2f2_c			uv						= (mesh.GeometryBuffers.size() > 3) ? gpk::vcn2f2_t{(gpk::n2f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / (u0_t)sizeof(gpk::n2f2_t)}	: gpk::vcn2f2_t{};
+		gpk::vc3f2_c			positions				= (mesh.GeometryBuffers.size() > 1) ? gpk::vc3f2_t{(gpk::n3f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / (u0_t)sizeof(gpk::n3f2_t)}	: gpk::vc3f2_t{};
+		gpk::vc3f2_c			normals					= (mesh.GeometryBuffers.size() > 2) ? gpk::vc3f2_t{(gpk::n3f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / (u0_t)sizeof(gpk::n3f2_t)}	: gpk::vc3f2_t{};
+		gpk::vc2f2_c			uv						= (mesh.GeometryBuffers.size() > 3) ? gpk::vc2f2_t{(gpk::n2f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / (u0_t)sizeof(gpk::n2f2_t)}	: gpk::vc2f2_t{};
 
 		transforms.Model					= scene.RenderNodes.BaseTransforms[iRenderNode].Model * transforms.Model;
 		::gpk::pobj<::gpk::SRenderBuffer>	indexBuffer		= scene.Graphics->Buffers[mesh.GeometryBuffers[0]];

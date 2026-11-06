@@ -18,17 +18,17 @@ namespace gpk
 
 gpk::err_t	gpk::keyValConstStringSerialize	(view<cnst kv<vcst_t>> keyVals, view<cnst vcst_t> keysToSave, au0_t & output)	{
 	::gpk::apod<kv<vcst_t>>	keyValsToSave			= {};
-	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
-		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
+	for(u2_t iKey = 0; iKey < keyVals.size(); ++iKey) {
+		for(u2_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
 			const kv<vcst_t>	& kvToCheck				= keyVals[iKey];
 			::gpk::vcst_c		& keyToSave				= keysToSave[iRef];
 			if(kvToCheck.Key == keyToSave)
 				keyValsToSave.push_back(kvToCheck);
 		}
 	}
-	output.append((const uint8_t*)&keyValsToSave.size(), szof(uint32_t));
-	uint32_t					iOffset								= 0;
-	for(uint32_t iKey = 0; iKey < keyValsToSave.size(); ++iKey) {
+	output.append((const u0_t*)&keyValsToSave.size(), szof(u2_t));
+	u2_t					iOffset								= 0;
+	for(u2_t iKey = 0; iKey < keyValsToSave.size(); ++iKey) {
 		iOffset					+= saveView(output, keyValsToSave[iKey].Key);
 		iOffset					+= saveView(output, keyValsToSave[iKey].Val);
 	}
@@ -36,11 +36,11 @@ gpk::err_t	gpk::keyValConstStringSerialize	(view<cnst kv<vcst_t>> keyVals, view<
 }
 
 gpk::err_t			gpk::keyValConstStringDeserialize	(vcu0_c input, ::gpk::aobj<kv<vcst_t>> & output)	{
-	uint32_t				offset								= 0;
+	u2_t				offset								= 0;
 	u2_c					keysToRead							= *(u2_c*)input.begin();
-	offset				+= (uint32_t)szof(uint32_t);
+	offset				+= (u2_t)szof(u2_t);
 	output.resize(keysToRead);
-	for(uint32_t iKey = 0; iKey < keysToRead; ++iKey) {
+	for(u2_t iKey = 0; iKey < keysToRead; ++iKey) {
 		offset					+= ::gpk::viewRead(output[iKey].Key, {&input[offset], input.size() - offset});
 		offset					+= ::gpk::viewRead(output[iKey].Val, {&input[offset], input.size() - offset});
 	}

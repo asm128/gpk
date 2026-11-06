@@ -33,7 +33,7 @@ namespace gpk
 	struct SServer {
 		SUDPServer			UDP;
 
-		ao<TUDPQueue>		QueueReceived;
+		aobj<TUDPQueue>		QueueReceived;
 		apobj<TQueueSend>	QueueToSend;	// A queue for each client
 
 		vcst_t				Adapter				= "0";	// default

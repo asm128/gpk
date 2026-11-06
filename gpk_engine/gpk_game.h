@@ -1,5 +1,6 @@
 #include "gpk_game_stage.h"
 #include "gpk_apod_serialize.h"
+#include "gpk_enum.h"
 
 #ifndef GPK_GAME_H
 #define GPK_GAME_H

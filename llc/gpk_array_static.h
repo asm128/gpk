@@ -6,6 +6,7 @@
 
 namespace gpk
 {
+#pragma pack(push, 1)
 	tpl_t_nu2 stct array_static	{
 		stxp		u2_c				N 	= 	_nu2;
 		tdfTTCnst(_t);
@@ -49,6 +50,8 @@ namespace gpk
 			rtrn out.size();
 		}
 	};
+#pragma pack(pop)
+
 	tplTN2usng	asttc		= ::gpk::array_static<T, N>;
 	tplTN2usng	astatic		= ::gpk::array_static<T, N>;
 
@@ -103,9 +106,9 @@ namespace gpk
 	}
 	stxp astsc_t<5 >	str			(s0_t arg) {
 		rtrn	(arg >=    0) ?	str(u0_t(arg))
-			:	(arg <= -100) ?	astsc_t<5>{'-', digit<2>((int16_t)-arg), digit<1>((int16_t)-arg), digit<0>((int16_t)-arg)}
-			:	(arg <=  -10) ?	astsc_t<5>{'-', digit<1>((int16_t)-arg), digit<0>((int16_t)-arg)}
-			:					astsc_t<5>{'-', digit<0>((int16_t)-arg)}
+			:	(arg <= -100) ?	astsc_t<5>{'-', digit<2>((s1_t)-arg), digit<1>((s1_t)-arg), digit<0>((s1_t)-arg)}
+			:	(arg <=  -10) ?	astsc_t<5>{'-', digit<1>((s1_t)-arg), digit<0>((s1_t)-arg)}
+			:					astsc_t<5>{'-', digit<0>((s1_t)-arg)}
 			;
 	}
 } // namespace

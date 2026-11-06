@@ -103,8 +103,9 @@ namespace gpk
 		::gpk::view<const _tPOD>	viewToLoad;
 		if_fail_fef(gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
-			if(index >= output.size()) 
+			if(index >= output.size()) {
 				if_fail_fef(output.resize(index + 1), "index: %i", index);
+			}
 			else {
 				::gpk::papod<_tPOD>			& block				= output[index];
 				if(block)
@@ -180,8 +181,9 @@ namespace gpk
 			if_fail_fe(gpk::saveView(output, Orbiters));
 			info_printf("Saved %s, %i", "Orbiters", Orbiters.size());
 			for(u2_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
-				if(ShipOrbiterActionQueue[iShipOrbiter] && ShipOrbiterActionQueue[iShipOrbiter]->size())
+				if(ShipOrbiterActionQueue[iShipOrbiter] && ShipOrbiterActionQueue[iShipOrbiter]->size()) {
 					if_fail_fef(gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
+				}
 				else
 					if_fail_fef(gpk::saveView(output, ::gpk::vc3f2_t{}), "iShipOrbiter: %i", iShipOrbiter);
 			}

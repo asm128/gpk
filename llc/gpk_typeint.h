@@ -133,8 +133,8 @@ namespace gpk
 
 	tpl_tstct	rm_cnst				{ usng T = _t; };
 	tpl_tstct	rm_cnst<cnst _t>	{ usng T = _t; };
-	tpl_tstct	is_cnst				{ stxp bool Value = false; };
-	tpl_tstct	is_cnst<cnst _t>	{ stxp bool Value = true; };
+	tpl_tstct	is_cnst				{ stxp b8_t Value = false; };
+	tpl_tstct	is_cnst<cnst _t>	{ stxp b8_t Value = true; };
 	tpl_tstct	rm_vltl				{ usng T = _t; };
 	tpl_tstct	rm_vltl<vltl _t>	{ usng T = _t; };
 	tpl_tstct	rm_csvl				{ usng T = _t; };
@@ -160,21 +160,6 @@ namespace gpk
 
 	tpl_tstct srcdst { tdfTTCnst(_t); T src, dst; }; 
 	tpl_tstct dstsrc { tdfTTCnst(_t); T dst, src; };
-#define GPK_USING_TYPEINT()				\
-	using	::gpk::b8_t, ::gpk::b8_c	\
-		,	::gpk::uc_t, ::gpk::uc_c	\
-		,	::gpk::sc_t, ::gpk::sc_c	\
-		,	::gpk::u0_t, ::gpk::u0_c	\
-		,	::gpk::u1_t, ::gpk::u1_c	\
-		,	::gpk::u2_t, ::gpk::u2_c	\
-		,	::gpk::u3_t, ::gpk::u3_c	\
-		,	::gpk::s0_t, ::gpk::s0_c	\
-		,	::gpk::s1_t, ::gpk::s1_c	\
-		,	::gpk::s2_t, ::gpk::s2_c	\
-		,	::gpk::s3_t, ::gpk::s3_c	\
-		,	::gpk::f2_t, ::gpk::f2_c	\
-		,	::gpk::f3_t, ::gpk::f3_c	\
-		,	::gpk::uP_t, ::gpk::uP_c
 
 } // namespace
 
@@ -318,18 +303,32 @@ namespace gpk
 		, OS_FAMILY_CUSTOM		  = 0x40U
 		};
 #define GDEFINE_ENUM_NAMEP(TEnum)	\
-	nsix	sc_c*		get_enum_namep	(cnst TEnum&)	nxpt	{ rtrn #TEnum; } \
-	ndsc	sc_c*		get_value_namep (TEnum value)	nxpt;
+	nsix	::gpk::sc_c*		get_enum_namep	(cnst TEnum&)	nxpt	{ rtrn #TEnum; } \
+	ndsc	::gpk::sc_c*		get_value_namep (TEnum value)	nxpt;
+	//
 	GDEFINE_ENUM_NAMEP(DEVICE_TYPE  );
 	GDEFINE_ENUM_NAMEP(OPCODE_SET   );
 	GDEFINE_ENUM_NAMEP(OPCODE_EXT   );
 	GDEFINE_ENUM_NAMEP(OS_FAMILY	);
+} // namespace
+
 #define gpk_enum_value_log(printf_fn, enumVal)	printf_fn("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'", get_enum_namep GPKREP3(enumVal) ? char(enumVal) : '?', get_value_namep(enumVal))
 #define GDEFINE_ENUM_CASE_DEFAULT(TEnum, TValue)    default                 : rtrn #TValue
 #define GDEFINE_ENUM_CASE(TEnum, TValue)            case TEnum##_##TValue   : rtrn #TValue
-} // namespace
 
-
-
-
+#define GPK_USING_TYPEINT()				\
+	usng	::gpk::b8_t, ::gpk::b8_c	\
+		,	::gpk::uc_t, ::gpk::uc_c	\
+		,	::gpk::sc_t, ::gpk::sc_c	\
+		,	::gpk::u0_t, ::gpk::u0_c	\
+		,	::gpk::u1_t, ::gpk::u1_c	\
+		,	::gpk::u2_t, ::gpk::u2_c	\
+		,	::gpk::u3_t, ::gpk::u3_c	\
+		,	::gpk::s0_t, ::gpk::s0_c	\
+		,	::gpk::s1_t, ::gpk::s1_c	\
+		,	::gpk::s2_t, ::gpk::s2_c	\
+		,	::gpk::s3_t, ::gpk::s3_c	\
+		,	::gpk::f2_t, ::gpk::f2_c	\
+		,	::gpk::f3_t, ::gpk::f3_c	\
+		,	::gpk::uP_t, ::gpk::uP_c
 #endif // GPK_TYPEINT_H_23627

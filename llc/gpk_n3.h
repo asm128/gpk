@@ -200,7 +200,7 @@ namespace gpk
 
 
 #define GPK_USING_N3()					\
-	using ::gpk::n3uc_t, ::gpk::n3uc_c	\
+	usng ::gpk::n3uc_t, ::gpk::n3uc_c	\
 		, ::gpk::n3sc_t, ::gpk::n3sc_c	\
 		, ::gpk::n3u0_t, ::gpk::n3u0_c	\
 		, ::gpk::n3u1_t, ::gpk::n3u1_c	\

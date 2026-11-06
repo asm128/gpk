@@ -77,7 +77,7 @@ static ::gpk::err_t		fontConvertMain			(::gpk::SRuntimeValues &) {
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ".png")
 			continue;
-		if_fail_ce(::gpk::pngFileLoad(pngCache, filenameInput, imageCache));
+		if_fail_ce(::gpk::pngLoadFile(pngCache, filenameInput, imageCache));
 		filenameOutput			= filenameInput;
 		filenameOutput.append_string("fix.png");
 		::gpk::aobj<::gpk::vcst_t>		splitFileName;

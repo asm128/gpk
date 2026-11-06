@@ -16,7 +16,7 @@ gpk::err_t 		gpk::geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const :
 	const u2_t				offsetNormals				= geometry.Normals			.size(); geometry.Normals			.resize(offsetNormals			+ 24);
 	const u2_t				offsetTextureCoords			= geometry.TextureCoords	.size(); geometry.TextureCoords		.resize(offsetTextureCoords		+ 24);
 	const u2_t				offsetPositionIndices		= geometry.PositionIndices	.size(); geometry.PositionIndices	.resize(offsetPositionIndices	+ 36);
-	const ::gpk::vcn3f2_t	vertices					= {&::gpk::VOXEL_FACE_VERTICES[0].A, 24};
+	const ::gpk::vc3f2_t	vertices					= {&::gpk::VOXEL_FACE_VERTICES[0].A, 24};
 	for(u2_t iVertex = offsetPositions; iVertex < geometry.Positions.size(); ++iVertex)
 		geometry.Positions[iVertex]	= params.Orientation.RotateVector(vertices[iVertex].Scaled(params.HalfSizes * 2.0f) - params.Origin);
 

@@ -308,7 +308,7 @@ namespace gpk
 	}; // array_pod
 
 	tplTusng	apod		= array_pod<T>;
-	tplTusng	ap			= apod	<T>;
+	//tplTusng	ap			= apod	<T>;
 
 	tydf		apod<b8_t>	ab8_t;	tdcs	ab8_t	ab8_c;
 	tydf		apod<uc_t>	auc_t;	tdcs	auc_t	auc_c;

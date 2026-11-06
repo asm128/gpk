@@ -23,6 +23,13 @@ namespace gpk
 	stin	err_t	fileToMemory		(vcst_t fileName, as0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
 	stin	err_t	fileToMemory		(vcst_t fileName, string & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
 
+	stin	err_t	with				(vcst_t filename, gpk::FError<vcu0_t /*fileInMemory*/> funcWithFile) {
+		au0_t				fileInMemory		= {};
+		if_fail_fe(gpk::fileToMemory(filename, fileInMemory));
+		if_fail_fef(funcWithFile(fileInMemory), "%.*s", GPK_VIEW_ARGS(filename));
+		return 0;
+	}
+
 	GDEFINE_ENUM_TYPE(OPEN_MODE, u2_t);
 	GDEFINE_ENUM_VALUE(OPEN_MODE, CLOSE		, 0);
 	GDEFINE_ENUM_VALUE(OPEN_MODE, READ		, 'r' + (u1_t('b') << 8));							//  1

@@ -22,6 +22,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gme", "gme\gme.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_file_explorer", "gpk_file_explorer\gpk_file_explorer.vcxproj", "{5842B8C0-45CD-4089-B0E3-7C25D2F97D51}"
 	ProjectSection(ProjectDependencies) = postProject
+		{39953D8D-A830-46BD-917E-1A96C8BDADC6} = {39953D8D-A830-46BD-917E-1A96C8BDADC6}
 		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
 	EndProjectSection
 EndProject

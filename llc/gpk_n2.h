@@ -175,7 +175,7 @@ namespace gpk
 #pragma pack(pop)
 
 #define GPK_USING_N2()					\
-	using ::gpk::n2uc_t, ::gpk::n2uc_c	\
+	usng ::gpk::n2uc_t, ::gpk::n2uc_c	\
 		, ::gpk::n2sc_t, ::gpk::n2sc_c	\
 		, ::gpk::n2u0_t, ::gpk::n2u0_c	\
 		, ::gpk::n2u1_t, ::gpk::n2u1_c	\

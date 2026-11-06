@@ -216,7 +216,7 @@ gpk::err_t			gpk::SEngine::CreateImageFromFile(vcst_t fileFolder, vcst_t fileNam
 
 	index					= Scene->Graphics->Surfaces.Create(label(filePath));
 	pobj<SSurface>	& surface					= Scene->Graphics->Surfaces[index];
-	if_fail_fe(gpk::pngFileLoad(PNGCache, filePath, surface->Data));
+	if_fail_fe(gpk::pngLoadFile(PNGCache, filePath, surface->Data));
 	surface->Desc.Dimensions	= PNGCache.Header.Size.u1();
 	surface->Desc.BitDepth		= PNGCache.Header.BitDepth;
 	surface->Desc.ColorType		= PNGCache.Header.ColorType;

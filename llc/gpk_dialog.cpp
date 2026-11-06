@@ -112,7 +112,7 @@ gpk::err_t			gpk::checkBoxUpdate			(::gpk::SDialogCheckBox	& checkbox)								{
 	if(controlTable.IsAction(checkbox.IdGUIControl)) {
 		if(dialog.ImageCross.Texels.size() < 4) {
 #if !(defined(GPK_ESP32) || defined(GPK_ARDUINO))
-			if_fail_e(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross));
+			if_fail_e(::gpk::pngLoadFile("../gpk_data/images/cross.png", imageCross));
 #endif
 			dialog.ImageCross.resize(imageCross.metrics());
 			for(u2_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {

@@ -364,19 +364,19 @@ namespace gpk
 
 	stxp	vcst_t		TRIM_CHARACTERS		= " \t\b\n\r";
 
-	err_t			rtrim				(vcst_t & trimmed, cnst vcst_t & original, cnst vcst_t & characters = TRIM_CHARACTERS);
-	err_t			ltrim				(vcst_t & trimmed, cnst vcst_t & original, cnst vcst_t & characters = TRIM_CHARACTERS);
-	err_t			trim				(vcst_t & trimmed, cnst vcst_t & original, cnst vcst_t & characters = TRIM_CHARACTERS);
-	stin	err_t	rtrim				(vcst_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
-	stin	err_t	ltrim				(vcst_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
-	stin	err_t	trim				(vcst_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
+	err_t			rtrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
+	err_t			ltrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
+	err_t			trim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
+	stin	err_t	rtrim				(vcsc_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
+	stin	err_t	ltrim				(vcsc_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
+	stin	err_t	trim				(vcsc_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
 
-	stin	err_t	rtrim				(vs0_t & trimmed, cnst vs0_t & original, vcst_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = rtrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
-	stin	err_t	ltrim				(vs0_t & trimmed, cnst vs0_t & original, vcst_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = ltrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
-	stin	err_t	trim				(vs0_t & trimmed, cnst vs0_t & original, vcst_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = trim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
-	stin	err_t	rtrim				(vs0_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
-	stin	err_t	ltrim				(vs0_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
-	stin	err_t	trim				(vs0_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
+	stin	err_t	rtrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = rtrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	ltrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = ltrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	trim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = trim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	rtrim				(vsc_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
+	stin	err_t	ltrim				(vsc_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
+	stin	err_t	trim				(vsc_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
 
 	tplT	err_t	reverse				(view<T> elements)													{
 		u2_c				lastElement			= elements.size() - 1;

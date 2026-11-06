@@ -7,34 +7,34 @@
 
 namespace gpk
 {
-	tplT using	vn2		= ::gpk::view<::gpk::n2<T>>;
-	tplT using	vcn2	= ::gpk::view<cnst ::gpk::n2<T>>;
+	tplTusng	v2		= view<n2<T>>;
+	tplTusng	vc2		= view<cnst n2<T>>;
 
-	tydf	::gpk::vn2<sc_t>	vn2sc_t;	tdcs	vn2sc_t	vn2sc_c;
-	tydf	::gpk::vn2<uc_t>	vn2uc_t;	tdcs	vn2uc_t	vn2uc_c;
-	tydf	::gpk::vn2<u0_t>	vn2u0_t;	tdcs	vn2u0_t	vn2u0_c;
-	tydf	::gpk::vn2<u1_t>	vn2u1_t;	tdcs	vn2u1_t	vn2u1_c;
-	tydf	::gpk::vn2<u2_t>	vn2u2_t;	tdcs	vn2u2_t	vn2u2_c;
-	tydf	::gpk::vn2<u3_t>	vn2u3_t;	tdcs	vn2u3_t	vn2u3_c;
-	tydf	::gpk::vn2<s0_t>	vn2s0_t;	tdcs	vn2s0_t	vn2s0_c;
-	tydf	::gpk::vn2<s1_t>	vn2s1_t;	tdcs	vn2s1_t	vn2s1_c;
-	tydf	::gpk::vn2<s2_t>	vn2s2_t;	tdcs	vn2s2_t	vn2s2_c;
-	tydf	::gpk::vn2<s3_t>	vn2s3_t;	tdcs	vn2s3_t	vn2s3_c;
-	tydf	::gpk::vn2<f2_t>	vn2f2_t;	tdcs	vn2f2_t	vn2f2_c;
-	tydf	::gpk::vn2<f3_t>	vn2f3_t;	tdcs	vn2f3_t	vn2f3_c;
+	tydf	v2<sc_t>	v2sc_t ;	tdcs	v2sc_t	v2sc_c;
+	tydf	v2<uc_t>	v2uc_t ;	tdcs	v2uc_t	v2uc_c;
+	tydf	v2<u0_t>	v2u0_t ;	tdcs	v2u0_t	v2u0_c;
+	tydf	v2<u1_t>	v2u1_t ;	tdcs	v2u1_t	v2u1_c;
+	tydf	v2<u2_t>	v2u2_t ;	tdcs	v2u2_t	v2u2_c;
+	tydf	v2<u3_t>	v2u3_t ;	tdcs	v2u3_t	v2u3_c;
+	tydf	v2<s0_t>	v2s0_t ;	tdcs	v2s0_t	v2s0_c;
+	tydf	v2<s1_t>	v2s1_t ;	tdcs	v2s1_t	v2s1_c;
+	tydf	v2<s2_t>	v2s2_t ;	tdcs	v2s2_t	v2s2_c;
+	tydf	v2<s3_t>	v2s3_t ;	tdcs	v2s3_t	v2s3_c;
+	tydf	v2<f2_t>	v2f2_t ;	tdcs	v2f2_t	v2f2_c;
+	tydf	v2<f3_t>	v2f3_t ;	tdcs	v2f3_t	v2f3_c;
 
-	tydf	::gpk::vcn2<sc_t>	vcn2sc_t;	tdcs	vcn2sc_t	vcn2sc_c;
-	tydf	::gpk::vcn2<uc_t>	vcn2uc_t;	tdcs	vcn2uc_t	vcn2uc_c;
-	tydf	::gpk::vcn2<u0_t>	vcn2u0_t;	tdcs	vcn2u0_t	vcn2u0_c;
-	tydf	::gpk::vcn2<u1_t>	vcn2u1_t;	tdcs	vcn2u1_t	vcn2u1_c;
-	tydf	::gpk::vcn2<u2_t>	vcn2u2_t;	tdcs	vcn2u2_t	vcn2u2_c;
-	tydf	::gpk::vcn2<u3_t>	vcn2u3_t;	tdcs	vcn2u3_t	vcn2u3_c;
-	tydf	::gpk::vcn2<s0_t>	vcn2s0_t;	tdcs	vcn2s0_t	vcn2s0_c;
-	tydf	::gpk::vcn2<s1_t>	vcn2s1_t;	tdcs	vcn2s1_t	vcn2s1_c;
-	tydf	::gpk::vcn2<s2_t>	vcn2s2_t;	tdcs	vcn2s2_t	vcn2s2_c;
-	tydf	::gpk::vcn2<s3_t>	vcn2s3_t;	tdcs	vcn2s3_t	vcn2s3_c;
-	tydf	::gpk::vcn2<f2_t>	vcn2f2_t;	tdcs	vcn2f2_t	vcn2f2_c;
-	tydf	::gpk::vcn2<f3_t>	vcn2f3_t;	tdcs	vcn2f3_t	vcn2f3_c;
+	tydf	vc2<sc_t>	vc2sc_t;	tdcs	vc2sc_t	vc2sc_c;
+	tydf	vc2<uc_t>	vc2uc_t;	tdcs	vc2uc_t	vc2uc_c;
+	tydf	vc2<u0_t>	vc2u0_t;	tdcs	vc2u0_t	vc2u0_c;
+	tydf	vc2<u1_t>	vc2u1_t;	tdcs	vc2u1_t	vc2u1_c;
+	tydf	vc2<u2_t>	vc2u2_t;	tdcs	vc2u2_t	vc2u2_c;
+	tydf	vc2<u3_t>	vc2u3_t;	tdcs	vc2u3_t	vc2u3_c;
+	tydf	vc2<s0_t>	vc2s0_t;	tdcs	vc2s0_t	vc2s0_c;
+	tydf	vc2<s1_t>	vc2s1_t;	tdcs	vc2s1_t	vc2s1_c;
+	tydf	vc2<s2_t>	vc2s2_t;	tdcs	vc2s2_t	vc2s2_c;
+	tydf	vc2<s3_t>	vc2s3_t;	tdcs	vc2s3_t	vc2s3_c;
+	tydf	vc2<f2_t>	vc2f2_t;	tdcs	vc2f2_t	vc2f2_c;
+	tydf	vc2<f3_t>	vc2f3_t;	tdcs	vc2f3_t	vc2f3_c;
 } // namespace
 
 #endif // GPK_VIEW_N2_2973498273423617

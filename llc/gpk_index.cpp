@@ -113,7 +113,7 @@ err_t			gpk_cgi_generate_output			(SCGIRuntimeValues & runtimeValues, string & o
 }
 
 gpk::err_t	gpk::getItemViews		(SJSONReader & content, const AD_SHOP_CATEGORY category, vcst_t /*lang*/, aobj<SItemViews> & indicesToDisplay) {
-	for(int32_t iItem = 0, countItems = jsonArraySize(content, 0); iItem < countItems; ++iItem) {
+	for(s2_t iItem = 0, countItems = jsonArraySize(content, 0); iItem < countItems; ++iItem) {
 		SItemViews		views					= {(u2_t)iItem};
 		cnst err_t		jsonIndexCurrentItem	= jsonArrayValueGet(content, 0, iItem);
 		vcst_t			viewWikiCategory		= "";
@@ -305,7 +305,7 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //		output.append_string("px;\" >");
 //		string								base64Id;
 //		char													tempIntStr[256]				= {};
-//		for(int32_t iItem = 0, countItems = indicesToDisplay.size(); iItem < countItems; ++iItem) {
+//		for(s2_t iItem = 0, countItems = indicesToDisplay.size(); iItem < countItems; ++iItem) {
 //			const SItemViews										& views						= indicesToDisplay[iItem];
 //			base64Id.clear();
 //			::gpk::sprintf_s(tempIntStr, "%u", iItem);
@@ -511,12 +511,12 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //		output.append_string("\n<option value=\"-1\" style=\"\">All</option>");
 //
 //	;;gpk::array_obj<::SBarrio>								viewsBarrio;
-//	for(int32_t iBarrio = 0; iBarrio < countBarrios; ++iBarrio) {
-//		int32_t													indexBarrioNode					= jsonArrayValueGet(*jsonBarrios.Reader[0], iBarrio);
-//		int32_t													indexBarrioName					= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "name"		);
-//		int32_t													indexBarrioArea					= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "area"		);
-//		int32_t													indexBarrioPopulation			= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "population"	);
-//		int32_t													indexBarrioCommune				= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "commune"	);
+//	for(s2_t iBarrio = 0; iBarrio < countBarrios; ++iBarrio) {
+//		s2_t													indexBarrioNode					= jsonArrayValueGet(*jsonBarrios.Reader[0], iBarrio);
+//		s2_t													indexBarrioName					= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "name"		);
+//		s2_t													indexBarrioArea					= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "area"		);
+//		s2_t													indexBarrioPopulation			= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "population"	);
+//		s2_t													indexBarrioCommune				= jsonObjectValueGet(*jsonBarrios.Reader[indexBarrioNode], jsonBarrios.Reader.View, "commune"	);
 //		::SBarrio												barrio;
 //		barrio.Name											= jsonBarrios.Reader.View[indexBarrioName		];
 //		barrio.Area											= jsonBarrios.Reader.View[indexBarrioArea		];

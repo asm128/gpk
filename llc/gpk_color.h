@@ -126,7 +126,7 @@ namespace gpk
 		cxpr	bool			oper==		(u2_t other)					csnx	{ return other == *((cnst u2_t*)this);			}
 		cxpr	SColorBGRA		oper*		(cnst SColorBGRA & color)		csnx	{ return {(u0_t)::gpk::min(b * (int)color.b, 255)	, (u0_t)::gpk::min(g * (int)color.g, 255)	,(u0_t)::gpk::min(r * (int)color.r, 255), a};			}
 		cxpr	SColorBGRA		oper+		(cnst SColorBGRA & color)		csnx	{ return {(u0_t)::gpk::min(b + (int)color.b, 255)	, (u0_t)::gpk::min(g + (int)color.g, 255)	,(u0_t)::gpk::min(r + (int)color.r, 255), a};			}
-		cxpr	SColorBGRA		oper-		(cnst SColorBGRA & color)		csnx	{ return {(u0_t)::gpk::clamped(b - (int16_t)color.b, 0, 255), (u0_t)::gpk::clamped(g - (int16_t)color.g, 0, 255),(u0_t)::gpk::clamped(r - (int16_t)color.r, 0, 255), a};	}
+		cxpr	SColorBGRA		oper-		(cnst SColorBGRA & color)		csnx	{ return {(u0_t)::gpk::clamped(b - (s1_t)color.b, 0, 255), (u0_t)::gpk::clamped(g - (s1_t)color.g, 0, 255),(u0_t)::gpk::clamped(r - (s1_t)color.r, 0, 255), a};	}
 		cxpr	SColorBGRA		oper*		(f2_t scalar)					csnx	{ return {(u0_t)::gpk::clamped(b * scalar, 0.0f, 255.0f)	, (u0_t)::gpk::clamped(g * scalar, 0.0f, 255.0f)	,(u0_t)::gpk::clamped(r * scalar, 0.0f, 255.0f), a};			}
 		cxpr	SColorBGRA		oper/		(f2_t scalar)					cnst		{ return {(u0_t)::gpk::clamped(b / scalar, 0.0f, 255.0f)	, (u0_t)::gpk::clamped(g / scalar, 0.0f, 255.0f)	,(u0_t)::gpk::clamped(r / scalar, 0.0f, 255.0f), a};			}
 		cxpr	SColorBGRA		oper*		(f3_t scalar)					csnx	{ return {(u0_t)::gpk::clamped(b * scalar, 0.0,  255.0 )	, (u0_t)::gpk::clamped(g * scalar, 0.0 , 255.0 )	,(u0_t)::gpk::clamped(r * scalar, 0.0, 255.0),	a};				}
