@@ -49,7 +49,7 @@ namespace gpk
 	}	// Recursive
 	// this function was ceated in order to work around the problem of the JSON system returning pointers to the original string, without having the opportunity of processing escaped path slashes.
 	//err_t						pathNameCompose			(string & out_composed, vcst_t fileName, vcst_t path = {}, vcst_t extension = {});
-	err_t						pathNameCompose			(vcst_t path, vcst_t fileName, string & out_composed);
+	err_t						pathNameCompose			(vcst_t path, vcst_t fileName, asc_t & out_composed);
 	err_t						pathNormalize			(vcst_t path, string & output, sc_c separator = '/');
 	err_t						pathAbsolute			(vcst_t path, string & output, sc_c separator = '/');
 	err_t						pathBegin				(vcst_t path, vcst_t & output);

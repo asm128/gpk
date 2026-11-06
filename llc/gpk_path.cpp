@@ -125,13 +125,13 @@ sttc	gpk::err_t	validatePathSeparators	(vcst_t path, bool allowUNC) {
 	rtrn 0;
 }
 
-sttc	err_t 	appendPathNormalized		(vcst_t path, string & output) {
+sttc	err_t 	appendPathNormalized		(vcst_t path, asc_t & output) {
 	u2_t			written				= 0;
 	for(u2_t iChar = 0; iChar < path.size(); ++iChar) {
 		sc_t			curChar				= path[iChar];
 		if(::pathSeparator(curChar))
 			curChar					= '/';
-		if_fail_fef(output.push_back(curChar), "output.size()=%" GPK_FMT_U2 ".", output.size());
+		if_fail_fe(output.push_back(curChar));
 		++written;
 	}
 	rtrn written;
@@ -231,7 +231,7 @@ gpk::err_t			gpk::pathAbsolute			(vcst_t path, string & output, sc_c separator) 
 #endif
 }
 //
-gpk::err_t			gpk::pathNameCompose		(vcst_t path, vcst_t fileName, string & out_composed)		{
+gpk::err_t			gpk::pathNameCompose		(vcst_t path, vcst_t fileName, asc_t & out_composed)		{
 	if_fail_fe(::validatePathSeparators(path, true));
 	if_fail_fe(::validatePathSeparators(fileName, 0 == path.size()));
 	u2_t				pathLength				= 0;
