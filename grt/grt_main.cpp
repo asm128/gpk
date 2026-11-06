@@ -3,6 +3,7 @@
 #include "gpk_sync.h"
 #include "gpk_timer.h"
 #include "gpk_app_impl.h"
+#include "gpk_string_compose.h"
 
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
@@ -80,22 +81,23 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 		::gpk::vcst_t					fileName						= "gme";
 		if(globalRuntimeValues.EntryPointArgs.Positionals.size())
 			fileName					= {globalRuntimeValues.EntryPointArgs.Positionals[0], (u2_t )strlen(globalRuntimeValues.EntryPointArgs.Positionals[0])};
-		char							mainModuleName	[512]			= {};
+		string							mainModuleName					= {};
 		::gpk::vcst_t					extension						= (GPK_MODULE_EXTENSION);
-		::gpk::sprintf_s(mainModuleName,  "%.*s.%.*s", GPK_VIEW_ARGS(fileName), GPK_VIEW_ARGS(extension));
+		if_fail_fe(::gpk::append_strings(mainModuleName, fileName, '.', extension));
 		::gpk::SRuntimeModule			mainModule						= {};
-		if_fail_fef(::gpk::frameworkModuleLoad(mainModule, mainModuleName), "Failed to create main module. %.*s.", mainModuleName);
-		info_printf("Created main module: '%s'.", mainModuleName);
+		if_fail_fef(::gpk::frameworkModuleLoad(mainModule, mainModuleName), "Failed to create main module. %.*s.", GPK_VIEW_ARGS(mainModuleName));
+		info_printf("Created main module: '%.*s'.", GPK_VIEW_ARGS(mainModuleName));
 		void							* app;
-		if_fail_fef(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %.*s.", mainModuleName);
+		if_fail_fef(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %.*s.", GPK_VIEW_ARGS(mainModuleName));
 		mainModule.Application		= app;
 		info_printf("%s", "Initializing application instance.");
 		if(::gpk::failed(mainModule.Setup(app))) {
 			error_printf("%s", "Setup() Failed!");
-			if_fail_fef(mainModule.Delete(&app), "Failed to create main module. %s.", mainModuleName);
+			if_fail_fef(mainModule.Delete(&app), "Failed to create main module.%.*s.", GPK_VIEW_ARGS(mainModuleName));
 			return -1;
 		}
 		runtimeState.MainModule		= &mainModule;
+
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
 		if_fail_e(mainModule.Cleanup(app));

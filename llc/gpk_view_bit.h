@@ -9,13 +9,13 @@ namespace gpk
 #pragma pack(push, 1)
 	tplt <tpnm _tInt>
 	struct bit_proxy {
-		tydf	_tInt			T;
+		tydf	_tInt		T;
 
-		T							& Element;
-		u0_t						Offset;
+		T					& Element;
+		u0_t				Offset;
 
-		oper					bool		()				cnst	{ return Element & (1ULL << Offset); }
-		bit_proxy&				oper=		(bool value)			{ value ? Element |= (1ULL << Offset) : Element &= ~(1ULL << Offset); return *this; }
+		oper				bool		()				cnst	{ return Element & (1ULL << Offset); }
+		bit_proxy&			oper=		(bool value)			{ value ? Element |= (1ULL << Offset) : Element &= ~(1ULL << Offset); return *this; }
 	};
 
 	tplt<tpnm _tInt>	ndsx	u0_t		bit_offset_field_size	() 	{
@@ -89,14 +89,14 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	tplT	using					vbit		= ::gpk::view_bit<T>;
-	tydf	::gpk::view_bit<u0_t>	vbitu0_t, vbitu8	;
-	tydf	::gpk::view_bit<u1_t>	vbitu1_t, vbitu1_t	;
-	tydf	::gpk::view_bit<u2_t>	vbitu2_t, vbitu32	;
-	tydf	::gpk::view_bit<u3_t>	vbitu3_t, vbitu64	;
-	tplT	err_t		reverse_bits		(::gpk::view_bit<T> toReverse)											{
-		u2_c				countBits			= toReverse.size() / 2;
-		u2_c				lastBitIndex		= toReverse.size() - 1;
+	tplTusng	vbit		= view_bit<T>;
+	tydf		vbit<u0_t>	vbitu0_t;
+	tydf		vbit<u1_t>	vbitu1_t;
+	tydf		vbit<u2_t>	vbitu2_t;
+	tydf		vbit<u3_t>	vbitu3_t;
+	tplT		err_t		reverse_bits		(vbit<T> toReverse)											{
+		u2_c		countBits			= toReverse.size() / 2;
+		u2_c		lastBitIndex		= toReverse.size() - 1;
 		for(u2_t iBit = 0; iBit < countBits; ++iBit) {
 			u2_c				iRev				= lastBitIndex - iBit;
 			cnst bool					current				= toReverse[iBit];

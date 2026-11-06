@@ -19,7 +19,7 @@ namespace gpk
 
 		TViewConst			GetView			(u2_t client)						const	{ 
 			const au3_t				& data			= Bits[client]; 
-			return {data.begin(), min(FieldNames.size(), data.bit_count())}; 
+			return {data.begin(), ::gpk::min(FieldNames.size(), (u2_t)data.bit_count())}; 
 		}
 
 		TView				GetView			(u2_t client, bool resize = false)			{ 
@@ -27,7 +27,7 @@ namespace gpk
 			if(resize && FieldNames.size() > data.bit_count()) 
 				if_true_te(data.resize_bits(FieldNames.size())); 
 
-			return {data.begin(), min(FieldNames.size(), data.bit_count())}; 
+			return {data.begin(), ::gpk::min(FieldNames.size(), (u2_t)data.bit_count())}; 
 		}
 
 		err_t 				CreateField		(const vcst_t & fieldName)					{ 
