@@ -4,6 +4,7 @@
 #include "gpk_noise.h"
 #include "gpk_chrono.h"
 #include "gpk_parse.h"
+#include "gpk_string_compose.h"
 
 
 #ifdef GPK_ATMEL
@@ -253,7 +254,7 @@ gpk::err_t			gpk::digest						(vcu0_c & input, ::gpk::string & digest)		{
 	char						temp		[32]				= {};
 	for(::gpk::u2_t i = 0; i < ::gpk::min(filtered.size(), (::gpk::u2_t)8U); ++i) {
 		::gpk::sprintf_s(temp, "%" GPK_FMT_U2, filtered[i]);
-		if_fail_fe(digest.append_string(temp));
+		if_fail_fe(::gpk::append_strings(digest, temp));
 	}
 	return 0;
 }

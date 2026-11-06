@@ -1,12 +1,12 @@
-#include "llc_typeint.h"
+#include "gpk_typeint.h"
 
-#ifndef LLC_ARDUINO_STREAM_H
-#define LLC_ARDUINO_STREAM_H
+#ifndef GPK_ARDUINO_STREAM_H
+#define GPK_ARDUINO_STREAM_H
 
-#ifdef LLC_ARDUINO
+#ifdef GPK_ARDUINO
 #include <Stream.h>
 
-namespace llc
+namespace gpk
 {
 	//ndsi	vcst_t		tovcc   (cnst Stream   & srcstr)							{ rtrn srcstr.length() ? vcst_t{srcstr.begin(), srcstr.length()} : vcst_t{}; }
 	//stin	err_t	tovcc   (vcst_t		& output, cnst Stream	& srcstr)	{ rtrn (output = tovcc(srcstr)).size(); }
@@ -20,6 +20,6 @@ namespace llc
 	ndsi	u2_t 		size	(cnst Stream & srcstr)	{ rtrn (*((Stream*)&srcstr)).available(); }
 	ndsi	u2_t 		size	(Stream & srcstr)		{ rtrn srcstr.available(); }
 } // namespace
-#endif // LLC_ARDUINO
+#endif // GPK_ARDUINO
 
-#endif // LLC_ARDUINO_STREAM_H
+#endif // GPK_ARDUINO_STREAM_H

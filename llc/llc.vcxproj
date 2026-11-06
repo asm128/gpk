@@ -123,6 +123,7 @@
     <ClInclude Include="gpk_minmax_n3.h" />
     <ClInclude Include="gpk_mutex.h" />
     <ClInclude Include="gpk_n3.h" />
+    <ClInclude Include="gpk_pack.h" />
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_platform_error.h" />
     <ClInclude Include="gpk_pod_definition.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="gpk_voxel_geometry.h" />
     <ClInclude Include="gpk_window.h" />
     <ClInclude Include="gpk_framework.h" />
+    <ClInclude Include="gpk_circuit.h" />
     <ClInclude Include="gpk_gui_control_list.h" />
     <ClInclude Include="gpk_gui_desktop.h" />
     <ClInclude Include="gpk_raster_lh.h" />
@@ -267,6 +269,7 @@
     <ClCompile Include="gpk_base64.cpp" />
     <ClCompile Include="gpk_block.cpp" />
     <ClCompile Include="gpk_broker.cpp" />
+    <ClCompile Include="gpk_circuit.cpp" />
     <ClCompile Include="gpk_cgi.cpp" />
     <ClCompile Include="gpk_cgi_main.cpp" />
     <ClCompile Include="gpk_cgi_module.cpp" />

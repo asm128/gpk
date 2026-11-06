@@ -55,26 +55,26 @@ err_t			gpk_cgi_generate_output			(SCGIRuntimeValues & runtimeValues, string & o
 	string				sessionFileContents				= {};
 	aobj<kv<vcst_t>>	cookieValues;
 	if (isCGIEnviron) {
-		if_fail_fe(output.append_string("Content-type: text/html\r\nCache-control: no-cache\r\n"));
-		if_fail_fe(output.append_string("\r\n"));
+		if_fail_fe(::gpk::append_strings(output, "Content-type: text/html\r\nCache-control: no-cache\r\n"));
+		if_fail_fe(::gpk::append_strings(output, "\r\n"));
 		gpk::find("HTTP_COOKIE", view<cnst kv<vcst_t>>{runtimeValues.RuntimeValues.EntryPointArgs.Environment}, cookie);
 		if(0 == cookie.size()) {
-			output.append_string("{ \"status\" : 403, \"description\" :\"forbidden - The server currently doesn't accept requests to this frame without a cookie set.\" }\r\n");
+			::gpk::append_strings(output, "{ \"status\" : 403, \"description\" :\"forbidden - The server currently doesn't accept requests to this frame without a cookie set.\" }\r\n");
 			return 1;
 			//::sessionInitialize(requestReceived, cookie, sessionFileName, digested);
-			//if_fail_fef(output.append_string("\r\nSet-Cookie: "));
+			//if_fail_fef(::gpk::append_strings(output, "\r\nSet-Cookie: "));
 			//if_fail_fef(output.append(cookie));
 		}
 		else {
 			if_fail_fe(append_strings(output, "\r\n\r\n"));
 			//if_fail_fef(::ntl::sessionFileLoad(cookie, sessionFileContents, cookieValues), "%s", "Failed to load session!");
 		}
-		//if_fail_fef(output.append_string("\r\nSet-Cookie: "));
+		//if_fail_fef(::gpk::append_strings(output, "\r\nSet-Cookie: "));
 		//if_fail_fef(output.append(cookie));
 
 		stxp vcst_c		methodsValid	[]	= {"GET", "POST"};
 		if(-1 == gpk::keyValVerify(runtimeValues.RuntimeValues.EntryPointArgs.Environment, "REQUEST_METHOD", methodsValid)) {
-			output.append_string("{ \"status\" : 403, \"description\" :\"forbidden\" }\r\n");
+			::gpk::append_strings(output, "{ \"status\" : 403, \"description\" :\"forbidden\" }\r\n");
 			return 1;
 		}
 	}
@@ -255,7 +255,7 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 		const SWordIndices		& element = wordSet[iWord];
 		if_fail_fe(output.push_back('['));
 		for(u2_t iArticle = 0; iArticle < element.Indices.size(); ++iArticle) {
-			if_fail_fe(append_strings(output, str(element.Indices[iArticle])));
+			if_fail_fe(append_strings(output, element.Indices[iArticle]));
 			if(iArticle < (element.Indices.size() - 1))
 				if_fail_fe(output.push_back(','));
 		}
@@ -289,163 +289,163 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 }
 //
 //tatic err_t								htmlBoardGenerate					(view<const SItemViews> indicesToDisplay, vcst_t fontSize, vcst_t /*title*/, vcst_t lang, string & output)	{
-//	output.append_string("\n<table style=\"width:100%;height:100%;text-align:center;font-size:");
+//	::gpk::append_strings(output, "\n<table style=\"width:100%;height:100%;text-align:center;font-size:");
 //	output.append(fontSize);
-//	output.append_string("px;\" >");
-//	output.append_string("\n<tr style=\"\" >");
-//	output.append_string("\n<td style=\"width:100%;font-weight:bold; vertical-align:top;\">");
+//	::gpk::append_strings(output, "px;\" >");
+//	::gpk::append_strings(output, "\n<tr style=\"\" >");
+//	::gpk::append_strings(output, "\n<td style=\"width:100%;font-weight:bold; vertical-align:top;\">");
 //	//::ntl::htmlTag("h2", title, {}, output);
-//	output.append_string("\n</td>");
-//	output.append_string("\n</tr>");
-//	output.append_string("\n<tr style=\"\" >");
-//	output.append_string("\n<td style=\"width:100%;font-weight:bold; vertical-align:top;\">");
+//	::gpk::append_strings(output, "\n</td>");
+//	::gpk::append_strings(output, "\n</tr>");
+//	::gpk::append_strings(output, "\n<tr style=\"\" >");
+//	::gpk::append_strings(output, "\n<td style=\"width:100%;font-weight:bold; vertical-align:top;\">");
 //
-//		output.append_string("\n<table style=\"width:100%;text-align:center;border-style:solid;border-width:2px;font-size:");
+//		::gpk::append_strings(output, "\n<table style=\"width:100%;text-align:center;border-style:solid;border-width:2px;font-size:");
 //		output.append(fontSize);
-//		output.append_string("px;\" >");
+//		::gpk::append_strings(output, "px;\" >");
 //		string								base64Id;
 //		char													tempIntStr[256]				= {};
 //		for(s2_t iItem = 0, countItems = indicesToDisplay.size(); iItem < countItems; ++iItem) {
 //			const SItemViews										& views						= indicesToDisplay[iItem];
 //			base64Id.clear();
 //			::gpk::sprintf_s(tempIntStr, "%u", iItem);
-//			output.append_string("\n<tr id=\"");
-//			output.append_string(tempIntStr);
-//			output.append_string("\">");
-//			output.append_string("\n<td style=\"width:100%;text-align:left;vertical-align:top;\">");
+//			::gpk::append_strings(output, "\n<tr id=\"");
+//			::gpk::append_strings(output, tempIntStr);
+//			::gpk::append_strings(output, "\">");
+//			::gpk::append_strings(output, "\n<td style=\"width:100%;text-align:left;vertical-align:top;\">");
 //			//
-//				output.append_string("\n<table style=\"background-color:white;width:100%;height:100%;min-height:100%;text-align:center;border-style:solid;border-width:2px;border-radius:8px;font-size:");
+//				::gpk::append_strings(output, "\n<table style=\"background-color:white;width:100%;height:100%;min-height:100%;text-align:center;border-style:solid;border-width:2px;border-radius:8px;font-size:");
 //				output.append(fontSize);
-//				output.append_string("px;\" >");
-//				output.append_string("\n<tr>");
-//				output.append_string("\n<td style=\"background-color:lightgrey;border-radius:8px;text-align:left;vertical-align:top;\">");
+//				::gpk::append_strings(output, "px;\" >");
+//				::gpk::append_strings(output, "\n<tr>");
+//				::gpk::append_strings(output, "\n<td style=\"background-color:lightgrey;border-radius:8px;text-align:left;vertical-align:top;\">");
 //				//
 //				string pTitle;
 //				//::ntl::htmlTag("h3", views.Title, "style=\"text-align:left;\"", pTitle);
 //				//::ntl::htmlHRefLink({pTitle.begin(), pTitle.size()}, views.URL, "style=\"text-decoration:none;font-weight:bold;\"", output);
-//				output.append_string("\n</td>");
-//				output.append_string("\n</tr>");
-//				output.append_string("\n<tr>");
-//				output.append_string("\n<td style=\"vertical-align:top;height:100%;text-align:left;font-size:");
+//				::gpk::append_strings(output, "\n</td>");
+//				::gpk::append_strings(output, "\n</tr>");
+//				::gpk::append_strings(output, "\n<tr>");
+//				::gpk::append_strings(output, "\n<td style=\"vertical-align:top;height:100%;text-align:left;font-size:");
 //				output.append(fontSize);
-//				output.append_string("px;\">");
+//				::gpk::append_strings(output, "px;\">");
 //				//::ntl::htmlTag("h3", views.Text, "style=\" font-weight:normal;text-align:left;\"", output);
 //				//
-//				output.append_string("\n</td>");
-//				output.append_string("\n</tr>");
-//				output.append_string("\n</table>");
+//				::gpk::append_strings(output, "\n</td>");
+//				::gpk::append_strings(output, "\n</tr>");
+//				::gpk::append_strings(output, "\n</table>");
 //			//
-//			output.append_string("\n</td>");
-//			output.append_string("\n<td style=\"height:100%;text-align:left;vertical-align:top;\">");
+//			::gpk::append_strings(output, "\n</td>");
+//			::gpk::append_strings(output, "\n<td style=\"height:100%;text-align:left;vertical-align:top;\">");
 //
-//				output.append_string("\n<table style=\"\" >");
-//				output.append_string("\n<tr>");
-//				output.append_string("\n<td style=\"text-align:left;vertical-align:top;width:100%;\">");
-//				output.append_string("<a target=\"blank\" title=\"");
+//				::gpk::append_strings(output, "\n<table style=\"\" >");
+//				::gpk::append_strings(output, "\n<tr>");
+//				::gpk::append_strings(output, "\n<td style=\"text-align:left;vertical-align:top;width:100%;\">");
+//				::gpk::append_strings(output, "<a target=\"blank\" title=\"");
 //				output.append(views.ImageTitle);
-//				output.append_string("\" href=\"");
+//				::gpk::append_strings(output, "\" href=\"");
 //				output.append(views.ImageHRef);
-//				output.append_string("\" class=\"image\" ><img style=\"width:320px;\" decoding=\"async\" elementtiming=\"thumbnail\" alt=\"");
+//				::gpk::append_strings(output, "\" class=\"image\" ><img style=\"width:320px;\" decoding=\"async\" elementtiming=\"thumbnail\" alt=\"");
 //				output.append(views.ImageAlt);
-//				output.append_string("\" src=\"");
+//				::gpk::append_strings(output, "\" src=\"");
 //				output.append(views.ImageSrc);
-//				output.append_string("\" ></a>");
-//				output.append_string("\n</td>");
-//				output.append_string("\n</tr><tr>");
-//				output.append_string("\n<td style=\"vertical-align:top;\">");
+//				::gpk::append_strings(output, "\" ></a>");
+//				::gpk::append_strings(output, "\n</td>");
+//				::gpk::append_strings(output, "\n</tr><tr>");
+//				::gpk::append_strings(output, "\n<td style=\"vertical-align:top;\">");
 //
 //				// ----- Image info table
-//					output.append_string("\n<table style=\"background-color:white;width:100%;height:100%;text-align:center;border-style:solid;border-width:2px;border-radius:8px;\" font-size:");
+//					::gpk::append_strings(output, "\n<table style=\"background-color:white;width:100%;height:100%;text-align:center;border-style:solid;border-width:2px;border-radius:8px;\" font-size:");
 //					output.append(fontSize);
-//					output.append_string("px;\">");
+//					::gpk::append_strings(output, "px;\">");
 //					if(views.MapURL.size()) {
-//						output.append_string("\n<tr>");
-//						output.append_string("\n<td style=\"text-align:center;vertical-align:top;font-size:");
+//						::gpk::append_strings(output, "\n<tr>");
+//						::gpk::append_strings(output, "\n<td style=\"text-align:center;vertical-align:top;font-size:");
 //						output.append(fontSize);
-//						output.append_string("px;\">");
-//						output.append_string("\n<a target=\"blank\" style=\"margin:4px;\" href=\"");
+//						::gpk::append_strings(output, "px;\">");
+//						::gpk::append_strings(output, "\n<a target=\"blank\" style=\"margin:4px;\" href=\"");
 //						output.append(views.MapURL);
-//						output.append_string("\" >");
+//						::gpk::append_strings(output, "\" >");
 //						if(lang == "es")
-//							output.append_string("Localización");
+//							::gpk::append_strings(output, "Localización");
 //						else
-//							output.append_string("Location");
-//						output.append_string("\n</a>");
-//						output.append_string("\n</td>");
-//						output.append_string("\n</tr>");
+//							::gpk::append_strings(output, "Location");
+//						::gpk::append_strings(output, "\n</a>");
+//						::gpk::append_strings(output, "\n</td>");
+//						::gpk::append_strings(output, "\n</tr>");
 //					}
 //					// ----- Addresses
 //					if(views.Addresses.size()) {
-//						output.append_string("\n<tr style=\"height:100%;\">");
-//						output.append_string("\n<td style=\"text-align:center;vertical-align:top;border-style:solid;border-top-width:1px;font-size:");
+//						::gpk::append_strings(output, "\n<tr style=\"height:100%;\">");
+//						::gpk::append_strings(output, "\n<td style=\"text-align:center;vertical-align:top;border-style:solid;border-top-width:1px;font-size:");
 //						output.append(fontSize);
-//						output.append_string("px;\" >");
+//						::gpk::append_strings(output, "px;\" >");
 //						for(u2_t iPhone = 0, countAddr = views.Addresses.size(); iPhone < countAddr; ++iPhone) {
 //							output.append(views.Addresses[iPhone]);
-//							output.append_string("\n<br />");
+//							::gpk::append_strings(output, "\n<br />");
 //						}
-//						output.append_string("\n</td>");
-//						output.append_string("\n</tr>");
+//						::gpk::append_strings(output, "\n</td>");
+//						::gpk::append_strings(output, "\n</tr>");
 //					}
 //
 //					// ----- Phones
 //					if(views.Phones.size() || views.WPs.size()) {
-//						output.append_string("\n<tr style=\"height:100%;\">");
-//						output.append_string("\n<td style=\"text-align:center;vertical-align:top;border-style:solid;border-top-width:1px;font-size:");
+//						::gpk::append_strings(output, "\n<tr style=\"height:100%;\">");
+//						::gpk::append_strings(output, "\n<td style=\"text-align:center;vertical-align:top;border-style:solid;border-top-width:1px;font-size:");
 //						output.append(fontSize);
-//						output.append_string("px;\" >");
+//						::gpk::append_strings(output, "px;\" >");
 //						for(u2_t iPhone = 0, countPhones = views.Phones.size(); iPhone < countPhones; ++iPhone) {
 //							output.append(views.Phones[iPhone]);
-//							output.append_string("\n<br />");
+//							::gpk::append_strings(output, "\n<br />");
 //						}
 //						for(u2_t iPhone = 0, countWPs	 = views.WPs	.size(); iPhone < countWPs		; ++iPhone) {
 //							vcst_t									textPhone						= views.WPs[iPhone];
-//							output.append_string("\n<a target=\"blank\" href=\"https://wa.me/");
+//							::gpk::append_strings(output, "\n<a target=\"blank\" href=\"https://wa.me/");
 //							output.append(textPhone);
-//							output.append_string("\" >");
+//							::gpk::append_strings(output, "\" >");
 //							output.append(textPhone);
-//							output.append_string("</a>");
-//							output.append_string("<br />");
+//							::gpk::append_strings(output, "</a>");
+//							::gpk::append_strings(output, "<br />");
 //						}
 //
 //						//
-//						output.append_string("\n</td>");
-//						output.append_string("\n</tr>");
+//						::gpk::append_strings(output, "\n</td>");
+//						::gpk::append_strings(output, "\n</tr>");
 //					}
-//					output.append_string("\n</table>");
+//					::gpk::append_strings(output, "\n</table>");
 //
-//				output.append_string("\n</td>");
-//				output.append_string("\n</tr>");
-//				output.append_string("\n</table>");
+//				::gpk::append_strings(output, "\n</td>");
+//				::gpk::append_strings(output, "\n</tr>");
+//				::gpk::append_strings(output, "\n</table>");
 //
 //
-//			output.append_string("\n</td>");
-//			output.append_string("\n</tr>");
+//			::gpk::append_strings(output, "\n</td>");
+//			::gpk::append_strings(output, "\n</tr>");
 //		}
-//		output.append_string("\n</table>");
+//		::gpk::append_strings(output, "\n</table>");
 //
-//	output.append_string("\n</td>");
-//	output.append_string("\n</tr>");
-//	output.append_string("\n</table>");
+//	::gpk::append_strings(output, "\n</td>");
+//	::gpk::append_strings(output, "\n</tr>");
+//	::gpk::append_strings(output, "\n</table>");
 //
 //	return 0;
 //
 
 //static	err_t								pageCatalog					(vcst_t contentFileName, vcst_t /*pathScript*/, n2s2_t screenSize, const vcst_t & /*pathStyles*/, const AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output) {
 //
-//	output.append_string("\n<html>");
+//	::gpk::append_strings(output, "\n<html>");
 //	// --- Head
-//	output.append_string("\n<head>");
-//	output.append_string("\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=0.5\" />");
-//	output.append_string("\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />");
+//	::gpk::append_strings(output, "\n<head>");
+//	::gpk::append_strings(output, "\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=0.5\" />");
+//	::gpk::append_strings(output, "\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />");
 //	string								fileStyle			;
 //	//::ntl::httpPath(pathStyles, "blankstyle", "css", fileStyle);
 //	//::ntl::htmlHeaderTitle		(title, output);
 //	//::ntl::htmlHeaderStyleLink	({fileStyle.begin(), fileStyle.size()}, output);
-//	output.append_string("\n</head>");
+//	::gpk::append_strings(output, "\n</head>");
 //
 //	// --- Body
-//	output.append_string(
+//	::gpk::append_strings(output, 
 //		"\n<body style=\"width:100%;height:100%;font-family:Arial;\">"
 //		"\n<table style=\"width:100%;height:100%;text-align:center;\">"
 //		"\n<tr style=\"\" >"
@@ -464,19 +464,19 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //	else
 //		::gpk::sprintf_s(fontSize, "%u", screenSize.y ? screenSize.y / 44 : 24);
 //
-//	output.append_string(
+//	::gpk::append_strings(output, 
 //		"\n<div style=\"background-color:#ffffff;position:sticky;left:0;top:0;\">"
 //		"\n<table style=\"width:100%;height:100%;text-align:center;\">"
 //		"\n<tr style=\"\" >"
 //		"\n<td style=\"font-weight:bold;vertical-align:center;font-size:"
 //		);
-//	output.append_string(fontSize);
-//	output.append_string("px;\" >");
+//	::gpk::append_strings(output, fontSize);
+//	::gpk::append_strings(output, "px;\" >");
 //
 //	const vcst_t							textSearch							= (lang == "es") ? "Buscar" : "Search";
 //	//::ntl::htmlTag("h5", textSearch, {}, output);
 //
-//	output.append_string(
+//	::gpk::append_strings(output, 
 //		"\n</td>"
 //		"\n<td style=\"position:sticky;left:0px;top:0px;sticky;font-size:24px;font-weight:bold;width:20px;text-align:left;vertical-align:top;\">"
 //	//"\n<img src=\"/obelisco/image/blank.png\"/>"
@@ -488,17 +488,17 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //
 //#define ENABLE_CATALOG_BARRIO
 //#if defined(ENABLE_CATALOG_BARRIO)
-//	output.append_string("\n<td style=\"font-weight:bold;font-size:");
-//	output.append_string(fontSize);
-//	output.append_string("px;\" >");
-//	output.append_string("<h5>Barrio:<h5>");
-//	output.append_string("</td>");
-//	output.append_string(
+//	::gpk::append_strings(output, "\n<td style=\"font-weight:bold;font-size:");
+//	::gpk::append_strings(output, fontSize);
+//	::gpk::append_strings(output, "px;\" >");
+//	::gpk::append_strings(output, "<h5>Barrio:<h5>");
+//	::gpk::append_strings(output, "</td>");
+//	::gpk::append_strings(output, 
 //		"\n<td>"
 //		"<select id=\"selectBarrio\" onchange=\"var searchBar = document.getElementById('searchBar'); if(searchBar.value.length > 0) obeSearch(searchBar.value); else clearSearch();\" style=\"font-size:"
 //		);
-//	output.append_string(fontSize);
-//	output.append_string("px;\" >");
+//	::gpk::append_strings(output, fontSize);
+//	::gpk::append_strings(output, "px;\" >");
 //
 //	SJSONFile										jsonBarrios;
 //	jsonFileRead(jsonBarrios, "barrios.json");
@@ -506,9 +506,9 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //	char													tempBarrioOption[256]			= {};
 //	vcst_t								barrioName;
 //	if(lang == "es")
-//		output.append_string("\n<option value=\"-1\" style=\"\">Todos</option>");
+//		::gpk::append_strings(output, "\n<option value=\"-1\" style=\"\">Todos</option>");
 //	else
-//		output.append_string("\n<option value=\"-1\" style=\"\">All</option>");
+//		::gpk::append_strings(output, "\n<option value=\"-1\" style=\"\">All</option>");
 //
 //	;;gpk::array_obj<::SBarrio>								viewsBarrio;
 //	for(s2_t iBarrio = 0; iBarrio < countBarrios; ++iBarrio) {
@@ -527,18 +527,18 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //
 //	for(u2_t iBarrio = 0; iBarrio < viewsBarrio.size(); ++iBarrio) {
 //		::gpk::sprintf_s(tempBarrioOption, "\n<option value=\"%u\" style=\"\">", iBarrio);
-//		output.append_string(tempBarrioOption);
+//		::gpk::append_strings(output, tempBarrioOption);
 //		output.append(viewsBarrio[iBarrio].Name);
-//		output.append_string("</option>");
+//		::gpk::append_strings(output, "</option>");
 //	}
 //
-//	output.append_string(
+//	::gpk::append_strings(output, 
 //		"</select>"
 //		"\n</td>"
 //		);
 //#endif
 //
-//	output.append_string(
+//	::gpk::append_strings(output, 
 //		"\n</tr>"
 //		"\n</table>"
 //		"\n</div>"
@@ -546,22 +546,22 @@ gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indi
 //
 //	::htmlBoardGenerate(indicesToDisplay, fontSize}, title, lang, output);
 //
-//	output.append_string("\n<script charset=\"iso-8859-1\">");
+//	::gpk::append_strings(output, "\n<script charset=\"iso-8859-1\">");
 //	::outputSearchScript(indicesToDisplay, output);
-//	output.append_string("\n</script>");
+//	::gpk::append_strings(output, "\n</script>");
 //
 //	string								fileScriptMenu;
 //	//::ntl::httpPath(pathScript, "filter", "js", fileScriptMenu);
 //	//::ntl::htmlHeaderScriptFile({fileScriptMenu.begin(), fileScriptMenu.size()}, output);
 //
-//	output.append_string(
+//	::gpk::append_strings(output, 
 //		"\n</td>"
 //		"\n</tr>"
 //		"\n</table>"
 //		"\n</body>"
 //		);
 //
-//	output.append_string("\n</html>");
+//	::gpk::append_strings(output, "\n</html>");
 //	return 0;
 //}
 //

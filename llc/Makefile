@@ -18,7 +18,7 @@ IntDir	= ../../obj/$(Platform).$(Configuration)/$(ProjectName)
 OBJDIRS	:= $(patsubst %, $(IntDir), $(ProjectName))
 INCDIR	:= $(patsubst %,-I%,$(IncDir))
 
-CFLAGS	:= -std=c++17 -Wall -Werror -O$(OPT) $(INCDIR) 
+CFLAGS	:= -std=c++23 -Wall -Werror -O$(OPT) $(INCDIR) 
 CC		:= g++
 
 _OBJ	:= $(patsubst %.cpp,%.o,$(wildcard *.cpp)) 

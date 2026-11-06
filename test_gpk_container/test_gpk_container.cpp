@@ -2,6 +2,8 @@
 #include "gpk_runtime.h"
 #include <windows.h>
 
+usns gpk;
+
 static	const char				test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};
 
 int test_array_pod() {
@@ -11,7 +13,7 @@ int test_array_pod() {
 	::gpk::asc_t			atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 
-	always_printf("test_chars: %u, %u, %s", (uint32_t)strlen(test_chars), (uint32_t)::gpk::size(test_chars), test_chars);
+	always_printf("test_chars: %u, %u, %s", (u2_t )strlen(test_chars), (u2_t )::gpk::size(test_chars), test_chars);
 	always_printf("aconst_0  : %u, %s", aconst_0	.size(), aconst_0	.begin());
 	always_printf("aconst_1  : %u, %s", aconst_1	.size(), aconst_1	.begin());
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());
@@ -29,8 +31,6 @@ int test_array_pod() {
 	if_fail_fe(atest_0.pop_back		());						always_printf("pop_back             : %u, %s"		, atest_0.size(), atest_0.begin());
 	if_fail_fe(atest_1.pop_back		(popped));					always_printf("pop_back             : %u, %s, '%c'"	, atest_1.size(), atest_1.begin(), popped);
 	if_fail_fe(atest_1.push_back		(popped = '$'));			always_printf("push_back            : %u, %s"		, atest_1.size(), atest_1.begin());
-	if_fail_fe(atest_0.append_string	(" again"));				always_printf("append_string        : %u, %s"		, atest_0.size(), atest_0.begin());
-	if_fail_fe(atest_1.append_string	(::gpk::vcst_t{" value"}));	always_printf("append_string        : %u, %s"		, atest_1.size(), atest_1.begin());
 	OutputDebugString("\n\n");
 
 	atest_0.clear			();			always_printf("clear                : %u, 0x%p", atest_0.size(), atest_0.begin());
@@ -102,7 +102,7 @@ int test_array_obj() {
 	::gpk::aobj<char>				atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 
-	always_printf("test_chars: %u, %u, %s", (uint32_t)strlen(test_chars), (uint32_t)::gpk::size(test_chars), test_chars);
+	always_printf("test_chars: %u, %u, %s", (u2_t )strlen(test_chars), (u2_t )::gpk::size(test_chars), test_chars);
 	always_printf("aconst_0  : %u, %s", aconst_0	.size(), aconst_0	.begin());
 	always_printf("aconst_1  : %u, %s", aconst_1	.size(), aconst_1	.begin());
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());

@@ -103,10 +103,6 @@ namespace gpk
 	//	}
 	//	always_printf("%.*s: %u bytes; showing %u%s\n%s", GPK_VIEW_ARGS(label), bytes.size(), count, count < bytes.size() ? " (prefix only)" : "", text);
 	//}
-	struct STestLogWriters {
-		log_print_t			Print				= {};
-		log_write_t			Write				= {};
-	};
 	struct STestLogBuffer {
 		mutex				Mutex				= {};
 		string				Text				= {};
@@ -116,8 +112,6 @@ namespace gpk
 		u3_t				SeedOverride		= {};
 		b8_t				SeedOverrideEnabled = {};
 
-		STestLogBuffer		* ActiveLog			= {};
-		STestLogWriters		Writers				= {};
 		bool				Console				= {};
 
 		u3_t				testSeed			(u3_t fallback)		{ rtrn SeedOverrideEnabled ? SeedOverride : fallback; }
@@ -128,29 +122,18 @@ namespace gpk
 	struct STestLogCapture {
 		STestRunnerState	& Runner;	
 		STestLogBuffer		* PreviousBuffer	= {};
-		STestLogWriters		Previous			= {};
 
 							STestLogCapture		(cnst STestLogCapture &)	= delete;
 		STestLogCapture		& oper=				(cnst STestLogCapture &)	= delete;
 
 							~STestLogCapture	()							{
-			Runner.ActiveLog	= PreviousBuffer;
-			if(Previous.Print != testCapturePrint || Previous.Write != testCaptureWrite)
-				::gpk::setupLogCallbacks(Previous.Print, Previous.Write);
 		}
 							STestLogCapture		(STestRunnerState & runner, STestLogBuffer & buffer, bool console)
 			: Runner			(runner)
 			, PreviousBuffer	(&buffer)									{
-			::gpk::getLogCallbacks(Previous.Print, Previous.Write);
 			if(0 == PreviousBuffer) {
-				Runner.Writers		= Previous;
 				Runner.Console		= console;
 			}
-			Runner.ActiveLog	= &buffer;
-			if(Previous.Print != testCapturePrint || Previous.Write != testCaptureWrite)
-				::gpk::setupLogCallbacks(testCapturePrint, testCaptureWrite);
-			if(!PreviousBuffer && false == Runner.Console)
-				Previous			= {};
 		}
 
 	};

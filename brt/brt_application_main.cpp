@@ -41,12 +41,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToText.x	= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, (::gpk::cid_t)-1);
 	::gpk::tcpipInitialize();
-	uint64_t					port						= 9998;
-	uint64_t					adapter						= 0;
+	u3_t 					port						= 9998;
+	u3_t 					adapter						= 0;
 	{ // load port from config file
 		::gpk::vcst_t				jsonPort					= {};
 		const ::gpk::SJSONReader	& jsonReader				= framework.JSONConfig.Reader;
-		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, app.ProcessFileName);
+		const s2_t				indexObjectApp				= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, app.ProcessFileName);
 		if_true_wf(::gpk::failed(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
 		else {
 			if_fail_wf(gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, app.ProcessFileName	), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessFileName	));
@@ -55,13 +55,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 			if_fail_wf(gpk::jsonExpressionResolve("listen_port"						, jsonReader, indexObjectApp, jsonPort				), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(jsonPort))
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, port);
-				info_printf("Port to listen on: %u.", (uint32_t)port);
+				info_printf("Port to listen on: %u.", (u2_t )port);
 			}
 			jsonPort = "";
 			if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, adapter);
-				info_printf("Adapter: %u.", (uint32_t)adapter);
+				info_printf("Adapter: %u.", (u2_t )adapter);
 			}
 		}
 	}
@@ -74,7 +74,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	szCmdlineFinal.push_back(0);
 	szCmdlineApp.push_back(0);
 
-	if_fail_fef(gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (uint32_t)port);
+	if_fail_fef(gpk::serverStart(app.Server, (uint16_t)port, (s1_t)adapter), "Failed to start server on port %u. Port busy?", (u2_t )port);
 	return 0;
 }
 
@@ -89,7 +89,7 @@ sttc	::gpk::err_t	createChildProcess
 	::gpk::vstr_t				szCmdlineFinal			= commandLine;
 	bool						bSuccess				= false;
 	stxp	bool				isUnicodeEnv			= false;
-	stxp	uint32_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stxp	u2_t 			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 	
 	if(INVALID_HANDLE_VALUE != process.ProcessInfo.hProcess	){ CloseHandle(process.ProcessInfo.hProcess	); }
 	bSuccess				= CreateProcessA(szCmdlineApp	// Create the child process.
@@ -125,10 +125,10 @@ static	::gpk::err_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gp
 
 static	::gpk::err_t	readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	static	::gpk::au0_t		chBuf;
-	stxp	uint32_t			BUFSIZE					= 1024 * 1024 * 50;
+	stxp	u2_t 			BUFSIZE					= 1024 * 1024 * 50;
 	chBuf.resize(BUFSIZE);
 	for (;;) {
-		uint32_t					dwRead					= 0;
+		u2_t 					dwRead					= 0;
 		if_zero_fe(ReadFile(handles.ChildStd_OUT_Read, chBuf.begin(), chBuf.size(), (DWORD*)&dwRead, NULL));
 		if(0 == dwRead)
 			break;
@@ -177,7 +177,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	{	// pick up messages for later processing
 		::std::lock_guard			lock						(app.Server.Mutex);
 		receivedPerClient.resize(app.Server.Clients.size());
-		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
+		for(u2_t  iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
 			::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
 			::gpk::lock_guard					lockRecv					(conn->Queue.MutexReceive);
 			*(receivedPerClient[iClient])	= app.Server.Clients[iClient]->Queue.Received;
@@ -188,10 +188,10 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	app.ClientIOHandles.resize(receivedPerClient.size());
 	app.ClientProcesses.resize(receivedPerClient.size());
 	{	// Exectue processes
-		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
+		for(u2_t  iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			::brt::SProcessHandles		& iohandles				= app.ClientIOHandles[iClient];
 			::brt::SProcess				& process				= app.ClientProcesses[iClient];
-			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
+			for(u2_t  iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, (*(receivedPerClient[iClient]))[iMessage]->Payload.begin());
 				::gpk::vu0_t					environmentBlock		= (*(receivedPerClient[iClient]))[iMessage]->Payload;
 				// llamar proceso
@@ -204,7 +204,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				::gpk::vcu0_t					payload					= (*(receivedPerClient[iClient]))[iMessage]->Payload;
 				::gpk::err_t					contentOffset			= payload.find((gpk::u0_t)0U);
 				if_fail_cef(contentOffset, "%s", "Failed to find environment block stop code.");
-				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
+				if(payload.size() && (payload.size() > (u2_t )contentOffset + 2))
 					if_fail_ef(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2}), "%s", "Failed to write request content to process' stdin.");
 				if_fail_ef(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process.
 			}
@@ -214,12 +214,12 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	::gpk::apobj<::gpk::apobj<::gpk::au0_t>>	& clientsResponses		= app.ClientResponses;
 	if_fail_fef(clientsResponses.resize(receivedPerClient.size()), "current:%u,new:%u", clientsResponses.size(), receivedPerClient.size());
 	{	// Read processes output if they're done processing.
-		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
+		for(u2_t  iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			::gpk::pobj<::gpk::apobj<::gpk::au0_t>>	& clientResponses = clientsResponses[iClient];
 			if_fail_fe(clientResponses->resize(receivedPerClient[iClient]->size()));
 			::brt::SProcessHandles	& iohandles				= app.ClientIOHandles[iClient];
 			::brt::SProcess			& process				= app.ClientProcesses[iClient];
-			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
+			for(u2_t  iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
 				info_printf("Client %i received: %.*s.", iClient, (*(receivedPerClient[iClient]))[iMessage]->Payload.size(), (*(receivedPerClient[iClient]))[iMessage]->Payload.begin());
 				// generar respuesta proceso
 				//clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
@@ -231,9 +231,9 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 			}
 		}
 	}
-	for(uint32_t iClient = 0; iClient < clientsResponses.size(); ++iClient) {
+	for(u2_t  iClient = 0; iClient < clientsResponses.size(); ++iClient) {
 		::gpk::pobj<::gpk::apobj<::gpk::au0_t>>	& clientResponses = clientsResponses[iClient];
-		for(uint32_t iMessage = 0; iMessage < clientResponses->size(); ++iMessage) { // contestar
+		for(u2_t  iMessage = 0; iMessage < clientResponses->size(); ++iMessage) { // contestar
 			if((*clientResponses)[iMessage]->size()) {
 				::std::lock_guard					lock						(app.Server.Mutex);
 				::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
@@ -257,7 +257,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	app;
 	::gpk::pobj<::gpk::rtbgra8d32>	target;
 	target.create();
-	target->resize(app.Framework.RootWindow.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
+	target->resize(app.Framework.RootWindow.Size, {0xFF, 0x40, 0x7F, 0xFF}, (u2_t )-1);
 	{
 		::std::lock_guard				lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
@@ -276,14 +276,14 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 //// Example 1
 //// By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
 //static int					REM_tmain0							()		{
-//	stxp	uint32_t	BUFSIZE					= 4096;
+//	stxp	u2_t 	BUFSIZE					= 4096;
 //	char							environmentBlock2Set	[BUFSIZE]	= {};
-//	int32_t							charsWritten						= 0;
+//	s2_t							charsWritten						= 0;
 //	DWORD							dwFlags								= 0;
 //	stxp	::gpk::vcst_c			szAppName	[]						= GPK_CXS("ex3.exe");
 //	PROCESS_INFORMATION				pi									= {};
-//	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
-//	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
+//	if_fail_fef(charsWritten += 1 + (s2_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
+//	if_fail_fef(charsWritten += 1 + (s2_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
 //	// Create the child process, specifying a new environment block.
 //	STARTUPINFOA						si									= {sizeof(STARTUPINFOA)};
 //	stxp	bool		isUnicodeEnv						= false;
@@ -299,7 +299,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 //#define VARNAME "MyVariable"
 //
 //static int					REM_tmain1			() {
-//	stxp	const uint32_t			BUFSIZE					= 4096;
+//	stxp	const u2_t 			BUFSIZE					= 4096;
 //	stxp	::gpk::vcst_c			szAppName			= GPK_CXS("ex3.exe");
 //	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
 //	PROCESS_INFORMATION				pi					= {};

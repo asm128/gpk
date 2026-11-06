@@ -7,8 +7,8 @@
 #include <Windows.h>
 
 using namespace gpk;
-//static gpk::err_t 							metrics_split			(const view_const_string& input_string, n2<int32_t>& output_metrics)												{
-//	uint32_t												iChar					= 0;
+//static gpk::err_t 							metrics_split			(const view_const_string& input_string, n2<s2_t>& output_metrics)												{
+//	u2_t 												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 //		if('x' == input_string[iChar]) {
 //			asc_t									sx						= {};
@@ -97,7 +97,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 			output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>QueryString (%u): %.*s</h4>", querystring.size(), GPK_VIEW_ARGS(querystring)));
 		}
 		const view<vcst_t>		keyvalviews			= runtimeValues.QueryStringElements;
-		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
+		for(u2_t  iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
 			const kv<vcst_t>						& keyval			= runtimeValues.QueryStringKeyVals[iChar];
@@ -115,7 +115,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 		find("CONTENT_LENGTH"	, queryStringKeyVals, contentLength	);
 		output.append(buffer, formatForSize({contentLength	.begin(), contentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
 		output.append(buffer, formatForSize({contentype		.begin(), contentype	.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>", (uint32_t)framework.TargetSize.x, (uint32_t)framework.TargetSize.y));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>", (u2_t )framework.TargetSize.x, (u2_t )framework.TargetSize.y));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>IP: %u.%u.%u.%u:%u</h4>"		, GPK_IPV4_EXPAND(framework.RuntimeValues.RemoteIP)));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String IP: %s</h4>"			, remoteIP	.begin()));
@@ -124,18 +124,18 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 
 		//int														argc					= __argc;
 		//char													** argv					= __argv;
-		//for(int32_t iArg = 0; iArg < argc; ++iArg)
+		//for(s2_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
 			asc_t	content_body			= {};
 			content_body.resize(runtimeValues.Content.Length);
-			uint32_t			iChar					= 0;
+			u2_t 			iChar					= 0;
 			char				iArg					= 0;
 			while(iChar < runtimeValues.Content.Length) {
 				int					count					= 0;
 				//memset(content_body.begin(), 0, content_body.size());
 				content_body.resize(0);
-				uint32_t			iOffset					= iChar;
+				u2_t 			iOffset					= iChar;
 				bool				value					= false;
 				while(iChar < runtimeValues.Content.Length && (iArg = runtimeValues.Content.Body[iChar++])) {
 					if(iArg == '\n') {
@@ -166,7 +166,7 @@ static ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	SCGIFramework									framework			= {runtimeValues};
 	if_fail_fe(cgiRuntimeValuesLoad(framework.RuntimeValues));
 	const array_obj<vcst_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
-	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
+	for(u2_t  iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 
 	printf("%s\r\n\r\n",

@@ -8,6 +8,8 @@
 
 #include "gpk_udp_client.h"
 
+usns gpk;
+
 sttc	gpk::err_t	initClient			(gpk::SUDPClient & bestClient)										{
 	bestClient.AddressConnect	= {};
 	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);	// If loading the remote IP from the json fails, we fall back to the local address.
@@ -32,10 +34,10 @@ sttc	gpk::err_t	initClient			(gpk::SUDPClient & bestClient)										{
 			::gpk::vcst_t					jsonPort							= {};
 			if_fail_w(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_port", jsonConfig, 0, jsonPort))
 			else {
-				uint64_t					port								= 0;
+				u3_t 					port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, port);
 				bestClient.AddressConnect.Port	= (uint16_t)port;
-				info_printf("Remote port: %u.", (uint32_t)port);
+				info_printf("Remote port: %u.", (u2_t )port);
 			}
 		}
 	}
@@ -59,7 +61,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 		::gpk::au0_t						responseRemote;
 		{	// Send the request data to the connected service.
 			if_true_vef(-1, bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			if_fail_fe(gpk::connectionPushData(bestClient, bestClient.Queue, {(const uint8_t*)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
+			if_fail_fe(gpk::connectionPushData(bestClient, bestClient.Queue, {(const u0_t *)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
 				if_fail_fe(gpk::clientUpdate(bestClient));
 				::gpk::apobj<::gpk::SUDPMessage>	received;

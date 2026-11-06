@@ -119,7 +119,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 	if(app.D3DApp.Scene.IndexBuffer.size() < app.Engine.Scene->Graphics->Meshes.size() || !app.D3DApp.GUIStuff.IndexBuffer) {
 		if_fail_fe(app.D3DApp.CreateDeviceResources(*app.Engine.Scene->Graphics));
 	}
-	app.D3DApp.Text.Update(frameInfo.Seconds.LastFrame, frameInfo.Seconds.Total, (uint32_t)frameInfo.FrameMeter.FramesPerSecond);
+	app.D3DApp.Text.Update(frameInfo.Seconds.LastFrame, frameInfo.Seconds.Total, (u2_t )frameInfo.FrameMeter.FramesPerSecond);
 #endif
 
 	//-----------------------------
@@ -163,8 +163,8 @@ static	::gpk::error_t	sceneDraw
 	
 
 	::gpk::an3f32				& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
-	for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord) {
-		::gpk::n3i16				coord		= wireframePixelCoords[iCoord].s1_t();
+	for(u2_t  iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord) {
+		::gpk::n3i16				coord		= wireframePixelCoords[iCoord].s1();
 		::gpk::rgbaf				color		= 
 			{ (float)(totalSeconds - iCoord / 1.0f / totalSeconds)
 			, (float)(totalSeconds - iCoord / 2.0f / totalSeconds)
@@ -199,7 +199,7 @@ static	::gpk::error_t	sceneDraw
 #else 
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::prtbgra8d32			backBuffer				= framework.RootWindow.BackBuffer;
-	backBuffer->resize(framework.RootWindow.BackBuffer->Color.metrics(), clearColor, (uint32_t)-1);
+	backBuffer->resize(framework.RootWindow.BackBuffer->Color.metrics(), clearColor, (u2_t )-1);
 	::sceneDraw(engineScene, app.Engine.Scene->RenderCache, *backBuffer, cameraSelected.Position, cameraSelected.Target, {0, 1}, 0);
 	if_fail_fe(gpk::guiDraw(*app.Framework.GUI, backBuffer->Color));
 	memcpy(framework.RootWindow.BackBuffer->Color.View.begin(), backBuffer->Color.View.begin(), backBuffer->Color.View.byte_count());

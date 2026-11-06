@@ -1,17 +1,14 @@
-#ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
-#	define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
-#endif
-
 #include "gpk_json.h"
 
 #include "gpk_file.h"
 #include "gpk_parse.h"
 #include "gpk_math.h"
 #include "gpk_cstring.h"
+#include "gpk_string_compose.h"
 
 GPK_USING_TYPEINT();
 
-#define json_info_printf(...) // info_printf
+#define json_info_printf(...) ::gpk::dummy(__VA_ARGS__) // info_printf
 #define json_error_printf error_printf
 
 gpk::err_t			gpk::jsonCompareObject		(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; for(u2_t iChild = 0; iChild < node.Children.size(); iChild += 2)	if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
@@ -101,7 +98,7 @@ gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, gpk::view<cnst vcst_t
 	case gpk::JSON_TYPE_INTEGER		: {
 		sc_t					temp[64]					= {};
 		if_fail_fe(::gpk::sprintf_s(temp, "%" GPK_FMT_S3, (s3_t)node->Token->Value));
-		if_fail_fe(output.append_string(temp));
+		if_fail_fe(::gpk::append_strings(output, temp));
 	}
 		break;
 	case gpk::JSON_TYPE_DECIMAL		: {
@@ -113,7 +110,7 @@ gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, gpk::view<cnst vcst_t
 		if_true_fef(lenNum >= (err_t)::gpk::size(temp), "JSON decimal exceeds the formatting buffer: %.16f.", f);
 		while(lenNum > 0 && (0 == temp[lenNum] || '0' == temp[lenNum]))
 			temp[lenNum--]					= 0;
-		if_fail_fe(output.append_string(temp));
+		if_fail_fe(::gpk::append_strings(output, temp));
 	}
 		break;
 	case gpk::JSON_TYPE_BOOLEAN			:
@@ -153,9 +150,9 @@ gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, gpk::view<cnst vcst_t
 sttc	gpk::err_t	jsonCloseElement			(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, u2_t indexChar) {
 	if_true_fef(tokens.size() <= (u2_t)stateReader.IndexCurrentElement, "Invalid parser state. Cannot close element: %" GPK_FMT_S2 ".", stateReader.IndexCurrentElement);
 	gpk::SJSONToken			* closing					= 0;
-	closing					= stateReader.CurrentElement; //&object[stateReader.IndexCurrentElement];
-	closing->Span.End		= (u2_t)indexChar + 1;
-	gpk::vcst_t			labelType				= gpk::get_value_label(closing->Type);
+	closing				= stateReader.CurrentElement; //&object[stateReader.IndexCurrentElement];
+	closing->Span.End	= (u2_t)indexChar + 1;
+	gpk::vcst_t				labelType				= gpk::get_value_label(closing->Type);
 	json_info_printf("%.*s closed. Index %.2i. Level: %" GPK_FMT_S2 ". Parent index: %" GPK_FMT_S2 ". Node type: %" GPK_FMT_S2 ". Begin: %" GPK_FMT_S2 ". End: %" GPK_FMT_S2 ".", (int)labelType.size(), labelType.begin(), stateReader.IndexCurrentElement, stateReader.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End);
 	stateReader.IndexCurrentElement					= closing->ParentIndex;
 	--stateReader.NestLevel;
@@ -197,6 +194,7 @@ sttc	gpk::err_t	jsonTestAndCloseKey			(gpk::SJSONReaderState & stateReader, gpk:
 sttc	gpk::err_t	jsonCloseOrDiscardEmptyKOrV	(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, gpk::JSON_TYPE containerType) {
 	gpk::err_t				errVal						= 0;
 	cnst gpk::vcst_t			labelType				= gpk::get_value_label(containerType);
+	(void)labelType;
 	if(tokens[tokens.size() - 1].Type == containerType) {
 		json_info_printf("Discarding empty container element at index %" GPK_FMT_S2 " (%.*s). Level: %" GPK_FMT_S2 "", tokens.size() - 1, (int)labelType.size(), labelType.begin(), stateReader.NestLevel);
 		stateReader.IndexCurrentElement	= tokens[tokens.size() - 1].ParentIndex;

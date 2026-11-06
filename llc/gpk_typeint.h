@@ -126,7 +126,7 @@ namespace gpk
 #if defined(GPK_WINDOWS) && !defined(_WIN64) && !defined(WIN64)
 	tydf	long		refcount_t;
 #else
-	tydf	intptr_t	refcount_t;
+	tydf	sP_t		refcount_t;
 #endif
 	tdcs	refcount_t	refcount_c;
 	tdvl	refcount_t	refcount_vl;

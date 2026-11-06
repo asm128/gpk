@@ -1,10 +1,10 @@
-#include "llc_enum.h"
-#include "llc_apod_serialize.h"
+#include "gpk_enum.h"
+#include "gpk_apod_serialize.h"
 
-#ifndef LLC_CCSDS_H
-#define LLC_CCSDS_H
+#ifndef GPK_CCSDS_H
+#define GPK_CCSDS_H
 
-namespace llc
+namespace gpk
 {
     GDEFINE_ENUM_TYPE (CCSDS_VALUE, u0_t);
     GDEFINE_ENUM_VALUE(CCSDS_VALUE, B8      , 0);
@@ -99,7 +99,7 @@ namespace llc
     
     inline  u2_t            size            (const CCSDSPayload & payload)  { return payload.Size(); }
 
-    GDEFINE_ENUM_TYPE (CCSDS_APID, ::llc::u1_t);
+    GDEFINE_ENUM_TYPE (CCSDS_APID, ::gpk::u1_t);
     GDEFINE_ENUM_VALUE(CCSDS_APID, Telemetry    , 1);
     GDEFINE_ENUM_VALUE(CCSDS_APID, Energy       , 2);
     GDEFINE_ENUM_VALUE(CCSDS_APID, Compute      , 3);
@@ -113,4 +113,4 @@ namespace llc
     err_t ccsdsPacket         (au0_t & output, bool telemetry, CCSDS_APID apid, u1_t family = -1, u1_t subfamily = -1, const CCSDSPayload & payload = {});
 } // namespace
 
-#endif // LLC_CCSDS_H
+#endif // GPK_CCSDS_H

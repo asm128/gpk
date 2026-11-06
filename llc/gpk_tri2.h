@@ -8,9 +8,9 @@
 namespace gpk 
 {
 #pragma pack(push, 1)
-	tpl_t struct tri2 : public tri<::gpk::n2<_t>>		{
+	tpl_t struct tri2 : public tri<n2<_t>>		{
 		tydf	_t				T;
-		tydf	::gpk::n2<T>	TVertex;
+		tydf	n2<T>	TVertex;
 
 		using	tri<TVertex>	::A;
 		using	tri<TVertex>	::B;
@@ -37,12 +37,12 @@ namespace gpk
 				, C.tplt Cast<_t2>()
 				};
 		}
-		cxpr	bool			CulledX		(cnst ::gpk::minmax<T>& minMax)	csnx	{
+		cxpr	bool			CulledX		(cnst minmax<T>& minMax)	csnx	{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				;
 		}
-		cxpr	bool			CulledY		(cnst ::gpk::minmax<T>& minMax)	csnx	{
+		cxpr	bool			CulledY		(cnst minmax<T>& minMax)	csnx	{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				;
@@ -75,8 +75,8 @@ namespace gpk
 	tydf	minmax<tri2f3_t>	minmaxtri2f3_t;	tdcs minmaxtri2f3_t	minmaxtri2f3_c;
 #pragma pack(pop)
 
-	tplT	::gpk::n2<T>	triangleWeight	(cnst ::gpk::tri<T> & weights, cnst ::gpk::tri2<T> & values)	nxpt	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
-	tplT	::gpk::tri2<T>&	translate		(::gpk::tri2<T> & triangle, cnst ::gpk::n2<T> & translation)	nxpt	{
+	tplT	n2<T>		triangleWeight	(cnst tri<T> & weights, cnst tri2<T> & values)	nxpt	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
+	tplT	tri2<T>&	translate		(tri2<T> & triangle, cnst n2<T> & translation)	nxpt	{
 		triangle.A			+= translation;
 		triangle.B			+= translation;
 		triangle.C			+= translation;

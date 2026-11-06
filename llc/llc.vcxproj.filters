@@ -807,6 +807,9 @@
     <ClInclude Include="gpk_system_key.h">
       <Filter>system</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_pack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

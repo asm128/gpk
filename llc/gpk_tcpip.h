@@ -12,12 +12,12 @@ namespace gpk
 	struct SIPv4 {
 		u2_t			IP					= {};
 		
-							SIPv4				(gpk::vcst_t strIP)							{ 	tcpipAddress(strIP, IP); }
-							
-		inxp				SIPv4				()								noexcept	= default;
-		inxp				SIPv4				(const SIPv4 &)					noexcept	= default;
-		inxp				SIPv4				(u2_t little_endian)		noexcept	: IP(little_endian) {}
-		cxpr				SIPv4				(u0_t _0, u0_t _1, u0_t _2, u0_t _3 = 0)
+						SIPv4				(vcst_t strIP)							{ 	tcpipAddress(strIP, IP); }
+						
+		inxp			SIPv4				()								noexcept	= default;
+		inxp			SIPv4				(const SIPv4 &)					noexcept	= default;
+		inxp			SIPv4				(u2_t little_endian)		noexcept	: IP(little_endian) {}
+		cxpr			SIPv4				(u0_t _0, u0_t _1, u0_t _2, u0_t _3 = 0)
 			: IP
 			{ 	byte_to<u2_t>(_0, 0)
 			| 	byte_to<u2_t>(_1, 1)
@@ -27,11 +27,11 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(SIPv4, IP == other.IP);
 
-		inxp	u0_t		operator[]			(u0_t index)		const	noexcept	{ return 	byte_at(IP, index); }
+		inxp	u0_t	operator[]			(u0_t index)		const	noexcept	{ return 	byte_at(IP, index); }
 		u0_t&			operator[]			(u0_t index)				noexcept	{ return *(((u0_t*)&IP) + index); }
 
-		inxp	operator	u2_t			()					const	noexcept	{ return IP; }
-		cxpr	operator	gpk::astu0_t<4>		()					const	noexcept	{
+		inxp	oper	u2_t			()					const	noexcept	{ return IP; }
+		cxpr	oper	astu0_t<4>		()					const	noexcept	{
 			return 
 				{ 	byte_at(IP, 0)
 				, 	byte_at(IP, 1) 
@@ -41,8 +41,8 @@ namespace gpk
 		}
 
 		template<size_t buflen>
-		gpk::astsc_t<(buflen > 16) ? buflen : 16>	toString			(sc_t separator = '.')						const	noexcept	{
-			gpk::astsc_t<(buflen > 16) ? buflen : 16>	result	= {};
+		astsc_t<(buflen > 16) ? buflen : 16>	toString			(sc_t separator = '.')						const	noexcept	{
+			astsc_t<(buflen > 16) ? buflen : 16>	result	= {};
 			print(result.Storage, separator);
 			return result; 
 		}
@@ -59,7 +59,7 @@ namespace gpk
 		}
 	};
 
-	stin		astsc_t<16>	str			(const gpk::SIPv4 ip)	{ return ip.toString<16>(); }
+	stin		astsc_t<16>	str			(const SIPv4 ip)	{ return ip.toString<16>(); }
 
 	typedef struct SIPv4End : SIPv4 {
 		u1_t			Port				= {};
@@ -67,11 +67,11 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(SIPv4End, IP == other.IP && Port == other.Port);
 
 		template<size_t buflen>
-		operator			gpk::astsc_t<min((size_t)22, buflen)>	()		const	noexcept	{
+		operator			astsc_t<min((size_t)22, buflen)>	()		const	noexcept	{
 			if(0 == Port)
 				return *(const SIPv4*)this;
 
-			gpk::astsc_t<buflen>	result;
+			astsc_t<buflen>	result;
 			sprintf_s(result.Storage, "%u.%u.%u.%u:%u"
 				, 	byte_at(IP, 0)
 				, 	byte_at(IP, 1)
@@ -144,7 +144,7 @@ namespace gpk
 				err_t	tcpipAddress		(u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4);
 	stin		err_t	tcpipAddress		(u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)							{
 		address.Port		= portRequested;
-		if_fail_fe(gpk::tcpipAddress(portRequested, adapterIndex, mode, address.IP));
+		if_fail_fe(tcpipAddress(portRequested, adapterIndex, mode, address.IP));
 		return 0;
 	}
 	stin		err_t	tcpipAddress		(vcst_t hostName, u1_t portRequested, u2_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{

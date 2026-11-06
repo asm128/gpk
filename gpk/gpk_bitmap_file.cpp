@@ -2,6 +2,7 @@
 #include "gpk_bitmap_file.h"
 #include "gpk_png.h"
 #include "gpk_file.h"
+#include "gpk_string_compose.h"
 
 GPK_USING_TYPEINT ();
 GPK_USING_VIEW    ();
@@ -71,7 +72,7 @@ static	gpk::err_t LoadBitmapFromBMPFile		(const ::gpk::vcst_t & szFileName, ::gp
 
 	::gpk::apod<sc_t>			filename					= szFileName;
 	filename.resize(filename.size() - 3);
-	filename.append_string("png");
+	::gpk::append_strings(filename, "png");
 
 	::gpk::vcst_t					pngfn						= {filename};
 	::gpk::au0_t					filebytes;

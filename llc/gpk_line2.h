@@ -7,9 +7,9 @@
 namespace gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	tplt<tpnm _tDimension>	struct line2 : public line<::gpk::n2<_tDimension>>		{
+	tplt<tpnm _tDimension>	struct line2 : public line<n2<_tDimension>>		{
 		typedef	_tDimension		T;
-		typedef	::gpk::n2<T>	TVertex;
+		typedef	n2<T>	TVertex;
 		using line<TVertex>::	A;
 		using line<TVertex>::	B;
 		using line<TVertex>::	line;
@@ -22,22 +22,22 @@ namespace gpk
 				};
 		}
 	};
-	typedef line2<f2_t>	line2f2_t, line2f;
-	typedef line2<f3_t>	line2f64, line2d;
-	typedef line2<u0_t>	line2u8;
-	typedef line2<u1_t>	line2u1_t;
-	typedef line2<u2_t>	line2u32;
-	typedef line2<u3_t>	line2u64;
-	typedef line2<s0_t>	line2i8;
-	typedef line2<s1_t>	line2s1_t;
-	typedef line2<s2_t>	line2i32;
-	typedef line2<s3_t>	line2i64;
+	tydf line2<f2_t> line2f2_t; tdcs line2f2_t line2f2_c;
+	tydf line2<f3_t> line2f3_t; tdcs line2f3_t line2f3_c;
+	tydf line2<u0_t> line2u0_t; tdcs line2u0_t line2u0_c;
+	tydf line2<u1_t> line2u1_t; tdcs line2u1_t line2u1_c;
+	tydf line2<u2_t> line2u2_t; tdcs line2u2_t line2u2_c;
+	tydf line2<u3_t> line2u3_t; tdcs line2u3_t line2u3_c;
+	tydf line2<s0_t> line2s0_t; tdcs line2s0_t line2s0_c;
+	tydf line2<s1_t> line2s1_t; tdcs line2s1_t line2s1_c;
+	tydf line2<s2_t> line2s2_t; tdcs line2s2_t line2s2_c;
+	tydf line2<s3_t> line2s3_t; tdcs line2s3_t line2s3_c;
 
-	tplt<tpnm T> sinx	T		rise		(const ::gpk::line2<T> & line)									noexcept	{ return line.B.y - line.A.y;		}
-	tplt<tpnm T> sinx	T		run			(const ::gpk::line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
-	tplt<tpnm T> sinx	T		slope		(const ::gpk::line2<T> & line)												{ return rise(line) / run(line);	}
-	tplt<tpnm T> stxp	T		orient2d	(const ::gpk::line2<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	tplt<tpnm T> stin	f3_t	determinant	(const ::gpk::line2<T>& line)									noexcept	{ return ::gpk::determinant((f3_t)line.A.x, (f3_t)line.A.y, (f3_t)line.B.x, (f3_t)line.B.y); }
+	tplt<tpnm T> sinx	T		rise		(const line2<T> & line)									noexcept	{ return line.B.y - line.A.y;		}
+	tplt<tpnm T> sinx	T		run			(const line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
+	tplt<tpnm T> sinx	T		slope		(const line2<T> & line)												{ return rise(line) / run(line);	}
+	tplt<tpnm T> stxp	T		orient2d	(const line2<T> & segment, const n2<T> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	tplt<tpnm T> stin	f3_t	determinant	(const line2<T>& line)									noexcept	{ return determinant((f3_t)line.A.x, (f3_t)line.A.y, (f3_t)line.B.x, (f3_t)line.B.y); }
 #pragma pack(pop)
 	// ---- Collision
 	//tplt<tpnm T> static	bool	raySegmentIntersect	(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{

@@ -23,7 +23,7 @@
 		::gpk::SCGIRuntimeValues	runtimeValues;											\
 		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const sc_t**)argv, (u2_t)argc});		\
 		::gpk::apod<sc_t>			output;													\
-		if_fail_fe(output.append_string("Content-type: application/json\r\n"));				\
+		if_fail_fe(::gpk::append_strings(output, "Content-type: application/json\r\n"));				\
 		::generate_output(runtimeValues, output);											\
 		output.push_back('\0');																\
 		fprintf(stdout, "%.*s", GPK_VIEW_ARGS(output));										\

@@ -32,6 +32,7 @@
 #	define	GPK_FREE_MODULE(moduleAddr)								FreeLibrary		((HMODULE)moduleAddr)
 #	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		GetProcAddress	((HMODULE)moduleHandle, symbolName)
 #elif defined(GPK_LINUX) || defined(GPK_ANDROID)
+#	include <dlfcn.h>
 #	define	GPK_LOAD_MODULE(moduleName)								dlopen	(moduleName, RTLD_GLOBAL)
 #	define	GPK_FREE_MODULE(moduleAddr)								dlclose	(moduleAddr)
 #	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		dlsym	(moduleHandle, symbolName)

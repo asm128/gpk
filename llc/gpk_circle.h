@@ -8,21 +8,21 @@ namespace gpk
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	tplt<tpnm T> 
 	struct circle { 
-		f3_t			Radius; 
-		::gpk::n2<T>	Center; 
+		f3_t		Radius; 
+		n2<T>		Center; 
 
 		GPK_DEFAULT_OPERATOR(circle<T>, Center == other.Center && Radius == other.Radius); 
 	};
-	typedef circle<f2_t>		circlef2_t, circlef;
-	typedef circle<f3_t>		circlef64, circled;
-	typedef circle<u0_t>		circleu8;
-	typedef circle<u1_t>	circleu1_t;
-	typedef circle<u2_t>	circleu32;
-	typedef circle<u3_t>	circleu64;
-	typedef circle<s0_t>		circlei8;
-	typedef circle<s1_t>		circlei16;
-	typedef circle<s2_t>		circlei32;
-	typedef circle<s3_t>		circlei64;
+	tydf circle<f2_t> circlef2_t; tdcs circlef2_t circlef2_c;
+	tydf circle<f3_t> circlef3_t; tdcs circlef3_t circlef3_c;
+	tydf circle<u0_t> circleu0_t; tdcs circleu0_t circleu0_c;
+	tydf circle<u1_t> circleu1_t; tdcs circleu1_t circleu1_c;
+	tydf circle<u2_t> circleu2_t; tdcs circleu2_t circleu2_c;
+	tydf circle<u3_t> circleu3_t; tdcs circleu3_t circleu3_c;
+	tydf circle<s0_t> circles0_t; tdcs circles0_t circles0_c;
+	tydf circle<s1_t> circles1_t; tdcs circles1_t circles1_c;
+	tydf circle<s2_t> circles2_t; tdcs circles2_t circles2_c;
+	tydf circle<s3_t> circles3_t; tdcs circles3_t circles3_c;
 #pragma pack(pop)
 } // namespace
 

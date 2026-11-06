@@ -6,6 +6,9 @@
 #include "gpk_parse.h"
 #include "gpk_file.h"
 #include "gpk_chrono.h"
+#include "gpk_string_compose.h"
+
+
 
 #include "gpk_udp_client.h"
 
@@ -15,7 +18,7 @@ sttc gpk::err_t		cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::
 		sprintf_s(filename, "la_betty_criminal_at_%llu.jpg", ::gpk::timeCurrent());
 		if_fail_fe(::gpk::fileFromMemory(filename, runtimeValues.Content.Body));
 	}
-	if_fail_fe(output.append_string("{\"code\":200, \"message\": \"OK\"}"));
+	if_fail_fe(::gpk::append_strings(output, "{\"code\":200, \"message\": \"OK\"}"));
 	return 0;
 }
 

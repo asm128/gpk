@@ -18,7 +18,7 @@ ndsc	gpk::err_t	gpk::keyValVerify		(view<cnst keyval<vcst_t>> environViews, vcst
 gpk::err_t			gpk::token_split		(char valueSeparator, vcst_t input_string, keyval<vcst_t> & output_views)	{
 	s2_t					indexSeparator;
 	if_fail_wf(indexSeparator = find(valueSeparator, input_string), "'%c' character not found.", valueSeparator);
-	output_views.Key		= {input_string.begin(), (u2_t)indexSeparator};
+	output_views.Key	= {input_string.begin(), (u2_t)indexSeparator};
 
 	b8_c					hasValue							= indexSeparator > 0 && u2_t(indexSeparator + 1) < input_string.size();
 	output_views.Val	= hasValue

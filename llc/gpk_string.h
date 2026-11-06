@@ -49,4 +49,6 @@ namespace gpk
 
 } // namespace
 
+#define GPK_USING_STRING()  usng ::gpk::string
+
 #endif // GPK_STRING_H

@@ -119,7 +119,7 @@ gpk::err_t 		gpk::drawLine
 	, ::gpk::apod<::gpk::n3f2_t>	& pixelCoords
 	, ::gpk::grid<u2_t>	depthBuffer
 	) {
-	::gpk::line2i32				line					= {{(s2_t)lineFloat.A.x, (s2_t)lineFloat.A.y}, {(s2_t)lineFloat.B.x, (s2_t)lineFloat.B.y}};
+	::gpk::line2s2_t				line					= {{(s2_t)lineFloat.A.x, (s2_t)lineFloat.A.y}, {(s2_t)lineFloat.B.x, (s2_t)lineFloat.B.y}};
 	s2_t						xDiff					= (s2_t)fabs(line.B.x - line.A.x);
 	s2_t						yDiff					= (s2_t)-fabs(line.B.y - line.A.y);
 	s2_t						sx						= (s2_t)line.A.x < line.B.x ? 1 : -1;

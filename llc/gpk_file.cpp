@@ -126,7 +126,7 @@ sttc gpk::err_t fileSplitSmall(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 	for(u2_t iPart = 0; iPart < countParts; ++iPart) {
 		cnst u2_t		offsetPart = sizePartMax * iPart;
 		fileNameDst.clear();
-		if_fail_fe(gpk::append_strings(fileNameDst, fileNameSrc, '.', gpk::str(iPart)));
+		if_fail_fe(gpk::append_strings(fileNameDst, fileNameSrc, '.', iPart));
 		info_printf("Creating part %u: '%s'.", iPart, fileNameDst.begin());
 		cnst u2_t		countBytes = gpk::min(sizePartMax, fileInMemory.size() - offsetPart);
 		if_fail_fe(gpk::fileFromMemory(fileNameDst, gpk::vcs0_t{fileInMemory.begin() + offsetPart, countBytes}));
@@ -142,7 +142,7 @@ sttc gpk::err_t fileSplitLarge(gpk::vcst_t fileNameSrc, u2_c sizePartMax, u3_c s
 	u3_t				offset = 0;
 	for(u2_t iPart = 0; iPart < countParts; ++iPart) {
 		fileNameDst.clear();
-		if_fail_fe(gpk::append_strings(fileNameDst, fileNameSrc, '.', gpk::str(iPart)));
+		if_fail_fe(gpk::append_strings(fileNameDst, fileNameSrc, '.', iPart));
 		cnst u3_t		partSize = gpk::min(sizeFile - offset, (u3_t)sizePartMax);
 		u3_t			partOffset = 0;
 		while(partOffset < partSize) {
@@ -173,7 +173,7 @@ gpk::err_t gpk::fileSplit(vcst_t fileNameSrc, u2_c sizePartMax) {
 gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
 	string					fileNameSrc				= {};
 	::gpk::u2_t				iPart					= 0;
-	if_fail_fe(gpk::append_strings(fileNameSrc, fileNameDst, '.', gpk::str(iPart)));
+	if_fail_fe(gpk::append_strings(fileNameSrc, fileNameDst, '.', iPart));
 	::FILE					* fpDest					= 0;
 	gpk::string				finalPathName				= fileNameDst;
 	if_fail_fef(gpk::fopen_s(fpDest, finalPathName, GPK_OPEN_MODE_WRITE), "%s", finalPathName.begin());
@@ -183,7 +183,7 @@ gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
 	while(0 == gpk::fileToMemory(fileNameSrc, fileInMemory)) {	// Load first part and write it to the joined file.
 		if_true_fef(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fpDest), "Write operation failed. Disk full? File size: %" GPK_FMT_U2 ". File name: %s.", fileInMemory.size(), fileNameSrc.begin());
 		fileNameSrc.clear();
-		if_fail_fe(gpk::append_strings(fileNameSrc, fileNameDst, '.', gpk::str(++iPart)));
+		if_fail_fe(gpk::append_strings(fileNameSrc, fileNameDst, '.', ++iPart));
 		fileInMemory.clear();
 	}
 	fclose(fpDest);

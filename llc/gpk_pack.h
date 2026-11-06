@@ -1,10 +1,10 @@
-#include "llc_enum.h"
-#include "llc_functional.h"
+#include "gpk_enum.h"
+#include "gpk_functional.h"
 
-#ifndef LLC_PACK_H
-#define LLC_PACK_H
+#ifndef GPK_PACK_H
+#define GPK_PACK_H
 
-namespace llc
+namespace gpk
 {
     GDEFINE_ENUM_TYPE(PACK_TYPE, u0_t);
     GDEFINE_ENUM_VALUE(PACK_TYPE, NONE      , 0);
@@ -27,7 +27,7 @@ namespace llc
     tplTInTOut    err_t   packFilter4 (apod<TOut> & filtered, view<const TIn> unfiltered)                         { return unfiltered.for_each([&filtered](const TIn & element) { return filtered.push_back(element); } ); }
     tplTInTOut    err_t   packFilter  (apod<TOut> & filtered, view<const TIn> unfiltered, PACK_FILTER filterType) {
         switch(filterType) {
-        default: llc_enum_value_error(filterType); return -1;
+        default: gpk_enum_value_error(filterType); return -1;
         case PACK_FILTER_0: return filter0(filtered, unfiltered);
         case PACK_FILTER_1: return filter1(filtered, unfiltered);
         case PACK_FILTER_2: return filter2(filtered, unfiltered);
@@ -42,4 +42,4 @@ namespace llc
     tplTInTOut    err_t   viewUnpack  (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/)                         { return -1; }
 } // namespace
 
-#endif // LLC_PACK_H
+#endif // GPK_PACK_H

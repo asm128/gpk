@@ -115,35 +115,22 @@ namespace gpk
 			return Count;
 		}
 		// Returns the new size of the array
-		err_t				pop_back			(T & oldValue)							noexcept	{
+		err_t				pop_back			(T & oldValue)								noexcept	{
 			if_true_fe(0 == Count);
 			oldValue				= Data[--Count];
 			Data[Count]				= {};
 			return Count;
 		}
 		// Returns the index of the pushed value or -1 on failure
-		err_t				push_back			(cnst T & newValue)						noexcept	{
+		err_t				push_back			(cnst T & newValue)							noexcept	{
 			cnst s2_t				oldSize				= Count;
 			if_fail_fe(resize(oldSize + 1, newValue));
 			return oldSize;
 		}
-		inln		err_t	append_string		(cnst gpk::function<err_t(TArray&)> & funcAppend)	noexcept	{ return funcAppend ? funcAppend(*this) : 0; }
-		
-		tplN2uinln	err_t	append_string		(cnst T (&newChain)[N])								noexcept	{ return append_string(vcst_t{newChain}); }
-		inln		err_t	append_string		(vcst_t newChain)									noexcept	{ if_fail_fe(append(newChain.begin(), newChain.size())); return newChain.size(); }
-		inln		err_t	append_string		(cnst T & element)									noexcept	{ if_fail_fe(push_back(element)); return 1; }
-		inln		err_t	append_strings		(cnst view<cnst vcst_t> & newChains)				noexcept	{ 
-			s2_t					appended				= 0;
-			for(u2_t i = 0, stop = newChains.size(); i < stop; ++i) {
-				cnst vcst_t & newChain = newChains[i];
-				if_fail_fe(append(newChain));
-				appended += newChain.size();
-			}
-			return appended;
-		}
-		tplN2uinln	err_t	append				(cnst T (&newChain)[N])								noexcept	{ return append(newChain, (u2_t)N); }
-		inln		err_t	append				(cnst view<cnst T> & newChain)						noexcept	{ return append(newChain.begin(), newChain.size());	}
-		inln		err_t	append				(cnst view<cnst view<cnst T>> & newChains)			noexcept	{ 
+		inln		err_t	append				(cnst FError<TArray&> & funcAppend)			noexcept	{ return funcAppend ? funcAppend(*this) : 0; }
+		tplN2uinln	err_t	append				(cnst T (&newChain)[N])						noexcept	{ return append(newChain, (u2_t)N); }
+		inln		err_t	append				(cnst view<cnst T> & newChain)				noexcept	{ return append(newChain.begin(), newChain.size());	}
+		inln		err_t	append				(cnst view<cnst view<cnst T>> & newChains)	noexcept	{ 
 			s2_t					count				= 0;
 			for(u2_t i = 0, stop = newChains.size(); i < stop; ++i) {
 				cnst view<cnst T> & newChain		= newChains[i];
@@ -152,7 +139,7 @@ namespace gpk
 			}
 			return count;
 		}
-		err_t				append				(cnst T * chainToAppend, u2_t chainLength)			noexcept	{
+		err_t				append				(cnst T * chainToAppend, u2_t chainLength)	noexcept	{
 			if(0 == chainLength)
 				return Count;
 			if_null_fe(chainToAppend);
@@ -310,22 +297,19 @@ namespace gpk
 	tplTusng	apod		= array_pod<T>;
 	//tplTusng	ap			= apod	<T>;
 
-	tydf		apod<b8_t>	ab8_t;	tdcs	ab8_t	ab8_c;
-	tydf		apod<uc_t>	auc_t;	tdcs	auc_t	auc_c;
-	tydf		apod<sc_t>	asc_t;	tdcs	asc_t	asc_c;
-	tydf		apod<u0_t>	au0_t;	tdcs	au0_t	au0_c;
-	tydf		apod<u1_t>	au1_t;	tdcs	au1_t	au1_c;
-	tydf		apod<u2_t>	au2_t;	tdcs	au2_t	au2_c;
-	tydf		apod<u3_t>	au3_t;	tdcs	au3_t	au3_c;
-	tydf		apod<s0_t>	as0_t;	tdcs	as0_t	as0_c;
-	tydf		apod<s1_t>	as1_t;	tdcs	as1_t	as1_c;
-	tydf		apod<s2_t>	as2_t;	tdcs	as2_t	as2_c;
-	tydf		apod<s3_t>	as3_t;	tdcs	as3_t	as3_c;
-	tydf		apod<f2_t>	af2_t;	tdcs	af2_t	af2_c;
-	tydf		apod<f3_t>	af3_t;	tdcs	af3_t	af3_c;
-
-	stin	vstr_t	str		(asc_t & arg)	{ rtrn {arg.begin(), arg.size()}; }
-	stin	vcst_t	str		(asc_c & arg)	{ rtrn {arg.begin(), arg.size()}; }
+	tydf	apod<b8_t>	ab8_t;	tdcs	ab8_t	ab8_c;
+	tydf	apod<uc_t>	auc_t;	tdcs	auc_t	auc_c;
+	tydf	apod<sc_t>	asc_t;	tdcs	asc_t	asc_c;
+	tydf	apod<u0_t>	au0_t;	tdcs	au0_t	au0_c;
+	tydf	apod<u1_t>	au1_t;	tdcs	au1_t	au1_c;
+	tydf	apod<u2_t>	au2_t;	tdcs	au2_t	au2_c;
+	tydf	apod<u3_t>	au3_t;	tdcs	au3_t	au3_c;
+	tydf	apod<s0_t>	as0_t;	tdcs	as0_t	as0_c;
+	tydf	apod<s1_t>	as1_t;	tdcs	as1_t	as1_c;
+	tydf	apod<s2_t>	as2_t;	tdcs	as2_t	as2_c;
+	tydf	apod<s3_t>	as3_t;	tdcs	as3_t	as3_c;
+	tydf	apod<f2_t>	af2_t;	tdcs	af2_t	af2_c;
+	tydf	apod<f3_t>	af3_t;	tdcs	af3_t	af3_c;
 
 	tplt<tpnm T, tpnm TView>
 	err_t			join		(array_pod<T> & output, cnst T & separator, view<cnst TView> fields) {

@@ -52,7 +52,7 @@ namespace gpk
 		TEvent&			oper= 		(const TEvent &)					= default;
 		TEvent&			oper= 		(const TEView & eventView)			{ Type = eventView.Type; Data = eventView.Data; rtrn *this; }
 
-		oper			TEView		()							const	{ rtrn {Type, Data.cu8()}; }
+		oper			TEView		()							const	{ rtrn {Type, Data}; }
 
 		err_t			Save		(au0_t & output)			const	{
 			if_fail_fe(savePOD(output, Type));

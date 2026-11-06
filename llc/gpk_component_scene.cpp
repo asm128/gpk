@@ -3,6 +3,7 @@
 #include "gpk_stdstring.h"
 #include "gpk_json.h"
 #include "gpk_label.h"
+#include "gpk_string_compose.h"
 
 
 GPK_USING_TYPEINT();
@@ -195,8 +196,8 @@ static	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t
 			::gpk::string					matFilename				= {};
 			s2_t										pathStop				= ::gpk::rfind('/', filename);
 			if(pathStop == -1) {
-				matFilename.append_string("./");
-				matFilename.append_string(lineValues[1]);
+				::gpk::append_strings(matFilename, "./");
+				::gpk::append_strings(matFilename, lineValues[1]);
 			}
 			else {
 				::gpk::vcst_t						filepath				= {};

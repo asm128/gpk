@@ -27,7 +27,7 @@ static	void			threadRender		(void* pRuntimeState)												{
 	::gpk::SRuntimeModule		* runtimeModule		= runtimeState.MainModule;
 	if_null_re(runtimeModule);
 	gpk_sync_increment(runtimeState.RenderThreadUsers);
-	int32_t						result				= 0;
+	s2_t						result				= 0;
 	while(result = gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1) - 1 && result != -1) {
 		runtimeModule->Render(runtimeModule->Application);
 	}
@@ -79,7 +79,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 	{
 		::gpk::vcst_t						fileName						= "gme";
 		if(globalRuntimeValues.EntryPointArgs.Positionals.size())
-			fileName					= {globalRuntimeValues.EntryPointArgs.Positionals[0], (uint32_t)strlen(globalRuntimeValues.EntryPointArgs.Positionals[0])};
+			fileName					= {globalRuntimeValues.EntryPointArgs.Positionals[0], (u2_t )strlen(globalRuntimeValues.EntryPointArgs.Positionals[0])};
 		char							mainModuleName	[512]			= {};
 		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule			mainModule						= {};

@@ -8,6 +8,8 @@
 #include <Windows.h>
 #include <process.h>
 
+usns gpk;
+
 namespace brt
 {
 	struct SProcessHandles {
@@ -33,7 +35,7 @@ static	::gpk::err_t								createChildProcess
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	bool													bSuccess				= false;
 	stxp	bool								isUnicodeEnv			= false;
-	stxp	uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stxp	u2_t 							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
 	::gpk::safe_closehandle(process.ProcessInfo.hProcess);
 	bSuccess											= CreateProcessA
@@ -98,7 +100,7 @@ static	::gpk::err_t				loadConfig
 		if_true_vef(-1, ::gpk::jsonParse(jsonReader, ::gpk::view_const_string{jsonData.begin(), jsonData.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
 	}
 	{ // load port from config file
-		int32_t							indexObjectApp			;
+		s2_t							indexObjectApp			;
 		if_fail_wf(indexObjectApp = ::gpk::jsonExpressionResolve("application.gpk_cgi_interceptor", jsonReader, 0, processFileName), "Failed to find application node (%s) in json configuration file: '%s'", "application.gpk_cgi_interceptor", fileNameJSONConfig.begin())
 		else {
 			if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, processFileName	)), "Failed to load config from json! Last contents found: %s.", processFileName	.begin())
@@ -147,11 +149,11 @@ static	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read 
 
 	//char									chBuf	[BUFSIZE]		= {};
 	static	::gpk::au0_t						chBuf;
-	stxp	const uint32_t					BUFSIZE					= 1024 * 1024;
+	stxp	const u2_t 					BUFSIZE					= 1024 * 1024;
 	chBuf.resize(BUFSIZE);
 	bool									bSuccess				= FALSE;
 	while(true) {
-		uint32_t								dwRead					= 0;
+		u2_t 								dwRead					= 0;
 		if(handleReadable(handles.ChildStd_OUT_Read)) {
 			bSuccess							= ReadFile(handles.ChildStd_OUT_Read, chBuf.begin(), chBuf.size(), (DWORD*)&dwRead, NULL);
 			if_true_vef(-1, false == bSuccess, "%s", "Failed to read from child process' standard output.");
