@@ -72,7 +72,7 @@ namespace gpk
 	struct SLobbyClient {
 		typedef	::gpk::apobj<::gpk::SMessage> TMessageQueue;
 
-		::gpk::SUDPClient					Client				= {};
+		::gpk::SSocketClient					Client				= {};
 		::gpk::SDialog						Dialog				= {};
 		::gpk::SInputBox					InputBox			= {};
 		UI_LOBBY_USER						Field				= UI_LOBBY_USER_Offline;

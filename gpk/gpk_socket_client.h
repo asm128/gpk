@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	struct SUDPClient {
+	struct SSocketClient {
 		::gpk::SConnection					Connection;
 		::gpk::SSocketConnection			Socket;
 		::gpk::SIPv4End						AddressConnect;
@@ -14,9 +14,9 @@ namespace gpk
 		::gpk::apobj<::gpk::SMessage>		CacheSent;	// This is only to speed up message processing.
 	};
 
-	::gpk::err_t			clientDisconnect		(SUDPClient & client);
-	::gpk::err_t			clientConnect			(SUDPClient & client);
-	::gpk::err_t			clientUpdate			(SUDPClient & client);
+	::gpk::err_t			clientDisconnect		(SSocketClient & client);
+	::gpk::err_t			clientConnect			(SSocketClient & client);
+	::gpk::err_t			clientUpdate			(SSocketClient & client);
 }
 
 #endif // GPK_UDP_CLIENT_H_23627

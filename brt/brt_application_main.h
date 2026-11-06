@@ -1,4 +1,4 @@
-#include "gpk_udp_server.h"
+#include "gpk_socket_server.h"
 
 #include "gpk_framework.h"
 #include "gpk_gui.h"
@@ -28,7 +28,7 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 	struct SApplication {
 		::gpk::SFramework				Framework;
 		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen							= {};
-		::gpk::SUDPServer				Server								= {};
+		::gpk::SSocketServer				Server								= {};
 		::gpk::apobj<::gpk::apobj<::gpk::SMessage>>	ReceivedPerClient;
 		::gpk::apobj<::gpk::apobj<::gpk::au0_t>>			ClientResponses;
 		::gpk::aobj<::brt::SProcess>					ClientProcesses;

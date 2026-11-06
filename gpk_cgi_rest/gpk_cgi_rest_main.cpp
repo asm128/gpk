@@ -6,11 +6,11 @@
 #include "gpk_parse.h"
 #include "gpk_file.h"
 
-#include "gpk_udp_client.h"
+#include "gpk_socket_client.h"
 
 usns gpk;
 
-sttc	gpk::err_t	initClient			(gpk::SUDPClient & bestClient)										{
+sttc	gpk::err_t	initClient			(gpk::SSocketClient & bestClient)										{
 	bestClient.AddressConnect	= {};
 	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);	// If loading the remote IP from the json fails, we fall back to the local address.
 	::gpk::string				fileJSONConfig					= {};
@@ -52,7 +52,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 		environmentBlock.push_back(0);
 	}
 	{	// Connect the client to the service.
-		::gpk::SUDPClient				bestClient				= {};
+		::gpk::SSocketClient				bestClient				= {};
 		{	// setup and connect
 			bestClient.AddressConnect	= {};
 			if_fail_fe(::initClient(bestClient));
@@ -60,15 +60,15 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 		}
 		::gpk::au0_t						responseRemote;
 		{	// Send the request data to the connected service.
-			if_true_vef(-1, bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			if_fail_fe(gpk::connectionPushData(bestClient, bestClient.Queue, {(const u0_t *)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
-			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
+			if_true_vef(-1, bestClient.Connection.State != ::gpk::CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
+			if_fail_fe(gpk::connectionPushData(bestClient.Connection, bestClient.Connection.Queue, {(const u0_t *)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
+			while(bestClient.Connection.State != ::gpk::CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
 				if_fail_fe(gpk::clientUpdate(bestClient));
 				::gpk::apobj<::gpk::SMessage>	received;
 				{	// pick up messages for later processing
-					::std::lock_guard				lockRecv					(bestClient.Queue.MutexReceive);
-					received					= bestClient.Queue.Received;
-					bestClient.Queue.Received.clear();
+					::std::lock_guard				lockRecv					(bestClient.Connection.Queue.MutexReceive);
+					received					= bestClient.Connection.Queue.Received;
+					bestClient.Connection.Queue.Received.clear();
 				}
 				if(received.size()) {	// Response has been received. Break loop.
 					responseRemote				= received[0]->Payload;

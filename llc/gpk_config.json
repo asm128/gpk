@@ -26,10 +26,10 @@
 		},
 		"gpk_cgi_rest": 
 		{	"remote_port"	: "9797"
-		,	"remote_ip"		: "192.168.100.59"
+		,	"remote_ip"		: "192.168.1.4"
 		},
 		"test_udp_client": 
-		{	"remote_ip"		: "192.168.100.59"
+		{	"remote_ip"		: "192.168.1.4"
 		,	"remote_port"	: "9898"
 		},
 		"gpk_lobby": 

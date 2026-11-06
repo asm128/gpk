@@ -10,7 +10,7 @@
 
 
 
-#include "gpk_udp_client.h"
+#include "gpk_socket_client.h"
 
 sttc gpk::err_t		cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
 	{	// Prepare CGI environment and request content packet to save to disk.

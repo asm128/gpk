@@ -29,7 +29,7 @@ namespace gpk
 	};
 
 	struct SClient {
-		::gpk::SUDPClient	UDP;
+		::gpk::SSocketClient	UDP;
 
 		::gpk::TPacketQueue	QueueReceived		= {};
 		::gpk::TPacketQueueSend	QueueToSend			= {};
