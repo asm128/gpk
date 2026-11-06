@@ -102,7 +102,7 @@ namespace gpk
 			//::gpk::dialogCreate(createdControl);
 			//Controls[index]	= createdControl;
 			::gpk::gref<_TDialogControl>	* newRef	= 0;
-			if_true_ve(-1, 0 == ::gpk::ref_create(&newRef));
+			if_true_ve(-1, 0 == ::gpk::ref_create(newRef));
 			Controls[index].set_ref((::gpk::gref<::gpk::IDialogControl>*)newRef);
 			Controls[index]->Dialog	= this;
 			const u2_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
