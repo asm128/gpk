@@ -16,11 +16,11 @@ namespace gpk
 		usng	TNCOPtr			::Reference;
 
 		inln	cnst T*			oper->	()												csnx	{ return Reference->Instance;														}
-		inln	T*				oper->	()												nxpt	{ return (0 == Reference) ? ref_create(&Reference) : Reference->Instance;	}
+		inln	T*				oper->	()												nxpt	{ return (0 == Reference) ? ref_create(Reference) : Reference->Instance;	}
 
 		tplt<tpnm... _tArgsConstructor>
-		inln	T*				create		(_tArgsConstructor &&... argsConstructor)	nxpt	{ return ref_create(&Reference, argsConstructor...);							}
-		inln	T*				allocate	()											nxpt	{ return ref_allocate(&Reference);											}
+		inln	T*				create		(_tArgsConstructor &&... argsConstructor)	nxpt	{ return ref_create(Reference, argsConstructor...);							}
+		inln	T*				allocate	()											nxpt	{ return ref_allocate(Reference);											}
 	};
 	tplt<tpnm T> usng po	= pobj<T>; 
 } // namespace

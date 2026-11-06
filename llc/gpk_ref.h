@@ -13,10 +13,10 @@ namespace gpk
 	};
 
 	tplT	gref<T>*	ref_acquire				(gref<T> * gpk_reference)	nxpt	{ if(gpk_reference) gpk_sync_increment(gpk_reference->References); return gpk_reference; }
-	tplT	err_t		ref_release				(gref<T>* * gpk_reference)			{
+	tplT	err_t		ref_release				(gref<T>* & gpk_reference)			{
 		tydf	gref<T>			TRef;
-		TRef					* oldRef				= *gpk_reference;
-		*gpk_reference		= 0;
+		TRef					* oldRef				= gpk_reference;
+		gpk_reference		= 0;
 		if(oldRef)
 			switch(refcount_c referenceCount = gpk_sync_decrement(oldRef->References)) {
 			default: if_fail_fef(referenceCount, "Reference count error! (%i).", referenceCount); break;
@@ -31,25 +31,26 @@ namespace gpk
 			}
 		return 0;
 	}
-	tplT	T*			ref_allocate			(gref<T>* * gpk_reference)	nxpt	{
+	tplT	T*			ref_allocate			(gref<T>* & gpk_reference)	nxpt	{
 		tydf	gref<T>			TRef;
 		TRef					* newRef;
-		if_null_ve(0, newRef = malloc(newRef));
-		if_true_block_log(error_printf, 0 == (newRef->References = one_if(malloc(newRef->Instance))), gpk_free(newRef); return 0;);
-		TRef					* oldRef				= *gpk_reference;
-		*gpk_reference		= newRef;
-		ref_release(&oldRef);
-		return (*gpk_reference)->Instance;
+		if_null_ve(0, gpk::malloc(newRef));
+		if_true_block_log(error_printf, 0 == gpk::malloc(newRef->Instance), gpk_free(newRef); return 0; );
+		newRef->References	= 1;
+		TRef					* oldRef				= gpk_reference;
+		gpk_reference		= newRef;
+		ref_release(oldRef);
+		return gpk_reference->Instance;
 	}
-	tplT_vtArgs	T*		ref_create				(gref<T>* * gpk_reference, _tArgs&&... argsConstructor)	{
+	tplT_vtArgs	T*		ref_create				(gref<T>* & gpk_reference, _tArgs&&... argsConstructor)	{
 		tydf	gref<T>			TRef;
 		TRef					* newRef				= 0;
-		if_null_ve(0, ref_allocate(&newRef));
+		if_null_ve(0, ref_allocate(newRef));
 		new (newRef->Instance) T{argsConstructor...};
-		TRef					* oldRef				= *gpk_reference;
-		*gpk_reference		= newRef;
-		ref_release(&oldRef);
-		return (*gpk_reference)->Instance;
+		TRef					* oldRef				= gpk_reference;
+		gpk_reference		= newRef;
+		ref_release(oldRef);
+		return gpk_reference->Instance;
 	}
 } // namespace
 
