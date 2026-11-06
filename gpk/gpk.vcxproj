@@ -20,11 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_connection.h" />
+    <ClInclude Include="gpk_connection_ip.h" />
     <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_lobby.h" />
-    <ClInclude Include="gpk_udp_client.h" />
+    <ClInclude Include="gpk_socket_client.h" />
     <ClInclude Include="gpk_udp_client_app.h" />
-    <ClInclude Include="gpk_udp_server.h" />
+    <ClInclude Include="gpk_socket_server.h" />
     <ClInclude Include="gpk_bitmap_file.h" />
     <ClInclude Include="gpk_ro_gnd.h" />
     <ClInclude Include="gpk_ro_rsm.h" />
@@ -34,12 +35,13 @@
   <ItemGroup>
     <ClCompile Include="gpk_bitmap_file.cpp" />
     <ClCompile Include="gpk_connection.cpp" />
+    <ClCompile Include="gpk_connection_ip.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
-    <ClCompile Include="gpk_udp_client.cpp" />
+    <ClCompile Include="gpk_socket_client.cpp" />
     <ClCompile Include="gpk_udp_client_app.cpp" />
-    <ClCompile Include="gpk_udp_server.cpp" />
+    <ClCompile Include="gpk_socket_server.cpp" />
     <ClCompile Include="gpk_udp_server_app.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -95,26 +97,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)../$(Platform).$(Configuration)/</OutDir>
-    <IntDir>$(SolutionDir)../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
+    <OutDir>$(ProjectDir)../../$(Platform).$(Configuration)/</OutDir>
+    <IntDir>$(ProjectDir)../../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)../$(Platform).$(Configuration)/</OutDir>
-    <IntDir>$(SolutionDir)../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
+    <OutDir>$(ProjectDir)../../$(Platform).$(Configuration)/</OutDir>
+    <IntDir>$(ProjectDir)../../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)../$(Platform).$(Configuration)/</OutDir>
-    <IntDir>$(SolutionDir)../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
+    <OutDir>$(ProjectDir)../../$(Platform).$(Configuration)/</OutDir>
+    <IntDir>$(ProjectDir)../../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)../$(Platform).$(Configuration)/</OutDir>
-    <IntDir>$(SolutionDir)../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
+    <OutDir>$(ProjectDir)../../$(Platform).$(Configuration)/</OutDir>
+    <IntDir>$(ProjectDir)../../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

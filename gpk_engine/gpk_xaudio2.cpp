@@ -541,7 +541,7 @@ static	gpk::err_t enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<
 	return S_OK;
 }
 
-HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::view<sc_c> & wavname, IXAudio2*	XAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice) {
+HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::vcst_t & wavname, IXAudio2*	XAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice) {
 	safe_destroySourceVoice(SourceVoice);
 
 	// Search for media

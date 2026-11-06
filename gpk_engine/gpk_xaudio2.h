@@ -57,7 +57,7 @@ namespace gpk
 		X3DAUDIO_DSP_SETTINGS	dspSettings				= {};
 		bool					Playing					= false;
 
-		HRESULT					PrepareAudio			(::gpk::view<sc_c> & wavname, IXAudio2*	pXAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice);
+	HRESULT					PrepareAudio			(::gpk::vcst_t & wavname, IXAudio2*	pXAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice);
 	};
 
 	// Struct to hold audio game state

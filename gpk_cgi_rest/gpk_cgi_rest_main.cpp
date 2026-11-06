@@ -25,7 +25,7 @@ sttc	gpk::err_t	initClient			(gpk::SUDPClient & bestClient)										{
 			::gpk::vcst_t					jsonIP							= {};
 			if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP))
 			else {
-				info_printf("Remote IP: %s.", jsonIP.begin());
+				info_printf("Remote IP: %.*s.", GPK_VIEW_ARGS(jsonIP));
 				if_fail_e(::gpk::tcpipAddress(jsonIP, {}, bestClient.AddressConnect));	// turn the string into a SIPv4Endpoint struct.
 			}
 		}
@@ -64,7 +64,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 			if_fail_fe(gpk::connectionPushData(bestClient, bestClient.Queue, {(const u0_t *)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
 				if_fail_fe(gpk::clientUpdate(bestClient));
-				::gpk::apobj<::gpk::SUDPMessage>	received;
+				::gpk::apobj<::gpk::SMessage>	received;
 				{	// pick up messages for later processing
 					::std::lock_guard				lockRecv					(bestClient.Queue.MutexReceive);
 					received					= bestClient.Queue.Received;
@@ -76,7 +76,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 				}
 			}
 		}
-		//info_printf("Remote CGI answer: %s.", responseRemote.begin());
+		//info_printf("Remote CGI answer: %.*s.", GPK_VIEW_ARGS(responseRemote));
 		if_fail_fe(gpk::clientDisconnect(bestClient));
 		output					= {(char*)responseRemote.begin(), responseRemote.size()};
 	}

@@ -1,5 +1,5 @@
-#include "gpk_udp_server.h"
-#include "gpk_udp_client.h"
+#include "gpk_socket_server.h"
+#include "gpk_socket_client.h"
 #include "gpk_framework.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_dialog.h"
@@ -16,45 +16,45 @@ namespace gpk
 {
 
 	struct SLobbyRoomStats {
-		u3_t			UsersConnected;
-		u3_t			UsersEverJoined;
+		uint64_t			UsersConnected;
+		uint64_t			UsersEverJoined;
 	};
 
 	struct SLobbyRoom {
-		vcst_t			Name;
-		as3_t			Moderators;
-		as3_t			Users;
+	::gpk::vcst_t						Name;
+		::gpk::as3_t			Moderators;
+		::gpk::as3_t			Users;
 	};
 
 	struct SLobbyUser {
-		vcst_t			Mail;
-		vcst_t			Pass;
+	::gpk::vcst_t						Mail;
+	::gpk::vcst_t						Pass;
 	};
 
 	struct SLobbyUserInfo {
-		vcst_t			Name;
+	::gpk::vcst_t						Name;
 	};
 
 	struct SLobbyServer {
-		typedef	apobj<SUDPMessage> TMessageQueue;
+		typedef	::gpk::apobj<::gpk::SMessage> TMessageQueue;
 
-		au3_t								IdListRoom			= {};
-		au3_t								IdListUsers			= {};
+		::gpk::au3_t								IdListRoom			= {};
+		::gpk::au3_t								IdListUsers			= {};
 
-		SUDPServer						Server				= {};
+		::gpk::SSocketServer						Server				= {};
 
-		aobj<SLobbyUser		>	Credentials			= {};
-		aobj<SLobbyUserInfo	>	InfoUser			= {};
-		aobj<SLobbyRoom		>	InfoRoom			= {};
+		::gpk::aobj<::gpk::SLobbyUser		>	Credentials			= {};
+		::gpk::aobj<::gpk::SLobbyUserInfo	>	InfoUser			= {};
+		::gpk::aobj<::gpk::SLobbyRoom		>	InfoRoom			= {};
 
-		SDialog							Dialog				= {};
-		SVirtualKeyboard					VirtualKeyboard		= {};
+		::gpk::SDialog							Dialog				= {};
+		::gpk::SVirtualKeyboard					VirtualKeyboard		= {};
 
-		aobj<TMessageQueue>				MessagesToProcess	= {};	// A queue per client.
+		::gpk::aobj<TMessageQueue>				MessagesToProcess	= {};	// A queue per client.
 
-		gpk::err_t 						Stop				()												{ return serverStop(Server); }
-		gpk::err_t 						Start				(u1_t portNumber, s1_t adapterIndex=0)	{ return serverStart(Server, portNumber, adapterIndex); }
-		gpk::err_t 						Update				()	{ return 0; }
+		::gpk::err_t							Stop				()												{ return ::gpk::serverStop(Server); }
+		::gpk::err_t							Start				(uint16_t portNumber, int16_t adapterIndex=0)	{ return ::gpk::serverStart(Server, portNumber, adapterIndex); }
+		::gpk::err_t							Update				()	{ return 0; }
 	};
 
 	GDEFINE_ENUM_TYPE(UI_LOBBY_USER, u0_t);
@@ -70,22 +70,22 @@ namespace gpk
 
 
 	struct SLobbyClient {
-		typedef	apobj<SUDPMessage> TMessageQueue;
+		typedef	::gpk::apobj<::gpk::SMessage> TMessageQueue;
 
-		SUDPClient					Client				= {};
-		SDialog						Dialog				= {};
-		SInputBox					InputBox			= {};
+		::gpk::SUDPClient					Client				= {};
+		::gpk::SDialog						Dialog				= {};
+		::gpk::SInputBox					InputBox			= {};
 		UI_LOBBY_USER						Field				= UI_LOBBY_USER_Offline;
 
-		u3_t							IdRoom				= 0;
-		u3_t							IdUser				= 0;
+		uint64_t							IdRoom				= 0;
+		uint64_t							IdUser				= 0;
 
-		SLobbyUser					Credentials			= {};
-		SLobbyUserInfo				InfoUser			= {};
-		SLobbyRoom					Room				= {};
+		::gpk::SLobbyUser					Credentials			= {};
+		::gpk::SLobbyUserInfo				InfoUser			= {};
+		::gpk::SLobbyRoom					Room				= {};
 
-		apobj<SLobbyUserInfo>	InfoRoomUsers		= {};
-		apobj<SLobbyUserInfo>	InfoRoomModerators	= {};
+		::gpk::apobj<::gpk::SLobbyUserInfo>	InfoRoomUsers		= {};
+		::gpk::apobj<::gpk::SLobbyUserInfo>	InfoRoomModerators	= {};
 
 		TMessageQueue						MessagesToProcess	= {};
 
@@ -94,83 +94,83 @@ namespace gpk
 											~SLobbyClient		()	{
 			NetworkThread.join();
 			NetworkThread								= {};
-			clientDisconnect(Client);
+			::gpk::clientDisconnect(Client);
 		}
 
 											SLobbyClient		()	{
-			SGUI								 & gui				= *Dialog.GUI;
+			::gpk::SGUI								 & gui				= *Dialog.GUI;
 			gui.Controls.Draw[Dialog.Root].NoBorder = gui.Controls.Draw[Dialog.Root].NoClient = true;
-			acid	controls;
-			if_true_e(failed(guiCreateControlList<UI_LOBBY_USER>(gui, Dialog.Root, {240U, 22U}, {}, ALIGN_TOP_RIGHT, ALIGN_TOP_RIGHT, controls)));
-			if_true_e(failed(inputBoxCreate(InputBox, gui, Dialog.Root)));
+			::gpk::acid	controls;
+			e_if(failed(::gpk::guiCreateControlList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, {240U, 22U}, {}, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_TOP_RIGHT, controls)));
+			e_if(failed(::gpk::inputBoxCreate(InputBox, gui, Dialog.Root)));
 		}
 
-		gpk::err_t 					Connect				() { 
-			Client.State								= UDP_CONNECTION_STATE_HANDSHAKE;
+		::gpk::err_t						Connect				() { 
+			Client.Connection.State								= ::gpk::CONNECTION_STATE_HANDSHAKE;
 			if(NetworkThread.joinable()) {
 				NetworkThread.join();
 			}
 
-			if(Client.State == UDP_CONNECTION_STATE_IDLE)
+			if(Client.Connection.State == ::gpk::CONNECTION_STATE_IDLE)
 				return 0;
 			NetworkThread								= ::std::thread([this] { 
 				if_fail_fe(gpk::clientConnect(Client)); 
-				return controlTextSet(*Dialog.GUI, Dialog.Root + 1, "Connected");
+				return ::gpk::controlTextSet(*Dialog.GUI, Dialog.Root + 1, "Connected");
 			});
 			return 0;
 		}
 
-		gpk::err_t 							Update				(const pobj<SInput> & inputState, vpobj<SEventSystem> frameEvents) { 
+		::gpk::err_t								Update				(const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> frameEvents) { 
 			if(!Dialog.Input) {
 				Dialog.Input								= inputState;
 			}
-			SGUI										 & gui				= *Dialog.GUI;
-			static const vcst_t							connectingString	= {"Connecting..."};
-			switch(Client.State) {
-			case UDP_CONNECTION_STATE_IDLE			: break;
-			case UDP_CONNECTION_STATE_DISCONNECTED	: 
+			::gpk::SGUI										 & gui				= *Dialog.GUI;
+			static const ::gpk::vcst_t							connectingString	= {"Connecting..."};
+			switch(Client.Connection.State) {
+			case ::gpk::CONNECTION_STATE_IDLE			: break;
+			case ::gpk::CONNECTION_STATE_DISCONNECTED	: 
 				if_fail_fe(gpk::controlTextSet(gui, Dialog.Root + 1, "Disconnected"));
 				Connect(); 
 				break;
-			case UDP_CONNECTION_STATE_HANDSHAKE		: 
-				if_fail_fe(gpk::controlTextSet(gui, Dialog.Root + 1, {connectingString.begin(), connectingString.size() - 3 + ((u2_t)timeCurrent() % 4)}));
+			case ::gpk::CONNECTION_STATE_HANDSHAKE		: 
+				if_fail_fe(gpk::controlTextSet(gui, Dialog.Root + 1, {connectingString.begin(), connectingString.size() - 3 + ((uint32_t)::gpk::timeCurrent() % 4)}));
 				break;
 			}
 
 			if_fail_fe(gpk::guiProcessInput(gui, *inputState, frameEvents));
 
-			acid				controlsToProcess			= {};
+			::gpk::acid				controlsToProcess			= {};
 			if_fail_fe(gpk::guiGetProcessableControls(gui, controlsToProcess));
-			if(const s2_t result = InputBox.Update(gui, InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
+			if(const int32_t result = InputBox.Update(gui, InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
 				if(result == INT_MAX) { 
-					vcst_t						trimmed			= vcst_t{InputBox.Text};
-					trim(trimmed);
-					controlTextSet(gui, Dialog.Root + 1 + Field, label{trimmed});
+		::gpk::vcst_t								trimmed			= ::gpk::vcst_t{InputBox.Text};
+					::gpk::trim(trimmed);
+					::gpk::controlTextSet(gui, Dialog.Root + 1 + Field, ::gpk::label{trimmed});
 					InputBox.Edit(gui, false);
 					gui.Controls.SetHidden(InputBox.IdRoot, true);
 				}
 			}
 			else {
-				if_fail_fe(gpk::guiProcessControls(gui, controlsToProcess, [&](s2_t iControl) {
-					const SControlPlacement			& control		= gui.Controls.Placement[iControl];
-					SControlPlacement				& inputBox		= gui.Controls.Placement[InputBox.IdRoot];
+				if_fail_fe(gpk::guiProcessControls(gui, controlsToProcess, [&](int32_t iControl) {
+					const ::gpk::SControlPlacement			& control		= gui.Controls.Placement[iControl];
+					::gpk::SControlPlacement				& inputBox		= gui.Controls.Placement[InputBox.IdRoot];
 					bool							edit			= false;
 					switch(iControl - (Dialog.Root + 1)) {
 					default								: 
-					case UI_LOBBY_USER_GUID		: 
-					case UI_LOBBY_USER_Offline	: 
+					case ::gpk::UI_LOBBY_USER_GUID		: 
+					case ::gpk::UI_LOBBY_USER_Offline	: 
 						gui.Controls.SetHidden(InputBox.IdRoot, true);
 						break;
-					case UI_LOBBY_USER_Mail		: 
-					case UI_LOBBY_USER_Name		: 
-					case UI_LOBBY_USER_Room		: 
-					case UI_LOBBY_USER_Pass		: 
+					case ::gpk::UI_LOBBY_USER_Mail		: 
+					case ::gpk::UI_LOBBY_USER_Name		: 
+					case ::gpk::UI_LOBBY_USER_Room		: 
+					case ::gpk::UI_LOBBY_USER_Pass		: 
 						inputBox.Area.Offset		= control.Area.Offset; 
 						inputBox.Align				= control.Align; 
-						controlMetricsInvalidate(gui, InputBox.IdRoot);
+						::gpk::controlMetricsInvalidate(gui, InputBox.IdRoot);
 						InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
 						edit						= true;
-						Field						= (UI_LOBBY_USER)(iControl - (Dialog.Root + 1));
+						Field						= (::gpk::UI_LOBBY_USER)(iControl - (Dialog.Root + 1));
 						gui.Controls.SetHidden(InputBox.IdRoot, false);
 						break;
 					}
@@ -179,21 +179,21 @@ namespace gpk
 				}));
 			}
 			{
-				::std::lock_guard								lockRecv					(Client.Queue.MutexReceive);
-				for(u2_t iMessage = 0; iMessage < Client.Queue.Received.size(); ++iMessage) {
-					if_fail_fe(MessagesToProcess.push_back(Client.Queue.Received[iMessage]));
+				::std::lock_guard								lockRecv					(Client.Connection.Queue.MutexReceive);
+				for(uint32_t iMessage = 0; iMessage < Client.Connection.Queue.Received.size(); ++iMessage) {
+					if_fail_fef(MessagesToProcess.push_back(Client.Connection.Queue.Received[iMessage]), "%s", "Out of memory?");
 				}
-				Client.Queue.Received.clear();
+				Client.Connection.Queue.Received.clear();
 			}
-			for(u2_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
-				vcu0_t							viewPayload					= MessagesToProcess[iMessage]->Payload;
-				info_printf("Client received: %.*s.", GPK_VIEW_ARGS(viewPayload));
+			for(uint32_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
+				::gpk::vcu0_t							viewPayload					= MessagesToProcess[iMessage]->Payload;
+				info_printf("Client received: %s.", viewPayload.begin());
 			}
 			return 0;
 		}
 
-		gpk::err_t 							Draw				(g8bgra target) { 
-			return guiDraw(*Dialog.GUI, target);
+		::gpk::err_t								Draw				(::gpk::g8bgra target) { 
+			return ::gpk::guiDraw(*Dialog.GUI, target);
 		}
 	};
 

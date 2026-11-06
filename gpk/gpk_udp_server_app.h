@@ -1,4 +1,4 @@
-#include "gpk_udp_server.h"
+#include "gpk_socket_server.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_json.h"
 
@@ -22,47 +22,47 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(UI_SERVER_INFO, TimeStarted		, 4);
 
 	struct SServerUI {
-		cid_t				Root				= -1;
-		acid				Info				= {};
-		acid				Input				= {};
-		string				TextDateTime		= "-";
-		string				TextTimeStarted		= "-";
-		string				TextClientCount		= "-";
+		::gpk::cid_t				Root				= -1;
+		::gpk::acid					Info				= {};
+		::gpk::acid					Input				= {};
+	::gpk::asc_t				TextDateTime		= ::gpk::vcst_t{"-"};
+	::gpk::asc_t				TextTimeStarted		= ::gpk::vcst_t{"-"};
+	::gpk::asc_t				TextClientCount		= ::gpk::vcst_t{"-"};
 	};
 
 	struct SServer {
-		SUDPServer			UDP;
+		gpk::SSocketServer			UDP;
 
-		aobj<TUDPQueue>		QueueReceived;
-		apobj<TQueueSend>	QueueToSend;	// A queue for each client
+		gpk::aobj<gpk::TPacketQueue>		QueueReceived;
+		gpk::apobj<gpk::TPacketQueueSend>	QueueToSend;	// A queue for each client
 
-		vcst_t				Adapter				= "0";	// default
-		vcst_t				Port				= "9865";
+		::gpk::vcst_t				Adapter				= "0";	// default
+		::gpk::vcst_t				Port				= "9865";
 
 		SServerUI					UI;
 
-		f3_t						ListeningSince		= {};
+		double						ListeningSince		= {};
 	};
 
-	err_t			loadServerConfig	(const SJSONReader & jsonConfig, s2_t parentNode, vcst_t & port, vcst_t & adapter);
-	err_t			serverStart			(SServer & server, SGUI & gui);
-	err_t			serverUpdate		(SServer & server, SGUI & gui);
-	err_t			setupGUI			(SServerUI & serverUI, SGUI & gui);
-	err_t			processGUIEvent		(SServer & server, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent);
+	::gpk::err_t			loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcst_t & port, ::gpk::vcst_t & adapter);
+	::gpk::err_t			serverStart			(::gpk::SServer & server, ::gpk::SGUI & gui);
+	::gpk::err_t			serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui);
+	::gpk::err_t			setupGUI			(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui);
+	::gpk::err_t			processGUIEvent		(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent);
 
 	tplt<tpnm _tEvent, tpnm _tState> 
-	err_t			processUDPEvents
-		( vcpobj<SServer>	servers
+	::gpk::err_t			processUDPEvents
+		( ::gpk::vcpobj<SServer>	servers
 		, _tState					& state
-		, const ::std::function<err_t(u2_t iServer, u2_t iClient, _tState &, const _tEvent &)>	
+		, const ::std::function<::gpk::err_t(uint32_t iServer, uint32_t iClient, _tState &, const _tEvent &)>	
 										& funcProcessServerRequest
 		) {
-		for(u2_t iServer = 0; iServer < servers.size(); ++iServer) {
-			const ::std::function<err_t(u2_t iClient, _tState &, const _tEvent &)>	
-										funcProcessRequest		= [iServer, funcProcessServerRequest](u2_t iClient, _tState & customState, const _tEvent & customEvent) {
+		for(uint32_t iServer = 0; iServer < servers.size(); ++iServer) {
+			const ::std::function<::gpk::err_t(uint32_t iClient, _tState &, const _tEvent &)>	
+										funcProcessRequest		= [iServer, funcProcessServerRequest](uint32_t iClient, _tState & customState, const _tEvent & customEvent) {
 				return funcProcessServerRequest(iServer, iClient, customState, customEvent);
 			};
-			if_fail_fe(processUDPEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));
+			if_fail_fe(gpk::processEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));
 		}
 		return 0;
 	}

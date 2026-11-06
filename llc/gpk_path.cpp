@@ -327,19 +327,19 @@ sttc gpk::err_t		pathListEntry			(vcst_t pathToList, gpk::SPathContents & pathCo
 			rtrn 0;
 	}
 	gpk::err_t				action						= 0;
-	if_fail_fef(action = onItem(isFolder, sPath), "'%s'", sPath.begin());
+	if_fail_fef(action = onItem(isFolder, sPath), "'%.*s'", GPK_VIEW_ARGS(sPath));
 	if(action & 1)
 		rtrn 0;
 	if(isFolder) {
 		gpk::err_t				newFolderIndex				= pathContents.Folders.push_back({});
 		if_fail_fe(newFolderIndex);
-		if_fail_fef(gpk::pathList(sPath, pathContents.Folders[newFolderIndex], onItem, extension), "'%s'", sPath.begin());
-		verbose_printf("Directory: %s.", sPath.begin());
+		if_fail_fef(gpk::pathList(sPath, pathContents.Folders[newFolderIndex], onItem, extension), "'%.*s'", GPK_VIEW_ARGS(sPath));
+		verbose_printf("Directory: %.*s.", GPK_VIEW_ARGS(sPath));
 	}
 	else {
 		s2_t						indexFile;
 		if_fail_fef(indexFile = pathContents.Files.push_back(sPath), "%s", "Failed to push path to output list");
-		verbose_printf("File %" GPK_FMT_U2 ": %s.", indexFile, sPath.begin());
+		verbose_printf("File %" GPK_FMT_U2 ": %.*s.", indexFile, GPK_VIEW_ARGS(sPath));
 	}
 	rtrn 0;
 }
@@ -369,7 +369,7 @@ sttc gpk::err_t		pathListNative			(vcst_t pathToList, gpk::SPathContents & pathC
 			gpk::string		entryPath;
 			if_fail_bef(result = pathNameCompose(pathToList, entryName, entryPath), "%s", drnt->d_name);
 			struct stat			metadata						= {};
-			if_fail_bef(result = lstat(entryPath.begin(), &metadata), "%s", entryPath.begin());
+			if_fail_bef(result = lstat(entryPath.begin(), &metadata), "%.*s", GPK_VIEW_ARGS(entryPath));
 			isFolder											= S_ISDIR(metadata.st_mode);
 		}
 		if_fail_bef(result = ::pathListEntry(pathToList, pathContents, onItem, extension, entryName, isFolder), "'%.*s'", (int)entryName.size(), entryName.begin());

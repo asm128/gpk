@@ -1,4 +1,4 @@
-#include "gpk_connection.h"
+#include "gpk_connection_ip.h"
 
 #ifndef GPK_HTTP_SERVER_H_23627
 #define GPK_HTTP_SERVER_H_23627
@@ -7,15 +7,16 @@ namespace gpk
 {
 	struct SHTTPServer {
 		::gpk::auto_socket_close			Socket;
-		::gpk::apobj<::gpk::STCPConnection>	Clients;
+		::gpk::apobj<::gpk::SConnection>	Connections;
+		::gpk::apobj<::gpk::SSocketConnection>	Clients;
 		::std::mutex						Mutex;
 		::gpk::SIPv4End				Address						= {};
 		bool								Listen						= false;
-		s2_t								Timeout						= 3000000;	// Kill clients timeout
+		int32_t								Timeout						= 3000000;	// Kill clients timeout
 	};
 
-	gpk::err_t 					serverStart					(::gpk::SHTTPServer& serverInstance, u1_t port);
-	gpk::err_t 					serverStop					(::gpk::SHTTPServer& serverInstance);
+	::gpk::err_t						serverStart					(::gpk::SHTTPServer& serverInstance, uint16_t port);
+	::gpk::err_t						serverStop					(::gpk::SHTTPServer& serverInstance);
 
 } // namespace
 

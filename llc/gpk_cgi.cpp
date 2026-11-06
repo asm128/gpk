@@ -63,7 +63,7 @@ gpk::err_t			gpk::querystring_split	(vcst_t input_string, aobj<vcst_t> & output_
 		sliceu2_c		& slice				= slices[iSlice];
 		const u2_t			slicelen			= slice.End - slice.Begin;
 		if(slicelen) {
-			view<sc_c>			keyval				= {&input_string[slice.Begin], slicelen};
+		vcst_t				keyval				= {&input_string[slice.Begin], slicelen};
 			output_views.push_back(keyval);
 		}
 	}
@@ -96,7 +96,7 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(view<const kv<vcst_t>> environViews)	{
 		aobj<kv<vcst_t>>	environViewsTest;
 		keyValConstStringDeserialize(environmentBlockToSave, environViewsTest);
 		//for(u2_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
-		//	info_printf("CGI Environ (original): '%s = %s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key).begin(), GPK_VIEW_ARGS(environViews[iEnviron].Val).begin());
+		//	info_printf("CGI Environ (original): '%.*s = %.*s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key), GPK_VIEW_ARGS(environViews[iEnviron].Val));
 		for(u2_t iEnviron = 0; iEnviron < environViewsTest.size(); ++iEnviron)
 			info_printf("CGI Environ: '%.*s = %.*s'.", GPK_VIEW_ARGS(environViewsTest[iEnviron].Key), GPK_VIEW_ARGS(environViewsTest[iEnviron].Val));
 	}

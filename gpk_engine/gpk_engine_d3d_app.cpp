@@ -109,7 +109,7 @@ gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEng
 		const SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material				= skin.Material;
 
-		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
+		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %.*s", iNode, node.Mesh, node.Slice, GPK_VIEW_ARGS(engineScene.Graphics->Meshes.Names[node.Mesh]));
 		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, skin.Material.Color.Diffuse.a != 1.0f, nodeConstants);
 	}
 	for(u2_t iAlpha  = 0; iAlpha < alpha.size(); ++iAlpha) {
@@ -129,7 +129,7 @@ gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEng
 		const SGeometrySlice	slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material	= skin.Material;
 
-		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
+		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %.*s", iNode, node.Mesh, node.Slice, GPK_VIEW_ARGS(engineScene.Graphics->Meshes.Names[node.Mesh]));
 		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, skin.Material.Color.Diffuse.a != 1.0f, nodeConstants);
 	}
 	return 0;

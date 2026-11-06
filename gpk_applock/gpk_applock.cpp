@@ -65,7 +65,7 @@ sttc gpk::err_t		configureLock	(b8_t install, vcst_t keyPath, vcst_t filterPath,
 	if(ERROR_SUCCESS == result && debugger != vcst_t{existing.Storage, (u2_t)-1}) {
 		if(false == install)
 			return 0;
-		error_printf("Refusing to replace a different IFEO Debugger for %s.", filterKeyPath.begin());
+		error_printf("Refusing to replace a different IFEO Debugger for %.*s.", GPK_VIEW_ARGS(filterKeyPath));
 		return ERROR_ALREADY_EXISTS;
 	}
 	if(false == install && ERROR_FILE_NOT_FOUND == result)

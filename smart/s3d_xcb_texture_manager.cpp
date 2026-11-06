@@ -45,7 +45,7 @@
 ::gpk::err_t					s3d::SXCBTextureManager::CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t  depth, ::gpk::view_const_char filename) {
 	::gpk::view_const_char				extension		= {};
 	::gpk::array_pod<char_t>			ext_lwr			= {};
-	{ if_fail_fef(filename.slice(extension, filename.size() - 3, 3), "File extension not supported for file '%s'", filename.begin()); }
+	{ if_fail_fef(filename.slice(extension, filename.size() - 3, 3), "File extension not supported for file '%.*s'", GPK_VIEW_ARGS(filename)); }
 	{ if_fail_fef(ext_lwr.append(extension), "%s", ""); }
 	::gpk::tolower(ext_lwr);
 	static const ::gpk::vcst_t				str_png			= "png";
@@ -54,19 +54,19 @@
 	::gpk::ptr_obj<::s3d::SXCBPixmap>	newPixmap		= {};
 	::gpk::SImage<::gpk::SColorBGRA>	& loadedImage	= newPixmap->Image;
 	if(ext_lwr == str_png) {
-		info_printf("Loading png file: '%s'", filename.begin());
-		{ if_fail_fef(::gpk::pngFileLoad(filename, loadedImage), "Failed to load png file: '%s'", filename.begin()); }
+		info_printf("Loading png file: '%.*s'", GPK_VIEW_ARGS(filename));
+		{ if_fail_fef(::gpk::pngFileLoad(filename, loadedImage), "Failed to load png file: '%.*s'", GPK_VIEW_ARGS(filename)); }
 	}
 	//else if(ext_lwr == str_svg) {
-	//	info_printf("Loading svg file: '%s'", filename.begin());
+	//	info_printf("Loading svg file: '%.*s'", GPK_VIEW_ARGS(filename));
 	//	int									w = 0, h = 0, n = 0;
 	//	if (::gpk::SColorBGRA *data = (::gpk::SColorBGRA*)stbi_load((char*)GPK_VIEW_ARGS(filename).begin(), &w, &h, &n, 4)) {
-	//		info_printf("Loaded with stb_image: '%s'", filename.begin());
+	//		info_printf("Loaded with stb_image: '%.*s'", GPK_VIEW_ARGS(filename));
 	//		{ if_fail_fef(loadedImage.Texels.append({data, u2_t (w * h)}), "%s", ""); }
 	//		free(data);
 	//	}
 	//	else if (NSVGimage * shapes = nsvgParseFromFile(GPK_VIEW_ARGS(filename).begin(), "px", 96.0f)) {
-	//		info_printf("Loaded with nanosvg: '%s'", filename.begin());
+	//		info_printf("Loaded with nanosvg: '%.*s'", GPK_VIEW_ARGS(filename));
 	//		w							= (int)shapes->width;
 	//		h							= (int)shapes->height;
 	//		NSVGrasterizer					* rast	= nsvgCreateRasterizer();
@@ -84,7 +84,7 @@
 	//	}
 	//}
 	else {
-		error_printf("Invalid extension: '%s'", ext_lwr.begin());
+		error_printf("Invalid extension: '%.*s'", GPK_VIEW_ARGS(ext_lwr));
 		return -1;
 	}
 	xcb_pixmap_t						pixmap		= xcb_generate_id(c);

@@ -44,7 +44,7 @@ namespace gpk
 		gpk::err_t 		Write			(::gpk::vcu0_t dataToSend)	const {
 			u2_t					sizeSent		= (u2_t)-1;
 #ifdef GPK_WINDOWS
-			if_true_vef(-1, 0 == WriteFile(PlatformDetail.Handle, (const void*)dataToSend.begin(), (u2_t)dataToSend.size(), (DWORD*)&sizeSent, 0) , "Failed to write to serial port %s." , GPK_VIEW_ARGS(Port).begin());
+			if_true_vef(-1, 0 == WriteFile(PlatformDetail.Handle, (const void*)dataToSend.begin(), (u2_t)dataToSend.size(), (DWORD*)&sizeSent, 0) , "Failed to write to serial port %.*s." , GPK_VIEW_ARGS(Port));
 #endif
 			return sizeSent;
 		}
@@ -54,7 +54,7 @@ namespace gpk
 			if_fail_fe(dataReceived.resize(1024));
 			memset(&dataReceived[0], 0, dataReceived.size());
 #ifdef GPK_WINDOWS
-			if_true_vef(-1, 0 == ReadFile(PlatformDetail.Handle, &dataReceived[0], (u2_t)dataReceived.size(), (DWORD*)&sizeRead, 0), "Failed to read from serial port %s.", GPK_VIEW_ARGS(Port).begin());
+			if_true_vef(-1, 0 == ReadFile(PlatformDetail.Handle, &dataReceived[0], (u2_t)dataReceived.size(), (DWORD*)&sizeRead, 0), "Failed to read from serial port %.*s.", GPK_VIEW_ARGS(Port));
 #endif
 			return sizeRead; 
 		}
@@ -62,17 +62,17 @@ namespace gpk
 		gpk::err_t 		Open			(::gpk::vcst_t port, u2_t baudRate, ::gpk::SERIAL_PARITY parity = ::gpk::SERIAL_PARITY_NONE, ::gpk::SERIAL_STOP_BITS stopBitsZeroToTwo = ::gpk::SERIAL_STOP_BITS_ONE) {
 			Port					= port;
 #ifdef GPK_WINDOWS
-			if_true_vef(-1, INVALID_HANDLE_VALUE == (PlatformDetail.Handle = CreateFile(port.begin(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0)), "Failed to open serial on %s.", GPK_VIEW_ARGS(Port).begin()); 
+			if_true_vef(-1, INVALID_HANDLE_VALUE == (PlatformDetail.Handle = CreateFile(port.begin(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0)), "Failed to open serial on %.*s.", GPK_VIEW_ARGS(Port));
 
 			// Set serial port parameters
 			PlatformDetail.Params	= {sizeof(PlatformDetail.Params)};
-			if_true_vef(-1, 0 == GetCommState(PlatformDetail.Handle, &PlatformDetail.Params), "Failed to get serial port state for %s.", GPK_VIEW_ARGS(Port).begin()); 
+			if_true_vef(-1, 0 == GetCommState(PlatformDetail.Handle, &PlatformDetail.Params), "Failed to get serial port state for %.*s.", GPK_VIEW_ARGS(Port));
 
 			PlatformDetail.Params.BaudRate	= baudRate;
 			PlatformDetail.Params.ByteSize	= 8;
 			PlatformDetail.Params.StopBits	= (BYTE)stopBitsZeroToTwo;
 			PlatformDetail.Params.Parity	= (BYTE)parity;
-			if_true_vef(-1, 0 == SetCommState(PlatformDetail.Handle, &PlatformDetail.Params), "Failed to set serial port state for %s.", GPK_VIEW_ARGS(Port).begin()); 
+			if_true_vef(-1, 0 == SetCommState(PlatformDetail.Handle, &PlatformDetail.Params), "Failed to set serial port state for %.*s.", GPK_VIEW_ARGS(Port));
 
 			// Set serial port timeouts
 			PlatformDetail.Timeouts.ReadIntervalTimeout			= 50;
@@ -80,7 +80,7 @@ namespace gpk
 			PlatformDetail.Timeouts.ReadTotalTimeoutMultiplier	= 2;
 			PlatformDetail.Timeouts.WriteTotalTimeoutConstant	= 50;
 			PlatformDetail.Timeouts.WriteTotalTimeoutMultiplier	= 2;
-			if_true_vef(-1, 0 == SetCommTimeouts(PlatformDetail.Handle, &PlatformDetail.Timeouts), "Failed to set serial port timeouts for %s.", GPK_VIEW_ARGS(Port).begin()); 
+			if_true_vef(-1, 0 == SetCommTimeouts(PlatformDetail.Handle, &PlatformDetail.Timeouts), "Failed to set serial port timeouts for %.*s.", GPK_VIEW_ARGS(Port));
 #endif
 			return 0;
 		}

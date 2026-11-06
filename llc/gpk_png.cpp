@@ -818,14 +818,14 @@ sttc	gpk::err_t pngActualFileLoad	(vcu0_t source, ::gpk::SPNGData & pngData, ::g
 			}
 		}
 		else if(0 == memcmp(newChunk.Type, "tEXt", 4)) { 	// Can store text that can be represented in ISO/IEC 8859-1, with one key-value pair for each chunk. The "key" must be between 1 and 79 characters long. Separator is a null character. The "value" can be any length, including zero up to the maximum permissible chunk size minus the length of the keyword and separator. Neither "key" nor "value" can contain null character. Leading or trailing spaces are also disallowed.
-			verbose_printf("Text Key: %s.", newChunk.Data.begin());
+			verbose_printf("Text Key: %.*s.", GPK_VIEW_ARGS(newChunk.Data));
 			u2_t							keyLength										= (u2_t)strlen((const sc_t*)newChunk.Data.begin());
 			u2_t							valueLength										= newChunk.Data.size() - (keyLength + 1);
 			::gpk::apod<sc_t>					value;
 			if_fail_fe(value.resize(valueLength + 1));
 			value[valueLength]				= 0;
 			memcpy(&value[0], &newChunk.Data[keyLength + 1], valueLength);
-			verbose_printf("Text: %s.", value.begin());
+			verbose_printf("Text: %.*s.", GPK_VIEW_ARGS(value));
 			if(-1 == pngData.Feature[::gpk::PNG_TAG_tEXt])
 				pngData.Feature[::gpk::PNG_TAG_tEXt] = iChunk;
 

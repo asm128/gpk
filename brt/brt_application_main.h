@@ -29,14 +29,14 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 		::gpk::SFramework				Framework;
 		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen							= {};
 		::gpk::SUDPServer				Server								= {};
-		::gpk::apobj<::gpk::apobj<::gpk::SUDPMessage>>	ReceivedPerClient;
+		::gpk::apobj<::gpk::apobj<::gpk::SMessage>>	ReceivedPerClient;
 		::gpk::apobj<::gpk::apobj<::gpk::au0_t>>			ClientResponses;
 		::gpk::aobj<::brt::SProcess>					ClientProcesses;
 		::gpk::aobj<::brt::SProcessHandles>				ClientIOHandles;
 
-		::gpk::vcst_t			ProcessFileName						= "";
-		::gpk::vcst_t			ProcessMockPath						= "";
-		::gpk::vcst_t			ProcessParams						= "";
+		::gpk::vcst_t						ProcessFileName						= "";
+		::gpk::vcst_t						ProcessMockPath						= "";
+		::gpk::vcst_t						ProcessParams						= "";
 		SECURITY_ATTRIBUTES	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
 		::gpk::string			szCmdlineApp						= "";

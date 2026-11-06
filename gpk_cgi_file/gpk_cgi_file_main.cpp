@@ -41,7 +41,7 @@ sttc gpk::err_t		cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 			"\r\n\r\n"
 		);
 		html.push_back('\0');
-		printf("%s", html.begin());
+		printf("%.*s", GPK_VIEW_ARGS(html));
 #ifdef GPK_WINDOWS
 		OutputDebugStringA(html.begin());
 #endif

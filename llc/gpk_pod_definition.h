@@ -44,7 +44,7 @@ namespace gpk
 		::gpk::apod<::gpk::C_TYPE>	Types;
 
 		gpk::err_t 			push_any		(const ::gpk::C_TYPE type, const ::gpk::vcst_t label, const vcu0_t & defaultValue) { 
-			if_true_vef(Labels.size() > (u2_t)Labels.find(label), "'%s' already exists.", GPK_VIEW_ARGS(label).begin()); 
+			if_true_vef(Labels.size() > (u2_t)Labels.find(label), "'%.*s' already exists.", GPK_VIEW_ARGS(label));
 			if_fail_fe(Types.push_back(type));
 			if_fail_fe(Offsets.push_back((u1_t)DefaultData.size()));
 			if_fail_fe(DefaultData.append(defaultValue));

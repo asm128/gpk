@@ -187,7 +187,7 @@ gpk::err_t 		gpk::drawScene
 		if(renderNode.Mesh >= scene.Graphics->Meshes.size())
 			continue;
 
-		info_printf("Mesh name: %s", scene.Graphics->Meshes.Names[renderNode.Mesh].begin());
+		info_printf("Mesh name: %.*s", GPK_VIEW_ARGS(scene.Graphics->Meshes.Names[renderNode.Mesh]));
 		
 		::gpk::SRenderNodeConstants		transforms			= scene.RenderNodes.Transforms[iRenderNode];
 		transforms.NodeSize	= scene.RenderNodes.BaseTransforms[iRenderNode].NodeSize;

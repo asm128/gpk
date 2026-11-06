@@ -47,7 +47,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 		::gpk::vcst_t				jsonPort					= {};
 		const ::gpk::SJSONReader	& jsonReader				= framework.JSONConfig.Reader;
 		const s2_t				indexObjectApp				= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, app.ProcessFileName);
-		if_true_wf(::gpk::failed(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
+		if_true_wf(::gpk::failed(indexObjectApp), "Failed to find application node (%.*s) in json configuration file: '%s'", "application.brt", GPK_VIEW_ARGS(framework.FileNameJSONConfig))
 		else {
 			if_fail_wf(gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, app.ProcessFileName	), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessFileName	));
 			if_fail_wf(gpk::jsonExpressionResolve("process.command_line_app_name"	, jsonReader, indexObjectApp, app.ProcessMockPath	), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessMockPath	));
@@ -58,7 +58,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 				info_printf("Port to listen on: %u.", (u2_t )port);
 			}
 			jsonPort = "";
-			if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve("adapter", jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(jsonPort))
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, adapter);
 				info_printf("Adapter: %u.", (u2_t )adapter);
@@ -109,7 +109,7 @@ sttc	::gpk::err_t	createChildProcess
 		if_fail_fe(gpk::append_strings(userMessage, "Attach your debugger to '", szCmdlineApp, "' and press OK to initiate the process' main thread."));
 		MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
 	}
-	info_printf("Creating process '%s' with command line '%s'", szCmdlineApp.begin(), szCmdlineFinal.begin());
+	info_printf("Creating process '%.*s' with command line '%.*s'", GPK_VIEW_ARGS(szCmdlineApp), GPK_VIEW_ARGS(szCmdlineFinal));
 	ResumeThread(process.ProcessInfo.hThread);
 	return 0;
 }
@@ -173,12 +173,12 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				return 1;
 			return 0;
 		});
-	::gpk::apobj<::gpk::apobj<::gpk::SUDPMessage>>	& receivedPerClient		= app.ReceivedPerClient;
+	::gpk::apobj<::gpk::apobj<::gpk::SMessage>>	& receivedPerClient		= app.ReceivedPerClient;
 	{	// pick up messages for later processing
 		::std::lock_guard			lock						(app.Server.Mutex);
 		receivedPerClient.resize(app.Server.Clients.size());
 		for(u2_t  iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
-			::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
+			::gpk::pobj<::gpk::SConnection>	conn						= app.Server.Clients[iClient];
 			::gpk::lock_guard					lockRecv					(conn->Queue.MutexReceive);
 			*(receivedPerClient[iClient])	= app.Server.Clients[iClient]->Queue.Received;
 			app.Server.Clients[iClient]->Queue.Received.clear();
@@ -192,8 +192,9 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 			::brt::SProcessHandles		& iohandles				= app.ClientIOHandles[iClient];
 			::brt::SProcess				& process				= app.ClientProcesses[iClient];
 			for(u2_t  iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
-				info_printf("Client %i received: %s.", iClient, (*(receivedPerClient[iClient]))[iMessage]->Payload.begin());
-				::gpk::vu0_t					environmentBlock		= (*(receivedPerClient[iClient]))[iMessage]->Payload;
+				::gpk::SMessage			& pClientMessage		= *(*receivedPerClient[iClient])[iMessage];
+				::gpk::vu0_t				environmentBlock		= pClientMessage.Payload;
+				info_printf("Client %i received: %.*s.", iClient, GPK_VIEW_ARGS(environmentBlock));
 				// llamar proceso
 				if_fail_ce(::initHandles(iohandles));
 				process.StartInfo.hStdError		= iohandles.ChildStd_ERR_Write;
@@ -201,12 +202,12 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				process.StartInfo.hStdInput		= iohandles.ChildStd_IN_Read;
 				process.ProcessInfo.hProcess	= INVALID_HANDLE_VALUE;
 				process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
-				::gpk::vcu0_t					payload					= (*(receivedPerClient[iClient]))[iMessage]->Payload;
-				::gpk::err_t					contentOffset			= payload.find((gpk::u0_t)0U);
+				::gpk::vcu0_t				payload					= environmentBlock;
+				::gpk::err_t				contentOffset			= payload.find((u0_t)0U);
 				if_fail_cef(contentOffset, "%s", "Failed to find environment block stop code.");
-				if(payload.size() && (payload.size() > (u2_t )contentOffset + 2))
+				if(payload.size() && (payload.size() > (u2_t)contentOffset + 2))
 					if_fail_ef(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2}), "%s", "Failed to write request content to process' stdin.");
-				if_fail_ef(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process.
+				if_fail_ef(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal), "Failed to create child process: %.*s.", GPK_VIEW_ARGS(app.ProcessFileName));	// Create the child process.
 			}
 		}
 	}
@@ -236,7 +237,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 		for(u2_t  iMessage = 0; iMessage < clientResponses->size(); ++iMessage) { // contestar
 			if((*clientResponses)[iMessage]->size()) {
 				::std::lock_guard					lock						(app.Server.Mutex);
-				::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
+				::gpk::pobj<::gpk::SConnection>	conn						= app.Server.Clients[iClient];
 				if_fail_fe(::gpk::connectionPushData(*conn, conn->Queue, *((*clientResponses)[iMessage]), true, true));
 				receivedPerClient[iClient][iMessage]	= {};
 				::brt::SProcess						& process				= app.ClientProcesses[iClient];

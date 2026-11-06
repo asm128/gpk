@@ -65,13 +65,13 @@ static	::gpk::err_t								createChildProcess
 	::gpk::asc_t								userMessage				= {};
 	{
 		userMessage.resize(2 * appPath.size() + 2 * commandLine.size() + 1024);
-		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", appPath.begin());
+		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%.*s' and press OK to initiate the process' main thread.", GPK_VIEW_ARGS(appPath));
 	}
 
 	MessageBoxA(0, userMessage.begin(), (const char*)popupTitle.begin(), MB_OK | MB_TOPMOST);	// Tell the user to attach the debugger to the child process.
 
 	{	// Resume the child CGI process' main thread after the user acknowledged the message box.
-		info_printf("Creating process '%s' with command line '%s'", appPath.begin(), commandLine.begin());
+		info_printf("Creating process '%.*s' with command line '%.*s'", GPK_VIEW_ARGS(appPath), GPK_VIEW_ARGS(commandLine));
 		ResumeThread(process.ProcessInfo.hThread);
 	}
 	return 0;
@@ -96,12 +96,12 @@ static	::gpk::err_t				loadConfig
 	::gpk::apod<char>						jsonData				= {};
 	::gpk::SJSONReader						jsonReader				= {};
 	if(fileNameJSONConfig.size()) {	// Attempt to load config file.
-		if_true_vef(-1, ::gpk::failed(::gpk::fileToMemory(fileNameJSONConfig, jsonData)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
-		if_true_vef(-1, ::gpk::jsonParse(jsonReader, ::gpk::view_const_string{jsonData.begin(), jsonData.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
+		if_true_vef(-1, ::gpk::failed(::gpk::fileToMemory(fileNameJSONConfig, jsonData)), "Failed to load config JSON file! File not found? File name: %.*s.", GPK_VIEW_ARGS(fileNameJSONConfig));
+		if_true_vef(-1, ::gpk::jsonParse(jsonReader, ::gpk::view_const_string{jsonData.begin(), jsonData.size()}), "Failed to read json! Not a valid json file? File name: %.*s.", GPK_VIEW_ARGS(fileNameJSONConfig));
 	}
 	{ // load port from config file
 		s2_t							indexObjectApp			;
-		if_fail_wf(indexObjectApp = ::gpk::jsonExpressionResolve("application.gpk_cgi_interceptor", jsonReader, 0, processFileName), "Failed to find application node (%s) in json configuration file: '%s'", "application.gpk_cgi_interceptor", fileNameJSONConfig.begin())
+		if_fail_wf(indexObjectApp = ::gpk::jsonExpressionResolve("application.gpk_cgi_interceptor", jsonReader, 0, processFileName), "Failed to find application node (%.*s) in json configuration file: '%s'", "application.gpk_cgi_interceptor", GPK_VIEW_ARGS(fileNameJSONConfig))
 		else {
 			if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, processFileName	)), "Failed to load config from json! Last contents found: %s.", processFileName	.begin())
 			if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve("process.command_line_app_name"	, jsonReader, indexObjectApp, processMockPath	)), "Failed to load config from json! Last contents found: %s.", processMockPath	.begin())
@@ -167,7 +167,7 @@ static	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read 
 		GetExitCodeProcess(process.ProcessInfo.hProcess, &exitCode);
 		if(STILL_ACTIVE != exitCode && 0 == handleReadable(handles.ChildStd_OUT_Read))
 			break;
-		//info_printf("Process output: %s", GPK_VIEW_ARGS({chBuf.begin(), chBuf.size()}).begin());
+		//info_printf("Process output: %.*s", GPK_VIEW_ARGS({GPK_VIEW_ARGS(chBuf), chBuf.size()}).begin());
 		if(0 == readBytes[readBytes.size() - 1])
 			break;
 	}
@@ -250,7 +250,7 @@ static int											cgiMain					(::gpk::SRuntimeValues & coreRuntimeValues)	{
 		//);
 		appState.ReadBytes.push_back('\0');
 		OutputDebugStringA((const char*)appState.ReadBytes.begin());
-		printf("%s", appState.ReadBytes.begin());
+		printf("%.*s", GPK_VIEW_ARGS(appState.ReadBytes));
 	}
 	return 0;
 }

@@ -25,7 +25,7 @@ gpk::err_t gpk::frameworkModuleLoad(SRuntimeModule & loadedModule, cnst vcst_t &
 			break;
 		(&loadedModule.Handle)[iMember + 1] = GPK_LOAD_MODULE_FUNCTION(loadedModule.Handle, functionNames[iMember].Name.begin());
 		if(0 == (&loadedModule.Handle)[iMember + 1]) {
-			error_printf("Failed to load module function:%s.", functionNames[iMember].Name.begin());
+			error_printf("Failed to load module function:%.*s.", GPK_VIEW_ARGS(functionNames[iMember].Name));
 			GPK_FREE_MODULE(loadedModule.Handle);
 			loadedModule = {};
 			rtrn OS_NOT_FOUND;

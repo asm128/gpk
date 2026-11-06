@@ -90,7 +90,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 			"\n</head>"
 		));
 		output.append(buffer, ::gpk::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
-		output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
+		output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>Booting %.*s...</h4>", GPK_VIEW_ARGS(framework.ModuleName)));
 		vcst_t							querystring;
 		find("QUERY_STRING", queryStringKeyVals, querystring);
 		if(querystring.size()) {
@@ -119,7 +119,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>IP: %u.%u.%u.%u:%u</h4>"		, GPK_IPV4_EXPAND(framework.RuntimeValues.RemoteIP)));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String IP: %s</h4>"			, remoteIP	.begin()));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String Port: %s</h4>"			, remotePORT.begin()));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String Port: %.*s</h4>"			, GPK_VIEW_ARGS(remotePORT)));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 
 		//int														argc					= __argc;
@@ -153,10 +153,10 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 				if(0 == content_body.size())
 					break;
 				content_body.push_back(0);
-				output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (%u:%u/%u:%u): %s</h1>", iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), content_body.begin()));
+				output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (%u:%u/%u:%u): %.*s</h1>", iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), GPK_VIEW_ARGS(content_body)));
 			}
 		}
-		output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %.*s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), GPK_VIEW_ARGS(runtimeValues.Content.Body)));
 		output.append(buffer, ::sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
 	}
 	return 0;
@@ -177,7 +177,7 @@ static ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	if_fail_fe(::cgiBootstrap(framework, html));
 	html.push_back('\0');
 	OutputDebugStringA(html.begin());
-	printf("%s", html.begin());
+	printf("%.*s", GPK_VIEW_ARGS(html));
 	::std::putc(0, stdout);
 	return 0;
 }

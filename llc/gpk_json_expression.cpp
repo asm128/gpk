@@ -19,10 +19,10 @@ GPK_USING_TYPEINT();
 static	gpk::err_t printNode		(const ::gpk::SExpressionNode* node, const ::gpk::vcst_t & expression)			{
 	const ::gpk::apod<sc_t>					viewPrintable					= ::gpk::string({&expression[node->Token->Span.Begin], node->Token->Span.End - node->Token->Span.Begin});
 	const ::gpk::vcst_t						viewTokenType					= ::gpk::get_value_label(node->Token->Type);
-	info_printf("Entering expression node type: %u (%s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %s", node->Token->Type, viewTokenType.begin(), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, viewPrintable.begin());
+	info_printf("Entering expression node type: %u (%.*s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %.*s", node->Token->Type, GPK_VIEW_ARGS(viewTokenType), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, GPK_VIEW_ARGS(viewPrintable));
 	for(::gpk::u2_t iChildren = 0; iChildren < node->Children.size(); ++iChildren)
 		::printNode(node->Children[iChildren], expression);
-	info_printf("Exiting expression node type: %u (%s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %s", node->Token->Type, viewTokenType.begin(), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, viewPrintable.begin());
+	info_printf("Exiting expression node type: %u (%.*s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %.*s", node->Token->Type, GPK_VIEW_ARGS(viewTokenType), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, GPK_VIEW_ARGS(viewPrintable));
 	return 0;
 }
 #endif
@@ -105,7 +105,7 @@ static	gpk::err_t evaluateExpression						(::gpk::SJSONExpressionSolver& results
 		else {
 			if(::gpk::EXPRESSION_READER_TYPE_KEY == expressionType) {
 				::gpk::vcst_t				strKey							= currentExpressionView;
-				if_true_fef(currentJSON && currentType != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s. Key to solve: %s.", ::gpk::get_value_label(currentType).begin(), ::gpk::string(currentExpressionView).begin());
+				if_true_fef(currentJSON && currentType != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s. Key to solve: %s.", ::gpk::get_value_namep(currentType), ::gpk::string(currentExpressionView).begin());
 				if(1 == childToSolve.Children.size()
 					&& (::gpk::EXPRESSION_READER_TYPE_TERM_KEY == childToSolve.Children[0]->Token->Type || ::gpk::EXPRESSION_READER_TYPE_TERM_ANY == childToSolve.Children[0]->Token->Type)) {
 					cnst ::gpk::err_t indexOfResolvedSubExpression = ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, (0 >= lastResult.IndexJSONResult) ? lastResult.IndexJSONResult : lastResult.IndexRootJSONNode, strKey);
@@ -117,10 +117,10 @@ static	gpk::err_t evaluateExpression						(::gpk::SJSONExpressionSolver& results
 			else {
 				::gpk::vcst_t				viewOfExpressionResult			= {};
 				if(::gpk::EXPRESSION_READER_TYPE_TERM_INDEX == expressionType) {
-					if_true_fef(currentJSON && currentType != ::gpk::JSON_TYPE_ARRAY && currentType != ::gpk::JSON_TYPE_STRING, "Only arrays can be accessed by index. JSON type: %s.", ::gpk::get_value_label(currentType).begin());
+					if_true_fef(currentJSON && currentType != ::gpk::JSON_TYPE_ARRAY && currentType != ::gpk::JSON_TYPE_STRING, "Only arrays can be accessed by index. JSON type: %s.", ::gpk::get_value_namep(currentType));
 					const s2_t			indexOfResolvedSubExpression	= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode, viewOfExpressionResult);
 					if_true_fef(-1 == indexOfResolvedSubExpression, "Failed to solve expression: %s.", ::gpk::string(currentExpressionView).begin());
-					if_true_fef(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_INTEGER, "Arrays can only be accessed by index with a json integer. Type found: %s.",::gpk::get_value_label(inputJSON.Token[indexOfResolvedSubExpression].Type).begin());
+					if_true_fef(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_INTEGER, "Arrays can only be accessed by index with a json integer. Type found: %s.",::gpk::get_value_namep(inputJSON.Token[indexOfResolvedSubExpression].Type));
 					u3_t				numberRead						= 0;
 					if_fail_fe(gpk::parseIntegerDecimal(viewOfExpressionResult, numberRead));
 					if(currentType == ::gpk::JSON_TYPE_STRING) {
@@ -133,7 +133,7 @@ static	gpk::err_t evaluateExpression						(::gpk::SJSONExpressionSolver& results
 					}
 				}
 				else if(::gpk::EXPRESSION_READER_TYPE_TERM_KEY == expressionType) {
-					if_true_fef(currentJSON && currentType != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentType).begin());
+					if_true_fef(currentJSON && currentType != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s.", ::gpk::get_value_namep(currentType));
 					s2_t						indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode, viewOfExpressionResult);
 					if_true_fef(-1 == (lastResult.IndexJSONResult = indexOfResolvedSubExpression), "Failed to solve expression: %s.", ::gpk::string(currentExpressionView).begin());
 					::gpk::SExpressionReader	reader;
@@ -256,7 +256,7 @@ static	gpk::err_t evaluateExpression						(::gpk::SJSONExpressionSolver& results
 						}
 					}
 					else {
-						error_printf("Unrecognized expression reader type: '%s'.", ::gpk::get_value_label(childToSolve.Token->Type).begin());
+						error_printf("Unrecognized expression reader type: '%s'.", ::gpk::get_value_namep(childToSolve.Token->Type));
 						return -1;
 					}
 				}

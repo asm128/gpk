@@ -1,4 +1,4 @@
-#include "gpk_udp_client.h"
+#include "gpk_socket_client.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_json.h"
 
@@ -19,40 +19,40 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INFO, Connected		, 3);
 
 	struct SClientUI {
-		cid_t		Root				= CID_INVALID;
-		acid			Info				= {};
-		acid			Input				= {};
-		asc_t		TextDateTime		= {};
-		asc_t		TextConnected		= {};
-		asc_t		TextConnectedSince	= {};
-		SInputBox	InputBox;
+		::gpk::cid_t		Root				= ::gpk::CID_INVALID;
+		::gpk::acid			Info				= {};
+		::gpk::acid			Input				= {};
+		::gpk::asc_t		TextDateTime		= {};
+		::gpk::asc_t		TextConnected		= {};
+		::gpk::asc_t		TextConnectedSince	= {};
+		::gpk::SInputBox	InputBox;
 	};
 
 	struct SClient {
-		SUDPClient	UDP;
+		::gpk::SUDPClient	UDP;
 
-		TUDPQueue	QueueReceived		= {};
-		TQueueSend	QueueToSend			= {};
+		::gpk::TPacketQueue	QueueReceived		= {};
+		::gpk::TPacketQueueSend	QueueToSend			= {};
 
-		vcst_t		RemoteIp			= "192.168.100.59";
-		vcst_t		RemotePort			= "9865";
+		::gpk::vcst_t		RemoteIp			= "192.168.100.59";
+		::gpk::vcst_t		RemotePort			= "9865";
 
-		SClientUI	UI					= {};
+		::gpk::SClientUI	UI					= {};
 
-		f3_t				ConnectedSince		= {};
+		double				ConnectedSince		= {};
 
 							~SClient			()	{
-			if(UDP.State != UDP_CONNECTION_STATE_DISCONNECTED)
-				if_fail_w(clientDisconnect(UDP));
+			if(UDP.Connection.State != ::gpk::CONNECTION_STATE_DISCONNECTED)
+				if_fail_w(::gpk::clientDisconnect(UDP));
 		}
 	};
 
-	err_t		loadClientConfig	(const SJSONReader & jsonConfig, s2_t parentNode, vcst_t & remote_ip, vcst_t & remote_port);
-	err_t		clientConnect		(SClient & client, SGUI & gui);
-	err_t		clientUpdate		(SClient & client, SGUI & gui);
-	err_t		setupGUI			(SClientUI & client, SGUI & gui);
-	err_t		updateGUI			(SClient & client, SGUI & gui);
-	err_t		processGUIEvent		(SClient & client, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent);
+	::gpk::err_t		loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcst_t & remote_ip, ::gpk::vcst_t & remote_port);
+	::gpk::err_t		clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui);
+	::gpk::err_t		clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui);
+	::gpk::err_t		setupGUI			(::gpk::SClientUI & client, ::gpk::SGUI & gui);
+	::gpk::err_t		updateGUI			(::gpk::SClient & client, ::gpk::SGUI & gui);
+	::gpk::err_t		processGUIEvent		(::gpk::SClient & client, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent);
 } // namespace
 
 #endif // GPK_UDP_CLIENT_APP_H_23701

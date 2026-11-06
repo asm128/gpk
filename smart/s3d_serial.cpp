@@ -142,7 +142,7 @@ usns gpk;
 }
 
 ::gpk::err_t			s3d::serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud) {
-	info_printf("Opening port '%s' at %d bps\n", portName.begin(), baud);
+	info_printf("Opening port '%.*s' at %d bps\n", GPK_VIEW_ARGS(portName), baud);
 	serial.Connected		= false;
 #ifndef GPK_WINDOWS
 	gpk::safe_closesocket(serial.Handle);

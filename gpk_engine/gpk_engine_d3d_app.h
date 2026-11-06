@@ -84,7 +84,7 @@ namespace gpk
 					{ { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					, { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					};
-				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
+				sprintf_s(shaderFileName, "%.*s.cso", GPK_VIEW_ARGS(shaderName));
 
 				::gpk::as0_t				fileVS;
 				if_fail_fe(gpk::fileToMemory(::gpk::vcst_t{shaderFileName}, fileVS));
@@ -98,7 +98,7 @@ namespace gpk
 				::gpk::vcst_t					shaderName							= "psGUI";
 				sc_t							shaderFileName	[1024]				= {};
 				::gpk::pcom<ID3D11PixelShader>	pixelShader;
-				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
+				sprintf_s(shaderFileName, "%.*s.cso", GPK_VIEW_ARGS(shaderName));
 				::gpk::as0_t					filePS;
 				if_fail_fe(gpk::fileToMemory(::gpk::vcst_t{shaderFileName}, filePS));
 

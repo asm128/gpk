@@ -92,8 +92,8 @@ sttc gpk::err_t				screenSwitch			(::dry::SApplication & app, ::dry::SCREEN oldS
 	gui.Controls.SetHidden(app.Screens.Info.ControlIds[::dry::SCREEN_CONTROL_INFO_DIALOG], idControl != dry::SCREEN_CONTROL_MENU_INFO);
 	if(oldScreen != app.Screens.ScreenSelected) {
 		info_printf("Switching to screen: %s. Previous screen: %s. Modal enabled: %s."
-			, ::gpk::get_value_label(app.Screens.ScreenSelected).begin()
-			, ::gpk::get_value_label(oldScreen).begin()
+			, ::gpk::get_value_namep(app.Screens.ScreenSelected)
+			, ::gpk::get_value_namep(oldScreen)
 			, app.Screens.ModalEnabled ? "true" : "false"
 			);
 		app.Screens.ScreenSelected			= newScreen;
@@ -268,7 +268,7 @@ gpk::err_t dry::updateApp			(::dry::SApplication & app) {
 	if_fail_e(::gpk::failed(::dry::dryerUpdate(app.Dryer, app.Framework.Timer.LastTimeMicroseconds / 1000)));
 	for(u2_t  iDryerEvent = 0; iDryerEvent < app.Dryer.EventList.size(); ++iDryerEvent) {
 		::dry::DRYER_EVENT						dryerEvent						= app.Dryer.EventList[iDryerEvent];
-		always_printf("Processing dryer event: %s (%u).", ::gpk::get_value_label(dryerEvent).begin(), dryerEvent);
+		always_printf("Processing dryer event: %s (%u).", ::gpk::get_value_namep(dryerEvent), dryerEvent);
 		switch(dryerEvent) {
 		case DRYER_EVENT_STARTED				: break;
 		case DRYER_EVENT_PRE_PREHEATING_STARTED	: break;
@@ -280,20 +280,20 @@ gpk::err_t dry::updateApp			(::dry::SApplication & app) {
 		case DRYER_EVENT_DOOR_OPEN				: break;
 		case DRYER_EVENT_DOOR_CLOSED			: break;
 		default:
-			warning_printf("Dryer event not handled: %s (%u)", ::gpk::get_value_label(dryerEvent).begin(), dryerEvent);
+			warning_printf("Dryer event not handled: %s (%u)", ::gpk::get_value_namep(dryerEvent), dryerEvent);
 			break;
 		}
 	}
 	//for(u2_t  iDryerCommand = 0; iDryerCommand < app.Dryer.CommandList.size(); ++iDryerCommand) {
 	//	const ::dry::SDryerCommand				dryerCommand					= app.Dryer.CommandList[iDryerCommand];
 	//	::gpk::err_t							failed							= {};
-	//	always_printf("Processing dryer command: %s (%u). Args: %i.", ::gpk::get_value_label(dryerCommand.Command).begin(), dryerCommand.Command, dryerCommand.Args);
+	//	always_printf("Processing dryer command: %s (%u). Args: %i.", ::gpk::get_value_namep(dryerCommand.Command), dryerCommand.Command, dryerCommand.Args);
 	//	switch(dryerCommand.Command) {
 	//	case ::dry::DRYER_COMMAND_PUMP: {
 	//		const ::gpk::vcc						serialCommand					= dryerCommand.Args ? ::gpk::vcst_t{"<ON>"} : ::gpk::vcst_t{"<OFF>"};
 	//		if(errored(::s3d::serialWrite(app.Serial, serialCommand))) {
 	//			failed = true;
-	//			error_printf("Failed to send serial command to control pump: %s.", serialCommand.begin());
+	//			error_printf("Failed to send serial command to control pump: %.*s.", GPK_VIEW_ARGS(serialCommand));
 	//		}
 	//		break;
 	//	}

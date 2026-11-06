@@ -13,7 +13,7 @@ gpk::err_t 		gpk::virtualKeyboardHandleEvent	(const ::gpk::SVirtualKeyboard & vk
 	}
 	else if(::gpk::in_range<s2_t>(iControl, idKeyStop, idKeyStop + ::gpk::get_value_count<::gpk::VK_SCANCODE>())) {
 		const ::gpk::VK_SCANCODE	key					= ::gpk::VK_SCANCODE(iControl - idKeyStop);
-		info_printf("Virtual scancode: %s (%i)", ::gpk::get_value_label(key).begin(), key);
+		info_printf("Virtual scancode: %s (%i)", ::gpk::get_value_namep(key), key);
 		return 1 + events.push_back({::gpk::VK_EVENT_EDIT, key});
 	}
 	return 0;

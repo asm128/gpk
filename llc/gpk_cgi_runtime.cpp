@@ -58,9 +58,9 @@ gpk::err_t			gpk::httpRequestInit			(SHTTPAPIRequest & requestReceived, cnst SCG
 	return isCGIEnviron ? 1 : 0;
 }
 
-static	gpk::err_t cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<::gpk::sc_c> & strContentType)	{
+static	gpk::err_t cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::vcst_t & strContentType)	{
 	if_true_vef(-1, 0 == strContentType.size(), "%s", "No input string");
-	static	::gpk::view<sc_c>					content_types []			=
+	static	::gpk::vcst_t						content_types []			=
 		{ "application/javascript"
 		, "application/json"
 		, "application/x-www-form-urlencoded"
@@ -121,7 +121,7 @@ static	gpk::err_t cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, con
 	return 0;
 }
 
-static	gpk::err_t cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::view<sc_c> & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort) {
+static	gpk::err_t cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcst_t & strRemoteIP, const ::gpk::vcst_t& strRemotePort) {
 	remoteIP.Port			= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
@@ -155,12 +155,12 @@ static	gpk::err_t cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::view<sc_c> & 
 	return 0;
 }
 
-static	gpk::err_t cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<::gpk::sc_c> & strContent)	{
+static	gpk::err_t cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::vcst_t & strContent)	{
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
-static	gpk::err_t cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<::gpk::sc_c> & strContent)	{
+static	gpk::err_t cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::vcst_t & strContent)	{
 	switch(contentType) {
 	default: break;
 	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA:
@@ -173,7 +173,7 @@ static	gpk::err_t cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, cons
 gpk::err_t 		gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues)	{
 	::gpk::view<cnst ::gpk::kv<vcst_t>>	environViews			= cgiRuntimeValues.RuntimeValues.EntryPointArgs.Environment;
 	//for(u2_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
-	//	info_printf("CGI Environ (original): '%s = %s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key).begin(), GPK_VIEW_ARGS(environViews[iEnviron].Val).begin());
+	//	info_printf("CGI Environ (original): '%.*s = %.*s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key), GPK_VIEW_ARGS(environViews[iEnviron].Val));
 
 	{
 		::gpk::vcst_t					querystring;

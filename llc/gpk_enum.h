@@ -59,7 +59,7 @@ namespace gpk
 		//			value				= Values[i];
 		//			return 0;
 		//		}
-		//	enum_printf("Enumeration value not found! Name: %s.", name.size(), name.begin());
+		//	enum_printf("Enumeration value not found! Name: %.*s.", name.size(), GPK_VIEW_ARGS(name));
 		//	value				= INVALID_VALUE;
 		//	return -1;
 		//}

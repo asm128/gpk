@@ -11,12 +11,12 @@ static ::gpk::err_t b64DecodeMain(::gpk::SRuntimeValues & runtimeValues) {
 
 	::gpk::au0_t				in_b64			= {};
 	::gpk::au0_t				out_data		= {};
-	if_fail_fef(gpk::fileToMemory(in_filename, in_b64), "Failed to load file: %s", in_filename.begin());
+	if_fail_fef(gpk::fileToMemory(in_filename, in_b64), "Failed to load file: %.*s", GPK_VIEW_ARGS(in_filename));
 	if_fail_fef(gpk::base64Decode(in_b64, out_data), "Failed to encode file contents! %s.", "Out of memory?");
 
 	::gpk::string		out_filename	= in_filename;
 	out_filename.append(".b64.decoded");
-	if_fail_fef(gpk::fileFromMemory({out_filename.begin(), out_filename.size()}, out_data), "Failed to save file: %s", out_filename.begin());
+	if_fail_fef(gpk::fileFromMemory({out_filename.begin(), out_filename.size()}, out_data), "Failed to save file: %.*s", GPK_VIEW_ARGS(out_filename));
 	return 0;
 }
 

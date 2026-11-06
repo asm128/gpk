@@ -42,7 +42,7 @@ static	gpk::err_t clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	client.Address												= temp;
 	int																wsae										= WSAGetLastError() ;
 	if_true_vef(-1, received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed to receive connect response from address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
-	if_true_vef(-1, commandReceived.Type != ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE, "Invalid server command received! Command received: %s.", ::gpk::get_value_label(commandReceived.Type).begin());
+	if_true_vef(-1, commandReceived.Type != ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE, "Invalid server command received! Command received: %s.", ::gpk::get_value_namep(commandReceived.Type));
 	commandToSend.Packed										= 1;
 	if_fail_fef(::sendto(client.Socket.Handle, (const sc_t*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sizeof(struct sockaddr_in)), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
 	client.LastPing = client.FirstPing							= ::gpk::timeCurrentInUs();
@@ -93,7 +93,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 }
 
 gpk::err_t 		gpk::clientUpdate							(::gpk::SUDPClient & client)		{
-	if_true_vef(-1, client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected. Current state: %s.", ::gpk::get_value_label(client.State).begin());
+	if_true_vef(-1, client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected. Current state: %s.", ::gpk::get_value_namep(client.State));
 	client.CacheSent.clear(); client.CacheSend.clear();
 	return ::gpk::connectionSendQueue(client, client.CacheSent, client.CacheSend);
 }
