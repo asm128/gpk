@@ -34,7 +34,7 @@ namespace gpk
 		::gpk::TUDPQueue	QueueReceived		= {};
 		::gpk::TQueueSend	QueueToSend			= {};
 
-		::gpk::vcst_t		RemoteIp			= "192.168.100.59";
+		::gpk::vcst_t		RemoteIp			= "192.168.1.4";
 		::gpk::vcst_t		RemotePort			= "9865";
 
 		::gpk::SClientUI	UI					= {};
