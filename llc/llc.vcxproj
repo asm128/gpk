@@ -85,9 +85,11 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
+    <ClInclude Include="gpk_event_primitives.h" />
     <ClInclude Include="gpk_gpio.h" />
     <ClInclude Include="gpk_i2c.h" />
     <ClInclude Include="gpk_keyed_bit_array.h" />
+    <ClInclude Include="gpk_lifecycle.h" />
     <ClInclude Include="gpk_linear_map_pobj.h" />
     <ClInclude Include="gpk_log_level.h" />
     <ClInclude Include="gpk_event_input.h" />
