@@ -105,10 +105,12 @@ err_t			gpk_cgi_generate_output			(SCGIRuntimeValues & runtimeValues, string & o
 
 	//::pageCatalog("ads.json", programState.Path.Script, sizeScreen, programState.Path.Style, category, title, qsArgs.Language.size() ? qsArgs.Language : "es", output);
 
+#if defined(GPK_WINDOWS)
 	if(output.size()) {
 		OutputDebugStringA(output.begin());
 		OutputDebugStringA("\n");
 	}
+#endif
 	return 0;
 }
 

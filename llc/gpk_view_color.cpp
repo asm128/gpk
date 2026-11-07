@@ -1,15 +1,15 @@
-#include "llc_view_color.h"
+#include "gpk_view_color.h"
 
-::llc::err_t llc::vcu82bgr8(vcu0_t bytes, ::llc::bgr8 & colorToSet) {
-	if_true_fe(szof(::llc::bgr8) > bytes.size());
+::gpk::err_t gpk::vcu82bgr8(vcu0_t bytes, ::gpk::bgr8 & colorToSet) {
+	if_true_fe(szof(::gpk::bgr8) > bytes.size());
 	colorToSet.r = bytes[2]; 
 	colorToSet.g = bytes[1]; 
 	colorToSet.b = bytes[0]; 
 	return 3;
 }
 
-::llc::err_t llc::vcu82bgra8(vcu0_t bytes, ::llc::bgra8 & colorToSet) {
-	if_true_fe(szof(::llc::bgra8) > bytes.size());
+::gpk::err_t gpk::vcu82bgra8(vcu0_t bytes, ::gpk::bgra8 & colorToSet) {
+	if_true_fe(szof(::gpk::bgra8) > bytes.size());
 	colorToSet.a = bytes[3];
 	colorToSet.r = bytes[2]; 
 	colorToSet.g = bytes[1]; 

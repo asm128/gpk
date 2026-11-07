@@ -1,9 +1,9 @@
-#include "llc_enum.h"
+#include "gpk_enum.h"
 
-#ifndef LLC_WIFI_H
-#define LLC_WIFI_H
+#ifndef GPK_WIFI_H
+#define GPK_WIFI_H
 
-namespace llc
+namespace gpk
 {
 	GDEFINE_ENUM_TYPE(WIFI_AUTH, u0_t);
     GDEFINE_ENUM_VALUE(WIFI_AUTH, OPEN                    , 0);  //  
@@ -27,4 +27,4 @@ namespace llc
     GDEFINE_ENUM_VALUE(WIFI_AUTH, MAX                     , 17); //
 } // namespace 
 
-#endif // LLC_WIFI_H
+#endif // GPK_WIFI_H

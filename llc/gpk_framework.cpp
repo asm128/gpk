@@ -13,6 +13,9 @@
 #	include <joystickapi.h>
 #	include <xinput.h>
 #	pragma warning(disable: 4995)
+#elif defined(GPK_XCB)
+#	include <xkbcommon/xkbcommon-x11.h>
+#	include <locale.h>
 #endif
 
 GPK_USING_TYPEINT();
@@ -112,6 +115,79 @@ gpk::err_t 		gpk::updateFramework						(::gpk::SFramework& framework)											
 
 static	::RECT			minClientRect			= {100, 100, 100 + 320, 100 + 200};
 
+static	u0_t		win32ScanCode			(LPARAM lParam) {
+	return (u0_t)((lParam >> 16) & 0xFF);
+}
+
+static	u0_t		win32SystemKey			(WPARAM wParam, LPARAM lParam) {
+	const u0_t		scanCode				= ::win32ScanCode(lParam);
+	switch(wParam) {
+	default			: return (u0_t)wParam;
+	case VK_SHIFT	: return (u0_t)::MapVirtualKeyExW(scanCode, MAPVK_VSC_TO_VK_EX, ::GetKeyboardLayout(0));
+	case VK_CONTROL	: return lParam & (1 << 24) ? VK_RCONTROL : VK_LCONTROL;
+	case VK_MENU		: return lParam & (1 << 24) ? VK_RMENU : VK_LMENU;
+	}
+}
+
+static	u2_t		win32InputModifiers		() {
+	u2_t				modifiers				= {};
+	if(::GetKeyState(VK_SHIFT  ) & 0x8000) modifiers |= ::gpk::INPUT_MODIFIER_Shift;
+	if(::GetKeyState(VK_CAPITAL) & 0x0001) modifiers |= ::gpk::INPUT_MODIFIER_CapsLock;
+	if(::GetKeyState(VK_CONTROL) & 0x8000) modifiers |= ::gpk::INPUT_MODIFIER_Control;
+	if(::GetKeyState(VK_MENU   ) & 0x8000) modifiers |= ::gpk::INPUT_MODIFIER_Alt;
+	if(::GetKeyState(VK_NUMLOCK) & 0x0001) modifiers |= ::gpk::INPUT_MODIFIER_NumLock;
+	if(::GetKeyState(VK_SCROLL ) & 0x0001) modifiers |= ::gpk::INPUT_MODIFIER_ScrollLock;
+	if((::GetKeyState(VK_LWIN) | ::GetKeyState(VK_RWIN)) & 0x8000) modifiers |= ::gpk::INPUT_MODIFIER_Super;
+	if(::GetKeyState(VK_RMENU) & 0x8000) modifiers |= ::gpk::INPUT_MODIFIER_AltGr;
+	return modifiers;
+}
+
+static	u2_t		win32KeySym				(WPARAM wParam, LPARAM lParam) {
+	if(wParam)
+		return (u2_t)wParam;
+	const u2_t		scanCode				= ::win32ScanCode(lParam) | ((lParam & (1 << 24)) ? 0xE000 : 0);
+	return (u2_t)::MapVirtualKeyExW(scanCode, MAPVK_VSC_TO_VK_EX, ::GetKeyboardLayout(0));
+}
+
+static	u2_t		win32TextCodePoint		(::gpk::SWindowPlatformDetail & detail, u1_t codeUnit) {
+	if(codeUnit >= 0xD800 && codeUnit <= 0xDBFF) {
+		detail.PendingHighSurrogate = codeUnit;
+		return 0;
+	}
+	if(codeUnit >= 0xDC00 && codeUnit <= 0xDFFF) {
+		const u1_t	highSurrogate			= detail.PendingHighSurrogate;
+		detail.PendingHighSurrogate = 0;
+		return highSurrogate >= 0xD800 && highSurrogate <= 0xDBFF
+			? 0x10000 + (((u2_t)highSurrogate - 0xD800) << 10) + ((u2_t)codeUnit - 0xDC00)
+			: 0;
+	}
+	detail.PendingHighSurrogate = 0;
+	return codeUnit;
+}
+
+static	gpk::err_t	win32EnqueueText		(::gpk::SWindow & window, u2_t codePoint, LPARAM lParam) {
+	if(0 == codePoint)
+		return 0;
+	const u0_t		scanCode				= ::win32ScanCode(lParam);
+	const u2_t		keySym					= ::win32KeySym(0, lParam);
+	return ::gpk::eventEnqueueTextChar(window.EventQueue, ::gpk::SInputTextEvent{codePoint, keySym, -1, scanCode});
+}
+
+static	gpk::err_t	win32EnqueueKey			(::gpk::SWindow & window, UINT message, WPARAM wParam, LPARAM lParam) {
+	const bool		pressed					= WM_KEYDOWN == message || WM_SYSKEYDOWN == message;
+	const u0_t		keyCode					= ::win32SystemKey(wParam, lParam);
+	const u2_t		time						= (u2_t)::GetMessageTime();
+	if_fail_fe(::gpk::inputKeyboardStateSet(*window.Input, keyCode, pressed, -1, time * .001f));
+	const ::gpk::SInputKeyEvent keyEvent				= {keyCode, ::win32ScanCode(lParam), -1, ::win32KeySym(wParam, lParam), ::win32InputModifiers(), time};
+	switch(message) {
+	default				: return -1;
+	case WM_KEYDOWN		: return ::gpk::eventEnqueueKeyboardDown	(window.EventQueue, keyEvent);
+	case WM_KEYUP		: return ::gpk::eventEnqueueKeyboardUp		(window.EventQueue, keyEvent);
+	case WM_SYSKEYDOWN	: return ::gpk::eventEnqueueKeyboardSysDown(window.EventQueue, keyEvent);
+	case WM_SYSKEYUP		: return ::gpk::eventEnqueueKeyboardSysUp	(window.EventQueue, keyEvent);
+	}
+}
+
 //extern				::SApplication				* g_ApplicationInstance						;
 static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
 	switch(uMsg) {
@@ -120,19 +196,19 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		((::MINMAXINFO*)lParam)->ptMinTrackSize	= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
 		return 0;
 	case WM_NCCREATE			: {
-		const CREATESTRUCTA						& createStruct			= *(const CREATESTRUCTA*)lParam;
+		const CREATESTRUCTW						& createStruct			= *(const CREATESTRUCTW*)lParam;
 		::SetWindowLongPtrA(hWnd, GWLP_USERDATA, (LONG_PTR)createStruct.lpCreateParams);
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 	}
 	}
 	//::SApplication						& app						= *g_ApplicationInstance;
 	static	const int						adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 	if(0 == ::GetWindowLongPtrA(hWnd, GWLP_USERDATA))
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 
 	::gpk::SWindow				* pWindow		= (::gpk::SWindow*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
 	if(0 == pWindow)
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 
 	::gpk::SWindow				& mainDisplay	= *pWindow;
 
@@ -168,11 +244,29 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		}
 		break;
 	}
-	case WM_CHAR			: verbose_printf("WM_CHAR          '%u'.", wParam); if_fail_e(gpk::eventEnqueueTextChar				(mainDisplay.EventQueue, (u2_t)wParam)); mainDisplay.Repaint = true; break;
-	case WM_KEYDOWN			: verbose_printf("WM_KEYDOWN       '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardDown			(mainDisplay.EventQueue, (u0_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 1; mainDisplay.Repaint = true; break;
-	case WM_KEYUP			: verbose_printf("WM_KEYUP         '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardUp			(mainDisplay.EventQueue, (u0_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 0; mainDisplay.Repaint = true; break;
-	case WM_SYSKEYDOWN		: verbose_printf("WM_SYSKEYDOWN    '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysDown		(mainDisplay.EventQueue, (u0_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 1; mainDisplay.Repaint = true; break;
-	case WM_SYSKEYUP		: verbose_printf("WM_SYSKEYUP      '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysUp		(mainDisplay.EventQueue, (u0_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 0; mainDisplay.Repaint = true; break;
+	case WM_CHAR			:
+	case WM_SYSCHAR		: {
+		verbose_printf("WM_CHAR          '%u'.", wParam);
+		if_fail_e(::win32EnqueueText(mainDisplay, ::win32TextCodePoint(displayDetail, (u1_t)wParam), lParam));
+		mainDisplay.Repaint = true;
+		break;
+	}
+	case WM_UNICHAR		: {
+		if(UNICODE_NOCHAR == wParam)
+			return TRUE;
+		if_fail_e(::win32EnqueueText(mainDisplay, (u2_t)wParam, lParam));
+		mainDisplay.Repaint = true;
+		return 0;
+	}
+	case WM_KEYDOWN			:
+	case WM_KEYUP			:
+	case WM_SYSKEYDOWN		:
+	case WM_SYSKEYUP		: {
+		verbose_printf("WM_KEY           '%u'.", wParam);
+		if_fail_e(::win32EnqueueKey(mainDisplay, uMsg, wParam, lParam));
+		mainDisplay.Repaint = true;
+		break;
+	}
 	case WM_LBUTTONDOWN		: verbose_printf("WM_LBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; break;
 	case WM_RBUTTONDOWN		: verbose_printf("WM_RBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 1; mainDisplay.Repaint = true; break;
 	case WM_MBUTTONDOWN		: verbose_printf("WM_MBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 1; mainDisplay.Repaint = true; break;
@@ -272,11 +366,11 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	//	break;// Joystick JOYSTICKID2 changed position in the z-direction.
 	//}
 	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
-static	void					initWndClass								(::HINSTANCE hInstance, const TCHAR* className, WNDPROC wndProc, ::WNDCLASSEX& wndClassToInit)	{
-	wndClassToInit					= {sizeof(::WNDCLASSEX),};
+static	void					initWndClass								(::HINSTANCE hInstance, LPCWSTR className, WNDPROC wndProc, ::WNDCLASSEXW& wndClassToInit)	{
+	wndClassToInit					= {sizeof(::WNDCLASSEXW),};
 	wndClassToInit.lpfnWndProc		= wndProc;
 	wndClassToInit.hInstance		= hInstance;
 	wndClassToInit.hIcon			= LoadIcon	(NULL, IDC_ICON);
@@ -286,10 +380,68 @@ static	void					initWndClass								(::HINSTANCE hInstance, const TCHAR* classNa
 	wndClassToInit.style			= CS_DBLCLKS;
 }
 #elif defined(GPK_XCB)
+static	void		xcbInputCleanup								(::gpk::SWindowPlatformDetail & detail) {
+	if(detail.XKBComposeState) xkb_compose_state_unref(detail.XKBComposeState);
+	if(detail.XKBComposeTable) xkb_compose_table_unref(detail.XKBComposeTable);
+	if(detail.XKBState) xkb_state_unref(detail.XKBState);
+	if(detail.XKBKeymap) xkb_keymap_unref(detail.XKBKeymap);
+	if(detail.XKBContext) xkb_context_unref(detail.XKBContext);
+	detail.XKBComposeState = {};
+	detail.XKBComposeTable = {};
+	detail.XKBState = {};
+	detail.XKBKeymap = {};
+	detail.XKBContext = {};
+	detail.XKBDeviceId = -1;
+}
+
+static	gpk::err_t xcbInputSetup								(::gpk::SWindowPlatformDetail & detail) {
+	if(detail.XKBState)
+		return 0;
+
+	detail.XKBContext = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+	if(0 == detail.XKBContext)
+		return -1;
+
+	uint16_t		majorVersion = {};
+	uint16_t		minorVersion = {};
+	uint8_t			eventBase = {};
+	uint8_t			errorBase = {};
+	if(false == xkb_x11_setup_xkb_extension(detail.Connection
+		, XKB_X11_MIN_MAJOR_XKB_VERSION, XKB_X11_MIN_MINOR_XKB_VERSION
+		, XKB_X11_SETUP_XKB_EXTENSION_NO_FLAGS
+		, &majorVersion, &minorVersion, &eventBase, &errorBase
+		)) {
+		::xcbInputCleanup(detail);
+		return -1;
+	}
+
+	detail.XKBDeviceId = xkb_x11_get_core_keyboard_device_id(detail.Connection);
+	if(0 > detail.XKBDeviceId) {
+		::xcbInputCleanup(detail);
+		return -1;
+	}
+
+	detail.XKBKeymap = xkb_x11_keymap_new_from_device(detail.XKBContext, detail.Connection, detail.XKBDeviceId, XKB_KEYMAP_COMPILE_NO_FLAGS);
+	detail.XKBState = detail.XKBKeymap ? xkb_x11_state_new_from_device(detail.XKBKeymap, detail.Connection, detail.XKBDeviceId) : 0;
+	if(0 == detail.XKBKeymap || 0 == detail.XKBState) {
+		::xcbInputCleanup(detail);
+		return -1;
+	}
+
+	const sc_t * locale = setlocale(LC_CTYPE, "");
+	if(locale) {
+		detail.XKBComposeTable = xkb_compose_table_new_from_locale(detail.XKBContext, locale, XKB_COMPOSE_COMPILE_NO_FLAGS);
+		if(detail.XKBComposeTable)
+			detail.XKBComposeState = xkb_compose_state_new(detail.XKBComposeTable, XKB_COMPOSE_STATE_NO_FLAGS);
+	}
+	return 0;
+}
+
 static	gpk::err_t xcbWindowCreate								(::gpk::SWindow & window) {
 	if(0 == window.PlatformDetail.Connection) {
 		window.PlatformDetail.Connection														= xcb_connect(NULL, NULL);
 	}
+	if_fail_fe(::xcbInputSetup(window.PlatformDetail));
 	xcb_screen_t			* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
 	window.PlatformDetail.IdDrawableBackPixmap												= xcb_generate_id(window.PlatformDetail.Connection);
 	xcb_create_pixmap(window.PlatformDetail.Connection, xcbScreen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, xcbScreen->root, window.Size.x, window.Size.y);
@@ -340,6 +492,7 @@ gpk::err_t 		gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
 #elif defined(GPK_XCB)
 	::gpk::SWindowPlatformDetail & detail = mainWindow.PlatformDetail;
 	if(detail.Connection) {
+		::xcbInputCleanup(detail);
 		if(detail.IdDrawable) xcb_destroy_window(detail.Connection, detail.IdDrawable);
 		if(detail.IdDrawableBackPixmap) xcb_free_pixmap(detail.Connection, detail.IdDrawableBackPixmap);
 		if(detail.GC) xcb_free_gc(detail.Connection, detail.GC);
@@ -363,11 +516,11 @@ gpk::err_t 		gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeV
 #if defined(GPK_WINDOWS)
 	HINSTANCE						hInstance				= runtimeValues.hInstance;
 	::initWndClass(hInstance, ::gpk::SWindowPlatformDetail::DefaultRootWindowClassName.begin(), ::mainWndProc, displayDetail.WindowClass);
-	::RegisterClassEx(&displayDetail.WindowClass);
+	::RegisterClassExW(&displayDetail.WindowClass);
 	::RECT							finalClientRect			= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
 	DWORD							windowStyle				= WS_OVERLAPPEDWINDOW; //WS_POPUP;
 	::AdjustWindowRectEx(&finalClientRect, windowStyle, FALSE, 0);
-	displayDetail.WindowHandle	= ::CreateWindowEx(0, displayDetail.WindowClass.lpszClassName, TEXT("Window"), windowStyle | CS_DBLCLKS
+	displayDetail.WindowHandle	= ::CreateWindowExW(0, displayDetail.WindowClass.lpszClassName, L"Window", windowStyle | CS_DBLCLKS
 		, finalClientRect.left
 		, finalClientRect.top
 		, finalClientRect.right		- finalClientRect.left
@@ -387,9 +540,6 @@ gpk::err_t 		gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeV
 	if(0 == displayDetail.Connection) {
 		displayDetail.Connection	= xcb_connect(0, 0);
 	}
-	xcb_screen_t				* xcbScreen			= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.Connection)).data;
-	::std::shared_ptr<xcb_get_geometry_reply_t>	geometry									(xcb_get_geometry_reply(mainWindow.PlatformDetail.Connection, xcb_get_geometry(mainWindow.PlatformDetail.Connection, xcbScreen->root), nullptr), free);
-	mainWindow.Size						= {geometry->width, geometry->height};
 	if_fail_fef(xcbWindowCreate(mainWindow), "%s", "Failed to create main window.");
 	(void)runtimeValues;
 #else

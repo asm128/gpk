@@ -1,7 +1,9 @@
 #include "gpk_window.h"
+#include "gpk_system_key.h"
 
 #if defined(GPK_XCB)
 #	include <xcb/xcb_image.h>
+#	include <xkbcommon/xkbcommon-keysyms.h>
 #endif
 
 GPK_USING_TYPEINT();
@@ -20,6 +22,10 @@ gpk::err_t 		gpk::fullScreenExit			(::gpk::SWindow & window) {
 		, window.WindowedWindowRect.Bottom - window.WindowedWindowRect.Top
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
+#elif defined(GPK_XCB)
+	const u2_t				values[]					= {window.WindowedWindowRect.Left, window.WindowedWindowRect.Top, window.Size.x, window.Size.y};
+	xcb_configure_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
+	xcb_flush(window.PlatformDetail.Connection);
 #endif // GPK_WINDOWS
 	if_true_e(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= false;
@@ -53,11 +59,167 @@ gpk::err_t 		gpk::fullScreenEnter		(::gpk::SWindow & window) {
 		{ u1_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
 		, u1_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
+#elif defined(GPK_XCB)
+	xcb_get_geometry_reply_t	* geometry					= xcb_get_geometry_reply(window.PlatformDetail.Connection, xcb_get_geometry(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable), 0);
+	if_null_fe(geometry);
+	window.WindowedWindowRect.Left	= geometry->x;
+	window.WindowedWindowRect.Top	= geometry->y;
+	window.WindowedWindowRect.Right	= geometry->x + geometry->width;
+	window.WindowedWindowRect.Bottom	= geometry->y + geometry->height;
+	free(geometry);
+	xcb_screen_t				* screen					= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
+	window.Size				= {screen->width_in_pixels, screen->height_in_pixels};
+	const u2_t				values[]					= {0, 0, window.Size.x, window.Size.y};
+	xcb_configure_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
+	xcb_flush(window.PlatformDetail.Connection);
 #endif // GPK_WINDOWS
 	if_true_e(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= true;
 	return 0;
 }
+
+#if defined(GPK_XCB)
+static	u0_t		xcbSystemKey			(xkb_keysym_t keySym) {
+	if(keySym >= XKB_KEY_a && keySym <= XKB_KEY_z)
+		return (u0_t)('A' + keySym - XKB_KEY_a);
+	if(keySym >= XKB_KEY_A && keySym <= XKB_KEY_Z)
+		return (u0_t)keySym;
+	if(keySym >= XKB_KEY_0 && keySym <= XKB_KEY_9)
+		return (u0_t)keySym;
+	if(keySym >= XKB_KEY_KP_0 && keySym <= XKB_KEY_KP_9)
+		return (u0_t)(::gpk::SYSTEM_KEY_Numpad0 + keySym - XKB_KEY_KP_0);
+	if(keySym >= XKB_KEY_F1 && keySym <= XKB_KEY_F24)
+		return (u0_t)(::gpk::SYSTEM_KEY_F1 + keySym - XKB_KEY_F1);
+
+	switch(keySym) {
+	default					: return 0;
+	case XKB_KEY_BackSpace		: return ::gpk::SYSTEM_KEY_Backspace;
+	case XKB_KEY_Tab			:
+	case XKB_KEY_ISO_Left_Tab	: return ::gpk::SYSTEM_KEY_Tab;
+	case XKB_KEY_Clear			: return ::gpk::SYSTEM_KEY_Clear;
+	case XKB_KEY_Return			:
+	case XKB_KEY_KP_Enter		: return ::gpk::SYSTEM_KEY_Enter;
+	case XKB_KEY_Shift_L		: return ::gpk::SYSTEM_KEY_LShift;
+	case XKB_KEY_Shift_R		: return ::gpk::SYSTEM_KEY_RShift;
+	case XKB_KEY_Control_L		: return ::gpk::SYSTEM_KEY_LControl;
+	case XKB_KEY_Control_R		: return ::gpk::SYSTEM_KEY_RControl;
+	case XKB_KEY_Alt_L			:
+	case XKB_KEY_Meta_L			: return ::gpk::SYSTEM_KEY_LMenu;
+	case XKB_KEY_Alt_R			:
+	case XKB_KEY_Meta_R			:
+	case XKB_KEY_ISO_Level3_Shift
+							: return ::gpk::SYSTEM_KEY_RMenu;
+	case XKB_KEY_Pause			:
+	case XKB_KEY_Break			: return ::gpk::SYSTEM_KEY_Pause;
+	case XKB_KEY_Caps_Lock		: return ::gpk::SYSTEM_KEY_Capital;
+	case XKB_KEY_Escape			: return ::gpk::SYSTEM_KEY_Escape;
+	case XKB_KEY_space			:
+	case XKB_KEY_KP_Space		: return ::gpk::SYSTEM_KEY_Space;
+	case XKB_KEY_Page_Up		:
+	case XKB_KEY_KP_Prior		: return ::gpk::SYSTEM_KEY_Prior;
+	case XKB_KEY_Page_Down		:
+	case XKB_KEY_KP_Next		: return ::gpk::SYSTEM_KEY_Next;
+	case XKB_KEY_End			:
+	case XKB_KEY_KP_End			: return ::gpk::SYSTEM_KEY_End;
+	case XKB_KEY_Home			:
+	case XKB_KEY_KP_Home		: return ::gpk::SYSTEM_KEY_Home;
+	case XKB_KEY_Left			:
+	case XKB_KEY_KP_Left		: return ::gpk::SYSTEM_KEY_Left;
+	case XKB_KEY_Up				:
+	case XKB_KEY_KP_Up			: return ::gpk::SYSTEM_KEY_Up;
+	case XKB_KEY_Right			:
+	case XKB_KEY_KP_Right		: return ::gpk::SYSTEM_KEY_Right;
+	case XKB_KEY_Down			:
+	case XKB_KEY_KP_Down		: return ::gpk::SYSTEM_KEY_Down;
+	case XKB_KEY_Select			: return ::gpk::SYSTEM_KEY_Select;
+	case XKB_KEY_Print			:
+	case XKB_KEY_Sys_Req		: return ::gpk::SYSTEM_KEY_Snapshot;
+	case XKB_KEY_Execute		: return ::gpk::SYSTEM_KEY_Execute;
+	case XKB_KEY_Insert			:
+	case XKB_KEY_KP_Insert		: return ::gpk::SYSTEM_KEY_Insert;
+	case XKB_KEY_Delete			:
+	case XKB_KEY_KP_Delete		: return ::gpk::SYSTEM_KEY_Delete;
+	case XKB_KEY_Help			: return ::gpk::SYSTEM_KEY_Help;
+	case XKB_KEY_Super_L		:
+	case XKB_KEY_Hyper_L		: return ::gpk::SYSTEM_KEY_Lwin;
+	case XKB_KEY_Super_R		:
+	case XKB_KEY_Hyper_R		: return ::gpk::SYSTEM_KEY_Rwin;
+	case XKB_KEY_Menu			: return ::gpk::SYSTEM_KEY_Apps;
+	case XKB_KEY_KP_Multiply	: return ::gpk::SYSTEM_KEY_Multiply;
+	case XKB_KEY_KP_Add			: return ::gpk::SYSTEM_KEY_Add;
+	case XKB_KEY_KP_Separator	: return ::gpk::SYSTEM_KEY_Separator;
+	case XKB_KEY_KP_Subtract	: return ::gpk::SYSTEM_KEY_Subtract;
+	case XKB_KEY_KP_Decimal		: return ::gpk::SYSTEM_KEY_Decimal;
+	case XKB_KEY_KP_Divide		: return ::gpk::SYSTEM_KEY_Divide;
+	case XKB_KEY_Num_Lock		: return ::gpk::SYSTEM_KEY_Numlock;
+	case XKB_KEY_Scroll_Lock	: return ::gpk::SYSTEM_KEY_Scroll;
+	case XKB_KEY_semicolon		:
+	case XKB_KEY_colon			: return ::gpk::SYSTEM_KEY_OEM_1;
+	case XKB_KEY_equal			:
+	case XKB_KEY_plus			: return ::gpk::SYSTEM_KEY_OEM_plus;
+	case XKB_KEY_comma			:
+	case XKB_KEY_less			: return ::gpk::SYSTEM_KEY_OEM_comma;
+	case XKB_KEY_minus			:
+	case XKB_KEY_underscore		: return ::gpk::SYSTEM_KEY_OEM_minus;
+	case XKB_KEY_period			:
+	case XKB_KEY_greater		: return ::gpk::SYSTEM_KEY_OEM_period;
+	case XKB_KEY_slash			:
+	case XKB_KEY_question		: return ::gpk::SYSTEM_KEY_OEM_2;
+	case XKB_KEY_grave			:
+	case XKB_KEY_asciitilde		: return ::gpk::SYSTEM_KEY_OEM_3;
+	case XKB_KEY_bracketleft	:
+	case XKB_KEY_braceleft		: return ::gpk::SYSTEM_KEY_OEM_4;
+	case XKB_KEY_backslash		:
+	case XKB_KEY_bar			: return ::gpk::SYSTEM_KEY_OEM_5;
+	case XKB_KEY_bracketright	:
+	case XKB_KEY_braceright		: return ::gpk::SYSTEM_KEY_OEM_6;
+	case XKB_KEY_apostrophe		:
+	case XKB_KEY_quotedbl		: return ::gpk::SYSTEM_KEY_OEM_7;
+	}
+}
+
+static	xkb_keysym_t	xcbBaseKeySym			(const ::gpk::SWindowPlatformDetail & detail, xkb_keycode_t keyCode, xkb_keysym_t currentKeySym) {
+	xkb_layout_index_t	layout					= xkb_state_key_get_layout(detail.XKBState, keyCode);
+	if(XKB_LAYOUT_INVALID == layout)
+		layout = 0;
+	const xkb_keysym_t	* keySyms				= {};
+	return 0 < xkb_keymap_key_get_syms_by_level(detail.XKBKeymap, keyCode, layout, 0, &keySyms) ? keySyms[0] : currentKeySym;
+}
+
+static	u2_t		xcbTextCodePoint		(const ::gpk::SWindowPlatformDetail & detail, xkb_keycode_t keyCode, xkb_keysym_t keySym) {
+	const u2_t		codePoint					= xkb_state_key_get_utf32(detail.XKBState, keyCode);
+	if(0 == detail.XKBComposeState)
+		return codePoint;
+
+	if(XKB_COMPOSE_FEED_ACCEPTED != xkb_compose_state_feed(detail.XKBComposeState, keySym))
+		return codePoint;
+
+	switch(xkb_compose_state_get_status(detail.XKBComposeState)) {
+	default:
+	case XKB_COMPOSE_NOTHING	: return codePoint;
+	case XKB_COMPOSE_COMPOSING	: return 0;
+	case XKB_COMPOSE_CANCELLED	:
+		xkb_compose_state_reset(detail.XKBComposeState);
+		return 0;
+	case XKB_COMPOSE_COMPOSED	: {
+		const u2_t	composed					= xkb_keysym_to_utf32(xkb_compose_state_get_one_sym(detail.XKBComposeState));
+		xkb_compose_state_reset(detail.XKBComposeState);
+		return composed;
+	}	}
+}
+
+static	u2_t		xcbInputModifiers		(const ::gpk::SWindowPlatformDetail & detail, const ::gpk::SInputKeyboard & keyboard) {
+	u2_t				modifiers					= {};
+	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_SHIFT, XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Shift;
+	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_CAPS , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_CapsLock;
+	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_CTRL , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Control;
+	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_ALT  , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Alt;
+	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_NUM  , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_NumLock;
+	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_LOGO , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Super;
+	if(keyboard.KeyState[::gpk::SYSTEM_KEY_RMenu]) modifiers |= ::gpk::INPUT_MODIFIER_AltGr;
+	return modifiers;
+}
+#endif
 
 gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
 	bool						quit						= false;
@@ -77,8 +239,30 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 		switch(event->response_type & ~0x80) {
 		default					: break;
 		case XCB_EXPOSE			: displayInstance.Repaint = true; if_fail_e(::gpk::eventEnqueueScreenRedraw(displayInstance.EventQueue, 0)); break;
-		case XCB_KEY_PRESS		: { const xcb_key_press_event_t   & key = *(xcb_key_press_event_t  *)event; input.KeyboardCurrent.KeyState[key.detail] = 1; displayInstance.Repaint = true; if_fail_e(::gpk::eventEnqueueKeyboardDown(displayInstance.EventQueue, key.detail)); break; }
-		case XCB_KEY_RELEASE	: { const xcb_key_release_event_t & key = *(xcb_key_release_event_t*)event; input.KeyboardCurrent.KeyState[key.detail] = 0; displayInstance.Repaint = true; if_fail_e(::gpk::eventEnqueueKeyboardUp  (displayInstance.EventQueue, key.detail)); break; }
+		case XCB_KEY_PRESS		:
+		case XCB_KEY_RELEASE	: {
+			const bool				pressed					= XCB_KEY_PRESS == (event->response_type & ~0x80);
+			const xcb_key_press_event_t & key					= *(xcb_key_press_event_t*)event;
+			::gpk::SWindowPlatformDetail & detail				= displayInstance.PlatformDetail;
+			const xkb_keysym_t	keySym						= xkb_state_key_get_one_sym(detail.XKBState, key.detail);
+			const xkb_keysym_t	baseKeySym					= ::xcbBaseKeySym(detail, key.detail, keySym);
+			const u0_t			keyCode						= ::xcbSystemKey(baseKeySym);
+			const u2_t			codePoint					= pressed ? ::xcbTextCodePoint(detail, key.detail, keySym) : 0;
+
+			xkb_state_update_key(detail.XKBState, key.detail, pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
+			if_fail_e(::gpk::inputKeyboardStateSet(input, keyCode, pressed, detail.XKBDeviceId, key.time * .001f));
+
+			const ::gpk::SInputKeyEvent keyEvent = {keyCode, key.detail, detail.XKBDeviceId, keySym, ::xcbInputModifiers(detail, input.KeyboardCurrent), key.time};
+			const bool			systemKey					= ::gpk::SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[::gpk::SYSTEM_KEY_Menu];
+			if_fail_e(pressed
+				? systemKey ? ::gpk::eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyEvent) : ::gpk::eventEnqueueKeyboardDown(displayInstance.EventQueue, keyEvent)
+				: systemKey ? ::gpk::eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyEvent) : ::gpk::eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyEvent)
+				);
+			if(codePoint)
+				if_fail_e(::gpk::eventEnqueueTextChar(displayInstance.EventQueue, ::gpk::SInputTextEvent{codePoint, keySym, detail.XKBDeviceId, key.detail}));
+			displayInstance.Repaint = true;
+			break;
+		}
 		case XCB_BUTTON_PRESS	: {
 			const xcb_button_press_event_t & button = *(xcb_button_press_event_t*)event;
 			displayInstance.Repaint = true;

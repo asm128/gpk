@@ -58,7 +58,7 @@ static	gpk::err_t transformTriangles
 		 || transformedUVs.C.x > 1.0f
 		 || transformedUVs.C.y > 1.0f
 		) 
-			_CrtDbgBreak();
+			::gpk::debugBreak();
 		output.UVs.push_back(transformedUVs);
 	}
 	return 0; 

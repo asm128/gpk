@@ -12,6 +12,8 @@
 #	include <Windows.h>
 #elif defined(GPK_XCB)
 #	include <xcb/xcb.h>
+#	include <xkbcommon/xkbcommon.h>
+#	include <xkbcommon/xkbcommon-compose.h>
 #endif
 
 #ifndef GPK_WINDOW_H_23627
@@ -19,19 +21,19 @@
 
 namespace gpk
 {
-
 	struct SWindowPlatformDetail {
 #if defined(GPK_WINDOWS)
 		typedef	::gpk::bgra			TOSWindowNativeTexel;
-		stxp	::gpk::astatic<TCHAR, 256>	DefaultRootWindowClassName	= {TEXT("GPK_WINDOW")};
+		stxp	::gpk::astatic<WCHAR, 256>	DefaultRootWindowClassName	= {L"GPK_WINDOW"};
 
 		::HWND								WindowHandle				= {};
-		::WNDCLASSEX						WindowClass					= {sizeof(::WNDCLASSEX), CS_DBLCLKS, 0, 0, 0, 0, 0, 0, 0, 0, DefaultRootWindowClassName.begin(), 0};
-		u2_t							BitmapInfoSize				= 0;
+		::WNDCLASSEXW						WindowClass					= {sizeof(::WNDCLASSEXW), CS_DBLCLKS, 0, 0, 0, 0, 0, 0, 0, 0, DefaultRootWindowClassName.begin(), 0};
+		u2_t								BitmapInfoSize				= 0;
 		::BITMAPINFO						BitmapInfo					= {sizeof(::BITMAPINFO)};
 		::HDC								IntermediateDeviceContext	= 0;    // <- note, we're creating, so it needs to be destroyed
 		::HBITMAP							IntermediateBitmap			= 0;
 		::gpk::view<TOSWindowNativeTexel>	PixelBits					= {};
+		u1_t								PendingHighSurrogate		= {};
 
 											~SWindowPlatformDetail		()	{
 			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			);
@@ -45,6 +47,12 @@ namespace gpk
 		xcb_drawable_t						IdDrawable					= {};
 		xcb_drawable_t						IdDrawableBackPixmap		= {};
 		xcb_atom_t							WMDelete					= {};
+		::xkb_context						* XKBContext				= {};
+		::xkb_keymap						* XKBKeymap				= {};
+		::xkb_state						* XKBState					= {};
+		::xkb_compose_table				* XKBComposeTable			= {};
+		::xkb_compose_state				* XKBComposeState			= {};
+		s2_t								XKBDeviceId				= -1;
 
 											~SWindowPlatformDetail		()	{
 			if(GC) {
