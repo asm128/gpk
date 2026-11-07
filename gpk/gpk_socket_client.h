@@ -9,7 +9,7 @@ namespace gpk
 		::gpk::SConnection					Connection;
 		::gpk::SSocketConnection			Socket;
 		::gpk::SIPv4End						AddressConnect;
-		int16_t								AdapterIndex;
+		s1_t								AdapterIndex;
 		::gpk::apobj<::gpk::SMessage>		CacheSend;	// This is only to speed up message processing.
 		::gpk::apobj<::gpk::SMessage>		CacheSent;	// This is only to speed up message processing.
 	};

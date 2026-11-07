@@ -1,4 +1,3 @@
-#define GPK_STDOUT_LOG_ENABLED
 #include "gpk_stdsocket.h"
 #include "gpk_sync.h"
 #include "gpk_runtime.h"
@@ -45,8 +44,7 @@ static ::gpk::err_t udpServerMain(::gpk::SRuntimeValues &) {
 		}
 		info_printf("Sent connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 		if(handle != clientHandle) {
-			if(clientHandle!= INVALID_SOCKET)
-				closesocket(clientHandle);
+			safe_closesocket(clientHandle);
 		}
 	}
 	tcpipShutdown();

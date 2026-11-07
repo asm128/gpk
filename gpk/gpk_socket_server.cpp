@@ -23,23 +23,23 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 	::gpk::apobj<::gpk::SMessage>		cacheSend						= {};
 	while(serverInstance.Listen) {
 		::gpk::sleep(1);
-		uint32_t							totalClientCount				= serverInstance.Sockets.size();
+		u2_t							totalClientCount				= serverInstance.Sockets.size();
 		{
 			::std::lock_guard					lock								(serverInstance.Mutex);
 			totalClientCount				= serverInstance.Sockets.size();
 		}
 		timeval								wait_time							= {0, 1};
-		uint32_t							remainder							= totalClientCount % 64;
-		uint32_t							stageCount							= ::gpk::round_up(totalClientCount, 64U);
+		u2_t							remainder							= totalClientCount % 64;
+		u2_t							stageCount							= ::gpk::round_up(totalClientCount, 64U);
 		fd_set								sockets								= {};
-		for(uint32_t iStage = 0; iStage < stageCount; ++iStage) {
-			const uint32_t						offsetClient						= iStage * 64;
+		for(u2_t iStage = 0; iStage < stageCount; ++iStage) {
+			const u2_t						offsetClient						= iStage * 64;
 			memset(&sockets, -1, szof(fd_set));
 			sockets.fd_count				= 0;
-			uint32_t							stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
+			u2_t							stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
 			{
 				::std::lock_guard					lock								(serverInstance.Mutex);
-				for(uint32_t iClient = 0, actualCount = ::gpk::min(serverInstance.Sockets.size(), stageClientCount); iClient < actualCount; ++iClient) {
+				for(u2_t iClient = 0, actualCount = ::gpk::min(serverInstance.Sockets.size(), stageClientCount); iClient < actualCount; ++iClient) {
 					::gpk::pobj<::gpk::SSocketConnection>	pclient							= serverInstance.Sockets[offsetClient + iClient];
 					if(0 == pclient.get_ref() || pclient->IdConnection >= serverInstance.Clients.size() || 0 == serverInstance.Clients[pclient->IdConnection].get_ref()) {
 						if(pclient.get_ref()) {
@@ -65,8 +65,8 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 				{
 					::std::lock_guard				lock								(serverInstance.Mutex);
 					if_true_bi(0 == serverInstance.Sockets.size());
-					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
-						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Sockets.size(), stageClientCount); iClient < countCli; ++iClient) {
+					for(u2_t sd = 0; sd < sockets.fd_count; ++sd) {
+						for(u2_t iClient = 0, countCli = ::gpk::min(serverInstance.Sockets.size(), stageClientCount); iClient < countCli; ++iClient) {
 							::gpk::pobj<::gpk::SSocketConnection>		pclient								= serverInstance.Sockets[offsetClient + iClient];
 							if(0 == pclient.get_ref() || pclient->IdConnection >= serverInstance.Clients.size() || 0 == serverInstance.Clients[pclient->IdConnection].get_ref() || pclient->Socket == INVALID_SOCKET || serverInstance.Clients[pclient->IdConnection]->State == ::gpk::CONNECTION_STATE_DISCONNECTED)
 								continue;
@@ -77,7 +77,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 						}
 					}
 				}
-				for(uint32_t iClient = 0; iClient < clientsToProcess.size(); ++iClient) {
+				for(u2_t iClient = 0; iClient < clientsToProcess.size(); ++iClient) {
 					if(false == serverInstance.Listen)
 						return 0;
 					FD_ZERO(sockets.fd_array);
@@ -97,7 +97,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 						::gpk::SCommand							command								= {};						// Where to store received data
 						int											bytes_received						= 0;
 						if (::gpk::failed(bytes_received = ::recvfrom(clientSocket.Socket, (sc_t*)&command, (int)sizeof(::gpk::SCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
-							uint32_t									lastError							= ::WSAGetLastError();
+							u2_t									lastError							= ::WSAGetLastError();
 							if(lastError != WSAEMSGSIZE) {
 								warning_printf("%s", "'lastError != WSAEMSGSIZE' - Could not receive datagram.");
 								::recvfrom(clientSocket.Socket, (sc_t*)&command, (int)szof(::gpk::SCommand), 0, 0, 0);
@@ -131,7 +131,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 }
 
 static	::gpk::err_t	recycleClient					(::gpk::SSocketServer& serverInstance, ::gpk::pobj<::gpk::SConnection> & pClient, ::gpk::pobj<::gpk::SSocketConnection> & pSocket)		{
-	for(uint32_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
+	for(u2_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
 		pClient										= serverInstance.Clients[iClient];
 		pSocket										= serverInstance.Sockets[iClient];
 		::gpk::SConnection							& client						= *pClient;
@@ -168,8 +168,8 @@ static	::gpk::err_t	serverAcceptClient		(::gpk::SSocketServer& serverInstance, :
 	gpk::pobj<gpk::SSocketConnection>	pSocket				= {};
 	{ // accept
 		::std::lock_guard			lock					(serverInstance.Mutex);
-		int32_t						found					= ::recycleClient(serverInstance, pClient, pSocket);
-		const uint32_t				idConnection			= (-1 == found) ? serverInstance.Clients.size() : (uint32_t)found;
+		s2_t						found					= ::recycleClient(serverInstance, pClient, pSocket);
+		const u2_t				idConnection			= (-1 == found) ? serverInstance.Clients.size() : (u2_t)found;
 		::gpk::tcpipAddressFromSockaddr(sa_client, pSocket->Address);
 		pSocket->IdConnection	= idConnection;
 		command.Type			= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
@@ -286,7 +286,7 @@ static	void			threadServer			(void* pServerInstance)				{
 	}
 }
 
-::gpk::err_t			gpk::serverStart		(::gpk::SSocketServer& serverInstance, uint16_t port, int16_t adapterIndex, ::gpk::TRANSPORT_PROTOCOL protocol)		{
+::gpk::err_t			gpk::serverStart		(::gpk::SSocketServer& serverInstance, u1_t port, s1_t adapterIndex, ::gpk::TRANSPORT_PROTOCOL protocol)		{
 	serverInstance.Listen		= true;
 	serverInstance.Address.Port	= port;
 	serverInstance.AdapterIndex	= adapterIndex;
@@ -305,7 +305,7 @@ static	void			threadServer			(void* pServerInstance)				{
 	int							sa_length				= (int)sizeof(sockaddr_in);		// Length of client struct
 	::gpk::SCommand			command					= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, };							// Where to store received data
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
-	uint32_t					attempt					= 0;
+	u2_t					attempt					= 0;
 	do{
 		::sendto(serverInstance.Socket, (const sc_t*)&command, (int)sizeof(::gpk::SCommand), 0, (sockaddr*)&sa_srv, sa_length);
 		::gpk::sleep(100);
@@ -318,7 +318,7 @@ static	void			threadServer			(void* pServerInstance)				{
 ::gpk::err_t			gpk::serverPayloadCollect(::gpk::SSocketServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SMessage>> & receivedMessages)		{
 	::std::lock_guard			lock					(server.Mutex);
 	if_fail_fe(receivedMessages.resize(server.Clients.size()));
-	for(uint32_t iClient = 0, countClients = server.Clients.size(); iClient < countClients; ++iClient) {
+	for(u2_t iClient = 0, countClients = server.Clients.size(); iClient < countClients; ++iClient) {
 		::gpk::pnco<::gpk::SConnection>	client			= server.Clients[iClient];
 		if(!client)
 			continue;

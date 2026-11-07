@@ -42,7 +42,7 @@ static ::gpk::err_t		create_window	(xcb_connection_t * connection, xcb_screen_t 
 		const u2_t 				values[2]	= {0xFF00FF,};
 		xcb_create_gc(connection, fill, window.PlatformDetail.IdDrawableBackPixmap, mask, values);
 
-		const xcb_rectangle_t		r1			= {0, 0, (uint16_t)window.Size.x, (uint16_t)window.Size.y};
+		const xcb_rectangle_t		r1			= {0, 0, (u1_t)window.Size.x, (u1_t)window.Size.y};
 		xcb_poly_fill_rectangle(connection, window.PlatformDetail.IdDrawableBackPixmap, fill, 1, &r1);
 		xcb_free_gc(connection, fill);
 	}

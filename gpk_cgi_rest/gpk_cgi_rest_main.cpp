@@ -36,7 +36,7 @@ sttc	gpk::err_t	initClient			(gpk::SSocketClient & bestClient)										{
 			else {
 				u3_t 					port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, port);
-				bestClient.AddressConnect.Port	= (uint16_t)port;
+				bestClient.AddressConnect.Port	= (u1_t)port;
 				info_printf("Remote port: %u.", (u2_t )port);
 			}
 		}

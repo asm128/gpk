@@ -74,7 +74,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	szCmdlineFinal.push_back(0);
 	szCmdlineApp.push_back(0);
 
-	if_fail_fef(gpk::serverStart(app.Server, (uint16_t)port, (s1_t)adapter), "Failed to start server on port %u. Port busy?", (u2_t )port);
+	if_fail_fef(gpk::serverStart(app.Server, (u1_t)port, (s1_t)adapter), "Failed to start server on port %u. Port busy?", (u2_t )port);
 	return 0;
 }
 

@@ -17,7 +17,7 @@
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "GPK Entity Test v0.1");
 
 // --- Cleanup application resources.
-::gpk::error_t			cleanup					(::SApplication & app)											{
+::gpk::err_t			cleanup					(::SApplication & app)											{
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::SWindow				& mainWindow			= framework.RootWindow;
 #if !defined(DISABLE_D3D11)
@@ -28,7 +28,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "GPK Entity Test v0.1");
 	return 0;
 }
 
-static	::gpk::error_t	updateSizeDependentResources(::SApplication & app)											{
+static	::gpk::err_t	updateSizeDependentResources(::SApplication & app)											{
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
 	const ::gpk::n2u16			newSize					= mainWindow.Size;
 #if !defined(DISABLE_D3D11)
@@ -41,7 +41,7 @@ static	::gpk::error_t	updateSizeDependentResources(::SApplication & app)								
 	return 0;
 }
 
-static	::gpk::error_t	processScreenEvent		(::SApplication & app, const ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) { 
+static	::gpk::err_t	processScreenEvent		(::SApplication & app, const ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) { 
 	switch(screenEvent.Type) {
 	default: break;
 	case ::gpk::EVENT_SCREEN_Create:
@@ -55,7 +55,7 @@ static	::gpk::error_t	processScreenEvent		(::SApplication & app, const ::gpk::SE
 	return 0;
 }
 
-static	::gpk::error_t	processGUIEvent			(::SApplication & /*app*/, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
+static	::gpk::err_t	processGUIEvent			(::SApplication & /*app*/, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
 	switch(screenEvent.Type) {
 	default: break;
 	case ::gpk::EVENT_GUI_CONTROL_StateChange: {
@@ -67,7 +67,7 @@ static	::gpk::error_t	processGUIEvent			(::SApplication & /*app*/, const ::gpk::
 	return 0;
 }
 
-static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SEventSystem & sysEvent) { 
+static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEventSystem & sysEvent) { 
 	switch(sysEvent.Type) {
 	default: break;
 	case ::gpk::SYSTEM_EVENT_Screen	: return ::gpk::eventExtractAndHandle<::gpk::EVENT_SCREEN		>(sysEvent, [&app](const ::gpk::SEventView<::gpk::EVENT_SCREEN		> & screenEvent) { return processScreenEvent(app, screenEvent); }); 
@@ -76,7 +76,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 	return 0;
 }
 
-::gpk::error_t			setup					(::SApplication& app)											{
+::gpk::err_t			setup					(::SApplication& app)											{
 #if !defined(DISABLE_D3D11)
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 #endif
@@ -88,7 +88,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 	return 0;
 }
 
-::gpk::error_t			update					(::SApplication& app, bool systemRequestedExit)					{
+::gpk::err_t			update					(::SApplication& app, bool systemRequestedExit)					{
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
 	::gpk::SGUI					& gui					= *framework.GUI;
@@ -98,7 +98,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 	::gpk::apobj<::gpk::SEventSystem>	eventsToProcess	= mainWindow.EventQueue;
 	if_fail_fe(eventsToProcess.append(gui.Controls.EventQueue));
 	if_fail_fe(eventsToProcess.for_each([&app, &systemExit](const ::gpk::pobj<::gpk::SEventSystem> & sysEvent) { 
-		::gpk::error_t				result; 
+		::gpk::err_t				result; 
 		if_fail_fe(result = ::processSystemEvent(app, *sysEvent)); 
 		if(result == 1) 
 			systemExit				= true; 
@@ -133,7 +133,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 }
 
 #ifdef DISABLE_D3D11
-static	::gpk::error_t	sceneDraw				
+static	::gpk::err_t	sceneDraw				
 	( const ::gpk::SEngineScene	& engineScene
 	, ::gpk::SEngineRenderCache	& renderCache
 	, ::gpk::rtbgra8d32		& backBuffer
@@ -179,7 +179,7 @@ static	::gpk::error_t	sceneDraw
 	return 0;
 }
 #endif
-::gpk::error_t			draw					(::SApplication& app)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+::gpk::err_t			draw					(::SApplication& app)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 	const ::gpk::n3f32			sunlightPos				= ::gpk::calcSunPosition();
 	//const double				sunlightFactor			= ::gpk::calcSunlightFactor(app.SSiegeApp.World.WorldState.DaylightRatioExtra, app.SSiegeApp.World.WorldState.DaylightOffsetMinutes);
 	const ::gpk::rgbaf			clearColor				= ::gpk::interpolate_linear(::gpk::DARKBLUE * .25, ::gpk::LIGHTBLUE * 1.1, 1/*sunlightFactor*/);

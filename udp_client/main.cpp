@@ -10,7 +10,7 @@ static ::gpk::err_t udpClientMain(::gpk::SRuntimeValues &) {
 	while(true) {
 #define MAKE_IT_WORK
 #if defined MAKE_IT_WORK
-		::gpk::tcpipAddressToSockaddr({{192,168,100,59}, 9898}, sa_server);
+		::gpk::tcpipAddressToSockaddr({{192,168,1,4}, 9898}, sa_server);
 #else
 		::gpk::tcpipAddressToSockaddr({{201,235,131,233}, 9898}, sa_server);
 #endif

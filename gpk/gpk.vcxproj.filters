@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="udp">
-      <UniqueIdentifier>{558b39bb-72d0-449a-afbb-ebd50d128afb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ragnarok">
       <UniqueIdentifier>{356a6b64-75c0-4839-a715-fc33431294eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="connection">
+      <UniqueIdentifier>{558b39bb-72d0-449a-afbb-ebd50d128afb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,28 +34,28 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_socket_server.h">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
     </ClInclude>
     <ClInclude Include="gpk_socket_client.h">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
     </ClInclude>
     <ClInclude Include="gpk_connection.h">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
     </ClInclude>
     <ClInclude Include="gpk_connection_ip.h">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_client_app.h">
+      <Filter>connection</Filter>
     </ClInclude>
     <ClInclude Include="gpk_http_server.h">
-      <Filter>Header Files</Filter>
+      <Filter>connection</Filter>
     </ClInclude>
     <ClInclude Include="gpk_lobby.h">
-      <Filter>Header Files</Filter>
+      <Filter>connection</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_udp_client_app.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_udp_server_app.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_server_app.h">
+      <Filter>connection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -63,16 +63,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_connection.cpp">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
     </ClCompile>
     <ClCompile Include="gpk_connection_ip.cpp">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
     </ClCompile>
     <ClCompile Include="gpk_socket_server.cpp">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
     </ClCompile>
     <ClCompile Include="gpk_socket_client.cpp">
-      <Filter>udp</Filter>
+      <Filter>connection</Filter>
     </ClCompile>
     <ClCompile Include="gpk_ro_gnd.cpp">
       <Filter>ragnarok</Filter>
@@ -83,11 +83,11 @@
     <ClCompile Include="gpk_ro_rsw.cpp">
       <Filter>ragnarok</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_udp_client_app.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="gpk_client_app.cpp">
+      <Filter>connection</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_udp_server_app.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="gpk_server_app.cpp">
+      <Filter>connection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
