@@ -20,8 +20,6 @@ nmsp gpk
 
 	tydf		aobj<STestError>	ATestError;
 
-	u3_t		testSeed			(u3_t fallback);
-
 	tplt<tpnm TEnum>
 	err_t		testResultRecord	(ATestError & errors, TEnum value, bool returnedError) {
 		vcst_c			enumName			= get_enum_namev(value);
@@ -92,17 +90,17 @@ nmsp gpk
 #define GPK_TEST_REQUIRE(errors, result, condition)					GPK_TEST_REQUIREF	(errors, result, (condition), "%s", "")
 
 	// Bounded previews keep generated binary cases readable; always disclose omitted bytes.
-	//stin void testTraceBytes(vcst_t label, vcu0_t bytes) {
-	//	stxp char digits[] = "0123456789ABCDEF";
-	//	char text[64 * 3 + 1] = {};
-	//	cnst u2_t count = bytes.size() < 64 ? bytes.size() : 64;
-	//	for(u2_t iByte = 0; iByte < count; ++iByte) {
-	//		text[iByte * 3 + 0] = digits[bytes[iByte] >> 4];
-	//		text[iByte * 3 + 1] = digits[bytes[iByte] & 15];
-	//		text[iByte * 3 + 2] = ' ';
-	//	}
-	//	always_printf("%.*s: %u bytes; showing %u%s\n%s", GPK_VIEW_ARGS(label), bytes.size(), count, count < bytes.size() ? " (prefix only)" : "", text);
-	//}
+	stin void testTraceBytes(vcst_t label, vcu0_t bytes) {
+		stxp char digits[] = "0123456789ABCDEF";
+		char text[64 * 3 + 1] = {};
+		cnst u2_t count = bytes.size() < 64 ? bytes.size() : 64;
+		for(u2_t iByte = 0; iByte < count; ++iByte) {
+			text[iByte * 3 + 0] = digits[bytes[iByte] >> 4];
+			text[iByte * 3 + 1] = digits[bytes[iByte] & 15];
+			text[iByte * 3 + 2] = ' ';
+		}
+		always_printf("%.*s: %u bytes; showing %u%s\n%s", GPK_VIEW_ARGS(label), bytes.size(), count, count < bytes.size() ? " (prefix only)" : "", text);
+	}
 	struct STestLogBuffer {
 		mutex				Mutex				= {};
 		string				Text				= {};
@@ -169,7 +167,7 @@ nmsp gpk
 	err_t			testSuiteReportWrite	(vcst_t folder, cnst STestSuiteReport & report, cnst ATestError & results, cnst STestLogBuffer & log);
 
 	tplt<tpnm TFunction>
-	sttc	err_t	testSuiteRun			(ATestError & results, STestRunReport & run, view<cnst vcst_t> selectedSuites, cnst STestSuite<TFunction> & suite) {
+	sttc	err_t	testSuiteRun			(STestRunnerState & runner, ATestError & results, STestRunReport & run, view<cnst vcst_t> selectedSuites, cnst STestSuite<TFunction> & suite) {
 		if(selectedSuites.size() && -1 == selectedSuites.find(suite.Name))
 			rtrn 0;
 		STestSuiteReport		report		= {suite.Name, suite.Folder};
@@ -184,10 +182,10 @@ nmsp gpk
 		ATestError			suiteResults;
 		STestLogBuffer		log;
 		{
-			STestLogCapture		capture		(log);
+			STestLogCapture		capture		(runner,  log, false);
 			STimer				timer;
 			try {
-				report.Status = suite.Function(suiteResults, folder);
+				report.Status = suite.Function(runner, suiteResults, folder);
 			}
 			catch(...) {
 				report.Status = -1;
@@ -230,7 +228,7 @@ nmsp gpk
 	tplt<tpnm... TSuites>
 	err_t			runSuites		(STestRunnerState & runner, SRuntimeValues & runtimeValues, cnst TSuites &... suites) {
 		STestLogBuffer		log;
-		STestLogCapture		capture			(log, 0 <= argsOptionIndex(runtimeValues.EntryPointArgs, "console"));
+		//(log, 0 <= argsOptionIndex(runtimeValues.EntryPointArgs, "console"));
 		STestRunReport		run;
 		err_t				status			= 0;
 		STimer				timer;
@@ -246,7 +244,7 @@ nmsp gpk
 				STimer				testTimer;
 				err_t				returnValues[] = {testSuiteRun(runner, results, run, selectedSuites, suites)...};
 				testTimer.Frame();
-				rtrn testRunSummary(runner, results, returnValues, testTimer.LastTimeMicroseconds);
+				rtrn testRunSummary(results, returnValues, testTimer.LastTimeMicroseconds);
 			}();
 		}
 		catch(...) { status = -1; error_printf("%s", "Runner setup or execution exception."); }
@@ -262,6 +260,6 @@ nmsp gpk
 
 } // nmsp
 
-#define GPK_TEST_SUITE(funcSuite, folder) testSuite(funcSuite, #funcSuite, folder)
+#define GPK_TEST_SUITE(funcSuite) testSuite(test_##funcSuite, #funcSuite, "./" #funcSuite)
 
 #endif // GPK_TEST_CORE_H
