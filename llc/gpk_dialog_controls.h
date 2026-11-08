@@ -3,7 +3,7 @@
 #ifndef GPK_DIALOG_CONTROLS_H_23627
 #define GPK_DIALOG_CONTROLS_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SDialogSlider;
 	cid_t			sliderCreate		(SDialog			& dialog);
@@ -68,7 +68,7 @@ namespace gpk
 	};
 
 	struct SDialogSlider : public IDialogControl {
-		typedef	function<err_t(vcst_t & format, s3_t value, const minmax<s3_t> & limits)>	
+		tydf	function<err_t(vcst_t & format, s3_t value, const minmax<s3_t> & limits)>	
 						TCallback;
 
 		cid_t			IdButton			= (cid_t)-1;
@@ -88,7 +88,7 @@ namespace gpk
 
 	tplt<tpnm _tValue>
 	struct SDialogTuner : public IDialogControl {
-		typedef	function<err_t(vcst_t & format, _tValue value, const minmax<_tValue> & limits)>	
+		tydf	function<err_t(vcst_t & format, _tValue value, const minmax<_tValue> & limits)>	
 								TCallback;
 
 		cid_t					IdDecrease			= -1;

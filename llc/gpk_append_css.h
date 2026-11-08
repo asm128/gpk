@@ -5,7 +5,7 @@
 #ifndef GPK_APPEND_CSS_H
 #define GPK_APPEND_CSS_H
 
-namespace gpk
+nmsp gpk
 {
 	tpl_vtArgs
 	err_t	appendCSSTag							(string & output, vcst_t tagName, _tArgs&&... cssAttributes)					{ return gpk::append_strings(output, tagName, '{', cssAttributes..., '}', '\n'); }
@@ -19,6 +19,6 @@ namespace gpk
 	err_t	appendCSSControlHeight					(string & output, u1_t	 outerLimit		, CSS_METRICS_UNIT metricsUnit = CSS_METRICS_UNIT_RELATIVE);
 	err_t	appendCSSControlSize					(string & output, n2u1_t outerLimit		, CSS_METRICS_UNIT metricsUnit = CSS_METRICS_UNIT_RELATIVE);
 	err_t	appendCSSSizeWithBorderWidth			(string & output, n2u1_t outerLimit		, u0_t borderWidth, CSS_METRICS_UNIT metricsUnit = CSS_METRICS_UNIT_RELATIVE);
-} // namespace 
+} // nmsp 
 
 #endif // GPK_APPEND_CSS_H

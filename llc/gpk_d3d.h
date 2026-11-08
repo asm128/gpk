@@ -9,11 +9,11 @@
 #ifndef GPK_D3D_H_23627
 #define GPK_D3D_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	gpk::err_t d3dDeviceValidate		(::gpk::pcom<::ID3D11Device3> & d3dDevice);
 	gpk::err_t d3dCreateTextureDynamic	(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::gc8bgra initData); 
-} // namespace
+} // nmsp
 
 #endif // GPK_D3D_H_23627
 

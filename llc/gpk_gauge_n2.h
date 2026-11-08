@@ -5,22 +5,22 @@
 #ifndef GPK_GAUGE_N2
 #define GPK_GAUGE_N2
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
-	typedef	gauge<n2char>	gauge2char;
-	typedef	gauge<n2uchar>	gauge2uchar;
-	typedef	gauge<n2f2_t>	gauge2f2_t;
-	typedef	gauge<n2f3_t>	gauge2f64;
-	typedef	gauge<n2u0_t >	gauge2u8;
-	typedef	gauge<n2u1_t>	gauge2u1_t;
-	typedef	gauge<n2u2_t>	gauge2u32;
-	typedef	gauge<n2u3_t>	gauge2u64;
-	typedef	gauge<n2s0_t >	gauge2i8;
-	typedef	gauge<n2s1_t>	gauge2s1_t;
-	typedef	gauge<n2s2_t>	gauge2i32;
-	typedef	gauge<n2i64>	gauge2i64;
+	tydf gaugemax<n2sc_t> gauge2sc_t; tdcs gauge2sc_t gauge2sc_c;
+	tydf gaugemax<n2uc_t> gauge2uc_t; tdcs gauge2uc_t gauge2uc_c;
+	tydf gaugemax<n2f2_t> gauge2f2_t; tdcs gauge2f2_t gauge2f2_c;
+	tydf gaugemax<n2f3_t> gauge2f3_t; tdcs gauge2f3_t gauge2f3_c;
+	tydf gaugemax<n2u0_t> gauge2u0_t; tdcs gauge2u0_t gauge2u0_c;
+	tydf gaugemax<n2u1_t> gauge2u1_t; tdcs gauge2u1_t gauge2u1_c;
+	tydf gaugemax<n2u2_t> gauge2u2_t; tdcs gauge2u2_t gauge2u2_c;
+	tydf gaugemax<n2u3_t> gauge2u3_t; tdcs gauge2u3_t gauge2u3_c;
+	tydf gaugemax<n2s0_t> gauge2s0_t; tdcs gauge2s0_t gauge2s0_c;
+	tydf gaugemax<n2s1_t> gauge2s1_t; tdcs gauge2s1_t gauge2s1_c;
+	tydf gaugemax<n2s2_t> gauge2s2_t; tdcs gauge2s2_t gauge2s2_c;
+	tydf gaugemax<n2s3_t> gauge2s3_t; tdcs gauge2s3_t gauge2s3_c;
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_GAUGE_N2

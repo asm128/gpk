@@ -19,7 +19,7 @@
 // #	include "driver/i2c.h"
 // #endif // GPK_ESP32
 
-// namespace gpk
+// nmsp gpk
 // {
 // 	stxp	u1_t	I2C_INTERRUPTS_MASK	= (u1_t)0x3fff; // I2C all interrupt bitmap
 // 	// I2C hardware cmd register fields.
@@ -304,7 +304,7 @@
 // // 		else if(frequency > 1000000UL)
 // // 			frequency = 1000000UL;
 
-// // 		// Freq limitation when using different clock sources
+// // 		// Freq limitation when usng different clock sources
 // // 		stxp	u2_t			I2C_CLK_LIMIT_REF_TICK	= ( 1 * 1000 * 1000 / 20);   // Limited by REF_TICK, no more than REF_TICK/20
 // // 		stxp	u2_t			I2C_CLK_LIMIT_APB     	= (80 * 1000 * 1000 / 20);   // Limited by APB, no more than APB/20
 // // 		stxp	u2_t			I2C_CLK_LIMIT_RTC     	= (20 * 1000 * 1000 / 20);   // Limited by RTC, no more than RTC/20
@@ -333,7 +333,7 @@
 // // 		i2c_sclk_t				src_clk 	= I2C_SCLK_DEFAULT;
 // // 		for (u2_t clk = I2C_SCLK_DEFAULT + 1; clk < I2C_SCLK_MAX; ++clk) {
 // // #if CONFIG_IDF_TARGET_ESP32S3
-// // 			ci_if(clk == I2C_SCLK_RTC, "%s", "RTC clock for s3 is unaccessable now.");
+// // 			if_true_ci(clk == I2C_SCLK_RTC, "%s", "RTC clock for s3 is unaccessable now.");
 // // #endif
 // // 			if (frequency <= i2c_clk_alloc[clk].clk_freq) {
 // // 				src_clk = (i2c_sclk_t)clk;
@@ -347,7 +347,7 @@
 // // 		i2c_set_timeout((i2c_port_t)i2c_num, I2C_MAX_TIMEOUT);	//Clock Stretching Timeout: 20b:esp32, 5b:esp32-c3, 24b:esp32-s2
 // // 		return 0;
 // // 	}
-// } // namespace
+// } // nmsp
 
 // // gpk::err_t gpk::i2cInit	(SI2CDevice & device) {
 // // 	(void)device;
@@ -409,18 +409,18 @@
 // // // #ifndef FORGE_VIEW_HPP
 // // // #define FORGE_VIEW_HPP
 
-// // // template <typename T>
+// // // tplt <tpnm T>
 // // // class view {
 // // //     T                       * data  = {}; 
 // // //     std::size_t             size    = {};
 // // // public:         
-// // //     constexpr               view        ()                              noexcept = default;
-// // //     constexpr               view        (T * elements, std::size_t len) noexcept : data(ptr), size(len) {}
+// // //     cxpr               view        ()                              nxpt = default;
+// // //     cxpr               view        (T * elements, std::size_t len) nxpt : data(ptr), size(len) {}
 
-// // //     constexpr   T&          operator[]  (std::size_t index)             noexcept { return data[index]; }
-// // //     constexpr   const T&    operator[]  (std::size_t index) const       noexcept { return data[index]; }
-// // //     constexpr   std::size_t length      ()                  const       noexcept { return size; }
-// // //     constexpr   bool        empty       ()                  const       noexcept { return size == 0; }
+// // //     cxpr   T&          oper[]  (std::size_t index)             nxpt { return data[index]; }
+// // //     cxpr   const T&    oper[]  (std::size_t index) const       nxpt { return data[index]; }
+// // //     cxpr   std::size_t length      ()                  const       nxpt { return size; }
+// // //     cxpr   bool        empty       ()                  const       nxpt { return size == 0; }
 // // // };
 
 // // // #endif // FORGE_VIEW_HPP
@@ -433,18 +433,18 @@
 // // // #ifndef SIGHT_VIEW_HPP
 // // // #define SIGHT_VIEW_HPP
 
-// // // template <typename T>
+// // // tplt <tpnm T>
 // // // class view {
 // // //     T* data = {};
 // // //     std::size_t size = {};
 // // // public:
-// // //     constexpr view() noexcept = default;
-// // //     constexpr view(T* ptr, std::size_t len) noexcept : data(ptr), size(len) {}
+// // //     cxpr view() nxpt = default;
+// // //     cxpr view(T* ptr, std::size_t len) nxpt : data(ptr), size(len) {}
 
-// // //     constexpr T& operator[](std::size_t index) noexcept { return data[index]; }
-// // //     constexpr const T& operator[](std::size_t index) const noexcept { return data[index]; }
-// // //     constexpr std::size_t length() const noexcept { return size; }
-// // //     constexpr bool empty() const noexcept { return size == 0; }
+// // //     cxpr T& oper[](std::size_t index) nxpt { return data[index]; }
+// // //     cxpr const T& oper[](std::size_t index) csnx { return data[index]; }
+// // //     cxpr std::size_t length() csnx { return size; }
+// // //     cxpr bool empty() csnx { return size == 0; }
 // // // };
 
 // // // #endif // SIGHT_VIEW_HPP
@@ -468,18 +468,18 @@
 // // // #ifndef FORGE_VIEW_HPP
 // // // #define FORGE_VIEW_HPP
 
-// // // template <typename T>
+// // // tplt <tpnm T>
 // // // class view {
 // // //     T                       * data  = {}; 
 // // //     std::size_t             size    = {};
 // // // public:         
-// // //     constexpr               view        ()                              noexcept = default;
-// // //     constexpr               view        (T * elements, std::size_t len) noexcept : data(ptr), size(len) {}
+// // //     cxpr               view        ()                              nxpt = default;
+// // //     cxpr               view        (T * elements, std::size_t len) nxpt : data(ptr), size(len) {}
 
-// // //     constexpr   T&          operator[]  (std::size_t index)             noexcept { return data[index]; }
-// // //     constexpr   const T&    operator[]  (std::size_t index) const       noexcept { return data[index]; }
-// // //     constexpr   std::size_t length      ()                  const       noexcept { return size; }
-// // //     constexpr   bool        empty       ()                  const       noexcept { return size == 0; }
+// // //     cxpr   T&          oper[]  (std::size_t index)             nxpt { return data[index]; }
+// // //     cxpr   const T&    oper[]  (std::size_t index) const       nxpt { return data[index]; }
+// // //     cxpr   std::size_t length      ()                  const       nxpt { return size; }
+// // //     cxpr   bool        empty       ()                  const       nxpt { return size == 0; }
 // // // };
 
 // // // #endif // FORGE_VIEW_HPP
@@ -492,18 +492,18 @@
 // // // #ifndef SIGHT_VIEW_HPP
 // // // #define SIGHT_VIEW_HPP
 
-// // // template <typename T>
+// // // tplt <tpnm T>
 // // // class view {
 // // //     T* data = {};
 // // //     std::size_t size = {};
 // // // public:
-// // //     constexpr view() noexcept = default;
-// // //     constexpr view(T* ptr, std::size_t len) noexcept : data(ptr), size(len) {}
+// // //     cxpr view() nxpt = default;
+// // //     cxpr view(T* ptr, std::size_t len) nxpt : data(ptr), size(len) {}
 
-// // //     constexpr T& operator[](std::size_t index) noexcept { return data[index]; }
-// // //     constexpr const T& operator[](std::size_t index) const noexcept { return data[index]; }
-// // //     constexpr std::size_t length() const noexcept { return size; }
-// // //     constexpr bool empty() const noexcept { return size == 0; }
+// // //     cxpr T& oper[](std::size_t index) nxpt { return data[index]; }
+// // //     cxpr const T& oper[](std::size_t index) csnx { return data[index]; }
+// // //     cxpr std::size_t length() csnx { return size; }
+// // //     cxpr bool empty() csnx { return size == 0; }
 // // // };
 
 // // // #endif // SIGHT_VIEW_HPP

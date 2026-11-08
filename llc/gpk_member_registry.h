@@ -12,7 +12,7 @@
 
 #define GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)				\
 	struct GPKM_NAME(_memberName)	{						\
-		typedef _nameSpace::_memberType		TMember;	\
+		tydf _nameSpace::_memberType		TMember;	\
 		sinx	::gpk::vcst_t				get_member_namespace		()	nxpt	{ rtrn #_nameSpace;						}	\
 		sinx	::gpk::vcst_t				get_member_type_name		()	nxpt	{ rtrn #_memberType;					}	\
 		sinx	::gpk::vcst_t				get_member_name				()	nxpt	{ rtrn #_memberName;					}	\
@@ -36,7 +36,7 @@
 	};																																\
 	GPK_MODULE_FUNCTION_NAME(_memberType)	_memberName
 
-namespace gpk {
+nmsp gpk {
 #pragma pack(push, 1)
 	tplt <tpnm... _tArgs>
 	stct member_registry {
@@ -48,12 +48,12 @@ namespace gpk {
 		sinx	view<cnst DATA_TYPE>		get_data_type_ids	()	nxpt { stxp cnst DATA_TYPE			results[] = {_tArgs ::get_member_data_type_id	()..., ::gpk::DATA_TYPE_UNKNOWN }; return results; }
 		sinx	view<u2_c>					get_member_sizes	()	nxpt { stxp cnst u2_t				results[] = {_tArgs ::get_member_size			()..., 0}; stxp vcu2_c results_view = {results}; return results_view;	}
 	}; // struct
-#	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
+#	define GPKM_NAMED_REGISTRY(registryName, ...)	tydf ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 
 	tplt<tpnm _tStruct>
-	inline	gpk::err_t 				get_member_registry()	{ return _tStruct::get_member_registry(); }
+	inln	gpk::err_t 				get_member_registry()	{ return _tStruct::get_member_registry(); }
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #define	GPKMFND(_nameSpace, _memberType, _memberName)				GPKFM(_nameSpace, _memberType, _memberName, ::gpk::DATA_TYPE_FUN	, #_memberName, #_memberName)
 #define	GPKMOND(_nameSpace, _memberType, _memberName)				GPKM(_nameSpace, _memberType, _memberName, ::gpk::DATA_TYPE_OBJ		, #_memberName, #_memberName)

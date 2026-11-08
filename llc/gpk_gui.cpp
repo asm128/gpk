@@ -498,7 +498,7 @@ gpk::err_t 		gpk::guiUpdateMetrics									(::gpk::SGUI & gui, const ::gpk::n2<u
 	return 0;
 }
 
-static	::gpk::cid_t	updateGUIControlHovered	(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::SControlState & controlState, const ::gpk::SInput & inputSystem, bool disabled)	noexcept	{
+static	::gpk::cid_t	updateGUIControlHovered	(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::SControlState & controlState, const ::gpk::SInput & inputSystem, bool disabled)	nxpt	{
 	if(controlState.IsHovered()) {
 		if(inputSystem.ButtonDown(0) && false == controlState.IsPressed())
 			gui.Controls.SetPressed(iControl, true);

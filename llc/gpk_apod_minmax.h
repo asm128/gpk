@@ -4,7 +4,7 @@
 #ifndef GPK_APOD_MINMAX_H
 #define GPK_APOD_MINMAX_H
 
-namespace gpk
+nmsp gpk
 {
 	tplT using	aminmax	= ::gpk::apod<::gpk::minmax<T>>;
 
@@ -20,6 +20,6 @@ namespace gpk
 	tydf	::gpk::aminmax<s3_t>	aminmaxs3_t;	tdcs	aminmaxs3_t	aminmaxs3_c;
 	tydf	::gpk::aminmax<f2_t>	aminmaxf2_t;	tdcs	aminmaxf2_t	aminmaxf2_c;
 	tydf	::gpk::aminmax<f3_t>	aminmaxf3_t;	tdcs	aminmaxf3_t	aminmaxf3_c;
-} // namespace gpk
+} // nmsp gpk
 
 #endif // GPK_APOD_MINMAX_H

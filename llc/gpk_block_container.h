@@ -5,7 +5,7 @@
 #ifndef GPK_BLOCK_CONTAINER_H_261011
 #define GPK_BLOCK_CONTAINER_H_261011
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm T, size_t _size>
 	class block_container {
@@ -81,6 +81,6 @@ namespace gpk
 			rtrn 0;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_BLOCK_CONTAINER_H_23627

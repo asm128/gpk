@@ -7,7 +7,7 @@
 #ifndef GPK_WEAPON_H
 #define GPK_WEAPON_H
 
-namespace gpk 
+nmsp gpk 
 {
 	tydf	aobj<a3sc_t>	aa3sc_t; tdcs aa3sc_t aa3sc_c;
 	tydf	aobj<a3uc_t>	aa3uc_t; tdcs aa3uc_t aa3uc_c;
@@ -106,13 +106,13 @@ namespace gpk
 		f2_t			OverheatPerShot		= {};	// 
 		bool			CoolingDown			= {};	// Reloading
 
-		inxp	f2_t	Busy				()	const			noexcept	{ 
+		inxp	f2_t	Busy				()	const			nxpt	{ 
 			return CoolingDown					? max(Delay.Limit - Delay.Value, Overheat.Value)
 				: (Delay.Value < Delay.Limit)	? Delay.Limit - Delay.Value
 				: 0
 				; 
 		}
-		f2_t			Pull				()					noexcept	{ 
+		f2_t			Pull				()					nxpt	{ 
 			const f2_t			busy				= Busy();
 			if(busy)
 				return busy;
@@ -123,7 +123,7 @@ namespace gpk
 				CoolingDown		= true;
 			return 0;
 		}
-		f2_t			Update				(f3_t seconds)	noexcept		{
+		f2_t			Update				(f3_t seconds)	nxpt		{
 			Delay.Value		+= (f2_t)seconds;
 			if(0 >= Overheat.Value && CoolingDown)
 				CoolingDown		= Overheat.Value	= 0;
@@ -276,6 +276,6 @@ namespace gpk
 			return 0;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_GALAXY_HELL_WEAPON_H

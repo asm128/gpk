@@ -5,7 +5,7 @@
 #ifndef GPK_ARGS_H_23627
 #define GPK_ARGS_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	stct SCommandLineArgs {
 		vcst_t					ProgramName = {};

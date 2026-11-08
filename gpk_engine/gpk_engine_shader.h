@@ -5,7 +5,7 @@
 #ifndef GPK_ENGINE_SHADER_FUNC_H_23627
 #define GPK_ENGINE_SHADER_FUNC_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	::gpk::rgbaf			lightCalcSpecular	(::gpk::n3f2_t gEyePosW, f2_t specularPower, ::gpk::rgbaf specularLight, ::gpk::rgbaf specularMaterial, ::gpk::n3f2_t posW, ::gpk::n3f2_t normalW, ::gpk::n3f2_t lightVecW);
 	::gpk::rgbaf			lightCalcDiffuse	(::gpk::rgbaf diffuseMaterial, ::gpk::n3f2_t normalW, ::gpk::n3f2_t lightVecW);
@@ -28,7 +28,7 @@ namespace gpk
 	gpk::err_t 		psSphereSolid		(const ::gpk::SEngineSceneConstants & constants, const ::gpk::SPSIn & inPS, ::gpk::bgra & outputPixel);
 	gpk::err_t 		psSphereMeridian	(const ::gpk::SEngineSceneConstants & constants, const ::gpk::SPSIn & inPS, ::gpk::bgra & outputPixel);
 
-}  // namespace
+}  // nmsp
 
 
 #endif // GPK_ENGINE_SHADER_FUNC_H_23627

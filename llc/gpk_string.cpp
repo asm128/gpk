@@ -13,7 +13,7 @@ gpk::err_t	gpk::camelCase		(vcst_t input, asc_t & camelCased) {
 				capsNext	= false;
 			}
 			//else
-			//	tolower(vc{&camelCased[1], camelCased.size() - 1});
+			//	tolower(vsf_t{&camelCased[1], camelCased.size() - 1});
 			if_fail_fe(camelCased.push_back(current));
 		}
 	}

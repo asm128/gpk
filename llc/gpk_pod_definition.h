@@ -3,7 +3,7 @@
 #ifndef GPK_POD_DEFINITION_H_23627
 #define GPK_POD_DEFINITION_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(C_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(C_TYPE, unsigned	, 0x00);
@@ -70,6 +70,6 @@ namespace gpk
 		gpk::err_t 			push_uchar		(::gpk::vcst_t label, uc_t defaultValue = (uc_t)::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
 		gpk::err_t 			push_char		(::gpk::vcst_t label, sc_t  defaultValue = (sc_t )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
 	};
-} // namespace 
+} // nmsp 
 
 #endif // GPK_POD_DEFINITION_H_23627

@@ -4,7 +4,7 @@
 #ifndef GPK_PATH_H_23627
 #define GPK_PATH_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	stct SPathInfo {
 		u0_t					NestLevel	: 7;
@@ -65,6 +65,6 @@ namespace gpk
 	err_t						pathStem				(vcst_t path, vcst_t & stem);
 
 	err_t						pathList				(vcst_t pathToList, SPathContents & outputTree, function<err_t(bool, vcst_c&)> onItem, gpk::vcst_c extension);
-} // namespace
+} // nmsp
 
 #endif // GPK_PATH_H_23627

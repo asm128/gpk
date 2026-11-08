@@ -3,7 +3,7 @@
 #ifndef GPK_ENGINE_EXPLORER_MENU_H_23627
 #define GPK_ENGINE_EXPLORER_MENU_H_23627
 
-namespace gpk
+nmsp gpk
 {	
 	GDEFINE_ENUM_TYPE(UI_FILE_OPTIONS, u0_t);
 	GDEFINE_ENUM_VALUE(UI_FILE_OPTIONS, New , 0);
@@ -44,6 +44,6 @@ namespace gpk
 
 	GDEFINE_ENUM_TYPE(EDITOR_APP_HELP, u0_t);
 	GDEFINE_ENUM_VALUE(EDITOR_APP_HELP, About, 0);
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_EXPLORER_MENU_H_23627

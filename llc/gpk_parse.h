@@ -4,13 +4,13 @@
 #ifndef GPK_PARSE_H_23627
 #define GPK_PARSE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	stxp	vcst_t	DIGITS_HEX						= "0123456789abcdef";
 	stxp	vcst_t	DIGITS_DECIMAL					= "0123456789";
 	err_t			parseArbitraryBaseInteger		(u2_t base, vcst_t symbolList, vcst_t sourceChars, u3_t * number_);
 	tplt<tpnm _tInt>	
-	inline	err_t	parseIntegerDecimal				(vcst_t sourceChars, _tInt & number_)	{
+	inln	err_t	parseIntegerDecimal				(vcst_t sourceChars, _tInt & number_)	{
 		u3_t				number							= 0; 
 		err_t				countDigits; 
 		if_fail_fe(countDigits = parseArbitraryBaseInteger(10, vcst_t{"0123456789"}, sourceChars, &number)); 
@@ -19,7 +19,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tInt>	
-	inline	err_t	parseIntegerHexadecimal			(vcst_t sourceChars, _tInt & number_)	{
+	inln	err_t	parseIntegerHexadecimal			(vcst_t sourceChars, _tInt & number_)	{
 		u3_t				number							= 0; 
 		err_t countDigits;
 		if_fail_fe(countDigits = parseArbitraryBaseInteger(16, vcst_t{"0123456789abcdef"}, sourceChars, &number)); 
@@ -57,6 +57,6 @@ namespace gpk
 	bool				isSpaceCharacter				(cnst char characterToTest);
 	err_t				skipToNextCharacter				(u2_t & indexCurrentChar, vcst_t expression);
 
-} // namespace
+} // nmsp
 
 #endif // GPK_PARSE_H_23627

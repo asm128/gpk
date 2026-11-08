@@ -7,19 +7,19 @@
 #ifndef GPK_GUI_H_23627
 #define GPK_GUI_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SGUIZoom {
 		n2f3_t				DPI					= {1.0, 1.0};
 		minmaxf3_t			ZoomLimits			= {0.1, 10.0};
 		f3_t				ZoomLevel			= 1.0;
 
-		bool				operator==			(const SGUIZoom & other)		const	noexcept	{
+		bool				operator==			(const SGUIZoom & other)		csnx	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inline	bool		operator!=			(const SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
+		inln	bool		operator!=			(const SGUIZoom & other)		csnx	{ return !operator==(other); }
 	};
 
 	struct SGUIColors {
@@ -72,6 +72,6 @@ namespace gpk
 
 	err_t			guiProcessControls				(const SGUI & gui, const function<err_t(cid_t iControl)> & funcOnExecute);
 	err_t			guiProcessControls				(const SGUI & gui, vcid controlsToProcess, const function<err_t(cid_t iControl)> & funcOnExecute);
-} // namespace
+} // nmsp
 
 #endif // GPK_GUI_H_23627

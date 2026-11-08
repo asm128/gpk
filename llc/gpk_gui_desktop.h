@@ -4,7 +4,7 @@
 #ifndef GPK_GUI_DESKTOP_H_23627
 #define GPK_GUI_DESKTOP_H_23627
 
-namespace gpk
+nmsp gpk
 {
 
 	tplt <tpnm _tElement>
@@ -16,7 +16,7 @@ namespace gpk
 		inxp	const _tElement&	operator[]					(u2_t index)			const				{ return Elements[index]; }
 		inxp	_tElement&			operator[]					(u2_t index)								{ return Elements[index]; }
 
-		inxp	u2_t			size						()							const	noexcept	{ return Elements.size(); }
+		inxp	u2_t			size						()							csnx	{ return Elements.size(); }
 		gpk::err_t 			push_back					(const _tElement & toPush)						{
 			const ::gpk::cid_t				elemIndex					= (::gpk::cid_t)Elements.push_back(toPush);
 			if_true_vef(-1, failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");
@@ -52,6 +52,6 @@ namespace gpk
 	gpk::err_t 			desktopControlListSetParent	(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::cid_t iControlList, ::gpk::cid_t iParentControlList, ::gpk::cid_t iParentListItem);
 	s3_t						desktopUpdate				(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::SInput & input);
 
-} // namespace
+} // nmsp
 
 #endif // GPK_GUI_DESKTOP_H_23627

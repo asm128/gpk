@@ -6,7 +6,7 @@
 #ifndef GPK_ENGINE_RENDERIMAGE_H_23627
 #define GPK_ENGINE_RENDERIMAGE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)
 	struct SSurfaceDescription {
@@ -27,7 +27,7 @@ namespace gpk
 		gpk::err_t 			Load			(::gpk::vcu0_t & input)			{ if_fail_fe(gpk::loadPOD(input, Desc)); return ::gpk::loadView(input, Data); }
 	};
 
-	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSurface>	SSurfaceManager;
-} // namespace
+	tydf	::gpk::gpk_linear_map_pobj<::gpk::SSurface>	SSurfaceManager;
+} // nmsp
 
 #endif // GPK_ENGINE_RENDERIMAGE_H_23627

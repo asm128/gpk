@@ -10,7 +10,7 @@
 #ifndef GPK_SCENE_H_23627
 #define GPK_SCENE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt <tpnm _tUnit>
 	struct SModelGeometry {
@@ -218,6 +218,6 @@ namespace gpk
 		return newIndex;
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_SCENE_H_23627

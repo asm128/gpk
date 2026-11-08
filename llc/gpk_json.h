@@ -7,7 +7,7 @@
 #ifndef GPK_JSON_H_23627
 #define GPK_JSON_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 #ifdef GPK_ARDUINO
@@ -210,6 +210,6 @@ namespace gpk
 	err_t			jsonFieldsToMap			(as2_t & indicesOfFields, view<cnst SJSONFieldBinding> fields, view<cnst keyval<vcst_t>> fieldMaps);
 	err_t			jsonToCodePoint			(vcst_t input, u2_t & unicode);
 
-} // namespace
+} // nmsp
 
 #endif // GPK_JSON_H_23627

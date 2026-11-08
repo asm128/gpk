@@ -8,7 +8,7 @@
 #ifndef GPK_ENGINE_GEOMETRY_DRAW_H_23627
 #define GPK_ENGINE_GEOMETRY_DRAW_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	gpk::err_t drawTriangle
 		( ::gpk::g8bgra						targetPixels

@@ -4,7 +4,7 @@
 #ifndef GPK_COLOR_TYPE_H_23627
 #define GPK_COLOR_TYPE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE(COLOR_TYPE, u0_t);
@@ -17,6 +17,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(COLOR_TYPE, BGRA				, 8); // Blue Green Red Alpha
 	GDEFINE_ENUM_VALUE(COLOR_TYPE, FILE				, 255); // Defined by file on load
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_COLOR_TYPE_H_23627

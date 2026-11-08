@@ -5,7 +5,7 @@
 #ifndef GPK_CONNECTION_IP_H_261025
 #define GPK_CONNECTION_IP_H_261025
 
-namespace gpk
+nmsp gpk
 {
 	struct SSocketConnection {
 		auto_socket_close	Socket			= {};
@@ -15,6 +15,6 @@ namespace gpk
 
 	err_t	connectionSendQueue		(SConnection & connection, SSocketConnection & client, apobj<SMessage> & messageCacheSent, apobj<SMessage> & messageCacheSend);
 	err_t	connectionHandleCommand	(SConnection & connection, SSocketConnection & client, SCommand & command, au0_t & receiveBuffer);
-} // namespace
+} // nmsp
 
 #endif // GPK_CONNECTION_IP_H_261025

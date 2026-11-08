@@ -6,9 +6,9 @@
 #ifndef GPK_PLANETARY_SYSTEM_H_23701
 #define GPK_PLANETARY_SYSTEM_H_23701
 
-namespace gpk
+nmsp gpk
 {
-	typedef	lmpod<vcst_t, SCelestialBody>	SCelestialBodyMap;
+	tydf	lmpod<vcst_t, SCelestialBody>	SCelestialBodyMap;
 
 	struct SPlanetarySystem {
 		SCelestialBodyMap			Body;
@@ -32,7 +32,7 @@ namespace gpk
 
 	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, const SJSONReader & jsonData);
 	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, vcst_t jsonFilePath);
-} // namespace
+} // nmsp
 
 #endif // GPK_PLANETARY_SYSTEM_H_23701
 

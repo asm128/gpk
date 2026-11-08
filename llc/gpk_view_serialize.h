@@ -5,7 +5,7 @@
 #ifndef GPK_VIEW_SERIALIZE_H_23627
 #define GPK_VIEW_SERIALIZE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplT		err_t	loadPOD			(vcu0_t & input, T & output) { 
 		if_true_fe(input.byte_count() < szof(T));
@@ -70,6 +70,6 @@ namespace gpk
 	tplTstin	err_t	viewPascal	(view<cnst T> & headerToRead, vcst_t input)	{ rtrn viewPascal<sc_c, cnst T>(headerToRead, input); }
 	tplTstin	err_t	viewPascal	(view<T> & headerToRead, vu0_t input)		{ rtrn viewPascal<u0_t, T>(headerToRead, input); }
 	tplTstin	err_t	viewPascal	(view<T> & headerToRead, vs0_t input)		{ rtrn viewPascal<s0_t, T>(headerToRead, input); }
-} // namespace
+} // nmsp
 
 #endif // GPK_VIEW_SERIALIZE_H_23627

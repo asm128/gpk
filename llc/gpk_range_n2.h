@@ -4,7 +4,7 @@
 #ifndef GPK_RANGE_N2
 #define GPK_RANGE_N2
 
-namespace gpk
+nmsp gpk
 {
 	tydf range<n2uc_t>	range2uc_t;	tdcs range2uc_t	range2uc_c;
 	tydf range<n2sc_t>	range2sc_t;	tdcs range2sc_t	range2sc_c;

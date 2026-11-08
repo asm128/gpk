@@ -8,7 +8,7 @@
 #else
 #	include <cerrno>
 #endif
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(ERRNO, s2_t);
 	GDEFINE_ENUM_VALUED(ERRNO, OK              ,    0, "No error"                                          );
@@ -143,6 +143,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUED(ERRNO, ENOTRECOVERABLE , -131, "State not recoverable"                             );
 	GDEFINE_ENUM_VALUED(ERRNO, ERFKILL         , -132, "Operation not possible due to RF-kill"             );
 	GDEFINE_ENUM_VALUED(ERRNO, EHWPOISON       , -133, "Memory page has hardware error"                    );
-} // namespace
+} // nmsp
 
 #endif // GPK_CERRNO_H

@@ -9,7 +9,7 @@
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)
 #else
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)										\
-namespace gpk																								\
+nmsp gpk																								\
 {																											\
 	struct SRuntimeState {																					\
 		refcount_t			RenderThreadUsers	= {};														\
@@ -43,7 +43,7 @@ namespace gpk																								\
 		return 0;																							\
 	} // 
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT_MT(_mainClass, _moduleTitle)										\
-	namespace gpk																								\
+	nmsp gpk																								\
 	{																											\
 		struct SRuntimeState {																					\
 			refcount_t			RenderThreadUsers	= {};														\

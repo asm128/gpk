@@ -6,7 +6,7 @@
 #ifndef GPK_ENGINE_RENDERBUFFER_H_23627
 #define GPK_ENGINE_RENDERBUFFER_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	GDEFINE_ENUM_TYPE(BUFFER_USAGE, u0_t);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Position			,  0);
@@ -67,8 +67,8 @@ namespace gpk
 		, ::gpk::pobj<SRenderBuffer>	& pUV
 		);
 
-	typedef	::gpk::gpk_linear_map_pobj<::gpk::SRenderBuffer>	SRenderBufferManager;
+	tydf	::gpk::gpk_linear_map_pobj<::gpk::SRenderBuffer>	SRenderBufferManager;
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_RENDERBUFFER_H_23627

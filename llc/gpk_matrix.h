@@ -3,7 +3,7 @@
 #ifndef GPK_MATRIX_H_23627
 #define GPK_MATRIX_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE(MATRIX_MATH, u0_t);
@@ -41,7 +41,7 @@ namespace gpk
 		TMatrix result = {};
 		for(u0_t row = 0; row < _width; ++row) {
 			for(u0_t column = 0; column < _width; ++column) {
-				result(row, column) = (typename TMatrix::TValue)(left(row, column) + right(row, column));
+				result(row, column) = (tpnm TMatrix::TValue)(left(row, column) + right(row, column));
 			}
 		}
 		rtrn result;
@@ -52,7 +52,7 @@ namespace gpk
 		TMatrix result = {};
 		for(u0_t row = 0; row < _width; ++row) {
 			for(u0_t column = 0; column < _width; ++column) {
-				result(row, column) = (typename TMatrix::TValue)(left(row, column) - right(row, column));
+				result(row, column) = (tpnm TMatrix::TValue)(left(row, column) - right(row, column));
 			}
 		}
 		rtrn result;
@@ -63,7 +63,7 @@ namespace gpk
 		TMatrix result = {};
 		for(u0_t row = 0; row < _width; ++row) {
 			for(u0_t column = 0; column < _width; ++column) {
-				result(row, column) = (typename TMatrix::TValue)(matrix(row, column) * scalar);
+				result(row, column) = (tpnm TMatrix::TValue)(matrix(row, column) * scalar);
 			}
 		}
 		rtrn result;
@@ -78,7 +78,7 @@ namespace gpk
 				for(u0_t index = 0; index < _width; ++index) {
 					value += left(row, index) * right(index, column);
 				}
-				result(row, column) = (typename TMatrix::TValue)value;
+				result(row, column) = (tpnm TMatrix::TValue)value;
 			}
 		}
 		rtrn result;
@@ -160,7 +160,7 @@ namespace gpk
 					}
 				}
 				cnst f3_t cofactor = ((row + column) % 2 ? -1 : 1) * matrixDeterminant(minor, (u0_t)(_width - 1));
-				result(column, row) = (typename TMatrix::TValue)(cofactor / determinant);
+				result(column, row) = (tpnm TMatrix::TValue)(cofactor / determinant);
 			}
 		}
 		rtrn result;

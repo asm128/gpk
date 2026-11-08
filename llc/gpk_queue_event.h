@@ -4,7 +4,7 @@
 #ifndef GPK_QUEUE_EVENT_H
 #define GPK_QUEUE_EVENT_H
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tEventType> using qevt			= ::gpk::qobj <::gpk::SEvent<_tEventType>>;
     tplt<tpnm _tEventType> using qpevt			= ::gpk::qpobj<::gpk::SEvent<_tEventType>>;

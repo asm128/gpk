@@ -4,7 +4,7 @@
 #ifndef GPK_LABEL_H_23627
 #define GPK_LABEL_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct label_statics;
 

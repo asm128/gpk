@@ -14,7 +14,7 @@
 #ifndef GPK_EVAL_H_23627
 #define GPK_EVAL_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	nsix		b8_t		true_if			(b8_t v)														nxpt	{ rtrn v; }
 	nsix		b8_t		false_if		(b8_t v)														nxpt	{ rtrn false == v; }
@@ -40,6 +40,6 @@ namespace gpk
 	}
 	tplTN2nsix	b8_t		equal			(cnst T(&other)[N], cnst T(&local)[N])							nxpt	{ rtrn equal(other, local, N); }
 
-} // namespace
+} // nmsp
 
 #endif // GPK_EVAL_H_23627

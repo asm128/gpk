@@ -6,7 +6,7 @@
 #ifndef GPK_INPUT_H_23627
 #define GPK_INPUT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 // TODO: REDO (this is heavily outdated and I think it should be heavily improved)
 #pragma pack(push, 1)
@@ -75,6 +75,6 @@ namespace gpk
 		input.TimeStampKeyboard[deviceIndex] = timeStamp;
 		return 0;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_INPUT_H_23627

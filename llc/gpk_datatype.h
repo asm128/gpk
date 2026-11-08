@@ -7,7 +7,7 @@
 #ifndef GPK_DATATYPE_H_23627
 #define GPK_DATATYPE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	enum DATA_TYPE : u2_t
@@ -77,14 +77,14 @@ namespace gpk
 		u2_t			IsNorm			:  1	;
 		u2_t			IsSigned		:  1	;
 
-		inxp	u2_t	ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
-		inxp	u2_t	TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
+		inxp	u2_t	ElementBytes	()							csnx	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
+		inxp	u2_t	TotalBytes		()							csnx	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
 
-		inxp	bool		IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
-		inxp	bool		IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
-		inxp	bool		IsUniform		()							const	noexcept	{ return !IsNonUniform(); }
+		inxp	bool		IsSTL			()							csnx	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
+		inxp	bool		IsNonUniform	()							csnx	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
+		inxp	bool		IsUniform		()							csnx	{ return !IsNonUniform(); }
 
-		inxp				SDataTypeID		( ::gpk::DATA_TYPE typeId )			noexcept
+		inxp				SDataTypeID		( ::gpk::DATA_TYPE typeId )			nxpt
 			: SizeInBits	(GTYPEID_ELEMENTSIZE	(typeId) - 1)
 			, ElementPad	(GTYPEID_ELEMENTPAD		(typeId))
 			, ElementCount	(GTYPEID_ELEMENTCOUNT	(typeId) - 1)
@@ -102,7 +102,7 @@ namespace gpk
 			, bool		isNorm			= false
 			, bool		elementPad		= false
 			, bool		isBigEndian		= false
-			)					noexcept
+			)					nxpt
 			: SizeInBits	(sizeInBits		- 1)
 			, ElementPad	(elementPad		? 1 : 0)
 			, ElementCount	(elementCount	- 1)
@@ -111,7 +111,7 @@ namespace gpk
 			, IsNorm		(isNorm			? 1 : 0)
 			, IsSigned		(isSigned		? 0 : 1)
 		{}
-		inxp	operator	DATA_TYPE		()							const				{
+		inxp	oper	DATA_TYPE		()							const				{
 			return GTYPEID_MAKE
 				( !IsSigned
 				, IsNorm
@@ -122,7 +122,7 @@ namespace gpk
 				, SizeInBits+1
 				);
 		}
-		inxp	bool		operator==		(const DATA_TYPE& other)	const				{
+		inxp	bool		oper==		(const DATA_TYPE& other)	const				{
 			return	u2_t(SizeInBits) + 1	==	u2_t(GTYPEID_ELEMENTSIZE	(other))
 				&&	ElementPad					==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
 				&&	u2_t(ElementCount) + 1	==	u2_t(GTYPEID_ELEMENTCOUNT	(other))
@@ -132,7 +132,7 @@ namespace gpk
 				&&	IsSigned					==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
 				;
 		}
-		inxp	bool		operator==		(const SDataTypeID& other)	const				{
+		inxp	bool		oper==		(const SDataTypeID& other)	const				{
 			return	SizeInBits		==	other.SizeInBits
 				&&	ElementPad		==	other.ElementPad
 				&&	ElementCount	==	other.ElementCount
@@ -538,9 +538,9 @@ namespace gpk
 	u2_t			getStringFromDataType			(DATA_TYPE dataType, sc_t* string);
 
 #if defined(__WINDOWS__)
-#	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
+#	pragma warning(disable : 4063)	// On Windows, usng enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
-} // namespace
+} // nmsp
 
 #endif // GPK_DATATYPE_H_23627

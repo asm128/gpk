@@ -3,7 +3,7 @@
 #ifndef GPK_LABEL_MANAGER_H_23627
 #define GPK_LABEL_MANAGER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	class CLabelManager	{
 #if defined(GPK_ARDUINO)

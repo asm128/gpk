@@ -5,7 +5,7 @@
 #ifndef GPK_VOXEL_GEOMETRY_H_23627
 #define GPK_VOXEL_GEOMETRY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SVoxelGeometry {
 		::gpk::SGeometryBuffers						Geometry			= {};
@@ -19,6 +19,6 @@ namespace gpk
 
 	gpk::err_t 		geometryVoxelModel	(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<u0_t> & voxelMap);
 
-} // namespace
+} // nmsp
 
 #endif // GPK_VOXEL_GEOMETRY_H_098273498237423

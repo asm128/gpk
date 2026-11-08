@@ -4,7 +4,7 @@
 #ifndef GPK_ORBTIER_H
 #define GPK_ORBTIER_H
 
-namespace gpk
+nmsp gpk
 {
 
 #pragma pack(push, 1)
@@ -71,6 +71,6 @@ namespace gpk
 		return 0;
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ORBTIER_H

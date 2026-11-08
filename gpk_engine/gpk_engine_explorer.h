@@ -5,7 +5,7 @@
 #ifndef GPK_ENGINE_EXPLORER_H_23627
 #define GPK_ENGINE_EXPLORER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SEditorRigidBody		{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
 	struct SEditorImage			{ ::gpk::acid IdControl = {}; s2_t IdEditable = -1; };
@@ -60,6 +60,6 @@ namespace gpk
 	gpk::err_t 			editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
 	//gpk::err_t 		editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
 	//gpk::err_t 		editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_EXPLORER_H_23627

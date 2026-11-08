@@ -5,23 +5,23 @@
 #ifndef GPK_LINEAR_MAP_POBJ_H_23627
 #define GPK_LINEAR_MAP_POBJ_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt <tpnm _tElementWithSaveLoad>
 	struct gpk_linear_map_pobj {
-		typedef _tElementWithSaveLoad	T;
-		typedef pobj<T>			TPObj;
+		tydf _tElementWithSaveLoad	T;
+		tydf pobj<T>			TPObj;
 
 		aobj<TPObj>				Elements		= {};
 		aobj<vcst_t>			Names			= {};
 
-		inline	const TPObj&	operator[]		(u2_t index)	const	{ return Elements[index]; }
-		inline	TPObj&			operator[]		(u2_t index)			{ return Elements[index]; }
-		inline	const TPObj&	operator[]		(vcst_t key)	const	{ return Elements[Names.find(key)]; }
-		inline	TPObj&			operator[]		(vcst_t key)			{ return Elements[Names.find(key)]; }
+		inln	const TPObj&	operator[]		(u2_t index)	const	{ return Elements[index]; }
+		inln	TPObj&			operator[]		(u2_t index)			{ return Elements[index]; }
+		inln	const TPObj&	operator[]		(vcst_t key)	const	{ return Elements[Names.find(key)]; }
+		inln	TPObj&			operator[]		(vcst_t key)			{ return Elements[Names.find(key)]; }
 
 		inxp	u2_t			size			()								const	{ return Names.size(); }
-		inline	err_t			find			(vcst_t key, u2_t offset = 0)	const	{ return Names.find(key, offset); }
+		inln	err_t			find			(vcst_t key, u2_t offset = 0)	const	{ return Names.find(key, offset); }
 
 		err_t					push_back		(const pobj<T> & instance, vcst_t name = {})	{
 			err_t						index			= 0;
@@ -34,7 +34,7 @@ namespace gpk
 			return index;
 		}
 
-		inline	err_t			Create			(vcst_t name = {})									{ return push_back({}, name); }
+		inln	err_t			Create			(vcst_t name = {})									{ return push_back({}, name); }
 		err_t					Delete			(u2_t index)										{
 			if_true_fef(index >= size(), "Invalid index:%u. Element count:%u.", index, size());
 			if_fail_fe(Names.remove_unordered(index));
@@ -94,6 +94,6 @@ namespace gpk
 		}
 	};
 
-} // namespace
+} // nmsp
 
 #endif // GPK_LINEAR_MAP_POBJ_H_23627

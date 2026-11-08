@@ -4,10 +4,10 @@
 #ifndef GPK_VIEW_PPOD_H_23627
 #define GPK_VIEW_PPOD_H_23627
 
-namespace gpk
+nmsp gpk
 {
-	tplT using	vppod	= ::gpk::view<::gpk::ppod<T>>;
-	tplT using	vcppod	= ::gpk::view<cnst ::gpk::ppod<T>>;
-} // namespace
+	tplT usng	vppod	= ::gpk::view<::gpk::ppod<T>>;
+	tplT usng	vcppod	= ::gpk::view<cnst ::gpk::ppod<T>>;
+} // nmsp
 
 #endif // GPK_VIEW_PPOD_H_23627

@@ -7,10 +7,10 @@
 #ifndef GPK_SWAP_H
 #define GPK_SWAP_H
 
-namespace gpk
+nmsp gpk
 {
 #ifndef GPK_ATMEL
-	using ::std::swap;
+	usng ::std::swap;
 #else // GPK_ATMEL
 	tplt<class _Ty>
 	inxp	void	swap(_Ty & _Left, _Ty & _Right) nxpt {
@@ -19,6 +19,6 @@ namespace gpk
 		_Right   = _Tmp;
 	}
 #endif // GPK_ATMEL
-} // namespace
+} // nmsp
 
 #endif // GPK_SWAP_H

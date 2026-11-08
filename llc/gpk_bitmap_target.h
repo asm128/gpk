@@ -13,7 +13,7 @@
 #ifndef BITMAP_TARGET_H_23627
 #define BITMAP_TARGET_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tCoord, tpnm T>
 	gpk::err_t 	drawPixelBrightness		(::gpk::grid<T> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const T & colorLight, f2_t factor, f3_t range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
@@ -197,7 +197,7 @@ namespace gpk
 		return pixelsDrawn;
 	}
 
-	typedef	gpk::err_t (*gpk_raster_callback)	(void* bitmapTarget, const ::gpk::n2u2_t & bitmapMetrics, const ::gpk::n2u2_t & cellPos, const void* value);
+	tydf	gpk::err_t (*gpk_raster_callback)	(void* bitmapTarget, const ::gpk::n2u2_t & bitmapMetrics, const ::gpk::n2u2_t & cellPos, const void* value);
 
 
 	// Bresenham's line algorithm
@@ -354,6 +354,6 @@ namespace gpk
 	static	gpk::err_t drawLine			(const ::gpk::n2u1_t & targetMetrics, const ::gpk::line3<_tCoord> & line, ::gpk::apod<::gpk::n2s1_t> & out_Points)				{
 		return drawLine(targetMetrics, ::gpk::line2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
 	}
-} // namespace
+} // nmsp
 
 #endif // BITMAP_TARGET_H_23627

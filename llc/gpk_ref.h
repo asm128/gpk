@@ -5,7 +5,7 @@
 #ifndef GPK_REF_H_23627
 #define GPK_REF_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplTstct gref {
 		T					* Instance			= {};
@@ -52,6 +52,6 @@ namespace gpk
 		ref_release(oldRef);
 		return gpk_reference->Instance;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_REF_H_23627

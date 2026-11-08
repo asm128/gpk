@@ -4,7 +4,7 @@
 #ifndef GPK_ARRAY_OBJ_H_23627
 #define GPK_ARRAY_OBJ_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tpl_tstct array_obj : public array_base<_t> {
 		tdfTTCnst(_t);

@@ -3,7 +3,7 @@
 #ifndef GPK_ENGINE_GAME_STAGE_H_23627
 #define GPK_ENGINE_GAME_STAGE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(MATCH_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Free			, 0);
@@ -85,6 +85,6 @@ namespace gpk
 	};
 	stxp	size_t SIZE_SSTAGESTATE = sizeof(SStageState);
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_GAME_STAGE_H_23627

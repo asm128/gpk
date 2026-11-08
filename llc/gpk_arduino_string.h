@@ -9,7 +9,7 @@
 #ifdef GPK_ARDUINO
 #	include <WString.h>
 
-namespace gpk
+nmsp gpk
 {
 	ndsi	vcst_t	tovcc   (cnst String & srcstr)					{ rtrn {srcstr.begin(), (u2_t)srcstr.length()}; }
 	stin	err_t	tovcc   (vcst_t	& output, cnst String & srcstr)	{ rtrn (output = tovcc(srcstr)).size(); }
@@ -22,7 +22,7 @@ namespace gpk
 	ndsi	vcst_t	str		(cnst String & srcstr)	{ rtrn tovcc(srcstr); }
 	ndsi	u2_t 	size	(cnst String & srcstr)	{ rtrn srcstr.length(); }
 			err_t	rtrim	(String & trimmed, const String & input);
-} // namespace
+} // nmsp
 #endif // GPK_ARDUINO
 
 #endif // GPK_ARDUINO_STRING_H

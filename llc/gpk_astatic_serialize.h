@@ -5,7 +5,7 @@
 #ifndef GPK_ASTATIC_SERIALIZE_H_23627
 #define GPK_ASTATIC_SERIALIZE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tPOD, ::gpk::u2_t _nSize> 
 	gpk::err_t 		loadView					(::gpk::vcu0_t & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
@@ -16,6 +16,6 @@ namespace gpk
 		memcpy(output.begin(), readView.begin(), ::gpk::min(readView.byte_count(), ::gpk::view<_tPOD>{output}.byte_count()));
 		return 0;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_ASTATIC_SERIALIZE_H_23627

@@ -9,7 +9,7 @@
 #ifndef GPK_ENGINE_H_23627
 #define GPK_ENGINE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	err_t					updateEntityTransforms			
 		( u2_t							iEntity
@@ -181,7 +181,7 @@ namespace gpk
 
 		err_t				CreateImageFromFile	(vcst_t fileFolder, vcst_t fileName);
 
-		typedef function<err_t(SGeometryBuffers&)> TGeometryFunc;
+		tydf function<err_t(SGeometryBuffers&)> TGeometryFunc;
 
 		tplt<tpnm _tParams>
 		err_t				CreateEntityFromGeometry
@@ -242,6 +242,6 @@ namespace gpk
 	err_t			collisionDetect		(cnst SEngine & engine, f3_t totalSeconds, apod<SContact> & contactsDetected);
 
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_H_23627

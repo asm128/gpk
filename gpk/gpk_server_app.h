@@ -5,7 +5,7 @@
 #ifndef GPK_SERVER_APP_H_23701
 #define GPK_SERVER_APP_H_23701
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE (UI_SERVER_INPUT, u0_t);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INPUT, Root			, 0);
@@ -41,7 +41,7 @@ namespace gpk
 
 		SServerUI				UI;
 
-		double					ListeningSince		= {};
+		f3_t					ListeningSince		= {};
 	};
 
 	err_t			loadServerConfig	(const SJSONReader & jsonConfig, s2_t parentNode, vcst_t & port, vcst_t & adapter);
@@ -66,6 +66,6 @@ namespace gpk
 		}
 		return 0;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_SERVER_APP_H_23701

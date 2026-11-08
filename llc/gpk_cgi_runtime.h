@@ -8,7 +8,7 @@
 #ifndef GPK_CGI_RUNTIME_H_23627
 #define GPK_CGI_RUNTIME_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	stxp	vcst_c		cgi_environ	[]		=
 		{	"AUTH_PASSWORD"
@@ -113,7 +113,7 @@ namespace gpk
 		n2s2_t				TargetSize					= {};
 		bool				Bootstrapped				= false;
 	};
-} // namespace
+} // nmsp
 
 #define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)										\
 gpk::err_t 			setup					(_mainClass& app);								\

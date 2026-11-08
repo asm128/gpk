@@ -4,17 +4,17 @@
 #ifndef ARRAY_BIT_ARRAY_H_23627
 #define ARRAY_BIT_ARRAY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tType>
 	struct array_bit {
-		typedef	_tType			T;
-		typedef	::gpk::vbit<T>	TView;
+		tydf	_tType			T;
+		tydf	::gpk::vbit<T>	TView;
 
 		::gpk::apod<T>			Data			;
 		::gpk::view_bit<T>		View			;
 
-		cxpr					array_bit		()					noexcept	= default;
+		cxpr					array_bit		()					nxpt	= default;
 								array_bit		(const ::gpk::view_bit<T> & other)
 			:	Data(other.begin(), round_up(other.size(), TView::ELEMENT_BITS))
 			,	View(Data.begin(), other.size())
@@ -36,9 +36,9 @@ namespace gpk
 			return *this;
 		}
 
-		inxp	const u2_t&	size			()				const	noexcept	{ return View.size(); }
+		inxp	const u2_t&	size			()				csnx	{ return View.size(); }
 
-		gpk::err_t 		resize			(u2_t newSize)		noexcept	{
+		gpk::err_t 		resize			(u2_t newSize)		nxpt	{
 			if_fail_fe(Data.resize(round_up(newSize, View.ELEMENT_BITS)));
 			View					= {Data.begin(), newSize};
 			return 0;
@@ -46,9 +46,9 @@ namespace gpk
 	}; // struct
 
 	tplt<tpnm T>	
-	using	abit	= ::gpk::array_bit<T>;
+	usng	abit	= ::gpk::array_bit<T>;
 
-	typedef	abit<u3_t>	abitu64;
+	tydf	abit<u3_t>	abitu3_t;
 } // 
 
 #endif // ARRAY_BIT_ARRAY_H_29037498023612

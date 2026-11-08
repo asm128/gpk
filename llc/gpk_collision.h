@@ -8,7 +8,7 @@
 #ifndef GPK_COLLISION_H_23627
 #define GPK_COLLISION_H_23627
 
-namespace gpk
+nmsp gpk
 {
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
@@ -119,7 +119,7 @@ namespace gpk
 		, ::gpk::line2<TAxis>		& bottom
 		)
 	{
-		typedef	::gpk::n2<TAxis>	TCoord2;
+		tydf	::gpk::n2<TAxis>	TCoord2;
 		left				= {center + TCoord2{-halfSizeBox, halfSizeBox}, center + TCoord2{-halfSizeBox,-halfSizeBox}};
 		top					= {center + TCoord2{ halfSizeBox, halfSizeBox}, center + TCoord2{-halfSizeBox, halfSizeBox}};
 		right				= {center + TCoord2{ halfSizeBox, halfSizeBox}, center + TCoord2{ halfSizeBox,-halfSizeBox}};
@@ -136,7 +136,7 @@ namespace gpk
 		, ::gpk::line2<TAxis>		& bottom
 		)
 	{
-		typedef	::gpk::n2<TAxis>	TCoord2;
+		tydf	::gpk::n2<TAxis>	TCoord2;
 		left				= {rect.Offset										, rect.Offset + TCoord2{0			, rect.Size.y}};
 		top					= {rect.Offset + TCoord2{0, rect.Size.y}			, rect.Offset + TCoord2{rect.Size.x	, rect.Size.y}};
 		right				= {rect.Offset + TCoord2{rect.Size.x, rect.Size.y}	, rect.Offset + TCoord2{rect.Size.x, 0}};

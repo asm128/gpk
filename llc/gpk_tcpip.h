@@ -3,7 +3,7 @@
 #ifndef GPK_TCPIP_H_23627
 #define GPK_TCPIP_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 		err_t		tcpipAddress		(	vcst_t strIP, u2_t & ipv4);
@@ -14,9 +14,9 @@ namespace gpk
 		
 						SIPv4				(vcst_t strIP)							{ 	tcpipAddress(strIP, IP); }
 						
-		inxp			SIPv4				()								noexcept	= default;
-		inxp			SIPv4				(const SIPv4 &)					noexcept	= default;
-		inxp			SIPv4				(u2_t little_endian)		noexcept	: IP(little_endian) {}
+		inxp			SIPv4				()								nxpt	= default;
+		inxp			SIPv4				(const SIPv4 &)					nxpt	= default;
+		inxp			SIPv4				(u2_t little_endian)		nxpt	: IP(little_endian) {}
 		cxpr			SIPv4				(u0_t _0, u0_t _1, u0_t _2, u0_t _3 = 0)
 			: IP
 			{ 	byte_to<u2_t>(_0, 0)
@@ -27,11 +27,11 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(SIPv4, IP == other.IP);
 
-		inxp	u0_t	operator[]			(u0_t index)		const	noexcept	{ return 	byte_at(IP, index); }
-		u0_t&			operator[]			(u0_t index)				noexcept	{ return *(((u0_t*)&IP) + index); }
+		inxp	u0_t	oper[]			(u0_t index)		csnx	{ return 	byte_at(IP, index); }
+		u0_t&			oper[]			(u0_t index)				nxpt	{ return *(((u0_t*)&IP) + index); }
 
-		inxp	oper	u2_t			()					const	noexcept	{ return IP; }
-		cxpr	oper	astu0_t<4>		()					const	noexcept	{
+		inxp	oper	u2_t			()					csnx	{ return IP; }
+		cxpr	oper	astu0_t<4>		()					csnx	{
 			return 
 				{ 	byte_at(IP, 0)
 				, 	byte_at(IP, 1) 
@@ -40,15 +40,15 @@ namespace gpk
 				};
 		}
 
-		template<size_t buflen>
-		astsc_t<(buflen > 16) ? buflen : 16>	toString			(sc_t separator = '.')						const	noexcept	{
+		tplt<size_t buflen>
+		astsc_t<(buflen > 16) ? buflen : 16>	toString			(sc_t separator = '.')						csnx	{
 			astsc_t<(buflen > 16) ? buflen : 16>	result	= {};
 			print(result.Storage, separator);
 			return result; 
 		}
 
 		tplt<size_t bufferSize>
-			err_t 		print				(sc_t (&target)[bufferSize], sc_t separator = '.')	const	noexcept	{
+			err_t 		print				(sc_t (&target)[bufferSize], sc_t separator = '.')	csnx	{
 			const sc_t format[] = {'%', 'u', separator, '%', 'u', separator, '%', 'u', separator, '%', 'u', 0};
 			return sprintf_s(target, format
 				, 	byte_at(IP, 0)
@@ -61,13 +61,13 @@ namespace gpk
 
 	stin		astsc_t<16>	str			(const SIPv4 ip)	{ return ip.toString<16>(); }
 
-	typedef struct SIPv4End : SIPv4 {
+	tydf struct SIPv4End : SIPv4 {
 		u1_t			Port				= {};
 
 		GPK_DEFAULT_OPERATOR(SIPv4End, IP == other.IP && Port == other.Port);
 
-		template<size_t buflen>
-		operator			astsc_t<min((size_t)22, buflen)>	()		const	noexcept	{
+		tplt<size_t buflen>
+		oper			astsc_t<min((size_t)22, buflen)>	()		csnx	{
 			if(0 == Port)
 				return *(const SIPv4*)this;
 
@@ -88,7 +88,7 @@ namespace gpk
 			SIPv4	Gateway		= {};
 			SIPv4	NetMask		= {};
 
-		cxpr		SIPv4	NetworkID	()	const	noexcept	{
+		cxpr		SIPv4	NetworkID	()	csnx	{
 			return 	SIPv4
 				( NetMask[0] & IPv4[0]
 				, NetMask[1] & IPv4[1]
@@ -97,7 +97,7 @@ namespace gpk
 				);
 		}
 
-		cxpr		SIPv4	BroadcastIP	()	const	noexcept	{
+		cxpr		SIPv4	BroadcastIP	()	csnx	{
 			return 	SIPv4
 				( ~NetMask[0] & IPv4[0]
 				, ~NetMask[1] & IPv4[1]
@@ -107,8 +107,8 @@ namespace gpk
 		}
 	};
 	
-	tplt<size_t count> using	astipv4		= 	astatic<	SIPv4, count>;
-	tplt<size_t count> using	astipv4end	= 	astatic<	SIPv4End, count>;
+	tplt<size_t count> usng	astipv4		= 	astatic<	SIPv4, count>;
+	tplt<size_t count> usng	astipv4end	= 	astatic<	SIPv4End, count>;
 #pragma pack(pop)
 
 		err_t			tcpipInitialize						();
@@ -152,7 +152,7 @@ namespace gpk
 	}
 		err_t			tcpipAddress		(vcst_t strAddress, vcst_t strPort, SIPv4End & ipv4end);
 	
-} // namespace
+} // nmsp
 
 #endif // GPK_TCPIP_H_23627
 

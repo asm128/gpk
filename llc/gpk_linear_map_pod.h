@@ -6,18 +6,18 @@
 #ifndef GPK_LINEAR_MAP_POD_H_23627
 #define GPK_LINEAR_MAP_POD_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt <tpnm _tKey, tpnm _tValue>
 	struct linear_map_pod {
-		typedef _tValue		T;
-		typedef _tKey		K;
+		tydf _tValue		T;
+		tydf _tKey		K;
 
 		apod<T>		Values			= {};
 		apod<K>		Keys			= {};
 
-		const T&			operator[]		(const K & key)	const	{ return Values[Keys.find(key)]; }
-		T&					operator[]		(const K & key)			{ return Values[Keys.find(key)]; }
+		const T&			oper[]		(const K & key)	const	{ return Values[Keys.find(key)]; }
+		T&					oper[]		(const K & key)			{ return Values[Keys.find(key)]; }
 
 		u2_t			size			()				const	{ return Keys.size(); }
 
@@ -72,7 +72,7 @@ namespace gpk
 		}
 	};
 	tplt <tpnm _tKey, tpnm _tValue>
-	using	lmpod	= linear_map_pod<_tKey, _tValue>;
-} // namespace
+	usng	lmpod	= linear_map_pod<_tKey, _tValue>;
+} // nmsp
 
 #endif // GPK_LINEAR_MAP_POD_H_23627

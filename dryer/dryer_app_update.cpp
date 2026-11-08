@@ -290,7 +290,7 @@ gpk::err_t dry::updateApp			(::dry::SApplication & app) {
 	//	always_printf("Processing dryer command: %s (%u). Args: %i.", ::gpk::get_value_namep(dryerCommand.Command), dryerCommand.Command, dryerCommand.Args);
 	//	switch(dryerCommand.Command) {
 	//	case ::dry::DRYER_COMMAND_PUMP: {
-	//		const ::gpk::vcc						serialCommand					= dryerCommand.Args ? ::gpk::vcst_t{"<ON>"} : ::gpk::vcst_t{"<OFF>"};
+	//		const ::gpk::vcsc_t						serialCommand					= dryerCommand.Args ? ::gpk::vcst_t{"<ON>"} : ::gpk::vcst_t{"<OFF>"};
 	//		if(errored(::s3d::serialWrite(app.Serial, serialCommand))) {
 	//			failed = true;
 	//			error_printf("Failed to send serial command to control pump: %.*s.", GPK_VIEW_ARGS(serialCommand));

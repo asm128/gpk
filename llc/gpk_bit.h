@@ -4,7 +4,7 @@
 #ifndef GPK_BIT_H
 #define GPK_BIT_H
 
-namespace gpk
+nmsp gpk
 {
 	tplTndsx	bool	bit_all			(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn (state & bitsToTest) == bitsToTest; }
 	tplTndsx	bool	bit_any			(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn 0 != (state & bitsToTest); }
@@ -28,7 +28,7 @@ namespace gpk
 	tplt<u2_t index, u0_t firstWidth, u0_t... remainingWidths>
 	ndsx u2_t bit_field_offset() nxpt {
 		static_assert(index < 1 + sizeof...(remainingWidths), "bit_field<> index out of range.");
-		if constexpr(0 == index)
+		if cxpr(0 == index)
 			rtrn 0;
 		else
 			rtrn firstWidth + bit_field_offset<index - 1, remainingWidths...>();
@@ -37,7 +37,7 @@ namespace gpk
 	tplt<u2_t index, u0_t firstWidth, u0_t... remainingWidths>
 	ndsx u0_t bit_field_width() nxpt {
 		static_assert(index < 1 + sizeof...(remainingWidths), "bit_field<> index out of range.");
-		if constexpr(0 == index)
+		if cxpr(0 == index)
 			rtrn firstWidth;
 		else
 			rtrn bit_field_width<index - 1, remainingWidths...>();

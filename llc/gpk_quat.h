@@ -3,7 +3,7 @@
 #ifndef GPK_QUAT_H_23627
 #define GPK_QUAT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t struct quat {
@@ -48,12 +48,12 @@ namespace gpk
 		cxpr	_t			LengthSquared		()							csnx	{ return x * x + y * y + z * z + w * w; }
 		inxp	f3_t		Length				()							cnst		{ cnst _t square = LengthSquared(); return square ? ::sqrt(square) : 0; }
 		cxpr	f3_t		Dot					(cnst TQuat & other)		csnx	{ return x * other.x + y * other.y + z * other.z + w * other.w; }
-		inline	TQuat &		Identity			()							nxpt	{ return *this = {0, 0, 0, 1}; }
-		inline	TQuat &		Normalize			()							nxpt	{ cnst _t square = LengthSquared(); return square ? *this /= ::sqrt(square) : *this; }
-		inline	TQuat		Normalized			()							csnx	{ cnst _t square = LengthSquared(); return square ? *this / ::sqrt(square) : *this; }
-		inline	TQuat &		LinearInterpolate	(cnst TQuat & p, cnst TQuat & q, f3_t time)	nxpt	{ return *this = (q - p) * time + p; }
-		inline	TQuat &		SetRotation			(cnst TQuat & q, cnst TQuat & p)			nxpt	{ return *this = q * p * ~q; }
-		inline	TQuat &		MakeFromEuler		(cnst Tn3 & value)								{ return MakeFromEuler(value.x, value.y, value.z); }
+		inln	TQuat &		Identity			()							nxpt	{ return *this = {0, 0, 0, 1}; }
+		inln	TQuat &		Normalize			()							nxpt	{ cnst _t square = LengthSquared(); return square ? *this /= ::sqrt(square) : *this; }
+		inln	TQuat		Normalized			()							csnx	{ cnst _t square = LengthSquared(); return square ? *this / ::sqrt(square) : *this; }
+		inln	TQuat &		LinearInterpolate	(cnst TQuat & p, cnst TQuat & q, f3_t time)	nxpt	{ return *this = (q - p) * time + p; }
+		inln	TQuat &		SetRotation			(cnst TQuat & q, cnst TQuat & p)			nxpt	{ return *this = q * p * ~q; }
+		inln	TQuat &		MakeFromEuler		(cnst Tn3 & value)								{ return MakeFromEuler(value.x, value.y, value.z); }
 		TQuat &				AddScaled			(cnst Tn3 & vector, f3_t scale)			nxpt	{
 			TQuat scaled = {_t(vector.x * scale), _t(vector.y * scale), _t(vector.z * scale), _t{}};
 			scaled *= *this;

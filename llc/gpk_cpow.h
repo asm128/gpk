@@ -3,11 +3,11 @@
 #ifndef GPK_CPOW_H
 #define GPK_CPOW_H
 
-namespace gpk
+nmsp gpk
 {
 	tplt<u0_t exp, tpnm T>
 	stxp	T			cpow_impl		(T base) {
-		if constexpr(0 == exp)
+		if cxpr(0 == exp)
 			rtrn T(1);
 		else
 			rtrn T(base * cpow_impl<exp - 1>(base));
@@ -32,6 +32,6 @@ namespace gpk
 	nsix	char		digit_ascii				(u3_t value, u0_t base)							nxpt	{ return digit_ascii(char(value % base)); }
 	tplt<u0_t exp, tpnm TValue>
 	nsix	char		digit					(const TValue value, const TValue base = 10)	nxpt	{ return ::gpk::digit_ascii(value / ::gpk::cpow<exp>(base), (u0_t)base); }
-} // namespace
+} // nmsp
 
 #endif // GPK_CPOW_H

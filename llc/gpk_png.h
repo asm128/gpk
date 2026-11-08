@@ -8,7 +8,7 @@
 #ifndef GPK_PNG_H_23627
 #define GPK_PNG_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	struct SPNGChunk {
@@ -96,6 +96,6 @@ namespace gpk
 	stin	err_t		pngLoadFile		(vcst_t filename	, au0_t & out_Data)						{ SPNGData tempCache; return pngLoadFile		(tempCache, filename	, out_Data); }
 
 			err_t 		pngFileWrite	(gc8bgra in_ImageView, au0_t & out_Bytes);
-} // namespace
+} // nmsp
 
 #endif // GPK_PNG_H_23627

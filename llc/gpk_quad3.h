@@ -4,7 +4,7 @@
 #ifndef GPK_QUAD3_H_23627
 #define GPK_QUAD3_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t struct quad3 : public quad<n3<_t>> {

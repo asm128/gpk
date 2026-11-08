@@ -10,11 +10,11 @@
 #	include <ctime>
 #endif
 
-namespace gpk
+nmsp gpk
 {
 	err_t	keyValConstStringSerialize		(view<cnst kv<vcst_t>> keyVals, view<cnst vcst_t> keysToSave, au0_t & output);
 	err_t	keyValConstStringDeserialize	(vcu0_c input, aobj<kv<vcst_t>> & output);
-} // namespace 
+} // nmsp 
 
 gpk::err_t	gpk::keyValConstStringSerialize	(view<cnst kv<vcst_t>> keyVals, view<cnst vcst_t> keysToSave, au0_t & output)	{
 	::gpk::apod<kv<vcst_t>>	keyValsToSave			= {};

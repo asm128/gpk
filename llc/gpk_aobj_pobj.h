@@ -5,7 +5,7 @@
 #ifndef GPK_APOBJ_H_23627
 #define GPK_APOBJ_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplT using apobj		= ::gpk::aobj<::gpk::pobj<T>>; 
 	tplT using paobj		= ::gpk::pobj<::gpk::aobj<T>>; 
@@ -14,6 +14,6 @@ namespace gpk
 
 	tplT using apaobj		= ::gpk::aobj<::gpk::paobj<T>>; 
 	tplT using aapobj		= ::gpk::aobj<::gpk::apobj<T>>; 
-} // namespace
+} // nmsp
 
 #endif // GPK_APOBJ_H_23627

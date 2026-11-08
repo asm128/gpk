@@ -19,11 +19,11 @@
 #ifndef GPK_WINDOW_H_23627
 #define GPK_WINDOW_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SWindowPlatformDetail {
 #if defined(GPK_WINDOWS)
-		typedef	::gpk::bgra			TOSWindowNativeTexel;
+		tydf	::gpk::bgra			TOSWindowNativeTexel;
 		stxp	::gpk::astatic<WCHAR, 256>	DefaultRootWindowClassName	= {L"GPK_WINDOW"};
 
 		::HWND								WindowHandle				= {};
@@ -41,7 +41,7 @@ namespace gpk
 			if(WindowHandle					) ::DestroyWindow	(WindowHandle);
 		}
 #elif defined(GPK_XCB)
-		typedef	::gpk::bgra					TOSWindowNativeTexel;
+		tydf	::gpk::bgra					TOSWindowNativeTexel;
 		xcb_connection_t					* Connection				= {};
 		xcb_gcontext_t						GC							= {};
 		xcb_drawable_t						IdDrawable					= {};
@@ -64,8 +64,8 @@ namespace gpk
 	};
 
 	struct SWindow {
-		typedef	::gpk::bgra					TTexel;
-		typedef	::gpk::rt<TTexel, u2_t>	TOffscreen;
+		tydf	::gpk::bgra					TTexel;
+		tydf	::gpk::rt<TTexel, u2_t>	TOffscreen;
 
 		::gpk::SWindowPlatformDetail		PlatformDetail			= {};
 		::gpk::apobj<::gpk::SEventSystem>	EventQueue				= {};
@@ -93,6 +93,6 @@ namespace gpk
 		return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); 
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_WINDOW_H_23627

@@ -5,7 +5,7 @@
 #ifndef GPK_CLIENT_APP_H_23701
 #define GPK_CLIENT_APP_H_23701
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE (UI_CLIENT_INPUT, u0_t);
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INPUT, Root		, 0);
@@ -53,6 +53,6 @@ namespace gpk
 	err_t		setupGUI			(SClientUI & client, SGUI & gui);
 	err_t		updateGUI			(SClient & client, SGUI & gui);
 	err_t		processGUIEvent		(SClient & client, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent);
-} // namespace
+} // nmsp
 
 #endif // GPKCLIENT_APP_H_23701

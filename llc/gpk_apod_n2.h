@@ -5,7 +5,7 @@
 #ifndef GPK_APOD_N2_3973498373423617
 #define GPK_APOD_N2_3973498373423617
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplT usng	a2	= apod<n2<T>>;
@@ -23,6 +23,6 @@ namespace gpk
 	tydf	a2<f2_t>	a2f2_t;	tdcs	a2f2_t	a2f2_c;
 	tydf	a2<f3_t>	a2f3_t;	tdcs	a2f3_t	a2f3_c;
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_APOD_N2_3973498373423617

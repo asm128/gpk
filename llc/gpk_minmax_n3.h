@@ -4,7 +4,7 @@
 #ifndef GPK_MINMAX_N3
 #define GPK_MINMAX_N3
 
-namespace gpk
+nmsp gpk
 {
 	tydf	minmax<n3uc_t>	minmax3uc_t;	tdcs minmax3uc_t	minmax3uc_c;
 	tydf	minmax<n3sc_t>	minmax3sc_t;	tdcs minmax3sc_t	minmax3sc_c;

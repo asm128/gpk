@@ -14,7 +14,7 @@
 #ifndef GPK_CSTRING_H_23627
 #define GPK_CSTRING_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #if defined(GPK_WINDOWS)
 #	pragma warning(disable : 4996)
@@ -124,6 +124,6 @@ namespace gpk
 #if defined(GPK_WINDOWS)
 #	pragma warning(default: 4996)
 #endif
-} // namespace
+} // nmsp
 
 #endif // GPK_CSTRING_H_23627

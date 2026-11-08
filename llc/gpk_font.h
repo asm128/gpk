@@ -5,7 +5,7 @@
 #ifndef GPK_FONT_H_23627
 #define GPK_FONT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SRasterFont {
 		n2u0_t		CharSize;

@@ -5,7 +5,7 @@
 #ifndef GPK_GAME_H
 #define GPK_GAME_H
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(PLAYER_MODE, u0_t);
 	GDEFINE_ENUM_VALUE(PLAYER_MODE, AI			, 0);
@@ -40,7 +40,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	typedef ::gpk::apod<SStageState>	astagestate;
+	tydf ::gpk::apod<SStageState>	astagestate;
 
 	struct SGame {
 		SGameSetup			Setup				= {};
@@ -62,6 +62,6 @@ namespace gpk
 		}
 
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_GAME_H

@@ -5,10 +5,10 @@
 #ifndef GPK_VIEW_TRI_2973498273423617
 #define GPK_VIEW_TRI_2973498273423617
 
-namespace gpk
+nmsp gpk
 {
-	tplT using	vtri	= ::gpk::view<::gpk::tri<T>>;
-	tplT using	vctri	= ::gpk::view<cnst ::gpk::tri<T>>;
+	tplT usng	vtri	= ::gpk::view<::gpk::tri<T>>;
+	tplT usng	vctri	= ::gpk::view<cnst ::gpk::tri<T>>;
 
 	tydf	::gpk::vtri<sc_t>	vtrisc_t;	tdcs	vtrisc_t	vtrisc_c;
 	tydf	::gpk::vtri<uc_t>	vtriuc_t;	tdcs	vtriuc_t	vtriuc_c;
@@ -35,6 +35,6 @@ namespace gpk
 	tydf	::gpk::vctri<s3_t>	vctris3_t;	tdcs	vctris3_t	vctris3_c;
 	tydf	::gpk::vctri<f2_t>	vctrif2_t;	tdcs	vctrif2_t	vctrif2_c;
 	tydf	::gpk::vctri<f3_t>	vctrif3_t;	tdcs	vctrif3_t	vctrif3_c;
-} // namespace
+} // nmsp
 
 #endif // GPK_VIEW_TRI_2973498273423617

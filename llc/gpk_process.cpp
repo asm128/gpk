@@ -1,7 +1,7 @@
 #include "gpk_process_internal.h"
 
 #if defined(GPK_WINDOWS) || defined(GPK_LINUX)
-namespace gpk {
+nmsp gpk {
 tplt<tpnm T>
 err_t SProcessManager<T>::Redirect(u2_t id) {
 	err_t result;
@@ -95,6 +95,6 @@ err_t SProcessManager<T>::Close(u2_t id) {
 	rtrn result;
 }
 
-template struct SProcessManager<SProcessPlatform>;
+tplt struct SProcessManager<SProcessPlatform>;
 }
 #endif

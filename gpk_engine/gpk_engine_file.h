@@ -6,7 +6,7 @@
 #ifndef GPK_ENGINE_FILE_H_23627
 #define GPK_ENGINE_FILE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	struct SRAMFolder {
 		::gpk::aobj<::gpk::vcst_t>		Names;
@@ -41,6 +41,6 @@ namespace gpk
 	};
 
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_FILE_H_23627

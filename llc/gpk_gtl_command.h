@@ -8,7 +8,7 @@
 #ifndef GPK_GTL_COMMAND_H
 #define GPK_GTL_COMMAND_H
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE (GTL_COMMAND, u0_t)
@@ -52,8 +52,8 @@ namespace gpk
 		::gpk::apobj<::gpk::SGTLMessage>	Send		;
 		::gpk::apobj<::gpk::SGTLMessage>	Sent		;
 #ifndef GPK_ATMEL
-		::std::mutex						MutexSend	;
-		::std::mutex						MutexReceive;
+		mutex						MutexSend	;
+		mutex						MutexReceive;
 #endif
 	};
 
@@ -70,6 +70,6 @@ namespace gpk
 		::gpk::GTL_STATE		State			= ::gpk::GTL_STATE_Disconnected;
 	};
 
-} // namespace
+} // nmsp
 
 #endif // GPK_GTL_COMMAND_H

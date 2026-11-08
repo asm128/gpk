@@ -6,7 +6,7 @@
 #ifndef GPK_STD_CSTRING_H
 #define GPK_STD_CSTRING_H
 
-namespace gpk
+nmsp gpk
 {
 	ndsi	vcst_t	tovcc   (sc_c * srcstr)						{ rtrn {srcstr, (::gpk::u2_t)-1}; }
 	stin	err_t	tovcc   (vcst_t	& output, sc_c * srcstr)	{ rtrn (output = tovcc(srcstr)).size(); }
@@ -20,6 +20,6 @@ namespace gpk
 
 	ndsi	vcst_t	tolabel (sc_c * srcstr)	{ rtrn label(tovcc(srcstr)); }
 	ndsi	string	toachar (sc_c * srcstr)	{ rtrn tovcc(srcstr); }
-} // namespace gpk
+} // nmsp gpk
 
 #endif // GPK_STD_CSTRING_H

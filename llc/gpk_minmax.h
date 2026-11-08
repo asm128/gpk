@@ -3,7 +3,7 @@
 #ifndef GPK_MINMAX_H
 #define GPK_MINMAX_H
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t struct minmax {
@@ -36,8 +36,8 @@ namespace gpk
 		inxp	minmax<f2_t> 	f2			()				csnx	{ return Cast<f2_t>(); }
 		inxp	minmax<f3_t> 	f3			()				csnx	{ return Cast<f3_t>(); }
 
-		inline	TMinMax&		Set			(T value)		nxpt	{ Min = Max = value; return *this; }
-		inline	TMinMax&		From		(T value)		nxpt	{ Min = Max = value; return *this; }
+		inln	TMinMax&		Set			(T value)		nxpt	{ Min = Max = value; return *this; }
+		inln	TMinMax&		From		(T value)		nxpt	{ Min = Max = value; return *this; }
 	};
 #pragma pack(pop)
 	tydf	minmax<uc_t>	minmaxuc_t;	tdcs	minmaxuc_t	minmaxuc_c;

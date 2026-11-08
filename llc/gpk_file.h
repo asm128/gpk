@@ -4,7 +4,7 @@
 #ifndef GPK_FILE_H_23627
 #define GPK_FILE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	err_t			with				(vcst_t filepath, vcst_t mode, const function<err_t(FILE*&)> & funcFile);	//
 
@@ -35,6 +35,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(OPEN_MODE, READ		, 'r' + (u1_t('b') << 8));							//  1
 	GDEFINE_ENUM_VALUE(OPEN_MODE, WRITE		, 'w' + (u1_t('b') << 8));							//  2
 	GDEFINE_ENUM_VALUE(OPEN_MODE, APPEND	, 'a' + (u2_t('b') << 8) + (u2_t('+') << 16));	//  3
-} // namespace
+} // nmsp
 
 #endif // GPK_FILE_H_23627

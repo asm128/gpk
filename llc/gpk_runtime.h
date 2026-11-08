@@ -14,7 +14,7 @@
 #ifndef GPK_RUNTIME_H_23627
 #define GPK_RUNTIME_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SRuntimeValuesDetail {
 #ifdef GPK_ANDROID
@@ -35,7 +35,7 @@ namespace gpk
 		qpevt<SYSTEM_EVENT>		EventsOut		= {};	// Direction is relative to the application/module receiving these values.
 	};
 
-} // namespace
+} // nmsp
 
 #if defined(GPK_WINDOWS)
 #	define GPK_SYSTEM_OS_DEBUG_INIT_FLAGS()	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF)

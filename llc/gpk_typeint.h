@@ -10,7 +10,7 @@
 #ifndef GPK_TYPEINT_H_23627
 #define GPK_TYPEINT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tydf	bool							b8_t;
 	tydf	char							sc_t, s0_t;
@@ -73,7 +73,7 @@ namespace gpk
 	tplTsinx	T			printf_arg	(T value)			nxpt	{ rtrn value; }
 	tplTsinx	void*		printf_arg	(T * value)			nxpt	{ rtrn value; }
 	tplTsinx	cnst void*	printf_arg	(cnst T * value)	nxpt	{ rtrn value; }
-	sinx		sc_t*		printf_arg	(sc_t * value)		nxpt	{ rtrn value; }
+	sinx		sc_c*		printf_arg	(sc_t * value)		nxpt	{ rtrn value; }
 	sinx		sc_c*		printf_arg	(sc_c * value)		nxpt	{ rtrn value; }
 
 #define tplN0u		tplt<::gpk::u0_t N>
@@ -111,7 +111,7 @@ namespace gpk
 #define tplTN2sinx	tplTN2	sinx
 #define tplTN2stxp	tplTN2	stxp
 #define tplTN2nsix	tplTN2	nsix
-
+	
 #if defined(GPK_ANDROID) || defined(GPK_CLANG)
 #	pragma clang diagnostic push
 #	pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
@@ -161,7 +161,7 @@ namespace gpk
 	tpl_tstct srcdst { tdfTTCnst(_t); T src, dst; }; 
 	tpl_tstct dstsrc { tdfTTCnst(_t); T dst, src; };
 
-} // namespace
+} // nmsp
 
 #if !defined(GPK_ANDROID) && !defined(GPK_ESP32) && !defined(GPK_ARDUINO)
 #	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }
@@ -251,7 +251,7 @@ namespace gpk
 #define GPK_FMT_NE_S3	"%" GPK_FMT_S3 " != %" GPK_FMT_S3
 #define GPK_FMT_NE_U3	"%" GPK_FMT_U3 " != %" GPK_FMT_U3
 
-namespace gpk
+nmsp gpk
 {
 		enum OPCODE_SET : u0_t
 		{ OPCODE_SET_UNKNOWN
@@ -310,7 +310,7 @@ namespace gpk
 	GDEFINE_ENUM_NAMEP(OPCODE_SET   );
 	GDEFINE_ENUM_NAMEP(OPCODE_EXT   );
 	GDEFINE_ENUM_NAMEP(OS_FAMILY	);
-} // namespace
+} // nmsp
 
 #define gpk_enum_value_log(printf_fn, enumVal)	printf_fn("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'", get_enum_namep GPKREP3(enumVal) ? char(enumVal) : '?', get_value_namep(enumVal))
 #define GDEFINE_ENUM_CASE_DEFAULT(TEnum, TValue)    default                 : rtrn #TValue

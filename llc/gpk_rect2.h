@@ -3,7 +3,7 @@
 #ifndef GPK_RECT2_H
 #define GPK_RECT2_H
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplt<tpnm T>
@@ -13,22 +13,22 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
 		tpl_t	
-		inxp	rect2<_t>	Cast		()	const	noexcept	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
+		inxp	rect2<_t>	Cast		()	csnx	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
 
-		inxp	rect2<uc_t>	uc			()	const	noexcept	{ return Cast<uc_t>(); }
-		inxp	rect2<sc_t>	sc			()	const	noexcept	{ return Cast<sc_t>(); }
-		inxp	rect2<u0_t>	u0			()	const	noexcept	{ return Cast<u0_t>(); }
-		inxp	rect2<u1_t>	u1			()	const	noexcept	{ return Cast<u1_t>(); }
-		inxp	rect2<u2_t>	u2			()	const	noexcept	{ return Cast<u2_t>(); }
-		inxp	rect2<u3_t>	u3			()	const	noexcept	{ return Cast<u3_t>(); }
-		inxp	rect2<s0_t>	s0			()	const	noexcept	{ return Cast<s0_t>(); }
-		inxp	rect2<s1_t>	s1			()	const	noexcept	{ return Cast<s1_t>(); }
-		inxp	rect2<s2_t>	s2			()	const	noexcept	{ return Cast<s2_t>(); }
-		inxp	rect2<s3_t>	s3			()	const	noexcept	{ return Cast<s3_t>(); }
-		inxp	rect2<f2_t>	f2			()	const	noexcept	{ return Cast<f2_t>(); }
-		inxp	rect2<f3_t>	f3			()	const	noexcept	{ return Cast<f3_t>(); }
+		inxp	rect2<uc_t>	uc			()	csnx	{ return Cast<uc_t>(); }
+		inxp	rect2<sc_t>	sc			()	csnx	{ return Cast<sc_t>(); }
+		inxp	rect2<u0_t>	u0			()	csnx	{ return Cast<u0_t>(); }
+		inxp	rect2<u1_t>	u1			()	csnx	{ return Cast<u1_t>(); }
+		inxp	rect2<u2_t>	u2			()	csnx	{ return Cast<u2_t>(); }
+		inxp	rect2<u3_t>	u3			()	csnx	{ return Cast<u3_t>(); }
+		inxp	rect2<s0_t>	s0			()	csnx	{ return Cast<s0_t>(); }
+		inxp	rect2<s1_t>	s1			()	csnx	{ return Cast<s1_t>(); }
+		inxp	rect2<s2_t>	s2			()	csnx	{ return Cast<s2_t>(); }
+		inxp	rect2<s3_t>	s3			()	csnx	{ return Cast<s3_t>(); }
+		inxp	rect2<f2_t>	f2			()	csnx	{ return Cast<f2_t>(); }
+		inxp	rect2<f3_t>	f3			()	csnx	{ return Cast<f3_t>(); }
 
-		inline	n2<T>		Limit		()	const	noexcept	{ return Offset + Size; }
+		inln	n2<T>		Limit		()	csnx	{ return Offset + Size; }
 	};
 	tydf rect2<uc_t>	rect2uc_t;	tydf	const rect2uc_t	rect2uc_c;	
 	tydf rect2<sc_t>	rect2sc_t;	tydf	const rect2sc_t	rect2sc_c;	
@@ -46,11 +46,11 @@ namespace gpk
 #pragma pack(pop)
 
 	tplt<tpnm T>
-	stxp	bool	in_range	(const n2<T>& pointToTest, const rect2<T>& area)	noexcept	{
+	stxp	bool	in_range	(const n2<T>& pointToTest, const rect2<T>& area)	nxpt	{
 		return	in_range(pointToTest.x, area.Offset.x, (T)(area.Offset.x + area.Size.x))
 			&&	in_range(pointToTest.y, area.Offset.y, (T)(area.Offset.y + area.Size.y))
 			;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_RECT2_H

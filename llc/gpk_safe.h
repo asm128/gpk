@@ -3,7 +3,7 @@
 #ifndef GPK_SAFE_H_23627
 #define GPK_SAFE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	tplT	err_t	safe_assign			(T* & handle, const T & value)	{ if(0			== handle) return -1; *handle = value; return 0; }
 	tplT	err_t	safe_free			(T* & handle)					{ if(0			== handle) return -1; ::free		(handle); handle = {}; return 0; }
@@ -11,6 +11,6 @@ namespace gpk
 #ifdef GPK_WINDOWS
 	tplT	err_t	safe_closehandle	(T  & handle)					{ if(T(-1LL)	== handle) return -1; ::CloseHandle	(handle); handle = T(-1LL); return 0; }
 #endif
-} // namespace 
+} // nmsp 
 
 #endif // GPK_SAFE_H_23627

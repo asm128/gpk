@@ -3,21 +3,21 @@
 #ifndef GPK_HTTP_SERVER_H_23627
 #define GPK_HTTP_SERVER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SHTTPServer {
-		::gpk::auto_socket_close			Socket;
-		::gpk::apobj<::gpk::SConnection>	Connections;
-		::gpk::apobj<::gpk::SSocketConnection>	Clients;
-		::std::mutex						Mutex;
-		::gpk::SIPv4End				Address						= {};
+		auto_socket_close			Socket;
+		apobj<SConnection>	Connections;
+		apobj<SSocketConnection>	Clients;
+		mutex						Mutex;
+		SIPv4End				Address						= {};
 		bool								Listen						= false;
 		s2_t								Timeout						= 3000000;	// Kill clients timeout
 	};
 
-	::gpk::err_t						serverStart					(::gpk::SHTTPServer& serverInstance, u1_t port);
-	::gpk::err_t						serverStop					(::gpk::SHTTPServer& serverInstance);
+	err_t						serverStart					(SHTTPServer& serverInstance, u1_t port);
+	err_t						serverStop					(SHTTPServer& serverInstance);
 
-} // namespace
+} // nmsp
 
 #endif // GPK_UDP_SERVER_H_23627

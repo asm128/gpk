@@ -3,7 +3,7 @@
 #ifndef GPK_SPHERE_H_23627
 #define GPK_SPHERE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	tplt<tpnm T> 
@@ -26,13 +26,13 @@ namespace gpk
 
 	// ---- Collision
 	// Returns the volume of a sphere. This is used to calculate how to recurse into the bounding volume tree. For a bounding sphere it is a simple calculation.
-	tplt<tpnm T> stxp f3_t	sphereSize		(const sphere<T> & sphere)								noexcept	{ return 1.3333333333333333 * math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
-	tplt<tpnm T> stxp bool	sphereOverlaps	(const sphere<T> & sphereA, const sphere<T> & sphereB)	noexcept	{
+	tplt<tpnm T> stxp f3_t	sphereSize		(const sphere<T> & sphere)								nxpt	{ return 1.3333333333333333 * math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
+	tplt<tpnm T> stxp bool	sphereOverlaps	(const sphere<T> & sphereA, const sphere<T> & sphereB)	nxpt	{
 		const f3_t	distanceSquared	= (sphereA.Center - sphereB.Center).LengthSquared();
 		const f3_t	radiiSum		= sphereA.Radius + sphereB.Radius;
 		return distanceSquared < (radiiSum * radiiSum);	// check squared distance against squared radius
 	}
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_SPHERE_H_23627

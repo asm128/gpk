@@ -3,7 +3,7 @@
 #ifndef GPK_SLICE_H
 #define GPK_SLICE_H
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t

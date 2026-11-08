@@ -6,7 +6,7 @@
 #ifndef GPK_GEOMETRY_H_23627
 #define GPK_GEOMETRY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #ifdef GPK_ATMEL
 	enum SHAPE_TYPE : u0_t
@@ -64,9 +64,9 @@ namespace gpk
 	struct SParamsCircle : SParamsDisc {
 		bool				Reverse			= false;
 
-		constexpr			SParamsCircle	()							noexcept	= default;
-		constexpr			SParamsCircle	(const SParamsCircle &)		noexcept	= default;
-		constexpr			SParamsCircle	(const SParamsDisc & other)	noexcept	: SParamsDisc(other) {}
+		cxpr			SParamsCircle	()							nxpt	= default;
+		cxpr			SParamsCircle	(const SParamsCircle &)		nxpt	= default;
+		cxpr			SParamsCircle	(const SParamsDisc & other)	nxpt	: SParamsDisc(other) {}
 
 		GPK_DEFAULT_OPERATOR_C(SParamsCircle, SParamsDisc::operator==(other) && Reverse == other.Reverse);
 	};
@@ -145,6 +145,6 @@ namespace gpk
 	gpk::err_t 	geometryBuildRingFlat		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
 	gpk::err_t 	geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube			& params);
 #endif
-} // namespace
+} // nmsp
 
 #endif // GPK_GEOMETRY_H_23627

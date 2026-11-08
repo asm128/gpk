@@ -3,7 +3,7 @@
 #ifndef GPK_ASCII_COLOR_H_23627
 #define GPK_ASCII_COLOR_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	// This type is used to represent the palette array of the ASCII console. Having : u1_t here makes ASCII_COLOR_INDEX to have the same memory footprint as an unsigned short.
 	enum ASCII_COLOR_INDEX : u2_t

@@ -7,7 +7,7 @@
 
 #if defined(GPK_WINDOWS)
 #	include <process.h>
-typedef	int			socklen_t;
+tydf	int			socklen_t;
 #endif
 
 GPK_USING_TYPEINT();
@@ -104,7 +104,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 	::gpk::tcpipAddressToSockaddr(client.Socket.Address, sa_server);
 	::gpk::SCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	// Data to send */
 	{
-		::std::lock_guard												lock										(client.Connection.Queue.MutexSend);
+		lock_guard												lock										(client.Connection.Queue.MutexSend);
 		for(u2_t i = 0; i < 2; ++i)
 			sendto(client.Socket.Socket, (const sc_t*)&commandToSend, (int)sizeof(::gpk::SCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
 		client.Socket.Socket.close();
@@ -120,12 +120,12 @@ static	void												threadUpdateClient							(void* pClient)						{
 	stxp	u2_t												MAX_ATTEMPTS								= 1;
 	client.Connection.State												= ::gpk::CONNECTION_STATE_HANDSHAKE;
 	{
-		::std::lock_guard												lock										(client.Connection.Queue.MutexSend);
+		lock_guard												lock										(client.Connection.Queue.MutexSend);
 		client.Connection.Queue.Send.clear();
 		client.Connection.Queue.Sent.clear();
 	}
 	{
-		::std::lock_guard												lock										(client.Connection.Queue.MutexReceive);
+		lock_guard												lock										(client.Connection.Queue.MutexReceive);
 		client.Connection.Queue.Received.clear();
 	}
 	do {

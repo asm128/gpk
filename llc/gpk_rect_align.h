@@ -5,7 +5,7 @@
 #ifndef GPK_RECT_ALIGN_H_23627
 #define GPK_RECT_ALIGN_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	//------------------------------------------------------------------------------------------------------------
 	tplt <tpnm T, tpnm TTarget>
@@ -14,7 +14,7 @@ namespace gpk
 		,	const ::gpk::rect2<T>		& rectangleToRealign
 		,	::gpk::rect2<T>				& rectangleRealigned
 		,	ALIGN						align
-		)	noexcept	{
+		)	nxpt	{
 		rectangleRealigned		= rectangleToRealign;
 			 if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleRealigned.Offset.x += (T)(targetSize.x >> 1)	- (rectangleRealigned.Size.x >> 1); }
 		else if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleRealigned.Offset.x =  (T) targetSize.x		- (rectangleRealigned.Size.x + rectangleRealigned.Offset.x); }
@@ -32,7 +32,7 @@ namespace gpk
 		,	const ::gpk::rect2<T>	& rectangleToDock
 		,	::gpk::rect2<T>			& rectangleDocked
 		,	ALIGN					align
-		)	noexcept	{
+		)	nxpt	{
 		rectangleDocked		= rectangleToDock;
 			 /*if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleDocked.Offset.x = (rectangleToDockTo.Size.x >> 1)	- (rectangleDocked.Size.x >> 1)	+ rectangleDocked.Offset.x; }
 		else*/if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleDocked.Offset.x = rectangleToDockTo.Size.x  - (rectangleDocked.Size.x		+ rectangleDocked.Offset.x); }
@@ -43,6 +43,6 @@ namespace gpk
 		else													{}
 		return rectangleDocked;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_RECT_ALIGN_H_23627

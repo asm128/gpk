@@ -25,7 +25,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 		::gpk::sleep(1);
 		u2_t							totalClientCount				= serverInstance.Sockets.size();
 		{
-			::std::lock_guard					lock								(serverInstance.Mutex);
+			::gpk::lock_guard					lock								(serverInstance.Mutex);
 			totalClientCount				= serverInstance.Sockets.size();
 		}
 		timeval								wait_time							= {0, 1};
@@ -38,7 +38,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 			sockets.fd_count				= 0;
 			u2_t							stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
 			{
-				::std::lock_guard					lock								(serverInstance.Mutex);
+				::gpk::lock_guard					lock								(serverInstance.Mutex);
 				for(u2_t iClient = 0, actualCount = ::gpk::min(serverInstance.Sockets.size(), stageClientCount); iClient < actualCount; ++iClient) {
 					::gpk::pobj<::gpk::SSocketConnection>	pclient							= serverInstance.Sockets[offsetClient + iClient];
 					if(0 == pclient.get_ref() || pclient->IdConnection >= serverInstance.Clients.size() || 0 == serverInstance.Clients[pclient->IdConnection].get_ref()) {
@@ -63,7 +63,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 			{
 				clientsToProcess.clear();
 				{
-					::std::lock_guard				lock								(serverInstance.Mutex);
+					::gpk::lock_guard				lock								(serverInstance.Mutex);
 					if_true_bi(0 == serverInstance.Sockets.size());
 					for(u2_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(u2_t iClient = 0, countCli = ::gpk::min(serverInstance.Sockets.size(), stageClientCount); iClient < countCli; ++iClient) {
@@ -135,7 +135,7 @@ static	::gpk::err_t	recycleClient					(::gpk::SSocketServer& serverInstance, ::g
 		pClient										= serverInstance.Clients[iClient];
 		pSocket										= serverInstance.Sockets[iClient];
 		::gpk::SConnection							& client						= *pClient;
-		int64_t											limitTime						= (::gpk::timeCurrentInUs() - client.LastPing);
+		s3_t											limitTime						= (::gpk::timeCurrentInUs() - client.LastPing);
 		info_printf("LimitTime : %lli.", limitTime);
 		if(limitTime > serverInstance.Timeout || pSocket->Socket == INVALID_SOCKET || client.State == ::gpk::CONNECTION_STATE_DISCONNECTED) {
 			client.State								= ::gpk::CONNECTION_STATE_DISCONNECTED;
@@ -145,11 +145,11 @@ static	::gpk::err_t	recycleClient					(::gpk::SSocketServer& serverInstance, ::g
 			client.LastPing								=
 			client.FirstPing							= 0;
 			{
-				::std::lock_guard								lockRecv						(client.Queue.MutexReceive);
+				::gpk::lock_guard								lockRecv						(client.Queue.MutexReceive);
 				client.Queue.Received	.clear();
 			}
 			{
-				::std::lock_guard								lockSend						(client.Queue.MutexSend);
+				::gpk::lock_guard								lockSend						(client.Queue.MutexSend);
 				client.Queue.Send		.clear();
 				client.Queue.Sent		.clear();
 			}
@@ -167,14 +167,14 @@ static	::gpk::err_t	serverAcceptClient		(::gpk::SSocketServer& serverInstance, :
 	gpk::pobj<gpk::SConnection>		pClient				= {};
 	gpk::pobj<gpk::SSocketConnection>	pSocket				= {};
 	{ // accept
-		::std::lock_guard			lock					(serverInstance.Mutex);
+		::gpk::lock_guard			lock					(serverInstance.Mutex);
 		s2_t						found					= ::recycleClient(serverInstance, pClient, pSocket);
 		const u2_t				idConnection			= (-1 == found) ? serverInstance.Clients.size() : (u2_t)found;
 		::gpk::tcpipAddressFromSockaddr(sa_client, pSocket->Address);
 		pSocket->IdConnection	= idConnection;
 		command.Type			= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
 		::gpk::pobj<::gpk::SMessage>	connectResponse		= {};
-		connectResponse.create(::gpk::SMessage{{}, (uint64_t)::gpk::timeCurrentInUs(), command});
+		connectResponse.create(::gpk::SMessage{{}, (u3_t)::gpk::timeCurrentInUs(), command});
 		if_fail_fe(pClient->Queue.Send.push_back(connectResponse));
 		pClient->LastPing		=
 		pClient->FirstPing		= ::gpk::timeCurrentInUs();
@@ -280,7 +280,7 @@ static	void			threadServer			(void* pServerInstance)				{
 	serverInstance.Listen	= false;
 	serverInstance.Socket.close();
 	{
-		::std::lock_guard			lock					(serverInstance.Mutex);
+		::gpk::lock_guard			lock					(serverInstance.Mutex);
 		serverInstance.Clients.clear();
 		serverInstance.Sockets.clear();
 	}
@@ -316,7 +316,7 @@ static	void			threadServer			(void* pServerInstance)				{
 }
 
 ::gpk::err_t			gpk::serverPayloadCollect(::gpk::SSocketServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SMessage>> & receivedMessages)		{
-	::std::lock_guard			lock					(server.Mutex);
+	lock_guard			lock					(server.Mutex);
 	if_fail_fe(receivedMessages.resize(server.Clients.size()));
 	for(u2_t iClient = 0, countClients = server.Clients.size(); iClient < countClients; ++iClient) {
 		::gpk::pnco<::gpk::SConnection>	client			= server.Clients[iClient];

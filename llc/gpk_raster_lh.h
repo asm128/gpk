@@ -21,7 +21,7 @@ GPK_USING_N3();
 #ifndef CED_DRAW_H_23627
 #define CED_DRAW_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SLight3 {
 		n3f2_t	Position;
@@ -167,6 +167,6 @@ namespace gpk
 		, apod<n3f2_t>		& lightPoints
 		, a8bgra						& lightColors
 		);
-} // namespace
+} // nmsp
 
 #endif // CED_DRAW_H_23627

@@ -3,13 +3,13 @@
 #ifndef GPK_HTTP_H_23627
 #define GPK_HTTP_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(HTTP_METHOD, s0_t);
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, UNKNOWN		, 0);	// ???
-	GDEFINE_ENUM_VALUE(HTTP_METHOD, GET			, 1);	// The GET method is used to retrieve information from the given server using a given URI. Requests using GET should only retrieve data and should have no other effect on the data.
+	GDEFINE_ENUM_VALUE(HTTP_METHOD, GET			, 1);	// The GET method is used to retrieve information from the given server usng a given URI. Requests usng GET should only retrieve data and should have no other effect on the data.
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, HEAD		, 2);	// Same as GET, but transfers the status line and header section only.
-	GDEFINE_ENUM_VALUE(HTTP_METHOD, POST		, 3);	// A POST request is used to send data to the server, for example, customer information, file upload, etc. using HTML forms.
+	GDEFINE_ENUM_VALUE(HTTP_METHOD, POST		, 3);	// A POST request is used to send data to the server, for example, customer information, file upload, etc. usng HTML forms.
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, PUT			, 4);	// Replaces all current representations of the target resource with the uploaded content.
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, DELETE		, 5);	// Removes all current representations of the target resource given by a URI.
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, CONNECT		, 6);	// Establishes a tunnel to the server identified by a given URI.
@@ -50,12 +50,12 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, MULTIPLE_CHOICES						, 300);		// Indicates multiple options for the resource from which the client may choose (via agent-driven content negotiation). For example, this code could be used to present multiple video format options, to list files with different filename extensions, or to suggest word-sense disambiguation.[20]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, MOVED_PERMANENTLY						, 301);		// This and all future requests should be directed to the given URI.[21]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, FOUND									, 302);		// (Previously "Moved temporarily") Tells the client to look at (browse to) another URL. 302 has been superseded by 303 and 307. This is an example of industry practice contradicting the standard. The HTTP/1.0 specification (RFC 1945) required the client to perform a temporary redirect (the original describing phrase was "Moved Temporarily"),[22] but popular browsers implemented 302 with the functionality of a 303 See Other. Therefore, HTTP/1.1 added status codes 303 and 307 to distinguish between the two behaviours.[23] However, some Web applications and frameworks use the 302 status code as if it were the 303.[24]
-	GDEFINE_ENUM_VALUE(HTTP_STATUS, SEE_OTHER								, 303);		// (since HTTP/1.1) The response to the request can be found under another URI using the GET method. When received in response to a POST (or PUT/DELETE), the client should presume that the server has received the data and should issue a new GET request to the given URI.[25]
+	GDEFINE_ENUM_VALUE(HTTP_STATUS, SEE_OTHER								, 303);		// (since HTTP/1.1) The response to the request can be found under another URI usng the GET method. When received in response to a POST (or PUT/DELETE), the client should presume that the server has received the data and should issue a new GET request to the given URI.[25]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, NOT_MODIFIED							, 304);		// (RFC 7232) Indicates that the resource has not been modified since the version specified by the request headers If-Modified-Since or If-None-Match. In such case, there is no need to retransmit the resource since the client still has a previously-downloaded copy.[26]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, USE_PROXY								, 305);		// (since HTTP/1.1) The requested resource is available only through a proxy, the address for which is provided in the response. For security reasons, many HTTP clients (such as Mozilla Firefox and Internet Explorer) do not obey this status code.[27]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, SWITCH_PROXY							, 306);		// No longer used. Originally meant "Subsequent requests should use the specified proxy."[28]
-	GDEFINE_ENUM_VALUE(HTTP_STATUS, TEMPORARY_REDIRECT						, 307);		// (since HTTP/1.1) In this case, the request should be repeated with another URI; however, future requests should still use the original URI. In contrast to how 302 was historically implemented, the request method is not allowed to be changed when reissuing the original request. For example, a POST request should be repeated using another POST request.[29]
-	GDEFINE_ENUM_VALUE(HTTP_STATUS, PERMANENT_REDIRECT						, 308);		// (RFC 7538) The request and all future requests should be repeated using another URI. 307 and 308 parallel the behaviors of 302 and 301, but do not allow the HTTP method to change. So, for example, submitting a form to a permanently redirected resource may continue smoothly.[30]
+	GDEFINE_ENUM_VALUE(HTTP_STATUS, TEMPORARY_REDIRECT						, 307);		// (since HTTP/1.1) In this case, the request should be repeated with another URI; however, future requests should still use the original URI. In contrast to how 302 was historically implemented, the request method is not allowed to be changed when reissuing the original request. For example, a POST request should be repeated usng another POST request.[29]
+	GDEFINE_ENUM_VALUE(HTTP_STATUS, PERMANENT_REDIRECT						, 308);		// (RFC 7538) The request and all future requests should be repeated usng another URI. 307 and 308 parallel the behaviors of 302 and 301, but do not allow the HTTP method to change. So, for example, submitting a form to a permanently redirected resource may continue smoothly.[30]
 
 	//_4XX_CLIENT_ERRORS					 					This class of status code is intended for situations in which the error seems to have been caused by the client. Except when responding to a HEAD request, the server should include an entity containing an explanation of the error situation, and whether it is a temporary or permanent condition. These status codes are applicable to any request method. User agents should display any included entity to the user.
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, BAD_REQUEST								, 400);		// The server cannot or will not process the request due to an apparent client error (e.g., malformed request syntax, size too large, invalid request message framing, or deceptive request routing).[32]
@@ -87,7 +87,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, PRECONDITION_REQUIRED					, 428);		// (RFC 6585) The origin server requires the request to be conditional. Intended to prevent the 'lost update' problem, where a client GETs a resource's state, modifies it, and PUTs it back to the server, when meanwhile a third party has modified the state on the server, leading to a conflict.[59]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, TOO_MANY_REQUESTS						, 429);		// (RFC 6585) The user has sent too many requests in a given amount of time. Intended for use with rate-limiting schemes.[59]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, REQUEST_HEADER_FIELDS_TOO_LARGE			, 431);		// (RFC 6585) The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large.[59]
-	GDEFINE_ENUM_VALUE(HTTP_STATUS, UNAVAILABLE_FOR_LEGAL_REASONS			, 451);		// (RFC 7725) A server operator has received a legal demand to deny access to a resource or to a set of resources that includes the requested resource.[60] The code 451 was chosen as a reference to the novel Fahrenheit 451 (see the Acknowledgements in the RFC).
+	GDEFINE_ENUM_VALUE(HTTP_STATUS, UNAVAILABLE_FOR_LEGAL_REASONS			, 451);		// (RFC 7725) A server oper has received a legal demand to deny access to a resource or to a set of resources that includes the requested resource.[60] The code 451 was chosen as a reference to the novel Fahrenheit 451 (see the Acknowledgements in the RFC).
 	//_5XX_SERVER_ERRORS					, 			THE_SERVER_FAILEd to fulfill a request. Response status codes beginning with the digit "5" indicate cases in which the server is aware that it has encountered an error or is otherwise incapable of performing the request. Except when responding to a HEAD request, the server should include an entity containing an explanation of the error situation, and indicate whether it is a temporary or permanent condition. Likewise, user agents should display any included entity to the user. These response codes are applicable to any request method.[62]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, INTERNAL_SERVER_ERROR					, 500);		// A generic error message, given when an unexpected condition was encountered and no more specific message is suitable.[63]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, NOT_IMPLEMENTED							, 501);		// The server either does not recognize the request method, or it lacks the ability to fulfil the request. Usually this implies future availability (e.g., a new feature of a web-service API).[64]
@@ -163,6 +163,6 @@ namespace gpk
 		bool				IsCGIEnviron				= {};
 	};
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_HTTP_H_23627

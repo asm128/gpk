@@ -3,7 +3,7 @@
 #ifndef GPK_PTR_OBJ_H_23627
 #define GPK_PTR_OBJ_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tOBJ>
 	class pobj : public pnco<_tOBJ> {
@@ -23,6 +23,6 @@ namespace gpk
 		inln	T*				allocate	()											nxpt	{ return ref_allocate(Reference);											}
 	};
 	tplt<tpnm T> usng po	= pobj<T>; 
-} // namespace
+} // nmsp
 
 #endif // GPK_PTR_OBJ_H_23627

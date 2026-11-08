@@ -5,7 +5,7 @@
 #ifndef GPK_N2_H_23627
 #define GPK_N2_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)
 	tpl_t struct n2 {
@@ -69,8 +69,8 @@ namespace gpk
 		inxp	n2<f2_t> 	f2					()				csnx	{ return Cast<f2_t>(); }
 		inxp	n2<f3_t> 	f3					()				csnx	{ return Cast<f3_t>(); }
 
-		inline	Tn2&		Set					(T value)							nxpt	{ x = y = value; return *this; }
-		inline	Tn2&		From				(T value)							nxpt	{ x = y = value; return *this; }
+		inln	Tn2&		Set					(T value)							nxpt	{ x = y = value; return *this; }
+		inln	Tn2&		From				(T value)							nxpt	{ x = y = value; return *this; }
 
 		int					SetAxis				(u0_t axisIndex, T value)		nxpt	{
 			switch(axisIndex) { 
@@ -93,7 +93,7 @@ namespace gpk
 		inxp	Tn2			GetScaled			(f3_t	scalar)							csnx	{ return {(T)(x * scalar), (T)(y * scalar)}; }
 		inxp	Tn2			GetScaled			(f3_t scalarx, f3_t scalary)			csnx	{ return {(T)(x * scalarx), (T)(y * scalary)}; }
 		inxp	Tn2			GetScaled			(cnst Tn2 & scales)						csnx	{ return {(T)(x * scales.x), (T)(y * scales.y)}; }
-		inline	Tn2			GetNormalized		()										csnx	{ cnst T sqLen = LengthSquared(); if(sqLen) { f3_c len = ::sqrt(sqLen); return {(T)(x / len), (T)(y / len)}; } else return {x, y};	}
+		inln	Tn2			GetNormalized		()										csnx	{ cnst T sqLen = LengthSquared(); if(sqLen) { f3_c len = ::sqrt(sqLen); return {(T)(x / len), (T)(y / len)}; } else return {x, y};	}
 		cxpr	f3_t		Dot					(cnst Tn2 & other)						csnx	{ return x * other.x + y * other.y; }
 		cxpr	T			LengthSquared		()										csnx	{ return x * x + y * y; }
 		cxpr	f3_t		Length				()										csnx	{ cnst T sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0; }
@@ -109,13 +109,13 @@ namespace gpk
 			x					= (T)px;
 			return *this;	
 		}
-		inline	Tn2&		InPlaceScale		(f3_t scalar)									nxpt	{ return *this *= scalar; }
+		inln	Tn2&		InPlaceScale		(f3_t scalar)									nxpt	{ return *this *= scalar; }
 		tpl_t2
-		inline	Tn2&		InPlaceScale		(_t2 scalarx, _t2 scalary)						nxpt	{ return *this = {(T)(x * scalarx), (T)(y * scalary)}; }
+		inln	Tn2&		InPlaceScale		(_t2 scalarx, _t2 scalary)						nxpt	{ return *this = {(T)(x * scalarx), (T)(y * scalary)}; }
 		tpl_t2
-		inline	Tn2&		InPlaceScale		(cnst n2<_t2>& other)							nxpt	{ return InPlaceScale(other.x, other.y); }
-		inline	Tn2&		InPlaceNormalize	()															{ cnst T sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
-		inline	Tn2&		InPlaceClamp		(cnst Tn2 & min, cnst Tn2 & max)				nxpt	{
+		inln	Tn2&		InPlaceScale		(cnst n2<_t2>& other)							nxpt	{ return InPlaceScale(other.x, other.y); }
+		inln	Tn2&		InPlaceNormalize	()															{ cnst T sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
+		inln	Tn2&		InPlaceClamp		(cnst Tn2 & min, cnst Tn2 & max)				nxpt	{
 			x					= ::gpk::clamped(x, min.x, max.x);
 			y					= ::gpk::clamped(y, min.y, max.y);
 			return *this;
@@ -188,7 +188,7 @@ namespace gpk
 		, ::gpk::n2f2_t, ::gpk::n2f2_c	\
 		, ::gpk::n2f3_t, ::gpk::n2f3_c
 		
-} // namespace
+} // nmsp
 
 #define N2_F2	"%f, %f"
 #define N2_F3	"%f, %f"

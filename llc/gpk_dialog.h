@@ -4,7 +4,7 @@
 #ifndef GPK_DIALOG_H_23627
 #define GPK_DIALOG_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	enum DIALOG_CONTROL : s0_t
@@ -25,7 +25,7 @@ namespace gpk
 		cid_t					IdParent			= (cid_t)-1;
 		u3_t				DeleteControl		: 1;
 
-		constexpr				IDialogControl		()													: DeleteControl(0) {}
+		cxpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();
 
 		virtual	gpk::err_t Resize				(const ::gpk::n2<u1_t> & newSize)				{ (void)newSize; return 0; }
@@ -75,7 +75,7 @@ namespace gpk
 								SDialog			(::gpk::pobj<::gpk::SGUI> & gui);
 								SDialog			();
 
-		inline	gpk::err_t Focused			()	const	noexcept	{ return FocusedCurrent; }
+		inln	gpk::err_t Focused			()	csnx	{ return FocusedCurrent; }
 
 		gpk::err_t 		Focus			(cid_t iControl)		{ 
 			if_true_vef(-1, Controls.size() <= (u2_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 

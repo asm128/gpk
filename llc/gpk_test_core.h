@@ -7,7 +7,7 @@
 #ifndef GPK_TEST_CORE_H
 #define GPK_TEST_CORE_H
 
-namespace gpk
+nmsp gpk
 {
 	struct STestError {
 		s3_t		Value			= {};
@@ -260,7 +260,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUED(TEST_REPORT_RESULT, CONSOLE, 2, "Opt-in console capture must forward each byte once.");
 	GDEFINE_ENUM_VALUED(TEST_REPORT_RESULT, ROOT_ERROR, 3, "Report-writing errors must survive in the root log.");
 
-} // namespace
+} // nmsp
 
 #define GPK_TEST_SUITE(funcSuite, folder) testSuite(funcSuite, #funcSuite, folder)
 

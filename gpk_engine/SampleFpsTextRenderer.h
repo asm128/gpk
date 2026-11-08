@@ -7,9 +7,9 @@
 #ifndef SAMPLEFPSTEXTRENDERER_H_23627
 #define SAMPLEFPSTEXTRENDERER_H_23627
 
-namespace gpk
+nmsp gpk
 {
-	// Renders the current FPS value in the bottom right corner of the screen using Direct2D and DirectWrite.
+	// Renders the current FPS value in the bottom right corner of the screen usng Direct2D and DirectWrite.
 	struct SampleFpsTextRenderer {
 		// Cached pointer to device resources.
 		::gpk::pobj<::DX::D3DDeviceResources>	DeviceResources					= {};
@@ -44,8 +44,8 @@ namespace gpk
 			Text											= (fps > 0) ? std::to_wstring(fps) + L" FPS" : L" - FPS";
 
 			::gpk::pcom<IDWriteTextLayout>						textLayout;
-			constexpr f2_t										w								= 240.0f; // Max width of the input text.
-			constexpr f2_t										h								= 50.0f;// Max height of the input text.
+			cxpr f2_t										w								= 240.0f; // Max width of the input text.
+			cxpr f2_t										h								= 50.0f;// Max height of the input text.
 			gpk_hrcall(DeviceResources->GetDWriteFactory()->CreateTextLayout(Text.c_str(), (u2_t) Text.length(), TextFormat, w, h, &textLayout));
 			if_fail_fe(textLayout.as(TextLayout));
 			gpk_hrcall(TextLayout->GetMetrics(&TextMetrics));

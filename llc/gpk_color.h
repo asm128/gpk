@@ -4,7 +4,7 @@
 #ifndef GPK_COLOR_H_23627
 #define GPK_COLOR_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 #define COLOR_RGBA_OPERATOR_MEMBERS(color_struct_type) \
@@ -307,6 +307,6 @@ namespace gpk
 	stxp	::gpk::rgbaf	DARKCYAN		= {0.0f , 0.5f               , 0.5f , 1.0f};
 	stxp	::gpk::rgbaf	DARKORANGE		= {1.0f , 0.5490196078431373f, 0.00f, 1.0f};
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_COLOR_H_23627

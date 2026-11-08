@@ -10,7 +10,7 @@
 #ifndef GPK_CSTDIO_H
 #define GPK_CSTDIO_H
 
-namespace gpk
+nmsp gpk
 {
 #ifdef GPK_WINDOWS
 	ndsi s3_t	ftell		(FILE * fp) { return ::_ftelli64(fp); }
@@ -38,6 +38,6 @@ namespace gpk
 #endif
 		return 0 == offset ? 0 : fseek(out_fp, offset, FSEEK_SET);
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_CSTDIO_H

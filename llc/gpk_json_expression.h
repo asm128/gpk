@@ -4,7 +4,7 @@
 #ifndef GPK_JSON_EXPRESSION_9238749283744
 #define GPK_JSON_EXPRESSION_9238749283744
 
-namespace gpk
+nmsp gpk
 {
 	stxp	vcst_c			strEmptyObj				= "{}";
 	stxp	vcst_c			strEmptyArr				= "[]";
@@ -40,6 +40,6 @@ namespace gpk
 	stin	err_t		jsonExpressionResolve		(vcst_t expression, const SJSONReader & inputJSON, u2_t indexNodeJSON) { vcst_t dead; return jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
 
 			err_t		jsonStringFormat			(vcst_t format, const SJSONReader & inputJSON, u2_t indexNodeJSON, asc_t & output);
-} // namespace
+} // nmsp
 
 #endif // GPK_JSON_EXPRESSION_9238749283744

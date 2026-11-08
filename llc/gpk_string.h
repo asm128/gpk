@@ -6,7 +6,7 @@
 #ifndef GPK_STRING_H
 #define GPK_STRING_H
 
-namespace gpk
+nmsp gpk
 {
 
     struct string : asc_t {
@@ -47,7 +47,7 @@ namespace gpk
 #endif
                 err_t   camelCase   (vcst_t input, asc_t & camelCased);
 
-} // namespace
+} // nmsp
 
 #define GPK_USING_STRING()  usng ::gpk::string
 

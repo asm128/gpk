@@ -4,7 +4,7 @@
 #ifndef GPK_TYPE_IDENTIFIER_H_23627
 #define GPK_TYPE_IDENTIFIER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct STypeIdentifier {
 		vcst_t			NameSpace		= {};
@@ -15,7 +15,7 @@ namespace gpk
 		inxp			STypeIdentifier	(vcst_t nameSpace, vcst_t name)	nxpt	: NameSpace(nameSpace), Name(name)	{}
 		inxp	b8_t	oper==			(cnst STypeIdentifier & right)	csnx	{ return NameSpace == right.NameSpace && Name == right.Name; }
 	};	// struct
-} // namespace
+} // nmsp
 
 
 #endif // GPK_TYPE_IDENTIFIER_H_23627

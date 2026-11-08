@@ -240,10 +240,10 @@ static	void										ShiftRows								(state_t* state)																			{
 	(*state)[1][3]									= temp;
 }
 
-namespace gpk
+nmsp gpk
 {
 	static u0_t									xtime									(u0_t x)														{ return ((x<<1) ^ (((x>>7) & 1) * 0x1b)); }
-} // namespace
+} // nmsp
 
 // MixColumns function mixes the columns of the state matrix
 static	void										MixColumns								(state_t* state)												{

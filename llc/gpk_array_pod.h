@@ -5,7 +5,7 @@
 #ifndef GPK_ARRAY_POD_H_23627
 #define GPK_ARRAY_POD_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	// This class is optimized to contain POD instances and won't work for C++ objects that require calling constructors/destructors.
 	tpl_tstct array_pod : public array_base<_t> {
@@ -21,7 +21,7 @@ namespace gpk
 		usng array_base<T>	::rfind					;
 
 	private:
-		err_t				source_offset		(cnst T * source, u2_t count, u2_t & offset)cnst noexcept	{
+		err_t				source_offset		(cnst T * source, u2_t count, u2_t & offset)cnst nxpt	{
 			offset					= (u2_t)-1;
 			if(0 == Data || 0 == source)
 				return 0;
@@ -59,12 +59,12 @@ namespace gpk
 			rtrn -1;
 		}
 
-		inxp				array_pod			()										noexcept	= default;
+		inxp				array_pod			()										nxpt	= default;
 							array_pod			(::std::initializer_list<T> init)					{
 			if_fail_te(resize((u2_t)init.size()));
 			memcpy(Data, init.begin(), Count * szof(T));
 		}
-							array_pod			(array_pod<T> && other)					noexcept	{
+							array_pod			(array_pod<T> && other)					nxpt	{
 			Size				= other.Size;
 			Count				= other.Count;
 			Data				= other.Data;
@@ -72,7 +72,7 @@ namespace gpk
 			other.Size			= other.Count			= 0;
 			other.Data			= 0;
 		}
-		inline				array_pod			(cnst array_pod<T> & other)							: array_pod((cnst view<cnst T>&) other) {}
+		inln				array_pod			(cnst array_pod<T> & other)							: array_pod((cnst view<cnst T>&) other) {}
 							array_pod			(cnst view<cnst T> & other)							{
 			if_true_te(resize(other.size()) != (s2_t)other.size());
 			memcpy(Data, other.begin(), other.byte_count());
@@ -82,7 +82,7 @@ namespace gpk
 			if_true_te(resize(_count) != (s2_t)_count);
 			memcpy(Data, other, _count * szof(T));
 		}
-		inxp	oper		view<cnst T>	()									cnst	noexcept	{ return {Data, Count}; }
+		inxp	oper		view<cnst T>	()									cnst	nxpt	{ return {Data, Count}; }
 		TArray&				oper =			(cnst array_pod<T>& other)								{ return oper=((cnst view<T> &) other); }
 		TArray&				oper =			(cnst view<cnst T> & other)								{
 			u2_t					sourceOffset		= 0;
@@ -106,31 +106,31 @@ namespace gpk
 			return *this;
 		}
 
-		inln	err_t		clear				()										noexcept	{ Count = 0; if(Data) Data[Count] = {}; return Count; }
-		err_t				clear_pointer		()										noexcept	{ safe_gpk_free(Data); Data = 0; return Size = Count = 0; }
+		inln	err_t		clear				()										nxpt	{ Count = 0; if(Data) Data[Count] = {}; return Count; }
+		err_t				clear_pointer		()										nxpt	{ safe_gpk_free(Data); Data = 0; return Size = Count = 0; }
 		// Returns the new size of the array
-		err_t				pop_back			()										noexcept	{
+		err_t				pop_back			()										nxpt	{
 			if_true_fe(0 == Count);
 			Data[--Count]				= {};
 			return Count;
 		}
 		// Returns the new size of the array
-		err_t				pop_back			(T & oldValue)								noexcept	{
+		err_t				pop_back			(T & oldValue)								nxpt	{
 			if_true_fe(0 == Count);
 			oldValue				= Data[--Count];
 			Data[Count]				= {};
 			return Count;
 		}
 		// Returns the index of the pushed value or -1 on failure
-		err_t				push_back			(cnst T & newValue)							noexcept	{
+		err_t				push_back			(cnst T & newValue)							nxpt	{
 			cnst s2_t				oldSize				= Count;
 			if_fail_fe(resize(oldSize + 1, newValue));
 			return oldSize;
 		}
-		inln		err_t	append				(cnst FError<TArray&> & funcAppend)			noexcept	{ return funcAppend ? funcAppend(*this) : 0; }
-		tplN2uinln	err_t	append				(cnst T (&newChain)[N])						noexcept	{ return append(newChain, (u2_t)N); }
-		inln		err_t	append				(cnst view<cnst T> & newChain)				noexcept	{ return append(newChain.begin(), newChain.size());	}
-		inln		err_t	append				(cnst view<cnst view<cnst T>> & newChains)	noexcept	{ 
+		inln		err_t	append				(cnst FError<TArray&> & funcAppend)			nxpt	{ return funcAppend ? funcAppend(*this) : 0; }
+		tplN2uinln	err_t	append				(cnst T (&newChain)[N])						nxpt	{ return append(newChain, (u2_t)N); }
+		inln		err_t	append				(cnst view<cnst T> & newChain)				nxpt	{ return append(newChain.begin(), newChain.size());	}
+		inln		err_t	append				(cnst view<cnst view<cnst T>> & newChains)	nxpt	{ 
 			s2_t					count				= 0;
 			for(u2_t i = 0, stop = newChains.size(); i < stop; ++i) {
 				cnst view<cnst T> & newChain		= newChains[i];
@@ -139,7 +139,7 @@ namespace gpk
 			}
 			return count;
 		}
-		err_t				append				(cnst T * chainToAppend, u2_t chainLength)	noexcept	{
+		err_t				append				(cnst T * chainToAppend, u2_t chainLength)	nxpt	{
 			if(0 == chainLength)
 				return Count;
 			if_null_fe(chainToAppend);
@@ -172,12 +172,12 @@ namespace gpk
 			}
 			return Size;
 		}
-		inln	err_t		resize_bits			(u2_t newBitCount)						noexcept	{
+		inln	err_t		resize_bits			(u2_t newBitCount)						nxpt	{
 			stxp u2_t					elementBits			= (u2_t)szof(T) * 8U;
 			return resize(newBitCount / elementBits + one_if(newBitCount % elementBits));
 		}
 		// Returns the new size of the array.
-		err_t				resize				(u2_t newCount)							noexcept	{
+		err_t				resize				(u2_t newCount)							nxpt	{
 			if_fail_fe(reserve(newCount));
 			Count					= newCount;
 			if(Data)
@@ -185,7 +185,7 @@ namespace gpk
 			return Count;
 		}
 		// Returns the new size of the array.
-		err_t				resize				(u2_t newCount, cnst T & newValue)		noexcept	{
+		err_t				resize				(u2_t newCount, cnst T & newValue)		nxpt	{
 			cnst T				valueCopy			= newValue;
 			if_fail_fe(reserve(newCount));
 			if(Data) {
@@ -196,7 +196,7 @@ namespace gpk
 			return Count;
 		}
 		// returns the new size of the list or -1 on failure.
-		err_t				insert				(u2_t index, cnst T & newValue)	noexcept	{
+		err_t				insert				(u2_t index, cnst T & newValue)	nxpt	{
 			if_true_fef(index > Count, GPK_FMT_GT_U2, index, Count);
 			cnst T				valueCopy			= newValue;
 			u2_c				newCount			= Count + 1;
@@ -223,7 +223,7 @@ namespace gpk
 			return Count = newCount;
 		}
 		// returns the new size of the list or -1 on failure.
-		err_t				insert				(u2_t index, cnst T * chainToInsert, u2_t chainLength)	noexcept	{
+		err_t				insert				(u2_t index, cnst T * chainToInsert, u2_t chainLength)	nxpt	{
 			if_true_fef(index > Count, GPK_FMT_GT_U2, index, Count);
 			if(0 == chainLength)
 				return Count;
@@ -266,23 +266,23 @@ namespace gpk
 			return Count = newCount;
 		}
 		tplt<size_t _chainLength>
-		inln	err_t		insert				(u2_t index, cnst T (&chainToInsert)[_chainLength])		noexcept	{ return insert(index, chainToInsert, (u2_t)_chainLength); }
-		inln	err_t		insert				(u2_t index, view<cnst T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
+		inln	err_t		insert				(u2_t index, cnst T (&chainToInsert)[_chainLength])		nxpt	{ return insert(index, chainToInsert, (u2_t)_chainLength); }
+		inln	err_t		insert				(u2_t index, view<cnst T> chainToInsert)			nxpt	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
-		err_t				remove_unordered	(u2_t index)											noexcept	{
+		err_t				remove_unordered	(u2_t index)											nxpt	{
 			if_true_fef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			Data[index]				= Data[--Count];
 			Data[Count]				= {};
 			return Count;
 		}
 		// returns the new array size or -1 if failed.
-		err_t				erase				(cnst T * address)										noexcept	{
+		err_t				erase				(cnst T * address)										nxpt	{
 			u2_t					index				= 0;
 			if_true_fef(1 != source_offset(address, 1, index), "Address outside the array range: 0x%p.", address);
 			return remove(index);
 		}
 		// returns the new array size or -1 if failed.
-		err_t				remove				(u2_t index)											noexcept	{
+		err_t				remove				(u2_t index)											nxpt	{
 			if_true_fef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			--Count;
 			while(index < Count) {
@@ -325,7 +325,7 @@ namespace gpk
 		}
 		rtrn appended;
 	}
-} // namespace
+} // nmsp
 
 #define GPK_USING_APOD()				\
 	usng	::gpk::ab8_t, ::gpk::ab8_c	\

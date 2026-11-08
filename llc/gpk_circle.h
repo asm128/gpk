@@ -3,7 +3,7 @@
 #ifndef GPK_CIRCLE_H_23627
 #define GPK_CIRCLE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	tplt<tpnm T> 
@@ -24,6 +24,6 @@ namespace gpk
 	tydf circle<s2_t> circles2_t; tdcs circles2_t circles2_c;
 	tydf circle<s3_t> circles3_t; tdcs circles3_t circles3_c;
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_CIRCLE_H_23627

@@ -5,7 +5,7 @@
 #ifndef GPK_ARRAY_CIRCULAR_H
 #define GPK_ARRAY_CIRCULAR_H
 
-namespace gpk
+nmsp gpk
 {
 
 	tplt<tpnm _tPOD, u2_t mAx>
@@ -15,14 +15,14 @@ namespace gpk
 		u2_t				Offset	= 0;
 		u2_t				Count	= 0;
 
-		using astatic<_t, mAx>	::Storage;
-		using astatic<_t, mAx>	::size;
-		using astatic<_t, mAx>	::slice;
+		usng astatic<_t, mAx>	::Storage;
+		usng astatic<_t, mAx>	::size;
+		usng astatic<_t, mAx>	::slice;
 	public:
 		tydf	_tPOD			T;
 		tydf	astatic<T, mAx>	TAStatic;
 
-		using TAStatic			::array_static;
+		usng TAStatic			::array_static;
 
 		err_t 		next			(T & output)	{
 			if_true_vw(-1, 0 == Count);
@@ -38,28 +38,28 @@ namespace gpk
 			return Count += 1;
 		}
 
-		template<u2_t _nBatch>
+		tplt<u2_t _nBatch>
 		err_t 		append			(const T (&output)[_nBatch])	{
 			if_true_fe(Count + _nBatch > free());
 			Storage[(Offset + Count) % mAx] = output;
 			return Count += 1;
 		}
 
-		err_t 		left			()	const	noexcept	{ return min(Count, size() - Offset); } // left side, first part
-		err_t 		right			()	const	noexcept	{ return max((err_t)0, (err_t)Count - left()); } // right side, second part
+		err_t 		left			()	csnx	{ return min(Count, size() - Offset); } // left side, first part
+		err_t 		right			()	csnx	{ return max((err_t)0, (err_t)Count - left()); } // right side, second part
 
-		inln	err_t left			(view<const T> & _left)	const	noexcept	{ return slice(_left , Offset, left()); }
-		inln	err_t right			(view<const T> & _right)	const	noexcept	{ return slice(_right, 0, right()); }
+		inln	err_t left			(view<const T> & _left)	csnx	{ return slice(_left , Offset, left()); }
+		inln	err_t right			(view<const T> & _right)	csnx	{ return slice(_right, 0, right()); }
 
-		err_t 		pair			(view<const T> & _left, view<const T> & _right)	const	noexcept	{
+		err_t 		pair			(view<const T> & _left, view<const T> & _right)	csnx	{
 			if_fail_fe(left(_left));
 			if_fail_fe(right(_right));
 			return _left.size() + _right.size(); 
 		} 
 
-		inxp	err_t free			()	const	noexcept	{ return size() - Count; }
-		inxp	err_t used			()	const	noexcept	{ return Count; }
-		inxp	err_t byte_count	()	const	noexcept	{ return Count * szof(T); }
+		inxp	err_t free			()	csnx	{ return size() - Count; }
+		inxp	err_t used			()	csnx	{ return Count; }
+		inxp	err_t byte_count	()	csnx	{ return Count * szof(T); }
 
 //		err_t 		read			(const function<int()> & funcRemaining, const function<int(T *, u2_t)> & funcRead) {
 //			return 0;	
@@ -89,21 +89,21 @@ namespace gpk
 		}
 	};
 
-	tplt<tpnm T, u2_t _maxCount> using acir			= array_circular<T, _maxCount>;
-	tplt<tpnm T, u2_t _maxCount> using acircular	= acir<T, _maxCount>;
+	tplt<tpnm T, u2_t _maxCount> usng acir			= array_circular<T, _maxCount>;
+	tplt<tpnm T, u2_t _maxCount> usng acircular	= acir<T, _maxCount>;
 	
-	tplt<u2_t _maxCount>	using acirsc_t	= acir<sc_t, _maxCount>;
-	tplt<u2_t _maxCount>	using aciruc_t	= acir<uc_t, _maxCount>;
-	tplt<u2_t _maxCount>	using aciru0_t 	= acir<u0_t, _maxCount>;
-	tplt<u2_t _maxCount>	using aciru1_t	= acir<u1_t, _maxCount>;
-	tplt<u2_t _maxCount>	using aciru2_t	= acir<u2_t, _maxCount>;
-	tplt<u2_t _maxCount>	using aciru3_t	= acir<u3_t, _maxCount>;
-	tplt<u2_t _maxCount>	using acirs0_t	= acir<s0_t, _maxCount>;
-	tplt<u2_t _maxCount>	using acirs1_t	= acir<s1_t, _maxCount>;
-	tplt<u2_t _maxCount>	using acirs2_t	= acir<s2_t, _maxCount>;
-	tplt<u2_t _maxCount>	using acirs3_t	= acir<s3_t, _maxCount>;
-	tplt<u2_t _maxCount>	using acirf2_t	= acir<f2_t, _maxCount>;
-	tplt<u2_t _maxCount>	using acirf3_t	= acir<f3_t, _maxCount>;
-} // namespace 
+	tplt<u2_t _maxCount>	usng acirsc_t	= acir<sc_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciruc_t	= acir<uc_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru0_t 	= acir<u0_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru1_t	= acir<u1_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru2_t	= acir<u2_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru3_t	= acir<u3_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs0_t	= acir<s0_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs1_t	= acir<s1_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs2_t	= acir<s2_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs3_t	= acir<s3_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirf2_t	= acir<f2_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirf3_t	= acir<f3_t, _maxCount>;
+} // nmsp 
 
 #endif // GPK_ARRAY_CIRCULAR_H

@@ -6,7 +6,7 @@
 #ifndef TERRAIN_H_23627
 #define TERRAIN_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack( push, 1 )
 	// U and V TexCoords follow the same order from GAT format heights
@@ -26,7 +26,7 @@ namespace gpk
 
 	struct STileGeometryGND {
 		f2_t									fHeight[4]						;			// west->east, north->south ordering
-		::gpk::STileFaceSkinMapping				SkinMapping						;	// <= -1 for none
+		STileFaceSkinMapping				SkinMapping						;	// <= -1 for none
 		//s1_t									Flags						= 0;				// GND v <= 1.5 // maybe a color key? a terrain property? We're going to use it to tell if the triangle is inverted.
 	};
 
@@ -44,11 +44,11 @@ namespace gpk
 
 	struct STileBrightnessGND 	{
 		u0_t									Brightness	[8][8]				= {};
-		::gpk::SColorRGB						ColorRGB	[8][8]				= {};
+		SColorRGB						ColorRGB	[8][8]				= {};
 	};
 
 	struct STiledTerrainMetricsGND {
-		::gpk::n2u2_t							Size							;	// Tile count
+		n2u2_t							Size							;	// Tile count
 		f2_t									TileScale						;	// The size to expand the tiles
 	};
 
@@ -63,25 +63,25 @@ namespace gpk
 
 	struct SGNDFileContents {
 		STiledTerrainMetricsGND					Metrics;
-		::gpk::aobj<::gpk::apod<sc_t>>			TextureNames;
+		aobj<apod<sc_t>>			TextureNames;
 		u2_t								LightmapTiles;		// ??
-		::gpk::n2u2_t							LightmapSize;
-		::gpk::apod<STileBrightnessGND	>		lstTileBrightnessData;
-		::gpk::apod<STileSkinGND		>		lstTileTextureData;
-		::gpk::apod<STileGeometryGND	>		lstTileGeometryData;
+		n2u2_t							LightmapSize;
+		apod<STileBrightnessGND	>		lstTileBrightnessData;
+		apod<STileSkinGND		>		lstTileTextureData;
+		apod<STileGeometryGND	>		lstTileGeometryData;
 	};
 
 	//709655609
-	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, ::gpk::vu0_c		& input);
+	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, vu0_c		& input);
 	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, FILE				* input);
-	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, ::gpk::vcst_c	& input);
+	gpk::err_t 						gndFileLoad						(SGNDFileContents& loaded, vcst_c	& input);
 
 	struct SModelNodeGND {
-		::gpk::apod<::gpk::n3f2_t>				Normals			;
-		::gpk::apod<::gpk::n3f2_t>				Vertices		;
-		::gpk::apod<::gpk::n2f2_t>				UVs				;
-		::gpk::apod<::gpk::tri<u2_t>>		VertexIndices	;
-		//::gpk::apod<s2_t>					SkinIndices		; // one per triangle (VertexIndices.size() / 3)
+		apod<n3f2_t>				Normals			;
+		apod<n3f2_t>				Vertices		;
+		apod<n2f2_t>				UVs				;
+		apod<tri<u2_t>>		VertexIndices	;
+		//apod<s2_t>					SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
 	struct STileMapping {
@@ -95,8 +95,8 @@ namespace gpk
 	};
 
 	struct SModelGND {
-		::gpk::aobj<::gpk::SModelNodeGND>		Nodes;
-		::gpk::img<::gpk::STileMapping>			TileMapping;
+		aobj<SModelNodeGND>		Nodes;
+		img<STileMapping>			TileMapping;
 	};
 
 	struct STiledTerrainCounters {
@@ -131,18 +131,18 @@ namespace gpk
 		};
 
 	gpk::err_t 						gndGenerateFaceGeometry
-		( const ::gpk::apod<STileSkinGND		>	lstTileTextureData
-		, const ::gpk::apod<STileGeometryGND	>	lstTileGeometryData
-		, const ::gpk::STiledTerrainMetricsGND		tileMapMetrics
+		( const apod<STileSkinGND		>	lstTileTextureData
+		, const apod<STileGeometryGND	>	lstTileGeometryData
+		, const STiledTerrainMetricsGND		tileMapMetrics
 		, TILE_FACE_FACING							facing_direction
 		, s2_t									textureIndex
-		, ::gpk::SModelNodeGND						& generated
-		, ::gpk::grid<::gpk::STileMapping>			& out_mapping
+		, SModelNodeGND						& generated
+		, grid<STileMapping>			& out_mapping
 		);
 
-	gpk::err_t 						blendGNDNormals		(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
+	gpk::err_t 						blendGNDNormals		(const grid<STileGeometryGND> &tileGeometryView, const view<STileSkinGND>& lstTileSkinData, const grid<STileMapping>& tileMappingView, view<SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // TERRAIN_H_23627

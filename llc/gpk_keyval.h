@@ -3,7 +3,7 @@
 #ifndef GPK_KEYVAL_H_26920
 #define GPK_KEYVAL_H_26920
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tKey, tpnm _tVal = _tKey>
 	stct keyval {

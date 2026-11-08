@@ -3,7 +3,7 @@
 #ifndef GPK_STREAM_VIEW_H_23627
 #define GPK_STREAM_VIEW_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tElement>
 	struct view_stream : public view<_tElement> {
@@ -11,11 +11,11 @@ namespace gpk
 
 		u2_t									CursorPosition						= 0;
 
-		using									view<_tElement>::Data;
-		using									view<_tElement>::size;
-		using									view<_tElement>::view;
+		usng									view<_tElement>::Data;
+		usng									view<_tElement>::size;
+		usng									view<_tElement>::view;
 
-		constexpr	u2_t				remaining							() const nxpt	{ rtrn CursorPosition <= size() ? size() - CursorPosition : 0; }
+		cxpr	u2_t				remaining							() const nxpt	{ rtrn CursorPosition <= size() ? size() - CursorPosition : 0; }
 
 		tplt<tpnm _tPOD>
 		err_t								read_pod							(view<_tPOD> output) {
@@ -47,6 +47,6 @@ namespace gpk
 		tplt<tpnm _tPOD, size_t _sCount> requires(false == is_cnst<_tElement>::Value)
 		inln	err_t						write_pod							(cnst _tPOD (&input)[_sCount])	{ rtrn write_pod(view<cnst _tPOD>{input}); }
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_STREAM_VIEW_H_23627

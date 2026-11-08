@@ -11,7 +11,7 @@
 #define GPK_DEBUG_H
 
 #ifndef GPK_DEBUG_ENABLED
-namespace gpk { stxp size_t DEBUG_BUILD = 0; }
+nmsp gpk { stxp size_t DEBUG_BUILD = 0; }
 #	define GPK_PLATFORM_CRT_CHECK_MEMORY()		do {} while(0)
 //#	ifndef ARDUINOJSON_ENABLE_COMMENTS
 #		define GPK_ERROR_PRINTF_ENABLED
@@ -21,7 +21,7 @@ namespace gpk { stxp size_t DEBUG_BUILD = 0; }
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
 //#	define GPK_VERBOSE_PRINTF_ENABLED	// Uncomment as needed
 #else
-namespace gpk { stxp size_t DEBUG_BUILD = (size_t)-1; }
+nmsp gpk { stxp size_t DEBUG_BUILD = (size_t)-1; }
 #	define GPK_ERROR_PRINTF_ENABLED
 #	define GPK_WARNING_PRINTF_ENABLED
 #	define GPK_INFO_PRINTF_ENABLED
@@ -50,11 +50,11 @@ namespace gpk { stxp size_t DEBUG_BUILD = (size_t)-1; }
 #	endif // GPK_WINDOWS
 #endif // GPK_DEBUG_ENABLED
 
-namespace gpk
+nmsp gpk
 {
 	int	debugBreakEnabled	()						nxpt;
 	int	debugBreak			()						nxpt;
 	int	debugBreakEnable	(int enabled = true)	nxpt;
 	int	debugBreakDisable	()						nxpt;
-} // namespace
+} // nmsp
 #endif // GPK_DEBUG_H

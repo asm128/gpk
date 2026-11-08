@@ -7,7 +7,7 @@
 #ifndef GPK_I2C_H
 #define GPK_I2C_H
 
-namespace gpk
+nmsp gpk
 {
 	// GDEFINE_ENUM_TYPE (I2C_ERROR, s0_t);
 	// GDEFINE_ENUM_VALUE(I2C_ERROR, Ok               , 0); // Success.
@@ -45,6 +45,6 @@ namespace gpk
 	err_t	i2cLoad	(SI2CDevice & host, u0_t address, vu0_t  & data, u1_t byteCountToLoad, u2_t timeout, BUS_MODE mode = BUS_MODE_DMA);
 	// Send
 	err_t	i2cSave	(SI2CDevice & host, u0_t address, vcu0_c & data, u2_t timeout, BUS_MODE mode = BUS_MODE_DMA);
-} // namespace
+} // nmsp
 
 #endif // GPK_I2C_H

@@ -4,7 +4,7 @@
 #ifndef GPK_ARRAY_VIEW_BIT_H_23627
 #define GPK_ARRAY_VIEW_BIT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplt <tpnm _tInt>
@@ -45,7 +45,7 @@ namespace gpk
 		bit_proxy<T>			oper*		()				{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return {*Element, (u0_t)Offset}; }
 		bool					oper*		()		cnst	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return (*Element) & (1ULL << Offset); }
 
-		inline	oper			bool		()							cnst	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return (*Element) & (1ULL << Offset); }
+		inln	oper			bool		()							cnst	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return (*Element) & (1ULL << Offset); }
 		inxp	bool			oper==		(cnst bit_iterator & other)	csnx	{ rtrn Element == other.Element && Offset == other.Offset; }
 		inxp	bool			oper!=		(cnst bit_iterator & other)	csnx	{ rtrn Element != other.Element || Offset != other.Offset; }
 
@@ -53,7 +53,7 @@ namespace gpk
 		bit_iterator			oper--		(int)			{ bit_iterator result (*this); --(*this); return result; }
 		bit_iterator&			oper++		()				{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); if(0 == ++Offset) ++Element; return *this; }
 		bit_iterator&			oper--		()				{ if_true_tef(0 == Index(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); if(0 == Offset) { --Element; Offset = ELEMENT_BITS - 1; } else --Offset; return *this; }
-		inline	bit_iterator&	oper=		(bool value)	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
+		inln	bit_iterator&	oper=		(bool value)	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
 	};
 
 	tplt<tpnm _tInt>
@@ -72,7 +72,7 @@ namespace gpk
 
 		// Constructors
 		inxp				view_bit		()								nxpt	= default;
-		inline				view_bit		(T * data, u2_t bitCount)				: Data(data), Count(bitCount) { if_true_tef(bitCount && 0 == data, "bitCount(%" GPK_FMT_U2 ")", bitCount); }
+		inln				view_bit		(T * data, u2_t bitCount)				: Data(data), Count(bitCount) { if_true_tef(bitCount && 0 == data, "bitCount(%" GPK_FMT_U2 ")", bitCount); }
 		tplN0u	inxp		view_bit		(T (&data)[N])					nxpt	: Data(data), Count(N * ELEMENT_BITS)								{}
 		tplN0u	inln		view_bit		(u2_t bitCount, T (&data)[N])			: Data(data), Count(::gpk::min(u2_t(N * ELEMENT_BITS), bitCount))	{ if_true_tef(bitCount > (N * ELEMENT_BITS), "max(%" GPK_FMT_U2 "), bitCount(%" GPK_FMT_U2 ")", N * ELEMENT_BITS, bitCount); }
 		// Operators
@@ -106,6 +106,6 @@ namespace gpk
 		return 0;
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ARRAY_VIEW_BIT_H_23627

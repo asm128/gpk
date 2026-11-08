@@ -9,7 +9,7 @@
 #ifndef GPK_FUNCTIONAL_H_23627
 #define GPK_FUNCTIONAL_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #ifdef GPK_ATMEL
 	tplt<tpnm _tFunction>	
@@ -31,6 +31,6 @@ namespace gpk
 
 	tplt<tpnm TSource, tpnm TTarget>		using	TFuncAppend 		= function<::gpk::err_t(TTarget 	& output, const TSource & origin)>;
 	tplt<tpnm TIO>							using	TFuncSize			= function<::gpk::err_t(const TIO & origin)>;
-} // namespace
+} // nmsp
 
 #endif // GPK_FUNCTIONAL_H_23627

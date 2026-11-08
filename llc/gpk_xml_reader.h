@@ -5,7 +5,7 @@
 #ifndef GPK_XML_READER_H_23627
 #define GPK_XML_READER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(XML_TOKEN, u0_t);
 	GDEFINE_ENUM_VALUE(XML_TOKEN, DOCUMENT		, 0x0);

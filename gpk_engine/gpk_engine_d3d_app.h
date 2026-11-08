@@ -11,11 +11,11 @@
 #ifndef GPK_ENGINE_D3D_APP_H_23627
 #define GPK_ENGINE_D3D_APP_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tColor>
 	struct SD3DGUIResources {
-		typedef	::gpk::img<_tColor>				TRenderTarget;
+		tydf	::gpk::img<_tColor>				TRenderTarget;
 
 		TRenderTarget							RenderTarget		= {};
 
@@ -112,7 +112,7 @@ namespace gpk
 					::gpk::n2f2_t		UV;
 				};
 #pragma pack(pop)
-				constexpr SPosUV			vertices[4]				= {{{-1, 1}, {0, 0}},{{1, 1}, {1, 0}},{{-1, -1}, {0, 1}}, {{1, -1}, {1, 1}}};
+				cxpr SPosUV			vertices[4]				= {{{-1, 1}, {0, 0}},{{1, 1}, {1, 0}},{{-1, -1}, {0, 1}}, {{1, -1}, {1, 1}}};
 
 				D3D11_SUBRESOURCE_DATA		vertexBufferData		= {vertices};
 				D3D11_BUFFER_DESC			vertexBufferDesc		= {sizeof(SPosUV) * 4};
@@ -122,7 +122,7 @@ namespace gpk
 				VertexBuffer				= d3dBuffer;
 			}
 			{
-				constexpr u1_t			indices[]							= {0, 1, 2, 1, 3, 2};
+				cxpr u1_t			indices[]							= {0, 1, 2, 1, 3, 2};
 				D3D11_SUBRESOURCE_DATA		vertexBufferData					= {indices};
 				D3D11_BUFFER_DESC			vertexBufferDesc					= {sizeof(u1_t) * 6};
 				vertexBufferDesc.BindFlags	= D3D11_BIND_INDEX_BUFFER;

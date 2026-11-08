@@ -3,7 +3,7 @@
 #ifndef GPK_ADAM7_H_23627
 #define GPK_ADAM7_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	err_t			adam7Sizes			(view<n2u2_t> & imageSizes, const n2<u2_t> & imageSize);
 	err_t			adam7ScaleIndex
@@ -30,6 +30,6 @@ namespace gpk
 		}
 		return 0;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_ADAM7_H_23627

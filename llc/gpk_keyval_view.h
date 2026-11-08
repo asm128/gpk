@@ -4,7 +4,7 @@
 #ifndef GPK_KEYVAL_VIEW_H_261022
 #define GPK_KEYVAL_VIEW_H_261022
 
-namespace gpk
+nmsp gpk
 {
 			err_t		token_split			(char valueSeparator, vcst_t input_string, keyval<vcst_t> & output_views);
 	stin	err_t		keyval_split		(vcst_t input_string, keyval<vcst_t> & out_keyval)			{ return token_split('=', input_string, out_keyval); }
@@ -28,6 +28,6 @@ namespace gpk
 		}
 		return -1;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_KEYVAL_VIEW_H_261022

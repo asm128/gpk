@@ -4,7 +4,7 @@
 #ifndef GPK_STL_H_23627
 #define GPK_STL_H_23627
 
-namespace gpk {
+nmsp gpk {
 #pragma pack(push, 1)
 	struct SSTLTriangle {
 		n3f2_t				Normal			= {};

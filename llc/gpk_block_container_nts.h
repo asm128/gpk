@@ -3,7 +3,7 @@
 #ifndef GPK_BLOCK_CONTAINER_NTS_261011
 #define GPK_BLOCK_CONTAINER_NTS_261011
 
-namespace gpk
+nmsp gpk
 {
 	tplt<size_t _size>
 	class block_container_nts {
@@ -27,6 +27,6 @@ namespace gpk
 			rtrn iBlock;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_BLOCK_CONTAINER_NTS_261011

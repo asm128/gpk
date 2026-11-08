@@ -14,7 +14,7 @@
 #ifndef GPK_LOG_CORE_H
 #define GPK_LOG_CORE_H
 
-namespace gpk
+nmsp gpk
 {
 	tydf	err_t	(*log_print_t)		(const char * text);
 	err_t			log_print			(const char * text);
@@ -36,7 +36,7 @@ namespace gpk
 		);
 	tpl_vtArgs
 	sinx	void	dummy				(_tArgs&&...)		{}
-} // namespace
+} // nmsp
 
 #ifdef GPK_WINDOWS
 #	define gpk_throw(...)								throw(__VA_ARGS__)

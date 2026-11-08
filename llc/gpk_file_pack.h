@@ -3,7 +3,7 @@
 #ifndef GPK_FILE_PACK_H
 #define GPK_FILE_PACK_H
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	stct SPackHeader {
@@ -53,6 +53,6 @@ namespace gpk
 	stin	err_t	fileToMemorySecure		(vcst_t fileName, vcu0_c & key, b8_t deflate, string & output)	{ SLoadCache temp; rtrn fileToMemorySecure  (temp, fileName, key, deflate, *(au0_t*)&output); }
 	stin	err_t	fileToMemorySecure		(vcst_t fileName, vcu0_c & key, b8_t deflate, au0_t & output)	{ SLoadCache temp; rtrn fileToMemorySecure  (temp, fileName, key, deflate, output); }
 	stin	err_t	fileFromMemorySecure	(vcst_t fileName, vcu0_c & key, b8_t deflate, vcu0_t input)		{ SLoadCache temp; rtrn fileFromMemorySecure(temp, fileName, key, deflate, input); }
-} // namespace
+} // nmsp
 
 #endif // GPK_FILE_PACK_H

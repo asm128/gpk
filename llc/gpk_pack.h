@@ -4,7 +4,7 @@
 #ifndef GPK_PACK_H
 #define GPK_PACK_H
 
-namespace gpk
+nmsp gpk
 {
     GDEFINE_ENUM_TYPE(PACK_TYPE, u0_t);
     GDEFINE_ENUM_VALUE(PACK_TYPE, NONE      , 0);
@@ -40,6 +40,6 @@ namespace gpk
     tplTInTOut    err_t   viewPack    (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/)                         { return -1; }
     tplTInTOut    err_t   viewUnpack  (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/, PACK_TYPE /*packType*/) { return -1; }
     tplTInTOut    err_t   viewUnpack  (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/)                         { return -1; }
-} // namespace
+} // nmsp
 
 #endif // GPK_PACK_H

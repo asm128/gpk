@@ -3,7 +3,7 @@
 #ifndef GPK_APPEND_XML_H
 #define GPK_APPEND_XML_H
 
-namespace gpk
+nmsp gpk
 {
 	err_t	appendXmlAttr		(string & output, vcst_t attrName, vcst_t attrValue = {});
 	err_t	appendXmlOpenTag	(string & output, vcst_t tagName);
@@ -15,6 +15,6 @@ namespace gpk
 	err_t	appendXmlTag		(string & output, vcst_t tagName, vcst_t tagAttributes, cnst function<err_t()> & funcAppend);
 	err_t	appendXmlTag		(string & output, vcst_t tagName, cnst function<err_t()> & funcAppendAttributes, const function<err_t()> & funcAppend);
 
-} // namespace 
+} // nmsp 
 
 #endif // GPK_APPEND_XML_H

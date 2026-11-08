@@ -4,7 +4,7 @@
 #ifndef GPK_STRING_COMPOSE
 #define GPK_STRING_COMPOSE
 
-namespace gpk
+nmsp gpk
 {
 	tplTstin	err_t	append_string			(asc_t & output, cnst T & arg)		{ rtrn output.append(str(arg)); }
 	tpl_vtArgs	err_t	append_strings			(asc_t & output, _tArgs&&... args)	{ 
@@ -35,6 +35,6 @@ namespace gpk
 				err_t	appendGtltedPrefixed	(string & output, vcst_t textToEnclose, b8_t prependSeparator = false, sc_t separator = ',');
 
 	tydf		function<err_t(string&)>			FAppend;
-} // namespace
+} // nmsp
 
 #endif // GPK_STRING_COMPOSE

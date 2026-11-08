@@ -4,7 +4,7 @@
 #ifndef GPK_EVENT_SCREEN_H_23627
 #define GPK_EVENT_SCREEN_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE (EVENT_SCREEN, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Create			,  0);
@@ -42,6 +42,6 @@ namespace gpk
 	stin	err_t eventEnqueueScreenConstraints	(apobj<SEventSystem> & queue, u0_t key)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Constraints, key); }
 	stin	err_t eventEnqueueScreenMove		(apobj<SEventSystem> & queue, n2u1_t coord)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Move		, coord); }
 	stin	err_t eventEnqueueScreenResize		(apobj<SEventSystem> & queue, n2u1_t size)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Resize		, size); }
-} // namespace 
+} // nmsp 
 
 #endif // GPK_EVENT_SCREEN_H_23627

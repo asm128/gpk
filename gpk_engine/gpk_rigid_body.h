@@ -9,7 +9,7 @@
 #ifndef GPK_RIGIDBODY_H_23627
 #define GPK_RIGIDBODY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	// The following structure stores forces information for a 3D rigid body. These change almost every frame during runtime
@@ -86,8 +86,8 @@ namespace gpk
 
 		gpk::err_t 					Load							(::gpk::vcu0_t & input);
 		gpk::err_t 					Save							(::gpk::au0_t & output)	const;
-		inline	gpk::err_t 			Load							(::gpk::vcst_t & input)			{ return Load(*((::gpk::vcu0_t*)&input)); }
-		inline	gpk::err_t 			Save							(::gpk::as0_t & output)	const	{ return Save(*((::gpk::apod<u0_t>*)&output)); }
+		inln	gpk::err_t 			Load							(::gpk::vcst_t & input)			{ return Load(*((::gpk::vcu0_t*)&input)); }
+		inln	gpk::err_t 			Save							(::gpk::as0_t & output)	const	{ return Save(*((::gpk::apod<u0_t>*)&output)); }
 
 		s2_t 							ZeroCenters						()	{ return Centers.fill({}); }
 		s2_t 							ZeroForces						()	{ return Forces.fill({}); }
@@ -201,34 +201,34 @@ namespace gpk
 			return 0;
 		}
 
-		inline	const SBodyFlags&			GetBodyFlags					(u2_t iBody)	const	{ return Flags  [iBody]; }
-		inline	const SBodyFrame&			GetBodyFrame					(u2_t iBody)	const	{ return Frames [iBody]; }
-		inline	const SBodyForces&			GetBodyForces					(u2_t iBody)	const	{ return Forces [iBody]; }
-		inline	const SBodyMass&			GetBodyMass						(u2_t iBody)	const	{ return Masses [iBody]; }
-		inline	const SBodyCenter&			GetBodyCenter					(u2_t iBody)	const	{ return Centers[iBody]; }
-		inline	SBodyFlags&					GetBodyFlags					(u2_t iBody)			{ return Flags  [iBody]; }
-		inline	SBodyFrame&					GetBodyFrame					(u2_t iBody)			{ return Frames [iBody]; }
-		inline	SBodyForces&				GetBodyForces					(u2_t iBody)			{ return Forces [iBody]; }
-		inline	SBodyMass&					GetBodyMass						(u2_t iBody)			{ return Masses [iBody]; }
-		inline	SBodyCenter&				GetBodyCenter					(u2_t iBody)			{ return Centers[iBody]; }
+		inln	const SBodyFlags&			GetBodyFlags					(u2_t iBody)	const	{ return Flags  [iBody]; }
+		inln	const SBodyFrame&			GetBodyFrame					(u2_t iBody)	const	{ return Frames [iBody]; }
+		inln	const SBodyForces&			GetBodyForces					(u2_t iBody)	const	{ return Forces [iBody]; }
+		inln	const SBodyMass&			GetBodyMass						(u2_t iBody)	const	{ return Masses [iBody]; }
+		inln	const SBodyCenter&			GetBodyCenter					(u2_t iBody)	const	{ return Centers[iBody]; }
+		inln	SBodyFlags&					GetBodyFlags					(u2_t iBody)			{ return Flags  [iBody]; }
+		inln	SBodyFrame&					GetBodyFrame					(u2_t iBody)			{ return Frames [iBody]; }
+		inln	SBodyForces&				GetBodyForces					(u2_t iBody)			{ return Forces [iBody]; }
+		inln	SBodyMass&					GetBodyMass						(u2_t iBody)			{ return Masses [iBody]; }
+		inln	SBodyCenter&				GetBodyCenter					(u2_t iBody)			{ return Centers[iBody]; }
 
 
-		inline	bool						Active							(u2_t iBody)									const	{ return Flags[iBody].Active; }
-		inline	bool						Collides						(u2_t iBody)									const	{ return Flags[iBody].Collides; }
-		inline	f2_t						GetMass							(u2_t iBody)									const	{ return 1.0f / Masses[iBody].InverseMass; }
-		inline	void						GetPosition						(u2_t iBody, ::gpk::n3f2_t & position)			const	{ position		= Centers[iBody].Position; }
-		inline	void						GetOrientation					(u2_t iBody, ::gpk::quatf2_t & orientation)		const	{ orientation	= Centers[iBody].Orientation; }
-		inline	void						GetRotation						(u2_t iBody, ::gpk::n3f2_t & rotation)			const	{ rotation		= Forces[iBody].Rotation;		}
-		inline	void						GetAcceleration					(u2_t iBody, ::gpk::n3f2_t & acceleration)		const	{ acceleration	= Forces[iBody].Acceleration;	}
-		inline	void						GetVelocity						(u2_t iBody, ::gpk::n3f2_t & velocity)			const	{ velocity		= Forces[iBody].Velocity;		}
+		inln	bool						Active							(u2_t iBody)									const	{ return Flags[iBody].Active; }
+		inln	bool						Collides						(u2_t iBody)									const	{ return Flags[iBody].Collides; }
+		inln	f2_t						GetMass							(u2_t iBody)									const	{ return 1.0f / Masses[iBody].InverseMass; }
+		inln	void						GetPosition						(u2_t iBody, ::gpk::n3f2_t & position)			const	{ position		= Centers[iBody].Position; }
+		inln	void						GetOrientation					(u2_t iBody, ::gpk::quatf2_t & orientation)		const	{ orientation	= Centers[iBody].Orientation; }
+		inln	void						GetRotation						(u2_t iBody, ::gpk::n3f2_t & rotation)			const	{ rotation		= Forces[iBody].Rotation;		}
+		inln	void						GetAcceleration					(u2_t iBody, ::gpk::n3f2_t & acceleration)		const	{ acceleration	= Forces[iBody].Acceleration;	}
+		inln	void						GetVelocity						(u2_t iBody, ::gpk::n3f2_t & velocity)			const	{ velocity		= Forces[iBody].Velocity;		}
 
-		inline	void						SetActive						(u2_t iBody, bool active)								{ Flags[iBody].Active	= active; }
-		inline	void						SetCollides						(u2_t iBody, bool collides)								{ Flags[iBody].Collides	= collides; }
-		inline	void						SetHalfSizes					(u2_t iBody, const ::gpk::n3f2_t & halfSizes)			{ BoundingVolumes[iBody].HalfSizes	= halfSizes; }
+		inln	void						SetActive						(u2_t iBody, bool active)								{ Flags[iBody].Active	= active; }
+		inln	void						SetCollides						(u2_t iBody, bool collides)								{ Flags[iBody].Collides	= collides; }
+		inln	void						SetHalfSizes					(u2_t iBody, const ::gpk::n3f2_t & halfSizes)			{ BoundingVolumes[iBody].HalfSizes	= halfSizes; }
 		
-		inline	void						SetMassInverse					(u2_t iBody, f2_t inverseMass)							{ Masses[iBody].InverseMass = inverseMass; }
-		inline	void						SetMass							(u2_t iBody, f2_t mass)								{ Masses[iBody].InverseMass = 1.0f / mass; }
-		inline	void						AddForce						(u2_t iBody, const ::gpk::n3f2_t & force)				{ Frames[iBody].AccumulatedForce += force; }
+		inln	void						SetMassInverse					(u2_t iBody, f2_t inverseMass)							{ Masses[iBody].InverseMass = inverseMass; }
+		inln	void						SetMass							(u2_t iBody, f2_t mass)								{ Masses[iBody].InverseMass = 1.0f / mass; }
+		inln	void						AddForce						(u2_t iBody, const ::gpk::n3f2_t & force)				{ Frames[iBody].AccumulatedForce += force; }
 
 		void								SetPosition						(u2_t iBody, const ::gpk::n3f2_t & newPosition)			{
 			::gpk::SBodyCenter						& bodyCenter					= Centers[iBody];
@@ -279,6 +279,6 @@ namespace gpk
 
 	};
 
-} // namespace
+} // nmsp
 
 #endif // CED_RIGIDBODY_H_23627

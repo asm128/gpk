@@ -3,9 +3,9 @@
 #ifndef GPK_APPEND_JS_H
 #define GPK_APPEND_JS_H
 
-namespace gpk
+nmsp gpk
 {
 
-} // namespace 
+} // nmsp 
 
 #endif // GPK_APPEND_JS_H

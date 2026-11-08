@@ -8,7 +8,7 @@
 
 #define gpk_event_printf verbose_printf
 
-namespace gpk
+nmsp gpk
 {
 	tpl_t struct SEventView {
 		tdfT(_t);
@@ -27,13 +27,13 @@ namespace gpk
 			rtrn 0;
 		}
 	};
-	tplt<tpnm T> using SEView 					= SEventView<T>;
-	tplt<tpnm T> using TEViewQueue 				= aobj<SEView<T>>;
+	tplt<tpnm T> usng SEView 					= SEventView<T>;
+	tplt<tpnm T> usng TEViewQueue 				= aobj<SEView<T>>;
 
-	tplt<tpnm T> using FEViewHandler			= function<err_t(      SEView<T>&)>;
-	tplt<tpnm T> using FEViewHandlerConst		= function<err_t(const SEView<T>&)>;
-	tplt<tpnm T> using FEventViewHandler		= function<err_t(      SEView<T>&)>;
-	tplt<tpnm T> using FEventViewHandlerConst	= function<err_t(const SEView<T>&)>;
+	tplt<tpnm T> usng FEViewHandler			= function<err_t(      SEView<T>&)>;
+	tplt<tpnm T> usng FEViewHandlerConst		= function<err_t(const SEView<T>&)>;
+	tplt<tpnm T> usng FEventViewHandler		= function<err_t(      SEView<T>&)>;
+	tplt<tpnm T> usng FEventViewHandlerConst	= function<err_t(const SEView<T>&)>;
 
 	tplt<tpnm _tEventType>
 	stct SEvent {
@@ -45,7 +45,7 @@ namespace gpk
 		au0_t			Data		= {};
 
 						SEvent		(const TEvent &)					= default;
-		constexpr		SEvent		(T type = {})						: Type(type) {}
+		cxpr		SEvent		(T type = {})						: Type(type) {}
 						SEvent		(T type, const vcu0_t data)			: Type(type), Data(data) {}
 						SEvent		(const TEView & eventView)			: Type(eventView.Type), Data(eventView.Data) {}
 
@@ -83,11 +83,11 @@ namespace gpk
 		}
 	};
 
-	tplt<tpnm T> using FEventHandler		= function<err_t(      SEvent<T>&)>;
-	tplt<tpnm T> using FEventHandlerConst	= function<err_t(const SEvent<T>&)>;
+	tplt<tpnm T> usng FEventHandler		= function<err_t(      SEvent<T>&)>;
+	tplt<tpnm T> usng FEventHandlerConst	= function<err_t(const SEvent<T>&)>;
 
-	tplt<tpnm T> using PEvent 				= pobj <SEvent<T>>;
-	tplt<tpnm T> using TEventQueue 			= apobj<SEvent<T>>;
+	tplt<tpnm T> usng PEvent 				= pobj <SEvent<T>>;
+	tplt<tpnm T> usng TEventQueue 			= apobj<SEvent<T>>;
 
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild>
 	sttc	err_t	eventWrapChild		(SEvent<_tEvntParent> & parentEvent, _tEvntChild childEventType, vcu0_t eventData) {

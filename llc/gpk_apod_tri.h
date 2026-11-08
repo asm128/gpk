@@ -5,7 +5,7 @@
 #ifndef GPK_APOD_TRI_3973498373423617
 #define GPK_APOD_TRI_3973498373423617
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplT using	atri	= ::gpk::apod<::gpk::tri<T>>;
@@ -23,6 +23,6 @@ namespace gpk
 	tydf	::gpk::atri<f2_t>	atrif2_t;	tdcs	atrif2_t	atrif2_c;
 	tydf	::gpk::atri<f3_t>	atrif3_t;	tdcs	atrif3_t	atrif3_c;
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_APOD_TRI_3973498373423617

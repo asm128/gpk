@@ -66,7 +66,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 				if_fail_fe(gpk::clientUpdate(bestClient));
 				::gpk::apobj<::gpk::SMessage>	received;
 				{	// pick up messages for later processing
-					::std::lock_guard				lockRecv					(bestClient.Connection.Queue.MutexReceive);
+					lock_guard				lockRecv					(bestClient.Connection.Queue.MutexReceive);
 					received					= bestClient.Connection.Queue.Received;
 					bestClient.Connection.Queue.Received.clear();
 				}

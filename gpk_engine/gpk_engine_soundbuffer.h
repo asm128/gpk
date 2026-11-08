@@ -5,7 +5,7 @@
 #ifndef GPK_ENGINE_SOUNDBUFFER_H_23_05_08
 #define GPK_ENGINE_SOUNDBUFFER_H_23_05_08
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(SOUND_BUFFER_MODE, u0_t);
 	GDEFINE_ENUM_VALUE(SOUND_BUFFER_MODE, Loop				,   0);
@@ -36,8 +36,8 @@ namespace gpk
 		}
 	};
 
-	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSoundBuffer>	SSoundBufferManager;
+	tydf	::gpk::gpk_linear_map_pobj<::gpk::SSoundBuffer>	SSoundBufferManager;
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_SOUNDBUFFER_H_23_05_08

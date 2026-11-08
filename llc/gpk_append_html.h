@@ -3,7 +3,7 @@
 #ifndef GPK_APPEND_HTML_H
 #define GPK_APPEND_HTML_H
 
-namespace gpk
+nmsp gpk
 {
 	stin	err_t	appendHtmlHead		(string & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "head", tagAttributes, innerHtml); }
 	stin	err_t	appendHtmlBody		(string & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "body", tagAttributes, innerHtml); }
@@ -18,6 +18,6 @@ namespace gpk
 	err_t			appendHtmlPage		(string & output, const FAppend & funcAppendHead, const FAppend & funcAppendBody);
 	err_t			appendHtmlPage		(string & output, const FAppend & funcAppendCSS, const FAppend & funcAppendJS, const FAppend & funcAppendBody);
 	err_t			appendHtmlPage		(string & output, vcst_t title, vcvcst_t filesCSS, vcvcst_t filesJS, const FAppend & funcAppendBody, vcst_t postScript = {});
-} // namespace 
+} // nmsp 
 
 #endif // GPK_APPEND_HTML_H

@@ -15,7 +15,7 @@
 #ifndef GPK_ENGINE_SCENE_H_23627
 #define GPK_ENGINE_SCENE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	
 #pragma pack(push, 1)
@@ -49,7 +49,7 @@ namespace gpk
 	stxp size_t		SPSINSIZE = sizeof(SPSIn);
 #pragma pack(pop)
 
-	typedef err_t (TFuncPixelShader)
+	tydf err_t (TFuncPixelShader)
 		( const SEngineSceneConstants	& constants
 		, const SPSIn					& inPS
 		, bgra							& outputPixel
@@ -90,8 +90,8 @@ namespace gpk
 		}
 	};
 
-	typedef	gpk_linear_map_pobj<SSkin>								SSkinManager;
-	typedef	gpk_linear_map_pobj<function<TFuncPixelShader>>	SShaderManager;
+	tydf	gpk_linear_map_pobj<SSkin>								SSkinManager;
+	tydf	gpk_linear_map_pobj<function<TFuncPixelShader>>	SShaderManager;
 
 	struct SEngineGraphics {
 		SRenderBufferManager	Buffers		= {};
@@ -184,6 +184,6 @@ namespace gpk
 		, const minmaxf2_t	& nearFar
 		);
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_SCENE_H

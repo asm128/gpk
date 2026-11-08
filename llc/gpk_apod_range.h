@@ -4,7 +4,7 @@
 #ifndef GPK_APOD_RANGE_H
 #define GPK_APOD_RANGE_H
 
-namespace gpk
+nmsp gpk
 {
 	tplT using	arange	= ::gpk::apod<::gpk::range<T>>;
 

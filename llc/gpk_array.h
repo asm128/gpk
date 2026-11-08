@@ -5,7 +5,7 @@
 #ifndef GPK_ARRAY_H_23627
 #define GPK_ARRAY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplT	usng	aaobj		= aobj<aobj<T>>; 
 	tplT	usng	aapod		= aobj<apod<T>>;
@@ -23,7 +23,7 @@ namespace gpk
 	tydf	aapod<f2_t>		aaf2_t;	tdcs aaf2_t aaf2_c;
 	tydf	aapod<f3_t>		aaf3_t;	tdcs aaf3_t aaf3_c;
 	tydf	aobj<string>	astr_t; tdcs astr_t astr_c;
-} // namespace 
+} // nmsp 
 
 #define GPK_USING_ARRAY()					\
 	GPK_USING_APOD		();					\

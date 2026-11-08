@@ -4,12 +4,12 @@
 #ifndef GPK_GRID_H_23627
 #define GPK_GRID_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm T, size_t _sizeWidth, size_t _sizeDepth>
 	struct grid_static : public grid<T> {
-		typedef	T			TCell;
-		typedef	grid<T>		TGridView;
+		tydf	T			TCell;
+		tydf	grid<T>		TGridView;
 
 		stxp	u2_t	Width									= (u2_t)_sizeWidth;
 		stxp	u2_t	Depth									= (u2_t)_sizeDepth;

@@ -4,7 +4,7 @@
 #ifndef GPK_APOD_SERIALIZE_H_23627
 #define GPK_APOD_SERIALIZE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm TOutput, tpnm T, u0_t widthField>
 	err_t					savePacked					(TOutput & output, cnst packed_uint<T, widthField> & packedInput) {
@@ -15,14 +15,14 @@ namespace gpk
 	}
 
 	tplT			err_t	saveView					(au0_t & output, cnst view<T> & viewToSerialize)	{
-		cnst packedu32				counterValue				= viewToSerialize.size();
+		cnst packedu2_t				counterValue				= viewToSerialize.size();
 		if_fail_fe(savePacked(output, counterValue));
 		if_fail_fe(output.append(view<u0_c>{(u0_c*)viewToSerialize.begin(), viewToSerialize.size()}));
 		return counterValue.ValueWidth() + viewToSerialize.byte_count();
 	}
 	//tplT			err_t	saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
 	//	u2_c						offset				= output.size();
-	//	cnst packedu32				counterValue		= viewToSerialize.size();
+	//	cnst packedu2_t				counterValue		= viewToSerialize.size();
 	//	if_fail_fe(output.append(counterValue.tplt cu8<vcu0_t>()));
 	//	for(cnst packed_uint<T> valpkd : viewToSerialize)
 	//		if_fail_fe(output.append(valpkd.tplt cu8<vcu0_t>()));
@@ -53,6 +53,6 @@ namespace gpk
 	tplTstin		err_t	loadView					(vcs0_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
 
 	//err_t					keyValConstStringSerialize	(view<cnst keyval<vcst_t>> keyVals, view<cnst vcst_t> keysToSave, au0_t & output);
-} // namespace
+} // nmsp
 
 #endif // GPK_APOD_SERIALIZE_H_23627

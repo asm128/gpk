@@ -3,13 +3,13 @@
 #ifndef GPK_TYPE_REGISTRY_H_23627
 #define GPK_TYPE_REGISTRY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct STypeRegistry {
 		::gpk::aobj<vcst_t>				Names;
 		::gpk::au2_t				MemberCount;
 
-		static	STypeRegistry&	GetGlobalInstance	()	noexcept	{
+		static	STypeRegistry&	GetGlobalInstance	()	nxpt	{
 			static STypeRegistry		instance;
 			return instance;
 		}
@@ -30,8 +30,8 @@ namespace gpk
 
 #define GPK_END_POD(_structName)																									\
 	public:																															\
-		sinx	::gpk::vcst_t	gpk_type_name			()		noexcept	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
-		sinx	u2_t		gpk_type_name_len		()		noexcept	{ return ::gpk::size(#_structName) - 1; }					\
+		sinx	::gpk::vcst_t	gpk_type_name			()		nxpt	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
+		sinx	u2_t		gpk_type_name_len		()		nxpt	{ return ::gpk::size(#_structName) - 1; }					\
 	};																																\
 	static	const int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
 
@@ -39,8 +39,8 @@ namespace gpk
 
 #define GPK_STRUCT_MEMBER(_type, _name, ...)																			\
 	struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																			\
-		sinx	::gpk::vcst_t	gpk_member_type_name	()		noexcept	{ return {::gpk::size(#_type) - 1, #_type}; }	\
-		sinx	::gpk::vcst_t	gpk_member_name			()		noexcept	{ return {::gpk::size(#_name) - 1, #_name}; }	\
+		sinx	::gpk::vcst_t	gpk_member_type_name	()		nxpt	{ return {::gpk::size(#_type) - 1, #_type}; }	\
+		sinx	::gpk::vcst_t	gpk_member_name			()		nxpt	{ return {::gpk::size(#_name) - 1, #_name}; }	\
 	};																													\
 	_type				_name
 }

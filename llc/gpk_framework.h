@@ -14,7 +14,7 @@
 #ifndef GPK_FRAMEWORK_H_23627
 #define GPK_FRAMEWORK_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SFrameworkDetail {
 #if defined(GPK_WINDOWS)
@@ -55,10 +55,10 @@ namespace gpk
 		::gpk::SJSONFile			JSONConfig				= {};
 
 #ifndef GPK_ATMEL
-		::std::mutex				LockGUI;
+		mutex				LockGUI;
 #endif
 
-		inline						SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcst_t fileNameJSONConfig = "gpk_config.json")
+		inln						SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcst_t fileNameJSONConfig = "gpk_config.json")
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig) {
 			RootWindow.Input.create();
 			GUI.create();
@@ -70,6 +70,6 @@ namespace gpk
 	gpk::err_t 			updateFramework			(::gpk::SFramework & framework);
 	gpk::err_t 			mainWindowCreate		(::gpk::SWindow & mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput> & displayInput);
 	gpk::err_t 			mainWindowDestroy		(::gpk::SWindow & mainWindow);
-} // namespace
+} // nmsp
 
 #endif // GPK_FRAMEWORK_H_23627

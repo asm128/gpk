@@ -4,18 +4,18 @@
 #ifndef GPK_LINE2_H_23627
 #define GPK_LINE2_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	tplt<tpnm _tDimension>	struct line2 : public line<n2<_tDimension>>		{
-		typedef	_tDimension		T;
-		typedef	n2<T>	TVertex;
-		using line<TVertex>::	A;
-		using line<TVertex>::	B;
-		using line<TVertex>::	line;
+		tydf	_tDimension		T;
+		tydf	n2<T>	TVertex;
+		usng line<TVertex>::	A;
+		usng line<TVertex>::	B;
+		usng line<TVertex>::	line;
 
 		tplt<tpnm _tOther>
-		line2<_tOther>			Cast		()		const	noexcept		{
+		line2<_tOther>			Cast		()		csnx		{
 			return
 				{ A.tplt Cast<_tOther>()
 				, B.tplt Cast<_tOther>()
@@ -33,11 +33,11 @@ namespace gpk
 	tydf line2<s2_t> line2s2_t; tdcs line2s2_t line2s2_c;
 	tydf line2<s3_t> line2s3_t; tdcs line2s3_t line2s3_c;
 
-	tplt<tpnm T> sinx	T		rise		(const line2<T> & line)									noexcept	{ return line.B.y - line.A.y;		}
-	tplt<tpnm T> sinx	T		run			(const line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
+	tplt<tpnm T> sinx	T		rise		(const line2<T> & line)									nxpt	{ return line.B.y - line.A.y;		}
+	tplt<tpnm T> sinx	T		run			(const line2<T> & line)									nxpt	{ return line.B.x - line.A.x;		}
 	tplt<tpnm T> sinx	T		slope		(const line2<T> & line)												{ return rise(line) / run(line);	}
-	tplt<tpnm T> stxp	T		orient2d	(const line2<T> & segment, const n2<T> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	tplt<tpnm T> stin	f3_t	determinant	(const line2<T>& line)									noexcept	{ return determinant((f3_t)line.A.x, (f3_t)line.A.y, (f3_t)line.B.x, (f3_t)line.B.y); }
+	tplt<tpnm T> stxp	T		orient2d	(const line2<T> & segment, const n2<T> & point)	nxpt	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	tplt<tpnm T> stin	f3_t	determinant	(const line2<T>& line)									nxpt	{ return determinant((f3_t)line.A.x, (f3_t)line.A.y, (f3_t)line.B.x, (f3_t)line.B.y); }
 #pragma pack(pop)
 	// ---- Collision
 	//tplt<tpnm T> static	bool	raySegmentIntersect	(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{
@@ -45,6 +45,6 @@ namespace gpk
 	//	const f3_t	t1		= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
 	//	return (t2 > 0 && 0 < t2 && t2 < 1);
 	//}
-} // namespace
+} // nmsp
 
 #endif // GPK_LINE2_H_23627

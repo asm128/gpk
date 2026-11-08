@@ -9,7 +9,7 @@
 #ifndef GPK_COMPLUS_H_23627
 #define GPK_COMPLUS_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm TUnknown> 
 	err_t		safe_release	(TUnknown ** storage) { 

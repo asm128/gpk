@@ -3,7 +3,7 @@
 #ifndef GPK_CDN_H_23627
 #define GPK_CDN_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	// Should fit in an u2_t
@@ -39,6 +39,6 @@ namespace gpk
 		::gpk::SContentId			Playroom	; // server_playroom
 	};
 #pragma pack(pop)
-} // namespace 
+} // nmsp 
 
 #endif // GPK_CDN_H_23627

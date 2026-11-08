@@ -3,7 +3,7 @@
 #ifndef GPK_GUI_CONTROL_LIST_H_23627
 #define GPK_GUI_CONTROL_LIST_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	cid_t			guiCreateControlList		(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, const SControlPlacement & args, ALIGN textAlign, vcid out_ids);
 	stin	cid_t	guiCreateControlList		(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, const SControlPlacement & args, ALIGN textAlign, acid & out_ids)									{ 

@@ -8,7 +8,7 @@
 #ifndef GPK_ENGINE_RENDERNODE_H_23627
 #define GPK_ENGINE_RENDERNODE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)
 	// ------------------ Render Node
@@ -183,6 +183,6 @@ namespace gpk
 			return RenderNodes.remove_unordered(indexNode);
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_RENDERNODE_H_23627

@@ -3,7 +3,7 @@
 #ifndef GPK_VIEW_MANAGER_H_23627
 #define GPK_VIEW_MANAGER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm T>
 	class CViewManager	{
@@ -79,6 +79,6 @@ namespace gpk
 			return newIndex;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_LABEL_MANAGER_H_23627

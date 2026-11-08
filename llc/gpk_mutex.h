@@ -15,7 +15,7 @@
 #ifndef GPK_MUTEX_H
 #define GPK_MUTEX_H
 
-namespace gpk
+nmsp gpk
 {
 #ifdef GPK_ATMEL
 	stct mutex {
@@ -72,6 +72,6 @@ namespace gpk
 		inln			~lock_guard	()							{ Lock.unlock(); }
 		inln			lock_guard	(T & lock)	: Lock(lock)	{ Lock.lock(); }
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_MUTEX_H

@@ -11,7 +11,7 @@
 #ifndef GPK_VOX_H_23627
 #define GPK_VOX_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #define gpk_vox_info_printf info_printf
 	astatic<bgra, 256> VOX_PALETTE_DEFAULT = {
@@ -70,7 +70,7 @@ namespace gpk
 		u2_t				ChunkSize				= 0;	// | num bytes of chunk content (N)
 		u2_t				ChildChunks				= 0;	// | num bytes of children chunks (M)
 
-		inline	bool			IsType					(vcst_t riff)	const	{
+		inln	bool			IsType					(vcst_t riff)	const	{
 			return riff == Type.Storage;
 		} 
 	};
@@ -100,7 +100,7 @@ namespace gpk
 		apod<SVOXVoxel>	Data					= {};
 	};
 
-	typedef aobj<kv<string, string>>	SVOXDict;
+	tydf aobj<kv<string, string>>	SVOXDict;
 
 	struct SVOXChunkTransform {
 		SVOXChunkHeader			Header					= {};
@@ -371,6 +371,6 @@ namespace gpk
 		}
 	};
 
-} // namespace
+} // nmsp
 
 #endif // GPK_VOX_H_23627

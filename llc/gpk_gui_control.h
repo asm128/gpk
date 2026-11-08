@@ -14,14 +14,14 @@
 #ifndef GPK_GUI_CONTROL_H_23627
 #define GPK_GUI_CONTROL_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
-	typedef	n2<cid_t>		n2cid;
-	typedef	rect<cid_t>		rectcid;
+	tydf	n2<cid_t>		n2cid;
+	tydf	rect<cid_t>		rectcid;
 
 	tplt<u2_t _sizeArray>	
-	using	astcid	= ::gpk::astatic<cid_t, _sizeArray>;
+	usng	astcid	= ::gpk::astatic<cid_t, _sizeArray>;
 
 	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Default	, 0);
@@ -61,10 +61,10 @@ namespace gpk
 		GUI_CONTROL_METRICS_FLAG	RelativeMetrics		= {};
 	}; 
 
-	sinx	::gpk::rectu1_t	controlNCRect		(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ctl.Border + ctl.Margin; }
-	stxp	::gpk::n2u1_t	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu1_t rc = controlNCRect(ctl); return ::gpk::n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
-	sinx	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu1_t & ncSpacing)	noexcept	{ ncSpacing = controlNCRect(ctl); }
-	sinx	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u1_t   & ncSpacing)	noexcept	{ ncSpacing = controlNCSpacing(ctl); }
+	sinx	::gpk::rectu1_t	controlNCRect		(const ::gpk::SControlPlacement & ctl)	nxpt	{ return ctl.Border + ctl.Margin; }
+	stxp	::gpk::n2u1_t	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	nxpt	{ const rectu1_t rc = controlNCRect(ctl); return ::gpk::n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
+	sinx	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
+	sinx	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
 
 	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, NORMAL				, 0);
@@ -214,28 +214,28 @@ namespace gpk
 		//
 		::gpk::apobj<::gpk::SEventSystem		>	EventQueue		= {};
 
-		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
-		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
-		inline	bool		SetHidden		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
-		inline	bool		SetFocused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
-		inline	bool		SetSelected		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
-		inline	bool		SetDisabled		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
-		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
-		inline	bool		SetAction		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
-		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
+		inln	bool		SetHovered		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
+		inln	bool		SetPressed		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
+		inln	bool		SetHidden		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
+		inln	bool		SetFocused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
+		inln	bool		SetSelected		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
+		inln	bool		SetDisabled		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
+		inln	bool		SetUpdated		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
+		inln	bool		SetAction		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
+		inln	bool		SetUnused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
 
-		inline	bool		IsHovered		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
-		inline	bool		IsPressed		(cid_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
-		inline	bool		IsHidden		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHidden   (); }
-		inline	bool		IsFocused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsFocused  (); }
-		inline	bool		IsSelected		(cid_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
-		inline	bool		IsDisabled		(cid_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
-		inline	bool		IsUpdated		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
-		inline	bool		IsAction		(cid_t iControl)		const	noexcept	{ return States[iControl].IsAction   (); }
-		inline	bool		IsUnused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
+		inln	bool		IsHovered		(cid_t iControl)		csnx	{ return States[iControl].IsHovered  (); }
+		inln	bool		IsPressed		(cid_t iControl)		csnx	{ return States[iControl].IsPressed  (); }
+		inln	bool		IsHidden		(cid_t iControl)		csnx	{ return States[iControl].IsHidden   (); }
+		inln	bool		IsFocused		(cid_t iControl)		csnx	{ return States[iControl].IsFocused  (); }
+		inln	bool		IsSelected		(cid_t iControl)		csnx	{ return States[iControl].IsSelected (); }
+		inln	bool		IsDisabled		(cid_t iControl)		csnx	{ return States[iControl].IsDisabled (); }
+		inln	bool		IsUpdated		(cid_t iControl)		csnx	{ return States[iControl].IsUpdated  (); }
+		inln	bool		IsAction		(cid_t iControl)		csnx	{ return States[iControl].IsAction   (); }
+		inln	bool		IsUnused		(cid_t iControl)		csnx	{ return States[iControl].IsUnused   (); }
 	};
 
 	::gpk::cid_t		controlCreate					(::gpk::SControlTable & gui, ::gpk::vs1_t defaultColors);
-} // namespace
+} // nmsp
 
 #endif // GPK_GUI_CONTROL_H_23627

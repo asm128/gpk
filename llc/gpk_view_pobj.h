@@ -4,10 +4,10 @@
 #ifndef GPK_VIEW_POBJ_H_23627
 #define GPK_VIEW_POBJ_H_23627
 
-namespace gpk
+nmsp gpk
 {
-	tplT using	vpobj	= ::gpk::view<::gpk::pobj<T>>;
-	tplT using	vcpobj	= ::gpk::view<cnst ::gpk::pobj<T>>;
-} // namespace
+	tplT usng	vpobj	= ::gpk::view<::gpk::pobj<T>>;
+	tplT usng	vcpobj	= ::gpk::view<cnst ::gpk::pobj<T>>;
+} // nmsp
 
 #endif // GPK_VIEW_POBJ_H_23627

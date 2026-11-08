@@ -7,17 +7,17 @@
 #ifndef GPK_ENGINE_ENTITY_H
 #define GPK_ENGINE_ENTITY_H
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)
-	typedef	u2_t		eid_t;
+	tydf	u2_t		eid_t;
 	stxp	eid_t			EID_INVALID		= eid_t(-1);
 
-	typedef	const eid_t		ceid_t;
-	typedef	apod<eid_t>		aeid;
-	typedef	view<eid_t>		veid;
-	typedef	view<ceid_t>	vceid;
-	typedef	papod<eid_t>	paeid;
+	tydf	const eid_t		ceid_t;
+	tydf	apod<eid_t>		aeid;
+	tydf	view<eid_t>		veid;
+	tydf	view<ceid_t>	vceid;
+	tydf	papod<eid_t>	paeid;
 	struct SEntity {
 		u2_t				RenderNode		= (u2_t)-1;
 		u2_t				RigidBody		= (u2_t)-1;
@@ -100,6 +100,6 @@ namespace gpk
 		}
 
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_ENTITY_H

@@ -210,12 +210,12 @@ gpk::err_t 		gpk::drawScene
 	::gpk::apod<::gpk::n3f2_t>					& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)
-	constexpr ::gpk::n3f2_t						xyz	[3]					= 
+	cxpr ::gpk::n3f2_t						xyz	[3]					= 
 		{ {1}
 		, {0, 1}
 		, {0, 0, 1}
 		};
-	constexpr ::gpk::bgra						colorXYZ[3]				= 
+	cxpr ::gpk::bgra						colorXYZ[3]				= 
 		{ ::gpk::RED
 		, ::gpk::GREEN
 		, ::gpk::BLUE

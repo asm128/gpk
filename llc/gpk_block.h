@@ -3,7 +3,7 @@
 #ifndef GPK_BLOCK_H_23627
 #define GPK_BLOCK_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	stct SRecordMap {
 		::gpk::u2_t	IdBlock		= {};
@@ -12,6 +12,6 @@ namespace gpk
 
 	gpk::err_t blockRecordIndices	(::gpk::u3_c idRecord, ::gpk::u2_c blockSize, ::gpk::SRecordMap & indices)	nxpt;
 	gpk::err_t blockRecordId		(cnst ::gpk::SRecordMap & indices, ::gpk::u2_c blockSize, ::gpk::u3_t & idRecord)	nxpt;
-} // namespace
+} // nmsp
 
 #endif // GPK_BLOCK_H_23627

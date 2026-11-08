@@ -4,7 +4,7 @@
 #ifndef GPK_AES_H_23627
 #define GPK_AES_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE(AES_LEVEL, u0_t);
 	GDEFINE_ENUM_VALUE(AES_LEVEL, 128, 0);

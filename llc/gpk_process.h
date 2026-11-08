@@ -6,7 +6,7 @@
 #ifndef GPK_PROCESS_H_23627
 #define GPK_PROCESS_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm TManager>
 	stct SProcessScope {
@@ -27,8 +27,8 @@ namespace gpk
 		}
 	};
 
-	typedef size_t					TWindowsHandle;
-	typedef sc_t					* ntsc_t;
+	tydf size_t					TWindowsHandle;
+	tydf sc_t					* ntsc_t;
 	stxp	cnst TWindowsHandle		INVALID_WINDOWS_HANDLE	 = (size_t)-1;
 	stct SWindowsProcessInfo {
 		TWindowsHandle		hProcess				= {};
@@ -242,6 +242,6 @@ namespace gpk
 	//
 	//err_t processExecute(vcst_t application, vcst_t commandLine, vcu0_t input, au0_t & output, u2_t & exitCode, vcs0_t environment = {});
 	//err_t processLaunch(vcst_t application, vcst_t commandLine, vcs0_t environment = {});
-} // namespace
+} // nmsp
 
 #endif // GPK_PROCESS_H_23627

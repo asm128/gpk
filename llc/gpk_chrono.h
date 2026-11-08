@@ -3,7 +3,7 @@
 #ifndef GPK_CHRONO_H_23627
 #define GPK_CHRONO_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	s3_t	timeCurrent		();
 	s3_t	timeCurrentInMs	();
@@ -26,6 +26,6 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-} // namespace
+} // nmsp
 
 #endif // GPK_CHRONO_H_23627

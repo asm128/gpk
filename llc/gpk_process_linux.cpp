@@ -12,7 +12,7 @@
 #include <sys/wait.h> // Child status and reaping.
 #include <unistd.h>   // Pipe I/O and standard descriptors.
 
-namespace gpk::process_detail {
+nmsp gpk::process_detail {
 sttc gpk::err_t processDescriptorClose(int & descriptor) {
 	if(0 > descriptor)
 		rtrn 0;

@@ -6,7 +6,7 @@
 #ifndef GPK_CONNECTION_H_23627
 #define GPK_CONNECTION_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE (ENDPOINT_COMMAND, u0_t)
@@ -73,11 +73,8 @@ namespace gpk
 	err_t						connectionPayloadCollect	(SConnection & client, apobj<SMessage> & receivedMessages);
 	err_t						connectionSendQueue			(SConnection & client, apobj<SMessage>& messageCacheSent, apobj<SMessage>& messageCacheSend, const FConnectionSend & send);
 	err_t						connectionHandleCommand		(SConnection & client, SCommand & command, const FConnectionReceive & receive, au0_t & receiveBuffer);
-	err_t						connectionPushData			(SConnection & client, SClientQueue & queue, const vcu0_t & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0);
-	stin	err_t				connectionPushData			(SConnection & client, SClientQueue & queue, const vcs0_t & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
-		return connectionPushData(client, queue, *(const vcu0_t*)&data, bEncrypted, bCompress, retryCount);
-	}
-stin	err_t				connectionPushData			(SConnection & client, SClientQueue & queue, vcst_t & data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
+	err_t						connectionPushData			(SConnection & client, SClientQueue & queue, vcu0_t data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0);
+	stin	err_t				connectionPushData			(SConnection & client, SClientQueue & queue, vcst_t data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
 		return connectionPushData(client, queue, *(const vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
 
@@ -132,8 +129,8 @@ stin	err_t				connectionPushData			(SConnection & client, SClientQueue & queue, 
 		return 0;
 	}
 
-	typedef apobj<SMessage>	TPacketQueue;
-	typedef apobj<au0_t>	TPacketQueueSend;
+	tydf apobj<SMessage>	TPacketQueue;
+	tydf apobj<au0_t>	TPacketQueueSend;
 }
 
 #endif // GPK_CONNECTION_H_23627

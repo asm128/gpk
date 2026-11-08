@@ -13,9 +13,9 @@
 #define DEVICERESOURCES_H_23627
 
 
-namespace DX 
+nmsp DX 
 {
-	using namespace gpk;
+	usng nmsp gpk;
 #if defined(_DEBUG)
 	// Check for SDK Layer support.
 	stin bool	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice({}, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, {}, 0, D3D11_SDK_VERSION, {}, {}, {})); }
@@ -23,7 +23,7 @@ namespace DX
 	// Converts a length in device-independent pixels (DIPs) to a length in physical pixels. Round to nearest integer.
 	stin f2_t	ConvertDipsToPixels			(f2_t dips, f2_t dpi)		{ stxp	f2_t dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
 
-	namespace DisplayMetrics
+	nmsp DisplayMetrics
 	{
 		stxp	bool	SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
 		stxp	f2_t	DpiThreshold				= 192.0f;	// 200% of standard desktop display.
@@ -79,7 +79,7 @@ namespace DX
 		D2D1::Matrix3x2F				m_orientationTransform2D	= {};
 		DirectX::XMFLOAT4X4				m_orientationTransform3D	= {};
 
-		inline	err_t					Initialize					()									{
+		inln	err_t					Initialize					()									{
 			if_fail_fe(CreateIndependentResources());
 			if_fail_fe(CreateDeviceResources());
 			return 0;
@@ -117,7 +117,7 @@ namespace DX
 					return 0;	// Everything is set up now. Do not continue execution of this method. HandleDeviceLost will reenter this method and correctly set up the new device.
 				}
 			} else {
-				// Otherwise, create a new one using the same adapter as the existing Direct3D device.
+				// Otherwise, create a new one usng the same adapter as the existing Direct3D device.
 				DXGI_SCALING								scaling						= DisplayMetrics::SupportHighResolutions ? DXGI_SCALING_NONE : DXGI_SCALING_STRETCH;
 				DXGI_SWAP_CHAIN_DESC1						swapChainDesc				= {};
 				swapChainDesc.Width						= lround(m_d3dRenderTargetSize.x);		// Match the size of the window.
@@ -406,6 +406,6 @@ namespace DX
 			return 0;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // DEVICERESOURCES_H_2387647892

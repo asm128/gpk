@@ -3,7 +3,7 @@
 #ifndef GPK_PTR_POD_H_23627
 #define GPK_PTR_POD_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tPOD>
 	class ppod : public pnco<_tPOD> {
@@ -22,6 +22,6 @@ namespace gpk
 		inln	T*				allocate	()											nxpt		{ return ref_allocate(Reference);						}
 	};
 	tplt<tpnm T> usng	pp	= ppod<T>;
-} // namespace
+} // nmsp
 
 #endif // GPK_PTR_POD_H_23627

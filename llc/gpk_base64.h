@@ -5,7 +5,7 @@
 #ifndef GPK_BASE64_H_23627
 #define GPK_BASE64_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	stxp	vcst_t		b64Symbols		= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	stxp	vcst_t		b64SymbolsFS	= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -79,6 +79,6 @@ namespace gpk
 	stin	err_t	base64Decode	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64Decode		(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
 	stin	err_t	base64EncodeFS	(vcs0_c & in_binary	, string & out_base64) { rtrn base64EncodeFS	(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
 	stin	err_t	base64DecodeFS	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64DecodeFS	(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
-} // namespace
+} // nmsp
 
 #endif // GPK_BASE64_H_23627

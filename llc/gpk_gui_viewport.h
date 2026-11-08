@@ -3,7 +3,7 @@
 #ifndef GPK_GUI_VIEWPORT_H_23627
 #define GPK_GUI_VIEWPORT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	enum VIEWPORT_CONTROL : s0_t

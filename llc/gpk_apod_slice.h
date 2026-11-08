@@ -4,7 +4,7 @@
 #ifndef GPK_APOD_SLICE_H
 #define GPK_APOD_SLICE_H
 
-namespace gpk
+nmsp gpk
 {
 	tplT using	aslice	= ::gpk::apod<::gpk::slice<T>>;
 

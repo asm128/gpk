@@ -6,7 +6,7 @@
 #ifndef GPK_ENGINE_PLANETARY_SYSTEM_H_23701
 #define GPK_ENGINE_PLANETARY_SYSTEM_H_23701
 
-namespace gpk
+nmsp gpk
 {
 	struct SPlanetarySystemEntityMap {
 		aeid		GravityCenters	;
@@ -59,6 +59,6 @@ namespace gpk
 	err_t		planetarySystemSetup			(const SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine); 
 	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, const SJSONReader & jsonData);
 	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, vcst_t jsonFilePath);
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_PLANETARY_SYSTEM_H_23701

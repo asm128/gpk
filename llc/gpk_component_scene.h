@@ -13,7 +13,7 @@
 #ifndef GPK_COMPONENT_SCENE_H_23627
 #define GPK_COMPONENT_SCENE_H_23627
 
-namespace gpk {
+nmsp gpk {
 	GDEFINE_ENUM_TYPE(COMPONENT_FILE_TYPE, u0_t); // bit field
 	GDEFINE_ENUM_VALUE(COMPONENT_FILE_TYPE, STL			, 1);
 	GDEFINE_ENUM_VALUE(COMPONENT_FILE_TYPE, PNG			, 2);
@@ -44,7 +44,7 @@ namespace gpk {
 	GDEFINE_FLAG_VALUE(GCOLOR_CHANNEL, DEPTH			, 0x10);
 	GDEFINE_FLAG_VALUE(GCOLOR_CHANNEL, STENCIL			, 0x20);
 
-	// These are different ways of using an image (texture) at render time (when drawing a particular object node).
+	// These are different ways of usng an image (texture) at render time (when drawing a particular object node).
 	GDEFINE_FLAG_TYPE(GIMAGE_USAGE, u0_t); // bit field
 	GDEFINE_FLAG_VALUE(GIMAGE_USAGE, COLOR				, 0x00); // The colors of the image are mapped as a common image
 	GDEFINE_FLAG_VALUE(GIMAGE_USAGE, BLEND_COLOR		, 0x10); // A 2D color image to be placed depending on the map value of GIMAGE_USAGE_BLEND_MAP
@@ -111,9 +111,9 @@ namespace gpk {
 			,											C								= 0xFF
 			,											D								= 0xFF
 			;
-		constexpr										SBlendIndices					()												noexcept 	= default;
-		constexpr										SBlendIndices					(u0_t a, u0_t b, u0_t c, u0_t d)	noexcept	: A(a), B(b), C(c), D(d)	{}
-		constexpr										SBlendIndices					(u2_t packedValue)							noexcept
+		cxpr										SBlendIndices					()												nxpt 	= default;
+		cxpr										SBlendIndices					(u0_t a, u0_t b, u0_t c, u0_t d)	nxpt	: A(a), B(b), C(c), D(d)	{}
+		cxpr										SBlendIndices					(u2_t packedValue)							nxpt
 			: A((u0_t)((packedValue & 0x000000FF) >>  0))
 			, B((u0_t)((packedValue & 0x0000FF00) >>  8))
 			, C((u0_t)((packedValue & 0x00FF0000) >> 16))
@@ -166,7 +166,7 @@ namespace gpk {
 		m4f2_t			Matrix							= {};
 		m4f2_t			MatrixInverse					= {};
 
-		inline	void			SetIdentity						()	noexcept {
+		inln	void			SetIdentity						()	nxpt {
 			Matrix			.Identity();
 			MatrixInverse	.Identity();
 		}
@@ -197,13 +197,13 @@ namespace gpk {
 	};
 #pragma pack(pop)
 
-	typedef	apod<n3u1_t			>	TIndexBuffer			;
-	typedef	apod<n3f2_t			>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
-	typedef	apod<bgra			>	TVertexColorBuffer		;
-	typedef	apod<n2f2_t			>	TTexCoordBuffer			;
-	typedef	apod<SBlendIndices	>	TBlendIndicesBuffer		;
-	typedef	apod<n2s1_t			>	TPixelCoordBuffer		;
-	typedef	apod<trif2_t		>	TTriangleWeightBuffer	;
+	tydf	apod<n3u1_t			>	TIndexBuffer			;
+	tydf	apod<n3f2_t			>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
+	tydf	apod<bgra			>	TVertexColorBuffer		;
+	tydf	apod<n2f2_t			>	TTexCoordBuffer			;
+	tydf	apod<SBlendIndices	>	TBlendIndicesBuffer		;
+	tydf	apod<n2s1_t			>	TPixelCoordBuffer		;
+	tydf	apod<trif2_t		>	TTriangleWeightBuffer	;
 
 	struct SRendererCache {
 		au2_t					NodesToRender			= {};
@@ -232,10 +232,10 @@ namespace gpk {
 		aobj<vcst_t>		Names	;
 		_tContainer			Values	;
 
-		_tValue &			operator[]					(u2_t index)				{ return Values[index]; }
-		const _tValue &		operator[]					(u2_t index)	const		{ return Values[index]; }
+		_tValue &			oper[]					(u2_t index)				{ return Values[index]; }
+		const _tValue &		oper[]					(u2_t index)	const		{ return Values[index]; }
 
-		const u2_t &		size						()				const noexcept	{ return Names.size(); }
+		const u2_t &		size						()				csnx	{ return Names.size(); }
 		err_t				push_back					(vcst_t name, const _tValue & value) {
 			if_fail_fe(Names.push_back(name));
 			return Values.push_back(value);
@@ -246,11 +246,11 @@ namespace gpk {
 	tplt<tpnm _tValue>	struct SKeyedArrayOBJ : public SKeyedArray<aobj<_tValue>, _tValue> {};
 
 	struct SNodeRenderer {
-		typedef	apod<n3u1_t>		TIndexBuffer		;
-		typedef	apod<n3f2_t>		TVertexBuffer		, TNormalBuffer,	TTangentBuffer;
-		typedef	a8bgra				TVertexColorBuffer	;
-		typedef	apod<n2f2_t>		TTexCoordBuffer		;
-		typedef	apod<SBlendIndices>	TBlendIndicesBuffer	;
+		tydf	apod<n3u1_t>		TIndexBuffer		;
+		tydf	apod<n3f2_t>		TVertexBuffer		, TNormalBuffer,	TTangentBuffer;
+		tydf	a8bgra				TVertexColorBuffer	;
+		tydf	apod<n2f2_t>		TTexCoordBuffer		;
+		tydf	apod<SBlendIndices>	TBlendIndicesBuffer	;
 
 		SKeyedArrayOBJ<TIndexBuffer			>	Indices					= {};
 		SKeyedArrayOBJ<TVertexBuffer		>	Vertices				= {};
@@ -306,6 +306,6 @@ namespace gpk {
 		err_t									Create					(vcst_t name);
 		err_t									CreateFromFile			(vcst_t filename);
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_COMPONENT_SCENE_H_23627

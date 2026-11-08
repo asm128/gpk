@@ -4,7 +4,7 @@
 #ifndef GPK_VIRTUAL_KEYBOARD_H_23627
 #define GPK_VIRTUAL_KEYBOARD_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE (VK_EVENT, u0_t);
 	GDEFINE_ENUM_VALUE(VK_EVENT, PRESS		,  1);
@@ -41,6 +41,6 @@ namespace gpk
 	gpk::err_t 		virtualKeyboardHandleEvent	(const ::gpk::SVirtualKeyboard & vk, ::gpk::cid_t iControl, ::gpk::apod<::gpk::SVirtualKeyboardEvent> & events);
 
 	//stin	gpk::err_t virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, cid_t iControl) { return ::gpk::virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
-} // namespace 
+} // nmsp 
 
 #endif // GPK_VIRTUAL_KEYBOARD_H_23627

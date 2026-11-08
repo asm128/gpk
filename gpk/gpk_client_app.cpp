@@ -77,10 +77,10 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 		: vcst_t{"Connect"}
 		)); 
 	if(client.SocketClient.Connection.State == CONNECTION_STATE_IDLE) {
-		const double				seconds				= timeCurrentInMs() / 1000.0 - client.ConnectedSince;
-		const int					minutes				= int(seconds / 60);
-		const int					hours				= int(minutes / 60);
-		const int					days				= hours / 24;
+		const f3_t				seconds				= timeCurrentInMs() / 1000.0 - client.ConnectedSince;
+		const s2_t				minutes				= int(seconds / 60);
+		const s2_t				hours				= int(minutes / 60);
+		const s2_t				days				= hours / 24;
 		if(days > 0)
 			sprintf_s(buf, "%u day%s %.2i:%.2i:%05.2f", days, days == 1 ? "s" : "", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
 		else

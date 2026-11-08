@@ -3,7 +3,7 @@
 #ifndef GPK_GRID_SCALE_20654834
 #define GPK_GRID_SCALE_20654834
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm T>
 	gpk::err_t 				grid_scale_fast				(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const f2_t xFactor, const f2_t yFactor) {
@@ -61,6 +61,6 @@ namespace gpk
 		}
 		return 0;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_GRID_SCALE_20983429834

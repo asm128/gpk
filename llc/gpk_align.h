@@ -5,7 +5,7 @@
 #ifndef GPK_ALIGN_H_23627
 #define GPK_ALIGN_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm TCoord, tpnm TTarget>
 	n2<TCoord> &	realignCoord

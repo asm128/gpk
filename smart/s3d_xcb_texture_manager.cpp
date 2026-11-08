@@ -13,9 +13,9 @@
 //#define NANOSVGRAST_IMPLEMENTATION
 //#include "nanosvgrast.h"
 
-::gpk::err_t					s3d::SXCBTextureManager::Create(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t  depth, ::gpk::view_grid<const ::gpk::SColorBGRA> pixels) {
-	::gpk::ptr_obj<::s3d::SXCBPixmap>	newPixmap		= {};
-	::gpk::SImage<::gpk::SColorBGRA>	& loadedImage	= newPixmap->Image;
+::gpk::err_t					s3d::SXCBTextureManager::Create(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t  depth, ::gpk::grid<const ::gpk::SColorBGRA> pixels) {
+	::gpk::pobj<::s3d::SXCBPixmap>	newPixmap		= {};
+	::gpk::img<::gpk::SColorBGRA>	& loadedImage	= newPixmap->Image;
 	{ if_fail_fef(loadedImage.Texels.append({pixels.begin(), pixels.size()}), "%s", ""); }
 
 	loadedImage.View				= {loadedImage.Texels.begin(), pixels.metrics()};
@@ -42,17 +42,17 @@
 	return XCBPixmap.push_back(newPixmap);
 }
 
-::gpk::err_t					s3d::SXCBTextureManager::CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t  depth, ::gpk::view_const_char filename) {
-	::gpk::view_const_char				extension		= {};
-	::gpk::array_pod<char_t>			ext_lwr			= {};
+::gpk::err_t					s3d::SXCBTextureManager::CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t  depth, ::gpk::vcsc_t filename) {
+	::gpk::vcst_t						extension		= {};
+	::gpk::string						ext_lwr			= {};
 	{ if_fail_fef(filename.slice(extension, filename.size() - 3, 3), "File extension not supported for file '%.*s'", GPK_VIEW_ARGS(filename)); }
 	{ if_fail_fef(ext_lwr.append(extension), "%s", ""); }
 	::gpk::tolower(ext_lwr);
 	static const ::gpk::vcst_t				str_png			= "png";
 	//static const ::gpk::vcst_t				str_svg			= "svg";
 
-	::gpk::ptr_obj<::s3d::SXCBPixmap>	newPixmap		= {};
-	::gpk::SImage<::gpk::SColorBGRA>	& loadedImage	= newPixmap->Image;
+	::gpk::pobj<::s3d::SXCBPixmap>	newPixmap		= {};
+	::gpk::img<::gpk::SColorBGRA>	& loadedImage	= newPixmap->Image;
 	if(ext_lwr == str_png) {
 		info_printf("Loading png file: '%.*s'", GPK_VIEW_ARGS(filename));
 		{ if_fail_fef(::gpk::pngFileLoad(filename, loadedImage), "Failed to load png file: '%.*s'", GPK_VIEW_ARGS(filename)); }

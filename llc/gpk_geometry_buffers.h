@@ -4,7 +4,7 @@
 #ifndef GPK_GEOMETRYBUFFERS_H_23627
 #define GPK_GEOMETRYBUFFERS_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SGeometryBuffers {
 		::gpk::a3f2_t	Positions;

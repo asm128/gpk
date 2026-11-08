@@ -14,7 +14,7 @@
 #	define GPK_PLATFORM_LOG_FORMAT(format)	(format)
 #endif
 
-namespace gpk
+nmsp gpk
 {
 	err_t			debug_print_prefix				(s0_t severity, sc_c * path, u2_t line, sc_c * function);
 #ifndef GPK_ARDUINO

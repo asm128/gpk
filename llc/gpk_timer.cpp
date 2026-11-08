@@ -11,7 +11,7 @@ GPK_USING_TYPEINT();
 
 stxp	f3_t			MICROSECOND_SCALE		= 0.000001;
 
-void					gpk::STimer::Reset		()				noexcept				{
+void					gpk::STimer::Reset		()				nxpt				{
 	LastTimeSeconds			= f3_t(LastTimeMicroseconds = 0);
 #if !(defined(GPK_WINDOWS) || defined(GPK_CMSIS))
 #	ifdef GPK_ARDUINO
@@ -32,7 +32,7 @@ void					gpk::STimer::Reset		()				noexcept				{
 #endif // !(GPK_WINDOWS || GPK_CMSIS)
 }
 
-f3_t			gpk::STimer::Frame		()				noexcept				{
+f3_t			gpk::STimer::Frame		()				nxpt				{
 #if defined(GPK_WINDOWS) || defined(GPK_CMSIS) 
 #	ifdef GPK_WINDOWS
 	s3_t				currentTimeStamp		= 0;

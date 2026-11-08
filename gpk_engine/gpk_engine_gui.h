@@ -4,7 +4,7 @@
 #ifndef GPK_ENGINE_GUI_H_23627
 #define GPK_ENGINE_GUI_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	GDEFINE_ENUM_TYPE(GUI_ENTITY, u0_t);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Label	, 0);
@@ -31,7 +31,7 @@ namespace gpk
 		::gpk::SGUI			GUI				= {};
 		::gpk::aeid			Entities		= {};
 		
-		inline				SEngineGUI		()	{ Reset(); }
+		inln				SEngineGUI		()	{ Reset(); }
 
 		gpk::err_t 	Reset			()	{
 			Engine				= {};
@@ -58,7 +58,7 @@ namespace gpk
 		::gpk::eid_t	CreateMenu		()	{ return 0; }
 		::gpk::eid_t	CreateViewport	()	{ return 0; }
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_GUI_H_23627
 

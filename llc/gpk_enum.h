@@ -8,7 +8,7 @@
 
 #define enum_printf verbose_printf
 
-namespace gpk
+nmsp gpk
 {
 	//stxp	vcst_c		UNDEFINED_ENUM_TYPE_STR					= "Undefined enumeration type.";
 	stxp	vcst_c		INVALID_ENUM_VALUE_STR		= "INVALID";
@@ -213,8 +213,8 @@ namespace gpk
 		}
 	};
 
-	tplt <tpnm TEnum>	inline	enum_definition<TEnum>&	get_enum	()					noexcept	{ return enum_definition<TEnum>::get();	}
-	tplt <tpnm TEnum>	inline	enum_definition<TEnum>&	get_enum	(const TEnum & )	noexcept	{ return enum_definition<TEnum>::get();	}
+	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	()					nxpt	{ return enum_definition<TEnum>::get();	}
+	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	(const TEnum & )	nxpt	{ return enum_definition<TEnum>::get();	}
 
 	// This type is used to initialize an enumeration value.
 	tpl_t struct genum_value {
@@ -279,34 +279,34 @@ namespace gpk
 		inxp	oper	cnst T&		()			const	{ return Value; }
 	};
 
-} // namespace
+} // nmsp
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																							\
 	enum EnumName : IntType {};																											\
 	static	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);					\
-	sinx	EnumName		oper &	(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
-	sinx	EnumName		oper ~	(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\
-	sinx	EnumName		oper ^	(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
-	stin	EnumName&		oper |=	(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
-	stin	EnumName&		oper &=	(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
-	stin	EnumName&		oper ^=	(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	sinx	EnumName		oper |	(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}
+	sinx	EnumName		oper &	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a & (IntType)b);				}	\
+	sinx	EnumName		oper ~	(EnumName  a)				nxpt	{ return (EnumName)		(~(IntType)a);					}	\
+	sinx	EnumName		oper ^	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a ^ (IntType)b);				}	\
+	stin	EnumName&		oper |=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
+	stin	EnumName&		oper &=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
+	stin	EnumName&		oper ^=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
+	sinx	EnumName		oper |	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a | (IntType)b);				}
 //
 #define GDEFINE_ENUM_STRUCT(EnumName, IntType)																								\
 	struct EnumName {																														\
 		IntType				Value			;																								\
-		inline	oper		IntType&		()			nxpt	{ return Value; }															\
+		inln	oper		IntType&		()			nxpt	{ return Value; }															\
 		inxp	oper		const IntType&	()	const	nxpt	{ return Value; }															\
 	};																																		\
 	static	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);								\
-	sinx	EnumName		oper &	(EnumName  a, EnumName b)	noexcept	{ return {a & (IntType)b};				}	\
-	sinx	EnumName		oper ~	(EnumName  a)				noexcept	{ return {~(IntType)a};					}	\
-	sinx	EnumName		oper ^	(EnumName  a, EnumName b)	noexcept	{ return {a ^ (IntType)b};				}	\
-	stin	EnumName&		oper |=	(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	{ ((IntType&)a) |= (IntType)b}; }	\
-	stin	EnumName&		oper &=	(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	{ ((IntType&)a) &= (IntType)b}; }	\
-	stin	EnumName&		oper ^=	(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	{ ((IntType&)a) ^= (IntType)b}; }	\
-	sinx	EnumName		oper |	(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		{a | (IntType)b};				}
+	sinx	EnumName		oper &	(EnumName  a, EnumName b)	nxpt	{ return {a & (IntType)b};				}	\
+	sinx	EnumName		oper ~	(EnumName  a)				nxpt	{ return {~(IntType)a};					}	\
+	sinx	EnumName		oper ^	(EnumName  a, EnumName b)	nxpt	{ return {a ^ (IntType)b};				}	\
+	stin	EnumName&		oper |=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	{ ((IntType&)a) |= (IntType)b}; }	\
+	stin	EnumName&		oper &=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	{ ((IntType&)a) &= (IntType)b}; }	\
+	stin	EnumName&		oper ^=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	{ ((IntType&)a) ^= (IntType)b}; }	\
+	sinx	EnumName		oper |	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		{a | (IntType)b};				}
 //
 #ifdef GPK_ATMEL
 #	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)					\
@@ -341,7 +341,7 @@ namespace gpk
 #define GDEFINE_FLAG_VALUE		GDEFINE_ENUM_VALUE
 
 #if defined(GPK_WINDOWS)
-#	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
+#	pragma warning(disable : 4063)	// On Windows, usng enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
 #define gpk_warning_unhandled_value(_enumValue)			warning_printf("Unhandled'%s' value:(0x%X)(%" GPK_FMT_S2 ")(%c) %s"	, ::gpk::get_enum_namep GPKREP3(_enumValue) ? char(_enumValue) : '?', ::gpk::get_value_namep(_enumValue))
@@ -353,7 +353,7 @@ namespace gpk
 #define gpk_enum_valued_warning(_enumValue)				gpk_enum_valued_log	(warning_printf	, _enumValue)
 #define gpk_enum_valued_error(_enumValue)				gpk_enum_valued_log	(error_printf	, _enumValue)
 
-namespace gpk
+nmsp gpk
 {
 	tpl_t struct SGPKEnumValue {
 		_t			Value;
@@ -394,7 +394,7 @@ namespace gpk
 			};	\
 	};
 
-namespace gpk
+nmsp gpk
 {
 //#ifdef GPK_ESP8266
 // 	GPK_ENUM_BEGIN	(RESULT, s0_t)

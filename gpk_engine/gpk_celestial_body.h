@@ -4,7 +4,7 @@
 #ifndef GPK_CELESTIAL_BODY_2379
 #define GPK_CELESTIAL_BODY_2379
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE(CELESTIAL_BODY, u0_t);
@@ -83,6 +83,6 @@ namespace gpk
 
 	CELESTIAL_BODY	bodyTypeFromString		(vcst_t bodyType);
 	PLANET_TYPE		bodySubtypeFromString	(vcst_t bodyType);
-} // namespace
+} // nmsp
 
 #endif // GPK_CELESTIAL_BODY

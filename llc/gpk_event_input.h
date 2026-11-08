@@ -5,7 +5,7 @@
 #ifndef GPK_EVENT_INPUT_H_23627
 #define GPK_EVENT_INPUT_H_23627
 
-namespace gpk
+nmsp gpk
 {	
 	GDEFINE_ENUM_TYPE(EVENT_TEXT, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_TEXT, Char		, 0);
@@ -100,6 +100,6 @@ namespace gpk
 	stin	err_t	eventEnqueueJoyPadZMove		(apobj<SEventSystem> & queue, u1_t value)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Joypad, EVENT_JOYPAD_ZMove		, value ); }
 	stin	err_t	eventEnqueueJoyPadUp		(apobj<SEventSystem> & queue, u0_t button)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Joypad, EVENT_JOYPAD_Button_up	, button); }
 	stin	err_t	eventEnqueueJoyPadDown		(apobj<SEventSystem> & queue, u0_t button)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Joypad, EVENT_JOYPAD_Button_down, button); }
-} // namespace
+} // nmsp
 
 #endif // GPK_EVENT_INPUT_H_23627

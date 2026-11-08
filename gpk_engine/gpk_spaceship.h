@@ -7,7 +7,7 @@
 #ifndef GPK_SPACESHIP_H
 #define GPK_SPACESHIP_H
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE (SHIP_GEOMETRY, u0_t);
 	GDEFINE_ENUM_VALUE(SHIP_GEOMETRY, Line			, 0);
@@ -68,8 +68,8 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SSpaceshipOrbiter {
-		SHIP_PART_TYPE		Type			= SHIP_PART_TYPE_Cargo;
-		::gpk::gaugemaxi32	Health			= {};
+		SHIP_PART_TYPE	Type			= SHIP_PART_TYPE_Cargo;
+		gaugemaxs2_t	Health			= {};
 		u2_t			Weapon			= (u2_t)-1;
 		u2_t			ActiveAction	= ~0U;
 	};
@@ -89,37 +89,37 @@ namespace gpk
 
 	struct SSpaceshipCore {
 		// Generally constants, little or no variation during level gameplay
-		s2_t				Team			= {};
-		::gpk::gaugemaxf2_t	Nitro			= {};
+		s2_t			Team			= {};
+		gaugemaxf2_t	Nitro			= {};
 
 		// Variable, may change at any time during 
-		s2_t				Health			= {};
+		s2_t			Health			= {};
 		u2_t			AvailableNitros	= {};
-		f3_t				TimePlayed		= {};
+		f3_t			TimePlayed		= {};
 	};
 #pragma pack(pop)
 	tplt<tpnm _tPOD> 
-	gpk::err_t 		loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const u2_t index) { 
-		::gpk::view<const _tPOD>	viewToLoad;
-		if_fail_fef(gpk::loadView(input, viewToLoad), "index: %i", index);
+	err_t 			loadView		(vcu0_t & input, apapod<_tPOD> & output, const u2_t index) { 
+		view<const _tPOD>	viewToLoad;
+		if_fail_fef(loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
 			if(index >= output.size()) {
 				if_fail_fef(output.resize(index + 1), "index: %i", index);
 			}
 			else {
-				::gpk::papod<_tPOD>			& block				= output[index];
+				papod<_tPOD>			& block				= output[index];
 				if(block)
 					block->clear();
 			}
 		}
 		else {
 			if(index >= output.size()) {
-				::gpk::papod<_tPOD>			block;
+				papod<_tPOD>			block;
 				*block.create()			= viewToLoad;
 				if_fail_fef(output.push_back(block), "index: %i", index);
 			}
 			else {
-				::gpk::papod<_tPOD>			& block				= output[index];
+				papod<_tPOD>			& block				= output[index];
 				if(!block)
 					block.create();
 				*block					= viewToLoad;
@@ -129,21 +129,21 @@ namespace gpk
 	}
 
 	struct SSpaceshipManager {
-		::gpk::apod<::gpk::SSpaceshipScore	>	ShipScores					= {}; // One per core
-		::gpk::apod<::gpk::SSpaceshipCore	>	ShipCores					= {}; // One per core
-		::gpk::aobj<::gpk::au1_t				>	ShipParts					= {}; // One per core, each one mapping to a list of orbiters.
+		apod<SSpaceshipScore	>	ShipScores					= {}; // One per core
+		apod<SSpaceshipCore	>	ShipCores					= {}; // One per core
+		aobj<au1_t				>	ShipParts					= {}; // One per core, each one mapping to a list of orbiters.
 
-		::gpk::apod<::gpk::SSpaceshipOrbiter>	Orbiters					= {};	// One per orbiter	
-		::gpk::apapod<::gpk::SHIP_ACTION	>	ShipOrbiterActionQueue		= {};
+		apod<SSpaceshipOrbiter>	Orbiters					= {};	// One per orbiter	
+		apapod<SHIP_ACTION	>	ShipOrbiterActionQueue		= {};
 
 		s2_t						Clear				()	{
-			::gpk::clear(ShipScores, ShipCores, ShipParts, Orbiters, ShipOrbiterActionQueue);
+			clear(ShipScores, ShipCores, ShipParts, Orbiters, ShipOrbiterActionQueue);
 			return 0;
 		}
 
 		s2_t						GetShipHealth		(u2_t iShipCore)				{ 
 			s2_t							totalHealth			= 0;
-			::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
+			vcu1_t					shipCoreParts		= ShipParts[iShipCore];
 			for(u2_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart)
 				totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 
@@ -156,7 +156,7 @@ namespace gpk
 				if(ShipCores[iShipCore].Team != teamId) 
 					continue;
 
-				::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
+				vcu1_t					shipCoreParts		= ShipParts[iShipCore];
 				for(u2_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart) 
 					totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 			}
@@ -164,13 +164,13 @@ namespace gpk
 		}
 
 
-		gpk::err_t 			Save				(::gpk::au0_t & output)	const	{ 
-			if_fail_fe(gpk::saveView(output, ShipScores	));
-			if_fail_fe(gpk::saveView(output, ShipCores	));
+		err_t 			Save				(au0_t & output)	const	{ 
+			if_fail_fe(saveView(output, ShipScores	));
+			if_fail_fe(saveView(output, ShipCores	));
 			u2_t						totalEntityChildren	= 0;
 			for(u2_t iShipCore = 0; iShipCore < ShipCores.size(); ++iShipCore) {
-				::gpk::vcu1_t					v		{ShipParts[iShipCore]};
-				if_fail_fef(gpk::saveView(output, v), "iPart: %i", iShipCore);
+				vcu1_t					v		{ShipParts[iShipCore]};
+				if_fail_fef(saveView(output, v), "iPart: %i", iShipCore);
 				totalEntityChildren += v.size();
 			}
 
@@ -178,35 +178,35 @@ namespace gpk
 			info_printf("Saved %s, %i", "ShipCores	", ShipCores	.size());
 	
 			// Orbiters
-			if_fail_fe(gpk::saveView(output, Orbiters));
+			if_fail_fe(saveView(output, Orbiters));
 			info_printf("Saved %s, %i", "Orbiters", Orbiters.size());
 			for(u2_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
 				if(ShipOrbiterActionQueue[iShipOrbiter] && ShipOrbiterActionQueue[iShipOrbiter]->size()) {
-					if_fail_fef(gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
+					if_fail_fef(saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
 				}
 				else
-					if_fail_fef(gpk::saveView(output, ::gpk::vc3f2_t{}), "iShipOrbiter: %i", iShipOrbiter);
+					if_fail_fef(saveView(output, vc3f2_t{}), "iShipOrbiter: %i", iShipOrbiter);
 			}
 			return 0; 
 		}
-		gpk::err_t 			Load				(::gpk::vcu0_t & input) { 
+		err_t 			Load				(vcu0_t & input) { 
 			ShipScores	.clear();
 			ShipCores	.clear();
-			if_fail_fe(gpk::loadView(input, ShipScores	));
-			if_fail_fe(gpk::loadView(input, ShipCores	));
+			if_fail_fe(loadView(input, ShipScores	));
+			if_fail_fe(loadView(input, ShipCores	));
 			if_fail_fe(ShipParts.resize(ShipCores.size()));
 			for(u2_t iPart = 0; iPart < ShipParts.size(); ++iPart) 
-				if_fail_fef(gpk::loadView(input, ShipParts[iPart]), "iPart: %i", iPart);
+				if_fail_fef(loadView(input, ShipParts[iPart]), "iPart: %i", iPart);
 
 			Orbiters.clear();
-			if_fail_fe(gpk::loadView(input, Orbiters));
+			if_fail_fe(loadView(input, Orbiters));
 			if_fail_fe(ShipOrbiterActionQueue.reserve(Orbiters.size()));
 			for(u2_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
-				if_fail_fe(gpk::loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
+				if_fail_fe(loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
 			}
 			return 0; 
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_SPACESHIP_H

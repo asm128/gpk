@@ -3,7 +3,7 @@
 #ifndef GPK_COORD_H_23627
 #define GPK_COORD_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplT struct SOrigin {

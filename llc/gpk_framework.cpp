@@ -85,13 +85,13 @@ gpk::err_t 		gpk::updateFramework						(::gpk::SFramework& framework)											
 		if_true_e(gpk::failed(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
 	::gpk::SGUI						& gui				= *framework.GUI;
 	{
-		::std::lock_guard				lock										(framework.LockGUI);
+		lock_guard				lock										(framework.LockGUI);
 		::gpk::guiProcessInput(gui, *mainWindow.Input, mainWindow.EventQueue);
 	}
 
 	if(framework.Settings.GUIZoom) {
 		if(mainWindow.Input->MouseCurrent.Deltas.z) {
-			::std::lock_guard				lock										(framework.LockGUI);
+			lock_guard				lock										(framework.LockGUI);
 			if(mainWindow.Input->MouseCurrent.Deltas.z > 0) {
 				if(gui.Zoom.ZoomLevel > 1)
 					++gui.Zoom.ZoomLevel;
@@ -402,10 +402,10 @@ static	gpk::err_t xcbInputSetup								(::gpk::SWindowPlatformDetail & detail) {
 	if(0 == detail.XKBContext)
 		return -1;
 
-	uint16_t		majorVersion = {};
-	uint16_t		minorVersion = {};
-	uint8_t			eventBase = {};
-	uint8_t			errorBase = {};
+	u1_t			majorVersion	= {};
+	u1_t			minorVersion	= {};
+	u0_t			eventBase		= {};
+	u0_t			errorBase		= {};
 	if(false == xkb_x11_setup_xkb_extension(detail.Connection
 		, XKB_X11_MIN_MAJOR_XKB_VERSION, XKB_X11_MIN_MINOR_XKB_VERSION
 		, XKB_X11_SETUP_XKB_EXTENSION_NO_FLAGS

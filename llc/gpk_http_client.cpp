@@ -232,7 +232,7 @@ gpk::err_t			gpk::httpClientRequest
 		::gpk::kv<vcst_t>					& header						= out_received.Headers[iLine];
 		if(-1 == ::gpk::token_split(':', headerLines[iLine], header)) {
 			header.Key								= headerLines[iLine];
-			//::gpk::view_char							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};
+			//::gpk::vsr_t							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};
 			//::gpk::tolower(strLine);
 		}
 		else {

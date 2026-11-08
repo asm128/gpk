@@ -3,7 +3,7 @@
 #ifndef GPK_AXIS_H_23627
 #define GPK_AXIS_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE(AXIS, u0_t);
@@ -48,6 +48,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(ALIGN, YCENTER		, ALIGN_TOP		| ALIGN_BOTTOM);
 	GDEFINE_ENUM_VALUE(ALIGN, ZCENTER		, ALIGN_FAR		| ALIGN_NEAR);
 	#pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_AXIS_H_23627

@@ -7,7 +7,7 @@
 #ifndef GPK_ENGINE_RENDERMESH_H_23627
 #define GPK_ENGINE_RENDERMESH_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	// ------------------ Geometry Mesh
 #pragma pack(push, 1)
@@ -61,7 +61,7 @@ namespace gpk
 		}
 	};	
 
-	typedef	::gpk::gpk_linear_map_pobj<::gpk::SGeometryMesh>	SMeshManager;
-} // namespace
+	tydf	::gpk::gpk_linear_map_pobj<::gpk::SGeometryMesh>	SMeshManager;
+} // nmsp
 
 #endif // GPK_ENGINE_RENDERMESH_H_23627

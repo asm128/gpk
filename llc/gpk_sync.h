@@ -15,17 +15,17 @@
 #	include <thread>
 #	include <chrono>
 #endif
-namespace gpk
+nmsp gpk
 {
 #ifdef GPK_WINDOWS
-	stin err_t	sleep	(u2_t milliseconds)		noexcept	{ Sleep(milliseconds); return (err_t)milliseconds; }
-	stin u3_t	sleepUs	(u3_t microseconds)		noexcept	{ std::this_thread::sleep_for(std::chrono::microseconds(microseconds)); return (s3_t)microseconds; }
+	stin err_t	sleep	(u2_t milliseconds)		nxpt	{ Sleep(milliseconds); return (err_t)milliseconds; }
+	stin u3_t	sleepUs	(u3_t microseconds)		nxpt	{ std::this_thread::sleep_for(std::chrono::microseconds(microseconds)); return (s3_t)microseconds; }
 #elif defined(GPK_ARDUINO)
-	stin err_t	sleep	(u2_t milliseconds)		noexcept	{ ::delay(milliseconds); return (err_t)milliseconds; }
-	stin u3_t	sleepUs	(u3_t microseconds)		noexcept	{ ::delayMicroseconds(microseconds); return microseconds; }
+	stin err_t	sleep	(u2_t milliseconds)		nxpt	{ ::delay(milliseconds); return (err_t)milliseconds; }
+	stin u3_t	sleepUs	(u3_t microseconds)		nxpt	{ ::delayMicroseconds(microseconds); return microseconds; }
 #else
-	stin err_t	sleep	(u2_t milliseconds)		noexcept	{ std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds)); return (err_t)milliseconds; }
-	stin u3_t	sleepUs	(u3_t microseconds)		noexcept	{ std::this_thread::sleep_for(std::chrono::microseconds(microseconds)); return microseconds; }
+	stin err_t	sleep	(u2_t milliseconds)		nxpt	{ std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds)); return (err_t)milliseconds; }
+	stin u3_t	sleepUs	(u3_t microseconds)		nxpt	{ std::this_thread::sleep_for(std::chrono::microseconds(microseconds)); return microseconds; }
 #endif
 
 #ifndef GPK_MTSUPPORT

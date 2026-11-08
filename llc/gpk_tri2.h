@@ -5,17 +5,17 @@
 #ifndef GPK_TRI2_H_23627
 #define GPK_TRI2_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)
 	tpl_t struct tri2 : public tri<n2<_t>>		{
 		tydf	_t				T;
 		tydf	n2<T>	TVertex;
 
-		using	tri<TVertex>	::A;
-		using	tri<TVertex>	::B;
-		using	tri<TVertex>	::C;
-		using	tri<TVertex>	::tri;
+		usng	tri<TVertex>	::A;
+		usng	tri<TVertex>	::B;
+		usng	tri<TVertex>	::C;
+		usng	tri<TVertex>	::tri;
 
 		inxp	tri2<uc_t>		uc		()	csnx	{ return {A.uc(), B.uc(), C.uc()}; }
 		inxp	tri2<sc_t>		sc		()	csnx	{ return {A.sc(), B.sc(), C.sc()}; }
@@ -82,6 +82,6 @@ namespace gpk
 		triangle.C			+= translation;
 		return triangle;
 	}
-} // namespace 
+} // nmsp 
 
 #endif // GPK_TRI2_H_23627

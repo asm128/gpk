@@ -4,7 +4,7 @@
 #ifndef GPK_FRAMEINFO_H_23627
 #define GPK_FRAMEINFO_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	stct SFrameSeconds {
@@ -12,12 +12,12 @@ namespace gpk
 		f3_t					LastFrame			;
 		f3_t					LastFrameHalfSquared;
 		// Helper
-		f3_t					UpdateFromTime		(f3_t secondsToAdd)			noexcept	{
+		f3_t					UpdateFromTime		(f3_t secondsToAdd)			nxpt	{
 			Total					+= LastFrame = secondsToAdd;
 			LastFrameHalfSquared	=  secondsToAdd * secondsToAdd * 0.5;
 			return LastFrame;
 		}
-		inline	f3_t			UpdateFromTimeUs	(u3_t microsecondsToAdd)	noexcept	{
+		inln	f3_t			UpdateFromTimeUs	(u3_t microsecondsToAdd)	nxpt	{
 			return UpdateFromTime(microsecondsToAdd * .000001);
 		}
 	};
@@ -26,7 +26,7 @@ namespace gpk
 		u3_t				Total				;
 		u3_t				LastFrame			;
 		// Helper
-		inline	void			UpdateFromTime		(u3_t microsecondsToAdd)	noexcept	{ Total += LastFrame = microsecondsToAdd; }
+		inln	void			UpdateFromTime		(u3_t microsecondsToAdd)	nxpt	{ Total += LastFrame = microsecondsToAdd; }
 	};
 
 	stct SFrameMeter {
@@ -68,7 +68,7 @@ namespace gpk
 		::gpk::SFrameInfo		FrameInfo			= {};
 
 		// Returns delta seconds since the previous `Frame()` call. Gets delta from timer and use it to update FrameInfo.
-		inline	f3_t			Frame				() {
+		inln	f3_t			Frame				() {
 			Timer.Frame();
 			return FrameInfo.Frame(Timer.LastTimeMicroseconds);
 		}		
@@ -76,6 +76,6 @@ namespace gpk
 #pragma pack(pop)
 
 
-} // namespace
+} // nmsp
 
 #endif // GPK_FRAMEINFO_H_23627

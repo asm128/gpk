@@ -3,7 +3,7 @@
 #ifndef GPK_STDSTRING_H_23627
 #define GPK_STDSTRING_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	//sinx err_t		toupper		(char input)		{ return input (curByte >= 'A' && curByte <= 'Z') & ~0x20; }
 	//sinx err_t		tolower		(char input)		{ return input (curByte >= 'A' && curByte <= 'Z') | 0x20; }

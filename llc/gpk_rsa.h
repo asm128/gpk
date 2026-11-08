@@ -3,7 +3,7 @@
 #ifndef GPK_RSA_H_23627
 #define GPK_RSA_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SRSAKeyPair {
 		u3_t				Public;
@@ -32,6 +32,6 @@ namespace gpk
 	stin	err_t	gpcEncodeWithHash	(vcs0_t	decrypted, u3_t n, u3_t key, u3_t testKey, bool salt, au3_t & encrypted)			{ return gpcEncodeWithHash(*(vcu0_t*)&decrypted, n, key, testKey, salt, encrypted); }
 	stin	err_t	gpcDecodeWithHash	(vcu3_t	encrypted, u3_t n, u3_t key, bool salt, string & decrypted)							{ return gpcDecodeWithHash(encrypted, n, key, salt, *(au0_t*)&decrypted); }
 	stin	err_t	gpcEncodeWithHash	(vcst_t	decrypted, u3_t n, u3_t key, u3_t testKey, bool salt, au3_t & encrypted)			{ return gpcEncodeWithHash(*(vcu0_t*)&decrypted, n, key, testKey, salt, encrypted); }
-} // namespace
+} // nmsp
 
 #endif // GPK_RSA_H_23627

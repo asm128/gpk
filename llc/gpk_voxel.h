@@ -8,7 +8,7 @@
 #ifndef GPK_VOXEL_H_23627
 #define GPK_VOXEL_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	stxp	::gpk::astatic<::gpk::bgra, 256>	VOXEL_PALETTE = {
@@ -230,6 +230,6 @@ namespace gpk
 			return 0;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_VOXEL_H_098273498237423

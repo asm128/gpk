@@ -3,7 +3,7 @@
 #ifndef GPK_TRI_H_23627
 #define GPK_TRI_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)
 	tplt<tpnm _tVertex>
@@ -30,6 +30,6 @@ namespace gpk
 	tydf	tri<f3_t>	trif3_t;	tdcs trif3_t	trif3_c;
 
 #pragma pack(pop)
-} // namespace 
+} // nmsp 
 
 #endif // GPK_TRI_H_23627

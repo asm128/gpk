@@ -4,7 +4,7 @@
 
 GPK_USING_TYPEINT();
 
-namespace gpk
+nmsp gpk
 {
 		struct SDeflateMatch {
 			rangeu3_t			Match					= {};

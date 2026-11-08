@@ -4,7 +4,7 @@
 #ifndef GPK_VIEW_COLOR_H_23627
 #define GPK_VIEW_COLOR_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tydf	::gpk::view<::gpk::frgba	>		vrgbaf	, vfrgba	;
 	tydf	::gpk::view<::gpk::u8bgra	>		vbgra	, v8bgra	;
@@ -20,6 +20,6 @@ namespace gpk
 
 	::gpk::err_t 		vcu82bgra8	(vcu0_t bytes, ::gpk::bgra8 & colorToSet);
 	::gpk::err_t 		vcu82bgr8	(vcu0_t bytes, ::gpk::bgr8 & colorToSet);
-} // namespace
+} // nmsp
 
 #endif // GPK_VIEW_COLOR_H_23627

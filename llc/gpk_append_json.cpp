@@ -1,6 +1,6 @@
 #include "gpk_append_json.h"
 
-namespace gpk
+nmsp gpk
 {
     stxp vcst_t PREPENDED_QUOT = ",\"";
     stxp vcst_t NOPREPDED_QUOT = "\"";

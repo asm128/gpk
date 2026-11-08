@@ -18,7 +18,7 @@
 //#define	gpk_calc_align_address_32	(address)				gpk_calc_align_address(32, address)	// (0x20 - (0x1F & (uintptr_t)address) & 0x1F)
 //#define	gpk_calc_align_address_64	(address)				gpk_calc_align_address(64, address)	// (0x40 - (0x3F & (uintptr_t)address) & 0x3F)
 
-namespace gpk
+nmsp gpk
 {
 	stxp	u1_c		MALLOC_CUSTOM_ALIGN		= 16;
 	stxp	u1_c		MALLOC_ALIGN			= 
@@ -52,7 +52,7 @@ namespace gpk
 	tplTstin	T*&		malloc					(T* & newRef, u2_t count)	nxpt	{ rtrn newRef = (T*)gpk_malloc(szof(T) * count); }
 	tplTstin	void*	safe_gpk_free			(T & p)						nxpt	{ T _pepe = p; p = 0; rtrn gpk_free(_pepe); }
 
-	struct auto_free : public auto_handler<void*, nullptr>	{ using TWrapper::auto_handler; inline ~auto_free() nxpt { close(); } inline void close() nxpt { safe_gpk_free(Handle); } };
+	struct auto_free : public auto_handler<void*, nullptr>	{ usng TWrapper::auto_handler; inln ~auto_free() nxpt { close(); } inln void close() nxpt { safe_gpk_free(Handle); } };
 
 	stxp		u2_t	GREF_PAGE_SIZE_MAX 		= 4096;
 	tplTsinx	u2_t	get_page_size			()							nxpt	{ rtrn (u2_t)(szof(T) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/szof(T) : 1; };
@@ -95,6 +95,6 @@ namespace gpk
 		static_assert(sizeof(TDst) == sizeof(TSrc), "cpycst requires equal footprints.");
 		rtrn *(TDst*)::memcpy(&dst, &src, sizeof(TDst));
 	}
-}	// namespace
+}	// nmsp
 
 #endif // GPK_MEMORY_H__92836409283642038462309846

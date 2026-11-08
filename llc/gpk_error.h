@@ -3,40 +3,36 @@
 #ifndef GPK_ERROR_H_23627
 #define GPK_ERROR_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tydf		s2_t	err_t;
 	tdcs		err_t	err_c;
 
-	tydf		s2_t	err_t;
-	tdcs		err_t	error_c;
-
 	tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
-	tplTnsix	bool	not_failed	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
 	tplTnsix	bool	succeeded	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
 
 	stxp		err_c	OS_OK                = 0;
-	stxp		err_c	OS_ERROR             = ::gpk::OS_OK                - 1;
-	stxp		err_c	OS_BUSY              = ::gpk::OS_ERROR             - 1;
-	stxp		err_c	OS_TIMEOUT           = ::gpk::OS_BUSY              - 1;
-	stxp		err_c	OS_FULL              = ::gpk::OS_TIMEOUT           - 1;
-	stxp		err_c	OS_EMPTY             = ::gpk::OS_FULL              - 1;
-	stxp		err_c	OS_OVERRUN           = ::gpk::OS_EMPTY             - 1;
-	stxp		err_c	OS_NOT_AVAILABLE     = ::gpk::OS_OVERRUN           - 1;
-	stxp		err_c	OS_NOT_FOUND         = ::gpk::OS_NOT_AVAILABLE     - 1;
-	stxp		err_c	OS_INVALID_PARAMETER = ::gpk::OS_NOT_FOUND         - 1;
-	stxp		err_c	OS_FORBIDDEN         = ::gpk::OS_INVALID_PARAMETER - 1;
-	stxp		err_c	OS_RESTART           = ::gpk::OS_FORBIDDEN         - 1;
-	stxp		err_c	OS_WAKE_UP           = ::gpk::OS_RESTART           - 1;
-	stxp		err_c	OS_SLEEP             = ::gpk::OS_WAKE_UP           - 1;
-	stxp		err_c	OS_OFFLINE           = ::gpk::OS_SLEEP             - 1;
-	stxp		err_c	OS_DISCONNECTED      = ::gpk::OS_OFFLINE           - 1;
-	stxp		err_c	OS_CONNECTING        = ::gpk::OS_DISCONNECTED      - 1;
-	stxp		err_c	OS_CONNECTED         = ::gpk::OS_CONNECTING        - 1;
-	stxp		err_c	OS_MISSING_DATA      = ::gpk::OS_CONNECTED         - 1;
-	stxp		err_c	OS_NO_MEMORY         = ::gpk::OS_MISSING_DATA      - 1;
-	stxp		err_c	OS_READ              = ::gpk::OS_NO_MEMORY         - 1;
-	stxp		err_c	OS_WRITE             = ::gpk::OS_READ              - 1;
+	stxp		err_c	OS_ERROR             = OS_OK                - 1;
+	stxp		err_c	OS_BUSY              = OS_ERROR             - 1;
+	stxp		err_c	OS_TIMEOUT           = OS_BUSY              - 1;
+	stxp		err_c	OS_FULL              = OS_TIMEOUT           - 1;
+	stxp		err_c	OS_EMPTY             = OS_FULL              - 1;
+	stxp		err_c	OS_OVERRUN           = OS_EMPTY             - 1;
+	stxp		err_c	OS_NOT_AVAILABLE     = OS_OVERRUN           - 1;
+	stxp		err_c	OS_NOT_FOUND         = OS_NOT_AVAILABLE     - 1;
+	stxp		err_c	OS_INVALID_PARAMETER = OS_NOT_FOUND         - 1;
+	stxp		err_c	OS_FORBIDDEN         = OS_INVALID_PARAMETER - 1;
+	stxp		err_c	OS_RESTART           = OS_FORBIDDEN         - 1;
+	stxp		err_c	OS_WAKE_UP           = OS_RESTART           - 1;
+	stxp		err_c	OS_SLEEP             = OS_WAKE_UP           - 1;
+	stxp		err_c	OS_OFFLINE           = OS_SLEEP             - 1;
+	stxp		err_c	OS_DISCONNECTED      = OS_OFFLINE           - 1;
+	stxp		err_c	OS_CONNECTING        = OS_DISCONNECTED      - 1;
+	stxp		err_c	OS_CONNECTED         = OS_CONNECTING        - 1;
+	stxp		err_c	OS_MISSING_DATA      = OS_CONNECTED         - 1;
+	stxp		err_c	OS_NO_MEMORY         = OS_MISSING_DATA      - 1;
+	stxp		err_c	OS_READ              = OS_NO_MEMORY         - 1;
+	stxp		err_c	OS_WRITE             = OS_READ              - 1;
 
 	stxp		err_c	ESP_NO_MEM                     = -0x101 ;
 	stxp		err_c	ESP_INVALID_ARG                = -0x102 ;

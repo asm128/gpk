@@ -3,7 +3,7 @@
 #ifndef GPK_PTR_NCO_H_23627
 #define GPK_PTR_NCO_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tNCO>
 	class pnco {
@@ -47,6 +47,6 @@ namespace gpk
 	};
 	tplt <tpnm T> usng pn	= pnco<T>; 
 	tplt <tpnm T> usng pi	= pnco<T>; 
-} // namespace
+} // nmsp
 
 #endif // GPK_PTR_NCO_H_23627

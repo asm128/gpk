@@ -7,7 +7,7 @@
 #ifndef GPK_GUI_TEXT_H_23627
 #define GPK_GUI_TEXT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	sinx	err_t	textLineCalcWidth				(n2u0_c & sizeCharCell, vcst_c & text0)		{ return (err_t)(sizeCharCell.x * text0.size()); }
 
@@ -76,6 +76,6 @@ namespace gpk
 		}
 		return 0;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_GUI_TEXT_H_23627

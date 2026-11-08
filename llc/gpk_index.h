@@ -6,7 +6,7 @@
 #ifndef SHIP_DATA_H_928734
 #define SHIP_DATA_H_928734
 
-namespace gpk
+nmsp gpk
 {
 	stxp vcst_c		INDEX_EXCLUSION_DEFAULTS[]	=
 		{ "the", "and", "it", "to", "an", "by", "was", "is", "in", "as", "for", "of", "up", "a"
@@ -51,6 +51,6 @@ namespace gpk
 	err_t	getWordDict			(aobj<SWordIndices> & wordSet, cnst SItemViews & item, u2_t iItem, aobj<string> & cacheItemWords, view<vcst_c> exceptions = INDEX_EXCLUSION_DEFAULTS);
 	err_t	getWordList			(aobj<string> & itemWords, cnst SItemViews & item, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
 	err_t	outputSearchScript	(string & output, view<cnst SItemViews> indicesToDisplay, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
-} // namespace 
+} // nmsp 
 
 #endif // SHIP_DATA_H_928734

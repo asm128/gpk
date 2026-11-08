@@ -4,7 +4,7 @@
 #ifndef GPK_IMG_SERIALIZE_H_23627
 #define GPK_IMG_SERIALIZE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	tplt<tpnm TPod>
 	gpk::err_t 			saveImage					(::gpk::au0_t & output, const ::gpk::grid<TPod> & input) {
@@ -23,6 +23,6 @@ namespace gpk
 		return 0;
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_IMG_SERIALIZE_H_23627

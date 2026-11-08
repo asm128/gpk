@@ -17,13 +17,13 @@
 #define GPK_STDSOCKET_H_23627
 
 #if !defined(GPK_WINDOWS)
-typedef int SOCKET;
+tydf int SOCKET;
 #	ifndef INVALID_SOCKET
 #		define INVALID_SOCKET -1
 #	endif
 #endif
 
-namespace gpk
+nmsp gpk
 {
 	stin	err_t	safe_closesocket	(SOCKET & handle)	{
 		if(handle != INVALID_SOCKET) {
@@ -37,9 +37,9 @@ namespace gpk
 		return 0;
 	}
 	struct auto_socket_close : public auto_handler<SOCKET, INVALID_SOCKET>					{
-		using		TWrapper						::auto_handler;
-		inline										~auto_socket_close					()	noexcept	{ close(); }
-		inline		void							close								()	noexcept	{ safe_closesocket(Handle); }
+		usng		TWrapper						::auto_handler;
+		inln										~auto_socket_close					()	nxpt	{ close(); }
+		inln		void							close								()	nxpt	{ safe_closesocket(Handle); }
 	};
 
 			err_t	tcpipAddressToSockaddr		(u0_t a1, u0_t a2, u0_t a3, u0_t a4, u1_t port, sockaddr_in & sockaddr);
@@ -59,7 +59,7 @@ namespace gpk
 	}
 	stin	err_t	tcpipAddressFromSockaddr	(const sockaddr_in& sockaddr, SIPv4End & address)	{ u0_t addr[4] = {}; if_fail_fe(tcpipAddressFromSockaddr	(sockaddr	, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
 	stin	err_t	tcpipAddress				(SOCKET socket, SIPv4End & address)					{ u0_t addr[4] = {}; if_fail_fe(tcpipAddress				(socket		, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
-} // namespace
+} // nmsp
 
 
 #endif // GPK_STDSOCKET_H_23627

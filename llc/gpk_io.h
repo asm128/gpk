@@ -10,7 +10,7 @@
 #ifndef GPK_IO_H_56847984984__
 #define GPK_IO_H_56847984984__
 
-namespace gpk
+nmsp gpk
 {
 	stin gpk::err_t fopen_s		(FILE** out_fp, const sc_t* pFilename, const sc_t* mode) {
 		if_true_vef(-1, 0 == out_fp, "File pointer cannot be a null pointer. File name: %s.", pFilename);
@@ -21,6 +21,6 @@ namespace gpk
 		return (0 == (*out_fp = fp)) ? -1:  0;
 #endif
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_IO_H_56847984984__

@@ -3,7 +3,7 @@
 #ifndef GPK_N3_H_23627
 #define GPK_N3_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	tpl_t struct n3 {
@@ -106,8 +106,8 @@ namespace gpk
 		//
 		inxp	T			Volume				()									csnx	{ return x * y * z; }
 		inxp	Tn3			Clamp				(cnst Tn3 & min, cnst Tn3 & max)	csnx	{ return {clamped(x, min.x, max.x), clamped(y, min.y, max.y), clamped(z, min.z, max.z)}; }
-		inline	Tn3&		Set					(T value)								nxpt	{ x = y = z = value; return *this; }
-		inline	Tn3&		From				(T value)								nxpt	{ x = y = z = value; return *this; }
+		inln	Tn3&		Set					(T value)								nxpt	{ x = y = z = value; return *this; }
+		inln	Tn3&		From				(T value)								nxpt	{ x = y = z = value; return *this; }
 
 		int					SetAxis				(u2_t axisIndex, T value) {
 			switch(axisIndex) { 
@@ -126,12 +126,12 @@ namespace gpk
 			return -1;
 		}
 
-		inline	Tn3&		Scale				(f3_t scalar)								nxpt	{ return *this *= scalar; }
-		inline	Tn3&		Scale				(cnst Tn3 & other)							nxpt	{ x *= other.x; y *= other.y; z *= other.z; return *this; }
+		inln	Tn3&		Scale				(f3_t scalar)								nxpt	{ return *this *= scalar; }
+		inln	Tn3&		Scale				(cnst Tn3 & other)							nxpt	{ x *= other.x; y *= other.y; z *= other.z; return *this; }
 		inxp	Tn3&		Normalize			()														{ cnst T sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
 
-		inline	Tn3			Scaled				(f3_t scalar)						csnx	{ return Tn3{*this}.Scale(scalar); }
-		inline	Tn3			Scaled				(cnst Tn3 & other)					csnx	{ return {x * other.x, y * other.y, z * other.z }; }
+		inln	Tn3			Scaled				(f3_t scalar)						csnx	{ return Tn3{*this}.Scale(scalar); }
+		inln	Tn3			Scaled				(cnst Tn3 & other)					csnx	{ return {x * other.x, y * other.y, z * other.z }; }
 		inxp	Tn3			Normalized			()									cnst				{ cnst T sqLen = LengthSquared(); return sqLen ? *this / ::sqrt(sqLen) : *this; }
 
 		cxpr	f3_t		Dot					(cnst Tn3 & other)					csnx	{ return x * other.x + y * other.y + z * other.z; }
@@ -212,7 +212,7 @@ namespace gpk
 		, ::gpk::n3s3_t, ::gpk::n3s3_c	\
 		, ::gpk::n3f2_t, ::gpk::n3f2_c	\
 		, ::gpk::n3f3_t, ::gpk::n3f3_c
-		} // namespace
+		} // nmsp
 
 #define N3_F2 "{%f, %f, %f}"
 #define N3_F3 "{%g, %g, %g}"

@@ -12,7 +12,7 @@
 #endif
 #include <cstdlib>		// for EXIT_SUCCESS
 
-using namespace gpk;
+using nmsp gpk;
 
 
 struct SRuntimeState {

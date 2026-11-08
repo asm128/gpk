@@ -5,7 +5,7 @@
 #ifndef GPK_GRID_VIEW_H_23627
 #define GPK_GRID_VIEW_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplt <tpnm _tCell>
@@ -66,7 +66,7 @@ namespace gpk
 			return 0;
 
 		view<TColor>				firstRow				= target[yStart];
-		if constexpr(1 == sizeof(TColor))
+		if cxpr(1 == sizeof(TColor))
 			memset(&firstRow[xStart], *((u0_t*)&value), xCount);
 		else {
 			for(s2_t x = 0; x < xCount; ++x)

@@ -6,7 +6,7 @@
 
 #include <Windows.h>
 
-using namespace gpk;
+using nmsp gpk;
 //static gpk::err_t 							metrics_split			(const view_const_string& input_string, n2<s2_t>& output_metrics)												{
 //	u2_t 												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
@@ -46,7 +46,7 @@ gpk::err_t 							genHTMLModuleOutput				(SCGIFramework & framework, string & ou
 	return 0;
 }
 
-stxp	const char						html_script	[]			=
+stxp	::gpk::vcst_c		html_script				=
 	"\n<script>"
 	"\nfunction bootstrap() {"
     "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"

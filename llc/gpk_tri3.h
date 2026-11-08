@@ -5,17 +5,17 @@
 #ifndef GPK_TRI3_H_23627
 #define GPK_TRI3_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t struct tri3 : public tri<n3<_t>> {
 		tydf	_t			T;
 		tydf	n3<T>		TVertex;
 
-		using	tri<TVertex>	::A;
-		using	tri<TVertex>	::B;
-		using	tri<TVertex>	::C;
-		using	tri<TVertex>	::tri;
+		usng	tri<TVertex>	::A;
+		usng	tri<TVertex>	::B;
+		usng	tri<TVertex>	::C;
+		usng	tri<TVertex>	::tri;
 
 		inxp	tri3<uc_t>		uc		()	csnx	{ return {A.uc(), B.uc(), C.uc()}; }
 		inxp	tri3<sc_t>		sc		()	csnx	{ return {A.sc(), B.sc(), C.sc()}; }

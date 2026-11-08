@@ -4,7 +4,7 @@
 #ifndef GPK_ENGINE_ORBIT_H_23701
 #define GPK_ENGINE_ORBIT_H_23701
 
-namespace gpk
+nmsp gpk
 {
 	gpk::err_t 		initOrbitRotation	(::gpk::SBodyForces & orbitForces, ::gpk::AXIS rotationAxis, const ::gpk::quatf2_t & orbitOrientation, f3_t rotation_period, f3_t rotation_unit);
 	gpk::err_t 		initOrbitCenter		(::gpk::SBodyCenter & orbitCenter, ::gpk::AXIS rotationAxis, f3_t orbitalInclination, f3_t orbitRadius);
@@ -53,6 +53,6 @@ namespace gpk
 		, f3_t		rotationPeriod
 		, f3_t		rotationUnit
 		);
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_ORBIT_H_23701

@@ -4,7 +4,7 @@
 #ifndef GPK_HTTP_CLIENT_H_23627
 #define GPK_HTTP_CLIENT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SHTTPResponse {
 		string				Body;

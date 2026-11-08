@@ -5,7 +5,7 @@
 #ifndef GPK_IMAGE_H_23627
 #define GPK_IMAGE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm TCell>
 	stct img {
@@ -163,6 +163,6 @@ namespace gpk
 	tydf img<f2_t>	imgf2_t;
 	tydf img<f3_t>	imgf3_t;
 	tydf imgmono<u3_t>	imgmonou3_t;
-} // namespace gpk
+} // nmsp gpk
 
 #endif // GPK_IMAGE_H_23627

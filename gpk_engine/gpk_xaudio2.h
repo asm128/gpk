@@ -25,7 +25,7 @@
 #ifndef GPK_XAUDIO2_H_23627
 #define GPK_XAUDIO2_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	stxp u0_t		INPUTCHANNELS	= 1;// number of source channels
 	stxp u0_t		OUTPUTCHANNELS	= 8;// maximum number of destination channels supported in this sample
@@ -117,7 +117,7 @@ namespace gpk
 
 		gpk::err_t 		PlayWave				(::gpk::vcst_t wavname);
 	};
-} // namespace
+} // nmsp
 #endif // GPK_XAUDIO2_H_23627
 
 

@@ -8,7 +8,7 @@
 #ifndef CED_GEOMETRY_H_23627
 #define CED_GEOMETRY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplt<tpnm _tAxis, tpnm _tColor> struct SLightPoint2 { ::gpk::n2f2_t Position; _tColor Color; };
@@ -156,6 +156,6 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-} // namespace
+} // nmsp
 
 #endif // CED_GEOMETRY_H_23627

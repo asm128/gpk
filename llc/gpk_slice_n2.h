@@ -4,7 +4,7 @@
 #ifndef GPK_SLICE_N2
 #define GPK_SLICE_N2
 
-namespace gpk
+nmsp gpk
 {
 	tydf slice<n2uc_t>	slice2uc_t;	tdcs slice2uc_t	slice2uc_c;
 	tydf slice<n2sc_t>	slice2sc_t;	tdcs slice2sc_t	slice2sc_c;

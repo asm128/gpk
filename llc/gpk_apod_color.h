@@ -5,13 +5,13 @@
 #ifndef GPK_APOD_COLOR_H_23627
 #define GPK_APOD_COLOR_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tydf	::gpk::apod<::gpk::rgbaf	>		afrgba	;
 	tydf	::gpk::apod<::gpk::bgra		>		a8bgra	;
 	tydf	::gpk::apod<::gpk::bgr		>		a8bgr	;
 	tydf	::gpk::apod<::gpk::rgba		>		a8rgba	;
 	tydf	::gpk::apod<::gpk::rgb		>		a8rgb	;
-} // namespace
+} // nmsp
 
 #endif // GPK_APOD_COLOR_H_23627

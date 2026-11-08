@@ -17,11 +17,11 @@ GPK_USING_VIEW();
 GPK_USING_APOD();
 GPK_USING_N2();
 
-using namespace gpk;
+usng nmsp gpk;
 
 //GPK_CGI_JSON_APP_IMPL();
 
-namespace gpk
+nmsp gpk
 {
 	stxp vcst_c		DEFAULT_LANGUAGE	= "es";
 	stxp vcst_c		DEFAULT_CATEGORIES	=  R"CATEGORIES(
@@ -43,7 +43,7 @@ namespace gpk
 	}
 }
 )CATEGORIES"; 
-} // namespace
+} // nmsp
 
 //sttc	err_t	pageCatalog						(vcst_t contentFileName, vcst_t pathScript, n2u2_c sizeScreen, vcst_t pathStyles, const AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output);
 
@@ -91,10 +91,10 @@ err_t			gpk_cgi_generate_output			(SCGIRuntimeValues & runtimeValues, string & o
 		}
 	}
 	// switch(category) {
-	// case ::AD_SHOP_CATEGORY_tours: title = (qsArgsLanguage == "es") ? vcst_t("Turismo"		) : vcst_t("Tourism"	); break;
-	// case ::AD_SHOP_CATEGORY_meals: title = (qsArgsLanguage == "es") ? vcst_t("Comidas"		) : vcst_t("Meals"		); break;
-	// case ::AD_SHOP_CATEGORY_shops: title = (qsArgsLanguage == "es") ? vcst_t("Comercios"	) : vcst_t("Shopping"	); break;
-	// case ::AD_SHOP_CATEGORY_shows: title = (qsArgsLanguage == "es") ? vcst_t("Espectáculos"	) : vcst_t("Shows"		); break;
+	// case ::AD_SHOP_CATEGORY_tours: title = (qsArgsLanguage == "es") ? vcst_t{"Turismo"		) : vcst_t{"Tourism"	); break;
+	// case ::AD_SHOP_CATEGORY_meals: title = (qsArgsLanguage == "es") ? vcst_t{"Comidas"		) : vcst_t{"Meals"		); break;
+	// case ::AD_SHOP_CATEGORY_shops: title = (qsArgsLanguage == "es") ? vcst_t{"Comercios"	) : vcst_t{"Shopping"	); break;
+	// case ::AD_SHOP_CATEGORY_shows: title = (qsArgsLanguage == "es") ? vcst_t{"Espectáculos"	) : vcst_t{"Shows"		); break;
 	// default: break;
 	// }
 

@@ -15,7 +15,7 @@
 #ifndef GPK_ARRAY_VIEW_H_23627
 #define GPK_ARRAY_VIEW_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t clss view {
@@ -51,9 +51,9 @@ namespace gpk
 			if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn Data[index];
 		}
-		tplt<tpnm _tIndex> inln T&		oper[]			(_tIndex index)						{ rtrn operator[]((u2_t)index); }
-		tplt<tpnm _tIndex> inln cnst T&	oper[]			(_tIndex index)				cnst	{ rtrn operator[]((u2_t)index); }
-		ndxp	b8_t					oper!=			(TCVCs & other)				cnst	{ rtrn  !operator==(other); } // I had to add this for the android build not supporting C++20.
+		tplt<tpnm _tIndex> inln T&		oper[]			(_tIndex index)						{ rtrn oper[]((u2_t)index); }
+		tplt<tpnm _tIndex> inln cnst T&	oper[]			(_tIndex index)				cnst	{ rtrn oper[]((u2_t)index); }
+		ndxp	b8_t					oper!=			(TCVCs & other)				cnst	{ rtrn  !oper==(other); } // I had to add this for the android build not supporting C++20.
 		ndxp	b8_t					oper==			(TCVCs & other)				cnst	{
 			if(size() != other.size())
 				rtrn false;
@@ -183,7 +183,6 @@ namespace gpk
 		tplt<tpnm _tMax> err_t	min				(cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)						cnst	{ _tMax minFound = {}; rtrn min(minFound, funcComparand, offset); }
 	}; // view<>
 
-	tplTusng	view_array	= view<T>;
 	tplTusng	view1d		= view<T>;
 	tplTusng	v1			= view<T>;
 
@@ -271,7 +270,7 @@ namespace gpk
 		ndix		sc_c*		end				()							csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
 		ndix		oper		sc_c* 			()							csnx	{ rtrn begin(); }
 	};
-	//tplN2u	bool	view_string	::oper==	(sc_c (&other)[N])	cnst	{ rtrn view<sc_t>::operator==(view_const_string(other)); }
+	//tplN2u	bool	view_string	::oper==	(sc_c (&other)[N])	cnst	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
 	tydf	view_const_string	vcst_t;
 	tdcs	vcst_t				vcst_c;
 
@@ -304,7 +303,7 @@ namespace gpk
 	tdcs	vstr_t			vstr_c;
 #define GPK_VIEW_ARGS(view) (int)view.size(), view.begin() // Parenthesizing the argument does not merely tolerate expressions—it legitimizes and conceals them. Without those parentheses, the macro enforces its intended use.
 
-	tplt<tpnm _tVal>		using kvvcst_t	= kv<vcst_t, _tVal>;
+	tplt<tpnm _tVal>		usng kvvcst_t	= kv<vcst_t, _tVal>;
 	stxp		vcst_t	VCC_NULL		= "null";
 	stxp		vcst_t	VCC_TRUE		= "true";
 	stxp		vcst_t	VCC_FALSE		= "false";
@@ -543,6 +542,6 @@ namespace gpk
 		,	::gpk::vf3_t, ::gpk::vf3_c, ::gpk::vcf3_t, ::gpk::vcf3_c	\
 		,	::gpk::vstr_t, ::gpk::vcst_t, ::gpk::vstr_c, ::gpk::vcst_c
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ARRAY_VIEW_H_23627

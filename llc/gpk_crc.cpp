@@ -4,7 +4,7 @@
 
 GPK_USING_TYPEINT();
 
-using namespace gpk;
+using nmsp gpk;
 
 stxp u2_c			GPK_CRC_CRC_SEED			= 18973;
 gpk::err_t			gpk::crcGenerate			(vcu0_t bytes, u3_t & crc)	{

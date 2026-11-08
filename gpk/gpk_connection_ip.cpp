@@ -5,7 +5,7 @@
 using ::gpk::sc_t;
 
 #if defined(GPK_WINDOWS)
-typedef int socklen_t;
+tydf int socklen_t;
 #endif
 
 static ::gpk::err_t connectionReceive(::gpk::SSocketConnection & client, const ::gpk::SCommand & command, ::gpk::au0_t & packet) {

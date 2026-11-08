@@ -8,7 +8,7 @@
 #ifndef GPK_ARRAY_BASE_H_23627
 #define GPK_ARRAY_BASE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tpl_vtArgs	err_t			clear					(_tArgs&&... args)				nxpt	{ const s2_t results[] = {args.clear()..., 0}; for(cnst s2_t result : results) if(result < 0) rtrn result; rtrn 0; }
 	tpl_vtArgs	err_t			resize					(u2_t newSize, _tArgs&&... args)		{
@@ -40,7 +40,7 @@ namespace gpk
 	// Base for arrays that keeps track of its actual size.
 #pragma pack(push, 1)
 	tplT class array_base : public view<T> {
-		static	u2_t		calc_reserve_count		(u2_c newCountRequested, u2_t & outCount)	noexcept	{ 
+		static	u2_t		calc_reserve_count		(u2_c newCountRequested, u2_t & outCount)	nxpt	{ 
 			stxp	u2_t			MAX_COUNT				= 0x3FFFFFFFU;
 			if(MAX_COUNT < newCountRequested)
 				return (u2_t)-1;
@@ -53,23 +53,23 @@ namespace gpk
 		}
 
 	protected:
-		using					view<T>::Data;
+		usng					view<T>::Data;
 		tydf					array_base<T>			TArray;
 
 		u2_t				Size					: 30;
 		u2_t				NoAlloc					: 2;
 //		u2_t				Offset					= 0;
 
-		inline					~array_base				()							noexcept	{ if(0 == NoAlloc) ::gpk::safe_gpk_free(Data); }
+		inln					~array_base				()							nxpt	{ if(0 == NoAlloc) ::gpk::safe_gpk_free(Data); }
 
-		inxp					array_base				()							noexcept	: Size(0), NoAlloc(0) {}
-		inxp					array_base				(const TArray &	 other)		noexcept	= delete;
-		inxp					array_base				(const TArray && other)		noexcept	= delete;
+		inxp					array_base				()							nxpt	: Size(0), NoAlloc(0) {}
+		inxp					array_base				(const TArray &	 other)		nxpt	= delete;
+		inxp					array_base				(const TArray && other)		nxpt	= delete;
 
 		TArray&					oper =				(const TArray &	 other)					= delete;
 		TArray&					oper =				(const TArray && other)					= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		static	gpk::err_t alloc_with_reserve		(u2_c newCount, T* & reserved)	noexcept	{ 
+		static	gpk::err_t alloc_with_reserve		(u2_c newCount, T* & reserved)	nxpt	{ 
 			u2_t					newSize					= 0;
 			if_fail_fef(calc_reserve_count(newCount, newSize), "Too large. newCount: %" GPK_FMT_S2 ".", newCount);
 			u2_c				bytesToAllocate			= szof(T) * (newSize + 1);

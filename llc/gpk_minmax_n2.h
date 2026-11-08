@@ -5,7 +5,7 @@
 #ifndef GPK_MINMAX_N2
 #define GPK_MINMAX_N2
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplTusng	minmax2 = minmax<n2<T>>;	
@@ -22,6 +22,6 @@ namespace gpk
 	tydf	minmax2<f2_t>	minmax2f2_t;	tdcs	minmax2f2_t	minmax2f2_c;
 	tydf	minmax2<f3_t>	minmax2f3_t;	tdcs	minmax2f3_t	minmax2f3_c;
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_MINMAX_N2

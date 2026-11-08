@@ -7,7 +7,7 @@
 #ifndef GPK_SPI_H
 #define GPK_SPI_H
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	stct SSPISlave {
@@ -36,6 +36,6 @@ namespace gpk
 	err_t	spiLoad	(SSPIDevice & device, u0_t pin, au0_t  & data, u2_t registerIndex, u2_t registerCount, u2_t timeout, BUS_MODE mode = BUS_MODE_DMA);
 	err_t	spiLoad	(SSPIDevice & device, u0_t pin, vu0_t  & data, u2_t registerIndex, u2_t registerCount, u2_t timeout, BUS_MODE mode = BUS_MODE_DMA);
 	err_t	spiSave	(SSPIDevice & device, u0_t pin, vcu0_c & data, u2_t registerIndex, u2_t timeout, BUS_MODE mode = BUS_MODE_DMA);
-} // namespace
+} // nmsp
 
 #endif // GPK_SPI_H

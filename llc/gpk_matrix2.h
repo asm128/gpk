@@ -4,7 +4,7 @@
 #ifndef GPK_MATRIX2_H_23627
 #define GPK_MATRIX2_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplt<tpnm T, MATRIX_MATH _math = MATRIX_MATH_ROW_VECTOR, MATRIX_LAYOUT _layout = MATRIX_LAYOUT_ROW_MAJOR>

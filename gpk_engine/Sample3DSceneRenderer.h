@@ -6,7 +6,7 @@
 #ifndef SAMPLE3DSCENERENDERER_H_23627
 #define SAMPLE3DSCENERENDERER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 
 	// This sample renderer instantiates a basic rendering pipeline.

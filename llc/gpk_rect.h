@@ -3,7 +3,7 @@
 #ifndef GPK_RECT_H_23627
 #define GPK_RECT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplT struct rect {

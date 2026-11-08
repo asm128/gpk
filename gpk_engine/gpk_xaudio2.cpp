@@ -391,7 +391,7 @@ static	gpk::err_t enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<
 #if defined(__cplusplus_winrt )
 
 	// Enumerating with WinRT using C++/CX
-	using namespace concurrency;
+	using nmsp concurrency;
 	using Windows::Devices::Enumeration::DeviceClass;
 	using Windows::Devices::Enumeration::DeviceInformation;
 	using Windows::Devices::Enumeration::DeviceInformationCollection;
@@ -419,10 +419,10 @@ static	gpk::err_t enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<
 
 #else
 	// Enumerating with WinRT using WRL
-	using namespace Microsoft::WRL::Wrappers;
-	using namespace ABI::Windows::Foundation;
-	using namespace ABI::Windows::Foundation::Collections;
-	using namespace ABI::Windows::Devices::Enumeration;
+	using nmsp Microsoft::WRL::Wrappers;
+	using nmsp ABI::Windows::Foundation;
+	using nmsp ABI::Windows::Foundation::Collections;
+	using nmsp ABI::Windows::Devices::Enumeration;
 
 	RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
 	gpk_hrcall(initialize);

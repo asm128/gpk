@@ -5,7 +5,7 @@
 #ifndef GPK_ENCODING_H_23627
 #define GPK_ENCODING_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	err_t			hexEncode				(vcu0_c & inputBinary, string & out_hexed	);
 

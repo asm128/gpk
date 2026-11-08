@@ -12,7 +12,7 @@
 #ifndef GPK_MATH_H_23627
 #define GPK_MATH_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	stxp	f3_t		math_pi				= 3.1415926535897932384626433832795;	// Pi
@@ -60,6 +60,6 @@ namespace gpk
 #endif
 
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_MATH_H_23627

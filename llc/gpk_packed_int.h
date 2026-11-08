@@ -3,7 +3,7 @@
 #ifndef GPK_PACKED_INT_H
 #define GPK_PACKED_INT_H
 
-namespace gpk 
+nmsp gpk 
 {
 	tplt<tpnm _tInt>	ndsx	u0_t		uint_width_field_size	()		{ 
 		return 
@@ -113,8 +113,8 @@ namespace gpk
 		tplt<tpnm TView>
 		TView			cu8				()	const 				{ return {(u0_c*)(void*)this, ValueWidth()}; }
 
-		ndix	u0_t	ValueWidth		()	const	noexcept	{ return u0_t(1 + TailWidth); }
-		ndsc	T		Value			()	const	noexcept	{
+		ndix	u0_t	ValueWidth		()	csnx	{ return u0_t(1 + TailWidth); }
+		ndsc	T		Value			()	csnx	{
 			if(0 == TailWidth)
 				return Multiplier;
 
@@ -125,15 +125,15 @@ namespace gpk
 	};
 #pragma pack(pop)
 	tydf packed_uint<u1_t> pku1_t, packedu1_t; tdcs pku1_t pku1_c;
-	tydf packed_uint<u2_t> pku2_t, packedu32; tdcs pku2_t pku2_c;
-	tydf packed_uint<u3_t> pku3_t, packedu64; tdcs pku3_t pku3_c;
+	tydf packed_uint<u2_t> pku2_t, packedu2_t; tdcs pku2_t pku2_c;
+	tydf packed_uint<u3_t> pku3_t, packedu3_t; tdcs pku3_t pku3_c;
 
 	//nsix ::gpk::packedu1_t	int_pack	(const u1_t value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
-	//nsix ::gpk::packedu32	int_pack	(u2_c value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
-	//nsix ::gpk::packedu64	int_pack	(const u3_t value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
-	//nsix ::gpk::packedi16	int_pack	(const s1_t  value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
-	//nsix ::gpk::packedi32	int_pack	(const s2_t  value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
-	//nsix ::gpk::packedi64	int_pack	(const s3_t  value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
+	//nsix ::gpk::packedu2_t	int_pack	(u2_c value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
+	//nsix ::gpk::packedu3_t	int_pack	(const u3_t value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
+	//nsix ::gpk::packeds1_t	int_pack	(const s1_t  value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
+	//nsix ::gpk::packeds2_t	int_pack	(const s2_t  value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
+	//nsix ::gpk::packeds3_t	int_pack	(const s3_t  value) { return {uint_tail_width(value), uint_tail_multiplier(value), uint_tail_base(value)}; } 
 }
 
 #endif // GPK_PACKED_INT_H

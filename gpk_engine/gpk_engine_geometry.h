@@ -4,7 +4,7 @@
 #ifndef GPK_ENGINE_GEOMETRY_H
 #define GPK_ENGINE_GEOMETRY_H
 
-namespace gpk 
+nmsp gpk 
 {
 	gpk::err_t 		createBuffers
 		( const ::gpk::SGeometryBuffers	& geometry
@@ -23,6 +23,6 @@ namespace gpk
 		, u2_t						& iUV
 		);
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_GEOMETRY_H

@@ -12,12 +12,12 @@
 #ifndef GPK_TEST_LOBBY_H_23627
 #define GPK_TEST_LOBBY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 
 	struct SLobbyRoomStats {
-		uint64_t				UsersConnected;
-		uint64_t				UsersEverJoined;
+		u3_t				UsersConnected;
+		u3_t				UsersEverJoined;
 	};
 
 	struct SLobbyRoom {
@@ -36,7 +36,7 @@ namespace gpk
 	};
 
 	struct SLobbyServer {
-		typedef	apobj<SMessage> TMessageQueue;
+		tydf	apobj<SMessage> TMessageQueue;
 
 		au3_t					IdListRoom			= {};
 		au3_t					IdListUsers			= {};
@@ -70,15 +70,15 @@ namespace gpk
 
 
 	struct SLobbyClient {
-		typedef	apobj<SMessage> TMessageQueue;
+		tydf	apobj<SMessage> TMessageQueue;
 
 		SSocketClient			Client				= {};
 		SDialog					Dialog				= {};
 		SInputBox				InputBox			= {};
 		UI_LOBBY_USER			Field				= UI_LOBBY_USER_Offline;
 
-		uint64_t				IdRoom				= 0;
-		uint64_t				IdUser				= 0;
+		u3_t				IdRoom				= 0;
+		u3_t				IdUser				= 0;
 
 		SLobbyUser				Credentials			= {};
 		SLobbyUserInfo			InfoUser			= {};
@@ -179,7 +179,7 @@ namespace gpk
 				}));
 			}
 			{
-				::std::lock_guard								lockRecv					(Client.Connection.Queue.MutexReceive);
+				lock_guard								lockRecv					(Client.Connection.Queue.MutexReceive);
 				for(u2_t iMessage = 0; iMessage < Client.Connection.Queue.Received.size(); ++iMessage) {
 					if_fail_fef(MessagesToProcess.push_back(Client.Connection.Queue.Received[iMessage]), "%s", "Out of memory?");
 				}
@@ -197,6 +197,6 @@ namespace gpk
 		}
 	};
 
-} // namespace
+} // nmsp
 
 #endif // GPK_TEST_LOBBY_H_23627

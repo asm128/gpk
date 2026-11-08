@@ -5,7 +5,7 @@
 #ifndef GPK_VIEW_N3_2973498273423617
 #define GPK_VIEW_N3_2973498273423617
 
-namespace gpk
+nmsp gpk
 {
 	tplTusng	v3			= view<n3<T>>;
 	tplTusng	vc3			= view<cnst n3<T>>;
@@ -34,6 +34,6 @@ namespace gpk
 	tydf		vc3<s3_t>	vc3s3_t;	tdcs	vc3s3_t	vc3s3_c;
 	tydf		vc3<f2_t>	vc3f2_t;	tdcs	vc3f2_t	vc3f2_c;
 	tydf		vc3<f3_t>	vc3f3_t;	tdcs	vc3f3_t	vc3f3_c;
-} // namespace
+} // nmsp
 
 #endif // GPK_VIEW_N3_2973498273423617

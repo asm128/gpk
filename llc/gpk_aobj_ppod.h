@@ -6,9 +6,9 @@
 #ifndef GPK_ARRAY_PPOD_H_23627
 #define GPK_ARRAY_PPOD_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt <tpnm T> using appod		= ::gpk::aobj<::gpk::ppod<T>>;
-} // namespace
+} // nmsp
 
 #endif // GPK_ARRAY_PPOD_H_23627

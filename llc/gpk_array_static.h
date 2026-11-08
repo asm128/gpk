@@ -4,7 +4,7 @@
 #ifndef GPK_ARRAY_STATIC_H_23627
 #define GPK_ARRAY_STATIC_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t_nu2 stct array_static	{
@@ -111,7 +111,7 @@ namespace gpk
 			:					astsc_t<5>{'-', digit<0>((s1_t)-arg)}
 			;
 	}
-} // namespace
+} // nmsp
 
 #define GPK_USING_ASTATIC()					\
 	usng	::gpk::astb8_t, ::gpk::astb8_c	\

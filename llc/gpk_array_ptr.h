@@ -1,11 +1,11 @@
 #include "gpk_aobj_pobj.h"
 #include "gpk_aobj_ppod.h"
-#include "gpk_array_pod.h"
+#include "gpk_string.h"
 
 #ifndef GPK_ARRAY_PTR_H_23627
 #define GPK_ARRAY_PTR_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm T> usng		papod		= pobj<apod<T>>;
 	tplt<tpnm T> usng		apapod		= aobj<papod<T>>;
@@ -35,6 +35,6 @@ namespace gpk
 	tydf	aobj<pas3_t>	apas3_t;
 	tydf	aobj<paf2_t>	apaf2_t;
 	tydf	aobj<paf3_t>	apaf3_t;
-} // namespace
+} // nmsp
 
 #endif // GPK_ARRAY_PTR_H_23627

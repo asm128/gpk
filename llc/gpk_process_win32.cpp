@@ -2,7 +2,7 @@
 
 #ifdef GPK_WINDOWS
 // Windows declarations already arrive through GPK's synchronization headers.
-namespace gpk::process_detail {
+nmsp gpk::process_detail {
 sttc	gpk::err_t		processHandleClose		(TWindowsHandle & handle) {
 	if(0 == handle || INVALID_WINDOWS_HANDLE == handle) {
 		handle					= INVALID_WINDOWS_HANDLE;

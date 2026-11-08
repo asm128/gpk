@@ -7,7 +7,7 @@
 #ifndef GPK_EXPRESSION_H_23627
 #define GPK_EXPRESSION_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	GDEFINE_ENUM_TYPE (EXPRESSION_READER_TYPE, s0_t);
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, TERM_ANY		,  0);
@@ -65,6 +65,6 @@ namespace gpk
 	// Token spans refer to format. Resolved views must survive the callback until the formatter copies them.
 	err_t					expressionStringFormat		(vcst_t format, view<cnst SStripLiteralToken> tokens, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
 	err_t					expressionStringFormat		(vcst_t format, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
-} // namespace
+} // nmsp
 
 #endif // GPK_EXPRESSION_H_23627

@@ -10,13 +10,13 @@
 #ifndef GPK_ASCII_TARGET_H_23627
 #define GPK_ASCII_TARGET_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SASCIITarget {
 		::gpk::imgu0_t			Characters			= {};
 		::gpk::imgu1_t			Colors				= {};
 
-		inxp	::gpk::n2u2_t	metrics				()	const	noexcept	{ return Characters.metrics(); }
+		inxp	::gpk::n2u2_t	metrics				()	csnx	{ return Characters.metrics(); }
 	};
 
 	gpk::err_t 		asciiTargetClear	(::gpk::SASCIITarget & target, u0_t character = ' ', u1_t color = ASCII_COLOR_WHITE);

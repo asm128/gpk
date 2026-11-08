@@ -5,7 +5,7 @@
 #ifndef GPK_GRID_COPY_20983429834
 #define GPK_GRID_COPY_20983429834
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm T, tpnm _tCoord>
 	gpk::err_t 		grid_copy_ex					(::gpk::grid<T> & dst, const ::gpk::grid<T>& src, const ::gpk::n2<_tCoord> & size_, const ::gpk::n2<_tCoord> & offsetDst, const ::gpk::n2<_tCoord> & offsetSrc)	{
@@ -281,6 +281,6 @@ namespace gpk
 				memcpy(&dst[y][0], &src[srcMaxY - y][0], sizeof(T) * metrics.x);
 		return metrics.y * metrics.x;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_GRID_COPY_20983429834

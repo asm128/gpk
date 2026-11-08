@@ -3,23 +3,23 @@
 #ifndef GPK_SOCKET_SERVER_H_23627
 #define GPK_SOCKET_SERVER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SSocketServer {
-		::gpk::auto_socket_close				Socket;
-		::gpk::apobj<::gpk::SConnection>		Clients;
-		::gpk::apobj<::gpk::SSocketConnection>	Sockets;
-		::std::mutex							Mutex;
-		::gpk::SIPv4End							Address								= {};
-		s1_t									AdapterIndex						= 0;
-		::gpk::TRANSPORT_PROTOCOL				Protocol							= ::gpk::TRANSPORT_PROTOCOL_UDP;
-		bool									Listen								= false;
-		s2_t									Timeout								= 3000000;	// Kill clients timeout
+		auto_socket_close			Socket			= {};
+		apobj<SConnection>			Clients			= {};
+		apobj<SSocketConnection>	Sockets			= {};
+		mutex						Mutex			= {};
+		SIPv4End					Address			= {};
+		s1_t						AdapterIndex	= {};
+		TRANSPORT_PROTOCOL			Protocol		= TRANSPORT_PROTOCOL_UDP;
+		bool						Listen			= {};
+		s2_t						Timeout			= 3000000;	// Kill clients timeout
 	};
 
-	::gpk::err_t						serverStart							(::gpk::SSocketServer & serverInstance, u1_t port, s1_t adapterIndex = 0, ::gpk::TRANSPORT_PROTOCOL protocol = ::gpk::TRANSPORT_PROTOCOL_UDP);
-	::gpk::err_t						serverStop							(::gpk::SSocketServer & serverInstance);
-	::gpk::err_t						serverPayloadCollect				(::gpk::SSocketServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SMessage>> & receivedMessages);
-} // namespace
+	err_t						serverStart							(SSocketServer & serverInstance, u1_t port, s1_t adapterIndex = 0, TRANSPORT_PROTOCOL protocol = TRANSPORT_PROTOCOL_UDP);
+	err_t						serverStop							(SSocketServer & serverInstance);
+	err_t						serverPayloadCollect				(SSocketServer & server, aobj<apobj<SMessage>> & receivedMessages);
+} // nmsp
 
 #endif // GPK_SOCKET_SERVER_H_23627

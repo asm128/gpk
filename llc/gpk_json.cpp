@@ -780,7 +780,7 @@ gpk::err_t	gpk::jsonObjectGetBooleanAsDecimal(cnst SJSONReader & reader, u2_t iN
 //gpk::err_t	gpk::jsonObjectGetAsDecimal	(cnst gpk::SJSONReader & reader, u2_t iNode, f3_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_DECIMAL) rtrn jsonObjectGetDecimal(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_INTEGER) {}; rtrn iNode; }
 //gpk::err_t	gpk::jsonObjectGetAsDecimal	(cnst gpk::SJSONReader & reader, u2_t iNode, f2_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_DECIMAL) rtrn jsonObjectGetDecimal(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_INTEGER) {}; rtrn iNode; }
 
-#define json_if_fail_fwf if_fail_fwf // if_fail_ve(-1, condition) /// rew_if_failed
+#define json_if_fail_fwf if_fail_fwf // if_fail_ve(-1, condition) /// if_fail_fef
 
 gpk::err_t	gpk::jsonObjectGetAsString	(cnst SJSONReader & reader, u2_t iNode, vcst_t key, vcst_t 	& value) { s2_t index; json_if_fail_fwf(index = jsonObjectValueGet(reader, iNode, key), "iNode: %" GPK_FMT_S2 ", key: '%.*s', node: '%.*s'.", iNode, (int)key.size(), key.begin(), (int)reader.View[iNode].size(), reader.View[iNode].begin()); rtrn jsonObjectGetString (reader, index, value); } 
 gpk::err_t	gpk::jsonObjectGetAsBoolean	(cnst SJSONReader & reader, u2_t iNode, vcst_t key, b8_t		& value) { s2_t index; json_if_fail_fwf(index = jsonObjectValueGet(reader, iNode, key), "iNode: %" GPK_FMT_S2 ", key: '%.*s', node: '%.*s'.", iNode, (int)key.size(), key.begin(), (int)reader.View[iNode].size(), reader.View[iNode].begin()); rtrn jsonObjectGetBoolean(reader, index, value); } 

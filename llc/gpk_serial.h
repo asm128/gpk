@@ -8,7 +8,7 @@
 #ifndef GPK_SERIAL_H
 #define GPK_SERIAL_H
 
-namespace gpk
+nmsp gpk
 {
 	enum SERIAL_PARITY : u0_t
 		{ SERIAL_PARITY_NONE	= 0
@@ -85,6 +85,6 @@ namespace gpk
 			return 0;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_SERIAL_H

@@ -4,18 +4,18 @@
 #ifndef KEYED_BIT_ARRAY_H_23627
 #define KEYED_BIT_ARRAY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tKey>
 	struct keyed_bit_array {
-		typedef	_tKey			K;
-		typedef	vbit<u3_t>	TView;
-		typedef	vbit<u3_c>	TViewConst;
+		tydf	_tKey			K;
+		tydf	vbit<u3_t>	TView;
+		tydf	vbit<u3_c>	TViewConst;
 
 		aau3_t				Bits;		// One data array per client.
 		aobj<vcst_t>		FieldNames;	// One for all.
 
-		inline	err_t		GetFieldIndex	(const vcst_t & fieldName)			const	{ return FieldNames.find(fieldName); }
+		inln	err_t		GetFieldIndex	(const vcst_t & fieldName)			const	{ return FieldNames.find(fieldName); }
 
 		TViewConst			GetView			(u2_t client)						const	{ 
 			const au3_t				& data			= Bits[client]; 
@@ -57,6 +57,6 @@ namespace gpk
 
 	};
 
-} // namespace 
+} // nmsp 
 
 #endif // KEYED_BIT_ARRAY_H_23627

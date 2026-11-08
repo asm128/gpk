@@ -6,7 +6,7 @@
 #ifndef GPK_DEFLATE_H_23627
 #define GPK_DEFLATE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 	stxp	u2_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
@@ -47,7 +47,7 @@ namespace gpk
 	err_t			crcGenerate				(vcu0_t bytes, u3_t & crc);
 	err_t			crcVerifyAndRemove		(au0_t & bytes);
 	err_t			crcGenerateAndAppend	(au0_t & bytes);
-} // namespace
+} // nmsp
 
 #endif // GPK_DEFLATE_H_23627
 
