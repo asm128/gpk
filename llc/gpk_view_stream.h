@@ -15,7 +15,7 @@ nmsp gpk
 		usng									view<_tElement>::size;
 		usng									view<_tElement>::view;
 
-		cxpr	u2_t				remaining							() const nxpt	{ rtrn CursorPosition <= size() ? size() - CursorPosition : 0; }
+		cxpr	u2_t				remaining							() csnx	{ rtrn CursorPosition <= size() ? size() - CursorPosition : 0; }
 
 		tplt<tpnm _tPOD>
 		err_t								read_pod							(view<_tPOD> output) {

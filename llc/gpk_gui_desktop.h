@@ -13,8 +13,8 @@ nmsp gpk
 		::gpk::aobj<_tElement>		Elements;
 		::gpk::au3_t				UnusedData;
 
-		inxp	const _tElement&	operator[]					(u2_t index)			const				{ return Elements[index]; }
-		inxp	_tElement&			operator[]					(u2_t index)								{ return Elements[index]; }
+		inxp	const _tElement&	oper[]					(u2_t index)			const				{ return Elements[index]; }
+		inxp	_tElement&			oper[]					(u2_t index)								{ return Elements[index]; }
 
 		inxp	u2_t			size						()							csnx	{ return Elements.size(); }
 		gpk::err_t 			push_back					(const _tElement & toPush)						{

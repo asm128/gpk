@@ -22,7 +22,7 @@ nmsp gpk
 		cxpr cnst T &	MathElement	(u0_t row, u0_t column)	csnx	{ rtrn MATRIX_MATH_ROW_VECTOR == _math ? (*this)(row, column) : (*this)(column, row); }
 
 		cxpr bool	oper==	(cnst TMatrix & other)	csnx	{ rtrn matrixEqual<3>(*this, other); }
-		cxpr bool	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == operator==(other); }
+		cxpr bool	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == oper==(other); }
 		cxpr TMatrix	oper+	(cnst TMatrix & other)	csnx	{ rtrn matrixAdd<3>(*this, other); }
 		cxpr TMatrix	oper-	(cnst TMatrix & other)	csnx	{ rtrn matrixSubtract<3>(*this, other); }
 		cxpr TMatrix	oper*	(f3_t scalar)			csnx	{ rtrn matrixScale<3>(*this, scalar); }
@@ -152,7 +152,7 @@ nmsp gpk
 		cxpr cnst T &	MathElement	(u0_t row, u0_t column)	csnx	{ rtrn MATRIX_MATH_ROW_VECTOR == _math ? (*this)(row, column) : (*this)(column, row); }
 
 		cxpr bool	oper==	(cnst TMatrix & other)	csnx	{ rtrn matrixEqual<4>(*this, other); }
-		cxpr bool	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == operator==(other); }
+		cxpr bool	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == oper==(other); }
 		cxpr TMatrix	oper+	(cnst TMatrix & other)	csnx	{ rtrn matrixAdd<4>(*this, other); }
 		cxpr TMatrix	oper-	(cnst TMatrix & other)	csnx	{ rtrn matrixSubtract<4>(*this, other); }
 		cxpr TMatrix	oper*	(f3_t scalar)			csnx	{ rtrn matrixScale<4>(*this, scalar); }

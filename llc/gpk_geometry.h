@@ -68,7 +68,7 @@ nmsp gpk
 		cxpr			SParamsCircle	(const SParamsCircle &)		nxpt	= default;
 		cxpr			SParamsCircle	(const SParamsDisc & other)	nxpt	: SParamsDisc(other) {}
 
-		GPK_DEFAULT_OPERATOR_C(SParamsCircle, SParamsDisc::operator==(other) && Reverse == other.Reverse);
+		GPK_DEFAULT_OPERATOR_C(SParamsCircle, SParamsDisc::oper==(other) && Reverse == other.Reverse);
 	};
 
 	struct SParamsRingSide { 

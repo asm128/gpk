@@ -31,8 +31,8 @@ nmsp gpk
 
 		aobj<paeid>				Children		= {};
 
-		const SEntity&			operator[]		(eid_t id)	const	{ return Entities[id]; }
-		SEntity&				operator[]		(eid_t id)			{ return Entities[id]; }
+		const SEntity&			oper[]		(eid_t id)	const	{ return Entities[id]; }
+		SEntity&				oper[]		(eid_t id)			{ return Entities[id]; }
 
 		u2_t					size			()			const	{ return Names.size(); }
 		u2_t					clear			()					{ ::gpk::clear(Entities, Names, Children); return 0; }

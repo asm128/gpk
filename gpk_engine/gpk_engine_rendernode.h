@@ -85,8 +85,8 @@ nmsp gpk
 		::gpk::apobj<::gpk::apod<::gpk::SLightPoint>>		LightsPoint			= {};
 		::gpk::apobj<::gpk::apod<::gpk::SLightSpot>>		LightsSpot			= {};
 
-		const ::gpk::SRenderNode&			operator[]		(u2_t index)							const	{ return RenderNodes[index]; }
-		SRenderNode&						operator[]		(u2_t index)									{ return RenderNodes[index]; }
+		const ::gpk::SRenderNode&			oper[]		(u2_t index)							const	{ return RenderNodes[index]; }
+		SRenderNode&						oper[]		(u2_t index)									{ return RenderNodes[index]; }
 
 		u2_t							size			()											const	{ return RenderNodes.size(); }
 

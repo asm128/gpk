@@ -30,8 +30,8 @@ nmsp DirectX
 								WaveBankReader		(WaveBankReader&&)		= default;
 								WaveBankReader		(WaveBankReader const&) = delete;
 
-		WaveBankReader&			operator=			(WaveBankReader&&)		= default;
-		WaveBankReader&			operator=			(WaveBankReader const&)	= delete;
+		WaveBankReader&			oper=			(WaveBankReader&&)		= default;
+		WaveBankReader&			oper=			(WaveBankReader const&)	= delete;
 
 		HRESULT					Open				(_In_z_ const wchar_t * szFileName)	nxpt;
 		u2_t				Find				(_In_z_ const sc_t * name)			const;

@@ -14,12 +14,12 @@ nmsp gpk
 		minmaxf3_t			ZoomLimits			= {0.1, 10.0};
 		f3_t				ZoomLevel			= 1.0;
 
-		bool				operator==			(const SGUIZoom & other)		csnx	{
+		bool				oper==			(const SGUIZoom & other)		csnx	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inln	bool		operator!=			(const SGUIZoom & other)		csnx	{ return !operator==(other); }
+		inln	bool		oper!=			(const SGUIZoom & other)		csnx	{ return !oper==(other); }
 	};
 
 	struct SGUIColors {

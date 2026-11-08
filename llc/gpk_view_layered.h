@@ -25,12 +25,12 @@ nmsp gpk
 		}
 
 		// Operators
-		::gpk::grid<_tElement>	operator[]		(u2_t layer)																			{
+		::gpk::grid<_tElement>	oper[]		(u2_t layer)																			{
 			if_true_te(0 == Data);
 			if_true_tef(layer >= Size.z, "%" GPK_FMT_U32 " > %" GPK_FMT_U32 ".", layer, Size.z);
 			return ::gpk::grid<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y);
 		}
-		::gpk::grid<const _tElement>		operator[]		(u2_t layer)														const				{
+		::gpk::grid<const _tElement>		oper[]		(u2_t layer)														const				{
 			if_true_te(0 == Data);
 			if_true_tef(layer >= Size.z, "%" GPK_FMT_U32 " > %" GPK_FMT_U32 ".", layer, Size.z);
 			return ::gpk::grid<const _tElement>(&Data[layer * LayerSize], Size.x, Size.y);

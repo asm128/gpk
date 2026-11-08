@@ -297,7 +297,7 @@ nmsp gpk
 	struct EnumName {																														\
 		IntType				Value			;																								\
 		inln	oper		IntType&		()			nxpt	{ return Value; }															\
-		inxp	oper		const IntType&	()	const	nxpt	{ return Value; }															\
+		inxp	oper		const IntType&	()	csnx	{ return Value; }															\
 	};																																		\
 	static	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);								\
 	sinx	EnumName		oper &	(EnumName  a, EnumName b)	nxpt	{ return {a & (IntType)b};				}	\

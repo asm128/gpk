@@ -15,10 +15,10 @@ nmsp gpk
 		aobj<TPObj>				Elements		= {};
 		aobj<vcst_t>			Names			= {};
 
-		inln	const TPObj&	operator[]		(u2_t index)	const	{ return Elements[index]; }
-		inln	TPObj&			operator[]		(u2_t index)			{ return Elements[index]; }
-		inln	const TPObj&	operator[]		(vcst_t key)	const	{ return Elements[Names.find(key)]; }
-		inln	TPObj&			operator[]		(vcst_t key)			{ return Elements[Names.find(key)]; }
+		inln	const TPObj&	oper[]		(u2_t index)	const	{ return Elements[index]; }
+		inln	TPObj&			oper[]		(u2_t index)			{ return Elements[index]; }
+		inln	const TPObj&	oper[]		(vcst_t key)	const	{ return Elements[Names.find(key)]; }
+		inln	TPObj&			oper[]		(vcst_t key)			{ return Elements[Names.find(key)]; }
 
 		inxp	u2_t			size			()								const	{ return Names.size(); }
 		inln	err_t			find			(vcst_t key, u2_t offset = 0)	const	{ return Names.find(key, offset); }

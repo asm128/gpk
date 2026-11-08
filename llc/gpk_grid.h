@@ -13,7 +13,7 @@ nmsp gpk
 	protected:
 		// Properties / Member Variables
 		_tCell						* Data			= 0;
-		n2u2_t				Size			= {0, 0};
+		n2u2_t						Size			= {0, 0};
 	public:
 		tydf	_tCell				T;
 		// Constructors
@@ -25,24 +25,27 @@ nmsp gpk
 		tplt<size_t _tWidth, size_t _tHeight>
 		inxp						grid			(T (&data)[_tHeight][_tWidth])		nxpt	: Data{&data[0][0]}, Size{_tWidth, _tHeight} {}
 
-		inxp	oper				grid<const T>	()							const	nxpt	{ return {Data, Size}; }
+		inxp	oper				grid<const T>	()							csnx	{ return {Data, Size}; }
 		// Operators
-		view<T>				operator[]		(u2_t row)									{ if_true_te(0 == Data); if_true_tef(row >= Size.y, "Invalid row: %i.", (s2_t)row); return {&Data[row * Size.x], Size.x}; }
-		view<const T>		operator[]		(u2_t row)				const				{ if_true_te(0 == Data); if_true_tef(row >= Size.y, "Invalid row: %i.", (s2_t)row); return {&Data[row * Size.x], Size.x}; }
-		T&							operator[]		(n2u2_c & cell)						{ if_true_te(0 == Data); if_true_tef(cell.y >= Size.y, "Invalid row: %i.", (s2_t)cell.y); if_true_tef(cell.x >= Size.x, "Invalid column: %i.", (s2_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
-		const T&					operator[]		(n2u2_c & cell)	const				{ if_true_te(0 == Data); if_true_tef(cell.y >= Size.y, "Invalid row: %i.", (s2_t)cell.y); if_true_tef(cell.x >= Size.x, "Invalid column: %i.", (s2_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
+		view<T>				oper[]		(u2_t row)									{ if_true_te(0 == Data); if_true_tef(row >= Size.y, "Invalid row: %i.", (s2_t)row); return {&Data[row * Size.x], Size.x}; }
+		view<const T>		oper[]		(u2_t row)				const				{ if_true_te(0 == Data); if_true_tef(row >= Size.y, "Invalid row: %i.", (s2_t)row); return {&Data[row * Size.x], Size.x}; }
+		T&					oper[]		(n2u2_c & cell)						{ if_true_te(0 == Data); if_true_tef(cell.y >= Size.y, "Invalid row: %i.", (s2_t)cell.y); if_true_tef(cell.x >= Size.x, "Invalid column: %i.", (s2_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
+		const T&			oper[]		(n2u2_c & cell)	const				{ if_true_te(0 == Data); if_true_tef(cell.y >= Size.y, "Invalid row: %i.", (s2_t)cell.y); if_true_tef(cell.x >= Size.x, "Invalid column: %i.", (s2_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
 
-		inxp	const T*			begin			()		const	nxpt	{ return Data; }
-		inxp	const T*			end				()		const	nxpt	{ return Data + size(); }
+		ndix	const T*	begin			()		csnx	{ return Data; }
+		ndix	const T*	end				()		csnx	{ return Data + size(); }
+		
+		ndin	T*			begin			()		nxpt	{ return Data; }
+		ndin	T*			end				()		nxpt	{ return Data + size(); }
 
-		inxp	T*					begin			()				nxpt	{ return Data; }
-		inxp	T*					end				()				nxpt	{ return Data + size(); }
+		ndix	oper		view<cnst T>	()		csnx	{ return {Data, size()}; }
+		ndin	oper		view<T>			()		nxpt	{ return {Data, size()}; }
 
-		inxp	n2u2_c&		metrics			()		const	nxpt	{ return Size; }
-		inxp	n2u1_t		metrics16		()		const	nxpt	{ return Size.u1(); }
-		inxp	u2_t		size			()		const	nxpt	{ return area(); }
-		inxp	u2_t 		byte_count		()		const	nxpt	{ return area() * sizeof(T); }
-		inxp	u2_t		area			()		const	nxpt	{ return Size.x * Size.y; }
+		ndix	n2u2_c&		metrics			()		csnx	{ return Size; }
+		ndix	n2u1_t		metrics16		()		csnx	{ return Size.u1(); }
+		ndix	u2_t		size			()		csnx	{ return area(); }
+		ndix	u2_t 		byte_count		()		csnx	{ return area() * sizeof(T); }
+		ndix	u2_t		area			()		csnx	{ return Size.x * Size.y; }
 
 		inln	err_t 	fill			(const T & value, u2_t offset = 0, u2_t count = 0xFFFFFFFFU) {
 			if_true_vef(-1, (count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);

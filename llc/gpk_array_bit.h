@@ -24,13 +24,13 @@ nmsp gpk
 			, View(Data.begin(), other.View.size())
 			{}
 
-		::gpk::array_bit<T>&	operator=			(const ::gpk::view_bit<T> & other) {
+		::gpk::array_bit<T>&	oper=			(const ::gpk::view_bit<T> & other) {
 			Data					= {other.begin(), round_up(other.size(), TView::ELEMENT_BITS)};
 			View					= {Data.begin(), other.size()};
 			return *this;
 		}
 
-		::gpk::array_bit<T>&	operator=			(const ::gpk::array_bit<T> & other) {
+		::gpk::array_bit<T>&	oper=			(const ::gpk::array_bit<T> & other) {
 			Data					= other.Data;
 			View					= {Data.begin(), other.View.size()};
 			return *this;

@@ -17,7 +17,7 @@ nmsp gpk
 
 	tplt<tpnm _t>
 	struct STypeRegistrator {
-		operator				int					()	{ return 0; }
+		oper				int					()	{ return 0; }
 
 								STypeRegistrator	()	{
 			::gpk::STypeRegistry		& typeRegistry		= ::gpk::STypeRegistry::GetGlobalInstance();
