@@ -1,4 +1,5 @@
 #include "lls_event_args.h"
+#include "gpk_string_compose.h"
 
 ::gpk::err_t			lls::printArgsEvent		(const ::lls::SArgsEvent & eventArgs, bool debugOutput) {
 	if(debugOutput)
@@ -56,6 +57,6 @@
 		, eventArgs.Value.AsFloat	
 		, eventArgs.Id	
 		);
-	do { if_fail_fe(output.append_string(temp)); } while(0);
+	do { if_fail_fe(::gpk::append_strings(output, temp)); } while(0);
 	return 0;
 }

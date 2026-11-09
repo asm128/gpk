@@ -19,7 +19,7 @@ static	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 	::gpk::SControlPlacement & userInputText = gui.Controls.Placement[llsUI.UserInput.IdText];
 	userInputRoot.Align			= ::gpk::ALIGN_CENTER_BOTTOM;
 	userInputRoot.Area.Size.y	= userInputText.Area.Size.y;
-	do { if_fail_fe(gui.Controls.SetHidden(llsUI.UserInput.VirtualKeyboard.IdRoot, true)); } while(0);
+	if_zero_fe(gui.Controls.SetHidden(llsUI.UserInput.VirtualKeyboard.IdRoot, true)); 
 	return 0;
 }
 
@@ -151,8 +151,8 @@ static	::gpk::err_t	updateInput				(::lls::LLSUI & /*ui*/, ::lls::SWorldView & w
 	return 0;
 }
 
-static	::gpk::err_t	parseCommands			(gpk::vpobj<::gpk::asc_t> inputQueue, gpk::apobj<::gpk::asc_t> & inputHistory, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
-	inputQueue.for_each([&outputEvents, &inputHistory](::gpk::pachar & textLine) {
+static	::gpk::err_t	parseCommands			(gpk::vpobj<::gpk::string> inputQueue, gpk::apobj<::gpk::string> & inputHistory, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+	inputQueue.for_each([&outputEvents, &inputHistory](::gpk::pobj<::gpk::string> & textLine) {
 		if_null_fe(textLine.get_ref());	
 		if_zero_fe(textLine->size());	
 
@@ -207,7 +207,7 @@ static	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Eve
 		break;	
 	case ::lls::APP_STATE_Init	: 
 		{
-			::gpk::aachar				fileNames				= {};
+			::gpk::astr_t				fileNames				= {};
 			if_fail_e(::gpk::pathList(app.FileStrings.SavegameFolder, fileNames, app.FileStrings.ExtensionSaveAuto));
 			if(fileNames.size())
 				if_fail_e(app.Load(fileNames[0]));
@@ -218,7 +218,7 @@ static	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Eve
 		do { if_fail_fe(app.StateSwitch(::lls::APP_STATE_Welcome)); } while(0);
 		break;
 	default: 
-		do { if_fail_fe(::updateInput(app.UI, worldView, secondsElapsed, inputState->KeyboardCurrent.KeyState, inputState->MouseCurrent.Deltas.s1_t(), inputState->MouseCurrent.ButtonState)); } while(0);
+		do { if_fail_fe(::updateInput(app.UI, worldView, secondsElapsed, inputState->KeyboardCurrent.KeyState, inputState->MouseCurrent.Deltas.s1(), inputState->MouseCurrent.ButtonState)); } while(0);
 
 		if(0 == funcHandleEvent)
 			funcHandleEvent			= [&app](::gpk::pobj<::lls::EventLLS> & _eventToProcess, ::gpk::apobj<::lls::EventLLS> & appOutputEvents) { return handleLLSEvent(app, _eventToProcess, appOutputEvents); };
@@ -261,7 +261,7 @@ static	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Eve
 				do { if_fail_fe(app.UI.UserInput.Text.slice(trimmed, 0, ::gpk::min(app.UI.UserInput.Text.size(), 128U))); } while(0);
 				do { if_fail_fe(::gpk::trim(trimmed)); } while(0);
 				if(trimmed.size()) {
-					::gpk::pachar				textInput;
+					::gpk::pobj<::gpk::string>	textInput;
 					if_null_fe(textInput.create());
 					*textInput				= ::gpk::label(trimmed);
 					info_printf("Console input queued: '%s'", textInput->begin());

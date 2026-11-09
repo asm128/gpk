@@ -389,7 +389,7 @@ gpk::err_t			gpk::expressionReaderParse			(::gpk::SExpressionReader & reader, ::
 }
 
 ::gpk::err_t gpk::expressionStringFormat(::gpk::vcst_t format, ::gpk::view<cnst ::gpk::SStripLiteralToken> tokens, cnst ::gpk::FError<::gpk::vcst_c &, ::gpk::vcst_t &> & resolve, ::gpk::asc_t & output) {
-	::gpk::asc_t					formatted;
+	::gpk::string					formatted;
 	for(::gpk::u2_t iType = 0; iType < tokens.size(); ++iType) {
 		cnst ::gpk::SStripLiteralToken	& type			= tokens[iType];
 		cnst bool						isToken			= ::gpk::STRIP_LITERAL_TYPE_TOKEN == type.Type;

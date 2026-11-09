@@ -1,8 +1,8 @@
 #include "lls_client.h"
 #include "lls_server.h"
 
-#include "gpk_udp_client_app.h"
-#include "gpk_udp_server_app.h"
+#include "gpk_client_app.h"
+#include "gpk_server_app.h"
 #include "gpk_framework.h"
 #include "lls_process_broker.h"
 

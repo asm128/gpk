@@ -15,7 +15,7 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "LLS Server v0.1");
 
-static	::gpk::err_t	loadNetworkConfig		(const ::gpk::SJSONReader & jsonConfig, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter) {
+static	::gpk::err_t	loadNetworkConfig		(const ::gpk::SJSONReader & jsonConfig, ::gpk::vcst_t & port, ::gpk::vcst_t & adapter) {
 	::gpk::err_t				appNodeIndex;
 	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.test_udp_server"}, jsonConfig, 0)); } while(0);
 	return ::gpk::loadServerConfig(jsonConfig, appNodeIndex, port, adapter);
@@ -31,7 +31,7 @@ static	::gpk::err_t	loadNetworkConfig		(const ::gpk::SJSONReader & jsonConfig, :
 	app.D3DApp.Shutdown();
 #endif
 
-	if_fail_w(::gpk::serverStop(app.Server->UDP));
+	if_fail_w(::gpk::serverStop(app.Server->SocketServer));
 	if_fail_w(::gpk::mainWindowDestroy(mainWindow));
 	if_fail_w(::lls::llsUpdate(app.LLSApp, 0, mainWindow.Input, mainWindow.EventQueue, {}));
 	if_fail_w(::gpk::tcpipShutdown());
@@ -111,7 +111,7 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEve
 		return result;
 	})); } while(0);
 
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::bool2char(systemExit), ::gpk::bool2char(systemRequestedExit));
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::b82sc(systemExit), ::gpk::b82sc(systemRequestedExit));
 
 	::gpk::SFrameInfo			& frameInfo				= framework.FrameInfo;
 	{
@@ -123,10 +123,10 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEve
 
 	int32_t						serverResult;
 	if_fail_e(serverResult = ::gpk::serverUpdate(*app.Server, gui));
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, serverResult == 1, "User requested close. Terminating execution.");
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, serverResult == 1, "%s", "User requested close. Terminating execution.");
 
-	if_fail_e(app.Server->QueueReceived.for_each([&app](::gpk::TUDPQueue & messages) {
-		messages.enumerate([&app](uint32_t & index, ::gpk::pobj<::gpk::SUDPMessage> & message) {
+	if_fail_e(app.Server->QueueReceived.for_each([&app](::gpk::TPacketQueue & messages) {
+		messages.enumerate([&app](uint32_t & index, ::gpk::pobj<::gpk::SMessage> & message) {
 			if(!message)
 				return 0;
 
@@ -150,7 +150,7 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEve
 
 	//-----------------------------
 	::gpk::STimer				& timer					= app.Framework.Timer;
-	sc_t						buffer	[256]			= {};
+	::gpk::sc_t						buffer	[256]			= {};
 	sprintf_s(buffer, "[%u x %u]. FPS: %g. Last frame seconds: %g.", mainWindow.Size.x, mainWindow.Size.y, 1 / timer.LastTimeSeconds, timer.LastTimeSeconds);
 	::HWND						windowHandle			= mainWindow.PlatformDetail.WindowHandle;
 	SetWindowTextA(windowHandle, buffer);

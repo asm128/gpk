@@ -37,7 +37,7 @@ static	::gpk::err_t	initHandles		(::llswin32::SProcessHandles & handles) {
 
 static	::gpk::err_t	createChildProcess
 	( ::llswin32::SProcess	& process
-	, ::gpk::vcu0_t			environmentBlock
+	, ::gpk::vu0_t			environmentBlock
 	, ::gpk::vcst_t		appPath
 	, ::gpk::vsc_t		commandLine
 	) {
@@ -100,9 +100,9 @@ static	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
 		job.Process.StartInfo.hStdInput				= job.IOHandles.ChildStd_IN_Read;
 		job.Process.StartInfo.dwFlags				|= STARTF_USESTDHANDLES;
 
-		::gpk::vcu0_t				environmentBlock				= job.Request;
+		::gpk::vu0_t				environmentBlock				= job.Request;
 		const ::gpk::vcu0_t		packet						= job.Request;
-		const ::gpk::err_t	contentOffset				= ::gpk::find_sequence_pod(::gpk::vcu0_t{(const uint8_t*)"\0", 2}, packet);
+		const ::gpk::err_t	contentOffset				= packet.find(::gpk::vcu0_t{(const uint8_t*)"\0", 2});
 		if_true_fef(0 > contentOffset, "%s", "Failed to find the CGI environment block terminator.");
 
 		do { if_fail_fe(::createChildProcess(job.Process, environmentBlock, job.CommandLineApp, job.CommandLine)); } while(0);
@@ -136,7 +136,7 @@ static	void	threadProcessRequest		(void * jobAddress) {
 ::gpk::err_t	llswin32::processBrokerSetup		(::llswin32::SProcessBroker & broker, const ::gpk::SJSONReader & jsonReader) {
 	uint64_t					port						= broker.Port;
 	uint64_t					adapter					= broker.Adapter;
-	::gpk::vcsc_t				jsonNumber					= {};
+	::gpk::vcst_t				jsonNumber					= {};
 	const ::gpk::err_t		appNodeIndex				= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.brt"}, jsonReader, 0, broker.ProcessFileName);
 	if_true_wf(::gpk::failed(appNodeIndex), "Failed to find application node '%s'.", "application.brt")
 	else {
@@ -166,10 +166,10 @@ static	void	threadProcessRequest		(void * jobAddress) {
 }
 
 ::gpk::err_t	llswin32::processBrokerUpdate		(::llswin32::SProcessBroker & broker) {
-	::gpk::aobj<::gpk::TUDPQueue>	receivedPerClient;
+	::gpk::aobj<::gpk::TPacketQueue>	receivedPerClient;
 	do { if_fail_fe(::gpk::serverPayloadCollect(broker.Server, receivedPerClient)); } while(0);
 	for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
-		::gpk::pobj<::gpk::SUDPConnection>	connection;
+		::gpk::pobj<::gpk::SConnection>	connection;
 		{
 			::std::lock_guard			lock						(broker.Server.Mutex);
 			if(iClient < broker.Server.Clients.size())
@@ -178,7 +178,7 @@ static	void	threadProcessRequest		(void * jobAddress) {
 		if(!connection)
 			continue;
 		for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
-			const ::gpk::pobj<::gpk::SUDPMessage>	& message			= receivedPerClient[iClient][iMessage];
+			const ::gpk::pobj<::gpk::SMessage>	& message			= receivedPerClient[iClient][iMessage];
 			if(!message)
 				continue;
 			::gpk::pobj<::llswin32::SProcessBrokerJob>	job;

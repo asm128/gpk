@@ -5,7 +5,8 @@
 #include "gpk_gui.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_dialog.h"
-#include "gpk_deflate.h"
+#include "gpk_file_pack.h"
+#include "gpk_string_compose.h"
 #include "gpk_array_ptr.h"
 #include "gpk_noise.h"
 
@@ -55,15 +56,13 @@ namespace lls
 		}
 
 		::gpk::err_t			GetPlayerFilePath			(const uint64_t time, const ::gpk::vcst_t & playerName, ::gpk::asc_t & playerFilePath)	const	{
-			::gpk::au0_t					b64PlayerName				= {};
+			::gpk::string					b64PlayerName				= {};
 			do { if_fail_fe(::gpk::base64Encode(playerName, b64PlayerName)); } while(0);
-			do { if_fail_fe(playerFilePath.append(SavegameFolder)); } while(0);
-			do { if_fail_fe(playerFilePath.append_string("/")); } while(0);
-			do { if_fail_fe(playerFilePath.append(b64PlayerName.cc())); } while(0);
-
-			sc_t						postfix[64]					= {};
-			sprintf_s(postfix, "%llu%s", time, ExtensionProfile.begin());
-			return playerFilePath.append_string(postfix);
+			return ::gpk::append_strings
+				( playerFilePath
+				, SavegameFolder, "/", b64PlayerName
+				, time, ExtensionProfile
+				);
 		}
 	};
 
@@ -71,8 +70,8 @@ namespace lls
 		::gpk::cid_t			Root				= ::gpk::CID_INVALID;
 		::gpk::SInputBox		UserInput			= {};
 		::gpk::acid				RootPerState		= {};
-		::gpk::apachar			InputHistory		= {};
-		::gpk::apachar			InputQueue			= {};
+		::gpk::apstring			InputHistory		= {};
+		::gpk::apstring			InputQueue			= {};
 	};
 
 	::gpk::err_t			setupLLSUI			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI);
@@ -124,9 +123,9 @@ namespace lls
 		::gpk::err_t			StateSwitch			(APP_STATE newState);
 
 		::gpk::err_t			Save				()	const	{
-			rni_if(Game.Controlled >= Game.Engine.Entities.size(), "No active player character! %i >= %i", Game.Controlled, Game.Engine.Entities.size());
+			if_true_vif(0, Game.Controlled >= Game.Engine.Entities.size(), "No active player character! %i >= %i", Game.Controlled, Game.Engine.Entities.size());
 				
-			::gpk::asc_t				playerPath;
+			::gpk::string				playerPath;
 			do { if_fail_fe(FileStrings.GetPlayerFilePath(::gpk::timeCurrent(), Game.Players[0].Name, playerPath)); } while(0);
 			return Save(playerPath);
 		}

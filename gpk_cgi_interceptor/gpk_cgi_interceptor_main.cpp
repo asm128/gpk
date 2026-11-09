@@ -62,7 +62,7 @@ static	::gpk::err_t								createChildProcess
 		popupTitle.push_back('\0');
 		if_true_vef(-1, popupTitle[0] != 'L', "%s", "");
 	}
-	::gpk::asc_t								userMessage				= {};
+	::gpk::string								userMessage				= {};
 	{
 		userMessage.resize(2 * appPath.size() + 2 * commandLine.size() + 1024);
 		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%.*s' and press OK to initiate the process' main thread.", GPK_VIEW_ARGS(appPath));

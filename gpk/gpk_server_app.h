@@ -25,9 +25,9 @@ nmsp gpk
 		cid_t					Root				= -1;
 		acid					Info				= {};
 		acid					Input				= {};
-		asc_t					TextDateTime		= "-";
-		asc_t					TextTimeStarted		= "-";
-		asc_t					TextClientCount		= "-";
+		string					TextDateTime		= "-";
+		string					TextTimeStarted		= "-";
+		string					TextClientCount		= "-";
 	};
 
 	struct SServer {

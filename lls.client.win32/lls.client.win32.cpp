@@ -16,7 +16,7 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "LLS Client v0.1");
 
-static	::gpk::err_t	loadNetworkConfig	(const ::gpk::SJSONReader & jsonConfig, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port) {
+static	::gpk::err_t	loadNetworkConfig	(const ::gpk::SJSONReader & jsonConfig, ::gpk::vcst_t & remote_ip, ::gpk::vcst_t & remote_port) {
 	::gpk::err_t				appNodeIndex;
 	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.test_udp_client"}, jsonConfig, 0)); } while(0);
 	return ::gpk::loadClientConfig(jsonConfig, appNodeIndex, remote_ip, remote_port);
@@ -31,7 +31,7 @@ static	::gpk::err_t	loadNetworkConfig	(const ::gpk::SJSONReader & jsonConfig, ::
 	app.D3DApp.Shutdown();
 #endif
 
-	if_fail_w(::gpk::clientDisconnect(app.Client.UDP));
+	if_fail_w(::gpk::clientDisconnect(app.Client.SocketClient));
 	if_fail_w(::gpk::mainWindowDestroy(mainWindow));
 	if_fail_w(::lls::llsUpdate(app.LLSApp, 0, mainWindow.Input, mainWindow.EventQueue, {}));
 	if_fail_w(::gpk::tcpipShutdown());
@@ -110,7 +110,7 @@ static	::gpk::err_t	processSystemEvent	(::SApplication & app, const ::gpk::SEven
 		return result;
 	})); } while(0);
 
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::bool2char(systemExit), ::gpk::bool2char(systemRequestedExit));
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::b82sc(systemExit), ::gpk::b82sc(systemRequestedExit));
 
 	::gpk::SFrameInfo			& frameInfo			= framework.FrameInfo;
 	{	
@@ -120,7 +120,7 @@ static	::gpk::err_t	processSystemEvent	(::SApplication & app, const ::gpk::SEven
 		//info_printf("Update engine in %f seconds", timer.LastTimeSeconds);
 	}
 
-	::gpk::pau8					payloadCache;
+	::gpk::pau0_t					payloadCache;
 	app.LLSApp.EventsToSend.for_each([&app, &payloadCache](::gpk::pobj<::lls::EventLLS> & ev){
 		payloadCache.create();
 		do { if_fail_fe(ev->Save(*payloadCache)); } while(0);
@@ -133,7 +133,7 @@ static	::gpk::err_t	processSystemEvent	(::SApplication & app, const ::gpk::SEven
 	do { if_fail_fe(clientResult = ::gpk::clientUpdate(app.Client, gui)); } while(0);
 	if_true_vif(::gpk::APPLICATION_STATE_EXIT, clientResult > 0, "User requested close (%i). Terminating execution.", clientResult);
 
-	if_fail_e(app.Client.QueueReceived.for_each([&app](::gpk::pobj<::gpk::SUDPMessage> & udp){ 
+	if_fail_e(app.Client.QueueReceived.for_each([&app](::gpk::pobj<::gpk::SMessage> & udp){ 
 		if(udp && udp->Payload.size()) {
 			::gpk::pobj<::lls::EventLLS>	eventReceived;
 			::gpk::vcu0_t							inputBytes			= udp->Payload;
@@ -153,7 +153,7 @@ static	::gpk::err_t	processSystemEvent	(::SApplication & app, const ::gpk::SEven
 
 	//-----------------------------
 	::gpk::STimer				& timer					= app.Framework.Timer;
-	sc_t						buffer	[256]			= {};
+	::gpk::sc_t						buffer	[256]			= {};
 	sprintf_s(buffer, "[%u x %u]. FPS: %g. Last frame seconds: %g.", mainWindow.Size.x, mainWindow.Size.y, 1 / timer.LastTimeSeconds, timer.LastTimeSeconds);
 	::HWND						windowHandle			= mainWindow.PlatformDetail.WindowHandle;
 	SetWindowTextA(windowHandle, buffer);

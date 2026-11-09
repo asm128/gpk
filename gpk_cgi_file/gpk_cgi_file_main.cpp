@@ -25,7 +25,7 @@ sttc gpk::err_t		cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::
 sttc gpk::err_t		cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	::gpk::SCGIRuntimeValues	cgiRuntimeValues(runtimeValues);
 	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
-	::gpk::asc_t			html;
+	::gpk::string			html;
 	if(::gpk::failed(::cgiBootstrap(cgiRuntimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"

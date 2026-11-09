@@ -123,7 +123,7 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 		//for(s2_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
-			asc_t	content_body			= {};
+			string	content_body			= {};
 			content_body.resize(runtimeValues.Content.Length);
 			u2_t 			iChar					= 0;
 			char				iArg					= 0;

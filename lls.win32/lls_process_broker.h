@@ -1,4 +1,4 @@
-#include "gpk_udp_server.h"
+#include "gpk_socket_server.h"
 #include "gpk_string.h"
 #include "gpk_sync.h"
 
@@ -26,7 +26,7 @@ namespace llswin32
 	};
 
 	struct SProcessBrokerJob {
-		::gpk::pobj<::gpk::SUDPConnection>	Connection;
+		::gpk::pobj<::gpk::SConnection>		Connection;
 		::gpk::au0_t					Request;
 		::gpk::au0_t					Response;
 		::gpk::string					CommandLineApp;
@@ -38,11 +38,11 @@ namespace llswin32
 	};
 
 	struct SProcessBroker {
-		::gpk::SUDPServer					Server;
+		::gpk::SSocketServer				Server;
 		::gpk::apobj<::llswin32::SProcessBrokerJob>	Jobs;
-		::gpk::vcsc_t					ProcessFileName			= "";
-		::gpk::vcsc_t					ProcessMockPath			= "";
-		::gpk::vcsc_t					ProcessParams				= "";
+		::gpk::vcst_t					ProcessFileName			= "";
+		::gpk::vcst_t					ProcessMockPath			= "";
+		::gpk::vcst_t					ProcessParams				= "";
 		::gpk::string					CommandLineApp			= "";
 		::gpk::string					CommandLine				= "";
 		uint16_t						Port						= 9998;

@@ -7,6 +7,8 @@
 
 nmsp gpk
 {
+	tydf	apobj<string>	apstring;
+
 	tplt<tpnm T> usng		papod		= pobj<apod<T>>;
 	tplt<tpnm T> usng		apapod		= aobj<papod<T>>;
 

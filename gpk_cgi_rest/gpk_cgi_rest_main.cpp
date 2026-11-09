@@ -45,7 +45,7 @@ sttc	gpk::err_t	initClient			(gpk::SSocketClient & bestClient)										{
 }
 
 static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
-	::gpk::asc_t				environmentBlock		= {};
+	::gpk::string				environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
 		if_fail_fe(gpk::environmentBlock(environmentBlock, runtimeValues.RuntimeValues.EntryPointArgs.Environment));
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());

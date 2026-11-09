@@ -34,9 +34,9 @@
 	#endif
 		sc_t					buf[64]					= {};
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
-		client.UI.TextConnectedSince	= ::gpk::vcst_t(buf);
+		client.UI.TextConnectedSince	= buf;
 	}
-	return ::gpk::controlTextSet(gui, client.UI.Info[::gpk::UI_CLIENT_INFO_ConnectedSince], {client.UI.TextConnectedSince});
+	return ::gpk::controlTextSet(gui, client.UI.Info[::gpk::UI_CLIENT_INFO_ConnectedSince], client.UI.TextConnectedSince);
 }
 
 gpk::err_t		gpk::processGUIEvent	(SClient & client, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent) { 
@@ -86,12 +86,12 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 		const s2_t				hours				= int(minutes / 60);
 		const s2_t				days				= hours / 24;
 		if(days > 0)
-			sprintf_s(buf, "%u day%s %.2i:%.2i:%05.2f", days, days == 1 ? "s" : "", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
+			::gpk::sprintf_s(buf, "%u day%s %.2i:%.2i:%05.2f", days, days == 1 ? "s" : "", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
 		else
-			sprintf_s(buf, "%.2i:%.2i:%05.2f", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
+			::gpk::sprintf_s(buf, "%.2i:%.2i:%05.2f", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
 
-		client.UI.TextConnected	= vcst_t(buf);
-		if_fail_fe(controlTextSet(gui, client.UI.Info[UI_CLIENT_INFO_Connected], {client.UI.TextConnected}));
+		client.UI.TextConnected	= buf;
+		if_fail_fe(controlTextSet(gui, client.UI.Info[UI_CLIENT_INFO_Connected], client.UI.TextConnected));
 	}
 	{
 		time_t						timeInt				= time(NULL);
@@ -103,8 +103,8 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 	#endif
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 
-		client.UI.TextDateTime	= vcst_t(buf);
-		if_fail_fe(controlTextSet(gui, client.UI.Info[UI_CLIENT_INFO_DateTime], {client.UI.TextDateTime}));
+		client.UI.TextDateTime	= buf;
+		if_fail_fe(controlTextSet(gui, client.UI.Info[UI_CLIENT_INFO_DateTime], client.UI.TextDateTime));
 	}
 	return 0;
 }

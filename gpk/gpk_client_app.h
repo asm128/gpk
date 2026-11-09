@@ -22,9 +22,9 @@ nmsp gpk
 		cid_t		Root				= CID_INVALID;
 		acid			Info				= {};
 		acid			Input				= {};
-		asc_t		TextDateTime		= {};
-		asc_t		TextConnected		= {};
-		asc_t		TextConnectedSince	= {};
+		string		TextDateTime		= {};
+		string		TextConnected		= {};
+		string		TextConnectedSince	= {};
 		SInputBox	InputBox;
 	};
 
