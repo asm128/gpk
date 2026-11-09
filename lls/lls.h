@@ -24,7 +24,7 @@ namespace lls
 		::gpk::SDialog			DialogHome			= {};
 		::gpk::acid				ControlsDialogHome	= {};
 		::gpk::SInputBox		InputBox			= {};
-		::gpk::astc<128>		TextScore			= {};
+		::gpk::astsc_t<128>		TextScore			= {};
 	};
 
 	struct SUIPlay {

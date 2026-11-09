@@ -17,7 +17,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "LLS Server v0.1");
 
 static	::gpk::err_t	loadNetworkConfig		(const ::gpk::SJSONReader & jsonConfig, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter) {
 	::gpk::err_t				appNodeIndex;
-	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve(::gpk::vcs{"application.test_udp_server"}, jsonConfig, 0)); } while(0);
+	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.test_udp_server"}, jsonConfig, 0)); } while(0);
 	return ::gpk::loadServerConfig(jsonConfig, appNodeIndex, port, adapter);
 }
 

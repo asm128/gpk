@@ -137,16 +137,16 @@ static	void	threadProcessRequest		(void * jobAddress) {
 	uint64_t					port						= broker.Port;
 	uint64_t					adapter					= broker.Adapter;
 	::gpk::vcsc_t				jsonNumber					= {};
-	const ::gpk::err_t		appNodeIndex				= ::gpk::jsonExpressionResolve(::gpk::vcs{"application.brt"}, jsonReader, 0, broker.ProcessFileName);
+	const ::gpk::err_t		appNodeIndex				= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.brt"}, jsonReader, 0, broker.ProcessFileName);
 	if_true_wf(::gpk::failed(appNodeIndex), "Failed to find application node '%s'.", "application.brt")
 	else {
-		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"process.executable_path"}, jsonReader, appNodeIndex, broker.ProcessFileName)), "Failed to load process executable path. Last contents found: '%s'.", broker.ProcessFileName.begin());
-		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_app_name"}, jsonReader, appNodeIndex, broker.ProcessMockPath)), "Failed to load process command-line application name. Last contents found: '%s'.", broker.ProcessMockPath.begin());
-		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_params"}, jsonReader, appNodeIndex, broker.ProcessParams)), "Failed to load process command-line parameters. Last contents found: '%s'.", broker.ProcessParams.begin());
-		if(::gpk::succeeded(::gpk::jsonExpressionResolve(::gpk::vcs{"listen_port"}, jsonReader, appNodeIndex, jsonNumber)))
+		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.executable_path"}, jsonReader, appNodeIndex, broker.ProcessFileName)), "Failed to load process executable path. Last contents found: '%s'.", broker.ProcessFileName.begin());
+		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_app_name"}, jsonReader, appNodeIndex, broker.ProcessMockPath)), "Failed to load process command-line application name. Last contents found: '%s'.", broker.ProcessMockPath.begin());
+		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_params"}, jsonReader, appNodeIndex, broker.ProcessParams)), "Failed to load process command-line parameters. Last contents found: '%s'.", broker.ProcessParams.begin());
+		if(::gpk::succeeded(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"}, jsonReader, appNodeIndex, jsonNumber)))
 			::gpk::parseIntegerDecimal(jsonNumber, port);
 		jsonNumber								= {};
-		if(::gpk::succeeded(::gpk::jsonExpressionResolve(::gpk::vcs{"adapter"}, jsonReader, appNodeIndex, jsonNumber)))
+		if(::gpk::succeeded(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonReader, appNodeIndex, jsonNumber)))
 			::gpk::parseIntegerDecimal(jsonNumber, adapter);
 	}
 

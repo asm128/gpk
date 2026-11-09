@@ -18,7 +18,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "LLS Client v0.1");
 
 static	::gpk::err_t	loadNetworkConfig	(const ::gpk::SJSONReader & jsonConfig, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port) {
 	::gpk::err_t				appNodeIndex;
-	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve(::gpk::vcs{"application.test_udp_client"}, jsonConfig, 0)); } while(0);
+	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.test_udp_client"}, jsonConfig, 0)); } while(0);
 	return ::gpk::loadClientConfig(jsonConfig, appNodeIndex, remote_ip, remote_port);
 }
 

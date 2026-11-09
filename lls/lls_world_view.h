@@ -157,7 +157,7 @@ namespace lls
 	struct SBox			{ uint32_t Color; };
 
 	struct STown {
-		::gpk::vcsc_t				Name;
+		::gpk::vcst_t				Name;
 		uint32_t				Country;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
@@ -174,7 +174,7 @@ namespace lls
 	};
 
 	struct SMiniMe {
-		::gpk::vcsc_t				Name;
+		::gpk::vcst_t				Name;
 		uint32_t				Hangar;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
