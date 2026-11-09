@@ -40,7 +40,7 @@ nmsp gpk
 	// Base for arrays that keeps track of its actual size.
 #pragma pack(push, 1)
 	tplT class array_base : public view<T> {
-		static	u2_t		calc_reserve_count		(u2_c newCountRequested, u2_t & outCount)	nxpt	{ 
+		static	err_t 	calc_reserve_count		(u2_c newCountRequested, u2_t & outCount)	nxpt	{ 
 			stxp	u2_t			MAX_COUNT				= 0x3FFFFFFFU;
 			if(MAX_COUNT < newCountRequested)
 				return (u2_t)-1;
