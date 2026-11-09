@@ -503,7 +503,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 //	char							environmentBlock2Set	[BUFSIZE]	= {};
 //	s2_t							charsWritten						= 0;
 //	DWORD							dwFlags								= 0;
-//	stxp	::gpk::vcst_c			szAppName	[]						= GPK_CXS("ex3.exe");
+//	stxp	::gpk::vcst_c			szAppName	[]						= "ex3.exe");
 //	PROCESS_INFORMATION				pi									= {};
 //	if_fail_fef(charsWritten += 1 + (s2_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
 //	if_fail_fef(charsWritten += 1 + (s2_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
@@ -523,7 +523,7 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 //
 //static int					REM_tmain1			() {
 //	stxp	const u2_t 			BUFSIZE					= 4096;
-//	stxp	::gpk::vcst_c			szAppName			= GPK_CXS("ex3.exe");
+//	stxp	::gpk::vcst_c			szAppName			= "ex3.exe");
 //	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
 //	PROCESS_INFORMATION				pi					= {};
 //	BOOL							fExist				= 0

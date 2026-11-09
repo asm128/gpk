@@ -34,15 +34,15 @@ namespace lls
 	enum SAVE_MODE { SAVE_MODE_AUTO, SAVE_MODE_QUICK, SAVE_MODE_STAGE, SAVE_MODE_USER };
 
 	struct SFileStrings {
-		::gpk::vcst_t				SavegameFolder				= GPK_CXS(".");
-		::gpk::vcst_t				ExtensionImages				= GPK_CXS(".png");
-		::gpk::vcst_t				ExtensionProfile			= GPK_CXS(".lls");
-		::gpk::vcst_t				ExtensionCredentials		= GPK_CXS(".llsc");
-		::gpk::vcst_t				ExtensionSave				= GPK_CXS(".llsz");
-		::gpk::vcst_t				ExtensionSaveUser			= GPK_CXS(".user.llsz");
-		::gpk::vcst_t				ExtensionSaveAuto			= GPK_CXS(".auto.llsz");
-		::gpk::vcst_t				ExtensionSaveStage			= GPK_CXS(".stage.llsz");
-		::gpk::vcst_t				ExtensionSaveQuick			= GPK_CXS(".quick.llsz");
+		::gpk::vcst_t				SavegameFolder				= ".";
+		::gpk::vcst_t				ExtensionImages				= ".png";
+		::gpk::vcst_t				ExtensionProfile			= ".lls";
+		::gpk::vcst_t				ExtensionCredentials		= ".llsc";
+		::gpk::vcst_t				ExtensionSave				= ".llsz";
+		::gpk::vcst_t				ExtensionSaveUser			= ".user.llsz";
+		::gpk::vcst_t				ExtensionSaveAuto			= ".auto.llsz";
+		::gpk::vcst_t				ExtensionSaveStage			= ".stage.llsz";
+		::gpk::vcst_t				ExtensionSaveQuick			= ".quick.llsz";
 
 		::gpk::err_t			GetSaveGameExtension		(SAVE_MODE saveMode, ::gpk::vcst_t & extension)	const	{
 			switch(saveMode) {
