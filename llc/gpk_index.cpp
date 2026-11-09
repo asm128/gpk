@@ -152,16 +152,7 @@ gpk::err_t	gpk::getItemViews		(SJSONReader & content, const AD_SHOP_CATEGORY cat
 	return 0;
 }
 
-gpk::err_t			gpk::getWordList				(aobj<string> & itemWords, cnst SItemViews & item, view<vcst_c> exceptions) {
-	aobj<vcst_t>			upper								= {};
-	if_fail_fe(split(item.Text	, ' ', upper));
-	if_fail_fe(split(item.Title	, ' ', upper));
-	if_fail_fe(split(item.URL	, ' ', upper));
-	if_fail_fe(split(item.Text	, ' ', upper));
-	for(u2_t iAddr = 0; iAddr < item.Addresses	.size(); ++iAddr) if_fail_fe(split(item.Addresses[iAddr], ' ', upper));
-	for(u2_t iAddr = 0; iAddr < item.Phones		.size(); ++iAddr) if_fail_fe(split(item.Phones	[iAddr], ' ', upper));
-	for(u2_t iAddr = 0; iAddr < item.WPs		.size(); ++iAddr) if_fail_fe(split(item.WPs		[iAddr], ' ', upper));
-
+gpk::err_t	gpk::wordListNormalize			(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> exceptions) {
 	if_fail_fe(itemWords.resize(upper.size()));
 	cnst kv<vcst_t>			replaceDict	[]						=
 		{	{ "áéíóúàèìòùäëïöüãõñçºª"
@@ -201,8 +192,20 @@ gpk::err_t			gpk::getWordList				(aobj<string> & itemWords, cnst SItemViews & it
 	}
 	return 0;
 }
-gpk::err_t	gpk::getWordDict	(aobj<SWordIndices> & wordSet, cnst SItemViews & item, u2_t iItem, aobj<string> & cacheItemWords, view<vcst_c> exceptions) {
-	if_fail_fe(gpk::getWordList(cacheItemWords, item, exceptions));
+
+gpk::err_t			gpk::getWordList				(aobj<string> & itemWords, cnst SItemViews & item, view<vcst_c> exceptions) {
+	aobj<vcst_t>			upper								= {};
+	if_fail_fe(split(item.Text	, ' ', upper));
+	if_fail_fe(split(item.Title	, ' ', upper));
+	if_fail_fe(split(item.URL	, ' ', upper));
+	if_fail_fe(split(item.Text	, ' ', upper));
+	for(u2_t iAddr = 0; iAddr < item.Addresses	.size(); ++iAddr) if_fail_fe(split(item.Addresses[iAddr], ' ', upper));
+	for(u2_t iAddr = 0; iAddr < item.Phones		.size(); ++iAddr) if_fail_fe(split(item.Phones	[iAddr], ' ', upper));
+	for(u2_t iAddr = 0; iAddr < item.WPs		.size(); ++iAddr) if_fail_fe(split(item.WPs		[iAddr], ' ', upper));
+	rtrn wordListNormalize(itemWords, upper, exceptions);
+}
+
+gpk::err_t	gpk::wordDictAppend				(aobj<SWordIndices> & wordSet, u2_t iItem, view<cnst string> cacheItemWords) {
 	for(u2_t iItemWord = 0; iItemWord < cacheItemWords.size(); ++iItemWord) {
 		vcst_t			itemWord			= cacheItemWords[iItemWord];
 		info_printf("itemWord: %.*s.", GPK_VIEW_ARGS(itemWord));
@@ -226,6 +229,42 @@ gpk::err_t	gpk::getWordDict	(aobj<SWordIndices> & wordSet, cnst SItemViews & ite
 			if_fail_fe(wordSet[wordSet.push_back({itemWord})].Indices.push_back(iItem));
 	}
 	return 0;
+}
+
+gpk::err_t	gpk::getWordDict	(aobj<SWordIndices> & wordSet, cnst SItemViews & item, u2_t iItem, aobj<string> & cacheItemWords, view<vcst_c> exceptions) {
+	if_fail_fe(gpk::getWordList(cacheItemWords, item, exceptions));
+	rtrn wordDictAppend(wordSet, iItem, cacheItemWords);
+}
+
+gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, u2_t itemCount, au2_t & itemIndices, view<vcst_c> exceptions) {
+	if_fail_fe(itemIndices.clear());
+	aobj<vcst_t>		inputWords						= {};
+	aobj<string>		normalizedWords					= {};
+	au0_t				matchedItems						= {};
+	if_fail_fe(split(input, ' ', inputWords));
+	if_fail_fe(wordListNormalize(normalizedWords, inputWords, exceptions));
+	if_fail_fe(matchedItems.resize(itemCount));
+	for(u2_t iItem = 0; iItem < matchedItems.size(); ++iItem)
+		matchedItems[iItem] = 0;
+	for(u2_t iInputWord = 0; iInputWord < normalizedWords.size(); ++iInputWord) {
+		cnst vcst_t		inputWord						= normalizedWords[iInputWord];
+		if(0 == inputWord.size())
+			continue;
+		for(u2_t iWord = 0; iWord < wordSet.size(); ++iWord) {
+			cnst SWordIndices & indexedWord					= wordSet[iWord];
+			if(0 > indexedWord.Text.find(inputWord))
+				continue;
+			for(u2_t iPosting = 0; iPosting < indexedWord.Indices.size(); ++iPosting) {
+				cnst u2_t		itemIndex						= indexedWord.Indices[iPosting];
+				if_true_fef(itemIndex >= itemCount, "Invalid item index: %u. Item count: %u.", itemIndex, itemCount);
+				matchedItems[itemIndex] = 1;
+			}
+		}
+	}
+	for(u2_t iItem = 0; iItem < matchedItems.size(); ++iItem)
+		if(matchedItems[iItem])
+			if_fail_fe(itemIndices.push_back(iItem));
+	rtrn (err_t)itemIndices.size();
 }
 
 gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indicesToDisplay, view<vcst_c> exceptions) {
