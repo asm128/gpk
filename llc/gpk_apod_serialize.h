@@ -17,7 +17,7 @@ nmsp gpk
 	tplT			err_t	saveView					(au0_t & output, cnst view<T> & viewToSerialize)	{
 		cnst packedu2_t				counterValue				= viewToSerialize.size();
 		if_fail_fe(savePacked(output, counterValue));
-		if_fail_fe(output.append(view<u0_c>{(u0_c*)viewToSerialize.begin(), viewToSerialize.size()}));
+		if_fail_fe(output.append({(u0_c*)viewToSerialize.begin(), viewToSerialize.byte_count()}));
 		return counterValue.ValueWidth() + viewToSerialize.byte_count();
 	}
 	//tplT			err_t	saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{

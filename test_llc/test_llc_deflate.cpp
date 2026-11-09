@@ -35,7 +35,7 @@ GDEFINE_ENUM_VALUED(DEFLATE_TEST_RESULT, CORRUPT_REJECTED	, 6, "arrayInflate() a
 			if(::gpk::failed(compression))
 				continue;
 			cnst ::gpk::err_t inflation = ::gpk::arrayInflate(compressed, restored, chunkSize);
-			always_printf("Inflation result:%i; restored:%u, expected:%u bytes; byte equality:%.*s.", inflation, restored.size(), length, (restored == source) ? "PASS" : "FAIL");
+			always_printf("Inflation result:%i; restored:%u, expected:%u bytes; byte equality:%s.", inflation, restored.size(), length, (restored == source) ? "PASS" : "FAIL");
 			::gpk::testTraceBytes("Restored", restored);
 			char name[96] = {};
 			if_fail_fe(::gpk::sprintf_s(name, "input_%u_chunk_%u.deflate", length, chunkSize));
