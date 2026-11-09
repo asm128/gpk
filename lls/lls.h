@@ -34,17 +34,17 @@ namespace lls
 	enum SAVE_MODE { SAVE_MODE_AUTO, SAVE_MODE_QUICK, SAVE_MODE_STAGE, SAVE_MODE_USER };
 
 	struct SFileStrings {
-		::gpk::vcsc_t				SavegameFolder				= GPK_CXS(".");
-		::gpk::vcsc_t				ExtensionImages				= GPK_CXS(".png");
-		::gpk::vcsc_t				ExtensionProfile			= GPK_CXS(".lls");
-		::gpk::vcsc_t				ExtensionCredentials		= GPK_CXS(".llsc");
-		::gpk::vcsc_t				ExtensionSave				= GPK_CXS(".llsz");
-		::gpk::vcsc_t				ExtensionSaveUser			= GPK_CXS(".user.llsz");
-		::gpk::vcsc_t				ExtensionSaveAuto			= GPK_CXS(".auto.llsz");
-		::gpk::vcsc_t				ExtensionSaveStage			= GPK_CXS(".stage.llsz");
-		::gpk::vcsc_t				ExtensionSaveQuick			= GPK_CXS(".quick.llsz");
+		::gpk::vcst_t				SavegameFolder				= GPK_CXS(".");
+		::gpk::vcst_t				ExtensionImages				= GPK_CXS(".png");
+		::gpk::vcst_t				ExtensionProfile			= GPK_CXS(".lls");
+		::gpk::vcst_t				ExtensionCredentials		= GPK_CXS(".llsc");
+		::gpk::vcst_t				ExtensionSave				= GPK_CXS(".llsz");
+		::gpk::vcst_t				ExtensionSaveUser			= GPK_CXS(".user.llsz");
+		::gpk::vcst_t				ExtensionSaveAuto			= GPK_CXS(".auto.llsz");
+		::gpk::vcst_t				ExtensionSaveStage			= GPK_CXS(".stage.llsz");
+		::gpk::vcst_t				ExtensionSaveQuick			= GPK_CXS(".quick.llsz");
 
-		::gpk::err_t			GetSaveGameExtension		(SAVE_MODE saveMode, ::gpk::vcsc_t & extension)	const	{
+		::gpk::err_t			GetSaveGameExtension		(SAVE_MODE saveMode, ::gpk::vcst_t & extension)	const	{
 			switch(saveMode) {
 			case SAVE_MODE_USER		: extension = ExtensionSaveUser	; break;
 			case SAVE_MODE_STAGE	: extension = ExtensionSaveStage; break;
@@ -54,12 +54,12 @@ namespace lls
 			return 0;
 		}
 
-		::gpk::err_t			GetPlayerFilePath			(const uint64_t time, const ::gpk::vcsc_t & playerName, ::gpk::asc_t & playerFilePath)	const	{
+		::gpk::err_t			GetPlayerFilePath			(const uint64_t time, const ::gpk::vcst_t & playerName, ::gpk::asc_t & playerFilePath)	const	{
 			::gpk::au0_t					b64PlayerName				= {};
-			gpk_necs(::gpk::base64Encode(playerName, b64PlayerName));
-			gpk_necs(playerFilePath.append(SavegameFolder));
-			gpk_necs(playerFilePath.append_string("/"));
-			gpk_necs(playerFilePath.append(b64PlayerName.cc()));
+			do { if_fail_fe(::gpk::base64Encode(playerName, b64PlayerName)); } while(0);
+			do { if_fail_fe(playerFilePath.append(SavegameFolder)); } while(0);
+			do { if_fail_fe(playerFilePath.append_string("/")); } while(0);
+			do { if_fail_fe(playerFilePath.append(b64PlayerName.cc())); } while(0);
 
 			sc_t						postfix[64]					= {};
 			sprintf_s(postfix, "%llu%s", time, ExtensionProfile.begin());
@@ -96,8 +96,8 @@ namespace lls
 
 	struct SPlayer {
 		llsid_t					Id					= SSIEGEID_INVALID;
-		::gpk::vcsc_t				User				= {};
-		::gpk::vcsc_t				Name				= {};
+		::gpk::vcst_t				User				= {};
+		::gpk::vcst_t				Name				= {};
 	};
 
 	struct SPlayerState {
@@ -127,19 +127,19 @@ namespace lls
 			rni_if(Game.Controlled >= Game.Engine.Entities.size(), "No active player character! %i >= %i", Game.Controlled, Game.Engine.Entities.size());
 				
 			::gpk::asc_t				playerPath;
-			gpk_necs(FileStrings.GetPlayerFilePath(::gpk::timeCurrent(), Game.Players[0].Name, playerPath));
+			do { if_fail_fe(FileStrings.GetPlayerFilePath(::gpk::timeCurrent(), Game.Players[0].Name, playerPath)); } while(0);
 			return Save(playerPath);
 		}
 
-		::gpk::err_t			Save				(::gpk::vcsc_t fileName)	const	{
+		::gpk::err_t			Save				(::gpk::vcst_t fileName)	const	{
 			::gpk::au0_t					serialized;
-			gpk_necs(Game.World.Save(serialized));
+			do { if_fail_fe(Game.World.Save(serialized)); } while(0);
 			return ::gpk::deflateFromMemory(fileName, serialized);
 		}
 
-		::gpk::err_t			Load				(::gpk::vcsc_t filename)			{
+		::gpk::err_t			Load				(::gpk::vcst_t filename)			{
 			::gpk::au0_t					serialized;
-			gpk_necs(::gpk::inflateToMemory(filename, serialized));
+			do { if_fail_fe(::gpk::inflateToMemory(filename, serialized)); } while(0);
 			::gpk::vcu0_t					viewSerialized		= serialized;
 			return Game.World.Load(viewSerialized);
 		}

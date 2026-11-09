@@ -46,7 +46,7 @@ GPK_USING_TYPEINT();
 	case ::lls::WORLD_ADMIN_Generate	: gpk_warning_not_implemented(gameEvent); break; 
 	case ::lls::WORLD_ADMIN_Reset		: gpk_warning_not_implemented(gameEvent); break; 
 	case ::lls::WORLD_ADMIN_Initialize	: 
-		gpk_necs(::lls::llsGameSetup(world));
+		do { if_fail_fe(::lls::llsGameSetup(world)); } while(0);
 		break; 
 	} 
 	return 0; 

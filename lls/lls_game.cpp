@@ -35,7 +35,7 @@ static	::gpk::err_t	createShipCore		(::gpk::SEngine & engine) {
 	::gpk::SParamsSphere		sphere				= {};
 	sphere.Radius			= ::SHIP_CORE_RADIUS;
 	::gpk::eid_t				iShip; 
-	gpk_necs(iShip = engine.CreateSphere(sphere, "Ship Core"));
+	do { if_fail_fe(iShip = engine.CreateSphere(sphere, "Ship Core")); } while(0);
 	engine.SetRotation(iShip, ::gpk::n3f2_t{0, 0, float(::gpk::math_pi_2 * .15)});
 	return iShip;
 }
@@ -50,7 +50,7 @@ static	::gpk::err_t	createShipRing		(::gpk::SEngine & engine, ::gpk::vcs entityN
 		ring.RadiusYMax			= ::SHIP_RING_RADIUS;
 		ring.CellCount.x		= 32;
 
-		gpk_necs(iShipRing = engine.CreateTube(ring, entityName));
+		do { if_fail_fe(iShipRing = engine.CreateTube(ring, entityName)); } while(0);
 	}
 	{
 		::gpk::SParamsCircle		energy				= {};
@@ -58,7 +58,7 @@ static	::gpk::err_t	createShipRing		(::gpk::SEngine & engine, ::gpk::vcs entityN
 		energy.Slices			= 32;
 
 		::gpk::eid_t				iRingEnergy; 
-		gpk_necs(iRingEnergy = engine.CreateDisc(energy, "Energy Disc"));
+		do { if_fail_fe(iRingEnergy = engine.CreateDisc(energy, "Energy Disc")); } while(0);
 		engine.SetColorDiffuse(iRingEnergy, {.2f, .5f, 1, .25f});
 		engine.Entities.SetParent(iRingEnergy, iShipRing);
 	}
@@ -72,7 +72,7 @@ static	::gpk::err_t	createShipCraneBox		(::gpk::SEngine & engine) {
 		::gpk::SParamsBox			base					= {};
 		base.HalfSizes.From(::SHIP_CRANE_BOX * .5f);
 		base.Origin				= base.HalfSizes;
-		gpk_necs(iArmRoot = engine.CreateBox(base, "Crane Base"));
+		do { if_fail_fe(iArmRoot = engine.CreateBox(base, "Crane Base")); } while(0);
 		engine.SetColorDiffuse(iArmRoot, {1, 1, 1, .25f});
 		//engine.SetHidden(iArmRoot, true);
 	}
@@ -85,13 +85,13 @@ static	::gpk::err_t	createShipCraneBox		(::gpk::SEngine & engine) {
 		iron.HalfSizes.SetAxis  (iAxis, ::SHIP_CRANE_BOX_HALF);
 		iron.HalfSizes.SetOthers(iAxis, ::SHIP_CRANE_IRON_HALF);
 		iron.Origin				= iron.HalfSizes;
-		gpk_necs(iArmBaseBorder = engine.CreateBox(iron, "Crane Base Iron"));
+		do { if_fail_fe(iArmBaseBorder = engine.CreateBox(iron, "Crane Base Iron")); } while(0);
 	
 		::gpk::n3f2_t				position				= {};
 		position.SetAxis((iAxis + 1) % 3, (::SHIP_CRANE_BOX_HALF - SHIP_CRANE_IRON_HALF) * (iRow ? 1 : -1));
 		position.SetAxis((iAxis + 2) % 3, (::SHIP_CRANE_BOX_HALF - SHIP_CRANE_IRON_HALF) * (iCol ? 1 : -1));
 		engine.SetPosition(iArmBaseBorder, position);
-		gpk_necs(engine.Entities.SetParent(iArmBaseBorder, iArmRoot));
+		do { if_fail_fe(engine.Entities.SetParent(iArmBaseBorder, iArmRoot)); } while(0);
 	}
 	return iArmRoot;
 }
@@ -102,7 +102,7 @@ static	::gpk::err_t	createShipCraneBar	(::gpk::SEngine & engine, ::gpk::vcs enti
 	bar.Radius				= {::SHIP_ARM_RADIUS, ::SHIP_ARM_RADIUS};
 	bar.Height				= ::SHIP_ARM_LENGTH;
 	::gpk::eid_t				iBar;
-	gpk_necall(iBar = engine.CreateCylinder(bar, entityName), "entityName: '%.*s'", GPK_VIEW_ARGS(entityName));
+	do { if_fail_fef(iBar = engine.CreateCylinder(bar, entityName), "entityName: '%.*s'", GPK_VIEW_ARGS(entityName)); } while(0);
 	engine.SetOrientation(iBar, ::gpk::quatf32{1, 0, 0, 1}.Normalize());
 	engine.SetPosition(iBar, {0, ::SHIP_CRANE_WHEEL_RADIUS * .5f, });
 	return iBar;
@@ -114,7 +114,7 @@ static	::gpk::err_t	createShipCraneWheel(::gpk::SEngine & engine, ::gpk::vcs ent
 	wheel.Radius			= ::gpk::dim2<::gpk::minmaxf2_t>(::SHIP_CRANE_WHEEL_RADIUS);
 	wheel.Height			= ::SHIP_CRANE_WHEEL_HEIGHT;
 	::gpk::eid_t				iWheel;
-	gpk_necall(iWheel = engine.CreateCylinder(wheel, entityName), "entityName: '%.*s'", GPK_VIEW_ARGS(entityName));
+	do { if_fail_fef(iWheel = engine.CreateCylinder(wheel, entityName), "entityName: '%.*s'", GPK_VIEW_ARGS(entityName)); } while(0);
 	engine.SetOrientation(iWheel, ::gpk::quatf32{1, 0, 0, 1}.Normalize());
 	return iWheel;
 }
@@ -129,7 +129,7 @@ static	::gpk::err_t	createShipCraneGrip	(::gpk::SEngine & engine, ::gpk::vcs ent
 		ring.RadiusYMax			= ::SHIP_GRIP_RADIUS;
 		ring.CellCount.x		= 32;
 
-		gpk_necs(iShipRing = engine.CreateTube(ring, entityName));
+		do { if_fail_fe(iShipRing = engine.CreateTube(ring, entityName)); } while(0);
 	}
 	{
 		::gpk::SParamsCircle		energy				= {};
@@ -137,7 +137,7 @@ static	::gpk::err_t	createShipCraneGrip	(::gpk::SEngine & engine, ::gpk::vcs ent
 		energy.Slices			= 32;
 
 		::gpk::eid_t				iRingEnergy; 
-		gpk_necs(iRingEnergy = engine.CreateDisc(energy, "Energy Disc"));
+		do { if_fail_fe(iRingEnergy = engine.CreateDisc(energy, "Energy Disc")); } while(0);
 		engine.SetColorDiffuse(iRingEnergy, {.2f, .5f, 1, .25f});
 		engine.Entities.SetParent(iRingEnergy, iShipRing);
 	}
@@ -150,13 +150,13 @@ static	::gpk::err_t	createShipCrane		(::gpk::SEngine & engine) {
 	{
 		::gpk::SParamsSphere		sphere				= {};
 		sphere.Radius			= ::SHIP_CORE_RADIUS;
-		gpk_necs(iCrane = engine.CreateSphere(sphere, "Ship Crane"));
+		do { if_fail_fe(iCrane = engine.CreateSphere(sphere, "Ship Crane")); } while(0);
 	}
 	engine.SetColorDiffuse(iCrane, {.25f, 1, 1, .5f});
 	{
 		::gpk::eid_t				iBox;
-		gpk_necs(iBox = ::createShipCraneBox(engine));	
-		gpk_necs(engine.Entities.SetParent(iBox, iCrane));
+		do { if_fail_fe(iBox = ::createShipCraneBox(engine));	 } while(0);
+		do { if_fail_fe(engine.Entities.SetParent(iBox, iCrane)); } while(0);
 	}
 	stxp	float				OFFSET_CORNER		= ::SHIP_CRANE_BOX_HALF + ::SHIP_CRANE_IRON_HALF;
 	for(uint32_t iArm = 0; iArm < 2; ++iArm) {
@@ -165,21 +165,21 @@ static	::gpk::err_t	createShipCrane		(::gpk::SEngine & engine) {
 			continue;
 
 		::gpk::eid_t				iWheel;
-		gpk_necs(iWheel = ::createShipCraneWheel(engine, isLeft ? ::gpk::vcs{"Ship Crane Wheel Left?"} : ::gpk::vcs{"Ship Crane Wheel Right?"}));
+		do { if_fail_fe(iWheel = ::createShipCraneWheel(engine, isLeft ? ::gpk::vcs{"Ship Crane Wheel Left?"} : ::gpk::vcs{"Ship Crane Wheel Right?"})); } while(0);
 		::gpk::n3f2_t				barPosition			= {OFFSET_CORNER, -::SHIP_CRANE_BOX_HALF, OFFSET_CORNER * (isLeft ? -1 : 1)};
 		engine.SetPosition(iWheel, barPosition);
 		engine.SetRotation(iWheel, ::gpk::n3f2_t{0, 0, float(::gpk::math_pi_2 * .15)});
-		gpk_necs(engine.Entities.SetParent(iWheel, iCrane));
+		do { if_fail_fe(engine.Entities.SetParent(iWheel, iCrane)); } while(0);
 
 		::gpk::eid_t				iBar;	// Create bar
-		gpk_necs(iBar = ::createShipCraneBar(engine, isLeft ? ::gpk::vcs{"Ship Crane Bar Left?"} : ::gpk::vcs{"Ship Crane Bar Right?"}));
-		gpk_necs(engine.Entities.SetParent(iBar, iWheel));
+		do { if_fail_fe(iBar = ::createShipCraneBar(engine, isLeft ? ::gpk::vcs{"Ship Crane Bar Left?"} : ::gpk::vcs{"Ship Crane Bar Right?"})); } while(0);
+		do { if_fail_fe(engine.Entities.SetParent(iBar, iWheel)); } while(0);
 
 		::gpk::eid_t				iGrip;	// Create bar
-		gpk_necs(iGrip = ::createShipCraneGrip(engine, isLeft ? ::gpk::vcs{"Ship Crane Grip Left?"} : ::gpk::vcs{"Ship Crane Grip Right?"}));
+		do { if_fail_fe(iGrip = ::createShipCraneGrip(engine, isLeft ? ::gpk::vcs{"Ship Crane Grip Left?"} : ::gpk::vcs{"Ship Crane Grip Right?"})); } while(0);
 		::gpk::n3f2_t				tubePosition			= {::SHIP_GRIP_RADIUS_MAX, ::SHIP_ARM_LENGTH, OFFSET_CORNER * (isLeft ? -1 : 1)};
 		engine.SetPosition(iGrip, tubePosition);
-		gpk_necs(engine.Entities.SetParent(iGrip, iBar));
+		do { if_fail_fe(engine.Entities.SetParent(iGrip, iBar)); } while(0);
 	}
 	return iCrane; 
 }
@@ -193,14 +193,14 @@ static	::gpk::err_t	createShipCrane		(::gpk::SEngine & engine) {
 ////	ring.RadiusYMax.Min		*= .005f;
 ////
 ////	::gpk::eid_t				iShipRing; 
-////	gpk_necs(iShipRing = engine.CreateRing(ring));
+////	do { if_fail_fe(iShipRing = engine.CreateRing(ring)); }
 ////	engine.SetRotation(iShipRing, ::gpk::n3f2_t{0, float(::gpk::math_pi * .25),});
 ////	return iShipRing; 
 ////}
 
 static	::gpk::err_t	shipCreate			(::lls::LLSGame & world) { 
-	gpk_necs(world.ShipCore = ::createShipCore(world.Engine));
-	gpk_necs(world.ShipRing = ::createShipRing(world.Engine));
+	do { if_fail_fe(world.ShipCore = ::createShipCore(world.Engine)); } while(0);
+	do { if_fail_fe(world.ShipRing = ::createShipRing(world.Engine)); } while(0);
 	const int					armCount			= ::DEFAULT_ARM_COUNT;
 	for(uint32_t iArm = 0; iArm < armCount; ++iArm) {
 		::gpk::eid_t				iArmRoot			= ::createShipCrane(world.Engine);
@@ -219,8 +219,8 @@ static	::gpk::err_t	shipCreate			(::lls::LLSGame & world) {
 }
 
 ::gpk::err_t			lls::llsGameSetup	(::lls::LLSGame & world) {
-	gpk_necs(::gpk::planetarySystemSetup(world.SolarSystem, world.Engine, "gpk_solar_system.json"));
-	gpk_necs(::shipCreate(world));
+	do { if_fail_fe(::gpk::planetarySystemSetup(world.SolarSystem, world.Engine, "gpk_solar_system.json")); } while(0);
+	do { if_fail_fe(::shipCreate(world)); } while(0);
 	return 0;
 }
 
@@ -273,7 +273,7 @@ static	::gpk::err_t	shipCreate			(::lls::LLSGame & world) {
 	::gpk::STimer				timer				= {};
 	::gpk::SEngine				& engine			= world.Engine;
 
-	gpk_necs(::gpk::drawScene(backBuffer.Color.View, backBuffer.DepthStencil.View, engine.Scene->RenderCache, *engine.Scene, cameraPosition, cameraTarget, cameraUp, nearFar));
+	do { if_fail_fe(::gpk::drawScene(backBuffer.Color.View, backBuffer.DepthStencil.View, engine.Scene->RenderCache, *engine.Scene, cameraPosition, cameraTarget, cameraUp, nearFar)); } while(0);
 
 	timer.Frame();
 	info_printf("Render scene in %f seconds", timer.LastTimeSeconds);

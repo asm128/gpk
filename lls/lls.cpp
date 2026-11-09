@@ -11,22 +11,22 @@ using ::gpk::get_value_namep, ::gpk::get_enum_namep, ::gpk::failed;
 GPK_USING_TYPEINT();
 
 static	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
-	gpk_necs(::gpk::inputBoxCreate(llsUI.UserInput, gui, llsUI.Root));
+	do { if_fail_fe(::gpk::inputBoxCreate(llsUI.UserInput, gui, llsUI.Root)); } while(0);
 	llsUI.UserInput.MaxLength	= 64;
-	gpk_necs(llsUI.UserInput.Edit(gui, true));
+	do { if_fail_fe(llsUI.UserInput.Edit(gui, true)); } while(0);
 
 	::gpk::SControlPlacement & userInputRoot = gui.Controls.Placement[llsUI.UserInput.IdRoot];
 	::gpk::SControlPlacement & userInputText = gui.Controls.Placement[llsUI.UserInput.IdText];
 	userInputRoot.Align			= ::gpk::ALIGN_CENTER_BOTTOM;
 	userInputRoot.Area.Size.y	= userInputText.Area.Size.y;
-	gpk_necs(gui.Controls.SetHidden(llsUI.UserInput.VirtualKeyboard.IdRoot, true));
+	do { if_fail_fe(gui.Controls.SetHidden(llsUI.UserInput.VirtualKeyboard.IdRoot, true)); } while(0);
 	return 0;
 }
 
 // initialize root gui layout and console input/virtual keyboard
 ::gpk::err_t			lls::setupLLSUI		(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
-	gpk_necs(llsUI.Root = ::gpk::createScreenLayout(gui));
-	gpk_necs(::setupConsole(gui, llsUI));
+	do { if_fail_fe(llsUI.Root = ::gpk::createScreenLayout(gui)); } while(0);
+	do { if_fail_fe(::setupConsole(gui, llsUI)); } while(0);
 	return 0; 
 }
 
@@ -37,11 +37,11 @@ static	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 		info_printf("Switching state: (%i) -> (%i) - '%s' -> '%s'", ActiveState, newState, ::gpk::get_value_namep(ActiveState), ::gpk::get_value_namep(newState));
 
 		if(0 == ActiveState || 0 == gui.Controls.States.size() || ::gpk::CID_INVALID == UI.Root) {
-			gpk_necs(::lls::setupLLSUI(gui, UI));
+			do { if_fail_fe(::lls::setupLLSUI(gui, UI)); } while(0);
 		}
 		while(newState >= UI.RootPerState.size()) {	// create layouts for each state as they're required
 			::gpk::cid_t				rootId;
-			gpk_necs(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::createScreenLayout(*GUI, UI.Root))]);
+			do { if_fail_fe(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::createScreenLayout(*GUI, UI.Root))]); } while(0);
 			if_zero_e(GUI->Controls.SetHidden(rootId, true));
 		}
 				
@@ -52,7 +52,7 @@ static	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 			if_zero_e(table.SetHidden(iDialogActive, true));
 		}
 		if(newState == APP_STATE_Home && ActiveState > APP_STATE_Home) // Don't autosave first time we enter Home.
-			es_if_failed(Save());
+			if_fail_e(Save());
 
 		ActiveState				= newState;
 	}
@@ -63,9 +63,9 @@ static	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 ::gpk::err_t			lls::llsDraw		(::lls::LLSApp & app, ::gpk::rtbgra8d32 & backBuffer, bool onlyGUI) { 
 	if(false == onlyGUI) {
 		const ::gpk::SCamera		& cameraSelected		= app.Game.Camera;
-		gpk_necs(::lls::llsGameDraw(app.Game, backBuffer, cameraSelected.Position, cameraSelected.Target, cameraSelected.Up, cameraSelected.NearFar));
+		do { if_fail_fe(::lls::llsGameDraw(app.Game, backBuffer, cameraSelected.Position, cameraSelected.Target, cameraSelected.Up, cameraSelected.NearFar)); } while(0);
 	}
-	gpk_necs(::gpk::guiDraw(*app.GUI, backBuffer.Color.View));
+	do { if_fail_fe(::gpk::guiDraw(*app.GUI, backBuffer.Color.View)); } while(0);
 	return 0; 
 }
 
@@ -75,12 +75,12 @@ static	::gpk::err_t	processScreenEvent		(::lls::LLSApp & app, const ::gpk::SEven
 	case ::gpk::EVENT_SCREEN_Close:
 	case ::gpk::EVENT_SCREEN_Deactivate: 
 		if(app.ActiveState != ::lls::APP_STATE_Welcome) 
-			gpk_necs(app.StateSwitch(::lls::APP_STATE_Home));
+			do { if_fail_fe(app.StateSwitch(::lls::APP_STATE_Home)); } while(0);
 		break;
 	case ::gpk::EVENT_SCREEN_Create:
 	case ::gpk::EVENT_SCREEN_Resize: {
 		::gpk::n2u1_t				newMetrics				= *(const ::gpk::n2u1_t*)screenEvent.Data.begin();
-		gpk_necs(::gpk::guiUpdateMetrics(*app.GUI, newMetrics, true));
+		do { if_fail_fe(::gpk::guiUpdateMetrics(*app.GUI, newMetrics, true)); } while(0);
 
 		::gpk::n2u1_t				renderTargetWorldSize;	
 		renderTargetWorldSize	= newMetrics;
@@ -91,7 +91,7 @@ static	::gpk::err_t	processScreenEvent		(::lls::LLSApp & app, const ::gpk::SEven
 		else 
 			renderTargetWorldSize.x = (uint16_t)(renderTargetWorldSize.y / targetRatioY + .1f);
 		
-		gpk_necs(app.RenderTargetWorld->resize(renderTargetWorldSize));
+		do { if_fail_fe(app.RenderTargetWorld->resize(renderTargetWorldSize)); } while(0);
 	}
 		break;
 	}
@@ -113,13 +113,13 @@ static	::gpk::err_t	processKeyboardEvent	(::lls::LLSApp & app, const ::gpk::SEve
 		if(screenEvent.Data[0] == VK_ESCAPE) {
 			if(false == app.UI.UserInput.Editing) {
 				if(app.ActiveState != ::lls::APP_STATE_Home) 
-					gpk_necs(app.StateSwitch(::lls::APP_STATE_Home));
+					do { if_fail_fe(app.StateSwitch(::lls::APP_STATE_Home)); } while(0);
 				else 
-					gpk_necs(app.StateSwitch(::lls::APP_STATE_Play));
+					do { if_fail_fe(app.StateSwitch(::lls::APP_STATE_Play)); } while(0);
 			}
 		}
 		else if(screenEvent.Data[0] == VK_OEM_5) {
-			gpk_necs(app.UI.UserInput.Edit(*app.GUI, true));
+			do { if_fail_fe(app.UI.UserInput.Edit(*app.GUI, true)); } while(0);
 		}
 		break;
 	}
@@ -129,9 +129,9 @@ static	::gpk::err_t	processKeyboardEvent	(::lls::LLSApp & app, const ::gpk::SEve
 static	::gpk::err_t	processSystemEvent		(::lls::LLSApp & app, const ::gpk::SEventSystem & sysEvent) { 
 	switch(sysEvent.Type) {
 	default: break;
-	case ::gpk::SYSTEM_EVENT_Screen		: gpk_necs(::gpk::eventExtractAndHandle<::gpk::EVENT_SCREEN		>(sysEvent, [&app](auto ev) { return processScreenEvent		(app, ev); })); break;
-	case ::gpk::SYSTEM_EVENT_Text		: gpk_necs(::gpk::eventExtractAndHandle<::gpk::EVENT_TEXT		>(sysEvent, [&app](auto ev) { return processTextEvent		(app, ev); })); break;
-	case ::gpk::SYSTEM_EVENT_Keyboard	: gpk_necs(::gpk::eventExtractAndHandle<::gpk::EVENT_KEYBOARD	>(sysEvent, [&app](auto ev) { return processKeyboardEvent	(app, ev); })); break;
+	case ::gpk::SYSTEM_EVENT_Screen		: do { if_fail_fe(::gpk::eventExtractAndHandle<::gpk::EVENT_SCREEN		>(sysEvent, [&app](auto ev) { return processScreenEvent		(app, ev); })); } while(0); break;
+	case ::gpk::SYSTEM_EVENT_Text		: do { if_fail_fe(::gpk::eventExtractAndHandle<::gpk::EVENT_TEXT		>(sysEvent, [&app](auto ev) { return processTextEvent		(app, ev); })); } while(0); break;
+	case ::gpk::SYSTEM_EVENT_Keyboard	: do { if_fail_fe(::gpk::eventExtractAndHandle<::gpk::EVENT_KEYBOARD	>(sysEvent, [&app](auto ev) { return processKeyboardEvent	(app, ev); })); } while(0); break;
 	}
 	return 0;
 }
@@ -203,22 +203,22 @@ static	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Eve
 	switch(app.ActiveState) {
 	case ::lls::APP_STATE_Quit	: return 1;
 	case ::lls::APP_STATE_Welcome	: // APP_STATE_Welcome comes right after APP_STATE_Init.
-		gpk_necs(app.StateSwitch(::lls::APP_STATE_Home)); 
+		do { if_fail_fe(app.StateSwitch(::lls::APP_STATE_Home));  } while(0);
 		break;	
 	case ::lls::APP_STATE_Init	: 
 		{
 			::gpk::aachar				fileNames				= {};
-			es_if_failed(::gpk::pathList(app.FileStrings.SavegameFolder, fileNames, app.FileStrings.ExtensionSaveAuto));
+			if_fail_e(::gpk::pathList(app.FileStrings.SavegameFolder, fileNames, app.FileStrings.ExtensionSaveAuto));
 			if(fileNames.size())
-				es_if_failed(app.Load(fileNames[0]));
+				if_fail_e(app.Load(fileNames[0]));
 
 			::lls::SArgsEvent		dummy					= {};
-			gpk_necs(::gpk::eventEnqueueChild(app.EventQueue, ::lls::LLS_EVENT_WORLD_ADMIN, ::lls::WORLD_ADMIN_Initialize, dummy));
+			do { if_fail_fe(::gpk::eventEnqueueChild(app.EventQueue, ::lls::LLS_EVENT_WORLD_ADMIN, ::lls::WORLD_ADMIN_Initialize, dummy)); } while(0);
 		}
-		gpk_necs(app.StateSwitch(::lls::APP_STATE_Welcome));
+		do { if_fail_fe(app.StateSwitch(::lls::APP_STATE_Welcome)); } while(0);
 		break;
 	default: 
-		gpk_necs(::updateInput(app.UI, worldView, secondsElapsed, inputState->KeyboardCurrent.KeyState, inputState->MouseCurrent.Deltas.s1_t(), inputState->MouseCurrent.ButtonState));
+		do { if_fail_fe(::updateInput(app.UI, worldView, secondsElapsed, inputState->KeyboardCurrent.KeyState, inputState->MouseCurrent.Deltas.s1_t(), inputState->MouseCurrent.ButtonState)); } while(0);
 
 		if(0 == funcHandleEvent)
 			funcHandleEvent			= [&app](::gpk::pobj<::lls::EventLLS> & _eventToProcess, ::gpk::apobj<::lls::EventLLS> & appOutputEvents) { return handleLLSEvent(app, _eventToProcess, appOutputEvents); };
@@ -234,7 +234,7 @@ static	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Eve
 
 		{ // Process the current event queue and enqueue messages generated by the world view.
 			const uint32_t				offsetToEnqueue		= app.EventQueue.size();
-			gpk_necs(::lls::llsGameUpdate(app.Game, app.EventQueue, app.EventQueue, secondsElapsed));
+			do { if_fail_fe(::lls::llsGameUpdate(app.Game, app.EventQueue, app.EventQueue, secondsElapsed)); } while(0);
 
 			if(app.EventQueue.size() > offsetToEnqueue)
 				app.EventQueue			= ::gpk::vpobj<::lls::EventLLS>{(::gpk::pobj<::lls::EventLLS>*)&app.EventQueue[offsetToEnqueue], app.EventQueue.size() - offsetToEnqueue};
@@ -254,21 +254,21 @@ static	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Eve
 	if(processInput) { // process console
 		::gpk::SGUI					& gui				= *app.GUI;
 		::gpk::acid					controlsToProcess	= {};
-		gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
+		do { if_fail_fe(::gpk::guiGetProcessableControls(gui, controlsToProcess)); } while(0);
 		if(int32_t result = app.UI.UserInput.Update(gui, app.UI.UserInput.VirtualKeyboard, systemEvents, controlsToProcess)) {
 			if(result == INT_MAX) { // enter key pressed
 				::gpk::vcsc_t					trimmed				= {};
-				gpk_necs(app.UI.UserInput.Text.slice(trimmed, 0, ::gpk::min(app.UI.UserInput.Text.size(), 128U)));
-				gpk_necs(::gpk::trim(trimmed));
+				do { if_fail_fe(app.UI.UserInput.Text.slice(trimmed, 0, ::gpk::min(app.UI.UserInput.Text.size(), 128U))); } while(0);
+				do { if_fail_fe(::gpk::trim(trimmed)); } while(0);
 				if(trimmed.size()) {
 					::gpk::pachar				textInput;
-					rees_if(0 == textInput.create());
+					if_null_fe(textInput.create());
 					*textInput				= ::gpk::label(trimmed);
 					info_printf("Console input queued: '%s'", textInput->begin());
-					gpk_necs(app.UI.InputQueue.push_back(textInput));
+					do { if_fail_fe(app.UI.InputQueue.push_back(textInput)); } while(0);
 				}
-				gpk_necs(app.UI.UserInput.SetText(gui, {}));
-				gpk_necs(app.UI.UserInput.Edit(gui, false));
+				do { if_fail_fe(app.UI.UserInput.SetText(gui, {})); } while(0);
+				do { if_fail_fe(app.UI.UserInput.Edit(gui, false)); } while(0);
 			}
 		}
 		//app.Game.Camera.Position.y = (float)sin(app.Game.Global.State.UserTime.Played) * .05f;
@@ -284,7 +284,7 @@ static	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Eve
 	}
 
 	if(::lls::APP_STATE_Init < app.ActiveState && app.UI.InputQueue.size()) {
-		gpk_necs(::parseCommands(app.UI.InputQueue, app.UI.InputHistory, app.EventQueue));
+		do { if_fail_fe(::parseCommands(app.UI.InputQueue, app.UI.InputHistory, app.EventQueue)); } while(0);
 		app.UI.InputQueue.clear();
 	}
 

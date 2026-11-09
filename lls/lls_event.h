@@ -29,7 +29,7 @@ namespace lls
 	}
 
 #define HANDLE_LLS_EVENT(_result, _state, _llsEventName, _outputEvents) \
-	es_if_failed(_result = ::lls::eventExtractAndHandle<::lls::_llsEventName>(eventToProcess, [&_state, &_outputEvents, &eventToProcess](auto ev){ \
+	if_fail_e(_result = ::lls::eventExtractAndHandle<::lls::_llsEventName>(eventToProcess, [&_state, &_outputEvents, &eventToProcess](auto ev){ \
 		return ::lls::handle##_llsEventName(_state, ev, _outputEvents); \
 	}))
 

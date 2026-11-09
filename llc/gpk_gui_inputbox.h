@@ -17,8 +17,8 @@ nmsp gpk
 		cid_t					IdRoot				= {};
 		cid_t					IdText				= {};
 		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
-		::gpk::asc_t			Text				= {};
-		u2_t				MaxLength			= 16;
+		::gpk::string			Text				= {};
+		u2_t					MaxLength			= 16;
 		bool					Editing				= false;
 
 

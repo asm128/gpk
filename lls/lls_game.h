@@ -39,18 +39,18 @@ namespace lls
 		::gpk::SEngine					Engine				= {};
 
 		::gpk::err_t					Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(Global.Save(output));
-			gpk_necs(SolarSystem.Save(output));
-			gpk_necs(World.Save(output));
-			gpk_necs(Engine.Save(output));
+			do { if_fail_fe(Global.Save(output)); } while(0);
+			do { if_fail_fe(SolarSystem.Save(output)); } while(0);
+			do { if_fail_fe(World.Save(output)); } while(0);
+			do { if_fail_fe(Engine.Save(output)); } while(0);
 			return 0;
 		}
 
 		::gpk::err_t					Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(Global.Load(input));
-			gpk_necs(SolarSystem.Load(input));
-			gpk_necs(World.Load(input));
-			gpk_necs(Engine.Load(input));
+			do { if_fail_fe(Global.Load(input)); } while(0);
+			do { if_fail_fe(SolarSystem.Load(input)); } while(0);
+			do { if_fail_fe(World.Load(input)); } while(0);
+			do { if_fail_fe(Engine.Load(input)); } while(0);
 			return 0;
 		}
 

@@ -161,14 +161,14 @@ namespace lls
 		uint32_t				Country;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(::gpk::saveView(output, Name)); 
-			gpk_necs(::gpk::savePOD (output, Country)); 
+			do { if_fail_fe(::gpk::saveView(output, Name)); } while(0); 
+			do { if_fail_fe(::gpk::savePOD (output, Country)); } while(0); 
 			return 0;
 		}
 
 		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(::gpk::loadLabel(input, Name)); 
-			gpk_necs(::gpk::loadPOD  (input, Country)); 
+			do { if_fail_fe(::gpk::loadLabel(input, Name)); } while(0); 
+			do { if_fail_fe(::gpk::loadPOD  (input, Country)); } while(0); 
 			return 0;
 		}
 	};
@@ -178,14 +178,14 @@ namespace lls
 		uint32_t				Hangar;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(::gpk::saveView(output, Name)); 
-			gpk_necs(::gpk::savePOD (output, Hangar)); 
+			do { if_fail_fe(::gpk::saveView(output, Name)); } while(0); 
+			do { if_fail_fe(::gpk::savePOD (output, Hangar)); } while(0); 
 			return 0;
 		}
 
 		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(::gpk::loadLabel(input, Name)); 
-			gpk_necs(::gpk::loadPOD  (input, Hangar)); 
+			do { if_fail_fe(::gpk::loadLabel(input, Name)); } while(0); 
+			do { if_fail_fe(::gpk::loadPOD  (input, Hangar)); } while(0); 
 			return 0;
 		}
 	};
@@ -195,14 +195,14 @@ namespace lls
 		allsid				Furniture;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(::gpk::savePOD (output, Size)); 
-			gpk_necs(::gpk::saveView(output, Furniture)); 
+			do { if_fail_fe(::gpk::savePOD (output, Size)); } while(0); 
+			do { if_fail_fe(::gpk::saveView(output, Furniture)); } while(0); 
 			return 0;
 		}
 
 		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(::gpk::loadPOD (input, Size)); 
-			gpk_necs(::gpk::loadView(input, Furniture)); 
+			do { if_fail_fe(::gpk::loadPOD (input, Size)); } while(0); 
+			do { if_fail_fe(::gpk::loadView(input, Furniture)); } while(0); 
 			return 0;
 		}
 	};
@@ -213,16 +213,16 @@ namespace lls
 		::gpk::au2_t			Characters;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(::gpk::savePOD (output, Offset)); 
-			gpk_necs(::gpk::saveView(output, Hangars)); 
-			gpk_necs(::gpk::saveView(output, Characters)); 
+			do { if_fail_fe(::gpk::savePOD (output, Offset)); } while(0); 
+			do { if_fail_fe(::gpk::saveView(output, Hangars)); } while(0); 
+			do { if_fail_fe(::gpk::saveView(output, Characters)); } while(0); 
 			return 0;
 		}
 
 		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(::gpk::loadPOD (input, Offset)); 
-			gpk_necs(::gpk::loadView(input, Hangars)); 
-			gpk_necs(::gpk::loadView(input, Characters)); 
+			do { if_fail_fe(::gpk::loadPOD (input, Offset)); } while(0); 
+			do { if_fail_fe(::gpk::loadView(input, Hangars)); } while(0); 
+			do { if_fail_fe(::gpk::loadView(input, Characters)); } while(0); 
 			return 0;
 		}
 	};
@@ -232,33 +232,33 @@ namespace lls
 		gpk::apobj<SWorldArea>	Blocks;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(::gpk::savePOD(output, Values.size())); 
+			do { if_fail_fe(::gpk::savePOD(output, Values.size())); } while(0); 
 			for(uint32_t iValueMap = 0; iValueMap < Values.size(); ++iValueMap)
-				gpk_necall(::gpk::saveImage<::gpk::bgra>(output, Values[iValueMap]->View), "Failed to load tile map %i", iValueMap);
+				do { if_fail_fef(::gpk::saveImage<::gpk::bgra>(output, Values[iValueMap]->View), "Failed to load tile map %i", iValueMap); } while(0);
 
-			gpk_necs(::gpk::savePOD(output, Blocks.size())); 
+			do { if_fail_fe(::gpk::savePOD(output, Blocks.size())); } while(0); 
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock)
-				gpk_necall(Blocks[iBlock]->Save(output), "Failed to load world area %i", iBlock);
+				do { if_fail_fef(Blocks[iBlock]->Save(output), "Failed to load world area %i", iBlock); } while(0);
 
 			return 0; 
 		}
 		::gpk::err_t			Load				(::gpk::vcu0_t & input) { 
 			uint32_t					valuesSize;
-			gpk_necs(::gpk::loadPOD(input, valuesSize)); 
-			gpk_necs(Values.reserve(valuesSize));
+			do { if_fail_fe(::gpk::loadPOD(input, valuesSize)); } while(0); 
+			do { if_fail_fe(Values.reserve(valuesSize)); } while(0);
 			for(uint32_t iValueMap = 0; iValueMap < valuesSize; ++iValueMap) { 
 				::gpk::pimg8bgra			tileMap;
 				tileMap.create();
-				gpk_necall(::gpk::loadImage(input, *tileMap), "Failed to load tile map %i", iValueMap); 
-				gpk_necs(Values.push_back(tileMap));
+				do { if_fail_fef(::gpk::loadImage(input, *tileMap), "Failed to load tile map %i", iValueMap); } while(0); 
+				do { if_fail_fe(Values.push_back(tileMap)); } while(0);
 			}
 
 			uint32_t					blocksSize;
-			gpk_necs(::gpk::loadPOD(input, blocksSize));
+			do { if_fail_fe(::gpk::loadPOD(input, blocksSize)); } while(0);
 			for(uint32_t iBlock = 0; iBlock < blocksSize; ++iBlock) { 
 				::gpk::pobj<SWorldArea>		block;
-				gpk_necall(block->Load(input), "Failed to load world area block %i", iBlock);
-				gpk_necs(Blocks.push_back(block));
+				do { if_fail_fef(block->Load(input), "Failed to load world area block %i", iBlock); } while(0);
+				do { if_fail_fe(Blocks.push_back(block)); } while(0);
 			}
 			return 0; 
 		}
@@ -289,30 +289,30 @@ namespace lls
 		SWorldTiles				Tiles;
 
 		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(::gpk::savePOD(output, WorldConfig)); 
-			gpk_necs(::gpk::savePOD(output, WorldState)); 
-			gpk_necs(::gpk::saveView(output, Hangars));
-			gpk_necs(::gpk::savePOD(output, Characters.size())); 
+			do { if_fail_fe(::gpk::savePOD(output, WorldConfig)); } while(0); 
+			do { if_fail_fe(::gpk::savePOD(output, WorldState)); } while(0); 
+			do { if_fail_fe(::gpk::saveView(output, Hangars)); } while(0);
+			do { if_fail_fe(::gpk::savePOD(output, Characters.size())); } while(0); 
 			for(uint32_t iCharacter = 0; iCharacter < Characters.size(); ++iCharacter)
-				gpk_necall(Characters[iCharacter].Save(output), "Failed to save character %i", iCharacter);
+				do { if_fail_fef(Characters[iCharacter].Save(output), "Failed to save character %i", iCharacter); } while(0);
 
-			gpk_necs(Tiles.Save(output));
+			do { if_fail_fe(Tiles.Save(output)); } while(0);
 			return 0;
 		}
 
 		::gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(::gpk::loadPOD(input, WorldConfig)); 
-			gpk_necs(::gpk::loadPOD(input, WorldState)); 
-			gpk_necs(::gpk::loadView(input, Hangars));
+			do { if_fail_fe(::gpk::loadPOD(input, WorldConfig)); } while(0); 
+			do { if_fail_fe(::gpk::loadPOD(input, WorldState)); } while(0); 
+			do { if_fail_fe(::gpk::loadView(input, Hangars)); } while(0);
 			uint32_t					characterCount;
-			gpk_necs(::gpk::loadPOD(input, characterCount)); 
+			do { if_fail_fe(::gpk::loadPOD(input, characterCount)); } while(0); 
 			for(uint32_t iMiniMes = 0; iMiniMes < characterCount; ++iMiniMes) { 
 				SMiniMe						miniMes;
-				gpk_necall(miniMes.Load(input), "Failed to load character %i", iMiniMes);
-				gpk_necs(Characters.push_back(miniMes));
+				do { if_fail_fef(miniMes.Load(input), "Failed to load character %i", iMiniMes); } while(0);
+				do { if_fail_fe(Characters.push_back(miniMes)); } while(0);
 			}
 
-			gpk_necs(Tiles.Load(input));
+			do { if_fail_fe(Tiles.Load(input)); } while(0);
 			return 0;
 		}
 	};

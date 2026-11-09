@@ -5,7 +5,7 @@ using ::gpk::get_value_namep, ::gpk::get_enum_namep, ::gpk::failed;
 GPK_USING_TYPEINT();
 
 ::gpk::err_t	lls::llsServerUpdate		(::lls::LLSServer & app, double lastTimeSeconds, const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) { 
-	gpk_necs(::lls::llsUpdate(app, lastTimeSeconds, inputState, systemEvents, [&app](::gpk::pobj<::lls::EventLLS> & _eventToProcess, ::gpk::apobj<::lls::EventLLS> & outputEvents) {
+	do { if_fail_fe(::lls::llsUpdate(app, lastTimeSeconds, inputState, systemEvents, [&app](::gpk::pobj<::lls::EventLLS> & _eventToProcess, ::gpk::apobj<::lls::EventLLS> & outputEvents) {
 		if(!_eventToProcess)
 			return false;
 
@@ -28,7 +28,7 @@ GPK_USING_TYPEINT();
 			break;
 		}
 		return bool(result == 1);
-	})); 
+	})); } while(0); 
 	return 0; 
 }
 

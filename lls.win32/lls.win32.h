@@ -47,8 +47,8 @@ struct SApplication {
 			Framework.GUI.create();
 		Client.LLSApp.GUI		= Framework.GUI;
 		Server.LLSApp.GUI.create();
-		es_if_failed(::gpk::rasterFontDefaults(Client.LLSApp.Game.Engine.Scene->Graphics->Fonts));
-		es_if_failed(::gpk::rasterFontDefaults(Server.LLSApp.Game.Engine.Scene->Graphics->Fonts));
+		if_fail_e(::gpk::rasterFontDefaults(Client.LLSApp.Game.Engine.Scene->Graphics->Fonts));
+		if_fail_e(::gpk::rasterFontDefaults(Server.LLSApp.Game.Engine.Scene->Graphics->Fonts));
 	}
 };
 
