@@ -7,16 +7,16 @@
 using ::gpk::get_value_namep, ::gpk::get_enum_namep, ::gpk::failed;
 GPK_USING_TYPEINT();
 
-stacxpr	uint16_t		LLS_MAX_PLAYERS		= 4;
-stacxpr	::gpk::n2u1_t	PLAYER_UI_SIZE		= {320, 40};
-stacxpr	::gpk::astatic<::gpk::bgra, LLS_MAX_PLAYERS>	PLAYER_COLORS	=
+stxp	uint16_t		LLS_MAX_PLAYERS		= 4;
+stxp	::gpk::n2u1_t	PLAYER_UI_SIZE		= {320, 40};
+stxp	::gpk::astatic<::gpk::bgra, LLS_MAX_PLAYERS>	PLAYER_COLORS	=
 	{ 0xFF00FF00U
 	, ::gpk::PURPLE
 	, 0xFF0000FFU
 	, 0xFFFFFF00U
 	};
 
-static	::gpk::error_t	guiSetupCommon		(::gpk::SGUI & gui) {
+static	::gpk::err_t	guiSetupCommon		(::gpk::SGUI & gui) {
 	gui.ColorModeDefault	= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault		= ::gpk::ASCII_COLOR_DARKRED * 16 + 10;
 	gui.SelectedFont		= 7;
@@ -27,7 +27,7 @@ static	::gpk::error_t	guiSetupCommon		(::gpk::SGUI & gui) {
 	return 0;
 }
 
-static	::gpk::error_t	dialogCreateCommon	(::gpk::SDialog & dialog, const ::gpk::pobj<::gpk::SInput> & inputState, const ::gpk::n2f2_t & cursorPos) {
+static	::gpk::err_t	dialogCreateCommon	(::gpk::SDialog & dialog, const ::gpk::pobj<::gpk::SInput> & inputState, const ::gpk::n2f2_t & cursorPos) {
 	dialog						= {};
 	dialog.Input				= inputState;
 	dialog.GUI->CursorPos		= cursorPos;
@@ -37,7 +37,7 @@ static	::gpk::error_t	dialogCreateCommon	(::gpk::SDialog & dialog, const ::gpk::
 	return dialog.Update();
 }
 
-static	::gpk::error_t	uiPlayerSetupHome	(::lls::SUIPlayer & uiPlayer, const ::gpk::pobj<::gpk::SInput> & input, const ::gpk::n2f2_t & cursorPos, uint32_t iPlayer, const ::gpk::vcsc_t & playerName) {
+static	::gpk::err_t	uiPlayerSetupHome	(::lls::SUIPlayer & uiPlayer, const ::gpk::pobj<::gpk::SInput> & input, const ::gpk::n2f2_t & cursorPos, uint32_t iPlayer, const ::gpk::vcsc_t & playerName) {
 	::gpk::ALIGN				playerAlign		= {};
 	::gpk::n2s1_t			playerPosition	= {};
 	switch(iPlayer) {
@@ -75,7 +75,7 @@ static	::gpk::error_t	uiPlayerSetupHome	(::lls::SUIPlayer & uiPlayer, const ::gp
 	return 0;
 }
 
-static	::gpk::error_t	clientUISetup		(::lls::LLSClient & app, const ::gpk::pobj<::gpk::SInput> & input) {
+static	::gpk::err_t	clientUISetup		(::lls::LLSClient & app, const ::gpk::pobj<::gpk::SInput> & input) {
 	while(app.Game.Players.size() < LLS_MAX_PLAYERS) {
 		sc_t					playerName[64]	= {};
 		sprintf_s(playerName, "Player %u", app.Game.Players.size() + 1);
@@ -92,7 +92,7 @@ static	::gpk::error_t	clientUISetup		(::lls::LLSClient & app, const ::gpk::pobj<
 	return 0;
 }
 
-static	::gpk::error_t	uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, uint16_t iPlayer, const ::gpk::vcsc_t & playerName, const ::gpk::bgra & playerColor) {
+static	::gpk::err_t	uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, uint16_t iPlayer, const ::gpk::vcsc_t & playerName, const ::gpk::bgra & playerColor) {
 	::gpk::SDialog			& playerDialog		= uiPlayer.DialogHome;
 	::gpk::SGUI				& playerGUI			= *playerDialog.GUI;
 	gpk_necs(::gpk::controlTextSet(playerGUI, playerDialog.Root + 1 + ::lls::UI_PROFILE_Score, ""));
@@ -110,7 +110,7 @@ static	::gpk::error_t	uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, uint16_t 
 	return 0;
 }
 
-static	::gpk::error_t	processClientScreenEvent	(::lls::LLSClient & app, const ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) {
+static	::gpk::err_t	processClientScreenEvent	(::lls::LLSClient & app, const ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) {
 	switch(screenEvent.Type) {
 	default: break;
 	case ::gpk::EVENT_SCREEN_Create:
@@ -123,7 +123,7 @@ static	::gpk::error_t	processClientScreenEvent	(::lls::LLSClient & app, const ::
 	return 0;
 }
 
-static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) {
+static	::gpk::err_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) {
 	for(uint32_t iPlayer = 0; iPlayer < app.UIPlay.PlayerUI.size(); ++iPlayer) {
 		::lls::SUIPlayer		& uiPlayer			= app.UIPlay.PlayerUI[iPlayer];
 		::gpk::SDialog			& dialog				= uiPlayer.DialogHome;
@@ -165,13 +165,13 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 	return 0;
 }
 
-::gpk::error_t		lls::llsClientUIDraw	(::lls::LLSClient & app, ::gpk::g8bgra targetPixels) {
+::gpk::err_t		lls::llsClientUIDraw	(::lls::LLSClient & app, ::gpk::g8bgra targetPixels) {
 	for(uint32_t iPlayer = 0; iPlayer < app.UIPlay.PlayerUI.size(); ++iPlayer)
 		gpk_necs(::gpk::guiDraw(*app.UIPlay.PlayerUI[iPlayer].DialogHome.GUI, targetPixels));
 	return 0;
 }
 
-::gpk::error_t		lls::llsClientUpdate		(::lls::LLSClient & app, double lastTimeSeconds, const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) { 
+::gpk::err_t		lls::llsClientUpdate		(::lls::LLSClient & app, double lastTimeSeconds, const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) { 
 	if(0 == app.UIPlay.PlayerUI.size())
 		gpk_necs(::clientUISetup(app, inputState));
 	gpk_necs(systemEvents.for_each([&app](const ::gpk::pobj<::gpk::SEventSystem> & systemEvent) {
@@ -186,7 +186,7 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 		const ::lls::EventLLS	& eventToProcess		= *_eventToProcess;
 		info_printf("%s", ::gpk::get_value_namep(eventToProcess.Type));
 
-		::gpk::error_t			result			= 0; 
+		::gpk::err_t			result			= 0; 
 		switch(eventToProcess.Type) {
 		CASE_LLS_EVENT(result, app, WORLD_EVENT, outputEvents); 
 		CASE_LLS_EVENT(result, app, WORLD_ADMIN, outputEvents); 
@@ -208,7 +208,7 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 	return 0; 
 }
 
-::gpk::error_t	lls::handleACTION_CHAR		(::lls::LLSClient & app, const ::lls::EViewMe & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleACTION_CHAR		(::lls::LLSClient & app, const ::lls::EViewMe & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)app; 
 	const ::lls::SArgsEvent	& eventArgs				= *(const ::lls::SArgsEvent*)gameEvent.Data.begin();
 	::lls::printArgsEvent(eventArgs);
@@ -234,7 +234,7 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 	return 0; 
 }
 
-::gpk::error_t	lls::handleWORLD_ADMIN		(::lls::LLSClient & app, const ::lls::EViewAdminWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_ADMIN		(::lls::LLSClient & app, const ::lls::EViewAdminWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)app; 
 	const ::lls::SArgsEvent	& eventArgs				= *(const ::lls::SArgsEvent*)gameEvent.Data.begin();
 	::lls::printArgsEvent(eventArgs);
@@ -253,7 +253,7 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 	return 0; 
 }
 
-::gpk::error_t	lls::handleWORLD_EVENT		(::lls::LLSClient & app, const ::lls::EViewWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_EVENT		(::lls::LLSClient & app, const ::lls::EViewWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)app; 
 	const ::lls::SArgsEvent	& eventArgs				= *(const ::lls::SArgsEvent*)gameEvent.Data.begin();
 	::lls::printArgsEvent(eventArgs);
@@ -271,7 +271,7 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 	return 0; 
 }
 
-::gpk::error_t	lls::handleCLIENT_ASKS		(::lls::LLSClient & app, const ::lls::EViewClient & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleCLIENT_ASKS		(::lls::LLSClient & app, const ::lls::EViewClient & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)app; 
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 
@@ -283,7 +283,7 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 	return 0; 
 }
 
-::gpk::error_t	lls::handleWORLD_SETUP		(::lls::LLSClient & world, const ::lls::EViewWorldSetup & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_SETUP		(::lls::LLSClient & world, const ::lls::EViewWorldSetup & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world; 
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 
@@ -294,7 +294,7 @@ static	::gpk::error_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gp
 	return 0;
 }
 
-::gpk::error_t	lls::handleWORLD_VALUE		(::lls::LLSClient & world, const ::lls::EViewWorldValue & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_VALUE		(::lls::LLSClient & world, const ::lls::EViewWorldValue & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world; 
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 

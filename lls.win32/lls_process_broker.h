@@ -34,7 +34,7 @@ namespace llswin32
 		::llswin32::SProcessHandles		IOHandles;
 		::llswin32::SProcess			Process;
 		::gpk::refcount_t				Done					= 0;
-		::gpk::error_t					Result					= 0;
+		::gpk::err_t					Result					= 0;
 	};
 
 	struct SProcessBroker {
@@ -50,9 +50,9 @@ namespace llswin32
 		bool							Started					= false;
 	};
 
-	::gpk::error_t	processBrokerSetup		(::llswin32::SProcessBroker & broker, const ::gpk::SJSONReader & jsonReader);
-	::gpk::error_t	processBrokerUpdate		(::llswin32::SProcessBroker & broker);
-	::gpk::error_t	processBrokerShutdown	(::llswin32::SProcessBroker & broker);
+	::gpk::err_t	processBrokerSetup		(::llswin32::SProcessBroker & broker, const ::gpk::SJSONReader & jsonReader);
+	::gpk::err_t	processBrokerUpdate		(::llswin32::SProcessBroker & broker);
+	::gpk::err_t	processBrokerShutdown	(::llswin32::SProcessBroker & broker);
 }
 
 #endif // LLS_PROCESS_BROKER_H_23627

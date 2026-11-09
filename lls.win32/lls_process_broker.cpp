@@ -22,7 +22,7 @@ static	void	closeProcessHandles		(::llswin32::SProcessBrokerJob & job) {
 	::closeHandle(job.Process.ProcessInfo.hThread);
 }
 
-static	::gpk::error_t	initHandles		(::llswin32::SProcessHandles & handles) {
+static	::gpk::err_t	initHandles		(::llswin32::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES			saAttr					= {sizeof(SECURITY_ATTRIBUTES)};
 	saAttr.bInheritHandle							= TRUE;
 	saAttr.lpSecurityDescriptor					= nullptr;
@@ -35,13 +35,13 @@ static	::gpk::error_t	initHandles		(::llswin32::SProcessHandles & handles) {
 	return 0;
 }
 
-static	::gpk::error_t	createChildProcess
+static	::gpk::err_t	createChildProcess
 	( ::llswin32::SProcess	& process
-	, ::gpk::vu8			environmentBlock
+	, ::gpk::vcu0_t			environmentBlock
 	, ::gpk::vcst_t		appPath
 	, ::gpk::vsc_t		commandLine
 	) {
-	stacxpr	uint32_t		creationFlags				= CREATE_SUSPENDED;
+	stxp	uint32_t		creationFlags				= CREATE_SUSPENDED;
 	::closeHandle(process.ProcessInfo.hProcess);
 	::closeHandle(process.ProcessInfo.hThread);
 	ree_if(false == (bool)::CreateProcessA
@@ -61,7 +61,7 @@ static	::gpk::error_t	createChildProcess
 	return 0;
 }
 
-static	::gpk::error_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gpk::vcu0_t bytesToSend) {
+static	::gpk::err_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gpk::vcu0_t bytesToSend) {
 	uint32_t					offsetWritten				= 0;
 	while(offsetWritten < bytesToSend.size()) {
 		DWORD						dwWritten					= 0;
@@ -73,8 +73,8 @@ static	::gpk::error_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gp
 	return 0;
 }
 
-static	::gpk::error_t	readFromPipe			(const ::llswin32::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
-	stacxpr	uint32_t		bufferSize					= 1024 * 1024;
+static	::gpk::err_t	readFromPipe			(const ::llswin32::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
+	stxp	uint32_t		bufferSize					= 1024 * 1024;
 	::gpk::au0_t				buffer;
 	gpk_necs(buffer.resize(bufferSize));
 	for(;;) {
@@ -92,17 +92,17 @@ static	::gpk::error_t	readFromPipe			(const ::llswin32::SProcessHandles & handle
 	return 0;
 }
 
-static	::gpk::error_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
-	const ::gpk::error_t		result						= [&job]() -> ::gpk::error_t {
+static	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
+	const ::gpk::err_t		result						= [&job]() -> ::gpk::err_t {
 		gpk_necs(::initHandles(job.IOHandles));
 		job.Process.StartInfo.hStdError				= job.IOHandles.ChildStd_ERR_Write;
 		job.Process.StartInfo.hStdOutput				= job.IOHandles.ChildStd_OUT_Write;
 		job.Process.StartInfo.hStdInput				= job.IOHandles.ChildStd_IN_Read;
 		job.Process.StartInfo.dwFlags				|= STARTF_USESTDHANDLES;
 
-		::gpk::vu8				environmentBlock				= job.Request;
+		::gpk::vcu0_t				environmentBlock				= job.Request;
 		const ::gpk::vcu0_t		packet						= job.Request;
-		const ::gpk::error_t	contentOffset				= ::gpk::find_sequence_pod(::gpk::vcu0_t{(const uint8_t*)"\0", 2}, packet);
+		const ::gpk::err_t	contentOffset				= ::gpk::find_sequence_pod(::gpk::vcu0_t{(const uint8_t*)"\0", 2}, packet);
 		ree_if(0 > contentOffset, "%s", "Failed to find the CGI environment block terminator.");
 
 		gpk_necs(::createChildProcess(job.Process, environmentBlock, job.CommandLineApp, job.CommandLine));
@@ -127,17 +127,17 @@ static	void	threadProcessRequest		(void * jobAddress) {
 	::llswin32::SProcessBrokerJob	& job						= *(::llswin32::SProcessBrokerJob*)jobAddress;
 	job.Result									= ::processRequest(job);
 	if(::gpk::failed(job.Result) && 0 == job.Response.size()) {
-		stacxpr	const char		failureResponse[]				= "LLS process broker failed to execute the configured process.";
+		stxp	const char		failureResponse[]				= "LLS process broker failed to execute the configured process.";
 		job.Response.append((const uint8_t*)failureResponse, ::gpk::size(failureResponse) - 1);
 	}
 	gpk_sync_increment(job.Done);
 }
 
-::gpk::error_t	llswin32::processBrokerSetup		(::llswin32::SProcessBroker & broker, const ::gpk::SJSONReader & jsonReader) {
+::gpk::err_t	llswin32::processBrokerSetup		(::llswin32::SProcessBroker & broker, const ::gpk::SJSONReader & jsonReader) {
 	uint64_t					port						= broker.Port;
 	uint64_t					adapter					= broker.Adapter;
 	::gpk::vcsc_t				jsonNumber					= {};
-	const ::gpk::error_t		appNodeIndex				= ::gpk::jsonExpressionResolve(::gpk::vcs{"application.brt"}, jsonReader, 0, broker.ProcessFileName);
+	const ::gpk::err_t		appNodeIndex				= ::gpk::jsonExpressionResolve(::gpk::vcs{"application.brt"}, jsonReader, 0, broker.ProcessFileName);
 	wf_if(::gpk::failed(appNodeIndex), "Failed to find application node '%s'.", "application.brt")
 	else {
 		wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"process.executable_path"}, jsonReader, appNodeIndex, broker.ProcessFileName)), "Failed to load process executable path. Last contents found: '%s'.", broker.ProcessFileName.begin());
@@ -165,7 +165,7 @@ static	void	threadProcessRequest		(void * jobAddress) {
 	return 0;
 }
 
-::gpk::error_t	llswin32::processBrokerUpdate		(::llswin32::SProcessBroker & broker) {
+::gpk::err_t	llswin32::processBrokerUpdate		(::llswin32::SProcessBroker & broker) {
 	::gpk::aobj<::gpk::TUDPQueue>	receivedPerClient;
 	gpk_necs(::gpk::serverPayloadCollect(broker.Server, receivedPerClient));
 	for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
@@ -190,7 +190,7 @@ static	void	threadProcessRequest		(void * jobAddress) {
 			gpk_necs(broker.Jobs.push_back(job));
 			if((uintptr_t)-1L == ::_beginthread(::threadProcessRequest, 0, job.operator->())) {
 				job->Result								= -1;
-				stacxpr const char	failureResponse[]				= "LLS process broker failed to start its request worker.";
+				stxp const char	failureResponse[]				= "LLS process broker failed to start its request worker.";
 				job->Response.append((const uint8_t*)failureResponse, ::gpk::size(failureResponse) - 1);
 				gpk_sync_increment(job->Done);
 			}
@@ -212,7 +212,7 @@ static	void	threadProcessRequest		(void * jobAddress) {
 	return 0;
 }
 
-::gpk::error_t	llswin32::processBrokerShutdown	(::llswin32::SProcessBroker & broker) {
+::gpk::err_t	llswin32::processBrokerShutdown	(::llswin32::SProcessBroker & broker) {
 	if(broker.Started)
 		ws_if_failed(::gpk::serverStop(broker.Server));
 	broker.Started								= false;
