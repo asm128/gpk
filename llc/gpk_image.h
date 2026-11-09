@@ -152,17 +152,17 @@ nmsp gpk
 		}
 	};
 
-	tydf img<u0_t>	imgu0_t;
-	tydf img<u1_t>	imgu1_t;
-	tydf img<u2_t>	imgu2_t;
-	tydf img<u3_t>	imgu3_t;
-	tydf img<s0_t>	imgs0_t;
-	tydf img<s1_t>	imgs1_t;
-	tydf img<s2_t>	imgs2_t;
-	tydf img<s3_t>	imgs3_t;
-	tydf img<f2_t>	imgf2_t;
-	tydf img<f3_t>	imgf3_t;
-	tydf imgmono<u3_t>	imgmonou3_t;
+	tydf img<u0_t>		imgu0_t; tdcs imgu0_t imgu0_c;
+	tydf img<u1_t>		imgu1_t; tdcs imgu1_t imgu1_c;
+	tydf img<u2_t>		imgu2_t; tdcs imgu2_t imgu2_c;
+	tydf img<u3_t>		imgu3_t; tdcs imgu3_t imgu3_c;
+	tydf img<s0_t>		imgs0_t; tdcs imgs0_t imgs0_c;
+	tydf img<s1_t>		imgs1_t; tdcs imgs1_t imgs1_c;
+	tydf img<s2_t>		imgs2_t; tdcs imgs2_t imgs2_c;
+	tydf img<s3_t>		imgs3_t; tdcs imgs3_t imgs3_c;
+	tydf img<f2_t>		imgf2_t; tdcs imgf2_t imgf2_c;
+	tydf img<f3_t>		imgf3_t; tdcs imgf3_t imgf3_c;
+	tydf imgmono<u3_t>	imgmonou3_t; tdcs imgmonou3_t imgmonou3_c;
 } // nmsp gpk
 
 #endif // GPK_IMAGE_H_23627

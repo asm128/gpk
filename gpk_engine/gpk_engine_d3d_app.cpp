@@ -1,3 +1,7 @@
+#include "gpk_platform_globals.h"
+
+#if defined(GPK_WINDOWS)
+
 #include "gpk_engine_d3d_app.h"
 #include "gpk_view_color.h"
 
@@ -158,3 +162,5 @@ gpk::err_t					gpk::d3dAppDraw				(SD3DApplication & d3dApp, const SEngineScene 
 	if_fail_fe(d3dApp.DeviceResources->Present());
 	return 0;
 }
+
+#endif

@@ -1,3 +1,7 @@
+#include "gpk_platform_globals.h"
+
+#if defined(GPK_WINDOWS)
+
 //--------------------------------------------------------------------------------------
 // File: WAVFileReader.cpp
 //
@@ -454,4 +458,6 @@ HRESULT DirectX::LoadWAVAudioFromFileEx(::gpk::vcst_t szFileName, ::gpk::au0_t &
 
 	return S_OK;
 }
+
+#endif
 

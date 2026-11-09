@@ -4,8 +4,8 @@
 #include "gpk_chrono.h"
 
 ::gpk::err_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, s2_t parentNode, ::gpk::vcst_t & remote_ip, ::gpk::vcst_t & remote_port) {
-	if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"remote_ip"  }, jsonConfig, parentNode, remote_ip));
-	if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"remote_port"}, jsonConfig, parentNode, remote_port));
+	if_fail_w(::gpk::jsonExpressionResolve("remote_ip"  , jsonConfig, parentNode, remote_ip));
+	if_fail_w(::gpk::jsonExpressionResolve("remote_port", jsonConfig, parentNode, remote_port));
 	info_printf("Remote server address '%.*s:%.*s'", GPK_VIEW_ARGS(remote_ip), GPK_VIEW_ARGS(remote_port));
 	return 0;
 }
@@ -27,7 +27,11 @@
 	{
 		time_t					timeInt					= time(0);
 		tm						timeptr					= {};
+	#if defined(GPK_WINDOWS)
 		localtime_s(&timeptr, &timeInt);
+	#else
+		localtime_r(&timeInt, &timeptr);
+	#endif
 		sc_t					buf[64]					= {};
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 		client.UI.TextConnectedSince	= ::gpk::vcst_t(buf);
@@ -92,7 +96,11 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 	{
 		time_t						timeInt				= time(NULL);
 		tm							timeptr				= {};
+	#if defined(GPK_WINDOWS)
 		localtime_s(&timeptr, &timeInt);
+	#else
+		localtime_r(&timeInt, &timeptr);
+	#endif
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 
 		client.UI.TextDateTime	= vcst_t(buf);

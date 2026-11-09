@@ -42,6 +42,7 @@ nmsp gpk
 #endif
 	nsix	s2_t		abs					(s2_t v)									nxpt	{ rtrn v < 0 ? -v : v; }
 	nsix	f3_t		abs					(f3_t v)									nxpt	{ rtrn v == 0 ? 0 : v < 0 ? -v : v; }
+	nsix	f2_t		fabsf				(f2_t v)									nxpt	{ rtrn v == 0 ? 0 : v < 0 ? -v : v; }
 	nsix	f3_t		fabs				(f3_t v)									nxpt	{ rtrn v == 0 ? 0 : v < 0 ? -v : v; }
 #if defined(GPK_WINDOWS) || defined(GPK_ATMEL)
 	stin	f3_t		atan				(f3_t f)												{ rtrn ::atan	(f); }

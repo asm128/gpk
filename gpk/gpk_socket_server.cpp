@@ -10,8 +10,14 @@
 #include <cstdlib>
 #if defined(GPK_WINDOWS)
 #	include <process.h>
+	tydf	int			socklen_t;
 #else
-#	error	"Not implemented."
+#	include <cerrno>
+#	define WSAEMSGSIZE		EMSGSIZE
+#	define WSAENETRESET		ENETRESET
+#	define WSAENOTSOCK		ENOTSOCK
+#	define _beginthread(callback, stackSize, argument)	::std::thread((callback), (argument)).detach()
+	static inline int WSAGetLastError() { return errno; }
 #endif
 
 GPK_USING_TYPEINT();
@@ -34,8 +40,12 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 		fd_set								sockets								= {};
 		for(u2_t iStage = 0; iStage < stageCount; ++iStage) {
 			const u2_t						offsetClient						= iStage * 64;
+#if defined(GPK_WINDOWS)
 			memset(&sockets, -1, szof(fd_set));
 			sockets.fd_count				= 0;
+#else
+			FD_ZERO(&sockets);
+#endif
 			u2_t							stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
 			{
 				::gpk::lock_guard					lock								(serverInstance.Mutex);
@@ -53,9 +63,14 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 						continue;
 					if(connection.Queue.Send.size())
 						if_fail_e(::gpk::connectionSendQueue(connection, *pclient, cacheSent, cacheSend));
+#if defined(GPK_WINDOWS)
 					sockets.fd_array[sockets.fd_count]		= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
+#else
+					if(pclient->Socket != INVALID_SOCKET)
+						FD_SET(pclient->Socket, &sockets);
+#endif
 				}
 			}
 			if(false == serverInstance.Listen)
@@ -65,12 +80,22 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 				{
 					::gpk::lock_guard				lock								(serverInstance.Mutex);
 					if_true_bi(0 == serverInstance.Sockets.size());
-					for(u2_t sd = 0; sd < sockets.fd_count; ++sd) {
+					for(u2_t sd = 0
+#if defined(GPK_WINDOWS)
+						; sd < sockets.fd_count
+#else
+						; sd < stageClientCount
+#endif
+						; ++sd) {
 						for(u2_t iClient = 0, countCli = ::gpk::min(serverInstance.Sockets.size(), stageClientCount); iClient < countCli; ++iClient) {
 							::gpk::pobj<::gpk::SSocketConnection>		pclient								= serverInstance.Sockets[offsetClient + iClient];
 							if(0 == pclient.get_ref() || pclient->IdConnection >= serverInstance.Clients.size() || 0 == serverInstance.Clients[pclient->IdConnection].get_ref() || pclient->Socket == INVALID_SOCKET || serverInstance.Clients[pclient->IdConnection]->State == ::gpk::CONNECTION_STATE_DISCONNECTED)
 								continue;
+#if defined(GPK_WINDOWS)
 							if(sockets.fd_array[sd] == pclient->Socket) {
+#else
+							if(sd == iClient && FD_ISSET(pclient->Socket, &sockets)) {
+#endif
 								if_fail_fe(clientsToProcess.push_back(pclient));
 								break;
 							}
@@ -80,7 +105,6 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 				for(u2_t iClient = 0; iClient < clientsToProcess.size(); ++iClient) {
 					if(false == serverInstance.Listen)
 						return 0;
-					FD_ZERO(sockets.fd_array);
 					::gpk::SSocketConnection					& clientSocket						= *clientsToProcess[iClient];
 					if(clientSocket.IdConnection >= serverInstance.Clients.size() || 0 == serverInstance.Clients[clientSocket.IdConnection].get_ref()) {
 						clientSocket.IdConnection = ::gpk::u2_t(-1);
@@ -88,12 +112,21 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 						continue;
 					}
 					::gpk::SConnection						& client							= *serverInstance.Clients[clientSocket.IdConnection];
+#if defined(GPK_WINDOWS)
+					FD_ZERO(sockets.fd_array);
 					sockets.fd_array[0]						= clientSocket.Socket;
 					sockets.fd_count						= 1;
 					::select(0, &sockets, 0, 0, &wait_time);
 					while(sockets.fd_count > 0) {
+#else
+					FD_ZERO(&sockets);
+					FD_SET(clientSocket.Socket, &sockets);
+					wait_time = {0, 1};
+					int socketsReady = ::select(clientSocket.Socket + 1, &sockets, 0, 0, &wait_time);
+					while(0 < socketsReady && FD_ISSET(clientSocket.Socket, &sockets)) {
+#endif
 						sockaddr_in									sa_client							= {};						// Information about the client
-						int											sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
+						socklen_t								sa_length							= sizeof(sockaddr_in);	// Length of client struct
 						::gpk::SCommand							command								= {};						// Where to store received data
 						int											bytes_received						= 0;
 						if (::gpk::failed(bytes_received = ::recvfrom(clientSocket.Socket, (sc_t*)&command, (int)sizeof(::gpk::SCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
@@ -121,7 +154,14 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 							else
 								::recvfrom(clientSocket.Socket, (sc_t*)&command, (int)szof(::gpk::SCommand), 0, 0, 0);
 						}
+#if defined(GPK_WINDOWS)
 						::select(0, &sockets, 0, 0, &wait_time);
+#else
+						FD_ZERO(&sockets);
+						FD_SET(clientSocket.Socket, &sockets);
+						wait_time = {0, 1};
+						socketsReady = ::select(clientSocket.Socket + 1, &sockets, 0, 0, &wait_time);
+#endif
 					}
 				}
 			}
@@ -194,7 +234,7 @@ static	::gpk::err_t	serverAcceptClient		(::gpk::SSocketServer& serverInstance, :
 }
 
 static	::gpk::err_t	serverListenTick		(::gpk::SSocketServer& serverInstance, const sockaddr_in & server)		{
-	int							client_length			= (int)sizeof(sockaddr_in);		// Length of client struct
+	socklen_t				client_length			= sizeof(sockaddr_in);		// Length of client struct
 	::gpk::SCommand			command					= {};	// Where to store received data
 	int							bytes_received			= 0;
 	sockaddr_in					sa_client				= {};	// Information about the client
@@ -261,7 +301,7 @@ static	::gpk::err_t	server					(::gpk::SSocketServer& serverInstance)		{
 #if defined(GPK_WINDOWS)
 	_beginthread(::threadUpdateClients, 0, &serverInstance);
 #else
-#	error "Not implemented."
+	::std::thread(::threadUpdateClients, &serverInstance).detach();
 #endif
 	info_printf("Server running on %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(serverInstance.Address));
 	while(serverInstance.Listen) {	// Loop and get data from clients

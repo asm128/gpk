@@ -1,5 +1,4 @@
 #include "gpk_auto_handler.h"
-#include "gpk_safe.h"
 #include "gpk_tcpip.h"
 
 #ifndef GPK_ATMEL		

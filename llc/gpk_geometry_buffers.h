@@ -7,11 +7,11 @@
 nmsp gpk
 {
 	struct SGeometryBuffers {
-		::gpk::a3f2_t	Positions;
-		::gpk::a3f2_t	Normals;
-		::gpk::a2f2_t	TextureCoords;
-		::gpk::au2_t	Colors;
-		::gpk::au2_t	PositionIndices;
+		a3f2_t	Positions;
+		a3f2_t	Normals;
+		a2f2_t	TextureCoords;
+		au2_t	Colors;
+		au2_t	PositionIndices;
 	};
 } // gpk
 

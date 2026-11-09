@@ -85,7 +85,7 @@ nmsp gpk
 			Integrator.Integrate(secondsLastFrame);
 			for(u2_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				SEntity			& entity			= Entities[iEntity];
-				if(entity.Parent != -1)
+				if(entity.Parent != EID_INVALID)
 					continue;
 
 				if_true_e(failed(updateEntityTransforms(iEntity, entity, Entities, Integrator, Scene->RenderNodes)));

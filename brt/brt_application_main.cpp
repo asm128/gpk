@@ -9,6 +9,15 @@
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
+#if defined(GPK_LINUX)
+#	include <errno.h>
+#	include <fcntl.h>
+#	include <poll.h>
+#	include <sys/wait.h>
+#	include <unistd.h>
+#	include <wordexp.h>
+#endif
+
 using namespace gpk;
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
@@ -78,6 +87,30 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	return 0;
 }
 
+#if defined(GPK_LINUX)
+static ::gpk::err_t	closeDescriptor			(int & descriptor) {
+	if(0 > descriptor)
+		return 0;
+	const int result					= ::close(descriptor);
+	descriptor						= -1;
+	if(0 != result) {
+		error_printf("Failed to close descriptor. errno: %i.", errno);
+		return -1;
+	}
+	return 0;
+}
+
+static ::gpk::err_t	closeOnExec				(int descriptor) {
+	const int flags					= ::fcntl(descriptor, F_GETFD);
+	if(0 > flags || 0 > ::fcntl(descriptor, F_SETFD, flags | FD_CLOEXEC)) {
+		error_printf("Failed to set close-on-exec for descriptor %i. errno: %i.", descriptor, errno);
+		return -1;
+	}
+	return 0;
+}
+#endif
+
+#if defined(GPK_WINDOWS)
 sttc	::gpk::err_t	createChildProcess
 	(	::brt::SProcess		& process
 	,	::gpk::vu0_t		environmentBlock
@@ -113,7 +146,65 @@ sttc	::gpk::err_t	createChildProcess
 	ResumeThread(process.ProcessInfo.hThread);
 	return 0;
 }
+#elif defined(GPK_LINUX)
+sttc	::gpk::err_t	createChildProcess
+	(	::brt::SProcess		& process
+	,	::gpk::vu0_t		environmentBlock
+	,	::gpk::vcst_t		appPath
+	,	::gpk::vsc_t		commandLine
+	,	bool				debugMessageBox			= false
+	) {
+	::gpk::apod<char*> environmentPointers;
+	for(::gpk::u2_t offset = 0; offset < environmentBlock.size() && environmentBlock[offset]; ) {
+		if_fail_fe(environmentPointers.push_back((char*)&environmentBlock[offset]));
+		while(offset < environmentBlock.size() && environmentBlock[offset])
+			++offset;
+		if_true_fef(offset >= environmentBlock.size(), "Unterminated environment entry at offset %u.", offset);
+		++offset;
+	}
+	if_fail_fe(environmentPointers.push_back(nullptr));
 
+	::wordexp_t words = {};
+	const int wordResult = ::wordexp(commandLine.begin(), &words, WRDE_NOCMD);
+	if(0 != wordResult) {
+		if(WRDE_NOSPACE == wordResult)
+			::wordfree(&words);
+		error_printf("Failed to parse command line '%.*s'. wordexp: %i.", GPK_VIEW_ARGS(commandLine), wordResult);
+		return -1;
+	}
+
+	const pid_t child = ::fork();
+	if(0 > child) {
+		const int error = errno;
+		::wordfree(&words);
+		error_printf("Failed to create process '%.*s'. errno: %i.", GPK_VIEW_ARGS(appPath), error);
+		return -1;
+	}
+	if(0 == child) {
+		if(0 > ::dup2(process.StartInfo.hStdInput , STDIN_FILENO )
+		|| 0 > ::dup2(process.StartInfo.hStdOutput, STDOUT_FILENO)
+		|| 0 > ::dup2(process.StartInfo.hStdError , STDERR_FILENO))
+			::_exit(126);
+		char * fallbackArguments[] = {(char*)appPath.begin(), nullptr};
+		char ** arguments = words.we_wordc ? words.we_wordv : fallbackArguments;
+		::execve(appPath.begin(), arguments, environmentPointers.begin());
+		::_exit(127);
+	}
+
+	process.ProcessInfo.hProcess = (::gpk::s2_t)child;
+	process.ProcessInfo.hThread = -1;
+	if_fail_fe(::closeDescriptor(process.StartInfo.hStdInput));
+	if_fail_fe(::closeDescriptor(process.StartInfo.hStdOutput));
+	if_fail_fe(::closeDescriptor(process.StartInfo.hStdError));
+	::wordfree(&words);
+	if(debugMessageBox)
+		warning_printf("Attach your debugger to process %i ('%.*s').", (int)child, GPK_VIEW_ARGS(appPath));
+	info_printf("Creating process '%.*s' with command line '%.*s'", GPK_VIEW_ARGS(appPath), GPK_VIEW_ARGS(commandLine));
+	return 0;
+}
+#endif
+
+#if defined(GPK_WINDOWS)
 static	::gpk::err_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcu0_t chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD						dwWritten				= 0;
 	bool						bSuccess				= false;
@@ -121,8 +212,25 @@ static	::gpk::err_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gp
 	if_true_vef(-1, false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
 	return bSuccess ? 0 : -1;
 }
+#elif defined(GPK_LINUX)
+static	::gpk::err_t	writeToPipe				(::brt::SProcessHandles & handles, ::gpk::vcu0_t chBufToSend) {
+	::gpk::u2_t offset = 0;
+	while(offset < chBufToSend.size()) {
+		const ssize_t written = ::write(handles.ChildStd_IN_Write, &chBufToSend[offset], chBufToSend.size() - offset);
+		if(0 > written) {
+			if(EINTR == errno)
+				continue;
+			error_printf("Failed to write to child process' standard input. errno: %i.", errno);
+			return -1;
+		}
+		offset += (::gpk::u2_t)written;
+	}
+	return ::closeDescriptor(handles.ChildStd_IN_Write);
+}
+#endif
 
 
+#if defined(GPK_WINDOWS)
 static	::gpk::err_t	readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	static	::gpk::au0_t		chBuf;
 	stxp	u2_t 			BUFSIZE					= 1024 * 1024 * 50;
@@ -142,7 +250,75 @@ static	::gpk::err_t	readFromPipe			(const ::brt::SProcess & process, const ::brt
 	}
 	return 0;
 }
+#elif defined(GPK_LINUX)
+static	::gpk::err_t	readFromPipe			(::brt::SProcess & process, ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
+	static ::gpk::au0_t chBuf;
+	stxp ::gpk::u2_t BUFSIZE = 1024 * 1024;
+	if_fail_fe(chBuf.resize(BUFSIZE));
+	::pollfd descriptors[2] = {
+		{handles.ChildStd_OUT_Read, POLLIN | POLLHUP, 0},
+		{handles.ChildStd_ERR_Read, POLLIN | POLLHUP, 0},
+	};
+	::gpk::u0_t descriptorsOpen = 2;
+	while(descriptorsOpen) {
+		const int pollResult = ::poll(descriptors, 2, -1);
+		if(0 > pollResult) {
+			if(EINTR == errno)
+				continue;
+			error_printf("Failed waiting for child process output. errno: %i.", errno);
+			return -1;
+		}
+		for(::gpk::u0_t index = 0; index < 2; ++index) {
+			::pollfd & descriptor = descriptors[index];
+			if(0 > descriptor.fd || 0 == (descriptor.revents & (POLLIN | POLLHUP | POLLERR | POLLNVAL)))
+				continue;
+			const ssize_t bytesRead = ::read(descriptor.fd, chBuf.begin(), chBuf.size());
+			if(0 < bytesRead) {
+				if(0 == index) {
+					if_fail_fe(readBytes.append(chBuf.begin(), (::gpk::u2_t)bytesRead));
+					info_printf("Process output: %.*s", (int)bytesRead, chBuf.begin());
+				}
+				else
+					warning_printf("Process error: %.*s", (int)bytesRead, chBuf.begin());
+				continue;
+			}
+			if(0 > bytesRead && EINTR == errno)
+				continue;
+			if(0 > bytesRead && EAGAIN != errno && EWOULDBLOCK != errno) {
+				error_printf("Failed reading child process output. errno: %i.", errno);
+				return -1;
+			}
+			if(0 == bytesRead || descriptor.revents & (POLLHUP | POLLERR | POLLNVAL)) {
+				if(0 == index) {
+					if_fail_fe(::closeDescriptor(handles.ChildStd_OUT_Read));
+				}
+				else {
+					if_fail_fe(::closeDescriptor(handles.ChildStd_ERR_Read));
+				}
+				descriptor.fd = -1;
+				--descriptorsOpen;
+			}
+		}
+	}
 
+	int status = 0;
+	pid_t waitResult = 0;
+	do
+		waitResult = ::waitpid((pid_t)process.ProcessInfo.hProcess, &status, 0);
+	while(0 > waitResult && EINTR == errno);
+	if(0 > waitResult) {
+		error_printf("Failed waiting for child process %i. errno: %i.", process.ProcessInfo.hProcess, errno);
+		return -1;
+	}
+	process.ExitCode = WIFEXITED(status) ? (::gpk::u2_t)WEXITSTATUS(status) : (::gpk::u2_t)(128 + WTERMSIG(status));
+	process.ProcessInfo.hProcess = -1;
+	if(0 != process.ExitCode)
+		warning_printf("exitCode: %u", process.ExitCode);
+	return 0;
+}
+#endif
+
+#if defined(GPK_WINDOWS)
 static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES			saAttr;
 	saAttr.bInheritHandle	= TRUE;		// Set the bInheritHandle flag so pipe handles are inherited.
@@ -155,6 +331,36 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	if_true_vef(-1, false == (bool)SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0)						, "Stdin SetHandleInformation: '%s'."	, "Failed to ensure the write handle to the pipe for STDIN is not inherited.");
 	return 0;	// The remaining open handles are cleaned up when this process terminates. To avoid resource leaks in a larger application, close handles explicitly.
 }
+#elif defined(GPK_LINUX)
+static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
+	int output[2] = {-1, -1};
+	int error [2] = {-1, -1};
+	int input [2] = {-1, -1};
+	if(0 != ::pipe(output) || 0 != ::pipe(error) || 0 != ::pipe(input)) {
+		error_printf("Failed to create child process pipes. errno: %i.", errno);
+		if(0 <= output[0]) ::close(output[0]);
+		if(0 <= output[1]) ::close(output[1]);
+		if(0 <= error [0]) ::close(error [0]);
+		if(0 <= error [1]) ::close(error [1]);
+		if(0 <= input [0]) ::close(input [0]);
+		if(0 <= input [1]) ::close(input [1]);
+		return -1;
+	}
+	handles.ChildStd_OUT_Read = output[0];
+	handles.ChildStd_OUT_Write = output[1];
+	handles.ChildStd_ERR_Read = error[0];
+	handles.ChildStd_ERR_Write = error[1];
+	handles.ChildStd_IN_Read = input[0];
+	handles.ChildStd_IN_Write = input[1];
+	if_fail_fe(::closeOnExec(handles.ChildStd_OUT_Read));
+	if_fail_fe(::closeOnExec(handles.ChildStd_OUT_Write));
+	if_fail_fe(::closeOnExec(handles.ChildStd_ERR_Read));
+	if_fail_fe(::closeOnExec(handles.ChildStd_ERR_Write));
+	if_fail_fe(::closeOnExec(handles.ChildStd_IN_Read));
+	if_fail_fe(::closeOnExec(handles.ChildStd_IN_Write));
+	return 0;
+}
+#endif
 
 ::gpk::err_t			update						(::brt::SApplication & app, bool exitSignal)	{
 	::gpk::STimer				timer;
@@ -200,8 +406,12 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				process.StartInfo.hStdError		= iohandles.ChildStd_ERR_Write;
 				process.StartInfo.hStdOutput	= iohandles.ChildStd_OUT_Write;
 				process.StartInfo.hStdInput		= iohandles.ChildStd_IN_Read;
+#if defined(GPK_WINDOWS)
 				process.ProcessInfo.hProcess	= INVALID_HANDLE_VALUE;
 				process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
+#elif defined(GPK_LINUX)
+				process.ProcessInfo.hProcess	= -1;
+#endif
 				::gpk::vcu0_t				payload					= environmentBlock;
 				::gpk::err_t				contentOffset			= payload.find((u0_t)0U);
 				if_fail_cef(contentOffset, "%s", "Failed to find environment block stop code.");
@@ -211,7 +421,11 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 			}
 		}
 	}
+#if defined(GPK_WINDOWS)
 	Sleep(10);
+#elif defined(GPK_LINUX)
+	::gpk::sleep(10);
+#endif
 	::gpk::apobj<::gpk::apobj<::gpk::au0_t>>	& clientsResponses		= app.ClientResponses;
 	if_fail_fef(clientsResponses.resize(receivedPerClient.size()), "current:%u,new:%u", clientsResponses.size(), receivedPerClient.size());
 	{	// Read processes output if they're done processing.
@@ -226,9 +440,15 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				//clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
 				(*clientResponses)[iMessage]->clear();
 				if_fail_fef(::readFromPipe(process, iohandles, *(*clientResponses)[iMessage]), "iClient: %u, iMessage: %u.", iClient, iMessage);
+#if defined(GPK_WINDOWS)
 				safe_closehandle(process.StartInfo.hStdError	);
 				safe_closehandle(process.StartInfo.hStdInput	);
 				safe_closehandle(process.StartInfo.hStdOutput	);
+#elif defined(GPK_LINUX)
+				::closeDescriptor(process.StartInfo.hStdError	);
+				::closeDescriptor(process.StartInfo.hStdInput	);
+				::closeDescriptor(process.StartInfo.hStdOutput	);
+#endif
 			}
 		}
 	}
@@ -240,9 +460,11 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				::gpk::pobj<::gpk::SConnection>	conn						= app.Server.Clients[iClient];
 				if_fail_fe(::gpk::connectionPushData(*conn, conn->Queue, *((*clientResponses)[iMessage]), true, true));
 				receivedPerClient[iClient][iMessage]	= {};
+#if defined(GPK_WINDOWS)
 				::brt::SProcess						& process				= app.ClientProcesses[iClient];
 				safe_closehandle(process.ProcessInfo.hProcess	);
 				safe_closehandle(process.ProcessInfo.hThread	);
+#endif
 
 			}
 		}

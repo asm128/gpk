@@ -14,8 +14,8 @@
 
 sttc gpk::err_t		cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
 	{	// Prepare CGI environment and request content packet to save to disk.
-		char filename[1024] = {};
-		sprintf_s(filename, "la_betty_criminal_at_%llu.jpg", ::gpk::timeCurrent());
+		::gpk::string filename;
+		if_fail_fe(::gpk::append_strings(filename, "la_betty_criminal_at_", ::gpk::timeCurrent(), ".jpg"));
 		if_fail_fe(::gpk::fileFromMemory(filename, runtimeValues.Content.Body));
 	}
 	if_fail_fe(::gpk::append_strings(output, "{\"code\":200, \"message\": \"OK\"}"));

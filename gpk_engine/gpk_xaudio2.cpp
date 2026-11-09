@@ -1,3 +1,7 @@
+#include "gpk_platform_globals.h"
+
+#if defined(GPK_WINDOWS)
+
 #include "gpk_xaudio2.h"
 
 #include "WAVFileReader.h"
@@ -578,3 +582,5 @@ HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::vcst_t & wavname, IXAudio2*	X
 	Playing					= true;
 	return S_OK;
 }
+
+#endif

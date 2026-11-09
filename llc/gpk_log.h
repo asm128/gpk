@@ -79,12 +79,10 @@ nmsp gpk
 
 #ifdef GPK_ATMEL
 #	define gpk_debug_printf(severity, format, ...)	::gpk::_gpk_debug_printf(__func__, F(format), ##__VA_ARGS__)
-#elif defined(GPK_ESP32)
-#	define gpk_debug_printf(severity, ...)			::gpk::debug_printf(severity, __FILE__, __LINE__, __func__, __VA_ARGS__)
-#elif defined(GPK_WINDOWS)
-#	define gpk_debug_printf(severity, ...)			::gpk::debug_printf(severity, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 #elif defined(GPK_ARDUINO)
 #	define gpk_debug_printf(severity, ...)			::gpk::_gpk_debug_printf(severity, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#elif defined(GPK_WINDOWS)
+#	define gpk_debug_printf(severity, ...)			::gpk::debug_printf(severity, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 #else
 #	define gpk_debug_printf(severity, ...)			::gpk::debug_printf(severity, __FILE__, __LINE__, __func__, __VA_ARGS__)
 #endif

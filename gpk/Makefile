@@ -10,11 +10,12 @@ endif
 
 OutDir =../../$(Platform).$(Configuration)
 IntDir =../../obj/$(Platform).$(Configuration)/$(ProjectName)
-IncDir =../../zlib
+IncDir =../../zlib ../../gpk/llc
 
 OBJDIRS := $(patsubst %, $(IntDir), $(ProjectName))
+INCDIR := $(patsubst %,-I%,$(IncDir))
 
-CFLAGS=-std=c++17 -Wall -O$(OPT) -I$(IncDir)
+CFLAGS=-std=c++20 -Wall -O$(OPT) $(INCDIR)
 CC=g++
 
 _OBJ = $(patsubst %.cpp,%.o,$(wildcard *.cpp)) 

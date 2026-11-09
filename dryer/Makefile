@@ -1,6 +1,6 @@
-IncDir			:= ../../smart/smart ../../gpk/llc
+IncDir			:= ../../gpk/smart ../../gpk/llc
 Libs			:= smart.a llc.a
-GccLibs			:= xcb xcb-image pthread
+GccLibs			:= xcb-image xkbcommon-x11 xkbcommon xcb pthread
 Platform		:= Linux.x64
 ProjectName		:= dryer
 Configuration	:= Release
@@ -22,7 +22,7 @@ LIBS	:= $(patsubst %, $(OutDir)/%, $(Libs))
 GCCLIBS := $(patsubst %, -l%, $(GccLibs))
 INCDIR	:= $(patsubst %, -I%, $(IncDir))
 
-CFLAGS	:= -o $(OutDir)/$(ProjectName).bin -std=c++17 -Wall -Werror -O$(OPT) $(C_DEFS) $(INCDIR) -L$(OutDir)
+CFLAGS	:= -o $(OutDir)/$(ProjectName).bin -std=c++23 -Wall -Werror -O$(OPT) $(C_DEFS) $(INCDIR) -L$(OutDir)
 CC		:= g++
 
 _OBJ	= $(patsubst %.cpp,%.o,$(wildcard *.cpp)) 
@@ -32,7 +32,7 @@ $(IntDir)/%.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $< 
 
 build: $(OBJDIRS) $(OBJ)
-	$(CC) $(OBJ) $(CFLAGS) $(C_DEFS) $(GCCLIBS) $(LIBS)
+	$(CC) $(OBJ) $(CFLAGS) $(C_DEFS) $(LIBS) $(GCCLIBS)
 
 $(OBJDIRS):
 	mkdir -p $@ 

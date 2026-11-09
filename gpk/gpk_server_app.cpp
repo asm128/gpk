@@ -29,7 +29,11 @@ gpk::err_t			gpk::serverStart	(SServer & server, SGUI & gui) {
 	server.ListeningSince	= timeCurrentInMs() / 1000.0;
 	time_t						timeInt				= time(NULL);
 	tm							timeptr				= {};
+#if defined(GPK_WINDOWS)
 	localtime_s(&timeptr, &timeInt);
+#else
+	localtime_r(&timeInt, &timeptr);
+#endif
 	sc_t						buf [64]			= {};
 	strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 	server.UI.TextTimeStarted	= vcst_t(buf);
@@ -48,14 +52,18 @@ static	::gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 			if(udpServer.Clients[iClient]->State == ::gpk::CONNECTION_STATE_IDLE)
 				++clientCount;
 
-		sprintf_s(buf, "Clients: %i", clientCount);	
+		::gpk::sprintf_s(buf, "Clients: %i", clientCount);	
 		server.UI.TextClientCount	= ::gpk::vcst_t(buf);
 		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_ClientCount], {server.UI.TextClientCount}));
 	}
 	{ // update datetime field
 		time_t						timeInt			= time(0);
 		tm							timeptr			= {};
+	#if defined(GPK_WINDOWS)
 		localtime_s(&timeptr, &timeInt);
+	#else
+		localtime_r(&timeInt, &timeptr);
+	#endif
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 		server.UI.TextDateTime	= ::gpk::vcst_t(buf);
 		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_DateTime], {server.UI.TextDateTime})); 

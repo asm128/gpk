@@ -1,4 +1,5 @@
 #include "gpk_enum.h"
+#include "gpk_math.h"
 
 #ifndef GPK_ENGINE_GAME_STAGE_H_23627
 #define GPK_ENGINE_GAME_STAGE_H_23627

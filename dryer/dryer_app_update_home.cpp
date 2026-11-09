@@ -85,7 +85,7 @@ gpk::err_t dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_
 	return 0;
 }
 
-template<size_t _nSize>
+template<::gpk::u2_t _nSize>
 sttc gpk::err_t				updateControlIfNeeded			(::dry::SApplication & app, ::gpk::sc_t (&bufferTemp)[_nSize], ::gpk::array_static<::gpk::sc_t, _nSize> & storage, ::dry::SCREEN_CONTROL_HOME idControl) {
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	::gpk::SGUI								& gui							= *app.Framework.GUI;

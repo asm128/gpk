@@ -11,19 +11,19 @@
 nmsp gpk
 {
 	gpk::err_t drawTriangle
-		( ::gpk::g8bgra						targetPixels
-		, const ::gpk::SGeometryBuffers		& geometry
-		, const int							iTriangle
-		, const ::gpk::m4f2_t				& matrixTransform
-		, const ::gpk::m4f2_t				& matrixTransformView
-		, const ::gpk::n3f2_t				& lightVector
-		, const ::gpk::rgbaf				& lightColor
-		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
-		, ::gpk::gc8bgra					textureImage
-		, ::gpk::apod<::gpk::SLight3>		& lightPoints
-		, ::gpk::apod<::gpk::rgbaf>			& lightColors
-		, ::gpk::grid<u2_t>			depthBuffer
+		( g8bgra					targetPixels
+		, const SGeometryBuffers	& geometry
+		, const u2_t				iTriangle
+		, const m4f2_t				& matrixTransform
+		, const m4f2_t				& matrixTransformView
+		, const n3f2_t				& lightVector
+		, const rgbaf				& lightColor
+		, apod<n2s1_t>				& pixelCoords
+		, apod<trif2_t>				& pixelVertexWeights
+		, gc8bgra					textureImage
+		, apod<SLight3>				& lightPoints
+		, apod<rgbaf>				& lightColors
+		, grid<u2_t>				depthBuffer
 		);
 }
 

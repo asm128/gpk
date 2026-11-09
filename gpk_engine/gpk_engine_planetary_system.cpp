@@ -184,10 +184,10 @@ sttc	gpk::err_t	initBody				(gpk::SEngine & engine, s2_t iEntity, bool isStar, f
 }
 
 sttc	gpk::err_t	textureNumber			(gpk::g8bgra view, u2_t number, const gpk::SRasterFont & font) { 
-	sc_t				strNumber[4]			= {};
-	sprintf_s(strNumber, "%i", number);
+	const auto			strNumberStorage		= ::gpk::str(number);
+	const ::gpk::vcst_t	strNumber			= strNumberStorage.Storage;
 	const gpk::rect2s1_t		targetRect				= 
-		{ {s1_t(view.metrics().x / 2 - (font.CharSize.x * strlen(strNumber)) / 2), s1_t(view.metrics().y / 2 - font.CharSize.y / 2)}
+		{ {s1_t(view.metrics().x / 2 - (font.CharSize.x * strNumber.size()) / 2), s1_t(view.metrics().y / 2 - font.CharSize.y / 2)}
 		, font.CharSize.s1()
 		};
 	gpk::a2u1_t		coords;

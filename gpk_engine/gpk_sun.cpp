@@ -1,5 +1,5 @@
 #include "gpk_sun.h"
-#include <ctime>
+#include "gpk_chrono.h"
 
 GPK_USING_TYPEINT	();
 GPK_USING_N2		();
@@ -12,13 +12,7 @@ f3_t					gpk::calcSunlightFactor(f3_t daylightRatioExtra, u2_t daylightOffsetMin
 }
 
 ::gpk::n3f2_t			gpk::calcSunPosition	()	{ 
-	const time_t				now						= time(0);
-	tm							ltm						= {};
-	localtime_s(&ltm, &now);
-
-	const u2_t				hourInSeconds			= ltm.tm_hour * 60 * 60;
-	const u2_t				minsInSeconds			= ltm.tm_min * 60;
-	const u2_t				daySeconds				= hourInSeconds + minsInSeconds + ltm.tm_sec;
+	const u2_t				daySeconds				= (u2_t)(::gpk::timeCurrent() % 86400);
 
 	return ::gpk::n3f2_t{0, -1}.RotateZ(::gpk::SCALE_DAY_SECONDS_TO_RADIANS * daySeconds);
 }

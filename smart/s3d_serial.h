@@ -1,4 +1,5 @@
 #include "gpk_array.h"
+#include "gpk_stdsocket.h"
 
 #if defined(GPK_WINDOWS)
 #	include <windows.h>

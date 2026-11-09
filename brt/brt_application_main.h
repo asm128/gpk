@@ -12,17 +12,40 @@
 namespace brt // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 	struct SProcessHandles {
+#if defined(GPK_WINDOWS)
 		HANDLE				ChildStd_IN_Read		= INVALID_HANDLE_VALUE;
 		HANDLE				ChildStd_IN_Write		= INVALID_HANDLE_VALUE;
 		HANDLE				ChildStd_OUT_Read		= INVALID_HANDLE_VALUE;
 		HANDLE				ChildStd_OUT_Write		= INVALID_HANDLE_VALUE;
 		HANDLE				ChildStd_ERR_Read		= INVALID_HANDLE_VALUE;
 		HANDLE				ChildStd_ERR_Write		= INVALID_HANDLE_VALUE;
+#elif defined(GPK_LINUX)
+		int					ChildStd_IN_Read		= -1;
+		int					ChildStd_IN_Write		= -1;
+		int					ChildStd_OUT_Read		= -1;
+		int					ChildStd_OUT_Write		= -1;
+		int					ChildStd_ERR_Read		= -1;
+		int					ChildStd_ERR_Write		= -1;
+#endif
 	};
 
 	struct SProcess {
+#if defined(GPK_WINDOWS)
 		PROCESS_INFORMATION	ProcessInfo				= {};
 		STARTUPINFOA		StartInfo				= {sizeof(STARTUPINFOA)};
+#elif defined(GPK_LINUX)
+		struct {
+			::gpk::s2_t		hProcess				= -1;
+			::gpk::s2_t		hThread				= -1;
+		} ProcessInfo;
+		struct {
+			int					hStdError				= -1;
+			int					hStdOutput				= -1;
+			int					hStdInput				= -1;
+			::gpk::u2_t		dwFlags				= {};
+		} StartInfo;
+		::gpk::u2_t			ExitCode				= {};
+#endif
 	};
 
 	struct SApplication {
@@ -37,7 +60,9 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 		::gpk::vcst_t						ProcessFileName						= "";
 		::gpk::vcst_t						ProcessMockPath						= "";
 		::gpk::vcst_t						ProcessParams						= "";
+#if defined(GPK_WINDOWS)
 		SECURITY_ATTRIBUTES	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
+#endif
 
 		::gpk::string			szCmdlineApp						= "";
 		::gpk::string			szCmdlineFinal						= "";

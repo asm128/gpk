@@ -172,13 +172,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="s3d_serial.cpp" />
-    <ClCompile Include="s3d_xcb_framework.cpp" />
-    <ClCompile Include="s3d_xcb_texture_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="s3d_serial.h" />
-    <ClInclude Include="s3d_xcb_framework.h" />
-    <ClInclude Include="s3d_xcb_texture_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />

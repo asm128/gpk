@@ -8,6 +8,15 @@
 #if defined(GPK_WINDOWS)
 #	include <process.h>
 tydf	int			socklen_t;
+#else
+#	include <cerrno>
+#	define WSAGetLastError()	errno
+#	define WSAEMSGSIZE		EMSGSIZE
+#	define WSAEINTR			EINTR
+#	define WSAENOTSOCK		ENOTSOCK
+#	define WSANOTINITIALISED	ENOTSOCK
+#	define WSAECONNRESET		ECONNRESET
+#	define _beginthread(callback, stackSize, argument)	::std::thread((callback), (argument)).detach()
 #endif
 
 GPK_USING_TYPEINT();
@@ -54,7 +63,7 @@ static	::gpk::err_t	clientQueueReceive								(::gpk::SSocketClient & client)		{
 	::gpk::au0_t														receiveBuffer;
 	while(client.Connection.State != ::gpk::CONNECTION_STATE_DISCONNECTED && client.Socket.Socket != INVALID_SOCKET) {
 		sockaddr_in														sa_server									= {};				/* Information about the server */
-		int																sa_length									= sizeof(struct sockaddr_in);
+		socklen_t														sa_length									= sizeof(struct sockaddr_in);
 		::gpk::SCommand												commandReceived								= {};	/* Data to send */
 		int																received_bytes								= recvfrom(client.Socket.Socket, (sc_t *)&commandReceived, (int)sizeof(::gpk::SCommand), MSG_PEEK, (sockaddr *)&sa_server, &sa_length);
 		int																wsae										= WSAGetLastError();

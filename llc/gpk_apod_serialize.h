@@ -38,6 +38,14 @@ nmsp gpk
 	tplTstin		err_t	saveView					(as0_t & output, cnst view<T> & headerToWrite)	{ return saveView(*(au0_t*)&output, headerToWrite); }
 	tplT			err_t	savePOD						(au0_t & output, cnst T & input)				{ if_fail_fe(output.append((cnst u0_t*)&input, szof(T))); return szof(T); }
 	tplTstin		err_t	savePOD						(as0_t & output, cnst T & input)				{ return savePOD(*(au0_t*)&output, input); }
+	tplt<tpnm TMap, tpnm TSave>
+	err_t					saveMap						(au0_t & output, cnst TMap & map, TSave save) {
+		u2_c						count						= map.size();
+		if_fail_fe(savePOD(output, count));
+		for(u2_t index = 0; index < count; ++index)
+			if_fail_fe(save(output, index, map[index]));
+		return 0;
+	}
 	tplT			err_t	saveUInt					(au0_t & output, cnst T & input)				{ 
 		cnst packed_uint<T>			packedInput					= input; 
 		return savePacked(output, packedInput); 

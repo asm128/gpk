@@ -4,8 +4,6 @@
 
 #include "gpk_parse.h"
 
-#include <Windows.h>
-
 using nmsp gpk;
 //static gpk::err_t 							metrics_split			(const view_const_string& input_string, n2<s2_t>& output_metrics)												{
 //	u2_t 												iChar					= 0;
@@ -30,7 +28,6 @@ using nmsp gpk;
 //}
 
 gpk::err_t 							genHTMLModuleOutput				(SCGIFramework & framework, string & output){
-	const SCGIRuntimeValues			& runtimeValues					= framework.RuntimeValues;
 	//char									buffer[4096]					= {};
 	SCGIModule						module;
 	vcst_t							moduleName						= framework.ModuleName;
@@ -42,7 +39,6 @@ gpk::err_t 							genHTMLModuleOutput				(SCGIFramework & framework, string & ou
 	module.Cleanup	(module.Application);
 	module.Delete	(&module.Application);
 	//output.append(buffer, formatForSize(framework.ModuleName, buffer, size(buffer), "<html>\n<body>\n<h1>bootstrapped module: ", "</h1>\n</body>\n</html>"));
-	runtimeValues;
 	return 0;
 }
 
@@ -136,12 +132,10 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 				//memset(content_body.begin(), 0, content_body.size());
 				content_body.resize(0);
 				u2_t 			iOffset					= iChar;
-				bool				value					= false;
 				while(iChar < runtimeValues.Content.Length && (iArg = runtimeValues.Content.Body[iChar++])) {
 					if(iArg == '\n') {
 						++count;
 						if(count >= 2) {
-							value			= true;
 							count			= 0;
 							//break;
 						}
@@ -176,7 +170,6 @@ static ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	string									html;
 	if_fail_fe(::cgiBootstrap(framework, html));
 	html.push_back('\0');
-	OutputDebugStringA(html.begin());
 	printf("%.*s", GPK_VIEW_ARGS(html));
 	::std::putc(0, stdout);
 	return 0;
