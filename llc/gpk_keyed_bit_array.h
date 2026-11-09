@@ -32,7 +32,7 @@ namespace gpk
 
 		::gpk::error_t			CreateField		(const ::gpk::vcsc_t & fieldName)					{ 
 			int32_t						fieldIndex;
-			ree_if(::gpk::succeeded(fieldIndex = FieldNames.find(fieldName)), "Duplicated field name at index %i: %s", fieldIndex, ::gpk::toString(fieldName).begin()); 
+			ree_if(::gpk::succeeded(fieldIndex = FieldNames.find(fieldName)), "Duplicated field name at index %i: %.*s", fieldIndex, GPK_VIEW_ARGS(fieldName)); 
 			return FieldNames.push_back(fieldName);
 		}
 

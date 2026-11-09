@@ -376,11 +376,11 @@ namespace
 		ScopedHandle						hFile				(safe_handle(CreateFileW(wszFileName.begin(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr)));
 #endif
 
-		rve_if(HRESULT_FROM_WIN32(GetLastError()), !hFile, "%s", ::gpk::toString(szFileName).begin());
+		rve_if(HRESULT_FROM_WIN32(GetLastError()), !hFile, "%.*s", GPK_VIEW_ARGS(szFileName));
 
 		// Get the file size
 		FILE_STANDARD_INFO					fileInfo			= {};
-		rve_if(HRESULT_FROM_WIN32(GetLastError()), !GetFileInformationByHandleEx(hFile.get(), FileStandardInfo, &fileInfo, sizeof(fileInfo)), "File not found: '%s'", ::gpk::toString(szFileName).begin());
+		rve_if(HRESULT_FROM_WIN32(GetLastError()), !GetFileInformationByHandleEx(hFile.get(), FileStandardInfo, &fileInfo, sizeof(fileInfo)), "File not found: '%.*s'", GPK_VIEW_ARGS(szFileName));
 		rve_if(E_FAIL, fileInfo.EndOfFile.HighPart > 0, "File is too big (%llu), so reject read", fileInfo.EndOfFile.QuadPart);
 		rve_if(E_FAIL, fileInfo.EndOfFile.LowPart < (sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT)), "Need at least %u bytes to have a valid minimal WAV file. Actual size: %u", sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT), fileInfo.EndOfFile.LowPart);
 

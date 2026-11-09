@@ -45,20 +45,20 @@ namespace gpk
 
 		inline					~ptr_com		()									noexcept	{ clear(); }
 
-		inlcxpr					ptr_com			()									noexcept	= default;
+		inxp					ptr_com			()									noexcept	= default;
 		inline					ptr_com			(const TNCOPtr& other)				noexcept	{ Unknown = other.Unknown; if(Unknown) Unknown->AddRef(); }
-		inlcxpr					ptr_com			(TNCOPtr&& other)					noexcept	{ Unknown = other.Unknown; other.Unknown = 0; }
+		inxp					ptr_com			(TNCOPtr&& other)					noexcept	{ Unknown = other.Unknown; other.Unknown = 0; }
 		inline					ptr_com			(TRef* other)						noexcept	{ Unknown = other; }
 
-		inlcxpr	operator		TRef		*	()									noexcept	{ return Unknown;	}
-		inlcxpr	operator		const TRef	*	()							const	noexcept	{ return Unknown;	}
+		inxp	operator		TRef		*	()									noexcept	{ return Unknown;	}
+		inxp	operator		const TRef	*	()							const	noexcept	{ return Unknown;	}
 
-		inlcxpr	bool			operator==		(const TNCOPtr& other)		const	noexcept	{ return Unknown == other.Unknown; }
-		inlcxpr	bool			operator!=		(const TNCOPtr& other)		const	noexcept	{ return !operator==(other); }
+		inxp	bool			operator==		(const TNCOPtr& other)		const	noexcept	{ return Unknown == other.Unknown; }
+		inxp	bool			operator!=		(const TNCOPtr& other)		const	noexcept	{ return !operator==(other); }
 
-		inlcxpr	TNCOPtr			operator =		(const TNCOPtr& other)				noexcept	{ TRef* oldInstance = Unknown; Unknown = other.Unknown; if(Unknown) Unknown->AddRef();	if(oldInstance) oldInstance->Release(); return *this; }
-		inlcxpr	TNCOPtr			operator =		(TNCOPtr&& other)					noexcept	{ TRef* oldInstance = Unknown; Unknown = other.Unknown; other.Unknown = 0;					if(oldInstance) oldInstance->Release(); return *this; }
-		inlcxpr	TNCOPtr			operator =		(TRef* other)						noexcept	{ TRef* oldInstance = Unknown; Unknown = other; if(Unknown) Unknown->AddRef();				if(oldInstance) oldInstance->Release(); return *this; }
+		inxp	TNCOPtr			operator =		(const TNCOPtr& other)				noexcept	{ TRef* oldInstance = Unknown; Unknown = other.Unknown; if(Unknown) Unknown->AddRef();	if(oldInstance) oldInstance->Release(); return *this; }
+		inxp	TNCOPtr			operator =		(TNCOPtr&& other)					noexcept	{ TRef* oldInstance = Unknown; Unknown = other.Unknown; other.Unknown = 0;					if(oldInstance) oldInstance->Release(); return *this; }
+		inxp	TNCOPtr			operator =		(TRef* other)						noexcept	{ TRef* oldInstance = Unknown; Unknown = other; if(Unknown) Unknown->AddRef();				if(oldInstance) oldInstance->Release(); return *this; }
 
 		inline	TRef*			operator->		()									noexcept	{ return Unknown; }
 		inline	const TRef*		operator->		()							const	noexcept	{ return Unknown; }
@@ -66,9 +66,9 @@ namespace gpk
 		inline	TRef**			operator &		()									noexcept	{ return &Unknown; }
 
 		inline	uint32_t		clear			()									noexcept	{ return ::gpk::safe_release(&Unknown); }
-		inlcxpr	const TRef*		get_ref			()							const	noexcept	{ return Unknown; }
-		inlcxpr	const TRef*		set_ref			(TRef* ref)							noexcept	{ ::gpk::safe_addref(&Unknown, ref); return Unknown; }
-		inlcxpr	TRef*			get				()							const	noexcept	{ return Unknown; }
+		inxp	const TRef*		get_ref			()							const	noexcept	{ return Unknown; }
+		inxp	const TRef*		set_ref			(TRef* ref)							noexcept	{ ::gpk::safe_addref(&Unknown, ref); return Unknown; }
+		inxp	TRef*			get				()							const	noexcept	{ return Unknown; }
 
 		tplt<tpnm _tNCOOther>
 		inline	::gpk::error_t	as				(_tNCOOther** other)				noexcept	{ 

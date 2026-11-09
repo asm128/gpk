@@ -9,7 +9,7 @@ GPK_USING_TYPEINT();
 ::gpk::error_t			gpk::loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter) {
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"}, jsonConfig, parentNode, port));
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonConfig, parentNode, adapter));
-	info_printf("\nListen port: %s.\nAdapter: %s.'", ::gpk::toString(port).begin(), ::gpk::toString(adapter).begin());
+	info_printf("\nListen port: %.*s.\nAdapter: %.*s.'", GPK_VIEW_ARGS(port), GPK_VIEW_ARGS(adapter));
 	return 0;
 }
 

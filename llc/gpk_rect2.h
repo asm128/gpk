@@ -13,18 +13,18 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
 		tplt <tpnm _t>
-		inlcxpr	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
+		inxp	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
 
-		inlcxpr	rect2<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	rect2<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	rect2<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	rect2<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	rect2<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	rect2<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	rect2<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	rect2<int64_t>	s3_t			()	const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	rect2<float>	f2_t			()	const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	rect2<double>	f3_t			()	const	noexcept	{ return Cast<double	>(); }
+		inxp	rect2<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
+		inxp	rect2<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
+		inxp	rect2<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
+		inxp	rect2<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
+		inxp	rect2<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
+		inxp	rect2<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
+		inxp	rect2<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
+		inxp	rect2<int64_t>	s3_t			()	const	noexcept	{ return Cast<int64_t	>(); }
+		inxp	rect2<float>	f2_t			()	const	noexcept	{ return Cast<float		>(); }
+		inxp	rect2<double>	f3_t			()	const	noexcept	{ return Cast<double	>(); }
 
 		inline	::gpk::n2<T>	Limit		()	const	noexcept	{ return Offset + Size; }
 	};

@@ -21,7 +21,7 @@ namespace gpk
 		float				InverseMass						= 0;
 		::gpk::m3f32		InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
 
-		inlcxpr	double		GetMass							()	{
+		inxp	double		GetMass							()	{
 			return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass; 
 		}
 	};

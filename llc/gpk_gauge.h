@@ -14,23 +14,23 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limit == other.Limit && Value == other.Value); 
 
 		cnstxpr double				Weight			()		const	noexcept	{ return 1.0 / Limit * Value; }
-		inlcxpr	double				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamped(Value, (T)0, Limit); }
+		inxp	double				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamped(Value, (T)0, Limit); }
 		T							SetClamp		(T value)		noexcept	{ return Value = ::gpk::clamped(value, 0, Limit); }
 		T							SetWeighted		(double weight)	noexcept	{ return SetClamp(T(Limit * weight)); }
 
 		tplt<tpnm _tOther>
 		gaugemax<_tOther>			Cast		()		const	noexcept	{ return {(_tOther)Limit, (_tOther)Value}; }
 
-		inlcxpr	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
+		inxp	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
+		inxp	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
+		inxp	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
+		inxp	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
+		inxp	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
+		inxp	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
+		inxp	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
+		inxp	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
+		inxp	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
+		inxp	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
 	};
 
 	tplt<tpnm T> 
@@ -40,25 +40,25 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limits == other.Limits && Value == other.Value); 
 
-		inlcxpr	T					Middle		()		const	noexcept	{ return Limits.Min + Limits.Length() / 2; }
+		inxp	T					Middle		()		const	noexcept	{ return Limits.Min + Limits.Length() / 2; }
 		cnstxpr	double				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
-		inlcxpr	double				WeightClamp	()		const	noexcept	{ return Limits.WeightClamp(Value); }
+		inxp	double				WeightClamp	()		const	noexcept	{ return Limits.WeightClamp(Value); }
 		T							SetClamp	(T value)		noexcept	{ return Value = Limits.Clamp(value); }
 		T							SetWeighted	(double weight)	noexcept	{ return Set(Limits.Weighted(weight)); }
 
 		tplt<tpnm _tOther>
 		gaugeminmax<_tOther>		Cast		()		const	noexcept	{ return {Limits.Cast<_tOther>(), (_tOther)Value}; }
 
-		inlcxpr	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
+		inxp	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
+		inxp	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
+		inxp	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
+		inxp	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
+		inxp	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
+		inxp	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
+		inxp	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
+		inxp	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
+		inxp	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
+		inxp	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
 	};
 #pragma pack(pop)
 	typedef	gaugemax<sc_t		>	gaugemaxchar;

@@ -13,7 +13,7 @@ GPK_USING_TYPEINT();
 stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 
 ::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ 
-	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%s", ::gpk::toString(jsonData.View[0]).begin());	
+	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%.*s", GPK_VIEW_ARGS(jsonData.View[0]));	
 	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
 }
 ::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcsc_t jsonFilePath)				{ 

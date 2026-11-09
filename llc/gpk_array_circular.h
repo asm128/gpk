@@ -57,9 +57,9 @@ namespace gpk
 			return _left.size() + _right.size(); 
 		} 
 
-		inlcxpr	::gpk::error_t	free			()	const	noexcept	{ return size() - Count; }
-		inlcxpr	::gpk::error_t	used			()	const	noexcept	{ return Count; }
-		inlcxpr	::gpk::error_t	byte_count		()	const	noexcept	{ return Count * sizeof(T); }
+		inxp	::gpk::error_t	free			()	const	noexcept	{ return size() - Count; }
+		inxp	::gpk::error_t	used			()	const	noexcept	{ return Count; }
+		inxp	::gpk::error_t	byte_count		()	const	noexcept	{ return Count * sizeof(T); }
 
 //		::gpk::error_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<int(T *, uint32_t)> & funcRead) {
 //			return 0;	

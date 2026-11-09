@@ -17,23 +17,23 @@ namespace gpk
 
 		cnstxpr	TRect			operator+	(const TRect & other)					const	noexcept	{ return {T(Left + other.Left), T(Top + other.Top), T(Right + other.Right), T(Bottom + other.Bottom)}; }
 
-		inlcxpr	T				Width		()	const { return Right - Left; }
-		inlcxpr	T				Height		()	const { return Bottom - Top; }
+		inxp	T				Width		()	const { return Right - Left; }
+		inxp	T				Height		()	const { return Bottom - Top; }
 		cnstxpr ::gpk::n2<T>	Dimensions	()	const { return {Width(), Height()}; }
 
 		tplt <tpnm _t>
-		inlcxpr	rect<_t>		Cast		()	const	noexcept	{ return {(_t)Left, (_t)Top, (_t)Right, (_t)Bottom}; }
+		inxp	rect<_t>		Cast		()	const	noexcept	{ return {(_t)Left, (_t)Top, (_t)Right, (_t)Bottom}; }
 
-		inlcxpr	rect<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	rect<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	rect<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	rect<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	rect<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	rect<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	rect<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	rect<int64_t>	s3_t			()	const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	rect<float>		f2_t			()	const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	rect<double>	f3_t			()	const	noexcept	{ return Cast<double	>(); }
+		inxp	rect<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
+		inxp	rect<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
+		inxp	rect<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
+		inxp	rect<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
+		inxp	rect<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
+		inxp	rect<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
+		inxp	rect<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
+		inxp	rect<int64_t>	s3_t			()	const	noexcept	{ return Cast<int64_t	>(); }
+		inxp	rect<float>		f2_t			()	const	noexcept	{ return Cast<float		>(); }
+		inxp	rect<double>	f3_t			()	const	noexcept	{ return Cast<double	>(); }
 	};
 	typedef rect<float>		rectf32;
 	typedef rect<double>	rectf64;

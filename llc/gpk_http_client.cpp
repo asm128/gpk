@@ -141,7 +141,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
     freeaddrinfo(servinfo); // all done with this structure
 
     int											numbytes						= 0;
-	info_printf("Sending request: \n%s", ::gpk::toString(bytesRequest).begin());
+	info_printf("Sending request: \n%.*s", GPK_VIEW_ARGS(bytesRequest));
     gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
 
 	::gpk::apod<sc_t>						buf								= {};
@@ -232,7 +232,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 		else {
 			::gpk::view<sc_t>							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};
 			::gpk::tolower(strLine);
-			info_printf("\n%s", ::gpk::toString(strLine).begin());
+			info_printf("\n%.*s", GPK_VIEW_ARGS(strLine));
 			if(::gpk::vcs{"transfer-encoding"} == header.Key) {
 				if(0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, header.Val))
 					bChunked								= true;

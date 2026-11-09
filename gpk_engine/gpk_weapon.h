@@ -107,7 +107,7 @@ namespace gpk
 		float			OverheatPerShot		= {};	// 
 		bool			CoolingDown			= {};	// Reloading
 
-		inlcxpr	float	Busy				()	const			noexcept	{ 
+		inxp	float	Busy				()	const			noexcept	{ 
 			return CoolingDown					? ::gpk::max(Delay.Limit - Delay.Value, Overheat.Value)
 				: (Delay.Value < Delay.Limit)	? Delay.Limit - Delay.Value
 				: 0

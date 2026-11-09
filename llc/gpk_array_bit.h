@@ -36,7 +36,7 @@ namespace gpk
 			return *this;
 		}
 
-		inlcxpr	const uint32_t&	size			()				const	noexcept	{ return View.size(); }
+		inxp	const uint32_t&	size			()				const	noexcept	{ return View.size(); }
 
 		::gpk::error_t			resize			(uint32_t newSize)		noexcept	{
 			gpk_necs(Data.resize(round_up(newSize, View.ELEMENT_BITS)));

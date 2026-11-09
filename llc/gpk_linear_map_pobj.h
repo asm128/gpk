@@ -20,7 +20,7 @@ namespace gpk
 		inline	const TPObj&		operator[]		(::gpk::vcsc_t key)	const	{ return Elements[Names.find(key)]; }
 		inline	TPObj&				operator[]		(::gpk::vcsc_t key)			{ return Elements[Names.find(key)]; }
 
-		inlcxpr	uint32_t			size			()											const	{ return Names.size(); }
+		inxp	uint32_t			size			()											const	{ return Names.size(); }
 		inline	::gpk::error_t		find			(::gpk::vcsc_c key, uint32_t offset = 0)	const	{ return Names.find(key, offset); }
 
 		::gpk::error_t				push_back		(const ::gpk::pobj<T> & instance, ::gpk::vcsc_c name = {})	{ 

@@ -6,7 +6,7 @@
 ::gpk::error_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port) {
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"remote_ip"  }, jsonConfig, parentNode, remote_ip));
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"remote_port"}, jsonConfig, parentNode, remote_port));
-	info_printf("Remote server address '%s:%s'", ::gpk::toString(remote_ip).begin(), ::gpk::toString(remote_port).begin());
+	info_printf("Remote server address '%.*s:%.*s'", GPK_VIEW_ARGS(remote_ip), GPK_VIEW_ARGS(remote_port));
 	return 0;
 }
 

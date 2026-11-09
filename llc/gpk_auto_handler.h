@@ -14,16 +14,16 @@ namespace gpk
 				_tHandle							Handle							= _vDefault;
 		stacxpr	const _tHandle						VDefault						= _vDefault;
 
-		inlcxpr										auto_handler					()								noexcept	= default;
-		inlcxpr										auto_handler					(const _tHandle & other)		noexcept	= delete;
-		inlcxpr										auto_handler					(const TWrapper & other)		noexcept	= delete;
+		inxp										auto_handler					()								noexcept	= default;
+		inxp										auto_handler					(const _tHandle & other)		noexcept	= delete;
+		inxp										auto_handler					(const TWrapper & other)		noexcept	= delete;
 
-		inlcxpr	operator							const _tHandle&					()						const	noexcept	{ return Handle;		}
+		inxp	operator							const _tHandle&					()						const	noexcept	{ return Handle;		}
 
-		inlcxpr	TWrapper							operator=		(const _tHandle & other)		noexcept	= delete;
-		inlcxpr	_tHandle*							operator&						()								noexcept	{ return &Handle;		}
+		inxp	TWrapper							operator=		(const _tHandle & other)		noexcept	= delete;
+		inxp	_tHandle*							operator&						()								noexcept	{ return &Handle;		}
 #if !defined(GPK_ATMEL)
-		inlcxpr	const _tHandle*						operator&						()						const	noexcept	{ return &Handle;		}
+		inxp	const _tHandle*						operator&						()						const	noexcept	{ return &Handle;		}
 #endif
 	};
 } // namespace

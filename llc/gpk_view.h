@@ -588,4 +588,6 @@ namespace gpk
 		,	::gpk::vf3_t, ::gpk::vf3_c, ::gpk::vcf3_t, ::gpk::vcf3_c	\
 		,	::gpk::vstr_t, ::gpk::vcst_t, ::gpk::vstr_c, ::gpk::vcst_c
 
+#define  GPK_VIEW_ARGS(view_instance) view_instance.size(), view_instance.begin()
+
 #endif // GPK_ARRAY_VIEW_H_23627

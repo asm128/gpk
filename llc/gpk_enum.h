@@ -49,7 +49,7 @@ namespace gpk
 					value				= Values[i];
 					return 0;
 				}
-			enum_printf("Enumeration value not found! Name: %s.", ::gpk::toString(name).begin());
+			enum_printf("Enumeration value not found! Name: %.*s.", GPK_VIEW_ARGS(name));
 			value				= INVALID_VALUE;
 			return -1;
 		}
@@ -68,7 +68,7 @@ namespace gpk
 				if(name == Names[i])
 					return Values[i];
 			}
-			enum_printf("Enumeration value not found! Name: %s.", ::gpk::toString(name).begin());
+			enum_printf("Enumeration value not found! Name: %.*s.", GPK_VIEW_ARGS(name));
 			return INVALID_VALUE;
 		}
 		err_t				get_value_by_index		(uint32_t index, T & value)					const			{

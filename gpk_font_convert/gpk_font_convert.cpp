@@ -64,7 +64,7 @@
 int						main					() {
 	::gpk::aobj<::gpk::asc_t>	fontFiles				= {};
 	::gpk::vcs					pathToSearch			= {"../gpk_data/fonts/cp437"};
-	gpk_necall(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
+	gpk_necall(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
 	::gpk::SPNGData				pngCache				= {};
 	::gpk::img8bgra				imageCache				= {};
 	::gpk::img8bgra				imageFixed				= {};
@@ -74,7 +74,7 @@ int						main					() {
 	::gpk::vcsc_t				extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
 		::gpk::vcsc_t				filenameInput			= fontFiles[iFile];
-		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
+		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%.*s'", GPK_VIEW_ARGS(filenameInput));
 		::gpk::apod<char>			lowercaseExtension		= ::gpk::toString(extension);
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcs{".png"})

@@ -33,9 +33,9 @@ namespace gpk
 	typedef line2<int32_t>	line2i32;
 	typedef line2<int64_t>	line2i64;
 
-	tplt<tpnm T> stincxp	T		rise		(const ::gpk::line2<T> & line)									noexcept	{ return line.B.y - line.A.y;		}
-	tplt<tpnm T> stincxp	T		run			(const ::gpk::line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
-	tplt<tpnm T> stincxp	T		slope		(const ::gpk::line2<T> & line)												{ return rise(line) / run(line);	}
+	tplt<tpnm T> sinx	T		rise		(const ::gpk::line2<T> & line)									noexcept	{ return line.B.y - line.A.y;		}
+	tplt<tpnm T> sinx	T		run			(const ::gpk::line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
+	tplt<tpnm T> sinx	T		slope		(const ::gpk::line2<T> & line)												{ return rise(line) / run(line);	}
 	tplt<tpnm T> stacxpr	T		orient2d	(const ::gpk::line2<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
 	tplt<tpnm T> stainli	double	determinant	(const ::gpk::line2<T>& line)									noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
 #pragma pack(pop)

@@ -189,7 +189,7 @@
 	DWORD								dwDesiredAccess			= GENERIC_READ | GENERIC_WRITE;
 	serial.Handle					= CreateFileA(portName.begin(), dwDesiredAccess, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (serial.Handle == INVALID_HANDLE_VALUE) {
-		ree_if(GetLastError() == ERROR_FILE_NOT_FOUND, "%s not available.", ::gpk::toString(portName).begin())
+		ree_if(GetLastError() == ERROR_FILE_NOT_FOUND, "%.*s not available.", GPK_VIEW_ARGS(portName))
 		else
 			error_printf("Failed to open serial port. %s", "Unknown error.");
 		return -1;

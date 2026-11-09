@@ -291,7 +291,7 @@ namespace gpk
 		}
 
 		cnstxpr	_tMat4		GetTranspose				()			const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
-		inlcxpr	Tn3			GetTranslation				()			const	noexcept	{ return { _41, _42, _43 }; }
+		inxp	Tn3			GetTranslation				()			const	noexcept	{ return { _41, _42, _43 }; }
 		_tMat4				GetInverse					()			const				{
 			_tMat4					mTranspose					= GetTranspose()
 				,					mResult						= *this

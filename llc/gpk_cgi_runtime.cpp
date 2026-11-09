@@ -173,7 +173,7 @@ static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, 
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
 	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
 	//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
-	//	info_printf("CGI Environ (original): '%s = %s'.", ::gpk::toString(environViews[iEnviron].Key).begin(), ::gpk::toString(environViews[iEnviron].Val).begin());
+	//	info_printf("CGI Environ (original): '%.*s = %.*s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key), GPK_VIEW_ARGS(environViews[iEnviron].Val));
 
 	{
 		::gpk::vcs					querystring;

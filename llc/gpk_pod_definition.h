@@ -9,7 +9,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(C_TYPE, unsigned	, 0x00);
 	GDEFINE_ENUM_VALUE(C_TYPE, signed	, 0x10);
 	GDEFINE_ENUM_VALUE(C_TYPE, float	, 0x20);
-	GDEFINE_ENUM_VALUE(C_TYPE, sc_t		, 0x41);
+	GDEFINE_ENUM_VALUE(C_TYPE, char		, 0x41);
 	GDEFINE_ENUM_VALUE(C_TYPE, apod		, 0x80);
 	// 
 	GDEFINE_ENUM_VALUE(C_TYPE, u0_t	, C_TYPE_unsigned	| 1);
@@ -23,19 +23,19 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(C_TYPE, f2_t	, C_TYPE_float		| 4);
 	GDEFINE_ENUM_VALUE(C_TYPE, f3_t	, C_TYPE_float		| 8);
 	GDEFINE_ENUM_VALUE(C_TYPE, uc_t, C_TYPE_char		| C_TYPE_unsigned);
-
-	stincxp	C_TYPE	toCType	(u0_t		)	{ return ::gpk::C_TYPE_u8   ; } 
-	stincxp	C_TYPE	toCType	(u1_t	)	{ return ::gpk::C_TYPE_u16  ; } 
-	stincxp	C_TYPE	toCType	(u2_t	)	{ return ::gpk::C_TYPE_u32  ; } 
-	stincxp	C_TYPE	toCType	(u3_t	)	{ return ::gpk::C_TYPE_u64  ; } 
-	stincxp	C_TYPE	toCType	(s0_t		)	{ return ::gpk::C_TYPE_i8   ; } 
-	stincxp	C_TYPE	toCType	(s1_t	)	{ return ::gpk::C_TYPE_i16  ; } 
-	stincxp	C_TYPE	toCType	(s2_t	)	{ return ::gpk::C_TYPE_i32  ; } 
-	stincxp	C_TYPE	toCType	(s3_t	)	{ return ::gpk::C_TYPE_i64  ; } 
-	stincxp	C_TYPE	toCType	(f2_t	)	{ return ::gpk::C_TYPE_f32  ; } 
-	stincxp	C_TYPE	toCType	(f3_t	)	{ return ::gpk::C_TYPE_f64  ; } 
-	stincxp	C_TYPE	toCType	(sc_t	)	{ return ::gpk::C_TYPE_char ; } 
-	stincxp	C_TYPE	toCType	(uc_t	)	{ return ::gpk::C_TYPE_uchar; } 
+		
+	nsix	C_TYPE	toCType	(u0_t)	{ return ::gpk::C_TYPE_u0_t; } 
+	nsix	C_TYPE	toCType	(u1_t)	{ return ::gpk::C_TYPE_u1_t; } 
+	nsix	C_TYPE	toCType	(u2_t)	{ return ::gpk::C_TYPE_u2_t; } 
+	nsix	C_TYPE	toCType	(u3_t)	{ return ::gpk::C_TYPE_u3_t; } 
+	nsix	C_TYPE	toCType	(s0_t)	{ return ::gpk::C_TYPE_s0_t; } 
+	nsix	C_TYPE	toCType	(s1_t)	{ return ::gpk::C_TYPE_s1_t; } 
+	nsix	C_TYPE	toCType	(s2_t)	{ return ::gpk::C_TYPE_s2_t; } 
+	nsix	C_TYPE	toCType	(s3_t)	{ return ::gpk::C_TYPE_s3_t; } 
+	nsix	C_TYPE	toCType	(f2_t)	{ return ::gpk::C_TYPE_f2_t; } 
+	nsix	C_TYPE	toCType	(f3_t)	{ return ::gpk::C_TYPE_f3_t; } 
+	nsix	C_TYPE	toCType	(sc_t)	{ return ::gpk::C_TYPE_sc_t; } 
+	nsix	C_TYPE	toCType	(uc_t)	{ return ::gpk::C_TYPE_uc_t; } 
 
 	struct SPODDefinition { 
 		::gpk::au0_t					DefaultData;
@@ -44,7 +44,7 @@ namespace gpk
 		::gpk::apod<::gpk::C_TYPE>	Types;
 
 		::gpk::error_t				push_any		(const ::gpk::C_TYPE type, const ::gpk::vcsc_t label, const vcu0_t & defaultValue) { 
-			rve_if(Labels.size() > (uint32_t)Labels.find(label), "'%s' already exists.", ::gpk::toString(label).begin()); 
+			rve_if(Labels.size() > (uint32_t)Labels.find(label), "'%.*s' already exists.", GPK_VIEW_ARGS(label)); 
 			gpk_necs(Types.push_back(type));
 			gpk_necs(Offsets.push_back((uint16_t)DefaultData.size()));
 			gpk_necs(DefaultData.append(defaultValue));

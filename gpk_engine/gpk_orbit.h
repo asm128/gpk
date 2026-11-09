@@ -23,7 +23,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	stincxp	double			degreesToRadians		(double degrees) { return ::gpk::math_2pi / 360.0 * degrees; }
+	sinx	double			degreesToRadians		(double degrees) { return ::gpk::math_2pi / 360.0 * degrees; }
 
 	// Calculate the axial inclination of the planet IN RADIANS
 	tplt<tpnm _tAxis>

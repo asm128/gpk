@@ -21,7 +21,7 @@ namespace gpk
 		TCoord						Acceleration				= {};	// A vector representing the speed in a given direction
 		TCoord						Velocity					= {};	// A vector representing the speed in a given direction
 
-		inlcxpr	bool				VelocityDepleted			()				const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
+		inxp	bool				VelocityDepleted			()				const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
 		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
 		void						IntegrateAccumulatedForce	(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			noexcept	{
 			Acceleration				+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
@@ -41,8 +41,8 @@ namespace gpk
 		_tElement					Damping						= .99f;	// A vector representing the speed in a given direction
 
 		inline	void				SetMass						(const double mass)																			noexcept	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
-		inlcxpr	double				GetMass						()				const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
-		inlcxpr	bool				HasFiniteMass				()				const	noexcept	{ return InverseMass >= 0.0f;								}
+		inxp	double				GetMass						()				const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
+		inxp	bool				HasFiniteMass				()				const	noexcept	{ return InverseMass >= 0.0f;								}
 	};
 
 	// This compact structure allows to define all the boolean states of the particle packed in a single byte.
@@ -50,7 +50,7 @@ namespace gpk
 		bool					Unused						: 1;
 		bool					Active						: 1;
 
-		inlcxpr	bool			RequiresProcessing			()				const	noexcept	{ return (false == Unused) && Active; }
+		inxp	bool			RequiresProcessing			()				const	noexcept	{ return (false == Unused) && Active; }
 	};
 #pragma pack(pop)
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.

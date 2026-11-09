@@ -17,16 +17,16 @@ namespace gpk
 		using	tri<TVertex>	::C;
 		using	tri<TVertex>	::tri;
 
-		inlcxpr	tri2<float>		f2_t			()		const	noexcept	{ return {A.f2_t(), B.f2_t(), C.f2_t()}; }
-		inlcxpr	tri2<double>	f3_t			()		const	noexcept	{ return {A.f3_t(), B.f3_t(), C.f3_t()}; }
-		inlcxpr	tri2<uint8_t>	s0_t			()		const	noexcept	{ return {A.s0_t (), B.s0_t (), C.s0_t ()}; }
-		inlcxpr	tri2<uint16_t>	s1_t			()		const	noexcept	{ return {A.s1_t(), B.s1_t(), C.s1_t()}; }
-		inlcxpr	tri2<uint32_t>	s2_t			()		const	noexcept	{ return {A.s2_t(), B.s2_t(), C.s2_t()}; }
-		inlcxpr	tri2<uint64_t>	s3_t			()		const	noexcept	{ return {A.s3_t(), B.s3_t(), C.s3_t()}; }
-		inlcxpr	tri2<int8_t>	u0_t			()		const	noexcept	{ return {A.u0_t (), B.u0_t (), C.u0_t ()}; }
-		inlcxpr	tri2<int16_t>	u1_t			()		const	noexcept	{ return {A.u1_t(), B.u1_t(), C.u1_t()}; }
-		inlcxpr	tri2<int32_t>	u2_t			()		const	noexcept	{ return {A.u2_t(), B.u2_t(), C.u2_t()}; }
-		inlcxpr	tri2<int64_t>	u3_t			()		const	noexcept	{ return {A.u3_t(), B.u3_t(), C.u3_t()}; }
+		inxp	tri2<float>		f2_t			()		const	noexcept	{ return {A.f2_t(), B.f2_t(), C.f2_t()}; }
+		inxp	tri2<double>	f3_t			()		const	noexcept	{ return {A.f3_t(), B.f3_t(), C.f3_t()}; }
+		inxp	tri2<uint8_t>	s0_t			()		const	noexcept	{ return {A.s0_t (), B.s0_t (), C.s0_t ()}; }
+		inxp	tri2<uint16_t>	s1_t			()		const	noexcept	{ return {A.s1_t(), B.s1_t(), C.s1_t()}; }
+		inxp	tri2<uint32_t>	s2_t			()		const	noexcept	{ return {A.s2_t(), B.s2_t(), C.s2_t()}; }
+		inxp	tri2<uint64_t>	s3_t			()		const	noexcept	{ return {A.s3_t(), B.s3_t(), C.s3_t()}; }
+		inxp	tri2<int8_t>	u0_t			()		const	noexcept	{ return {A.u0_t (), B.u0_t (), C.u0_t ()}; }
+		inxp	tri2<int16_t>	u1_t			()		const	noexcept	{ return {A.u1_t(), B.u1_t(), C.u1_t()}; }
+		inxp	tri2<int32_t>	u2_t			()		const	noexcept	{ return {A.u2_t(), B.u2_t(), C.u2_t()}; }
+		inxp	tri2<int64_t>	u3_t			()		const	noexcept	{ return {A.u3_t(), B.u3_t(), C.u3_t()}; }
 
 		tplt<tpnm _tOther>
 		tri2<_tOther>			Cast		()		const	noexcept		{

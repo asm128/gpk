@@ -17,8 +17,8 @@ int									main							(int , char ** )		{
 
 		::gpk::vcsc_t left, right;
 		const int32_t iPos = ::gpk::split(word, text, left, right);
-		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
-		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
+		info_printf("Word (%u): '%.*s'. Position: %i.", iWord, GPK_VIEW_ARGS(word), iPos);
+		info_printf("Left (%u): '%.*s'. Right(%u): '%.*s'", left.size(), GPK_VIEW_ARGS(left), right.size(), GPK_VIEW_ARGS(right));
 	}
 
 	info_printf("%u:%s.", text1.size(), text1.begin());
@@ -27,16 +27,16 @@ int									main							(int , char ** )		{
 
 		::gpk::vcsc_t left, right;
 		const int32_t iPos = ::gpk::split(word, text1, left, right);
-		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
-		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
+		info_printf("Word (%u): '%.*s'. Position: %i.", iWord, GPK_VIEW_ARGS(word), iPos);
+		info_printf("Left (%u): '%.*s'. Right(%u): '%.*s'", left.size(), GPK_VIEW_ARGS(left), right.size(), GPK_VIEW_ARGS(right));
 	}
 
 	::gpk::vcsc_t trimmed;
-	::gpk::rtrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::ltrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::trim (trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::rtrim(trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::ltrim(trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
-	::gpk::trim (trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
+	::gpk::rtrim(trimmed, text); info_printf("trimmed (%u): %.*s.", trimmed.size(), GPK_VIEW_ARGS(trimmed));
+	::gpk::ltrim(trimmed, text); info_printf("trimmed (%u): %.*s.", trimmed.size(), GPK_VIEW_ARGS(trimmed));
+	::gpk::trim (trimmed, text); info_printf("trimmed (%u): %.*s.", trimmed.size(), GPK_VIEW_ARGS(trimmed));
+	::gpk::rtrim(trimmed, text1); info_printf("trimmed (%u): %.*s.", trimmed.size(), GPK_VIEW_ARGS(trimmed));
+	::gpk::ltrim(trimmed, text1); info_printf("trimmed (%u): %.*s.", trimmed.size(), GPK_VIEW_ARGS(trimmed));
+	::gpk::trim (trimmed, text1); info_printf("trimmed (%u): %.*s.", trimmed.size(), GPK_VIEW_ARGS(trimmed));
 	return 0;
 }

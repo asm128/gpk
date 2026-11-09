@@ -14,7 +14,7 @@
 
 ::gpk::error_t			jsonTcpipAddress		(gpk::vcs strIP, uint32_t & ipv4) {
 	::gpk::SJSONReader			reader					= {};
-	gpk_necall(gpk::jsonParse(reader, strIP), "Failed to parse ip from string: '%s'.", ::gpk::toString(strIP).begin());
+	gpk_necall(gpk::jsonParse(reader, strIP), "Failed to parse ip from string: '%.*s'.", GPK_VIEW_ARGS(strIP));
 	ipv4					= 0;
 	{ int32_t iToken; gpk_necs(iToken = ::gpk::jsonArrayValueGet(reader, 0, 0)); ipv4 |= ::gpk::byte_to<uint32_t>((uint8_t)reader[iToken]->Token->Value, 0); }
 	{ int32_t iToken; gpk_necs(iToken = ::gpk::jsonArrayValueGet(reader, 0, 1)); ipv4 |= ::gpk::byte_to<uint32_t>((uint8_t)reader[iToken]->Token->Value, 1); }

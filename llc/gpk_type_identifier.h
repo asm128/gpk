@@ -10,8 +10,8 @@ namespace gpk
 		::gpk::vcsc_t			NameSpace				= {};
 		::gpk::vcsc_t			Name					= {};
 
-		inlcxpr					STypeIdentifier			()			= default;
-		inlcxpr					STypeIdentifier			(::gpk::vcsc_c & nameSpace, ::gpk::vcsc_c & name)	: NameSpace(nameSpace), Name(name)	{}
+		inxp					STypeIdentifier			()			= default;
+		inxp					STypeIdentifier			(::gpk::vcsc_c & nameSpace, ::gpk::vcsc_c & name)	: NameSpace(nameSpace), Name(name)	{}
 
 		inline	bool			operator==				(const STypeIdentifier & right)		const	noexcept	{ return NameSpace == right.NameSpace && Name == right.Name; }
 	};	// struct

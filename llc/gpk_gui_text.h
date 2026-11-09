@@ -9,7 +9,7 @@
 
 namespace gpk
 {
-	stincxp	::gpk::error_t	textLineCalcWidth				(::gpk::n2u0_c & sizeCharCell, ::gpk::vcst_c & text0)		{ return (::gpk::error_t)(sizeCharCell.x * text0.size()); }
+	sinx	::gpk::error_t	textLineCalcWidth				(::gpk::n2u0_c & sizeCharCell, ::gpk::vcst_c & text0)		{ return (::gpk::error_t)(sizeCharCell.x * text0.size()); }
 
 	tplt<tpnm _tColor>
 	static	::gpk::error_t	textLineDrawFixedSize			(::gpk::grid<_tColor> & target, const ::gpk::grid<_tColor> & viewTextureFont, uint16_t characterCellsX, int16_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, ::gpk::vcst_c & text0, const ::gpk::n2s1_t dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.

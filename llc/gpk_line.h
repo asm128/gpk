@@ -10,9 +10,9 @@ namespace gpk
 	struct line { 
 		_tVertex				A, B; 
 
-		inlcxpr					line		()											= default;
-		inlcxpr					line		(const line<_tVertex> & other)				= default;
-		inlcxpr					line		(const _tVertex & a, const _tVertex & b)	: A(a), B(b)	{}
+		inxp					line		()											= default;
+		inxp					line		(const line<_tVertex> & other)				= default;
+		inxp					line		(const _tVertex & a, const _tVertex & b)	: A(a), B(b)	{}
 
 		GPK_DEFAULT_OPERATOR(line<_tVertex>, A == other.A && B == other.B);
 	};

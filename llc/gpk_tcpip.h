@@ -14,9 +14,9 @@ namespace gpk
 		
 							SIPv4				(gpk::vcs strIP)							{ ::gpk::tcpipAddress(strIP, IP); }
 							
-		inlcxpr				SIPv4				()								noexcept	= default;
-		inlcxpr				SIPv4				(const SIPv4 &)					noexcept	= default;
-		inlcxpr				SIPv4				(uint32_t little_endian)		noexcept	: IP(little_endian) {}
+		inxp				SIPv4				()								noexcept	= default;
+		inxp				SIPv4				(const SIPv4 &)					noexcept	= default;
+		inxp				SIPv4				(uint32_t little_endian)		noexcept	: IP(little_endian) {}
 		cnstxpr				SIPv4				(uint8_t _0, uint8_t _1, uint8_t _2, uint8_t _3 = 0)
 			: IP
 			{ ::gpk::byte_to<uint32_t>(_0, 0)
@@ -27,10 +27,10 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(SIPv4, IP == other.IP);
 
-		inlcxpr	uint8_t		operator[]			(uint8_t index)		const	noexcept	{ return ::gpk::byte_at(IP, index); }
+		inxp	uint8_t		operator[]			(uint8_t index)		const	noexcept	{ return ::gpk::byte_at(IP, index); }
 		uint8_t&			operator[]			(uint8_t index)				noexcept	{ return *(((uint8_t*)&IP) + index); }
 
-		inlcxpr	operator	uint32_t			()					const	noexcept	{ return IP; }
+		inxp	operator	uint32_t			()					const	noexcept	{ return IP; }
 		cnstxpr	operator	gpk::astu8<4>		()					const	noexcept	{
 			return 
 				{ ::gpk::byte_at(IP, 0)

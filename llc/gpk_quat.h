@@ -13,9 +13,9 @@ namespace gpk
 		typedef	n3  <_tBase>	Tn3;
 
 		cnstxpr	bool			operator ==				(const Tq & other)					const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w; }
-		inlcxpr	bool			operator !=				(const Tq & other)					const	noexcept	{ return !operator==(other); }
-		inlcxpr	Tq				operator-				()									const	noexcept	{ return {x*-1, y*-1, z*-1, w * -1};	}
-		inlcxpr	Tq				operator~				()									const	noexcept	{ return {-x, -y, -z, w};			}
+		inxp	bool			operator !=				(const Tq & other)					const	noexcept	{ return !operator==(other); }
+		inxp	Tq				operator-				()									const	noexcept	{ return {x*-1, y*-1, z*-1, w * -1};	}
+		inxp	Tq				operator~				()									const	noexcept	{ return {-x, -y, -z, w};			}
 		cnstxpr	Tq				operator +				(const Tq & other)					const	noexcept	{ return { x + other.x, y + other.y, z + other.z, w + other.w }; }
 		cnstxpr	Tq				operator -				(const Tq & other)					const	noexcept	{ return { x - other.x, y - other.y, z - other.z, w - other.w }; }
 		cnstxpr	Tq				operator *				(double scalar)						const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
@@ -44,9 +44,9 @@ namespace gpk
 		Tq&						operator/=				(double scalar)											{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this;	}
 
 		tplt<tpnm _t>
-		inlcxpr	quat<_t>		Cast					()									const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};	}
+		inxp	quat<_t>		Cast					()									const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};	}
 		cnstxpr	_tBase			LengthSquared			()									const	noexcept	{ return x * x + y * y + z * z + w * w;	}
-		inlcxpr	double			Length					()									const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;	}
+		inxp	double			Length					()									const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;	}
 		cnstxpr	double			Dot		(const Tq & other)					const	noexcept	{ return x*other.x + y*other.y + z*other.z + w * other.w;	}
 		inline	Tq&				Identity				()											noexcept	{ return *this = {0, 0, 0, 1};			}
 		inline	Tq&				Normalize				()											noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }

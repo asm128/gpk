@@ -351,8 +351,8 @@ static	::gpk::error_t	expressionReaderProcessDocCharacter		(::gpk::SExpressionRe
 			"\nParent           : %i."
 			"\nType             : %i (%s)."
 			"\nOffset           : %i."
-			"\nView             : %s."
-			"\nExpression       : %s."
+			"\nView             : %.*s."
+			"\nExpression       : %.*s."
 			, reader.StateRead.IndexCurrentChar
 			, reader.StateRead.CharCurrent, reader.StateRead.CharCurrent
 			, reader.StateRead.IndexCurrentElement
@@ -363,8 +363,9 @@ static	::gpk::error_t	expressionReaderProcessDocCharacter		(::gpk::SExpressionRe
 			, validElement ? currentElement->Type										: -1
 			, validElement ? ::gpk::get_value_label(currentElement->Type).begin()		: "N/A"
 			, validElement ? currentElement->Span.Begin									: -1
-			, validElement ? &(::gpk::toString(expression)[currentElement->Span.Begin])	: ""
-			, ::gpk::toString(expression).begin()
+			, validElement ? currentElement->Span.End - currentElement->Span.Begin		: 0
+			, validElement ? &(expression[currentElement->Span.Begin])	: ""
+			, GPK_VIEW_ARGS(expression)
 		);
 	}
 	return 0;

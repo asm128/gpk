@@ -60,9 +60,9 @@
 		::gpk::aobj<::gpk::TKeyValConstString>	environViewsTest;
 		::gpk::keyValConstStringDeserialize(environmentBlockToSave, environViewsTest);
 		//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
-		//	info_printf("CGI Environ (original): '%s = %s'.", ::gpk::toString(environViews[iEnviron].Key).begin(), ::gpk::toString(environViews[iEnviron].Val).begin());
+		//	info_printf("CGI Environ (original): '%.*s = %.*s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key), GPK_VIEW_ARGS(environViews[iEnviron].Val));
 		for(uint32_t iEnviron = 0; iEnviron < environViewsTest.size(); ++iEnviron)
-			info_printf("CGI Environ: '%s = %s'.", ::gpk::toString(environViewsTest[iEnviron].Key).begin(), ::gpk::toString(environViewsTest[iEnviron].Val).begin());
+			info_printf("CGI Environ: '%.*s = %.*s'.", GPK_VIEW_ARGS(environViewsTest[iEnviron].Key), GPK_VIEW_ARGS(environViewsTest[iEnviron].Val));
 	}
 	return 0;
 }

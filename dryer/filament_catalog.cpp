@@ -107,13 +107,13 @@ static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catal
 }
 
 ::gpk::error_t						dry::catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename) {
-	gpk_necall(::gpk::jsonFileRead(catalog.JSONData, filename), "Failed to load filament catalog file: '%s'.", ::gpk::toString(filename).begin());
+	gpk_necall(::gpk::jsonFileRead(catalog.JSONData, filename), "Failed to load filament catalog file: '%.*s'.", GPK_VIEW_ARGS(filename));
 	const ::gpk::SJSONReader				& reader				= catalog.JSONData.Reader;
 	const int32_t							indexHistory			= ::gpk::jsonObjectValueGet(reader, 0, "history");
 	static const	::gpk::vcs				keys	[]				= {"loaded", "history"};
 	for(uint32_t iKey = 0; iKey < ::gpk::size(keys); ++iKey) {
 		const int32_t							indexValue				= ::gpk::jsonObjectValueGet(reader, 0, keys[iKey]);
-		cef_if(0 > indexValue, "'%s' node not found in '%s'", keys[iKey].begin(), ::gpk::toString(filename).begin()) else {}
+		cef_if(0 > indexValue, "'%.*s' node not found in '%s'", keys[iKey].begin(), GPK_VIEW_ARGS(filename)) else {}
 		for(uint32_t iFilament = 0, countFilaments = ::gpk::jsonArraySize(reader, indexValue); iFilament < countFilaments; ++iFilament) {
 			const int32_t							jsonIndexFilament			= ::gpk::jsonArrayValueGet(*reader[indexValue], iFilament);
 			const int32_t							jsonIndexUniqueId			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unique_id"				);
@@ -128,11 +128,11 @@ static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catal
 			const int32_t							jsonIndexTimestampLoaded	= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "loaded"					);
 			const int32_t							jsonIndexTimestampUnloaded	= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unloaded"				);
 			const int32_t							jsonIndexTimestampDried		= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "dried"					);
-			if(-1 != jsonIndexUniqueId			)	info_printf("Found filament property '%s': %s"	, "unique_id"	, ::gpk::toString(reader.View	[jsonIndexBrand		]).begin());
-			if(-1 != jsonIndexBrand				)	info_printf("Found filament property '%s': %s"	, "brand"		, ::gpk::toString(reader.View	[jsonIndexBrand		]).begin());
-			if(-1 != jsonIndexMaterial			)	info_printf("Found filament property '%s': %s"	, "material"	, ::gpk::toString(reader.View	[jsonIndexMaterial	]).begin());
-			if(-1 != jsonIndexColour			)	info_printf("Found filament property '%s': %s"	, "color"		, ::gpk::toString(reader.View	[jsonIndexColour	]).begin());
-			if(-1 != jsonIndexNotes				)	info_printf("Found filament property '%s': %s"	, "notes"		, ::gpk::toString(reader.View	[jsonIndexNotes		]).begin());
+			if(-1 != jsonIndexUniqueId			)	info_printf("Found filament property '%.*s': %s"	, "unique_id"	, GPK_VIEW_ARGS(reader.View	[jsonIndexBrand		]));
+			if(-1 != jsonIndexBrand				)	info_printf("Found filament property '%.*s': %s"	, "brand"		, GPK_VIEW_ARGS(reader.View	[jsonIndexBrand		]));
+			if(-1 != jsonIndexMaterial			)	info_printf("Found filament property '%.*s': %s"	, "material"	, GPK_VIEW_ARGS(reader.View	[jsonIndexMaterial	]));
+			if(-1 != jsonIndexColour			)	info_printf("Found filament property '%.*s': %s"	, "color"		, GPK_VIEW_ARGS(reader.View	[jsonIndexColour	]));
+			if(-1 != jsonIndexNotes				)	info_printf("Found filament property '%.*s': %s"	, "notes"		, GPK_VIEW_ARGS(reader.View	[jsonIndexNotes		]));
 			if(-1 != jsonIndexDensity			)	info_printf("Found filament property '%s': %f"	, "density"					, reader.Token	[jsonIndexDensity			].Value);
 			if(-1 != jsonIndexDiameter			)	info_printf("Found filament property '%s': %f"	, "diameter"				, reader.Token	[jsonIndexDiameter			].Value);
 			if(-1 != jsonIndexSpoolSize			)	info_printf("Found filament property '%s': %u"	, "spool_size"				, reader.Token	[jsonIndexSpoolSize			].Value);

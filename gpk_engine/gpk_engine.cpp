@@ -209,7 +209,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateImageFromFile(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName) {
 	sc_t						filePath	[2048]				= {};
-	sprintf_s(filePath, "%s/%s", ::gpk::toString(fileFolder).begin(), ::gpk::toString(fileName).begin());
+	sprintf_s(filePath, "%.*s/%.*s", GPK_VIEW_ARGS(fileFolder), GPK_VIEW_ARGS(fileName));
 	int32_t						index							= Images.Keys.find(filePath);
 	if(index != -1)
 		return Images.Values[index];

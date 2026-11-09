@@ -1,11 +1,11 @@
 #include "dryer_app.h"
 
 static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSONReader & jsonReader, ::gpk::vcsc_t arg) {
-	ree_if(arg.size() <= 2, "Invalid string received: %s.", ::gpk::toString(arg).begin());
+	ree_if(arg.size() <= 2, "Invalid string received: %.*s.", GPK_VIEW_ARGS(arg));
 	switch(arg[0]) {
 	case 'R':
 		arg.slice(arg, 2);
-		info_printf("Received reset value: '%s'", ::gpk::toString(arg).begin());
+		info_printf("Received reset value: '%.*s'", GPK_VIEW_ARGS(arg));
 		if(arg[0] == '1') {
 			if_fail_be(::gpk::failed(::s3d::serialWrite(app.Serial, ::gpk::vcs{"<ACK>"}.u8())));
 			const uint8_t							temperature						= app.Dryer.State.Running
@@ -24,11 +24,11 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 		break;
 	case 'E':
 		arg.slice(arg, 2);
-		info_printf("Received error value: '%s'", ::gpk::toString(arg).begin());
+		info_printf("Received error value: '%.*s'", GPK_VIEW_ARGS(arg));
 		break;
 	case 'C':
 		arg.slice(arg, 2);
-		info_printf("Received cycle value: '%s'", ::gpk::toString(arg).begin());
+		info_printf("Received cycle value: '%.*s'", GPK_VIEW_ARGS(arg));
 		if(arg[0] == '1') {
 			if(false == app.Dryer.State.Pump)
 				::s3d::serialWrite(app.Serial, ::gpk::vcs{"<OFF>"}.u8());
@@ -39,16 +39,16 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 		break;
 	case 'D':
 		arg.slice(arg, 2);
-		info_printf("Received door value: '%s'", ::gpk::toString(arg).begin());
+		info_printf("Received door value: '%.*s'", GPK_VIEW_ARGS(arg));
 		app.Dryer.State.DoorClosed			= arg[0] == '1';
 		break;
 	case 'T': {
 		arg.slice(arg, 2);
-		info_printf("Received temperature value: '%s'", ::gpk::toString(arg).begin());
+		info_printf("Received temperature value: '%.*s'", GPK_VIEW_ARGS(arg));
 		::gpk::array_obj<::gpk::vcsc_t>	values;
 		::gpk::split(arg, '/', values);
 		jsonReader.Reset();
-		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, values[0])), "Failed to parse sensor temperature value: %s", ::gpk::toString(values[0]).begin());
+		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, values[0])), "Failed to parse sensor temperature value: %.*s", GPK_VIEW_ARGS(values[0]));
 		if(::gpk::JSON_TYPE_DECIMAL != jsonReader[1]->Token->Type)
 			app.Dryer.State.Temperature			= (float)jsonReader[1]->Token->Value;
 		else {
@@ -57,7 +57,7 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 			app.Dryer.State.Temperature			= (float)value;
 		}
 		jsonReader.Reset();
-		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, values[1])), "Failed to parse target temperature value: %s", ::gpk::toString(values[1]).begin());
+		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, values[1])), "Failed to parse target temperature value: %.*s", GPK_VIEW_ARGS(values[1]));
 		double targetTemp	 = 0;
 		if(::gpk::JSON_TYPE_DECIMAL != jsonReader[1]->Token->Type)
 			targetTemp			= (float)jsonReader[1]->Token->Value;
@@ -76,9 +76,9 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 	}
 	case 'P':
 		arg.slice(arg, 2);
-		info_printf("Received pressure value: '%s'", ::gpk::toString(arg).begin());
+		info_printf("Received pressure value: '%.*s'", GPK_VIEW_ARGS(arg));
 		jsonReader							= {};
-		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, arg)), "Failed to parse sensor pressure value: %s", ::gpk::toString(arg).begin());
+		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, arg)), "Failed to parse sensor pressure value: %.*s", GPK_VIEW_ARGS(arg));
 		if(::gpk::JSON_TYPE_DECIMAL != jsonReader[1]->Token->Type)
 			app.Dryer.State.Vacuum				= (float)jsonReader[1]->Token->Value;
 		else {
@@ -89,9 +89,9 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 		break;
 	case 'H':
 		arg.slice(arg, 2);
-		info_printf("Received humidity value: '%s'", ::gpk::toString(arg).begin());
+		info_printf("Received humidity value: '%.*s'", GPK_VIEW_ARGS(arg));
 		jsonReader							= {};
-		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, arg)), "Failed to parse sensor humidity value: %s", ::gpk::toString(arg).begin());
+		if_fail_bef(::gpk::failed(::gpk::jsonParse(jsonReader, arg)), "Failed to parse sensor humidity value: %.*s", GPK_VIEW_ARGS(arg));
 		if(::gpk::JSON_TYPE_DECIMAL != jsonReader[1]->Token->Type)
 			app.Dryer.State.Humidity			= (float)jsonReader[1]->Token->Value;
 		else {
@@ -122,7 +122,7 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 		if(false == app.Serial.Connected) {
 			app.Dryer.State.Dryer				= false;
 			if(::gpk::failed(::s3d::serialOpen(app.Serial, portName, baud))) {
-				error_printf("Failed to open serial port '%s'.", ::gpk::toString(portName).begin());
+				error_printf("Failed to open serial port '%.*s'.", GPK_VIEW_ARGS(portName));
 				::gpk::sleep(1000);
 				continue;
 			}
@@ -143,14 +143,14 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 			continue;
 		}
 		const ::gpk::vcsc_t					messageText		= {(const ::gpk::sc_t*)bufferRead.begin(), bufferRead.size()};
-		info_printf("read %d bytes: '%s'", nReadBytes, ::gpk::toString(messageText).begin());
+		info_printf("read %d bytes: '%.*s'", nReadBytes, GPK_VIEW_ARGS(messageText));
 		::gpk::vcsc_t							trimmed			= messageText;
 		::gpk::trim(trimmed, trimmed, "<> \t\b\n\r");
-		info_printf("trimmed: '%s'", ::gpk::toString(trimmed).begin());
+		info_printf("trimmed: '%.*s'", GPK_VIEW_ARGS(trimmed));
 		::gpk::array_obj<::gpk::vcsc_t>		splitMessage;
 		::gpk::split(trimmed, ',', splitMessage);
 		for(uint32_t iArg = 0; iArg < splitMessage.size(); ++iArg)
-			if_fail_ef(::gpk::failed(::processStatusArg(app, jsonReader, splitMessage[iArg])), "Failed to process message parameter: %s", ::gpk::toString(splitMessage[iArg]).begin());
+			if_fail_ef(::gpk::failed(::processStatusArg(app, jsonReader, splitMessage[iArg])), "Failed to process message parameter: %.*s", GPK_VIEW_ARGS(splitMessage[iArg]));
 		app.Dryer.State.Dryer				= true;
 		::gpk::sleep(1000);
 	}

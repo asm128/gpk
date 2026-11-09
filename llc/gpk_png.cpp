@@ -1185,7 +1185,7 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= DEFLATE_CHUNK_SIZE;
 }
 
 ::gpk::error_t			gpk::pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcs & filename, ::gpk::img8bgra & out_Texture)	{
-	gpk_necall(gpk::pngFileLoad(pngData, filename), "%s", ::gpk::toString(filename).begin());
+	gpk_necall(gpk::pngFileLoad(pngData, filename), "%.*s", GPK_VIEW_ARGS(filename));
 	gpk_necs(out_Texture.resize(pngData.Header.Size));
 	return ::gpk::pngDecode(pngData, out_Texture.View);
 }

@@ -45,7 +45,7 @@ using ::gpk::sc_t;
 
 static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra& out_ImageView, const ::gpk::bgra & alphaKey, bool* out_alphaFound)		{
 	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, ::gpk::toString(szFileName).begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
-	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", ::gpk::toString(szFileName).begin());
+	ree_if(phBitmap == NULL, "Failed to load bitmap file: %.*s.", GPK_VIEW_ARGS(szFileName));
 
 	BITMAP						bm							= {};
 	GetObject(phBitmap, sizeof(BITMAP), &bm);		// Get the color depth of the DIBSection

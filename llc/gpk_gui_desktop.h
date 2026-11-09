@@ -13,10 +13,10 @@ namespace gpk
 		::gpk::aobj<_tElement>		Elements;
 		::gpk::au3_t				UnusedData;
 
-		inlcxpr	const _tElement&	operator[]					(uint32_t index)			const				{ return Elements[index]; }
-		inlcxpr	_tElement&			operator[]					(uint32_t index)								{ return Elements[index]; }
+		inxp	const _tElement&	operator[]					(uint32_t index)			const				{ return Elements[index]; }
+		inxp	_tElement&			operator[]					(uint32_t index)								{ return Elements[index]; }
 
-		inlcxpr	uint32_t			size						()							const	noexcept	{ return Elements.size(); }
+		inxp	uint32_t			size						()							const	noexcept	{ return Elements.size(); }
 		::gpk::error_t				push_back					(const _tElement & toPush)						{
 			const ::gpk::cid_t				elemIndex					= (::gpk::cid_t)Elements.push_back(toPush);
 			ree_if(failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");

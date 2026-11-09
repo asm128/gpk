@@ -47,7 +47,7 @@ static	::gpk::error_t								createChildProcess
 		, &process.StartInfo		// STARTUPINFO pointer
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION
-	ree_if(false == bSuccess, "Failed to create process'%s'.", ::gpk::toString(appPath).begin());
+	ree_if(false == bSuccess, "Failed to create process'%.*s'.", GPK_VIEW_ARGS(appPath));
 
 	::gpk::au0_t						popupTitle						= {};
 	{
@@ -164,7 +164,7 @@ static	::gpk::error_t				readFromPipe			(::SThreadStateRead & appState)	{	// Rea
 		GetExitCodeProcess(process.ProcessInfo.hProcess, &exitCode);
 		if(STILL_ACTIVE != exitCode && 0 == handleReadable(handles.ChildStd_OUT_Read))
 			break;
-		//info_printf("Process output: %s", ::gpk::toString({chBuf.begin(), chBuf.size()}).begin());
+		//info_printf("Process output: %.*s", GPK_VIEW_ARGS({chBuf.begin(), chBuf.size()}));
 		if(0 == readBytes[readBytes.size() - 1])
 			break;
 	}

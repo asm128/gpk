@@ -12,8 +12,8 @@ namespace gpk
 	tplt<tpnm _tBit> stacxpr	_tBit	bit_test		(const _tBit state, const _tBit bitsToTest)						noexcept	{ return ((state & bitsToTest) == bitsToTest) ? state : (_tBit)0; }
 
 	tplt<tpnm _tBit> ndstcxp	_tBit	bit_set_masked	(const _tBit state, const _tBit mask, const _tBit bitsToSet, const bool value)	noexcept	{ return (mask & bitsToSet) ? bit_set(state, mask & bitsToSet, value) : state; }
-	tplt<tpnm _tBit> stincxp	_tBit	bit_test_masked	(const _tBit state, const _tBit mask, const _tBit value)						noexcept	{ return (mask & value) ? bit_test(state, mask & value) : (_tBit)0; }
-	tplt<tpnm _tBit> stincxp	_tBit	bit_true		(const _tBit state, const _tBit bitsToTest)										noexcept	{ return bit_test(state, bitsToTest); }
+	tplt<tpnm _tBit> sinx	_tBit	bit_test_masked	(const _tBit state, const _tBit mask, const _tBit value)						noexcept	{ return (mask & value) ? bit_test(state, mask & value) : (_tBit)0; }
+	tplt<tpnm _tBit> sinx	_tBit	bit_true		(const _tBit state, const _tBit bitsToTest)										noexcept	{ return bit_test(state, bitsToTest); }
 	tplt<tpnm _tBit> stacxpr	_tBit	bit_false		(const _tBit state, const _tBit bitsToTest)										noexcept	{
 		const _tBit		bitsThatMatch		= (state & bitsToTest);
 		return _tBit((bitsThatMatch == bitsToTest) ? 0 : (state | bitsToTest) ? state | bitsToTest : -1);
@@ -29,9 +29,9 @@ namespace gpk
 	}
 
 //#ifdef GPK_BIGENDIAN
-//	stincxp	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF000000 >> (byteIndex * 8)) & bytes) >> ((sizeof(bytes) - byteIndex) * 8); }
+//	sinx	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF000000 >> (byteIndex * 8)) & bytes) >> ((sizeof(bytes) - byteIndex) * 8); }
 //#else
-//	stincxp	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF << (byteIndex * 8)) & bytes) >> (byteIndex * 8); }
+//	sinx	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF << (byteIndex * 8)) & bytes) >> (byteIndex * 8); }
 //#endif
 
 	tplt<tpnm _tField>

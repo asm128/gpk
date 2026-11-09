@@ -541,7 +541,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::vcsc_c & wavname, IXAudio2*	X
 
 	// Search for media
 	sc_t						strFilePath[4096]	= {};
-	sprintf_s(strFilePath, "./%s", ::gpk::toString(wavname).begin());
+	sprintf_s(strFilePath, "./%.*s", GPK_VIEW_ARGS(wavname));
 	wchar_t						wstrFilePath[4096]	= {};
 	size_t						count				= 0;
 	mbstowcs_s(&count, wstrFilePath, strFilePath, 4095);

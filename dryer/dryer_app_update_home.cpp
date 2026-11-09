@@ -140,10 +140,10 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 		controlFilament.Area.Size.y			= 24;
 		controlFilament.Border				= {1, 1, 1, 1};
 		::gpk::sc_t							bufferFormat[4096]				= {};
-		snprintf(bufferFormat, ::gpk::size(bufferFormat), "%s - %s - %s - %.2fmm"
-			, ::gpk::toString(app.Catalog.Material	[app.Catalog.FilamentLoaded[iSpool].Material]).begin()
-			, ::gpk::toString(app.Catalog.Brand		[app.Catalog.FilamentLoaded[iSpool].Brand	]).begin()
-			, ::gpk::toString(app.Catalog.Color		[app.Catalog.FilamentLoaded[iSpool].Color	]).begin()
+		snprintf(bufferFormat, ::gpk::size(bufferFormat), "%.*s - %.*s - %.*s - %.2fmm"
+			, GPK_VIEW_ARGS(app.Catalog.Material	[app.Catalog.FilamentLoaded[iSpool].Material])
+			, GPK_VIEW_ARGS(app.Catalog.Brand		[app.Catalog.FilamentLoaded[iSpool].Brand	])
+			, GPK_VIEW_ARGS(app.Catalog.Color		[app.Catalog.FilamentLoaded[iSpool].Color	])
 			, app.Catalog.Diameter[app.Catalog.FilamentLoaded[iSpool].Diameter]
 			);
 		controlText.Text					= ::gpk::label(bufferFormat);

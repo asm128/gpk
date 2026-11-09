@@ -93,7 +93,7 @@ static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vc
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
 			continue;
-		info_printf("Line %u: '%s'.", iLine, ::gpk::toString(line).begin());
+		info_printf("Line %u: '%.*s'.", iLine, GPK_VIEW_ARGS(line));
 
 		::gpk::aobj<::gpk::vcsc_t>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
@@ -151,7 +151,7 @@ static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vc
 
 static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t filename)  {
 	::gpk::apod<sc_t>							rawObj					= {};
-	gpk_necall(gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
+	gpk_necall(gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %.*s.", GPK_VIEW_ARGS(filename));
 
 	::gpk::SKeyedArrayPOD<int16_t>				materialIndices			= {};
 
@@ -175,7 +175,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
 			continue;
-		info_printf("Line %u: '%s'.", iLine, ::gpk::toString(line).begin());
+		info_printf("Line %u: '%.*s'.", iLine, GPK_VIEW_ARGS(line));
 		::gpk::aobj<::gpk::vcsc_t>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
 
@@ -201,7 +201,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 				matFilename.push_back('/');
 				matFilename.append(lineValues[1]);
 			}
-			ef_if(::createFromMTL(scene, matFilename, materialIndices), "Failed to load material file '%s'.", ::gpk::toString(matFilename).begin());
+			ef_if(::createFromMTL(scene, matFilename, materialIndices), "Failed to load material file '%.*s'.", GPK_VIEW_ARGS(matFilename));
 		}
 	}
 
@@ -211,7 +211,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
 			continue;
-		info_printf("Line %u: '%s'.", iLine, ::gpk::toString(line).begin());
+		info_printf("Line %u: '%.*s'.", iLine, GPK_VIEW_ARGS(line));
 
 		::gpk::aobj<::gpk::vcsc_t>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
@@ -232,7 +232,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 			}
 			objectName								= {lineValues[1].begin(), lineValues[1].size()};
 			++countObjects;
-			info_printf("Object #%i found: '%s'.", countObjects, ::gpk::toString(objectName).begin());
+			info_printf("Object #%i found: '%.*s'.", countObjects, GPK_VIEW_ARGS(objectName));
 		}
 		else if(command == ::gpk::vcs{"g"}) {
 			if(countGroups) {
@@ -244,14 +244,14 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 			groupName								= {lineValues[1].begin(), lineValues[1].size()};
 			newGroup.RenderNodes.push_back(scene.Renderer.Nodes.push_back(groupName, {}));
 			++countGroups;
-			info_printf("Group #%i found: '%s'.", countGroups, ::gpk::toString(groupName).begin());
+			info_printf("Group #%i found: '%.*s'.", countGroups, GPK_VIEW_ARGS(groupName));
 		}
 		else if(command == ::gpk::vcs{"usemtl"}) {
 			::gpk::vcsc_t									materialName	= lineValues[1];
-			info_printf("Setting material: %s", ::gpk::toString(materialName).begin());
+			info_printf("Setting material: %.*s", GPK_VIEW_ARGS(materialName));
 			for(uint32_t iMaterial = 0; iMaterial < materialIndices.size(); ++iMaterial)
 				if(materialIndices.Names[iMaterial] == materialName) {
-					info_printf("Setting material: %s", ::gpk::toString(materialName).begin());
+					info_printf("Setting material: %.*s", GPK_VIEW_ARGS(materialName));
 					scene.Renderer.Nodes[newGroup.RenderNodes[0]].Material = materialIndices.Values[iMaterial];
 					break;
 				}
@@ -298,14 +298,14 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 	stacxpr	::gpk::vcsc_t						str_obj					= {4, ".obj"};
 	if(ext_lwr == str_stl) {
 		::gpk::SSTLFile							stlFile					= {};
-		gpk_necall(gpk::stlFileLoad(filename, stlFile), "Failed to load file '%s'.", ::gpk::toString(filename).begin());
+		gpk_necall(gpk::stlFileLoad(filename, stlFile), "Failed to load file '%.*s'.", GPK_VIEW_ARGS(filename));
 		return ::createFromSTL(*this, stlFile, filename);
 	}
 	else if(ext_lwr == str_obj) {
 		return ::createFromOBJ(*this, filename);
 	}
 	else {
-		error_printf("File format not supported for file '%s'", ::gpk::toString(filename).begin());
+		error_printf("File format not supported for file '%.*s'", GPK_VIEW_ARGS(filename));
 		return -1;
 	}
 	return 0;
