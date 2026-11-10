@@ -15,11 +15,11 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(rect<T>, Left == other.Left && Top == other.Top && Right == other.Right && Bottom == other.Bottom); 
 
-		cnstxpr	TRect			operator+	(const TRect & other)					const	noexcept	{ return {T(Left + other.Left), T(Top + other.Top), T(Right + other.Right), T(Bottom + other.Bottom)}; }
+		cxpr	TRect			operator+	(const TRect & other)					const	noexcept	{ return {T(Left + other.Left), T(Top + other.Top), T(Right + other.Right), T(Bottom + other.Bottom)}; }
 
 		inxp	T				Width		()	const { return Right - Left; }
 		inxp	T				Height		()	const { return Bottom - Top; }
-		cnstxpr ::gpk::n2<T>	Dimensions	()	const { return {Width(), Height()}; }
+		cxpr ::gpk::n2<T>	Dimensions	()	const { return {Width(), Height()}; }
 
 		tplt <tpnm _t>
 		inxp	rect<_t>		Cast		()	const	noexcept	{ return {(_t)Left, (_t)Top, (_t)Right, (_t)Bottom}; }

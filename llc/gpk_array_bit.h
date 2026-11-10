@@ -14,7 +14,7 @@ namespace gpk
 		::gpk::apod<T>			Data			;
 		::gpk::view_bit<T>		View			;
 
-		cnstxpr					array_bit		()					noexcept	= default;
+		cxpr					array_bit		()					noexcept	= default;
 								array_bit		(const ::gpk::view_bit<T> & other)
 			:	Data(other.begin(), round_up(other.size(), TView::ELEMENT_BITS))
 			,	View(Data.begin(), other.size())

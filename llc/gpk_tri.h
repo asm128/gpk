@@ -10,9 +10,9 @@ namespace gpk
 	struct tri { 
 		_tVertex	A, B, C; 
 
-		cnstxpr		tri()															= default;
-		cnstxpr		tri(const tri & other)											= default;
-		cnstxpr		tri(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
+		cxpr		tri()															= default;
+		cxpr		tri(const tri & other)											= default;
+		cxpr		tri(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
 
 		GPK_DEFAULT_OPERATOR(tri<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};

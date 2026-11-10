@@ -24,7 +24,7 @@ namespace gpk
 	tplt<tpnm _tNumber>
 	sinx	double		sqrt_safe			(_tNumber _valueSquared)									noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
 	tplt<tpnm _tNumber>
-	cnstxpr	_tNumber	interpolate_linear	(const _tNumber a, const _tNumber b, const double factor)	noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
+	cxpr	_tNumber	interpolate_linear	(const _tNumber a, const _tNumber b, const double factor)	noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
 
 	struct SSinCos { double Sin, Cos; };
 
@@ -33,7 +33,7 @@ namespace gpk
 	// Calculate determinant of matrix:
 	// [a b]
 	// [c d]
-	cnstxpr	double		determinant			(double a, double b, double c, double d)					noexcept	{ return a * d - b * c; }
+	cxpr	double		determinant			(double a, double b, double c, double d)					noexcept	{ return a * d - b * c; }
 
 #if defined(GPK_WINDOWS) || defined(GPK_ATMEL)
 #	if defined(GPK_WINDOWS)

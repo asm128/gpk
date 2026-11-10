@@ -17,7 +17,7 @@ namespace gpk
 		inxp				SIPv4				()								noexcept	= default;
 		inxp				SIPv4				(const SIPv4 &)					noexcept	= default;
 		inxp				SIPv4				(uint32_t little_endian)		noexcept	: IP(little_endian) {}
-		cnstxpr				SIPv4				(uint8_t _0, uint8_t _1, uint8_t _2, uint8_t _3 = 0)
+		cxpr				SIPv4				(uint8_t _0, uint8_t _1, uint8_t _2, uint8_t _3 = 0)
 			: IP
 			{ ::gpk::byte_to<uint32_t>(_0, 0)
 			| ::gpk::byte_to<uint32_t>(_1, 1)
@@ -31,7 +31,7 @@ namespace gpk
 		uint8_t&			operator[]			(uint8_t index)				noexcept	{ return *(((uint8_t*)&IP) + index); }
 
 		inxp	operator	uint32_t			()					const	noexcept	{ return IP; }
-		cnstxpr	operator	gpk::astu8<4>		()					const	noexcept	{
+		cxpr	operator	gpk::astu8<4>		()					const	noexcept	{
 			return 
 				{ ::gpk::byte_at(IP, 0)
 				, ::gpk::byte_at(IP, 1) 
@@ -88,7 +88,7 @@ namespace gpk
 		::gpk::SIPv4	Gateway		= {};
 		::gpk::SIPv4	NetMask		= {};
 
-		cnstxpr	::gpk::SIPv4	NetworkID	()	const	noexcept	{
+		cxpr	::gpk::SIPv4	NetworkID	()	const	noexcept	{
 			return ::gpk::SIPv4
 				( NetMask[0] & IPv4[0]
 				, NetMask[1] & IPv4[1]
@@ -97,7 +97,7 @@ namespace gpk
 				);
 		}
 
-		cnstxpr	::gpk::SIPv4	BroadcastIP	()	const	noexcept	{
+		cxpr	::gpk::SIPv4	BroadcastIP	()	const	noexcept	{
 			return ::gpk::SIPv4
 				( ~NetMask[0] & IPv4[0]
 				, ~NetMask[1] & IPv4[1]

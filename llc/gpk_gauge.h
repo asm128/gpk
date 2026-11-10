@@ -13,7 +13,7 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limit == other.Limit && Value == other.Value); 
 
-		cnstxpr double				Weight			()		const	noexcept	{ return 1.0 / Limit * Value; }
+		cxpr double				Weight			()		const	noexcept	{ return 1.0 / Limit * Value; }
 		inxp	double				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamped(Value, (T)0, Limit); }
 		T							SetClamp		(T value)		noexcept	{ return Value = ::gpk::clamped(value, 0, Limit); }
 		T							SetWeighted		(double weight)	noexcept	{ return SetClamp(T(Limit * weight)); }
@@ -41,7 +41,7 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limits == other.Limits && Value == other.Value); 
 
 		inxp	T					Middle		()		const	noexcept	{ return Limits.Min + Limits.Length() / 2; }
-		cnstxpr	double				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
+		cxpr	double				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
 		inxp	double				WeightClamp	()		const	noexcept	{ return Limits.WeightClamp(Value); }
 		T							SetClamp	(T value)		noexcept	{ return Value = Limits.Clamp(value); }
 		T							SetWeighted	(double weight)	noexcept	{ return Set(Limits.Weighted(weight)); }

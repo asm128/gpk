@@ -6,12 +6,12 @@
 
 namespace gpk
 {
-	tplt<tpnm _tBit> ndstcxp	_tBit	bit_clear		(const _tBit state, const _tBit bitsToClear)					noexcept	{ return (state & bitsToClear)				? state & ~bitsToClear	: state; }
-	tplt<tpnm _tBit> ndstcxp	_tBit	bit_set			(const _tBit state, const _tBit bitsToSet  )					noexcept	{ return ((state & bitsToSet) != bitsToSet)	? state | bitsToSet	: state; }
-	tplt<tpnm _tBit> ndstcxp	_tBit	bit_set			(const _tBit state, const _tBit bitsToSet, const bool value)	noexcept	{ return value ? bit_set(state, bitsToSet) : bit_clear(state, bitsToSet); }
+	tplt<tpnm _tBit> ndsx	_tBit	bit_clear		(const _tBit state, const _tBit bitsToClear)					noexcept	{ return (state & bitsToClear)				? state & ~bitsToClear	: state; }
+	tplt<tpnm _tBit> ndsx	_tBit	bit_set			(const _tBit state, const _tBit bitsToSet  )					noexcept	{ return ((state & bitsToSet) != bitsToSet)	? state | bitsToSet	: state; }
+	tplt<tpnm _tBit> ndsx	_tBit	bit_set			(const _tBit state, const _tBit bitsToSet, const bool value)	noexcept	{ return value ? bit_set(state, bitsToSet) : bit_clear(state, bitsToSet); }
 	tplt<tpnm _tBit> stxp	_tBit	bit_test		(const _tBit state, const _tBit bitsToTest)						noexcept	{ return ((state & bitsToTest) == bitsToTest) ? state : (_tBit)0; }
 
-	tplt<tpnm _tBit> ndstcxp	_tBit	bit_set_masked	(const _tBit state, const _tBit mask, const _tBit bitsToSet, const bool value)	noexcept	{ return (mask & bitsToSet) ? bit_set(state, mask & bitsToSet, value) : state; }
+	tplt<tpnm _tBit> ndsx	_tBit	bit_set_masked	(const _tBit state, const _tBit mask, const _tBit bitsToSet, const bool value)	noexcept	{ return (mask & bitsToSet) ? bit_set(state, mask & bitsToSet, value) : state; }
 	tplt<tpnm _tBit> sinx	_tBit	bit_test_masked	(const _tBit state, const _tBit mask, const _tBit value)						noexcept	{ return (mask & value) ? bit_test(state, mask & value) : (_tBit)0; }
 	tplt<tpnm _tBit> sinx	_tBit	bit_true		(const _tBit state, const _tBit bitsToTest)										noexcept	{ return bit_test(state, bitsToTest); }
 	tplt<tpnm _tBit> stxp	_tBit	bit_false		(const _tBit state, const _tBit bitsToTest)										noexcept	{
