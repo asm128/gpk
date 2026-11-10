@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gpk_joiner_main.cpp">
+    <ClCompile Include="cut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

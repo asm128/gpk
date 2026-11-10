@@ -1,0 +1,41 @@
+CXX		:= g++
+CXXFLAGS	:= -std=c++23 -Wall -Wextra -Werror -Wno-error=type-limits -O3 -DNDEBUG -DNOMINMAX -DGPK_XCB -DGPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG -I../llc -I../gpk -pthread
+BUILD		:= $(CURDIR)/build/wsl
+OBJ		:= $(BUILD)/obj
+TARGET		:= $(BUILD)/gpk_transfer.peer
+FRAMEWORK_OBJ	:= $(OBJ)/gpk_crc.o $(OBJ)/gpk_debug.o $(OBJ)/gpk_log.o $(OBJ)/gpk_platform_error.o $(OBJ)/gpk_chrono.o
+
+.PHONY: release clean
+
+release: $(TARGET)
+
+$(OBJ):
+	mkdir -p "$@"
+
+$(OBJ)/gpk_transfer.o: gpk_transfer.cpp gpk_transfer.h | $(OBJ)
+	$(CXX) $(CXXFLAGS) -c -o "$@" gpk_transfer.cpp
+
+$(OBJ)/gpk_transfer.peer.o: gpk_transfer.peer.cpp gpk_transfer.h | $(OBJ)
+	$(CXX) $(CXXFLAGS) -c -o "$@" gpk_transfer.peer.cpp
+
+$(OBJ)/gpk_crc.o: ../llc/gpk_crc.cpp | $(OBJ)
+	$(CXX) $(CXXFLAGS) -c -o "$@" $<
+
+$(OBJ)/gpk_debug.o: ../llc/gpk_debug.cpp | $(OBJ)
+	$(CXX) $(CXXFLAGS) -c -o "$@" $<
+
+$(OBJ)/gpk_log.o: ../llc/gpk_log.cpp | $(OBJ)
+	$(CXX) $(CXXFLAGS) -c -o "$@" $<
+
+$(OBJ)/gpk_platform_error.o: ../llc/gpk_platform_error.cpp | $(OBJ)
+	$(CXX) $(CXXFLAGS) -c -o "$@" $<
+
+$(OBJ)/gpk_chrono.o: ../llc/gpk_chrono.cpp | $(OBJ)
+	$(CXX) $(CXXFLAGS) -c -o "$@" $<
+
+$(TARGET): $(OBJ)/gpk_transfer.o $(OBJ)/gpk_transfer.peer.o $(FRAMEWORK_OBJ)
+	mkdir -p "$(BUILD)"
+	$(CXX) -o "$@" $(OBJ)/gpk_transfer.o $(OBJ)/gpk_transfer.peer.o $(FRAMEWORK_OBJ) -pthread
+
+clean:
+	rm -rf "$(BUILD)"

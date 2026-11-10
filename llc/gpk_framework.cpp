@@ -170,15 +170,15 @@ static	gpk::err_t	win32EnqueueText		(::gpk::SWindow & window, u2_t codePoint, LP
 		return 0;
 	const u0_t		scanCode				= ::win32ScanCode(lParam);
 	const u2_t		keySym					= ::win32KeySym(0, lParam);
-	return ::gpk::eventEnqueueTextChar(window.EventQueue, ::gpk::SInputTextEvent{codePoint, keySym, -1, scanCode});
+	return ::gpk::eventEnqueueTextChar(window.EventQueue, ::gpk::SInputTextEvent{codePoint, keySym, 0, scanCode});
 }
 
 static	gpk::err_t	win32EnqueueKey			(::gpk::SWindow & window, UINT message, WPARAM wParam, LPARAM lParam) {
 	const bool		pressed					= WM_KEYDOWN == message || WM_SYSKEYDOWN == message;
 	const u0_t		keyCode					= ::win32SystemKey(wParam, lParam);
 	const u2_t		time						= (u2_t)::GetMessageTime();
-	if_fail_fe(::gpk::inputKeyboardStateSet(*window.Input, keyCode, pressed, -1, time * .001f));
-	const ::gpk::SInputKeyEvent keyEvent				= {keyCode, ::win32ScanCode(lParam), -1, ::win32KeySym(wParam, lParam), ::win32InputModifiers(), time};
+	if_fail_fe(::gpk::inputKeyboardStateSet(*window.Input, keyCode, pressed, 0, time * .001f));
+	const ::gpk::SInputKeyEvent keyEvent				= {keyCode, ::win32ScanCode(lParam), 0, ::win32KeySym(wParam, lParam), ::win32InputModifiers(), time};
 	switch(message) {
 	default				: return -1;
 	case WM_KEYDOWN		: return ::gpk::eventEnqueueKeyboardDown	(window.EventQueue, keyEvent);

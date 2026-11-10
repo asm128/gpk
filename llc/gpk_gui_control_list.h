@@ -65,6 +65,7 @@ nmsp gpk
 	err_t			controlListInitialize	(SGUI & gui, SControlList & menu);
 	err_t			controlListArrange		(SGUI & gui, SControlList & menu);
 	err_t			controlListPush			(SGUI & gui, SControlList & menu, vcst_c & text, s3_t eventCode = -1);
+	err_t			controlListCreate		(SGUI & gui, SControlList & menu, view<vcst_c> text, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT);
 
 	struct SPaletteGrid {
 		cid_t					IdControl				= -1;
