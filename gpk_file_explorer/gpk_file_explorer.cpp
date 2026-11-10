@@ -34,9 +34,10 @@ sttc ::gpk::err_t explorerScroll(::gfe::SApplication & app) {
 		app.ExplorerOffset							= app.ScrollY->ValueCurrent;
 		app.ExplorerPageSize						= pageSize;
 		app.ExplorerScrollMax						= scrollMax;
-		gui.Controls.Placement[app.ExplorerControls.IdControl].Area.Offset.y = (::gpk::s1_t)(-app.ExplorerOffset * rowHeight);
+		gui.Controls.Placement[app.ExplorerControls.IdControl].Area.Offset.y = 0;
 		for(::gpk::u2_t iControl = 0; iControl < app.ExplorerControls.IdControls.size(); ++iControl)
 			gui.Controls.SetHidden(app.ExplorerControls.IdControls[iControl], iControl < (::gpk::u2_t)app.ExplorerOffset || iControl >= (::gpk::u2_t)app.ExplorerOffset + pageSize);
+		if_fail_fe(::gpk::controlListArrange(gui, app.ExplorerControls));
 		if_fail_fe(::gpk::controlMetricsInvalidate(gui, app.ExplorerControls.IdControl));
 		if_fail_fe(::gpk::controlMetricsInvalidate(gui, app.ScrollY->IdGUIControl));
 	}
@@ -85,9 +86,17 @@ sttc ::gpk::err_t explorerRefresh(::gfe::SApplication & app) {
 	if_null_fe(app.DialogMain.Controls[app.Viewport].as(viewport));
 	if_fail_fe(::gpk::controlSetParent(gui, app.ExplorerControls.IdControl, viewport->IdClient));
 	gui.Controls.Placement[app.ExplorerControls.IdControl].Align = ::gpk::ALIGN_TOP_LEFT;
+	gui.Controls.Draw[app.ExplorerControls.IdControl].UseNewPalettes = true;
+	gui.Controls.Draw[app.ExplorerControls.IdControl].ColorMode = ::gpk::GUI_COLOR_MODE_Flat;
+	gui.Controls.Draw[app.ExplorerControls.IdControl].Palettes = app.DialogMain.Colors->Viewport;
 
-	for(::gpk::u2_t iLabel = 0; iLabel < app.ExplorerLabels.size(); ++iLabel)
+	for(::gpk::u2_t iLabel = 0; iLabel < app.ExplorerLabels.size(); ++iLabel) {
 		if_fail_fe(::gpk::controlListPush(gui, app.ExplorerControls, app.ExplorerLabels[iLabel], (::gpk::s3_t)iLabel - 1));
+		cnst ::gpk::cid_t idControl = app.ExplorerControls.IdControls[iLabel];
+		gui.Controls.Draw[idControl].UseNewPalettes = true;
+		gui.Controls.Draw[idControl].ColorMode = ::gpk::GUI_COLOR_MODE_Flat;
+		gui.Controls.Draw[idControl].Palettes = app.DialogMain.Colors->Button;
+	}
 	if_fail_fe(::gpk::controlTextSet(gui, viewport->IdTitle, app.ExplorerPath));
 	return 0;
 }
@@ -149,10 +158,10 @@ sttc ::gpk::err_t explorerActivate(::gfe::SApplication & app, ::gpk::cid_t idCon
 ::gpk::err_t setup(::gfe::SApplication & app) {
 	::gpk::SFramework				& framework				= app.Framework;
 	::gpk::SWindow					& mainWindow				= framework.RootWindow;
+	framework.GUI										= app.DialogMain.GUI;
 	mainWindow.Size										= {1280, 720};
 	if_fail_fe(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 	::gpk::SGUI					& gui					= *framework.GUI;
-	app.DialogMain.GUI									= framework.GUI;
 	app.DialogMain.Input								= mainWindow.Input;
 	gui.ColorModeDefault								= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault									= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
@@ -165,6 +174,9 @@ sttc ::gpk::err_t explorerActivate(::gfe::SApplication & app, ::gpk::cid_t idCon
 	controlExit.Align									= ::gpk::ALIGN_BOTTOM_RIGHT;
 	if_fail_fe(::gpk::controlTextSet(gui, app.IdExit, "Exit"));
 	gui.Controls.Text[app.IdExit].Align				= ::gpk::ALIGN_CENTER;
+	gui.Controls.Draw[app.IdExit].UseNewPalettes		= true;
+	gui.Controls.Draw[app.IdExit].ColorMode			= ::gpk::GUI_COLOR_MODE_Flat;
+	gui.Controls.Draw[app.IdExit].Palettes			= app.DialogMain.Colors->Button;
 	if_fail_fe(::gpk::controlSetParent(gui, app.IdExit, -1));
 
 	::gpk::pobj<::gpk::SDialogViewport>	viewport				= {};
@@ -173,19 +185,13 @@ sttc ::gpk::err_t explorerActivate(::gfe::SApplication & app, ::gpk::cid_t idCon
 	gui.Controls.Placement[viewport->IdGUIControl].Align	= ::gpk::ALIGN_CENTER;
 	if_fail_fe(::gpk::sliderCreate(app.DialogMain, app.ScrollY));
 	app.ScrollY->Vertical							= true;
-	gui.Controls.Placement[app.ScrollY->IdGUIControl].Area.Offset = {0, 20};
-	gui.Controls.Placement[app.ScrollY->IdGUIControl].Area.Size = {8, 556};
-	gui.Controls.Constraints[app.ScrollY->IdGUIControl].DockToControl.Top = viewport->IdGUIControl;
-	gui.Controls.Constraints[app.ScrollY->IdGUIControl].DockToControl.Right = viewport->IdGUIControl;
 	viewport->Settings.ScrollBarY					= true;
 	viewport->IdScrollBarY							= app.ScrollY->IdGUIControl;
 	if_fail_fe(::gpk::sliderSetValue(*app.ScrollY, 0));
 
 	::gpk::string					absolutePath			= {};
-	::gpk::vcst_t					rootPath					= {};
 	if_fail_fe(::gpk::pathAbsolute(".", absolutePath));
-	if_fail_fe(::gpk::pathBegin(absolutePath, rootPath));
-	app.ExplorerPath									= rootPath.size() ? rootPath : ::gpk::vcst_t{absolutePath};
+	app.ExplorerPath									= absolutePath;
 	return ::explorerRefresh(app);
 }
 

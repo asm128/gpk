@@ -30,27 +30,34 @@ gpk::err_t 		gpk::controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList&
 
 gpk::err_t 		gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	const ::gpk::SRasterFont	& selectedFont			= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
+	::gpk::cid_t				iPreviousVisible		= -1;
 	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		const u2_t				idControl				= menu.IdControls[iItem];
+		const ::gpk::cid_t		idControl				= menu.IdControls[iItem];
 		::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[idControl];
 		::gpk::SControlPlacement	& control				= gui.Controls.Placement	[idControl];
 		::gpk::SControlText			& controlText			= gui.Controls.Text			[idControl];
-		const u2_t				iPrevItem				= iItem - 1;
+		controlConstraints.DockToControl					= {-1, -1, -1, -1};
+		controlConstraints.AttachSizeToControl			= {-1, -1};
+		if(gui.Controls.States[idControl].IsHidden())
+			continue;
 		const ::gpk::n2u0_t			fontCharSize			= selectedFont.CharSize;
 		control.Area.Size.y		= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
 		case ::gpk::DIRECTION_RIGHT	:
 			control.Area.Size.x		= s1_t(fontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
-			if(menu.IdControls.size() > iPrevItem)
-				control.Area.Offset.x	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().x;
+			control.Area.Offset.x	= 0;
+			if(-1 != iPreviousVisible)
+				controlConstraints.DockToControl.Right	= iPreviousVisible;
 			break;
 		case ::gpk::DIRECTION_DOWN:
 			controlConstraints.AttachSizeToControl.x	= menu.IdControl;
-			if(menu.IdControls.size() > iPrevItem)
-				control.Area.Offset.y	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().y;
+			control.Area.Offset.y	= 0;
+			if(-1 != iPreviousVisible)
+				controlConstraints.DockToControl.Bottom	= iPreviousVisible;
 			break;
 		}
+		iPreviousVisible			= idControl;
 	}
 
 	::gpk::SControlPlacement	& controlMenu			= gui.Controls.Placement[menu.IdControl];
@@ -58,6 +65,8 @@ gpk::err_t 		gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& me
 	const ::gpk::n2u0_t			fontCharSize			= selectedFont.CharSize;
 	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const u2_t				idControl			= menu.IdControls		[iItem];
+		if(gui.Controls.States[idControl].IsHidden())
+			continue;
 		::gpk::SControlPlacement	& control			= gui.Controls.Placement[idControl];
 		::gpk::SControlText			& controlText		= gui.Controls.Text		[idControl];
 		switch(menu.Orientation) {

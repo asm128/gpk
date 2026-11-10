@@ -331,6 +331,7 @@ static	gpk::err_t viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SCont
 
 gpk::err_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)																{
 	::gpk::SDialog				& dialog				= *control.Dialog;
+	::gpk::SGUI					& gui					= *dialog.GUI;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	::gpk::SControlPlacement	& controlMain			= controlTable.Placement[control.IdGUIControl];
 	::gpk::SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
@@ -356,6 +357,18 @@ gpk::err_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)												
 			::gpk::SControlPlacement	& controlClient			= controlTable.Placement[control.IdClient];
 			controlClient.Area.Size	= clientFinalSize;
 		}
+	if(false == ::gpk::controlInvalid(gui, control.IdScrollBarY)) {
+		if(controlTable.States[control.IdScrollBarY].Parent != control.IdClient)
+			if_fail_fe(::gpk::controlSetParent(gui, control.IdScrollBarY, control.IdClient));
+		::gpk::SControlPlacement	& placementScroll		= controlTable.Placement[control.IdScrollBarY];
+		placementScroll.Area.Offset							= {};
+		placementScroll.Area.Size.x							= 12;
+		placementScroll.Align								= ::gpk::ALIGN_TOP_RIGHT;
+		::gpk::SControlConstraints	& constraintsScroll		= controlTable.Constraints[control.IdScrollBarY];
+		constraintsScroll.AttachSizeToControl				= {-1, control.IdScrollBarY};
+		constraintsScroll.DockToControl						= {-1, -1, -1, -1};
+		controlTable.SetHidden(control.IdScrollBarY, false == control.Settings.ScrollBarY || false == control.Settings.Unfolded);
+	}
 	control.SettingsOld		= control.Settings;
 	return 0;
 }
