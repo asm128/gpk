@@ -58,27 +58,35 @@ nmsp gpk
 	stin	err_t	base64Decode	(vcu0_c & in_base64, au0_t & out_binary) { rtrn base64Decode(B64_SYMBOL_MAP, in_base64, out_binary); }
 	stin	err_t	base64EncodeFS	(vcu0_c & in_binary, au0_t & out_base64) { rtrn base64Encode(B64_SYMBOL_MAP_FS, in_binary, out_base64); }
 	stin	err_t	base64DecodeFS	(vcu0_c & in_base64, au0_t & out_binary) { rtrn base64Decode(B64_SYMBOL_MAP_FS, in_base64, out_binary); }
-																	 
+
+	tplt<tpn(T1), tpn(T2)>
+	stin	err_t	base64			(view<cnst T1> inputView, apod<T2> & outputStorage, b8_t decode = false) {
+		static_assert(1 == szof(T1));
+		static_assert(1 == szof(T2));
+		err_t				result;
+		if(decode) {
+			if_fail_fe(result = base64Decode(*(vcu0_t*)&inputView, *(au0_t*)&outputStorage));
+		}
+		else
+			if_fail_fe(result = base64Encode(*(vcu0_t*)&inputView, *(au0_t*)&outputStorage));
+		return result;
+	}																	 
 	stin	err_t	base64Encode	(vcu0_c & in_binary, asc_t & out_base64) { rtrn base64Encode		(in_binary, *(au0_t*)&out_base64); }
 	stin	err_t	base64EncodeFS	(vcu0_c & in_binary, asc_t & out_base64) { rtrn base64EncodeFS		(in_binary, *(au0_t*)&out_base64); }
-																			
-	stin	err_t	base64Encode	(vcs0_c & in_binary, asc_t & out_base64) { rtrn base64Encode		(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
-	stin	err_t	base64EncodeFS	(vcs0_c & in_binary, asc_t & out_base64) { rtrn base64EncodeFS		(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
+	stin	err_t	base64Encode	(vcsc_c & in_binary, asc_t & out_base64) { rtrn base64Encode		(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
+	stin	err_t	base64EncodeFS	(vcsc_c & in_binary, asc_t & out_base64) { rtrn base64EncodeFS		(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
 
-	stin	err_t	base64Encode	(vcs0_c & in_binary, au0_t & out_base64) { rtrn base64Encode		(*(vcu0_t*)&in_binary, out_base64	); }
+	stin	err_t	base64Decode	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64Decode		(*(vcu0_t*)&in_base64, out_binary	); }
+	stin	err_t	base64DecodeFS	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64DecodeFS	(*(vcu0_t*)&in_base64, out_binary	); }
+	stin	err_t	base64Decode	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64Decode		(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
+	stin	err_t	base64DecodeFS	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64DecodeFS	(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
+
+	stin	err_t	base64Encode	(vcsc_c & in_binary, au0_t & out_base64) { rtrn base64Encode		(*(vcu0_t*)&in_binary, out_base64	); }
 	stin	err_t	base64Decode	(vcu0_c & in_base64, asc_t & out_binary) { rtrn base64Decode		(in_base64, *(au0_t*)&out_binary	); }
-	stin	err_t	base64EncodeFS	(vcs0_c & in_binary, au0_t & out_base64) { rtrn base64EncodeFS		(*(vcu0_t*)&in_binary, out_base64	); }
+	stin	err_t	base64EncodeFS	(vcsc_c & in_binary, au0_t & out_base64) { rtrn base64EncodeFS		(*(vcu0_t*)&in_binary, out_base64	); }
 	stin	err_t	base64DecodeFS	(vcu0_c & in_base64, asc_t & out_binary) { rtrn base64DecodeFS		(in_base64, *(au0_t*)&out_binary	); }
 
-	stin	err_t	base64Encode	(vcu0_c & in_binary	, string & out_base64) { rtrn base64Encode		(in_binary, *(au0_t*)&out_base64 	); }
-	stin	err_t	base64Decode	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64Decode		(*(vcu0_t*)&in_base64, out_binary	); }
-	stin	err_t	base64EncodeFS	(vcu0_c & in_binary	, string & out_base64) { rtrn base64EncodeFS	(in_binary, *(au0_t*)&out_base64 	); }
-	stin	err_t	base64DecodeFS	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64DecodeFS	(*(vcu0_t*)&in_base64, out_binary	); }
 
-	stin	err_t	base64Encode	(vcs0_c & in_binary	, string & out_base64) { rtrn base64Encode		(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
-	stin	err_t	base64Decode	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64Decode		(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
-	stin	err_t	base64EncodeFS	(vcs0_c & in_binary	, string & out_base64) { rtrn base64EncodeFS	(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
-	stin	err_t	base64DecodeFS	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64DecodeFS	(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
 } // nmsp
 
 #endif // GPK_BASE64_H_23627

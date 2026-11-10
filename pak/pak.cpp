@@ -12,16 +12,13 @@ sttc gpk::err_t				pakMain			(::gpk::SRuntimeValues & runtimeValues) {
 		, GPK_VIEW_ARGS(args.ProgramName)
 		);
 	::gpk::vcst_c					pathSource		= args.Positionals[0];
-	::gpk::vcst_c					pathTarget		= (args.Positionals.size() > 1) ? args.Positionals[1] : ::gpk::vcst_t{};
+	::gpk::vcst_c					pathTarget		= (args.Positionals.size() < 2) ? ::gpk::vcst_t{} : args.Positionals[1];
 	::gpk::b8_c						unpak			= 0 <= ::gpk::argsOptionIndex(args, "u");
 	if(unpak) {
 		if_fail_fe(::gpk::unpak(pathSource, pathTarget));
 	}
 	else
 		if_fail_fe(::gpk::pak(pathSource, pathTarget));
-
-	for(::gpk::u2_t iArg = 2; iArg < args.Positionals.size(); ++iArg)
-		info_printf("Unknown parameter: %.*s.", GPK_VIEW_ARGS(args.Positionals[iArg]));
 	return 0;
 }
 

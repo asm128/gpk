@@ -816,6 +816,9 @@
     <ClInclude Include="gpk_index_path.h">
       <Filter>script</Filter>
     </ClInclude>
+    <ClInclude Include="llc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -1078,6 +1081,9 @@
     </ClCompile>
     <ClCompile Include="gpk_index_path.cpp">
       <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="llc.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
