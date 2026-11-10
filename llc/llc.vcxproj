@@ -92,6 +92,7 @@
     <ClInclude Include="gpk_gpio.h" />
     <ClInclude Include="gpk_i2c.h" />
     <ClInclude Include="gpk_index.h" />
+    <ClInclude Include="gpk_index_path.h" />
     <ClInclude Include="gpk_keyed_bit_array.h" />
     <ClInclude Include="gpk_keyval_view.h" />
     <ClInclude Include="gpk_lifecycle.h" />
@@ -293,6 +294,7 @@
     <ClCompile Include="gpk_header_checkingg.cpp" />
     <ClCompile Include="gpk_i2c.cpp" />
     <ClCompile Include="gpk_index.cpp" />
+    <ClCompile Include="gpk_index_path.cpp" />
     <ClCompile Include="gpk_keyval_view.cpp" />
     <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_path.cpp" />

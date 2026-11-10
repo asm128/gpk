@@ -3,8 +3,8 @@
 #include "gpk_json.h"
 #include "gpk_string.h"
 
-#ifndef SHIP_DATA_H_928734
-#define SHIP_DATA_H_928734
+#ifndef GPK_INDEX_H_261109
+#define GPK_INDEX_H_261109
 
 nmsp gpk
 {
@@ -49,8 +49,11 @@ nmsp gpk
 		au2_t	Indices				= {};
 	};
 	err_t	getWordDict			(aobj<SWordIndices> & wordSet, cnst SItemViews & item, u2_t iItem, aobj<string> & cacheItemWords, view<vcst_c> exceptions = INDEX_EXCLUSION_DEFAULTS);
+	err_t	wordDictAppend		(aobj<SWordIndices> & wordSet, u2_t iItem, view<cnst string> cacheItemWords);
+	err_t	wordDictResolve		(view<cnst SWordIndices> wordSet, vcst_t input, u2_t itemCount, au2_t & itemIndices, view<vcst_c> exceptions = INDEX_EXCLUSION_DEFAULTS);
 	err_t	getWordList			(aobj<string> & itemWords, cnst SItemViews & item, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
+	err_t	wordListNormalize	(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
 	err_t	outputSearchScript	(string & output, view<cnst SItemViews> indicesToDisplay, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
 } // nmsp 
 
-#endif // SHIP_DATA_H_928734
+#endif // GPK_INDEX_H_261109

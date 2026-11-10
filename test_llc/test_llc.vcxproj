@@ -171,6 +171,9 @@
     <ClCompile Include="test_llc_base64.cpp" />
     <ClCompile Include="test_llc_deflate.cpp" />
     <ClCompile Include="test_llc_expression.cpp" />
+    <ClCompile Include="test_llc_index.cpp" />
+    <ClCompile Include="test_llc_index_catalog.cpp" />
+    <ClCompile Include="test_llc_index_path.cpp" />
     <ClCompile Include="test_llc_json.cpp" />
     <ClCompile Include="test_llc_json_expression.cpp" />
     <ClCompile Include="test_llc_linear_map.cpp" />
@@ -179,6 +182,7 @@
     <ClCompile Include="test_llc_view_serialize.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="test_llc_index_catalog.h" />
     <ClInclude Include="test_llc_suites.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

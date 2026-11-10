@@ -813,6 +813,9 @@
     <ClInclude Include="gpk_framework_module.h">
       <Filter>framework</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_index_path.h">
+      <Filter>script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -1072,6 +1075,9 @@
     </ClCompile>
     <ClCompile Include="gpk_framework_module.cpp">
       <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_index_path.cpp">
+      <Filter>script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
