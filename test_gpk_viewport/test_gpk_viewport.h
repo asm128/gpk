@@ -17,9 +17,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::apod<::gpk::bgra>		Triangle3dColorList				= {};
 	};
 
-	struct SCamera {
-		::gpk::n3f2_t					Position;
-		::gpk::n3f2_t					Target;
+	struct SCamera : ::gpk::SCameraPoints {
 		::gpk::minmaxf2_t				NearFar							= {0.01f , 1000.0f};
 	};
 
@@ -29,27 +27,22 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 		::gpk::n3f2_t					LightPos						= {10, 5, 0};
 
-		::gpk::m4<float>				Projection						= {};
-		::gpk::m4<float>				ViewMatrix						= {};
+		::gpk::m4f2_t					Projection						= {};
+		::gpk::m4f2_t					ViewMatrix						= {};
 	};
 
 	struct SApplication {
-		::std::mutex					LockRender						;
+		::gpk::mutex					LockRender						;
 
 		::gpk::SFramework				Framework;
 		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen						= {};
-		::gpk::aobj<::gpk::img8bgra>	PNGImages						= {};
 
 		::gpk::cid_t					IdExit							= -1;
 
-		::std::mutex					LockViewport					;
+		::gpk::mutex					LockViewport					;
 		::gpk::SDialog					DialogMain						= {};
-		::gpk::cid_t					Slider							= -1;
-		::gpk::cid_t					NumericTuner					= -1;
-		::gpk::cid_t					CheckBox						= -1;
 		::gpk::cid_t					Viewport						= -1;
-		//::gpk::tri3<float>			CubePositions	[12]			= {};
-		::gpk::SModelGeometryIndexed<float, uint8_t>	ModelGeometry;
+		::gpk::SModelGeometry<::gpk::f2_t>	ModelGeometry;
 
 		::gpk::pobj<::gpk::rtbgra8d32>	Buffer3D;
 		SVertexCache					VertexCache;

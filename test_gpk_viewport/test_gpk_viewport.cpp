@@ -14,71 +14,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 usns gpk;
 
-// Vertex coordinates for cube faces
-stxp	const tri3<float>					modelPositionsVertices	[12]						=
-	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first			?? I have no idea if this is correct lol
-	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second		?? I have no idea if this is correct lol
-
-	, {{0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}	// Back		- first			?? I have no idea if this is correct lol
-	, {{0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}}	// Back		- second		?? I have no idea if this is correct lol
-
-	, {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}}	// Bottom	- first			?? I have no idea if this is correct lol
-	, {{1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}	// Bottom	- second		?? I have no idea if this is correct lol
-
-	, {{1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}	// Left		- first
-	, {{1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}}	// Left		- second
-
-	, {{1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f}}	// Front	- first
-	, {{1.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Front	- second
-
-	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}}	// Top		- first
-	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}	// Top		- second
-	};
-
-stxp	const tri3<float>						modelNormalVectors		[12]						=
-	{ {{0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}}	// Right	- first			?? I have no idea if this is correct lol
-	, {{0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}}	// Right	- second		?? I have no idea if this is correct lol
-//		{					, , 										}
-	, {{-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}}	// Back		- first			?? I have no idea if this is correct lol
-	, {{-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}}	// Back		- second		?? I have no idea if this is correct lol
-//		{					, , 										}
-	, {{0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}}	// Bottom	- first			?? I have no idea if this is correct lol
-	, {{0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}}	// Bottom	- second		?? I have no idea if this is correct lol
-//		{					, , 										}
-	, {{0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}}	// Left		- first
-	, {{0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}}	// Left		- second
-//		{					, , 										}
-	, {{1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}}	// Front	- first
-	, {{1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}}	// Front	- second
-//		{					, , 										}
-	, {{0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}}	// Top		- first
-	, {{0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}}	// Top		- second
-	};
-
-template<typename _tIndex, typename _tValue>
-					err_t									indexValues									(const view<const _tValue> & in_values, apod<_tIndex> & out_indices, apod<_tValue> & out_values, apod<_tIndex> & out_remap){
-	for(uint32_t iValue = 0; iValue < in_values.size(); ++iValue) {
-		bool																	bFound										= false;
-		const _tValue															& in_value									= in_values[iValue];
-		for(uint32_t iValueIndexed = 0; iValueIndexed < out_values.size(); ++iValueIndexed) {
-			const _tValue															& out_value									= out_values[iValueIndexed];
-			if(in_value == out_value) {
-				bFound																= true;
-				out_indices	.push_back((_tIndex)iValueIndexed);
-				out_remap	.push_back((_tIndex)iValue);
-				break;
-			}
-		}
-		if(false == bFound) {
-			int32_t																	newIndex;
-			if_fail_fe(newIndex = out_values.push_back(in_value));
-			out_indices	.push_back((_tIndex)newIndex);
-			out_remap	.push_back((_tIndex)iValue);
-		}
-	}
-	return 0;
-}
-
 err_t			cleanup		(::gme::SApplication & app)						{ return mainWindowDestroy(app.Framework.RootWindow); }
 err_t			setup		(::gme::SApplication & app)						{
 	app.Buffer3D.create();
@@ -129,7 +64,7 @@ err_t			setup		(::gme::SApplication & app)						{
 	}
 
 	pobj<SDialogTuner<uint8_t>>						tuner						= {};
-	app.NumericTuner											= tunerCreate(app.DialogMain, tuner);
+	tunerCreate(app.DialogMain, tuner);
 	tuner->ValueLimits.Min										= 100;
 	tuner->ValueLimits.Max										= 200;
 	SControlTable											 & controlTable								= gui.Controls;
@@ -139,7 +74,7 @@ err_t			setup		(::gme::SApplication & app)						{
 	tuner->SetValue(0);
 
 	pobj<SDialogSlider>							slider										= {};
-	app.Slider													= sliderCreate(app.DialogMain, slider);
+	sliderCreate(app.DialogMain, slider);
 	slider->ValueLimits.Min										= 0;
 	slider->ValueLimits.Max										= 255;
 	controlTable.Placement[slider->IdGUIControl].Area.Offset	= {128, 128};
@@ -147,7 +82,7 @@ err_t			setup		(::gme::SApplication & app)						{
 	controlTable.Placement[slider->IdGUIControl].Area.Size.y	= 8;
 
 	pobj<SDialogCheckBox>									checkbox									= {};
-	app.CheckBox														= checkBoxCreate(app.DialogMain, checkbox);
+	checkBoxCreate(app.DialogMain, checkbox);
 	controlTable.Placement[checkbox->IdGUIControl].Area.Offset			= {128, 256};
 
 	pobj<SDialogViewport>									viewport									= {};
@@ -157,13 +92,9 @@ err_t			setup		(::gme::SApplication & app)						{
 	controlTable.Images		[viewport->IdClient		].ImageInvertY			= true;
 
 	stxp n3f2_c							cubeCenter									= {0.5f, 0.5f, 0.5f};
-	au0_t								& remap										= app.ModelGeometry.PositionRemap;
-	::indexValues({&modelPositionsVertices[0].A, ::gpk::size(modelPositionsVertices) * 3}, app.ModelGeometry.Positions.Indices, app.ModelGeometry.Positions.Values, remap);
-	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {
-		n3f2_t								& vertexToTransform					= app.ModelGeometry.Positions.Values[iVertex];
-		vertexToTransform				-= cubeCenter;
-	}
-	app.ModelGeometry.NormalsVertex.Values	= modelNormalVectors;
+	if_fail_fe(generateCubeGeometry(app.ModelGeometry));
+	for(u2_t iTriangle = 0; iTriangle < app.ModelGeometry.Positions.size(); ++iTriangle)
+		app.ModelGeometry.Positions[iTriangle].Translate(cubeCenter * -1);
 	return 0;
 }
 
@@ -171,14 +102,13 @@ err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	static STimer		timer;
 	if_true_vi(APPLICATION_STATE_EXIT, exitSignal);
 	{
-		::std::lock_guard			lock			(app.LockRender);
+		::gpk::lock_guard			lock			(app.LockRender);
 		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
 	}
 	SFramework			& framework		= app.Framework;
 	if_true_vi(APPLICATION_STATE_EXIT, APPLICATION_STATE_EXIT == updateFramework(app.Framework));
 
 	SGUI					& gui			= *framework.GUI;
-	acid					toProcess		= {};
 	if(1 == guiProcessControls(gui, [&app](cid_t iControl) { return one_if(iControl == app.IdExit); }))
 		return 1;
 
@@ -189,30 +119,24 @@ err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	::gme::SViewportScene													& scene										= app.Scene;
 	minmaxf2_t														& nearFar									= scene.Camera.NearFar;
 	{
-		::std::lock_guard														lockViewport								(app.LockViewport);
-		scene.Projection.Identity();
-		static	float															cameraRotation								= 0;
+		::gpk::lock_guard														lockViewport								(app.LockViewport);
 		scene.Camera																= {{10, 5, 0}, {}};
 		scene.LightPos															= scene.Camera.Position;
-		cameraRotation														+= (float)framework.RootWindow.Input->MouseCurrent.Deltas.x / 5.0f;
-		//camera.Position	.RotateY(cameraRotation);
 		scene.Camera.Position	.RotateY(frameInfo.Microseconds.Total / 1000000.0f);
 		scene.LightPos		.RotateY(frameInfo.Microseconds.Total /  500000.0f);
 		scene.ViewMatrix.LookAt(scene.Camera.Position, scene.Camera.Target, scene.CameraUp);
 		pobj<SDialogViewport>									viewport									= {};
 		app.DialogMain.Controls[app.Viewport].as(viewport);
-		const n2u2_t											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint32_t>();
+		const n2u1_t											offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
 		scene.Projection.FieldOfView(.25 * math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar);
 		scene.Projection															= scene.ViewMatrix * scene.Projection;
 		scene.LightPos.Normalize();
 
-		m4f2_t													mViewport									= {};
-		mViewport._11														= 2.0f / offscreenMetrics.x;
-		mViewport._22														= 2.0f / offscreenMetrics.y;
-		mViewport._33														= 1.0f / (float)(nearFar.Max - nearFar.Min);
-		mViewport._43														= (float)(-nearFar.Min * ( 1.0f / (nearFar.Max - nearFar.Min) ));
-		mViewport._44														= 1.0f;
-		scene.Projection													= scene.Projection * mViewport.GetInverse();
+		m4f2_t												mViewport									= {};
+		mViewport.ViewportRH(offscreenMetrics);
+		mViewport.MathElement(2, 2)									= nearFar.Max - nearFar.Min;
+		mViewport.MathElement(3, 2)									= nearFar.Min;
+		scene.Projection											*= mViewport;
 	}
 
 	timer.Frame();
@@ -237,42 +161,33 @@ err_t			draw			(::gme::SApplication & app)							{
 
 	apod<tri3f2_t>				& triangle3dList							= app.VertexCache.Triangle3dTransformed	;
 	apod<bgra>					& triangle3dColorList						= app.VertexCache.Triangle3dColorList	;
-	u2_c						countTriangles								= app.ModelGeometry.Positions.Indices.size() / 3;
-	triangle3dList		.resize(countTriangles);
+	triangle3dList		= app.ModelGeometry.Positions;
+	u2_c						countTriangles								= triangle3dList.size();
 	triangle3dColorList	.resize(countTriangles * 3);
-	m4<float>													projection									;
-	::gme::SCamera															camera										;
+	m4f2_t											projection									;
+	::gme::SCamera											camera										;
 	{
-		::gpk::lock_guard														lockViewport								(app.LockViewport);
-		projection															= app.Scene.Projection;
-		camera																= app.Scene.Camera;
+		::gpk::lock_guard										lockViewport								(app.LockViewport);
+		projection												= app.Scene.Projection;
+		camera													= app.Scene.Camera;
 	}
 
-	n3f2_t													& lightPos									= app.Scene.LightPos;
-	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) {
-		tri3<float>												& transformedTriangle						= triangle3dList[iTriangle];
-		transformedTriangle													=
-			{ app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 0]]
-			, app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 1]]
-			, app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 2]]
-			};
-		transform(transformedTriangle, projection);
-	}
+	n3f2_t											& lightPos									= app.Scene.LightPos;
+	for(u2_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle)
+		transform(triangle3dList[iTriangle], projection);
 	apod<tri2s2_t>							triangle2dList								= {};
 	triangle2dList.resize(countTriangles);
-	const n2<int32_t>											screenCenter								= {(int32_t)offscreenMetrics.x / 2, (int32_t)offscreenMetrics.y / 2};
 	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) { // Maybe the scale
 		tri3<float>												& transformedTriangle3D						= triangle3dList[iTriangle];
 		tri2<int32_t>												& transformedTriangle2D						= triangle2dList[iTriangle];
 		transformedTriangle2D.A												= {(int32_t)transformedTriangle3D.A.x, (int32_t)transformedTriangle3D.A.y};
 		transformedTriangle2D.B												= {(int32_t)transformedTriangle3D.B.x, (int32_t)transformedTriangle3D.B.y};
 		transformedTriangle2D.C												= {(int32_t)transformedTriangle3D.C.x, (int32_t)transformedTriangle3D.C.y};
-		translate(transformedTriangle2D, screenCenter);
 
 	}
 
-	view<n3f2_t>								normals										= {(n3f2_t*)app.ModelGeometry.NormalsVertex.Values.begin(), app.ModelGeometry.NormalsVertex.Values.size() * 3};
-	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Indices.size(); ++iVertex) {
+	view<n3f2_t>								normals										= {(n3f2_t*)app.ModelGeometry.NormalsVertex.begin(), app.ModelGeometry.NormalsVertex.size() * 3};
+	for(u2_t iVertex = 0; iVertex < countTriangles * 3; ++iVertex) {
 		double																	lightFactor									= normals[iVertex].Dot(lightPos);
 		triangle3dColorList[iVertex]										= (RED * lightFactor).Clamp();
 	}
@@ -281,7 +196,7 @@ err_t			draw			(::gme::SApplication & app)							{
 	n3f2_t													cameraFront										= (camera.Target - camera.Position).Normalize();
 	apod<trif2_t>								triangleWeights;
 
-	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
+	for(u2_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) {
 		double																	lightFactor									= normals[iTriangle * 3].Dot(cameraFront);
 		if(lightFactor > 0)
 			continue;
@@ -309,11 +224,11 @@ err_t			draw			(::gme::SApplication & app)							{
 	target.create();
 	target->resize(app.Framework.RootWindow.Size, LIGHTGRAY, 0xFFFFFFFFU);
 	{
-		::std::lock_guard														lock										(app.Framework.LockGUI);
+		::gpk::lock_guard														lock										(app.Framework.LockGUI);
 		guiDraw(*app.DialogMain.GUI, target->Color.View);
 	}
 	{
-		::std::lock_guard														lock										(app.LockRender);
+		::gpk::lock_guard														lock										(app.LockRender);
 		app.Offscreen														= target;
 	}
 	timer.Frame();
