@@ -53,6 +53,9 @@ nmsp gpk
 	stin	err_t	fileToMemorySecure		(vcst_t fileName, vcu0_c & key, b8_t deflate, string & output)	{ SLoadCache temp; rtrn fileToMemorySecure  (temp, fileName, key, deflate, *(au0_t*)&output); }
 	stin	err_t	fileToMemorySecure		(vcst_t fileName, vcu0_c & key, b8_t deflate, au0_t & output)	{ SLoadCache temp; rtrn fileToMemorySecure  (temp, fileName, key, deflate, output); }
 	stin	err_t	fileFromMemorySecure	(vcst_t fileName, vcu0_c & key, b8_t deflate, vcu0_t input)		{ SLoadCache temp; rtrn fileFromMemorySecure(temp, fileName, key, deflate, input); }
+
+	err_t			unpak					(vcst_t sourceFilename, vcst_t targetFolder);
+	err_t			pak						(vcst_t sourceFolder, vcst_t targetFilename);
 } // nmsp
 
 #endif // GPK_FILE_PACK_H
