@@ -13,18 +13,17 @@ GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, SOURCE_RESULT		, 4, "A resolved i
 GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, SOURCE_RECORD		, 5, "The expected onsushi source record was not resolved.");
 GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, INDEXED_VALUE		, 6, "The resolved record does not contain the indexed phone value.");
 GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, EMPTY_RESULT		, 7, "A missing catalog term unexpectedly resolved records.");
+GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, SCRIPT_RESULT		, 8, "outputSearchScript() rejected the catalog index.");
+GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, SCRIPT_DATA		, 9, "outputSearchScript() omitted catalog index data.");
 
 stxp ::gpk::vcst_c INDEX_CATALOG_FILE = "D:/enterprise/programming_sciences/codebases/Axiom/bundle_galaxy_hell/gpk_data/test_llc/ads.json";
 
 ::gpk::err_t SIndexCatalog::Load(::gpk::vcst_t fileName, ::gpk::AD_SHOP_CATEGORY category, ::gpk::vcst_t language) {
 	if_fail_fe(Item.clear());
 	if_fail_fe(Word.clear());
-	if_fail_fe(WordCache.clear());
 	if_fail_fe(::gpk::jsonFileRead(Source, fileName));
 	if_fail_fe(::gpk::getItemViews(Source.Reader, category, language, Item));
-	for(::gpk::u2_t iItem = 0; iItem < Item.size(); ++iItem)
-		if_fail_fe(::gpk::getWordDict(Word, Item[iItem], iItem, WordCache));
-	rtrn 0;
+	rtrn ::gpk::getWordDict(WordData, Word, Item);
 }
 
 ::gpk::err_t SIndexCatalog::Resolve(::gpk::vcst_t input, ::gpk::au2_t & itemIndices) cnst {
@@ -47,6 +46,12 @@ stxp ::gpk::vcst_c INDEX_CATALOG_FILE = "D:/enterprise/programming_sciences/code
 	GPK_TEST_REQUIREF(errors, INDEX_CATALOG_TEST_RESULT_LOAD_RESULT, ::gpk::failed(reopenResult), "Result:%i.", reopenResult);
 	GPK_TEST_CHECKF(errors, INDEX_CATALOG_TEST_RESULT_SOURCE_BYTES, reopened != catalog.Source.Bytes, "Reopened:%u, retained:%u.", reopened.size(), catalog.Source.Bytes.size());
 	GPK_TEST_REQUIREF(errors, INDEX_CATALOG_TEST_RESULT_ITEM_COUNT, 0 == catalog.Item.size(), "Items:%u.", catalog.Item.size());
+	::gpk::string script = {};
+	cnst ::gpk::err_t scriptResult = ::gpk::outputSearchScript(script, catalog.Item);
+	GPK_TEST_REQUIREF(errors, INDEX_CATALOG_TEST_RESULT_SCRIPT_RESULT, ::gpk::failed(scriptResult), "Result:%i.", scriptResult);
+	GPK_TEST_CHECK(errors, INDEX_CATALOG_TEST_RESULT_SCRIPT_DATA, 0 > script.find(::gpk::vcst_t{"var names=["}));
+	GPK_TEST_CHECK(errors, INDEX_CATALOG_TEST_RESULT_SCRIPT_DATA, 0 > script.find(::gpk::vcst_t{"var indices=["}));
+	GPK_TEST_CHECK(errors, INDEX_CATALOG_TEST_RESULT_SCRIPT_DATA, 0 > script.find(::gpk::vcst_t{"var idList=["}));
 
 	::gpk::au2_t resolved = {};
 	cnst ::gpk::err_t resolveResult = catalog.Resolve("7518", resolved);

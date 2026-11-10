@@ -254,6 +254,7 @@
     <ClInclude Include="gpk_packed_int.h" />
     <ClInclude Include="keyed_bit_array.h" />
     <ClInclude Include="gpk_queue_async.h" />
+    <ClInclude Include="gpk_index_catalog.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
@@ -343,6 +344,7 @@
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
+    <ClCompile Include="gpk_index_catalog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />

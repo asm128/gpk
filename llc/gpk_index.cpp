@@ -5,11 +5,9 @@
 
 #include "gpk_cgi_app_impl_v2.h"
 
-#include "gpk_json_expression.h"
 #include "gpk_parse.h"
 #include "gpk_keyval_view.h"
 #include "gpk_stdstring.h"
-#include "gpk_string.h"
 #include "gpk_string_compose.h"
 
 GPK_USING_TYPEINT();
@@ -45,112 +43,6 @@ nmsp gpk
 )CATEGORIES"; 
 } // nmsp
 
-//sttc	err_t	pageCatalog						(vcst_t contentFileName, vcst_t pathScript, n2u2_c sizeScreen, vcst_t pathStyles, const AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output);
-
-err_t			gpk_cgi_generate_output			(SCGIRuntimeValues & runtimeValues, string & output)	{
-	SHTTPAPIRequest		requestReceived					= {};
-	bool				isCGIEnviron					= httpRequestInit(requestReceived, runtimeValues, true);
-	vcst_t				cookie;
-	vcst_t				sessionFileName;				;
-	string				sessionFileContents				= {};
-	aobj<kv<vcst_t>>	cookieValues;
-	if (isCGIEnviron) {
-		if_fail_fe(append_strings(output, "Content-type: text/html\r\nCache-control: no-cache\r\n"));
-		if_fail_fe(append_strings(output, "\r\n"));
-		gpk::find("HTTP_COOKIE", view<cnst kv<vcst_t>>{runtimeValues.RuntimeValues.EntryPointArgs.Environment}, cookie);
-		if(0 == cookie.size()) {
-			append_strings(output, "{ \"status\" : 403, \"description\" :\"forbidden - The server currently doesn't accept requests to this frame without a cookie set.\" }\r\n");
-			return 1;
-			//::sessionInitialize(requestReceived, cookie, sessionFileName, digested);
-			//if_fail_fef(append_strings(output, "\r\nSet-Cookie: "));
-			//if_fail_fef(output.append(cookie));
-		}
-		else {
-			if_fail_fe(append_strings(output, "\r\n\r\n"));
-			//if_fail_fef(::ntl::sessionFileLoad(cookie, sessionFileContents, cookieValues), "%s", "Failed to load session!");
-		}
-		//if_fail_fef(append_strings(output, "\r\nSet-Cookie: "));
-		//if_fail_fef(output.append(cookie));
-
-		stxp vcst_c		methodsValid	[]	= {"GET", "POST"};
-		if(-1 == gpk::keyValVerify(runtimeValues.RuntimeValues.EntryPointArgs.Environment, "REQUEST_METHOD", methodsValid)) {
-			append_strings(output, "{ \"status\" : 403, \"description\" :\"forbidden\" }\r\n");
-			return 1;
-		}
-	}
-	AD_SHOP_CATEGORY		category						= AD_SHOP_CATEGORY_shops;//{}get_value<::AD_SHOP_CATEGORY>(qsArgs.Module);
-	{
-		SJSONReader categoryML;
-		if_fail_fef(jsonParse(categoryML, gpk::DEFAULT_CATEGORIES), "\n%.*s", GPK_VIEW_ARGS(DEFAULT_CATEGORIES));
-		vcst_t	qsArgsLanguage	= gpk::DEFAULT_LANGUAGE;
-		vcst_t	categoryName	= {};
-		{
-			vcst_t	rootNode;
-			s2_t	indexRoot;
-			if_fail_fe(indexRoot = jsonExpressionResolve(qsArgsLanguage, categoryML, category, categoryName));
-		}
-	}
-	// switch(category) {
-	// case ::AD_SHOP_CATEGORY_tours: title = (qsArgsLanguage == "es") ? vcst_t{"Turismo"		) : vcst_t{"Tourism"	); break;
-	// case ::AD_SHOP_CATEGORY_meals: title = (qsArgsLanguage == "es") ? vcst_t{"Comidas"		) : vcst_t{"Meals"		); break;
-	// case ::AD_SHOP_CATEGORY_shops: title = (qsArgsLanguage == "es") ? vcst_t{"Comercios"	) : vcst_t{"Shopping"	); break;
-	// case ::AD_SHOP_CATEGORY_shows: title = (qsArgsLanguage == "es") ? vcst_t{"Espectáculos"	) : vcst_t{"Shows"		); break;
-	// default: break;
-	// }
-
-	n2<vcst_t>							renderTargetMetrics	= {"", ""};
-	n2u2_t								sizeScreen						= {};
-	parseIntegerDecimal(renderTargetMetrics.x, sizeScreen.x);
-	parseIntegerDecimal(renderTargetMetrics.y, sizeScreen.y);
-
-	//::pageCatalog("ads.json", programState.Path.Script, sizeScreen, programState.Path.Style, category, title, qsArgs.Language.size() ? qsArgs.Language : "es", output);
-
-#if defined(GPK_WINDOWS)
-	if(output.size()) {
-		OutputDebugStringA(output.begin());
-		OutputDebugStringA("\n");
-	}
-#endif
-	return 0;
-}
-
-gpk::err_t	gpk::getItemViews		(SJSONReader & content, const AD_SHOP_CATEGORY category, vcst_t /*lang*/, aobj<SItemViews> & indicesToDisplay) {
-	for(s2_t iItem = 0, countItems = jsonArraySize(content, 0); iItem < countItems; ++iItem) {
-		SItemViews		views					= {(u2_t)iItem};
-		cnst err_t		jsonIndexCurrentItem	= jsonArrayValueGet(content, 0, iItem);
-		vcst_t			viewWikiCategory		= "";
-		cnst err_t		jsonIndexArrayCategory	= jsonExpressionResolve("category", content, jsonIndexCurrentItem, viewWikiCategory);
-		b8_t			isCategory				= false;
-		for(u2_t iCat = 0, countCat = (u2_t)jsonArraySize(*content[jsonIndexArrayCategory]); iCat < countCat; ++iCat) {
-			cnst err_t		jsonIndexNodeCategory	= jsonArrayValueGet(*content[jsonIndexArrayCategory], iCat);
-			cnst SJSONToken	& jsonToken				= content.Token[jsonIndexNodeCategory];
-			if(category == jsonToken.Value) {
-				isCategory	= true;
-				break;
-			}
-		}
-		if(false == isCategory)
-			continue;
-
-		// ---- Root arrays.
-		err_t		jsonIndexArrayPhone		;
-		err_t		jsonIndexArrayWP		;
-		err_t		jsonIndexArrayAddr		;
-		err_t		jsonIndexArrayBarrios	;
-		if_fail_fe(jsonIndexArrayPhone		= jsonExpressionResolve("phone"		, content, jsonIndexCurrentItem, views.MapURL));
-		if_fail_fe(jsonIndexArrayWP			= jsonExpressionResolve("whatsapp"	, content, jsonIndexCurrentItem, views.MapURL));
-		if_fail_fe(jsonIndexArrayAddr		= jsonExpressionResolve("address"	, content, jsonIndexCurrentItem, views.MapURL));
-		if_fail_fe(jsonIndexArrayBarrios	= jsonExpressionResolve("barrio"	, content, jsonIndexCurrentItem, views.MapURL));
-		
-		for(s2_t iAddr		= 0, countAddr		= jsonArraySize(*content[jsonIndexArrayAddr		]); iAddr		< countAddr		; ++iAddr		)	views.Addresses	.push_back(content.View[jsonArrayValueGet(*content[jsonIndexArrayAddr	 ], iAddr	)]);
-		for(s2_t iPhones	= 0, countPhones	= jsonArraySize(*content[jsonIndexArrayPhone	]); iPhones		< countPhones	; ++iPhones		)	views.Phones	.push_back(content.View[jsonArrayValueGet(*content[jsonIndexArrayPhone	 ], iPhones	)]);
-		for(s2_t iWPs		= 0, countWPs		= jsonArraySize(*content[jsonIndexArrayWP		]); iWPs		< countWPs		; ++iWPs		)	views.WPs		.push_back(content.View[jsonArrayValueGet(*content[jsonIndexArrayWP		 ], iWPs		)]);
-		for(s2_t iBarrios	= 0, countBarrios	= jsonArraySize(*content[jsonIndexArrayBarrios	]); iBarrios	< countBarrios	; ++iBarrios	)	views.Barrio	.push_back((u2_t)content.Token[jsonArrayValueGet(*content[jsonIndexArrayBarrios], iBarrios	)].Value);
-
-		if_fail_fe(indicesToDisplay.push_back(views));
-	}
-	return 0;
-}
 
 gpk::err_t	gpk::wordListNormalize			(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> exceptions) {
 	if_fail_fe(itemWords.resize(upper.size()));
@@ -193,21 +85,13 @@ gpk::err_t	gpk::wordListNormalize			(aobj<string> & itemWords, view<cnst vcst_t>
 	return 0;
 }
 
-gpk::err_t			gpk::getWordList				(aobj<string> & itemWords, cnst SItemViews & item, view<vcst_c> exceptions) {
-	aobj<vcst_t>			upper								= {};
-	if_fail_fe(split(item.Text	, ' ', upper));
-	if_fail_fe(split(item.Title	, ' ', upper));
-	if_fail_fe(split(item.URL	, ' ', upper));
-	if_fail_fe(split(item.Text	, ' ', upper));
-	for(u2_t iAddr = 0; iAddr < item.Addresses	.size(); ++iAddr) if_fail_fe(split(item.Addresses[iAddr], ' ', upper));
-	for(u2_t iAddr = 0; iAddr < item.Phones		.size(); ++iAddr) if_fail_fe(split(item.Phones	[iAddr], ' ', upper));
-	for(u2_t iAddr = 0; iAddr < item.WPs		.size(); ++iAddr) if_fail_fe(split(item.WPs		[iAddr], ' ', upper));
+gpk::err_t	gpk::getWordList				(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> exceptions) {
 	rtrn wordListNormalize(itemWords, upper, exceptions);
 }
 
-gpk::err_t	gpk::wordDictAppend				(aobj<SWordIndices> & wordSet, u2_t iItem, view<cnst string> cacheItemWords) {
-	for(u2_t iItemWord = 0; iItemWord < cacheItemWords.size(); ++iItemWord) {
-		vcst_t			itemWord			= cacheItemWords[iItemWord];
+gpk::err_t	gpk::wordDictAppend				(aobj<SWordIndices> & wordSet, u2_t iItem, view<cnst string> itemWords) {
+	for(u2_t iItemWord = 0; iItemWord < itemWords.size(); ++iItemWord) {
+		vcst_t			itemWord			= itemWords[iItemWord];
 		info_printf("itemWord: %.*s.", GPK_VIEW_ARGS(itemWord));
 		if(1 >= itemWord.size())
 			continue;
@@ -229,11 +113,6 @@ gpk::err_t	gpk::wordDictAppend				(aobj<SWordIndices> & wordSet, u2_t iItem, vie
 			if_fail_fe(wordSet[wordSet.push_back({itemWord})].Indices.push_back(iItem));
 	}
 	return 0;
-}
-
-gpk::err_t	gpk::getWordDict	(aobj<SWordIndices> & wordSet, cnst SItemViews & item, u2_t iItem, aobj<string> & cacheItemWords, view<vcst_c> exceptions) {
-	if_fail_fe(getWordList(cacheItemWords, item, exceptions));
-	rtrn wordDictAppend(wordSet, iItem, cacheItemWords);
 }
 
 gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, u2_t itemCount, au2_t & itemIndices, view<vcst_c> exceptions) {
@@ -267,67 +146,6 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 	rtrn (err_t)itemIndices.size();
 }
 
-gpk::err_t	gpk::outputSearchScript		(string & output, view<cnst SItemViews> indicesToDisplay, view<vcst_c> exceptions) {
-	aobj<SWordIndices>	wordSet;
-	aobj<string>		cacheItemWords;
-
-	for(u2_t iItem = 0, countItems = indicesToDisplay.size(); iItem < countItems; ++iItem)
-		if_fail_fe(getWordDict(wordSet, indicesToDisplay[iItem], iItem, cacheItemWords, exceptions));
-
-	if_fail_fe(append_strings(output, "\nvar names=["));
-	for(u2_t iWord = 0, countWords = wordSet.size(); iWord < countWords; ++iWord) {
-		cnst SWordIndices	& element				= wordSet[iWord];
-		info_printf("Word: %.*s.", GPK_VIEW_ARGS(element.Text));
-		if(0 <= find('\'', {element.Text})) {
-			if(0 <= find('"', {element.Text}))
-				continue;
-			if_fail_fe(append_strings(output, '"', element.Text, '"'));
-		}
-		else {
-			if_fail_fe(append_strings(output, '\'', element.Text, '\''));
-		}
-		if(iWord < (wordSet.size() - 1))
-			if_fail_fe(output.push_back(','));
-	}
-	if_fail_fe(append_strings(output, "];"
-		, "\nvar indices=["));
-	//char		tempIntStr[256]				= {};
-	for(u2_t iWord = 0; iWord < wordSet.size(); ++iWord) {
-		const SWordIndices		& element = wordSet[iWord];
-		if_fail_fe(output.push_back('['));
-		for(u2_t iArticle = 0; iArticle < element.Indices.size(); ++iArticle) {
-			if_fail_fe(append_strings(output, element.Indices[iArticle]));
-			if(iArticle < (element.Indices.size() - 1))
-				if_fail_fe(output.push_back(','));
-		}
-		if_fail_fe(output.push_back(']'));
-		if(iWord < (wordSet.size() - 1))
-			if_fail_fe(output.push_back(','));
-	}
-	if_fail_fe(append_strings(output, "];"
-		, "\nvar idList=["));
-	for(u2_t iArticle = 0; iArticle < indicesToDisplay.size(); ++iArticle) {
-		if_fail_fe(append_strings(output, iArticle));
-		if(iArticle < (indicesToDisplay.size() - 1))
-			if_fail_fe(output.push_back(','));
-	}
-	if_fail_fe(append_strings(output, "];"
-		, "\nvar barrioIdMap=["));
-	for(u2_t iArticle = 0; iArticle < indicesToDisplay.size(); ++iArticle) {
-		const SItemViews		& ad			= indicesToDisplay[iArticle];
-		if_fail_fe(output.push_back('['));
-		for(u2_t iBarrio = 0; iBarrio < ad.Barrio.size(); ++iBarrio) {
-			if_fail_fe(append_strings(output, ad.Barrio[iBarrio]));
-			if(iBarrio < (ad.Barrio.size() - 1))
-				if_fail_fe(output.push_back(','));
-		}
-		if_fail_fe(output.push_back(']'));
-		if(iArticle < (indicesToDisplay.size() - 1))
-			if_fail_fe(output.push_back(','));
-	}
-	if_fail_fe(append_strings(output, "];"));
-	return 0;
-}
 //
 //tatic err_t								htmlBoardGenerate					(view<const SItemViews> indicesToDisplay, vcst_t fontSize, vcst_t /*title*/, vcst_t lang, string & output)	{
 //	append_strings(output, "\n<table style=\"width:100%;height:100%;text-align:center;font-size:");
