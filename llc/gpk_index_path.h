@@ -6,6 +6,8 @@
 
 namespace gpk
 {
+	stxp vcst_c	INDEX_PATH_INCLUSIONS_DEFAULT[]	= {".cpp", ".h", ".txt", ".log"};
+
 	struct SPathIndexData {
 		SWordDictData	WordData			= {};
 		string			RelativePath		= {};

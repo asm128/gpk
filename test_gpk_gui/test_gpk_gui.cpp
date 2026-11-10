@@ -104,45 +104,6 @@ err_t			setup		(::gme::SApplication & app)						{
 	if_fail_fe(controlSetParent(gui, app.ColorPicker.IdControl, controlTestRoot));
 	if_fail_fe(paletteGridColorsSet(gui, app.ColorPicker, {gui.Colors->Palette->begin(), (u2_t)iShades, countTones}));
 
-	//char															bmpFileName2	[]							= "Codepage-437-24.bmp";
-	//if_true_e(failed(bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
-	//SImage<bgra>								& verticalAtlas								= app.VerticalAtlas;
-	//const n2<uint32_t>									fontCharSize								= {9, 16};
-	//verticalAtlas.resize(fontCharSize.x, fontCharSize.y * 256);
-	//for(uint32_t iChar = 0; iChar < 256; ++iChar) {
-	//	const uint32_t													srcOffsetY									= iChar / 32 * fontCharSize.y;
-	//	const uint32_t													dstOffsetY									= iChar * fontCharSize.y;
-	//	for(uint32_t y = 0; y < fontCharSize.y; ++y) {
-	//		for(uint32_t x = 0; x < fontCharSize.x; ++x) {
-	//			const uint32_t												srcOffsetX									= iChar % 32 * fontCharSize.x;
-	//			const uint32_t												dstOffsetX									= 0;
-	//			const bgra										& srcColor									= app.TextureFont.View[srcOffsetY + y][srcOffsetX + x];
-	//			verticalAtlas.View[dstOffsetY + y][dstOffsetX + x]		= srcColor;
-	//		}
-	//	}
-	//}
-	//const n2<uint32_t>									& textureFontMetrics						= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
-	//do { if_fail_fef(gui.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
-	//for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
-	//for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
-	//	const bgra											& srcColor									= verticalAtlas.View[y][x];//app.TextureFont.View[y][x];
-	//	gui.FontTexture.View[y * textureFontMetrics.x + x]
-	//		=	0 != srcColor.r
-	//		||	0 != srcColor.g
-	//		||	0 != srcColor.b
-	//		;
-	//}
-
-	//apod<char>	encoded;
-	//base64Encode({(const ubyte_t*)gui.FontTexture.Texels.begin(), gui.FontTexture.Texels.size() * 4}, encoded);
-	//FILE						* fp = 0;
-	//const int nul = 0;
-	//fopen_s(&fp, "codepage_437_encoded.txt", "wb");
-	//fwrite(encoded.begin(), 1, encoded.size(), fp);
-	//fwrite(&nul, 1, 1, fp);
-	//fclose(fp);
-
-
 	return 0;
 }
 

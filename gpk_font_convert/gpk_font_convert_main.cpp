@@ -34,11 +34,11 @@ using namespace gpk;
 			}
 		}
 	}
-	const ::gpk::n2<u2_t >								& textureFontMetrics	= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
+	const ::gpk::n2<u2_t >								& textureFontMetrics	= verticalAtlas.View.metrics();
 	if_fail_fef(fontTexture.resize(textureFontMetrics), "%s", "");
 	for(u2_t  y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(u2_t  x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
-		const ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];//app.TextureFont.View[y][x];
+		const ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];
 		const u2_t 												linearIndex				= y * textureFontMetrics.x + x;
 		fontTexture.View[linearIndex]
 			=	0 != srcColor.r

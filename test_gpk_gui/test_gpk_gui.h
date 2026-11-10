@@ -10,7 +10,6 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 {
 	struct SApplication {
 		::gpk::SFramework				Framework							;
-		::gpk::img8bgra					TextureFont							= {};
 		::gpk::img8bgra					VerticalAtlas						;
 		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen							= {};
 
@@ -21,11 +20,11 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::cid_t					IdTheme								= -1;
 		::gpk::cid_t					IdNewPalette						= -1;
 		::gpk::SControlList				ActionList							= {};
-		::gpk::SPaletteGrid				ColorPicker						= {};
+		::gpk::SPaletteGrid				ColorPicker							= {};
 		::gpk::cid_t					PaletteRow							= 10;
 		::gpk::cid_t					PaletteColumn						= 16;
-		::std::mutex	LockGUI;
-		::std::mutex	LockRender;
+		::gpk::mutex					LockGUI;
+		::gpk::mutex					LockRender;
 
 						SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
