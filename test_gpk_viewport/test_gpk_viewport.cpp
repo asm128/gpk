@@ -91,6 +91,10 @@ err_t			setup		(::gme::SApplication & app)						{
 	controlTable.Placement	[viewport->IdGUIControl	].Area.Size				= {640, 480};
 	controlTable.Images		[viewport->IdClient		].ImageInvertY			= true;
 
+	if_fail_fe(inputBoxCreate(app.InputBox, gui));
+	controlTable.Placement[app.InputBox.IdRoot].Align					= ALIGN_BOTTOM_LEFT;
+	app.InputBox.Edit(gui, true);
+
 	stxp n3f2_c							cubeCenter									= {0.5f, 0.5f, 0.5f};
 	if_fail_fe(generateCubeGeometry(app.ModelGeometry));
 	for(u2_t iTriangle = 0; iTriangle < app.ModelGeometry.Positions.size(); ++iTriangle)
@@ -109,7 +113,19 @@ err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	if_true_vi(APPLICATION_STATE_EXIT, APPLICATION_STATE_EXIT == updateFramework(app.Framework));
 
 	SGUI					& gui			= *framework.GUI;
-	if(1 == guiProcessControls(gui, [&app](cid_t iControl) { return one_if(iControl == app.IdExit); }))
+	acid					controlsToProcess	= {};
+	if_fail_fe(guiGetProcessableControls(gui, controlsToProcess));
+	if(const s2_t result = app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, controlsToProcess))
+		if(result == INT_MAX) {
+			pobj<SDialogViewport>	viewport	= {};
+			app.DialogMain.Controls[app.Viewport].as(viewport);
+			vcsc_t				name		= app.InputBox.Text;
+			trim(name);
+			if(name.size())
+				if_fail_fe(controlTextSet(gui, viewport->IdTitle, name));
+			app.InputBox.Edit(gui, false);
+		}
+	if(1 == guiProcessControls(gui, controlsToProcess, [&app](cid_t iControl) { return one_if(iControl == app.IdExit); }))
 		return 1;
 
 	app.DialogMain.Update();

@@ -1,6 +1,7 @@
 #include "gpk_framework.h"
 #include "gpk_gui.h"
 #include "gpk_dialog.h"
+#include "gpk_gui_inputbox.h"
 #include "gpk_camera.h"
 #include "gpk_matrix.h"
 #include "gpk_scene.h"
@@ -13,7 +14,7 @@
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 	struct SVertexCache {
-		::gpk::apod<::gpk::tri3<float>>	Triangle3dTransformed			= {};
+		::gpk::apod<::gpk::tri3f2_t>	Triangle3dTransformed			= {};
 		::gpk::apod<::gpk::bgra>		Triangle3dColorList				= {};
 	};
 
@@ -22,7 +23,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 	};
 
 	struct SViewportScene {
-		stxp	const ::gpk::n3f2_t		CameraUp						= {0, 1, 0};	// ? cam't remember what is this. Radians? Eulers?
+		stxp	::gpk::n3f2_c			CameraUp						= {0, 1, 0};	// ? cam't remember what is this. Radians? Eulers?
 		::gme::SCamera					Camera							= {{10, 5, 0}, {}};
 
 		::gpk::n3f2_t					LightPos						= {10, 5, 0};
@@ -41,6 +42,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 		::gpk::mutex					LockViewport					;
 		::gpk::SDialog					DialogMain						= {};
+		::gpk::SInputBox				InputBox						= {};
 		::gpk::cid_t					Viewport						= -1;
 		::gpk::SModelGeometry<::gpk::f2_t>	ModelGeometry;
 
