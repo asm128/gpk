@@ -22,6 +22,7 @@ sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues) {
 		, GPK_TEST_SUITE(array_pod)
 		, GPK_TEST_SUITE(base64)
 		, GPK_TEST_SUITE(deflate)
+		, GPK_TEST_SUITE(enum)
 		, GPK_TEST_SUITE(expression)
 		, GPK_TEST_SUITE(index)
 		, GPK_TEST_SUITE(index_catalog)

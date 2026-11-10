@@ -54,6 +54,9 @@
     <ClCompile Include="test_llc_deflate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_enum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="test_llc_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
