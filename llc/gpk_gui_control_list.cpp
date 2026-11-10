@@ -96,6 +96,16 @@ gpk::err_t 		gpk::controlListPush	(::gpk::SGUI & gui, ::gpk::SControlList& menu,
 	return 0;
 }
 
+gpk::err_t		gpk::controlListCreate	(::gpk::SGUI & gui, ::gpk::SControlList & menu, ::gpk::view<::gpk::vcst_c> text, ::gpk::cid_t parent, ::gpk::DIRECTION orientation) {
+	if_fail_fe(::gpk::controlListInitialize(gui, menu));
+	menu.Orientation	= orientation;
+	if(parent != ::gpk::CID_INVALID)
+		if_fail_fe(::gpk::controlSetParent(gui, menu.IdControl, parent));
+	for(u2_t iControl = 0; iControl < text.size(); ++iControl)
+		if_fail_fe(::gpk::controlListPush(gui, menu, text[iControl]));
+	return 0;
+}
+
 gpk::err_t 		gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
 	const ::gpk::n2f3_t			targetSize					= {256.0, 256.0};
 	palette.IdControl		= ::gpk::controlCreate(gui);
@@ -118,7 +128,8 @@ gpk::err_t 		gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& 
 	if_fail_fe(palette.IdControls.resize(colors.size()));
 	palette.Colors			= colors;
 
-	const ::gpk::n2f3_t			targetSize					= gui.Controls.Area[palette.IdControl].Client.Global.Size.f3(); //{256.0, 256.0};
+	const ::gpk::SControlPlacement	& controlPalette			= gui.Controls.Placement[palette.IdControl];
+	const ::gpk::n2f3_t			targetSize					= controlPalette.Area.Size.f3() - ::gpk::controlNCSpacing(controlPalette).f3();
 	::gpk::n2f3_t				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(u2_t y = 0; y < gridMetrics.y; ++y)
@@ -159,7 +170,7 @@ gpk::err_t 		gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& 
 		palette.IdControls[paletteElemIndex] = ::gpk::controlCreate(gui);
 		::gpk::SControlPlacement	& control			= gui.Controls.Placement[palette.IdControls[paletteElemIndex]];
 		::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw[palette.IdControls[paletteElemIndex]];
-		controlDraw.ColorTheme	= s0_t(themeIndex + 1);
+		controlDraw.ColorTheme	= s1_t(themeIndex + 1);
 		control.Area.Offset		= {(s1_t)(controlSize.x * x), (s1_t)(controlSize.y * y)};
 		control.Area.Size		= controlSize.s1();
 		if_fail_fe(gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));

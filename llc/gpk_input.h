@@ -62,7 +62,7 @@ nmsp gpk
 		bool						KeyUp				(u0_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
 		bool						KeyDown				(u0_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
 	};
-	stin	err_t	inputKeyboardStateSet	(SInput & input, u0_t keyCode, bool pressed, s2_t deviceId = -1, f2_t timeStamp = {}) {
+	stin	err_t	inputKeyboardStateSet	(SInput & input, u0_t keyCode, bool pressed, s2_t deviceId, f2_t timeStamp = {}) {
 		::gpk::inputKeyboardStateSet(input.KeyboardCurrent, keyCode, pressed);
 		if(0 > deviceId)
 			return 0;

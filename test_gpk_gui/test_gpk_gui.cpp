@@ -83,111 +83,26 @@ err_t			setup		(::gme::SApplication & app)						{
 		if((iChild / 9) == 5)
 			gui.Controls.Constraints[controlTestChild0].AttachSizeToText	= {true, true};
 	}
-	{
-		app.IdExit													= controlCreate(gui);
-		SControlPlacement													& controlExit			= gui.Controls.Placement[app.IdExit];
-		controlExit.Align											= ALIGN_BOTTOM_RIGHT				;
-		SControlText												& controlText			= gui.Controls.Text[app.IdExit];
-		controlText.Text											= "Exit";
-		controlSetParent(gui, app.IdExit, 9);
-	}
-	{
-		app.IdTheme													= controlCreate(gui);
-		SControlPlacement													& controlExit			= gui.Controls.Placement[app.IdTheme];
-		controlExit.Align											= ALIGN_CENTER_BOTTOM			;
-		SControlText												& controlText			= gui.Controls.Text[app.IdTheme];
-		controlText.Text											= "Theme";
-		controlSetParent(gui, app.IdTheme, 8);
-	}
-	{
-		app.IdMode													= controlCreate(gui);
-		SControlPlacement													& controlExit			= gui.Controls.Placement[app.IdMode];
-		controlExit.Align											= ALIGN_BOTTOM_LEFT				;
-		SControlText												& controlText			= gui.Controls.Text[app.IdMode];
-		controlText.Text											= "3D Mode";
-		controlSetParent(gui, app.IdMode, 7);
-	}
-	{
-		app.IdNewPalette											= controlCreate(gui);
-		SControlPlacement													& controlExit			= gui.Controls.Placement[app.IdNewPalette];
-		controlExit.Align											= ALIGN_CENTER_BOTTOM;
-		SControlText												& controlText			= gui.Controls.Text[app.IdNewPalette];
-		controlText.Text											= "Palette Mode";
-		controlSetParent(gui, app.IdNewPalette, 2);
-	}
-	for(uint32_t iButton = app.IdExit; iButton < gui.Controls.States.size(); ++iButton) {
-		SControlPlacement										& control				= gui.Controls.Placement[iButton];
-		SControlText												& controlText			= gui.Controls.Text[iButton];
-		control.Area												= {{0, 0}, {64, 20}};
-		control.Border												= {1, 1, 1, 1};
-		control.Margin												= {1, 1, 1, 1};
-		controlText.Align											= ALIGN_CENTER;
-		memcpy_s(gui.Controls.Draw[iButton].Palettes.Storage, app.Palettes);
+	const vcst_c						labelsAction[]				= {"Exit", "Theme", "3D Mode", "Palette Mode"};
+	if_fail_fe(controlListCreate(gui, app.ActionList, {labelsAction}, controlTestRoot));
+	app.IdExit			= app.ActionList.IdControls[0];
+	app.IdTheme			= app.ActionList.IdControls[1];
+	app.IdMode			= app.ActionList.IdControls[2];
+	app.IdNewPalette	= app.ActionList.IdControls[3];
+	gui.Controls.Placement[app.ActionList.IdControl].Align	= ALIGN_CENTER_BOTTOM;
+	for(uint32_t iButton = 0; iButton < app.ActionList.IdControls.size(); ++iButton) {
+		const cid_t idButton = app.ActionList.IdControls[iButton];
+		gui.Controls.Text[idButton].Align = ALIGN_CENTER;
+		memcpy_s(gui.Controls.Draw[idButton].Palettes.Storage, app.Palettes);
 	}
 
-	gui.Controls.Constraints[app.IdMode			].AttachSizeToText.x	= true;
-	gui.Controls.Constraints[app.IdNewPalette	].AttachSizeToText.x	= true;
-
-	//const int32_t													iShadesHalf				= iShades / 2;
-	for(uint32_t iTone = 0, countTones = gui.Colors->Palette->size() / iShades; iTone < countTones; ++iTone) {
-		for(uint32_t iShade = 0; iShade < iShades; ++iShade) {
-			const cid_t													idPaletteItem			= controlCreate(gui);
-			SControlPlacement													& control				= gui.Controls.Placement	[idPaletteItem];
-			SControlText												& controlText			= gui.Controls.Text[idPaletteItem];
-			control.Align												= ALIGN_TOP_RIGHT;
-			control.Area												= {{(int16_t)(256 - iShade * 12), (int16_t)(iTone * 12)}, {12, 12}};
-			//control.Area.Offset											+= {mainWi, 0};
-			//control.Area.Offset											-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
-			control.Border												= {1, 1, 1, 1};
-			control.Margin												= {1, 1, 1, 1};
-			gui.Controls.Draw[idPaletteItem].ColorTheme											= int16_t(iTone * iShades + iShade + 1);
-			controlText.Text											= ".";
-			controlSetParent(gui, idPaletteItem, 0);
-		}
-	}
-	for(uint32_t iShade = 0; iShade < iShades; ++iShade) {
-		const cid_t													idPaletteRow		= controlCreate(gui);
-		SControlPlacement													& controlRow		= gui.Controls.Placement	[idPaletteRow];
-		SControlText												& controlRowText	= gui.Controls.Text[idPaletteRow];
-		controlRow.Align											= ALIGN_TOP_RIGHT;
-		controlRow.Area												= {{(int16_t)(256 - iShade * 12), -12}, {12, 12}};
-		controlRow.Border											= {1, 1, 1, 1};
-		controlRow.Margin											= {1, 1, 1, 1};
-		gui.Controls.Draw[idPaletteRow].ColorTheme										= int16_t(iShade + 1);
-		controlRowText.Text											= app.RowText[iShade];
-		//gui.Controls.Constraints[idPaletteRow].AttachSizeToText.x	= true;
-		controlSetParent(gui, idPaletteRow, 0);
-	}
-	for(uint32_t iTone = 0, countTones = gui.Colors->Palette->size() / iShades; iTone < countTones; ++iTone) {
-		const cid_t													idPaletteRow		= controlCreate(gui);
-		SControlPlacement													& controlRow		= gui.Controls.Placement	[idPaletteRow];
-		SControlText												& controlRowText	= gui.Controls.Text[idPaletteRow];
-		controlRow.Align												= ALIGN_TOP_RIGHT;
-		controlRow.Area												= {{(int16_t)256+12, (int16_t)(iTone * 12)}, {12, 12}};
-		//control.Area.Offset										+= {mainWi, 0};
-		//control.Area.Offset										-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
-		controlRow.Border											= {1, 1, 1, 1};
-		controlRow.Margin											= {1, 1, 1, 1};
-		gui.Controls.Draw[idPaletteRow].ColorTheme										= int16_t(iTone * iShades + 0 + 1);
-		controlRowText.Text											= app.RowText[iTone];
-		gui.Controls.Constraints[idPaletteRow].AttachSizeToText.x	= true;
-		controlSetParent(gui, idPaletteRow, 0);
-	}
-
-	//for(uint32_t iColor = 0; iColor < gui.Palette.size(); ++iColor) {
-	//	const int32_t													idPaletteItem			= controlCreate(gui);
-	//	SControl													& control				= gui.Controls.Controls	[idPaletteItem];
-	//	SControlText												& controlText			= gui.Controls.Text[idPaletteItem];
-	//	control.Align												= ALIGN_TOP_RIGHT;
-	//	control.Area												= {{(int16_t)(256 - (iColor % iShades) * 16), (int16_t)((iColor / iShades) * 16)}, {16, 16}};
-	//	//control.Area.Offset											+= {mainWi, 0};
-	//	//control.Area.Offset											-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
-	//	control.Border												=
-	//	control.Margin												= {1, 1, 1, 1};
-	//	control.ColorTheme											= iColor + 1;
-	//	controlText.Text											= ".";
-	//	controlSetParent(gui, idPaletteItem, 0);
-	//}
+	const u2_t						countTones					= gui.Colors->Palette->size() / iShades;
+	if_fail_fe(paletteGridInitialize(gui, app.ColorPicker));
+	SControlPlacement				& pickerPlacement			= gui.Controls.Placement[app.ColorPicker.IdControl];
+	pickerPlacement.Align		= ALIGN_TOP_RIGHT;
+	pickerPlacement.Area.Size	= (n2u1_t{(u1_t)(iShades * 12), (u1_t)(countTones * 12)} + controlNCSpacing(pickerPlacement)).s1();
+	if_fail_fe(controlSetParent(gui, app.ColorPicker.IdControl, controlTestRoot));
+	if_fail_fe(paletteGridColorsSet(gui, app.ColorPicker, {gui.Colors->Palette->begin(), (u2_t)iShades, countTones}));
 
 	//char															bmpFileName2	[]							= "Codepage-437-24.bmp";
 	//if_true_e(failed(bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
@@ -260,13 +175,13 @@ err_t			update		(::gme::SApplication & app, bool exitSignal)	{
 				for(uint32_t iChild = 0; iChild < gui.Controls.States.size(); ++iChild)
 					gui.Controls.Draw[iChild].UseNewPalettes						= gui.Controls.Draw[iChild].UseNewPalettes ? 0 : 1;
 			}
-			else if(iControl > app.IdMode) {
-				gui.Controls.Draw[5].ColorTheme								= int16_t(iControl - app.IdNewPalette);
-				if(gui.Controls.Draw[5].ColorTheme >= (int32_t)gui.Colors->Palette->size())
-					gui.Controls.Draw[5].ColorTheme								= 10;
-				for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild)
-					gui.Controls.Draw[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Draw[5].ColorTheme;
-			}
+			else for(u2_t iColor = 0; iColor < app.ColorPicker.IdControls.size(); ++iColor)
+				if(iControl == app.ColorPicker.IdControls[iColor]) {
+					gui.Controls.Draw[5].ColorTheme = gui.Controls.Draw[iControl].ColorTheme;
+					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild)
+						gui.Controls.Draw[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Draw[5].ColorTheme;
+					break;
+				}
 			return 0;
 		}))
 			return 1;
