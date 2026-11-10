@@ -57,8 +57,8 @@ namespace gpk
 		::gpk::pobj<::gpk::SExpressionReader>	SubExpressionCache;
 	};
 
-	::gpk::error_t					expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
-	::gpk::error_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
+	gpk::err_t					expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
+	gpk::err_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
 } // namespace
 
 #endif // GPK_EXPRESSION_H_23627

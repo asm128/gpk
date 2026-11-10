@@ -24,7 +24,7 @@ namespace gpk
 
 		using TAStatic			::array_static;
 
-		::gpk::error_t			next			(T & output)	{
+		gpk::err_t			next			(T & output)	{
 			rews_if(0 == Count);
 			output = Storage[Offset % mAx];
 			if(size() == ++Offset)
@@ -32,43 +32,43 @@ namespace gpk
 			return Count -= 1;
 		}
 
-		::gpk::error_t			push_back		(const T & output)	{
+		gpk::err_t			push_back		(const T & output)	{
 			rees_if(0 == free());
 			Storage[(Offset + Count) % mAx] = output;
 			return Count += 1;
 		}
 
 		template<uint32_t _nBatch>
-		::gpk::error_t			append			(const T (&output)[_nBatch])	{
+		gpk::err_t			append			(const T (&output)[_nBatch])	{
 			rees_if(Count + _nBatch > free());
 			Storage[(Offset + Count) % mAx] = output;
 			return Count += 1;
 		}
 
-		::gpk::error_t			left			()	const	noexcept	{ return min(Count, size() - Offset); } // left side, first part
-		::gpk::error_t			right			()	const	noexcept	{ return max((::gpk::error_t)0, (::gpk::error_t)Count - left()); } // right side, second part
+		gpk::err_t			left			()	const	noexcept	{ return min(Count, size() - Offset); } // left side, first part
+		gpk::err_t			right			()	const	noexcept	{ return max((gpk::err_t)0, (gpk::err_t)Count - left()); } // right side, second part
 
-		inline	::gpk::error_t	left			(::gpk::view<const T> & _left)	const	noexcept	{ return slice(_left , Offset, left()); }
-		inline	::gpk::error_t	right			(::gpk::view<const T> & _right)	const	noexcept	{ return slice(_right, 0, right()); }
+		inline	gpk::err_t	left			(::gpk::view<const T> & _left)	const	noexcept	{ return slice(_left , Offset, left()); }
+		inline	gpk::err_t	right			(::gpk::view<const T> & _right)	const	noexcept	{ return slice(_right, 0, right()); }
 
-		::gpk::error_t			pair			(::gpk::view<const T> & _left, ::gpk::view<const T> & _right)	const	noexcept	{
+		gpk::err_t			pair			(::gpk::view<const T> & _left, ::gpk::view<const T> & _right)	const	noexcept	{
 			gpk_necs(left(_left));
 			gpk_necs(right(_right));
 			return _left.size() + _right.size(); 
 		} 
 
-		inxp	::gpk::error_t	free			()	const	noexcept	{ return size() - Count; }
-		inxp	::gpk::error_t	used			()	const	noexcept	{ return Count; }
-		inxp	::gpk::error_t	byte_count		()	const	noexcept	{ return Count * sizeof(T); }
+		inxp	gpk::err_t	free			()	const	noexcept	{ return size() - Count; }
+		inxp	gpk::err_t	used			()	const	noexcept	{ return Count; }
+		inxp	gpk::err_t	byte_count		()	const	noexcept	{ return Count * sizeof(T); }
 
-//		::gpk::error_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<int(T *, uint32_t)> & funcRead) {
+//		gpk::err_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<int(T *, uint32_t)> & funcRead) {
 //			return 0;	
 //		}	
-		::gpk::error_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
+		gpk::err_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
 			const uint32_t			stop			= mAx - Count;
 			int32_t					readCount		= 0; 
 			while(readCount < stop)
-			switch(const error_t funcRemainingResult = funcRemaining()) {
+			switch(const err_t funcRemainingResult = funcRemaining()) {
 			case 0:
 				return readCount;
 			default:
@@ -79,7 +79,7 @@ namespace gpk
 			return readCount;
 		}
 
-		::gpk::error_t			read		(uint32_t countToRead, const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
+		gpk::err_t			read		(uint32_t countToRead, const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
 			const uint32_t			stop			= ::gpk::min(countToRead, mAx - Count);
 			for(int32_t readCount = 0; readCount < stop; ++readCount) {
 				rve_if(-readCount, 0 >= funcRemaining(), "%" GPK_FMT_I32 " < %" GPK_FMT_I32, readCount, countToRead);

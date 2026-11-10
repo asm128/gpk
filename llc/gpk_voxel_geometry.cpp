@@ -1,7 +1,7 @@
 #include "gpk_voxel_geometry.h"
 
 
-static	::gpk::error_t	geometryVoxelFace
+static	gpk::err_t	geometryVoxelFace
 	( ::gpk::SGeometryBuffers						& geometry
 	, const ::gpk::n3f2_t							& voxelPos
 	, const ::gpk::view<const ::gpk::n3f2_t>	& rawVertices
@@ -21,7 +21,7 @@ static	::gpk::error_t	geometryVoxelFace
 	return 0;
 }
 
-::gpk::error_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<uint8_t> & voxelMap) {
+gpk::err_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<uint8_t> & voxelMap) {
 	const ::gpk::n3<uint8_t>	dimensions				= voxelMap.Dimensions;
 
 	::gpk::SGeometryBuffers	& geometry				= output.Geometry;

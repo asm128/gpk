@@ -18,11 +18,11 @@ namespace gpk
 		TContainer				Queue	= {};
 		::std::mutex			Lock	= {};
 
-		inline	::gpk::error_t 	Size	()						{ ::std::lock_guard locked(Lock); return Queue.size(); }
-		inline	::gpk::error_t	Clear	()						{ ::std::lock_guard	locked(Lock); return Queue.clear(); }
-		inline	::gpk::error_t	Post	(const T & item) 		{ ::std::lock_guard locked(Lock); return Queue.push_back(item); }
+		inline	gpk::err_t 	Size	()						{ ::std::lock_guard locked(Lock); return Queue.size(); }
+		inline	gpk::err_t	Clear	()						{ ::std::lock_guard	locked(Lock); return Queue.clear(); }
+		inline	gpk::err_t	Post	(const T & item) 		{ ::std::lock_guard locked(Lock); return Queue.push_back(item); }
 		// Appends to the `output` container all the messages from the queue
-		inline	::gpk::error_t	Read	(TContainer & output, bool clearQueue = true) {
+		inline	gpk::err_t	Read	(TContainer & output, bool clearQueue = true) {
 			::std::lock_guard		locked(Lock);
 			gpk_necs(output.append(Queue));
 			if(clearQueue) {
@@ -31,8 +31,8 @@ namespace gpk
 			return 0;
 		}
 		// Returns 1 + the amount of messages remaining in the queue
-		::gpk::error_t			Next	(T & output) {
-			::gpk::error_t	left;
+		gpk::err_t			Next	(T & output) {
+			gpk::err_t	left;
 			{
 				::std::lock_guard	locked(Lock);
 				rnis_if(0 == Queue.size());

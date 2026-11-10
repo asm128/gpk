@@ -17,7 +17,7 @@
 
 using gpk::sc_t;
 
-::gpk::error_t			gpk::urlDecode					(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded)		{
+gpk::err_t			gpk::urlDecode					(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded)		{
 	uint32_t					decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
 		const sc_t					currentChar						= urlToDecode[iChar];
@@ -34,7 +34,7 @@ using gpk::sc_t;
 	return decodedCharacters;
 }
 
-static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcsc_t & body, ::gpk::apod<sc_t> & joined)		{
+static	gpk::err_t	httpRequestChunkedJoin			(const ::gpk::vcsc_t & body, ::gpk::apod<sc_t> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -57,7 +57,7 @@ static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcsc_t & body, ::gp
 	return 0;
 }
 
-static	::gpk::error_t	httpClientRequestConstruct
+static	gpk::err_t	httpClientRequestConstruct
 	(	::gpk::HTTP_METHOD		method
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
@@ -92,7 +92,7 @@ static	::gpk::error_t	httpClientRequestConstruct
 
 // get sockaddr, IPv4 or IPv6:
 void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
-::gpk::error_t			gpk::httpClientRequest
+gpk::err_t			gpk::httpClientRequest
 	(	const ::gpk::SIPv4End		& clientToConnect
 	,	::gpk::HTTP_METHOD		method
 	,	const ::gpk::vcs		& hostName
@@ -155,7 +155,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 		ree_if((totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
 		if(0 == stopOfHeader && totalBytes >= 4) {
-			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {buf.begin(), totalBytes}, totalBytes - 4);
+			gpk::err_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {buf.begin(), totalBytes}, totalBytes - 4);
 			if(0 <= offsetStopOfHeader) {
 				// here we should do something in order to detect the content size
 				stopOfHeader						= offsetStopOfHeader;
@@ -191,7 +191,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 			}
 		}
 		//else if(stopOfHeader && totalBytes > stopOfHeader && bChunked) {
-		//	//::gpk::error_t							offsetStopOfChunks				= ::gpk::find_sequence_pod(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
+		//	//gpk::err_t							offsetStopOfChunks				= ::gpk::find_sequence_pod(viewEndOfChunk, {&buf[totalBytes - 7], totalBytes - 7});
 		//	//if(0 == offsetStopOfChunks)
 		//	//	break;
 		//}
@@ -250,12 +250,12 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 		contentReceived							= joined;
 	}
 
-	::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
+	gpk::err_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
 	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::vcsc_t{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
 	return 0;
 }
 
-::gpk::error_t			gpk::httpClientRequest
+gpk::err_t			gpk::httpClientRequest
 	(	const ::gpk::SIPv4End	& clientToConnect
 	,	::gpk::HTTP_METHOD	method
 	,	const ::gpk::vcs	& hostName

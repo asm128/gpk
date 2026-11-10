@@ -18,8 +18,8 @@ namespace gpk {
 		::gpk::view<::gpk::SSTLTriangle>	Triangles		= {};
 	};
 
-	::gpk::error_t						stlFileLoad		(::gpk::vcsc_t filename, ::gpk::SSTLFile & file);
-	::gpk::error_t						stlFileLoad		(::gpk::vcu0_t fileInMemory, ::gpk::vcu0_t & out_Header, ::gpk::view<::gpk::SSTLTriangle> & out_Triangles);
+	gpk::err_t						stlFileLoad		(::gpk::vcsc_t filename, ::gpk::SSTLFile & file);
+	gpk::err_t						stlFileLoad		(::gpk::vcu0_t fileInMemory, ::gpk::vcu0_t & out_Header, ::gpk::view<::gpk::SSTLTriangle> & out_Triangles);
 }
 
 #endif // GPK_STL_H_23627

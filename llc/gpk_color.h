@@ -280,36 +280,36 @@ namespace gpk
 	typedef u8rgb								rgb		;
 
 
-	stacxpr	::gpk::rgbaf	BLACK			= {0.0f , 0.0f               , 0.00f, 1.0f};
-	stacxpr	::gpk::rgbaf	WHITE			= {1.0f , 1.0f               , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	RED				= {1.0f , 0.0f               , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	GREEN			= {0.0f , 1.0f               , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	BLUE			= {0.0f , 0.0f               , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	YELLOW			= {1.0f , 1.0f               , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	MAGENTA			= {1.0f , 0.0f               , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	CYAN			= {0.0f , 1.0f               , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	ORANGE			= {1.0f , 0.647f             , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	PANOCHE			= {0.25f, 0.5f               , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	PURPLE			= {0.5f , 0.1f               , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	TURQUOISE		= {0.2f , 1.0                , 0.65f, 1.0f};
-	stacxpr	::gpk::rgbaf	BROWN			= {0.4f , 0.223f             , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	GRAY			= {0.5f , 0.5f               , 0.5f , 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTGRAY		= {0.75f, 0.75f              , 0.75f, 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTRED		= {1.0f , 0.25f              , 0.25f, 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTGREEN		= {0.5f , 1.0f               , 0.5f , 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTBLUE		= {0.25f, 0.25f              , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTYELLOW		= {1.0f , 1.0f               , 0.25f, 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTMAGENTA	= {1.0f , 0.25f              , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTCYAN		= {0.25f, 1.0f               , 1.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	LIGHTORANGE		= {1.0f , 0.780f             , 0.25f, 1.0f};
-	stacxpr	::gpk::rgbaf	DARKGRAY		= {0.25f, 0.25f              , 0.25f, 1.0f};
-	stacxpr	::gpk::rgbaf	DARKRED			= {0.5f , 0.0f               , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	DARKGREEN		= {0.0f , 0.5f               , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	DARKBLUE		= {0.0f , 0.0f               , 0.5f , 1.0f};
-	stacxpr	::gpk::rgbaf	DARKYELLOW		= {0.5f , 0.5f               , 0.0f , 1.0f};
-	stacxpr	::gpk::rgbaf	DARKMAGENTA		= {0.5f , 0.0f               , 0.5f , 1.0f};
-	stacxpr	::gpk::rgbaf	DARKCYAN		= {0.0f , 0.5f               , 0.5f , 1.0f};
-	stacxpr	::gpk::rgbaf	DARKORANGE		= {1.0f , 0.5490196078431373f, 0.00f, 1.0f};
+	stxp	::gpk::rgbaf	BLACK			= {0.0f , 0.0f               , 0.00f, 1.0f};
+	stxp	::gpk::rgbaf	WHITE			= {1.0f , 1.0f               , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	RED				= {1.0f , 0.0f               , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	GREEN			= {0.0f , 1.0f               , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	BLUE			= {0.0f , 0.0f               , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	YELLOW			= {1.0f , 1.0f               , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	MAGENTA			= {1.0f , 0.0f               , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	CYAN			= {0.0f , 1.0f               , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	ORANGE			= {1.0f , 0.647f             , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	PANOCHE			= {0.25f, 0.5f               , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	PURPLE			= {0.5f , 0.1f               , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	TURQUOISE		= {0.2f , 1.0                , 0.65f, 1.0f};
+	stxp	::gpk::rgbaf	BROWN			= {0.4f , 0.223f             , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	GRAY			= {0.5f , 0.5f               , 0.5f , 1.0f};
+	stxp	::gpk::rgbaf	LIGHTGRAY		= {0.75f, 0.75f              , 0.75f, 1.0f};
+	stxp	::gpk::rgbaf	LIGHTRED		= {1.0f , 0.25f              , 0.25f, 1.0f};
+	stxp	::gpk::rgbaf	LIGHTGREEN		= {0.5f , 1.0f               , 0.5f , 1.0f};
+	stxp	::gpk::rgbaf	LIGHTBLUE		= {0.25f, 0.25f              , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	LIGHTYELLOW		= {1.0f , 1.0f               , 0.25f, 1.0f};
+	stxp	::gpk::rgbaf	LIGHTMAGENTA	= {1.0f , 0.25f              , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	LIGHTCYAN		= {0.25f, 1.0f               , 1.0f , 1.0f};
+	stxp	::gpk::rgbaf	LIGHTORANGE		= {1.0f , 0.780f             , 0.25f, 1.0f};
+	stxp	::gpk::rgbaf	DARKGRAY		= {0.25f, 0.25f              , 0.25f, 1.0f};
+	stxp	::gpk::rgbaf	DARKRED			= {0.5f , 0.0f               , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	DARKGREEN		= {0.0f , 0.5f               , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	DARKBLUE		= {0.0f , 0.0f               , 0.5f , 1.0f};
+	stxp	::gpk::rgbaf	DARKYELLOW		= {0.5f , 0.5f               , 0.0f , 1.0f};
+	stxp	::gpk::rgbaf	DARKMAGENTA		= {0.5f , 0.0f               , 0.5f , 1.0f};
+	stxp	::gpk::rgbaf	DARKCYAN		= {0.0f , 0.5f               , 0.5f , 1.0f};
+	stxp	::gpk::rgbaf	DARKORANGE		= {1.0f , 0.5490196078431373f, 0.00f, 1.0f};
 #pragma pack(pop)
 } // namespace
 

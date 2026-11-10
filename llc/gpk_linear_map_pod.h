@@ -21,37 +21,37 @@ namespace gpk
 
 		uint32_t			size			()				const	{ return Keys.size(); }
 
-		::gpk::error_t		push_back		(const K & key, const T & instance)	{ 
+		gpk::err_t		push_back		(const K & key, const T & instance)	{ 
 			rees_if(Keys.size() > (uint32_t)Keys.find(key));
 			Keys.push_back(key); 
 			return Values.push_back(instance); 
 		}
 
-		::gpk::error_t		Create			(const K & key)							{
+		gpk::err_t		Create			(const K & key)							{
 			rees_if(Keys.size() > (uint32_t)Keys.find(key));
 			Keys.push_back(key);
 			return Values.push_back({});
 		}
 
-		::gpk::error_t		Delete			(const K & key)					{
+		gpk::err_t		Delete			(const K & key)					{
 			uint32_t				index			= Keys.find(key);
 			rees_if(Keys.size() <= index);
 			Keys.remove_unordered(index);
 			return Values.remove_unordered(index); 
 		}
 
-		::gpk::error_t		Clone			(const K & key, uint32_t index)	{ 
+		gpk::err_t		Clone			(const K & key, uint32_t index)	{ 
 			Values[Values.push_back({})] = Values[index]; 
 			return Keys.push_back(key); 
 		}
 
-		::gpk::error_t		Save			(::gpk::au0_t & output) const { 
+		gpk::err_t		Save			(::gpk::au0_t & output) const { 
 			gpk_necs(gpk::saveView(output, Keys));
 			gpk_necs(gpk::saveView(output, Values));
 			return 0;
 		}
 
-		::gpk::error_t		Load			(::gpk::vcu0_t & input) {
+		gpk::err_t		Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadView(input, Keys));
 			gpk_necs(gpk::loadView(input, Values));
 			return 0; 

@@ -15,7 +15,7 @@ namespace gpk
 #pragma pack(pop)
 }// namespace
 
-::gpk::error_t			gpk::gndFileLoad										(::gpk::SGNDFileContents & loaded, const ::gpk::vu8	& input)							{
+gpk::err_t			gpk::gndFileLoad										(::gpk::SGNDFileContents & loaded, const ::gpk::vu8	& input)							{
 	::gpk::view_stream<const uint8_t>								gnd_stream										= {input.begin(), input.size()};
 	::gpk::SGNDHeader												gndHeader										= {};
 	gpk_necall(gnd_stream.read_pod(gndHeader), "%s", "Cannot read GND header. Corrupt file?");
@@ -73,12 +73,12 @@ namespace gpk
 	return gnd_stream.CursorPosition;
 }
 
-::gpk::error_t			gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, FILE								* input)							{
+gpk::err_t			gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, FILE								* input)							{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-::gpk::error_t			gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, const ::gpk::vcs	& input)							{
+gpk::err_t			gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, const ::gpk::vcs	& input)							{
 	::gpk::apod<int8_t>									fileInMemory												= {};
 	gpk_necall(gpk::fileToMemory(input, fileInMemory), "Failed to load .gnd file: %s", input.begin());
 	return ::gpk::gndFileLoad(loaded, ::gpk::vu8((uint8_t*)fileInMemory.begin(), fileInMemory.size()));
@@ -87,7 +87,7 @@ namespace gpk
 #if defined(GPK_WINDOWS)
 #	pragma warning(disable : 4100)
 #endif
-static	::gpk::error_t	gndGenerateFaceGeometryRight							(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::STileGeometryGND * geometryTileRight, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
+static	gpk::err_t	gndGenerateFaceGeometryRight							(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::STileGeometryGND * geometryTileRight, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
 	const uint32_t				baseVertexIndex											= generated.Vertices.size();
 	const ::gpk::n3f2_t			faceVerts	[4]											=
 		{ {baseX + 0.0f, (geometryTile.fHeight[2] / tileScale), baseZ + 1.0f}
@@ -137,7 +137,7 @@ static	::gpk::error_t	gndGenerateFaceGeometryRight							(uint32_t baseX, uint32
 	return 0;
 }
 
-static	::gpk::error_t	gndGenerateFaceGeometryFront							(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::STileGeometryGND * geometryTileFront, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
+static	gpk::err_t	gndGenerateFaceGeometryFront							(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::STileGeometryGND * geometryTileFront, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
 	const uint32_t				baseVertexIndex											= generated.Vertices.size();
 	const ::gpk::n3f2_t			faceVerts	[4]											=
 		{ {baseX + 1.0f, (geometryTile.fHeight[3] / tileScale), baseZ + 1.0f}
@@ -186,7 +186,7 @@ static	::gpk::error_t	gndGenerateFaceGeometryFront							(uint32_t baseX, uint32
 #	pragma warning(default : 4100)
 #endif
 
-static	::gpk::error_t	gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
+static	gpk::err_t	gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
 	const uint32_t				baseVertexIndex											= generated.Vertices.size();
 	const ::gpk::n3f2_t										faceVerts	[4]											=
 		{ {baseX + 0.0f, (geometryTile.fHeight[0] / tileScale), baseZ + 0.0f}
@@ -245,7 +245,7 @@ static	::gpk::error_t	gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_
 	}
 	return 0;
 }
-::gpk::error_t			gpk::gndGenerateFaceGeometry
+gpk::err_t			gpk::gndGenerateFaceGeometry
 	( const ::gpk::apod<STileSkinGND		>	lstTileTextureData
 	, const ::gpk::apod<STileGeometryGND	>	lstTileGeometryData
 	, const ::gpk::STiledTerrainMetricsGND			tileMapMetrics
@@ -307,7 +307,7 @@ static	::gpk::error_t	gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_
 	return 0;
 }
 
-::gpk::error_t			gpk::blendGNDNormals				(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes)			{
+gpk::err_t			gpk::blendGNDNormals				(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes)			{
 	for(uint32_t y = 0; y < tileGeometryView.metrics().y - 1; ++y) {
 		const ::gpk::view<const ::gpk::STileGeometryGND	>	rowTileGeometry										= tileGeometryView	[y];
 		const ::gpk::view<const ::gpk::STileMapping		>	rowTileMapping										= tileMappingView	[y];

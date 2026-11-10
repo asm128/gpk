@@ -11,7 +11,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	stacxpr	::gpk::astatic<::gpk::bgra, 256>	VOXEL_PALETTE = {
+	stxp	::gpk::astatic<::gpk::bgra, 256>	VOXEL_PALETTE = {
 		0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
 		0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,
 		0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,
@@ -30,7 +30,7 @@ namespace gpk
 		0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111
 	};
 
-	stacxpr	::gpk::n3f2_t				VOXEL_VERTICES		[8]		= 
+	stxp	::gpk::n3f2_t				VOXEL_VERTICES		[8]		= 
 			{ {0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1} // Top
 			, {0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1} // Bottom
 			}; 
@@ -52,7 +52,7 @@ namespace gpk
 		bool		 Right			: 1;
 	};
 
-	stacxpr	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_VERTICES			= {
+	stxp	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_VERTICES			= {
 		{ {{0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}}  // Top		(y = 1)
 		, {{1, 0, 0}, {1, 1, 0}, {1, 0, 1}, {1, 1, 1}}	// Front	(x = 1)
 		, {{0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}}	// Right	(z = 1)
@@ -61,7 +61,7 @@ namespace gpk
 		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}	// Left		(z = 0)
 		}}; 
 
-	stacxpr	::gpk::astatic<::gpk::quad2f32, 6>	VOXEL_FACE_UV	= {
+	stxp	::gpk::astatic<::gpk::quad2f32, 6>	VOXEL_FACE_UV	= {
 		{ {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Top		
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Front	
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Right	
@@ -70,7 +70,7 @@ namespace gpk
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Left		
 		}};
 
-	stacxpr	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_NORMALS	= {
+	stxp	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_NORMALS	= {
 		{ {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}	// Top		
 		, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0}}	// Front	
 		, {{0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}}	// Right	
@@ -79,8 +79,8 @@ namespace gpk
 		, {{0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}}	// Left		
 		}};
 
-	stacxpr	::gpk::n3f2_t				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
-	stacxpr	::gpk::quadu8				VOXEL_FACE_NORMAL_INDICES	[6]		= 
+	stxp	::gpk::n3f2_t				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
+	stxp	::gpk::quadu8				VOXEL_FACE_NORMAL_INDICES	[6]		= 
 		{ {0, 0, 0, 0}	// Top		
 		, {1, 1, 1, 1}	// Front	
 		, {2, 2, 2, 2}	// Right	
@@ -89,7 +89,7 @@ namespace gpk
 		, {5, 5, 5, 5}	// Left		
 		};
 
-	stacxpr	::gpk::n3s0_t				VOXEL_DELTAS				[6]		= 
+	stxp	::gpk::n3s0_t				VOXEL_DELTAS				[6]		= 
 		{ { 0, 1, 0} // Top		(y = 1)
 		, { 1, 0, 0} // Front	(x = 1)
 		, { 0, 0, 1} // Right	(z = 1)
@@ -98,7 +98,7 @@ namespace gpk
 		, { 0, 0,-1} // Left	(z = -1)
 		};
 
-	stacxpr	uint8_t						VOXEL_FACE_INDICES		[6][6]	= 
+	stxp	uint8_t						VOXEL_FACE_INDICES		[6][6]	= 
 		{ {0, 2, 1, 1, 2, 3} // Top
 		, {0, 1, 2, 1, 3, 2}
 		, {0, 1, 2, 1, 3, 2}
@@ -107,7 +107,7 @@ namespace gpk
 		, {0, 2, 1, 1, 2, 3}
 		}; 
 
-	stacxpr	uint16_t					VOXEL_FACE_INDICES_16	[6][6]	= 
+	stxp	uint16_t					VOXEL_FACE_INDICES_16	[6][6]	= 
 		{ {4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 1, 4 * 3 + 3, 4 * 3 + 2} // Bottom
 		, {4 * 4 + 0, 4 * 4 + 2, 4 * 4 + 1, 4 * 4 + 1, 4 * 4 + 2, 4 * 4 + 3}
 		, {4 * 5 + 0, 4 * 5 + 2, 4 * 5 + 1, 4 * 5 + 1, 4 * 5 + 2, 4 * 5 + 3}
@@ -117,12 +117,12 @@ namespace gpk
 		, 
 		}; 
 
-	stacxpr	float						VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
+	stxp	float						VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
 
 	tplt<tpnm T, uint16_t _width = 16>
 	struct SVoxelLayer {
-		stacxpr	uint32_t					WIDTH						= _width;
-		stacxpr	uint32_t					DEPTH						= WIDTH;
+		stxp	uint32_t					WIDTH						= _width;
+		stxp	uint32_t					DEPTH						= WIDTH;
 
 		uint16_t										Y							= {};
 		T											Cells	[DEPTH][WIDTH]		= {};

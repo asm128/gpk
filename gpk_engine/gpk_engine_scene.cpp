@@ -9,7 +9,7 @@
 #include "gpk_view_tri.h"
 
 tplt <tpnm _tIndex>
-static	::gpk::error_t	transformTriangles					
+static	gpk::err_t	transformTriangles					
 	( ::gpk::SVSOutput		& output
 	, ::gpk::view<const _tIndex>	indices			
 	, ::gpk::vc3f32			positions	
@@ -58,7 +58,7 @@ static	::gpk::error_t	transformTriangles
 	return 0; 
 }
 
-static	::gpk::error_t	transformTriangles
+static	gpk::err_t	transformTriangles
 	( ::gpk::SEngineRenderCache				& renderCache
 	, const ::gpk::SEngineScene				& scene
 	, const ::gpk::SEngineSceneConstants	& constants
@@ -101,7 +101,7 @@ static	::gpk::error_t	transformTriangles
 }
 
 
-static	::gpk::error_t	drawBuffers
+static	gpk::err_t	drawBuffers
 	( ::gpk::g8bgra										& backBufferColors
 	, ::gpk::gu32										backBufferDepth
 	, ::gpk::SVSOutput									& outVS
@@ -148,7 +148,7 @@ static	::gpk::error_t	drawBuffers
 	return 0;
 }
 
-::gpk::error_t			gpk::drawScene									
+gpk::err_t			gpk::drawScene									
 	( ::gpk::g8bgra				backBufferColors
 	, ::gpk::gu32				backBufferDepth
 	, ::gpk::SEngineRenderCache	& renderCache
@@ -226,7 +226,7 @@ static	::gpk::error_t	drawBuffers
 	return 0;
 }
 
-::gpk::error_t			gpk::createBuffers	
+gpk::err_t			gpk::createBuffers	
 	( const ::gpk::SGeometryBuffers		& geometry
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
@@ -259,7 +259,7 @@ static	::gpk::error_t	drawBuffers
 	return 0;
 }
 
-::gpk::error_t			gpk::createBuffers
+gpk::err_t			gpk::createBuffers
 	( ::gpk::SRenderBufferManager	& bufferManager 
 	, const ::gpk::SGeometryBuffers	& geometry
 	, uint32_t						& iIndicesVertex
@@ -276,7 +276,7 @@ static	::gpk::error_t	drawBuffers
 	return 0;
 }
 
-::gpk::error_t			gpk::SEngineScene::CreateRenderNode
+gpk::err_t			gpk::SEngineScene::CreateRenderNode
 	( const ::gpk::SGeometryBuffers		& geometry
 	, const ::gpk::vcsc_t				name 
 	, bool								createSkin

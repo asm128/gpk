@@ -45,15 +45,15 @@ namespace gpk
 		::gpk::apod<SXMLToken>	Token				= {};
 	};
 
-	::gpk::error_t			xmlParse			(SXMLReader& reader, ::gpk::vcst_t xmlDoc);
-	::gpk::error_t			xmlParseCharacter	(SXMLReader& reader, ::gpk::vcst_t xmlDoc);
+	gpk::err_t			xmlParse			(SXMLReader& reader, ::gpk::vcst_t xmlDoc);
+	gpk::err_t			xmlParseCharacter	(SXMLReader& reader, ::gpk::vcst_t xmlDoc);
 
 	struct SXMLFile {
 		::gpk::apod<sc_t>		Bytes				= {};
 		::gpk::SXMLReader		Reader				= {};
 	};
 
-	::gpk::error_t			xmlFileRead			(::gpk::SXMLFile & file, ::gpk::vcst_c & filename);
+	gpk::err_t			xmlFileRead			(::gpk::SXMLFile & file, ::gpk::vcst_c & filename);
 
 }
 

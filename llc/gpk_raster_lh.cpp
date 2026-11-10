@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-::gpk::error_t			gpk::pixelBlend			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
+gpk::err_t			gpk::pixelBlend			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
 	if( (position.x >= 0 && position.x < (int32_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
 	) {
@@ -16,7 +16,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::setPixel			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
+gpk::err_t			gpk::setPixel			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gpk::bgra color)	{
 	if( (position.x >= 0 && position.x < (int32_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
 	) {
@@ -27,7 +27,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::drawRectangle		(::gpk::g8bgra pixels, ::gpk::rect2<int16_t> rectangle, ::gpk::bgra color)	{
+gpk::err_t			gpk::drawRectangle		(::gpk::g8bgra pixels, ::gpk::rect2<int16_t> rectangle, ::gpk::bgra color)	{
 	int32_t						countPixels				= 0;
 	for(int16_t y = 0; y < (int16_t)rectangle.Size.y; ++y)
 	for(int16_t x = 0; x < (int16_t)rectangle.Size.x; ++x)
@@ -35,7 +35,7 @@
 	return countPixels;
 }
 
-::gpk::error_t			gpk::drawCircle			(::gpk::g8bgra pixels, ::gpk::circle<int16_t> circle, ::gpk::bgra color)	{
+gpk::err_t			gpk::drawCircle			(::gpk::g8bgra pixels, ::gpk::circle<int16_t> circle, ::gpk::bgra color)	{
 	int32_t						countPixels				= 0;
 	for(int16_t y = (int16_t)-circle.Radius; y < (int16_t)circle.Radius; ++y)
 	for(int16_t x = (int16_t)-circle.Radius; x < (int16_t)circle.Radius; ++x) {
@@ -47,7 +47,7 @@
 }
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-::gpk::error_t			gpk::drawLine       	(::gpk::g8bgra pixels, ::gpk::line2i16 line, ::gpk::bgra color)	{
+gpk::err_t			gpk::drawLine       	(::gpk::g8bgra pixels, ::gpk::line2i16 line, ::gpk::bgra color)	{
 	int32_t						countPixels				= 0;
 	int32_t						dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t						sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
@@ -75,7 +75,7 @@
 
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-::gpk::error_t			gpk::drawLine       	(const ::gpk::n2u1_t offscreenMetrics, ::gpk::line2i16 line, ::gpk::apod<::gpk::n2s1_t> & pixelCoords)	{
+gpk::err_t			gpk::drawLine       	(const ::gpk::n2u1_t offscreenMetrics, ::gpk::line2i16 line, ::gpk::apod<::gpk::n2s1_t> & pixelCoords)	{
 	int32_t						dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t						sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
 	int32_t						dy						= (int32_t)-fabs(line.B.y - line.A.y );
@@ -110,7 +110,7 @@
 
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-::gpk::error_t			gpk::drawLine
+gpk::err_t			gpk::drawLine
 	( const ::gpk::n2u1_t		offscreenMetrics
 	, const ::gpk::line3f32		& lineFloat
 	, ::gpk::apod<::gpk::n3f2_t>	& pixelCoords
@@ -204,7 +204,7 @@ static	double		orient2d		(const ::gpk::n3f2_t & start, const ::gpk::n2f2_t & edg
 tplt <tpnm _tValue>	_tValue	max3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
 
-::gpk::error_t			gpk::drawTriangle		(::gpk::g8bgra pixels, const ::gpk::tri2<int16_t> & triangle, ::gpk::bgra color){
+gpk::err_t			gpk::drawTriangle		(::gpk::g8bgra pixels, const ::gpk::tri2<int16_t> & triangle, ::gpk::bgra color){
 	// Compute triangle bounding box
 	int16_t						minX					= ::min3(triangle.A.x, triangle.B.x, triangle.C.x);
 	int16_t						minY					= ::min3(triangle.A.y, triangle.B.y, triangle.C.y);
@@ -234,7 +234,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::error_t			gpk::drawTriangle
+gpk::err_t			gpk::drawTriangle
 	( const ::gpk::n2u2_t			targetSize
 	, const ::gpk::tri3f32			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
@@ -295,7 +295,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return 0;
 }
 
-::gpk::error_t			gpk::drawTriangle
+gpk::err_t			gpk::drawTriangle
 	( const ::gpk::n2u2_t			targetSize
 	, const ::gpk::tri2f32			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
@@ -339,7 +339,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return 0;
 }
 
-::gpk::error_t			gpk::drawPixels
+gpk::err_t			gpk::drawPixels
 	( ::gpk::g8bgra		targetPixels
 	, const ::gpk::tri3f32				& triangleWorld
 	, const ::gpk::n3f2_t				& normal
@@ -350,7 +350,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	, ::gpk::gc8bgra					textureImage
 	, ::gpk::apod<::gpk::n3f2_t>			& lightPoints
 	, ::gpk::a8bgra			& lightColors
-	, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+	, const ::gpk::function<gpk::err_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 	) {
 	const ::gpk::n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	double						lightFactorDirectional	= normal.Dot(lightVector);
@@ -365,9 +365,9 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 		const uint32_t				countLights				= lightPoints.size();
 		const ::gpk::rgbaf			ambientPerLight			= countLights ? texelColor / (10.0 * countLights) : ::gpk::rgbaf{};
 		::gpk::rgbaf				fragmentColor			= {};
-		stacxpr	double				rangeLight				= 10.0;
-		stacxpr	double				rangeLightSquared		= rangeLight * rangeLight;
-		stacxpr	double				rangeUnit				= 1.0 / rangeLightSquared;
+		stxp	double				rangeLight				= 10.0;
+		stxp	double				rangeLightSquared		= rangeLight * rangeLight;
+		stxp	double				rangeUnit				= 1.0 / rangeLightSquared;
 		for(uint32_t iLight = 0; iLight < countLights; ++iLight) {
 			const ::gpk::n3f2_t			lightToPoint			= lightPoints[iLight] - position;
 			const double				distanceToLight			= lightToPoint.LengthSquared();
@@ -385,7 +385,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::error_t			gpk::drawPixels
+gpk::err_t			gpk::drawPixels
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::tri3f32			& triangleWorld
 	, const ::gpk::n3f2_t			& normal
@@ -401,7 +401,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return gpk::drawPixels(targetPixels, triangleWorld, normal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, setPixel);
 }
 
-::gpk::error_t			gpk::drawQuadTriangle
+gpk::err_t			gpk::drawQuadTriangle
 	( const ::gpk::n2u2_t			& targetSize
 	, const ::gpk::tri3f32		& triangleScreen
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
@@ -411,7 +411,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawTriangle(targetSize, triangleScreen, pixelCoords, pixelVertexWeights, depthBuffer);
 }
 
-::gpk::error_t			gpk::drawQuadTriangle
+gpk::err_t			gpk::drawQuadTriangle
 	( const ::gpk::n2u2_t			& targetSize
 	, ::gpk::tri3f32				triangle
 	, const ::gpk::m4f32			& matrixTransformVP
@@ -428,7 +428,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawQuadTriangle(targetSize, triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 }
 
-::gpk::error_t			gpk::drawQuadTriangle
+gpk::err_t			gpk::drawQuadTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryQuads	& geometry
 	, const int						iTriangle
@@ -445,7 +445,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawQuadTriangle(targetPixels, geometry, iTriangle, matrixTransform, matrixTransformVP, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, depthBuffer, setPixel);
 }
 
-::gpk::error_t			gpk::drawQuadTriangle
+gpk::err_t			gpk::drawQuadTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryQuads	& geometry
 	, const int						iTriangle
@@ -458,7 +458,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
 	, ::gpk::grid<uint32_t>		depthBuffer
-	, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+	, const ::gpk::function<gpk::err_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 	) {
 	const ::gpk::tri3f32		& triangle			= geometry.Triangles	[iTriangle];;
 	const ::gpk::tri2f32		& triangleTexCoords	= geometry.TextureCoords[iTriangle];
@@ -470,7 +470,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return ::gpk::drawPixels(targetPixels, triangleWorld, xnormal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, funcSetPixel);
 }
 
-::gpk::error_t			gpk::drawQuadTriangle
+gpk::err_t			gpk::drawQuadTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryQuads	& geometry
 	, const int						iTriangle
@@ -503,7 +503,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::error_t			gpk::drawTriangle
+gpk::err_t			gpk::drawTriangle
 	( ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryTriangles	& geometry
 	, const int						iTriangle
@@ -537,7 +537,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::error_t			gpk::drawTriangle
+gpk::err_t			gpk::drawTriangle
 	( const ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryTriangles	& geometry
 	, const int							iTriangle
@@ -579,7 +579,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	return countPixels;
 }
 
-::gpk::error_t			gpk::drawTriangle
+gpk::err_t			gpk::drawTriangle
 	( const ::gpk::g8bgra	targetPixels
 	, const ::gpk::SGeometryTriangles	& geometry
 	, const int							iTriangle

@@ -22,9 +22,9 @@ namespace gpk
 		, SPI_MODE_DMA
 		};
 
-	::gpk::error_t spiInit (SSPIDevice& device);
-	::gpk::error_t spiRead (SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::SPI_MODE mode, uint32_t timeout);
-	::gpk::error_t spiWrite(SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::SPI_MODE mode, uint32_t timeout);
+	gpk::err_t spiInit (SSPIDevice& device);
+	gpk::err_t spiRead (SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::SPI_MODE mode, uint32_t timeout);
+	gpk::err_t spiWrite(SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::SPI_MODE mode, uint32_t timeout);
 } // namespace
 
 #endif // GPK_SPI_H_02394293

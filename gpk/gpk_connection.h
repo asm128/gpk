@@ -82,26 +82,26 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE			State						= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
-	stacxpr	const uint32_t				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
+	stxp	const uint32_t				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
-	::gpk::error_t						connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
-	::gpk::error_t						connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
-	::gpk::error_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au0_t & receiveBuffer);
-	::gpk::error_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu0_t & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
-	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcs0_t & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
+	gpk::err_t						connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
+	gpk::err_t						connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
+	gpk::err_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au0_t & receiveBuffer);
+	gpk::err_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu0_t & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
+	stin	gpk::err_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcs0_t & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
 		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
-	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, ::gpk::vcsc_c & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
+	stin	gpk::err_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, ::gpk::vcsc_c & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
 		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 
-	::gpk::error_t						processUDPClientQueueEvents	
+	gpk::err_t						processUDPClientQueueEvents	
 		( _tWithLoad						& eventCache
 		, uint32_t							iClient
 		, ::gpk::vpobj<::gpk::SUDPMessage>	clientQueue
 		, _tState							& state
-		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
+		, const ::std::function<gpk::err_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
 		) {
 		for(uint32_t iMessage = 0; iMessage < clientQueue.size(); ++iMessage) {
 			const ::gpk::SUDPMessage				& message					= *clientQueue[iMessage];
@@ -122,21 +122,21 @@ namespace gpk
 	}
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 
-	stainli	::gpk::error_t				processUDPClientQueueEvents	
+	stin	gpk::err_t				processUDPClientQueueEvents	
 		( uint32_t							iClient
 		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
 		, _tState							& state
-		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
+		, const ::std::function<gpk::err_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
 		) {
 		_tWithLoad								eventCache					= {};
 		return ::gpk::processUDPClientQueueEvents(eventCache, iClient, clientQueue, state, funcProcessRequest);
 	}
 
 	tplt<tpnm _tEvent, tpnm _tState> 
-	::gpk::error_t						processUDPEvents
+	gpk::err_t						processUDPEvents
 		( ::gpk::view<::gpk::apobj<::gpk::SUDPMessage>>	queueReceived
 		, _tState										& state
-		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest
+		, const ::std::function<gpk::err_t (uint32_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest
 		) {
 		_tEvent									eventReceived				= {};
 		for(uint32_t iClient = 0; iClient < queueReceived.size(); ++iClient) {

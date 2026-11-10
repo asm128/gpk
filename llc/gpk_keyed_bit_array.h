@@ -15,7 +15,7 @@ namespace gpk
 		::gpk::aau64			Bits;		// One data array per client.
 		::gpk::avcsc_t			FieldNames;	// One for all.
 
-		inline	::gpk::error_t	GetFieldIndex	(const ::gpk::vcsc_t & fieldName)			const	{ return FieldNames.find(fieldName); }
+		inline	gpk::err_t	GetFieldIndex	(const ::gpk::vcsc_t & fieldName)			const	{ return FieldNames.find(fieldName); }
 
 		TViewConst				GetView			(uint32_t client)						const	{ 
 			const ::gpk::au3_t			& data			= Bits[client]; 
@@ -30,14 +30,14 @@ namespace gpk
 			return {data.begin(), ::gpk::min(FieldNames.size(), data.bit_count())}; 
 		}
 
-		::gpk::error_t			CreateField		(const ::gpk::vcsc_t & fieldName)					{ 
+		gpk::err_t			CreateField		(const ::gpk::vcsc_t & fieldName)					{ 
 			int32_t						fieldIndex;
 			ree_if(::gpk::succeeded(fieldIndex = FieldNames.find(fieldName)), "Duplicated field name at index %i: %.*s", fieldIndex, GPK_VIEW_ARGS(fieldName)); 
 			return FieldNames.push_back(fieldName);
 		}
 
 		// This function only appends or clears `true` bits. It doesn't clear `false` bits, avoiding to resize the array.
-		::gpk::error_t			SetField		(uint32_t client, uint32_t index, bool value)	{ 
+		gpk::err_t			SetField		(uint32_t client, uint32_t index, bool value)	{ 
 			ree_if(index >= FieldNames.size(), "invalid index: %i", index);
 			::gpk::au3_t					& data			= Bits[client]; 
 			return (value || data.bit_count() > index) 
@@ -46,7 +46,7 @@ namespace gpk
 				; 
 		}
 
-		::gpk::error_t			GetField		(uint32_t client, uint32_t index)		const	{ 
+		gpk::err_t			GetField		(uint32_t client, uint32_t index)		const	{ 
 			ree_if(index >= FieldNames.size(), "invalid index: %i", index);
 			const ::gpk::au3_t			& data			= Bits[client]; 
 			return (index < data.bit_count())

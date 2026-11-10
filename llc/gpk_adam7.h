@@ -5,14 +5,14 @@
 
 namespace gpk
 {
-	::gpk::error_t			adam7Sizes			(::gpk::view<::gpk::n2u2_t> & imageSizes, const ::gpk::n2<u2_t> & imageSize);
-	::gpk::error_t			adam7ScaleIndex
+	gpk::err_t			adam7Sizes			(::gpk::view<::gpk::n2u2_t> & imageSizes, const ::gpk::n2<u2_t> & imageSize);
+	gpk::err_t			adam7ScaleIndex
 		( s2_t					iImage
 		, ::gpk::n2u2_t	&		offsetMultiplier
 		, ::gpk::n2u2_t	&		offsetBase
 		);
 	tplt<tpnm _tTexel>
-	sttc	::gpk::error_t	adam7Interlace		(::gpk::view<::gpk::img<_tTexel>> images, ::gpk::grid<_tTexel> & out_View)				{
+	sttc	gpk::err_t	adam7Interlace		(::gpk::view<::gpk::img<_tTexel>> images, ::gpk::grid<_tTexel> & out_View)				{
 		for(u2_t iImage = 0; iImage < images.size(); ++iImage) {
 			::gpk::n2u2_t				offsetMultiplier	= {1, 1};
 			::gpk::n2u2_t				offsetBase			= {0, 0};

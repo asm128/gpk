@@ -99,7 +99,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 	tplt<tpnm _tPOD> 
-	::gpk::error_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
+	gpk::err_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
 		gpk_necall(gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
@@ -163,7 +163,7 @@ namespace gpk
 		}
 
 
-		::gpk::error_t				Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t				Save				(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::saveView(output, ShipScores	));
 			gpk_necs(gpk::saveView(output, ShipCores	));
 			uint32_t						totalEntityChildren	= 0;
@@ -187,7 +187,7 @@ namespace gpk
 			}
 			return 0; 
 		}
-		::gpk::error_t				Load				(::gpk::vcu0_t & input) { 
+		gpk::err_t				Load				(::gpk::vcu0_t & input) { 
 			ShipScores	.clear();
 			ShipCores	.clear();
 			gpk_necs(gpk::loadView(input, ShipScores	));

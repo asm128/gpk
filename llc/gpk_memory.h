@@ -29,7 +29,7 @@
 
 namespace gpk
 {
-	stacxpr	const uintptr_t				calc_align_address			(uintptr_t alignment, uintptr_t address)	noexcept	{ return (alignment - ((alignment - 1) & address)) & (alignment - 1); }
+	stxp	const uintptr_t				calc_align_address			(uintptr_t alignment, uintptr_t address)	noexcept	{ return (alignment - ((alignment - 1) & address)) & (alignment - 1); }
 	stincxp	const uintptr_t				calc_align_address_4		(uintptr_t address)							noexcept	{ return calc_align_address( 4, address); }
 	stincxp	const uintptr_t				calc_align_address_8		(uintptr_t address)							noexcept	{ return calc_align_address( 8, address); }
 	stincxp	const uintptr_t				calc_align_address_16		(uintptr_t address)							noexcept	{ return calc_align_address(16, address); }
@@ -37,26 +37,26 @@ namespace gpk
 	stincxp	const uintptr_t				calc_align_address_64		(uintptr_t address)							noexcept	{ return calc_align_address(64, address); }
 
 #if defined(GPK_WINDOWS)
-	stainli	void						gpk_free					(void* ptr)									noexcept	{ _aligned_free(ptr);									}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
+	stin	void						gpk_free					(void* ptr)									noexcept	{ _aligned_free(ptr);									}
+	stin	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
 #elif defined(GPK_NEWLIB)
-	stainli	void						gpk_free					(void* ptr)									noexcept	{
+	stin	void						gpk_free					(void* ptr)									noexcept	{
 		::free(ptr);
 	}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{
+	stin	void*						gpk_malloc					(size_t size)								noexcept	{
 		int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1);
 		return p;
 	}
 #elif defined(GPK_ATMEL)
-	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::malloc(size + 1); return p; }
+	stin	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
+	stin	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::malloc(size + 1); return p; }
 #else
-	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
+	stin	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
+	stin	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
 #endif
 
 	tplt<tpnm _typePtr>
-	stainli	void						safe_gpk_free				(_typePtr &p)								noexcept	{
+	stin	void						safe_gpk_free				(_typePtr &p)								noexcept	{
 		_typePtr								_pepe						= p;
 		p									= 0;
 		gpk_free((void*)_pepe);
@@ -91,7 +91,7 @@ namespace gpk
 			);
 	}
 
-	tplt <tpnm _tBase>	stainli	int32_t		podcmp		(const _tBase* pA, const _tBase* pB)							noexcept	{
+	tplt <tpnm _tBase>	stin	int32_t		podcmp		(const _tBase* pA, const _tBase* pB)							noexcept	{
 		if(0 == pA)
 			return (0 == pB) ? 0 : 0x7FFFFFFF;
 		else if(0 == pB)
@@ -100,7 +100,7 @@ namespace gpk
 		return memcmp(pA, pB, sizeof(_tBase));
 	}
 
-	tplt <tpnm _tBase>	stainli	_tBase*		chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		noexcept	{
+	tplt <tpnm _tBase>	stin	_tBase*		chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		noexcept	{
 			for (uint32_t i = 0; i < count; ++i)
 				if (destination[i] != source[i])
 					destination[i]  = source[i];
@@ -108,8 +108,8 @@ namespace gpk
 	}
 
 	tplt <tpnm _tBase>			_tBase*		podcpy						(_tBase* dest, const _tBase* source)							noexcept	{
-		stacxpr	const uint32_t													dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
-		stacxpr	const uint32_t													typeAlign					= (uint32_t)get_type_align<_tBase>();
+		stxp	const uint32_t													dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
+		stxp	const uint32_t													typeAlign					= (uint32_t)get_type_align<_tBase>();
 		switch (typeAlign) {
 		case 32: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 4);	break;
 		case 16: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 2);	break;

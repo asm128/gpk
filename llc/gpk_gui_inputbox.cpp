@@ -6,7 +6,7 @@
 #	include "gpk_string.h"
 #endif
 
-::gpk::error_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
+gpk::err_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
 	::gpk::au1_t					keys;
 	for(uint16_t i = 1; i < 255; ++i) {
 		keys.push_back(i);
@@ -18,13 +18,13 @@
 	return vk.IdRoot;
 }
 
-::gpk::error_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, ::gpk::vcu1_c & keys) {
+gpk::err_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, ::gpk::vcu1_c & keys) {
 	vk.Keys					= keys;
 
 	vk.IdRoot				= ::gpk::controlCreate(gui);
 	const ::gpk::n2u0_t			charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
 	const ::gpk::n2s1_t			sizeKey						= (charSize + ::gpk::n2u0_t{6, 6}).s1_t();
-	stacxpr	uint16_t			SIZE_BUTTON					= 88;
+	stxp	uint16_t			SIZE_BUTTON					= 88;
 	const ::gpk::n2s1_t			sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
 	{
@@ -53,7 +53,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
+gpk::err_t			gpk::inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
 	gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
 	gui.Controls.States		[inputBox.IdRoot].Mask		&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};

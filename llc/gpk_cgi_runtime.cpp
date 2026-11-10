@@ -5,7 +5,7 @@
 
 using ::gpk::sc_c;
 
-::gpk::error_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
+gpk::err_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
 	const ::gpk::aobj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
 	::gpk::vcsc_t									remoteAddr;
 	const bool										isCGIEnviron					= -1 != ::gpk::find(::gpk::vcs{"REMOTE_ADDR"}, environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
@@ -55,7 +55,7 @@ using ::gpk::sc_c;
 	return isCGIEnviron ? 1 : 0;
 }
 
-static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<::gpk::sc_c> & strContentType)	{
+static	gpk::err_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<::gpk::sc_c> & strContentType)	{
 	ree_if(0 == strContentType.size(), "%s", "No input string");
 	static	::gpk::vcsc_c					content_types []			=
 		{ ::gpk::vcs{"application/javascript"													}
@@ -118,7 +118,7 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort) {
+static	gpk::err_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort) {
 	remoteIP.Port			= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
@@ -152,12 +152,12 @@ static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & 
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<::gpk::sc_c> & strContent)	{
+static	gpk::err_t	cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<::gpk::sc_c> & strContent)	{
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<::gpk::sc_c> & strContent)	{
+static	gpk::err_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<::gpk::sc_c> & strContent)	{
 	switch(contentType) {
 	default: break;
 	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA:
@@ -167,7 +167,7 @@ static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, 
 	return 0;
 }
 
-::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<::gpk::sc_c*> & argv)	{
+gpk::err_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<::gpk::sc_c*> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine	= argv;
 	::gpk::aobj<::gpk::TKeyValConstString>	& environViews	= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);

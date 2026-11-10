@@ -5,7 +5,7 @@
 #include "gpk_view_n3.h"
 #include "gpk_sphere.h"
 
-::gpk::error_t			gpk::geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox & params) {
+gpk::err_t			gpk::geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox & params) {
 	const uint32_t				offsetPositions				= geometry.Positions		.size(); geometry.Positions			.resize(offsetPositions			+ 24);
 	const uint32_t				offsetNormals				= geometry.Normals			.size(); geometry.Normals			.resize(offsetNormals			+ 24);
 	const uint32_t				offsetTextureCoords			= geometry.TextureCoords	.size(); geometry.TextureCoords		.resize(offsetTextureCoords		+ 24);
@@ -32,7 +32,7 @@ enum SQUARE_MODE
 	};
 
 tplt<tpnm _tIndex>
-static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionIndices, uint32_t vertexOffset, const ::gpk::n2u1_t cellCount, bool counterClockwise, bool outward) {
+static	gpk::err_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionIndices, uint32_t vertexOffset, const ::gpk::n2u1_t cellCount, bool counterClockwise, bool outward) {
 	const uint16_t				pitch						= cellCount.x + 1;								// 2 3 
 	const ::gpk::astu32<4>		indices						= counterClockwise ? ::gpk::astu32<4>{{1U, 0U, uint32_t(pitch + 1U), pitch}} : ::gpk::astu32<4>{{0U, 1U, pitch, uint32_t(pitch + 1U)}};	// 0 1 2 3
 	const uint32_t				indices_modes[2][6]			=
@@ -54,7 +54,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	});
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid & params) {
+gpk::err_t			gpk::geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
@@ -73,7 +73,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	});
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, params.Reverse, params.Outward); 
 }
-::gpk::error_t			gpk::geometryBuildSphere	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere & params) {
+gpk::err_t			gpk::geometryBuildSphere	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere & params) {
 	const uint32_t				 vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
@@ -97,7 +97,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	}
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, false, false); 
 }
-::gpk::error_t			gpk::geometryBuildCircleSide(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle & params) {
+gpk::err_t			gpk::geometryBuildCircleSide(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const uint32_t				vertexCount					= (uint32_t)params.Slices + 1;
 	const double				cellUnits					= 1.0 / params.Slices;
@@ -122,7 +122,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 	return 0; 
 }
-::gpk::error_t			gpk::geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall & params) {
+gpk::err_t			gpk::geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
@@ -147,7 +147,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, false, false); 
 }
 //
-::gpk::error_t			gpk::geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) { //(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f2_t & gridCenter)	{
+gpk::err_t			gpk::geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) { //(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f2_t & gridCenter)	{
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
@@ -177,7 +177,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	}
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) {
+gpk::err_t			gpk::geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
@@ -208,7 +208,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	}
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params)	{
+gpk::err_t			gpk::geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params)	{
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	gpk_necs(gpk::geometryBuildHelixHalf(geometry, params));
 	const uint32_t				vertexCount					= geometry.Positions.size() - vertexOffset;
@@ -219,7 +219,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	geometry.Normals	.for_each([](::gpk::n3f2_t & coord){ coord.z *= -1; coord.y *= -1; return 0; }, vertexOffset);
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildRingSide	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
+gpk::err_t			gpk::geometryBuildRingSide	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	::gpk::SParamsGrid			paramsGrid					= {{}, {params.Slices, 1}, params.Reverse};
 	gpk_necall(gpk::geometryBuildGrid(geometry, paramsGrid), "params.Slices: %i", params.Slices);
@@ -239,21 +239,21 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	);
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildRingFlat	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
+gpk::err_t			gpk::geometryBuildRingFlat	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
 	gpk_necs(gpk::geometryBuildRingSide(geometry, params));
 	::gpk::SParamsRingSide		paramsSide					= params;
 	paramsSide.Reverse		= true;
 	gpk_necs(gpk::geometryBuildRingSide(geometry, paramsSide));
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildDisc(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc & params) {
+gpk::err_t			gpk::geometryBuildDisc(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc & params) {
 	::gpk::SParamsCircle		paramsSide					= params;
 	gpk_necs(gpk::geometryBuildCircleSide(geometry, params));
 	paramsSide.Reverse		= true;
 	gpk_necs(gpk::geometryBuildCircleSide(geometry, paramsSide));
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildRing		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube & params) {
+gpk::err_t			gpk::geometryBuildRing		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube & params) {
 	::gpk::SParamsRingSide		paramsSide					= {};
 	paramsSide.Origin		= params.Origin;
 	paramsSide.Slices		= params.CellCount.x;
@@ -284,7 +284,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	gpk_necs(gpk::geometryBuildRingSide(geometry, paramsSide));
 	return 0;
 }
-::gpk::error_t			gpk::geometryBuildCylinder		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall & params) {
+gpk::err_t			gpk::geometryBuildCylinder		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall & params) {
 	::gpk::SParamsCircle		cap							= {};
 	cap.Origin				= params.Origin;
 	cap.Radius				= params.Radius.Min;

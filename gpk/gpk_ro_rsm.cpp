@@ -15,7 +15,7 @@ struct SRSMHeader {	// Represents the byte layout fou
 #pragma pack(pop)
 
 
-			::gpk::error_t								analyzeArray								(const ::gpk::view<uint8_t>& input) {
+			gpk::err_t								analyzeArray								(const ::gpk::view<uint8_t>& input) {
 	info_printf("%s", "---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
 
 	info_printf("%s", "---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
@@ -35,7 +35,7 @@ struct SRSMHeader {	// Represents the byte layout fou
 }
 
 // Read rotation keyframes. Not sure how they're expressed though.
-static	::gpk::error_t	rsmReadRotationKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
+static	gpk::err_t	rsmReadRotationKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
 	uint32_t					keyframeCount												= 0;			// Get the number of keyframe
 	rsm_stream.read_pod(keyframeCount);
 	info_printf("Rotation keyframe count: %u.", keyframeCount);
@@ -47,7 +47,7 @@ static	::gpk::error_t	rsmReadRotationKeyframes									(::gpk::view_stream<const
 }
 
 // >= v1.5 Read position keyframes
-static	::gpk::error_t	rsmReadPositionKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
+static	gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
 	uint32_t					positionFrameCount											= 0;
 	rsm_stream.read_pod(positionFrameCount);
 	GPK_PLATFORM_CRT_BREAKPOINT();
@@ -58,7 +58,7 @@ static	::gpk::error_t	rsmReadPositionKeyframes									(::gpk::view_stream<const
 	return 0;
 }
 
-::gpk::error_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view<uint8_t>	& input)							{
+gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view<uint8_t>	& input)							{
 	::gpk::view_stream<const uint8_t>							rsm_stream													= {input.begin(), input.size()};
 	SRSMHeader													header														= {};
 	rsm_stream.read_pod(header);
@@ -191,12 +191,12 @@ static	::gpk::error_t	rsmReadPositionKeyframes									(::gpk::view_stream<const
 	return rsm_stream.CursorPosition;
 }
 
-::gpk::error_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, FILE								* input)							{
+gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, FILE								* input)							{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-::gpk::error_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input)							{
+gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input)							{
 	::gpk::au0_t				fileInMemory												= {};
 	gpk_necall(gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
@@ -206,7 +206,7 @@ static	::gpk::error_t	rsmReadPositionKeyframes									(::gpk::view_stream<const
 	return rsmFileLoad(loaded, fileInMemory);
 }
 
-::gpk::error_t			gpk::rsmGeometryGenerate					(const ::gpk::SRSMFileContents& rsmData, ::gpk::view<::gpk::SModelNodeRSM>& out_meshes)			{
+gpk::err_t			gpk::rsmGeometryGenerate					(const ::gpk::SRSMFileContents& rsmData, ::gpk::view<::gpk::SModelNodeRSM>& out_meshes)			{
 	for(uint32_t iTex = 0, texCount = rsmData.TextureNames.size(); iTex < texCount; ++iTex) {
 		for(uint32_t iNode = 0, countNodes = rsmData.Nodes.size(); iNode < countNodes; ++iNode) {
 			const ::gpk::SRSMNode										& rsmNode													= rsmData.Nodes[iNode];

@@ -31,7 +31,7 @@ namespace gpk
 		uint8_t								Resend						: 1;
 	};
 
-	stacxpr	size_t	GTL_COMMAND_SIZE	= sizeof(SGTLCommand);
+	stxp	size_t	GTL_COMMAND_SIZE	= sizeof(SGTLCommand);
 	struct SGTLPayloadHeader {
 		::gpk::SGTLCommand					Command			;
 		uint64_t							IdSender		;

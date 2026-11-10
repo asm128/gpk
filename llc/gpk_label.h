@@ -29,7 +29,7 @@ namespace gpk
 		inline	bool		oper!=		(const label & other)			const	noexcept	{ return !oper==(other); }
 	};
 
-	stin ::gpk::error_t	loadLabel		(::gpk::vcu0_t & input, ::gpk::vcsc_t & output) { 
+	stin gpk::err_t	loadLabel		(::gpk::vcu0_t & input, ::gpk::vcsc_t & output) { 
 		uint32_t					bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
 		gpk_necs(input.slice(input, bytesRead));

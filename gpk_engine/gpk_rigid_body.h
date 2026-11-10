@@ -76,13 +76,13 @@ namespace gpk
 		::gpk::apod<::gpk::SBodyVolume	>	BoundingVolumes					= {};
 		::gpk::apod<::gpk::m4f32		>	TransformsLocal					= {};
 
-		stacxpr	::gpk::m4f32				MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
-		stacxpr	::gpk::m3f32				MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
+		stxp	::gpk::m4f32				MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
+		stxp	::gpk::m3f32				MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
 
-		::gpk::error_t						Load							(::gpk::vcu0_t & input);
-		::gpk::error_t						Save							(::gpk::au0_t & output)	const;
-		inline	::gpk::error_t				Load							(::gpk::vcsc_t & input)			{ return Load(*((::gpk::vcu0_t*)&input)); }
-		inline	::gpk::error_t				Save							(::gpk::as0_t & output)	const	{ return Save(*((::gpk::apod<uint8_t>*)&output)); }
+		gpk::err_t						Load							(::gpk::vcu0_t & input);
+		gpk::err_t						Save							(::gpk::au0_t & output)	const;
+		inline	gpk::err_t				Load							(::gpk::vcsc_t & input)			{ return Load(*((::gpk::vcu0_t*)&input)); }
+		inline	gpk::err_t				Save							(::gpk::as0_t & output)	const	{ return Save(*((::gpk::apod<uint8_t>*)&output)); }
 
 		int32_t 							ZeroCenters						()	{ return Centers.fill({}); }
 		int32_t 							ZeroForces						()	{ return Forces.fill({}); }

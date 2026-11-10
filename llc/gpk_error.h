@@ -8,8 +8,8 @@ namespace gpk
 	tydf		s2_t	err_t;
 	tdcs		err_t	err_c;
 
-	tydf		s2_t	error_t;
-	tdcs		error_t	error_c;
+	tydf		s2_t	err_t;
+	tdcs		err_t	error_c;
 
 	tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
 	tplTnsix	bool	not_failed	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }

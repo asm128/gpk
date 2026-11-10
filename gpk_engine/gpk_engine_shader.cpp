@@ -19,7 +19,7 @@
 	return lightFactor ? diffuserMaterial * (float)lightFactor : ::gpk::BLACK;
 }
 
-::gpk::error_t			gpk::psSolid
+gpk::err_t			gpk::psSolid
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
@@ -30,7 +30,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::psHidden
+gpk::err_t			gpk::psHidden
 	( const ::gpk::SEngineSceneConstants	& /*constants*/
 	, const ::gpk::SPSIn					& /*inPS*/
 	, ::gpk::bgra							& /*outputPixel*/
@@ -38,7 +38,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::psGrid
+gpk::err_t			gpk::psGrid
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
@@ -49,7 +49,7 @@
 	return 0; 
 }
 
-::gpk::error_t			gpk::psGridRuler
+gpk::err_t			gpk::psGridRuler
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
@@ -80,7 +80,7 @@
 	}
 }
 
-::gpk::error_t			gpk::psCylinderIn
+gpk::err_t			gpk::psCylinderIn
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
@@ -91,11 +91,11 @@
 	return 0; 
 }
 
-stacxpr	float			LIGHT_FACTOR_AMBIENT		= .025f;
-stacxpr	float			LIGHT_FACTOR_SPECULAR_POWER	= 30.0f;
-stacxpr	::gpk::bgra8	PIXEL_BLACK_NUMBER			= ::gpk::bgra{0, 0, 0, 255};
+stxp	float			LIGHT_FACTOR_AMBIENT		= .025f;
+stxp	float			LIGHT_FACTOR_SPECULAR_POWER	= 30.0f;
+stxp	::gpk::bgra8	PIXEL_BLACK_NUMBER			= ::gpk::bgra{0, 0, 0, 255};
 
-::gpk::error_t			gpk::psCylinder
+gpk::err_t			gpk::psCylinder
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
@@ -109,7 +109,7 @@ stacxpr	::gpk::bgra8	PIXEL_BLACK_NUMBER			= ::gpk::bgra{0, 0, 0, 255};
 	return 0; 
 }
 
-::gpk::error_t			gpk::psSphereAxis				
+gpk::err_t			gpk::psSphereAxis				
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
@@ -136,7 +136,7 @@ stacxpr	::gpk::bgra8	PIXEL_BLACK_NUMBER			= ::gpk::bgra{0, 0, 0, 255};
 	return 0; 
 }
 
-::gpk::error_t			gpk::psSphereSolid				
+gpk::err_t			gpk::psSphereSolid				
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
@@ -190,7 +190,7 @@ stacxpr	::gpk::bgra8	PIXEL_BLACK_NUMBER			= ::gpk::bgra{0, 0, 0, 255};
 	return 0; 
 }
 
-::gpk::error_t			gpk::psSphereMeridian			
+gpk::err_t			gpk::psSphereMeridian			
 	( const ::gpk::SEngineSceneConstants	& constants
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel

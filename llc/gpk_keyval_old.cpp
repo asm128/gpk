@@ -3,7 +3,7 @@
 #include "gpk_parse.h"
 #include "gpk_apod_serialize.h"
 
-::gpk::error_t			gpk::join				(::gpk::asc_t & output, char separator, ::gpk::vcvsc_t fields)	{
+gpk::err_t			gpk::join				(::gpk::asc_t & output, char separator, ::gpk::vcvsc_t fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
 		gpk_necall(output.append(fields[iField]), "%" GPK_FMT_U2 "", iField);
 		if(++iField < fields.size())
@@ -26,7 +26,7 @@
 	return sprintfable;
 }
 
-::gpk::error_t			gpk::token_split		(char valueSeparator, const ::gpk::vcst_t & input_string, TKeyValConstChar & output_views)	{
+gpk::err_t			gpk::token_split		(char valueSeparator, const ::gpk::vcst_t & input_string, TKeyValConstChar & output_views)	{
 	int32_t						indexSeparator;
 	if_fail_wf(indexSeparator = ::gpk::find(valueSeparator, input_string), "'%c' character not found.", valueSeparator);
 	output_views.Key		= {input_string.begin(), (uint32_t)indexSeparator};
@@ -41,22 +41,22 @@
 	return output_views.Val.size();
 }
 
-::gpk::error_t			gpk::find				(const ::gpk::vcst_t & keyToFind, const ::gpk::view<const ::gpk::TKeyValConstString> & keyvals, ::gpk::vcsc_t & out_val)		{
-	::gpk::error_t				index					= ::gpk::find(keyToFind, keyvals);
+gpk::err_t			gpk::find				(const ::gpk::vcst_t & keyToFind, const ::gpk::view<const ::gpk::TKeyValConstString> & keyvals, ::gpk::vcsc_t & out_val)		{
+	gpk::err_t				index					= ::gpk::find(keyToFind, keyvals);
 	out_val					= (-1 == index) ? ::gpk::vcst_t{} : keyvals[index].Val;
 	return index;
 }
 
-::gpk::error_t			gpk::keyvalNumeric		(const ::gpk::vcst_t & key, const ::gpk::view<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
+gpk::err_t			gpk::keyvalNumeric		(const ::gpk::vcst_t & key, const ::gpk::view<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
 	ree_if(0 == outputNumber, "%s", "Output number cannot point to a null address.");
-	::gpk::error_t				indexKey				= ::gpk::find(key, keyVals);
+	gpk::err_t				indexKey				= ::gpk::find(key, keyVals);
 	if(-1 != indexKey)
 		::gpk::parseIntegerDecimal(keyVals[indexKey].Val, outputNumber);
 
 	return indexKey;
 }
 
-::gpk::error_t			gpk::keyValVerify		(const ::gpk::view<::gpk::TKeyValConstString> & environViews, ::gpk::vcsc_c & keyToVerify, ::gpk::vcsc_c & valueToVerify)	{
+gpk::err_t			gpk::keyValVerify		(const ::gpk::view<::gpk::TKeyValConstString> & environViews, ::gpk::vcsc_c & keyToVerify, ::gpk::vcsc_c & valueToVerify)	{
 	for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey) {
 		if(environViews[iKey].Key == keyToVerify)
 			return (environViews[iKey].Val == valueToVerify) ? iKey : -1;
@@ -64,7 +64,7 @@
 	return -1;
 }
 
-::gpk::error_t			gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstString> & keyVals, const view<vcsc_c> & keysToSave, ::gpk::au0_t & output)	{
+gpk::err_t			gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstString> & keyVals, const view<vcsc_c> & keysToSave, ::gpk::au0_t & output)	{
 	::gpk::apod<::gpk::TKeyValConstString>	keyValsToSave					= {};
 	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
@@ -83,7 +83,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::TKeyValConstString> & output)	{
+gpk::err_t			gpk::keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::TKeyValConstString> & output)	{
 	uint32_t					offset								= 0;
 	u2_c				keysToRead							= *(u2_c*)input.begin();
 	offset					+= (uint32_t)szof(uint32_t);

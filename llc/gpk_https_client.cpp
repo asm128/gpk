@@ -21,7 +21,7 @@
 //#endif
 //}
 //
-//::gpk::error_t			httpstest					()					{
+//gpk::err_t			httpstest					()					{
 //	init_openssl_library();
 //
 //	const SSL_METHOD			* method					= SSLv23_method();
@@ -92,5 +92,5 @@
 //
 //	if(NULL != ctx)
 //		SSL_CTX_free(ctx);
-//	return (::gpk::error_t)res;
+//	return (gpk::err_t)res;
 //}

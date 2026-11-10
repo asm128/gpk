@@ -1,6 +1,6 @@
 #include "gpk_window.h"
 
-::gpk::error_t			gpk::fullScreenExit			(::gpk::SWindow & window) {
+gpk::err_t			gpk::fullScreenExit			(::gpk::SWindow & window) {
 	if(false == window.FullScreen)
 		return 0;
 
@@ -20,7 +20,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::fullScreenEnter		(::gpk::SWindow & window) {
+gpk::err_t			gpk::fullScreenEnter		(::gpk::SWindow & window) {
 	if(window.FullScreen)
 		return 1;
 
@@ -53,7 +53,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
+gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
 	bool						quit						= false;
 #if defined(GPK_WINDOWS)
 	::MSG						msg							= {};
@@ -72,7 +72,7 @@
 	return quit ? 1 : 0;
 }
 
-::gpk::error_t			gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
+gpk::err_t			gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
 	displayInstance.EventQueue.clear();
 	displayInstance.Resized	= false;
 	displayInstance.Repaint	= false;
@@ -89,7 +89,7 @@
 }
 
 #if defined(GPK_WINDOWS)
-::gpk::error_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
+gpk::err_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
 	const uint32_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
 	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1_t();
 	::gpk::n2u1_c				prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
@@ -142,7 +142,7 @@
 }
 #endif // GPK_WINDOWS
 
-::gpk::error_t			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::g8bgra& targetToPresent)		{
+gpk::err_t			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::g8bgra& targetToPresent)		{
 	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
 	::HWND					windowHandle								= displayInstance.PlatformDetail.WindowHandle;

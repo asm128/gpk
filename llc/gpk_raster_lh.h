@@ -76,7 +76,7 @@ namespace gpk
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
 		, ::gpk::grid<uint32_t>				depthBuffer
-		, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+		, const ::gpk::function<gpk::err_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 		);
 
 	int				drawQuadTriangle
@@ -145,7 +145,7 @@ namespace gpk
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
-		, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, ::gpk::n2s1_c & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+		, const ::gpk::function<gpk::err_t(::gpk::g8bgra targetPixels, ::gpk::n2s1_c & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 		);
 
 	int				drawPixels

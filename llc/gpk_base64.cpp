@@ -1,7 +1,7 @@
 #include "gpk_base64.h"
 #include "gpk_view_bit.h"
 
-static	::gpk::error_t	base64EncodeTriplet								(::gpk::vcsc_c & base64Symbols, ::gpk::vu8 inputTriplet, ::gpk::vu8 out_base64) {
+static	gpk::err_t	base64EncodeTriplet								(::gpk::vcsc_c & base64Symbols, ::gpk::vu8 inputTriplet, ::gpk::vu8 out_base64) {
 	for (uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
 		::gpk::view_bit<uint8_t>									inputBits														= {&inputTriplet[iSingleIn], 8};
 		::gpk::reverse_bits(inputBits);
@@ -25,7 +25,7 @@ static	::gpk::error_t	base64EncodeTriplet								(::gpk::vcsc_c & base64Symbols,
 	}
 	return 0;
 }
-::gpk::error_t			gpk::base64Encode								(::gpk::vcsc_c & base64Symbols, char base64PadSymbol, vcu0_c & inputBytes, ::gpk::au0_t & out_base64)	{
+gpk::err_t			gpk::base64Encode								(::gpk::vcsc_c & base64Symbols, char base64PadSymbol, vcu0_c & inputBytes, ::gpk::au0_t & out_base64)	{
 	rni_if(0 == inputBytes.size(), "%s", "Empty input stream.");
 	u2_c				packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
 	uint32_t					iOutput64														= out_base64.size(); //
@@ -52,7 +52,7 @@ static	::gpk::error_t	base64EncodeTriplet								(::gpk::vcsc_c & base64Symbols,
 	return 0;
 }
 
-static	::gpk::error_t	base64DecodeQuad												(::gpk::vu8 inputQuad, ::gpk::vu8 outputBytes)	{
+static	gpk::err_t	base64DecodeQuad												(::gpk::vu8 inputQuad, ::gpk::vu8 outputBytes)	{
 	for(uint32_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
 		::gpk::view_bit<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
 		::gpk::reverse_bits(inputBits);
@@ -72,7 +72,7 @@ static	::gpk::error_t	base64DecodeQuad												(::gpk::vu8 inputQuad, ::gpk::
 	return 0;
 }
 
-::gpk::error_t			gpk::base64Decode								(::gpk::vcsc_c & base64Symbols, char base64PadSymbol, vcu0_c & in_base64, ::gpk::au0_t & outputBytes)	{
+gpk::err_t			gpk::base64Decode								(::gpk::vcsc_c & base64Symbols, char base64PadSymbol, vcu0_c & in_base64, ::gpk::au0_t & outputBytes)	{
 	rni_if(0 == in_base64.size(), "%s", "Empty base64 string.");
 	int32_t														lengthInput														= in_base64.size();
 	if(uint32_t mymod = in_base64.size() % 4) {

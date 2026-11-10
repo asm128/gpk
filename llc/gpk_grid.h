@@ -44,7 +44,7 @@ namespace gpk
 		inxp	u2_t 				byte_count		()		const	nxpt	{ return area() * sizeof(T); }
 		inxp	u2_t				area			()		const	nxpt	{ return Size.x * Size.y; }
 
-		inln	::gpk::error_t		fill			(const T & value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
+		inln	gpk::err_t		fill			(const T & value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
 			ree_if((count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);
 			for(uint32_t i = offset, actualCount = ::gpk::min(size(), count); i < actualCount; ++i)
 				Data[i]						= value;
@@ -55,7 +55,7 @@ namespace gpk
 #pragma pack(pop)
 
 	tplt<tpnm TDim, tpnm TColor>
-	static	::gpk::error_t		drawRectangle			(::gpk::grid<TColor> & target, const TColor & value, const ::gpk::rect2<TDim> & rectangle)		{
+	static	gpk::err_t		drawRectangle			(::gpk::grid<TColor> & target, const TColor & value, const ::gpk::rect2<TDim> & rectangle)		{
 		s2_c						xCount					= ::gpk::min((int32_t)target.metrics().x - ::gpk::max((int32_t)rectangle.Offset.x, (int32_t)0), (int32_t)rectangle.Size.x + ::gpk::min((int32_t)rectangle.Offset.x, (int32_t)0));
 		s2_c						yCount					= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, (int32_t)0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, (int32_t)0));
 		s2_c						yStart					= (int32_t)::gpk::max((int32_t)0, (int32_t)rectangle.Offset.y);

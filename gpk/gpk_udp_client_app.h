@@ -47,12 +47,12 @@ namespace gpk
 		}
 	};
 
-	::gpk::error_t		loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port);
-	::gpk::error_t		clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui);
-	::gpk::error_t		clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui);
-	::gpk::error_t		setupGUI			(::gpk::SClientUI & client, ::gpk::SGUI & gui);
-	::gpk::error_t		updateGUI			(::gpk::SClient & client, ::gpk::SGUI & gui);
-	::gpk::error_t		processGUIEvent		(::gpk::SClient & client, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent);
+	gpk::err_t		loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port);
+	gpk::err_t		clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui);
+	gpk::err_t		clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui);
+	gpk::err_t		setupGUI			(::gpk::SClientUI & client, ::gpk::SGUI & gui);
+	gpk::err_t		updateGUI			(::gpk::SClient & client, ::gpk::SGUI & gui);
+	gpk::err_t		processGUIEvent		(::gpk::SClient & client, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent);
 } // namespace
 
 #endif // GPK_UDP_CLIENT_APP_H_23701

@@ -34,7 +34,7 @@ namespace gpk
 		::gpk::n3f2_t			LightPosition			= {}; 
 		float					PaddingB				= 0;
 	};
-	stacxpr size_t		SENGINESCENECONSTANTSSIZE = sizeof(SEngineSceneConstants);
+	stxp size_t		SENGINESCENECONSTANTSSIZE = sizeof(SEngineSceneConstants);
 
 
 	struct SPSIn {
@@ -46,10 +46,10 @@ namespace gpk
 		::gpk::gc8bgra			Surface				; 
 	};
 
-	stacxpr size_t		SPSINSIZE = sizeof(SPSIn);
+	stxp size_t		SPSINSIZE = sizeof(SPSIn);
 #pragma pack(pop)
 
-	typedef ::gpk::error_t	(TFuncPixelShader)
+	typedef gpk::err_t	(TFuncPixelShader)
 		( const ::gpk::SEngineSceneConstants	& constants
 		, const ::gpk::SPSIn					& inPS
 		, ::gpk::bgra							& outputPixel
@@ -78,12 +78,12 @@ namespace gpk
 		::gpk::SRenderMaterial	Material;
 		::gpk::au2_t				Textures;
 
-		::gpk::error_t			Save			(::gpk::au0_t & output) const { 
+		gpk::err_t			Save			(::gpk::au0_t & output) const { 
 			gpk_necs(gpk::savePOD(output, Material));
 			gpk_necs(gpk::saveView(output, Textures));
 			return 0;
 		}
-		::gpk::error_t			Load			(::gpk::vcu0_t & input) {
+		gpk::err_t			Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadPOD(input, Material));
 			gpk_necs(gpk::loadView(input, Textures));
 			return 0;
@@ -102,7 +102,7 @@ namespace gpk
 		::gpk::SShaderManager		Shaders		= {};
 		::gpk::SRasterFontManager	Fonts		= {};
 
-		::gpk::error_t				Save		(::gpk::au0_t & output)		const	{
+		gpk::err_t				Save		(::gpk::au0_t & output)		const	{
 			gpk_necs(Buffers	.Save(output));
 			gpk_necs(Surfaces	.Save(output));
 			gpk_necs(Meshes		.Save(output));
@@ -111,7 +111,7 @@ namespace gpk
 			//gpk_necs(Fonts	.Save(output));
 			return 0;
 		}
-		::gpk::error_t				Load		(::gpk::vcu0_t & input) {
+		gpk::err_t				Load		(::gpk::vcu0_t & input) {
 			gpk_necs(Buffers	.Load(input));
 			gpk_necs(Surfaces	.Load(input));
 			gpk_necs(Meshes		.Load(input));
@@ -127,16 +127,16 @@ namespace gpk
 		::gpk::SRenderNodeManager		RenderNodes				= {};
 		::gpk::SEngineRenderCache		RenderCache				= {};
 
-		::gpk::error_t					CreateRenderNode		(const ::gpk::SGeometryBuffers & geometry, ::gpk::vcsc_c name, bool createSkin);
+		gpk::err_t					CreateRenderNode		(const ::gpk::SGeometryBuffers & geometry, ::gpk::vcsc_c name, bool createSkin);
 
-		::gpk::error_t					Load					(::gpk::vcu0_t & input) {
+		gpk::err_t					Load					(::gpk::vcu0_t & input) {
 			gpk_necs(Graphics		->Load(input));
 			gpk_necs(RenderNodes	 .Load(input));
 			//gpk_necs(RenderCache	 .Load(input));
 			return 0;
 		}
 
-		::gpk::error_t					Save					(::gpk::au0_t & output)	const	{
+		gpk::err_t					Save					(::gpk::au0_t & output)	const	{
 			if(Graphics) 
 				gpk_necs(Graphics->Save(output));
 			else {
@@ -147,7 +147,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t					Clone					(uint32_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+		gpk::err_t					Clone					(uint32_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
 			const uint32_t						iNewNode				= RenderNodes.Clone(iRenderNode);
 			const uint32_t						idShaderSource			= RenderNodes[iRenderNode].Shader;
 			if(cloneShaders && idShaderSource < Graphics->Shaders.size())
@@ -172,7 +172,7 @@ namespace gpk
 
 	};
 
-	::gpk::error_t							drawScene
+	gpk::err_t							drawScene
 		( ::gpk::g8bgra				backBufferColors
 		, ::gpk::gu32				backBufferDepth
 		, ::gpk::SEngineRenderCache	& renderCache

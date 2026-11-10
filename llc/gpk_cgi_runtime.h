@@ -102,9 +102,9 @@ namespace gpk
 		::gpk::SStandardEntryPointArgs			EntryPointArgs				= {};
 	};
 
-	::gpk::error_t							httpRequestInit				(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron);
-	::gpk::error_t							cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const sc_t *> & argv);
-	::gpk::error_t							cgiMain						(int argc, sc_t** argv, sc_t**envv);
+	gpk::err_t							httpRequestInit				(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron);
+	gpk::err_t							cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const sc_t *> & argv);
+	gpk::err_t							cgiMain						(int argc, sc_t** argv, sc_t**envv);
 
 	struct SCGIFramework {
 		::gpk::vcsc_t				ModuleName					= {};
@@ -115,19 +115,19 @@ namespace gpk
 } // namespace
 
 #define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)										\
-::gpk::error_t				setup					(_mainClass& app);								\
-::gpk::error_t				cleanup					(_mainClass& app);								\
-::gpk::error_t				update					(_mainClass& app, bool systemRequestedExit);	\
-::gpk::error_t				draw					(_mainClass& app, ::gpk::apod<sc_t>& output);	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleVersion		()														{ return 1; }	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleCreate		(void**	instanceApp, ::gpk::SCGIFramework* framework)	{ try { *instanceApp = new _mainClass{*framework};													return 0;		} catch(...) {} return -1; }	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleDelete		(void**	instanceApp)									{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleSetup			(void*	instanceApp)									{ try { const ::gpk::error_t result = setup		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleCleanup		(void*	instanceApp)									{ try { const ::gpk::error_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleUpdate		(void*	instanceApp, bool systemRequestedExit)			{ try { const ::gpk::error_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleRender		(void*	instanceApp, ::gpk::apod<sc_t>& output)			{ try { const ::gpk::error_t result = draw		(*(_mainClass*)instanceApp, output);				return result;	} catch(...) {} return -1; }	\
-::gpk::error_t	GPK_STDCALL	gpk_moduleTitle			(sc_t* out_title, uint32_t *maxCount)					{	\
-	stacxpr	sc_c					mylmoduleTitle[]		= _moduleTitle;							\
+gpk::err_t				setup					(_mainClass& app);								\
+gpk::err_t				cleanup					(_mainClass& app);								\
+gpk::err_t				update					(_mainClass& app, bool systemRequestedExit);	\
+gpk::err_t				draw					(_mainClass& app, ::gpk::apod<sc_t>& output);	\
+gpk::err_t	GPK_STDCALL	gpk_moduleVersion		()														{ return 1; }	\
+gpk::err_t	GPK_STDCALL	gpk_moduleCreate		(void**	instanceApp, ::gpk::SCGIFramework* framework)	{ try { *instanceApp = new _mainClass{*framework};													return 0;		} catch(...) {} return -1; }	\
+gpk::err_t	GPK_STDCALL	gpk_moduleDelete		(void**	instanceApp)									{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
+gpk::err_t	GPK_STDCALL	gpk_moduleSetup			(void*	instanceApp)									{ try { const gpk::err_t result = setup		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+gpk::err_t	GPK_STDCALL	gpk_moduleCleanup		(void*	instanceApp)									{ try { const gpk::err_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+gpk::err_t	GPK_STDCALL	gpk_moduleUpdate		(void*	instanceApp, bool systemRequestedExit)			{ try { const gpk::err_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
+gpk::err_t	GPK_STDCALL	gpk_moduleRender		(void*	instanceApp, ::gpk::apod<sc_t>& output)			{ try { const gpk::err_t result = draw		(*(_mainClass*)instanceApp, output);				return result;	} catch(...) {} return -1; }	\
+gpk::err_t	GPK_STDCALL	gpk_moduleTitle			(sc_t* out_title, uint32_t *maxCount)					{	\
+	stxp	sc_c					mylmoduleTitle[]		= _moduleTitle;							\
 	if(0 == out_title) 																				\
 		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
 	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\

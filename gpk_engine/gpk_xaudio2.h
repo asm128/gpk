@@ -27,15 +27,15 @@
 
 namespace gpk
 {
-	stacxpr uint8_t		INPUTCHANNELS	= 1;// number of source channels
-	stacxpr uint8_t		OUTPUTCHANNELS	= 8;// maximum number of destination channels supported in this sample
-	stacxpr uint8_t		NUM_PRESETS		= 30;
+	stxp uint8_t		INPUTCHANNELS	= 1;// number of source channels
+	stxp uint8_t		OUTPUTCHANNELS	= 8;// maximum number of destination channels supported in this sample
+	stxp uint8_t		NUM_PRESETS		= 30;
 
 	// Constants to define our world space
-	stacxpr int32_t		XMIN			= -10;
-	stacxpr int32_t		XMAX			= 10;
-	stacxpr int32_t		ZMIN			= -10;
-	stacxpr int32_t		ZMAX			= 10;
+	stxp int32_t		XMIN			= -10;
+	stxp int32_t		XMAX			= 10;
+	stxp int32_t		ZMIN			= -10;
+	stxp int32_t		ZMAX			= 10;
 
 	struct AudioDevice {
 		std::wstring	Id;
@@ -108,14 +108,14 @@ namespace gpk
 		FLOAT32					matrixCoefficients		[INPUTCHANNELS * OUTPUTCHANNELS]    = {};
 
 
-		::gpk::error_t			InitAudio				();
-		::gpk::error_t			PrepareAudio			(::gpk::vcsc_c & wavname);
-		::gpk::error_t			UpdateAudio				(double fElapsedTime);
-		::gpk::error_t			SetReverb				(int nReverb);
-		::gpk::error_t			PauseAudio				(bool resume);
-		::gpk::error_t			CleanupAudio			();
+		gpk::err_t			InitAudio				();
+		gpk::err_t			PrepareAudio			(::gpk::vcsc_c & wavname);
+		gpk::err_t			UpdateAudio				(double fElapsedTime);
+		gpk::err_t			SetReverb				(int nReverb);
+		gpk::err_t			PauseAudio				(bool resume);
+		gpk::err_t			CleanupAudio			();
 
-		::gpk::error_t			PlayWave				(::gpk::vcsc_c & wavname);
+		gpk::err_t			PlayWave				(::gpk::vcsc_c & wavname);
 	};
 } // namespace
 #endif // GPK_XAUDIO2_H_23627

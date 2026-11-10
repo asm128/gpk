@@ -10,7 +10,7 @@
 #	include <ctime>
 #endif
 
-::gpk::error_t			gpk::querystring_split	(::gpk::vcsc_c & input_string, ::gpk::aobj<::gpk::vcsc_t>& output_views) {
+gpk::err_t			gpk::querystring_split	(::gpk::vcsc_c & input_string, ::gpk::aobj<::gpk::vcsc_t>& output_views) {
 	if(0 == input_string.size())
 		return 0;
 	uint32_t						start				= 0;
@@ -34,7 +34,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews)	{
+gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews)	{
 	::gpk::au0_t				environmentBlockToSave			= {};
 	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {

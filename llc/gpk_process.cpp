@@ -7,7 +7,7 @@
 #	include <unistd.h>
 #endif
 
-::gpk::error_t			gpk::environmentBlockViews		(const ::gpk::vcsc_t & environmentBlock, ::gpk::aobj<::gpk::TKeyValConstString> & out_Views)	{
+gpk::err_t			gpk::environmentBlockViews		(const ::gpk::vcsc_t & environmentBlock, ::gpk::aobj<::gpk::TKeyValConstString> & out_Views)	{
 	uint32_t					offsetEndVar					= 0;
 	while(offsetEndVar < environmentBlock.size() - 1) {
 		uint32_t					offsetBeginVar					= offsetEndVar + (offsetEndVar ? 1 : 0);
@@ -29,7 +29,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::environmentBlockFromEnviron(::gpk::apod<sc_t> & environmentBlock)	{
+gpk::err_t			gpk::environmentBlockFromEnviron(::gpk::apod<sc_t> & environmentBlock)	{
 #ifndef GPK_ATMEL
     for (sc_t **env = environ; *env; ++env)
 		environmentBlock.append(*env, (uint32_t)strlen(*env) + 1);

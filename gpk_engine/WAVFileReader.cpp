@@ -44,15 +44,15 @@ namespace
 	}
 
 	// .WAV files
-	stacxpr	uint32_t		FOURCC_RIFF_TAG			= MAKEFOURCC('R', 'I', 'F', 'F');
-	stacxpr	uint32_t		FOURCC_FORMAT_TAG		= MAKEFOURCC('f', 'm', 't', ' ');
-	stacxpr	uint32_t		FOURCC_DATA_TAG			= MAKEFOURCC('d', 'a', 't', 'a');
-	stacxpr	uint32_t		FOURCC_WAVE_FILE_TAG	= MAKEFOURCC('W', 'A', 'V', 'E');
-	stacxpr	uint32_t		FOURCC_XWMA_FILE_TAG	= MAKEFOURCC('X', 'W', 'M', 'A');
-	stacxpr	uint32_t		FOURCC_DLS_SAMPLE		= MAKEFOURCC('w', 's', 'm', 'p');
-	stacxpr	uint32_t		FOURCC_MIDI_SAMPLE		= MAKEFOURCC('s', 'm', 'p', 'l');
-	stacxpr	uint32_t		FOURCC_XWMA_DPDS		= MAKEFOURCC('d', 'p', 'd', 's');
-	stacxpr	uint32_t		FOURCC_XMA_SEEK			= MAKEFOURCC('s', 'e', 'e', 'k');
+	stxp	uint32_t		FOURCC_RIFF_TAG			= MAKEFOURCC('R', 'I', 'F', 'F');
+	stxp	uint32_t		FOURCC_FORMAT_TAG		= MAKEFOURCC('f', 'm', 't', ' ');
+	stxp	uint32_t		FOURCC_DATA_TAG			= MAKEFOURCC('d', 'a', 't', 'a');
+	stxp	uint32_t		FOURCC_WAVE_FILE_TAG	= MAKEFOURCC('W', 'A', 'V', 'E');
+	stxp	uint32_t		FOURCC_XWMA_FILE_TAG	= MAKEFOURCC('X', 'W', 'M', 'A');
+	stxp	uint32_t		FOURCC_DLS_SAMPLE		= MAKEFOURCC('w', 's', 'm', 'p');
+	stxp	uint32_t		FOURCC_MIDI_SAMPLE		= MAKEFOURCC('s', 'm', 'p', 'l');
+	stxp	uint32_t		FOURCC_XWMA_DPDS		= MAKEFOURCC('d', 'p', 'd', 's');
+	stxp	uint32_t		FOURCC_XMA_SEEK			= MAKEFOURCC('s', 'e', 'e', 'k');
 
 #pragma pack(push,1)
 	struct RIFFChunk {
@@ -67,8 +67,8 @@ namespace
 	};
 
 	struct DLSLoop {
-		stacxpr	uint32_t		LOOP_TYPE_FORWARD		= 0x00000000;
-		stacxpr	uint32_t		LOOP_TYPE_RELEASE		= 0x00000001;
+		stxp	uint32_t		LOOP_TYPE_FORWARD		= 0x00000000;
+		stxp	uint32_t		LOOP_TYPE_RELEASE		= 0x00000001;
 
 		uint32_t				Size;
 		uint32_t				LoopType;
@@ -78,8 +78,8 @@ namespace
 
 	struct RIFFDLSSample
 	{
-		stacxpr	uint32_t		OPTIONS_NOTRUNCATION	= 0x00000001;
-		stacxpr	uint32_t		OPTIONS_NOCOMPRESSION	= 0x00000002;
+		stxp	uint32_t		OPTIONS_NOTRUNCATION	= 0x00000001;
+		stxp	uint32_t		OPTIONS_NOCOMPRESSION	= 0x00000002;
 
 		uint32_t				Size;
 		uint16_t				UnityNote;
@@ -90,9 +90,9 @@ namespace
 	};
 
 	struct MIDILoop {
-		stacxpr	uint32_t		LOOP_TYPE_FORWARD		= 0x00000000;
-		stacxpr	uint32_t		LOOP_TYPE_ALTERNATING	= 0x00000001;
-		stacxpr	uint32_t		LOOP_TYPE_BACKWARD		= 0x00000002;
+		stxp	uint32_t		LOOP_TYPE_FORWARD		= 0x00000000;
+		stxp	uint32_t		LOOP_TYPE_ALTERNATING	= 0x00000001;
+		stxp	uint32_t		LOOP_TYPE_BACKWARD		= 0x00000002;
 
 		uint32_t				CuePointId;
 		uint32_t				Type;

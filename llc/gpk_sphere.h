@@ -26,8 +26,8 @@ namespace gpk
 
 	// ---- Collision
 	// Returns the volume of a sphere. This is used to calculate how to recurse into the bounding volume tree. For a bounding sphere it is a simple calculation.
-	tplt<tpnm T> stacxpr double	sphereSize		(const sphere<T> & sphere)								noexcept	{ return 1.3333333333333333 * ::gpk::math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
-	tplt<tpnm T> stacxpr bool	sphereOverlaps	(const sphere<T> & sphereA, const sphere<T> & sphereB)	noexcept	{
+	tplt<tpnm T> stxp double	sphereSize		(const sphere<T> & sphere)								noexcept	{ return 1.3333333333333333 * ::gpk::math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
+	tplt<tpnm T> stxp bool	sphereOverlaps	(const sphere<T> & sphereA, const sphere<T> & sphereB)	noexcept	{
 		const double	distanceSquared	= (sphereA.Center - sphereB.Center).LengthSquared();
 		const double	radiiSum		= sphereA.Radius + sphereB.Radius;
 		return distanceSquared < (radiiSum * radiiSum);	// check squared distance against squared radius

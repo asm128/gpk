@@ -12,7 +12,7 @@ namespace gpk
 		::gpk::aobj<::gpk::TKeyValConstString>	Headers;
 	};
 
-	::gpk::error_t					httpClientRequest
+	gpk::err_t					httpClientRequest
 		(	const ::gpk::SIPv4End			& remoteAddress
 		,	::gpk::HTTP_METHOD			method
 		,	const ::gpk::vcst_t			& hostName
@@ -22,7 +22,7 @@ namespace gpk
 		,	::gpk::apod<sc_t>			& out_received
 		);
 
-	::gpk::error_t					httpClientRequest
+	gpk::err_t					httpClientRequest
 		(	const ::gpk::SIPv4End			& remoteAddress
 		,	::gpk::HTTP_METHOD			method
 		,	const ::gpk::vcst_t			& hostName
@@ -32,7 +32,7 @@ namespace gpk
 		,	::gpk::SHTTPResponse		& out_received
 		);
 
-	//::gpk::error_t					httpsClientRequest
+	//gpk::err_t					httpsClientRequest
 	//	(	const ::gpk::SIPv4End			& remoteAddress
 	//	,	::gpk::HTTP_METHOD			method
 	//	,	const ::gpk::vcs			& hostName
@@ -42,7 +42,7 @@ namespace gpk
 	//	,	::gpk::apod<sc_t>			& out_received
 	//	);
 
-	::gpk::error_t					urlDecode	(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded);
+	gpk::err_t					urlDecode	(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded);
 
 }
 

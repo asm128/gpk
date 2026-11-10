@@ -8,11 +8,11 @@ namespace gpk
 	tplt<tpnm T>
 	class CViewManager	{
 #if defined(GPK_ARDUINO)
-		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 >> 1;
+		stxp	const uint32_t	BLOCK_SIZE	= 1024 >> 1;
 #elif defined(GPK_ESP32)
-		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 4;
+		stxp	const uint32_t	BLOCK_SIZE	= 1024 * 4;
 #else
-		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
+		stxp	const uint32_t	BLOCK_SIZE	= 1024 * 64;
 #endif
 		::gpk::block_container<T, BLOCK_SIZE>	Cells;
 
@@ -22,7 +22,7 @@ namespace gpk
 
 										~CViewManager				()				{}
 
-		::gpk::error_t					Save						(::gpk::apod<u0_t> & output)	const	{
+		gpk::err_t					Save						(::gpk::apod<u0_t> & output)	const	{
 			gpk_necs(gpk::saveView(output, Counts));
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
 				gpk_necs(output.append((const uint8_t*)Views[iArray], Counts[iArray] * sizeof(T)));
@@ -61,7 +61,7 @@ namespace gpk
 			return -1;
 		}
 
-		::gpk::error_t					View		(const T * elements, u1_t count, ::gpk::view<const T> & out_view)	{
+		gpk::err_t					View		(const T * elements, u1_t count, ::gpk::view<const T> & out_view)	{
 			if(0 == count || 0 == elements) {
 				out_view						= {};
 				return -1;

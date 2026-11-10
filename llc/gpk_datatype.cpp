@@ -7,7 +7,7 @@
 
 //
 uint32_t		gpk::getStringFromDataType		( ::gpk::DATA_TYPE dataType, sc_t* string ) {
-	stacxpr const sc_t	typeUINT	[]					= "UINT"
+	stxp const sc_t	typeUINT	[]					= "UINT"
 		,				typeINT		[]					= "INT"
 		,				typeFLOAT	[]					= "FLOAT"
 		,				typeUFLOAT	[]					= "UFLOAT"

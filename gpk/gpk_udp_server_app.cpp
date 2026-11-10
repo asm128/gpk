@@ -6,23 +6,23 @@
 
 GPK_USING_TYPEINT();
 
-::gpk::error_t			gpk::loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter) {
+gpk::err_t			gpk::loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter) {
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"}, jsonConfig, parentNode, port));
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonConfig, parentNode, adapter));
 	info_printf("\nListen port: %.*s.\nAdapter: %.*s.'", GPK_VIEW_ARGS(port), GPK_VIEW_ARGS(adapter));
 	return 0;
 }
 
-::gpk::error_t			gpk::setupGUI		(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui) {
+gpk::err_t			gpk::setupGUI		(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui) {
 	gpk_necs(serverUI.Root = ::gpk::createScreenLayout(gui));
 
-	stacxpr	::gpk::n2u1_t		CONTROL_SIZE		= {192, 20};
+	stxp	::gpk::n2u1_t		CONTROL_SIZE		= {192, 20};
 	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_SERVER_INPUT>(gui, serverUI.Input, serverUI.Root, CONTROL_SIZE, ::gpk::ALIGN_BOTTOM_RIGHT));
 	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_SERVER_INFO> (gui, serverUI.Info , serverUI.Root, CONTROL_SIZE, ::gpk::ALIGN_TOP_LEFT));
 	return 0;
 }
 
-::gpk::error_t			gpk::serverStart	(::gpk::SServer & server, ::gpk::SGUI & gui) {
+gpk::err_t			gpk::serverStart	(::gpk::SServer & server, ::gpk::SGUI & gui) {
 	gpk_necs(gpk::tcpipAddress({}, server.Port, server.UDP.Address));
 	gpk_necs(gpk::parseIntegerDecimal(server.Adapter, server.UDP.AdapterIndex));
 	gpk_necs(gpk::serverStart(server.UDP, server.UDP.Address.Port, server.UDP.AdapterIndex)); 
@@ -37,7 +37,7 @@ GPK_USING_TYPEINT();
 }
 
 
-static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
+static	gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	::gpk::SUDPServer			& udpServer		= server.UDP;
 	gpk_necs(gpk::controlTextSet(gui, server.UI.Input[::gpk::UI_SERVER_INPUT_Stop		], udpServer.Listen ? ::gpk::vcs{"Stop"} : ::gpk::vcs{"Start"})); 
 	gpk_necs(gpk::controlTextSet(gui, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcs{"Listening"} : ::gpk::vcs{"Stopped"})); 
@@ -64,7 +64,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	return 0;
 }
 
-::gpk::error_t			gpk::serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui) {
+gpk::err_t			gpk::serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui) {
 	server.QueueReceived.clear();
 	es_if_failed(::gpk::serverPayloadCollect(server.UDP, server.QueueReceived));
 
@@ -86,7 +86,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	return ::updateGUI(server, gui);
 }
 
-::gpk::error_t			gpk::processGUIEvent	(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
+gpk::err_t			gpk::processGUIEvent	(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
 	::gpk::SUDPServer			& udpServer				= server.UDP;
 	switch(screenEvent.Type) {
 	default: break;

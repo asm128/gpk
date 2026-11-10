@@ -1,12 +1,12 @@
 #include "gpk_i2c.h"
 #include "gpk_platform_error.h"
 
-::gpk::error_t gpk::i2cInit(SI2CDevice & device) {
+gpk::err_t gpk::i2cInit(SI2CDevice & device) {
 	(void)device;
 	return 0;
 }
 
-::gpk::error_t gpk::i2cRead(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::I2C_MODE mode, uint32_t timeout) {
+gpk::err_t gpk::i2cRead(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::I2C_MODE mode, uint32_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {
@@ -23,7 +23,7 @@
 #endif
 }
 
-::gpk::error_t gpk::i2cWrite(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::I2C_MODE mode, uint32_t timeout) {
+gpk::err_t gpk::i2cWrite(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::I2C_MODE mode, uint32_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {

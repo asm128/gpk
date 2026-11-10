@@ -7,7 +7,7 @@
 		::gpk::controlDelete(*Dialog->GUI, IdGUIControl, true); 
 }
 
-static	::gpk::error_t	dialogInitializeColors			(::gpk::SDialogColors & dialogColors, ::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>> & palettes) {
+static	gpk::err_t	dialogInitializeColors			(::gpk::SDialogColors & dialogColors, ::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>> & palettes) {
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_NORMAL	]			= (uint16_t)palettes.push_back({{::gpk::DARKGRAY			, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85	,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= (uint16_t)palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2	,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= (uint16_t)palettes.push_back({{::gpk::GRAY	 			, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
@@ -52,7 +52,7 @@ static	::gpk::error_t	dialogInitializeColors			(::gpk::SDialogColors & dialogCol
 	return 0;
 }
 
-static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
+static	gpk::err_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	::gpk::SGUI						& gui							= *dialog.GUI; 
 	gpk_necs(dialog.Root = ::gpk::controlCreate(gui));
 	gui.Controls.Placement		[dialog.Root].Margin				= {};
@@ -88,7 +88,7 @@ static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	::dialogInitialize(*this);
 }
 
-stacxpr	const uint32_t	heightOfField			= 18;
+stxp	const uint32_t	heightOfField			= 18;
 ::gpk::cid_t			gpk::checkBoxCreate		(::gpk::SDialog			& dialog)								{
 	cid_t						index					= -1;
 	::gpk::pobj<::gpk::SDialogCheckBox>	checkBox;
@@ -98,7 +98,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::memcpy_s(controlTable.Draw[checkBox->IdGUIControl].Palettes.Storage, dialog.Colors->CheckBox.Storage);
 	return index;
 }
-::gpk::error_t			gpk::checkBoxUpdate			(::gpk::SDialogCheckBox	& checkbox)								{
+gpk::err_t			gpk::checkBoxUpdate			(::gpk::SDialogCheckBox	& checkbox)								{
 	::gpk::SDialog				& dialog					= *checkbox.Dialog;
 	::gpk::SControlTable		& controlTable				= dialog.GUI->Controls;
 	::gpk::img<::gpk::bgra>		& imageCross				= dialog.ImageCrossBGRA;
@@ -141,7 +141,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	tunerText.Text			= {slider->ValueString, (uint32_t)snprintf(slider->ValueString, ::gpk::size(slider->ValueString) - 2, "%lli", (long long int)slider->ValueCurrent)};
 	return index;
 }
-::gpk::error_t			gpk::sliderSetValue		(::gpk::SDialogSlider & slider, int64_t value)				{
+gpk::err_t			gpk::sliderSetValue		(::gpk::SDialogSlider & slider, int64_t value)				{
 	::gpk::SDialog				& dialog				= *slider.Dialog;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	const int64_t				newValue				= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);;
@@ -176,7 +176,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	return 0;
 }
 
-::gpk::error_t			gpk::sliderUpdate			(::gpk::SDialogSlider	& slider)								{
+gpk::err_t			gpk::sliderUpdate			(::gpk::SDialogSlider	& slider)								{
 	::gpk::SDialog				& dialog					= *slider.Dialog;
 	::gpk::SControlTable		& controlTable				= dialog.GUI->Controls;
 	const int64_t				valueRange					= slider.ValueLimits.Max - slider.ValueLimits.Min;
@@ -229,7 +229,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::memcpy_s(controlTable.Draw[editBox->IdGUIControl].Palettes.Storage, dialog.Colors->CheckBox.Storage);
 	return index;
 }
-::gpk::error_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
+gpk::err_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
 	::gpk::SDialog				& dialog				= *control.Dialog;
 	if(dialog.Input->ButtonDown(0)) {
 	}
@@ -275,14 +275,14 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	return index;
 }
 
-::gpk::error_t			gpk::viewportAdjustSize	(::gpk::n2<int16_t> & sizeViewport, const ::gpk::n2<int16_t> & sizeClient)		{
+gpk::err_t			gpk::viewportAdjustSize	(::gpk::n2<int16_t> & sizeViewport, const ::gpk::n2<int16_t> & sizeClient)		{
 	sizeViewport			= sizeClient;
 	sizeViewport.x			+= 4;
 	sizeViewport.y			+= 4 + 1 + heightOfField;
 	return 0;
 }
 
-::gpk::error_t			gpk::viewportFold		(::gpk::SDialogViewport	& control, bool fold)														{
+gpk::err_t			gpk::viewportFold		(::gpk::SDialogViewport	& control, bool fold)														{
 	if((fold && control.Settings.Unfolded) || (false == control.Settings.Unfolded && false == fold)) {
 		::gpk::SDialog				& dialog				= *control.Dialog;
 		::gpk::SGUI					& gui					= *dialog.GUI;
@@ -309,7 +309,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	return one_if(false == control.Settings.Unfolded);
 }
 
-static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SControlPlacement & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2s1_t mouseDeltas) {
+static	gpk::err_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SControlPlacement & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2s1_t mouseDeltas) {
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
 	control.Settings.Dragging	= true;
@@ -321,7 +321,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	return 0;
 }
 
-::gpk::error_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)																{
+gpk::err_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)																{
 	::gpk::SDialog				& dialog				= *control.Dialog;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	::gpk::SControlPlacement	& controlMain			= controlTable.Placement[control.IdGUIControl];

@@ -45,14 +45,14 @@ namespace gpk
 		::gpk::au2_t						ConstantBuffers;
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
-		::gpk::error_t						Save			(::gpk::au0_t & output) const { 
+		gpk::err_t						Save			(::gpk::au0_t & output) const { 
 			gpk_necs(gpk::savePOD(output, Desc));
 			gpk_necs(gpk::saveView(output, GeometryBuffers));
 			gpk_necs(gpk::saveView(output, ConstantBuffers));
 			gpk_necs(gpk::saveView(output, GeometrySlices));
 			return 0;
 		}
-		::gpk::error_t						Load			(::gpk::vcu0_t & input) {
+		gpk::err_t						Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadPOD(input, Desc));
 			gpk_necs(gpk::loadView(input, GeometryBuffers));
 			gpk_necs(gpk::loadView(input, ConstantBuffers));

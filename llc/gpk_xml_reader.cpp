@@ -9,15 +9,15 @@ using gpk::sc_t, gpk::sc_c;
 
 #define xml_info_printf(...) ::gpk::dummy(__VA_ARGS__)// info_printf
 
-//stacxpr	::gpk::astatic<const sc_t, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
+//stxp	::gpk::astatic<const sc_t, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
 
-::gpk::error_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, ::gpk::vcst_c & filename) {
+gpk::err_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, ::gpk::vcst_c & filename) {
 	xml_info_printf("Loading xml file: %s.", filename.begin());
 	gpk_necall(gpk::fileToMemory({filename.begin(), filename.size()}, file.Bytes), "Failed to load file: '%s'", filename.begin());
 	return ::gpk::xmlParse(file.Reader, {file.Bytes});
 }
 
-static	::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_TOKEN token, int32_t iStartCharacter = -1) {
+static	gpk::err_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_TOKEN token, int32_t iStartCharacter = -1) {
 	const int32_t			parentIndex					= reader.StateRead.IndexCurrentElement;
 	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
 	(void)parentType;
@@ -38,7 +38,7 @@ static	::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_
 	return ++reader.StateRead.NestLevel;
 }
 
-static	::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iStopCharacter = -1) {
+static	gpk::err_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iStopCharacter = -1) {
 	const ::gpk::XML_TOKEN	token						= reader.StateRead.CurrentElement->Type;
 	const int32_t			parentIndex					= reader.StateRead.CurrentElement->Parent;
 	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
@@ -59,7 +59,7 @@ static	::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iS
 	return --reader.StateRead.NestLevel;
 }
 
-static	::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
+static	gpk::err_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {
@@ -84,7 +84,7 @@ static	::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk:
 	return 0;
 }
 
-static	::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
+static	gpk::err_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {
@@ -119,7 +119,7 @@ static	::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 		break;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
 	{
-		stacxpr	::gpk::astatic<const ::gpk::XML_TOKEN, 5> validScopes =
+		stxp	::gpk::astatic<const ::gpk::XML_TOKEN, 5> validScopes =
 			{ ::gpk::XML_TOKEN_TAG_NODE
 			, ::gpk::XML_TOKEN_TAG_OPEN
 			, ::gpk::XML_TOKEN_TAG_CLOSE
@@ -157,7 +157,7 @@ static	::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 	return 0;
 }
 
-static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::vcsc_t xmlDoc) {
+static	gpk::err_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::vcsc_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {
@@ -199,7 +199,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 		}
 		return -1;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
-		stacxpr	::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
+		stxp	::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
 			{ ::gpk::XML_TOKEN_TAG_NODE
 			, ::gpk::XML_TOKEN_TAG_OPEN
 			, ::gpk::XML_TOKEN_TAG_CLOSE
@@ -225,7 +225,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 	return 0;
 }
 
-static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
+static	gpk::err_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	switch(currentChar) {
@@ -255,7 +255,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	}
 		break;
 	case '\r': case '\n': case '\t': case '\b': case ' ': {
-		stacxpr	::gpk::array_static<const ::gpk::XML_TOKEN, 11> validScopes =
+		stxp	::gpk::array_static<const ::gpk::XML_TOKEN, 11> validScopes =
 			{ ::gpk::XML_TOKEN_DOCUMENT
 			, ::gpk::XML_TOKEN_COMMENT
 			, ::gpk::XML_TOKEN_PI
@@ -277,7 +277,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	}
 		break;
 	case '<': {
-		stacxpr	::gpk::array_static<const ::gpk::XML_TOKEN, 4> validScopes =
+		stxp	::gpk::array_static<const ::gpk::XML_TOKEN, 4> validScopes =
 			{ ::gpk::XML_TOKEN_COMMENT
 			, ::gpk::XML_TOKEN_DOCUMENT
 			, ::gpk::XML_TOKEN_TAG_TEXT
@@ -318,9 +318,9 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	return 0;
 }
 
-::gpk::error_t			gpk::xmlParseCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc)	{
-	stacxpr	::gpk::array_static<const ::gpk::XML_TOKEN, 4> TOKENS_CHARACTER_TAG	= {::gpk::XML_TOKEN_TAG_OPEN, ::gpk::XML_TOKEN_TAG_CLOSE, ::gpk::XML_TOKEN_PI, ::gpk::XML_TOKEN_ATTR};
-	stacxpr	::gpk::array_static<const ::gpk::XML_TOKEN, 3> TOKENS_CHARACTER_NAME	= {::gpk::XML_TOKEN_ATTR_NAME, ::gpk::XML_TOKEN_TAG_NAME, ::gpk::XML_TOKEN_PI_NAME};
+gpk::err_t			gpk::xmlParseCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc)	{
+	stxp	::gpk::array_static<const ::gpk::XML_TOKEN, 4> TOKENS_CHARACTER_TAG	= {::gpk::XML_TOKEN_TAG_OPEN, ::gpk::XML_TOKEN_TAG_CLOSE, ::gpk::XML_TOKEN_PI, ::gpk::XML_TOKEN_ATTR};
+	stxp	::gpk::array_static<const ::gpk::XML_TOKEN, 3> TOKENS_CHARACTER_NAME	= {::gpk::XML_TOKEN_ATTR_NAME, ::gpk::XML_TOKEN_TAG_NAME, ::gpk::XML_TOKEN_PI_NAME};
 	if(0 == reader.StateRead.CurrentElement) {
 		gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_DOCUMENT));
 	}
@@ -343,7 +343,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	return 0;
 }
 
-::gpk::error_t			gpk::xmlParse			(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc)	{
+gpk::err_t			gpk::xmlParse			(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc)	{
 	for(reader.StateRead.IndexCurrentChar = 0; reader.StateRead.IndexCurrentChar < xmlDoc.size(); ++reader.StateRead.IndexCurrentChar) {
 		if (gpk::failed(::gpk::xmlParseCharacter(reader, xmlDoc))) {
 			error_printf("Failed to parse XML:"

@@ -37,7 +37,7 @@ namespace gpk
 
 		inxp	const TRef*		get_ref		()							const	noexcept	{ return Reference; }
 		inxp	const TRef*		set_ref		(TRef * ref)						noexcept	{ TRef * oldInstance = Reference; Reference = ref; ::gpk::ref_release(&oldInstance); return Reference; }
-		inline	::gpk::error_t	clear		()									noexcept	{ return ::gpk::ref_release(&Reference); }
+		inline	gpk::err_t	clear		()									noexcept	{ return ::gpk::ref_release(&Reference); }
 
 		tplt<tpnm _tNCOOther>
 		inline	_tNCO*			as			(_tNCOOther* * other)				noexcept	{ return *other = (Reference ? dynamic_cast<_tNCOOther*>(Reference->Instance) : 0); }

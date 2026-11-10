@@ -31,7 +31,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t				blockConfigLoad				(::gpk::SBlockConfig & out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig & configDefault = {{}, 65535, 0});
+	gpk::err_t				blockConfigLoad				(::gpk::SBlockConfig & out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig & configDefault = {{}, 65535, 0});
 
 	tplt<tpnm _tBlock>
 	struct SMapTable {
@@ -50,20 +50,20 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t				blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
-	::gpk::error_t				blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord);
-	::gpk::error_t				blockRecordPath				(::gpk::asc_t & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcsc_t & dbName, const ::gpk::vcsc_t & dbPath);
+	gpk::err_t				blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
+	gpk::err_t				blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord);
+	gpk::err_t				blockRecordPath				(::gpk::asc_t & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcsc_t & dbName, const ::gpk::vcsc_t & dbPath);
 
-	stainli	::gpk::error_t		blockRecordPath				(::gpk::asc_t & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
+	stin	gpk::err_t		blockRecordPath				(::gpk::asc_t & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
 		::gpk::blockRecordIndices(idRecord, blockSize, indices);
 		return ::gpk::blockRecordPath(fileName, indices, dbName, dbPath);
 	}
 
-	::gpk::error_t				blockFileName				(::gpk::asc_t & fileName, const uint32_t idBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & folderName);
-	::gpk::error_t				blockFilePath				(::gpk::asc_t & finalPath, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath);
+	gpk::err_t				blockFileName				(::gpk::asc_t & fileName, const uint32_t idBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & folderName);
+	gpk::err_t				blockFilePath				(::gpk::asc_t & finalPath, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath);
 
 	tplt<tpnm _tElement>
-	::gpk::error_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, ::gpk::vcsc_c & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
+	gpk::err_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, ::gpk::vcsc_c & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
 		(void)maxBlocksInMemory;
 		loadedBytes.clear();
 		for(uint32_t iBlock = 0; iBlock < mapTable.Id.size(); ++iBlock)
@@ -71,21 +71,21 @@ namespace gpk
 
 		::gpk::pobj<_tElement>			newBlock;
 		newBlock.create();
-		::gpk::error_t					indexBlock					= mapTable.Block.push_back(newBlock);
+		gpk::err_t					indexBlock					= mapTable.Block.push_back(newBlock);
 		gpk_necs(mapTable.Id.push_back(indexMap.IdBlock));
 		gpk_necall(gpk::fileToMemorySecure(loadedBytes, fileName, mapTable.BlockConfig.Key, mapTable.BlockConfig.Deflate), "Failed to load block file: %.*s.", GPK_VIEW_ARGS(fileName));
 		return indexBlock;
 	}
 
 	tplt<tpnm _tElement>
-	::gpk::error_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath, uint64_t idRecord) {
+	gpk::err_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath, uint64_t idRecord) {
 		::gpk::apod<sc_t>				fileName					= {};
 		gpk_necs(gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath));
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
 	tplt<tpnm _tElement>
-	::gpk::error_t				blockMapSave				(::gpk::vcu0_c & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
+	gpk::err_t				blockMapSave				(::gpk::vcu0_c & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
 		::gpk::asc_t					finalPath					= {};
 		gpk_necs(gpk::blockFilePath(finalPath, dbName, dbPath));
 		::gpk::asc_t					fileName					= {};
@@ -94,10 +94,10 @@ namespace gpk
 	}
 
 	tplt<tpnm _tMapBlock>
-	::gpk::error_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, ::gpk::vcsc_c & dbPath, ::gpk::asc_t & outputData) {
+	gpk::err_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, ::gpk::vcsc_c & dbPath, ::gpk::asc_t & outputData) {
 		::gpk::SRecordMap				recordMap;
 		::gpk::apod<sc_t>				fileBytes;
-		::gpk::error_t					indexBlock					= ::gpk::blockMapLoad(fileBytes, recordMap, mapTable, mapTable.DBName, dbPath, idRecord);
+		gpk::err_t					indexBlock					= ::gpk::blockMapLoad(fileBytes, recordMap, mapTable, mapTable.DBName, dbPath, idRecord);
 		gpk_necall(indexBlock, "Invalid record id: %llu.", idRecord);
 		_tMapBlock						& loadedBlock				= *mapTable.Block[indexBlock];
 		if(fileBytes.size())
@@ -106,13 +106,13 @@ namespace gpk
 		return loadedBlock.MapGet(recordMap.IndexRecord, outputData);
 	}
 
-	//stainli	int16_t	mapTableContainerFromData	(const ::gpk::vcsc_t & sequenceToFind, const uint32_t countContainers)	{
+	//stin	int16_t	mapTableContainerFromData	(const ::gpk::vcsc_t & sequenceToFind, const uint32_t countContainers)	{
 	//	uint64_t					container					= 0;
 	//	::gpk::crcGenerate(sequenceToFind, container);
 	//	return (int16_t)(container % countContainers);
 	//}
 
-	//stainli	uint32_t				mapTableContainerFromId		(const uint32_t blockId, const uint32_t countContainers)	{ return blockId % countContainers; }
+	//stin	uint32_t				mapTableContainerFromId		(const uint32_t blockId, const uint32_t countContainers)	{ return blockId % countContainers; }
 
 	tplt<tpnm _tMapBlock>
 	int64_t						mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, ::gpk::vcsc_c & dbPath, ::gpk::vcsc_c & sequenceToFind)	{
@@ -152,7 +152,7 @@ namespace gpk
 
 			//filePart				= {fileNameCurrent.begin(), fileNameCurrent.size() - extension.size()};
 			gpk_necs(fileNameCurrent.slice(filePart, 0, fileNameCurrent.size() - extension.size()));
-			::gpk::error_t				indexOfPrevDot				= ::gpk::rfind('.', filePart);
+			gpk::err_t				indexOfPrevDot				= ::gpk::rfind('.', filePart);
 			if(-1 == indexOfPrevDot)
 				continue;
 
@@ -167,7 +167,7 @@ namespace gpk
 			indexMap.IdBlock		= idBlock;
 			indexMap.IndexRecord	= -1;
 			loadedBytes.clear();
-			const ::gpk::error_t		indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
+			const gpk::err_t		indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
 			_tMapBlock					& block						= *mapTable.Block[indexBlock];
 			gpk_necall(block.Load(loadedBytes), "Failed to load block file: %.*s.", GPK_VIEW_ARGS(fileNameCurrent));
 			const int32_t				indexRecord					= block.MapId(sequenceToFind);
@@ -225,7 +225,7 @@ namespace gpk
 		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
 		::gpk::blockFileName(indexMap.IdBlock, mapTable.DBName, containerPath, fileNameCurrent);
 		::gpk::apod<sc_t>				loadedBytes;
-		const ::gpk::error_t			indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
+		const gpk::err_t			indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
 		if(indexBlock >= 0) {
 			_tMapBlock						& block						= *mapTable.Block[indexBlock];
 			gpk_necall(block.Load(loadedBytes), "Failed to load block file: %.*s.", GPK_VIEW_ARGS(fileNameCurrent));
@@ -238,15 +238,15 @@ namespace gpk
 	struct SMapBlock {
 		::gpk::CViewManager<uint8_t>			Allocator;
 
-		inln	::gpk::error_t					Size		()										const	{ return Allocator.Counts.size(); }
-		inln	::gpk::error_t					Save		(::gpk::apod<uint8_t> & output)			const	{ return Allocator.Save(output); }
-		inln	::gpk::error_t					Load		(::gpk::vcu0_t & input)							{ return Allocator.Load(input); }
-		inln	::gpk::error_t					MapAdd		(::gpk::vcu0_c & dataToAdd)						{
+		inln	gpk::err_t					Size		()										const	{ return Allocator.Counts.size(); }
+		inln	gpk::err_t					Save		(::gpk::apod<uint8_t> & output)			const	{ return Allocator.Save(output); }
+		inln	gpk::err_t					Load		(::gpk::vcu0_t & input)							{ return Allocator.Load(input); }
+		inln	gpk::err_t					MapAdd		(::gpk::vcu0_c & dataToAdd)						{
 			return Allocator.View(dataToAdd.begin(), (uint16_t)dataToAdd.size());
 		}
 
-		::gpk::error_t							MapId		(::gpk::vcu0_c & dataToFind)			const;
-		::gpk::error_t							MapGet		(uint32_t index, ::gpk::vcu0_t & data)	const;
+		gpk::err_t							MapId		(::gpk::vcu0_c & dataToFind)			const;
+		gpk::err_t							MapGet		(uint32_t index, ::gpk::vcu0_t & data)	const;
 	};
 } // namespace
 

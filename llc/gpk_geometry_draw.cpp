@@ -1,6 +1,6 @@
 #include "gpk_geometry_draw.h"
 
-::gpk::error_t			gpk::drawTriangle
+gpk::err_t			gpk::drawTriangle
 	( const ::gpk::g8bgra				targetPixels
 	, const ::gpk::SGeometryBuffers		& geometry
 	, const int							iTriangle

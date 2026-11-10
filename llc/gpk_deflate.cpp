@@ -22,7 +22,7 @@ GPK_USING_TYPEINT();
 
 stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 
-::gpk::error_t			gpk::crcGenerate			(vcu0_c & bytes, uint64_t & crc)	{
+gpk::err_t			gpk::crcGenerate			(vcu0_c & bytes, uint64_t & crc)	{
 	crc						= 0;
 	u2_c				lastPos						= bytes.size() - 1;
 	for(uint32_t i=0; i < bytes.size(); ++i) {
@@ -32,14 +32,14 @@ stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 	return 0;
 }
 
-::gpk::error_t			gpk::crcGenerateAndAppend	(::gpk::au0_t & bytes)	{
+gpk::err_t			gpk::crcGenerateAndAppend	(::gpk::au0_t & bytes)	{
 	uint64_t					crcToStore					= 0;
 	::gpk::crcGenerate(bytes, crcToStore);
 	gpk_necs(bytes.append((const uint8_t*)&crcToStore, szof(uint64_t)));;
 	return 0;
 }
 
-::gpk::error_t			gpk::crcVerifyAndRemove		(::gpk::au0_t & bytes)	{
+gpk::err_t			gpk::crcVerifyAndRemove		(::gpk::au0_t & bytes)	{
 	ree_if(bytes.size() < 8, "Invalid input. No CRC can be found in an array of %u bytes.", bytes.size());
 	uint64_t					check						= 0;
 	u2_c				startOfCRC					= bytes.size() - 8;
@@ -50,7 +50,7 @@ stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 	return 0;
 }
 
-::gpk::error_t			gpk::arrayDeflate		(vcu0_c & inflated, ::gpk::au0_t & deflated, u2_c chunkSize)	{
+gpk::err_t			gpk::arrayDeflate		(vcu0_c & inflated, ::gpk::au0_t & deflated, u2_c chunkSize)	{
 #if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 #	ifdef GPK_ESP32
 	deflated				= inflated;
@@ -87,7 +87,7 @@ stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 	return 0;
 }
 
-::gpk::error_t			gpk::arrayInflate		(vcu0_c & deflated, ::gpk::au0_t & inflated, u2_c chunkSize)	{
+gpk::err_t			gpk::arrayInflate		(vcu0_c & deflated, ::gpk::au0_t & inflated, u2_c chunkSize)	{
 #if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 #	ifdef GPK_ESP32
 	inflated				= deflated;
@@ -129,14 +129,14 @@ stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 	return 0;
 }
 
-::gpk::error_t			gpk::folderUnpack			(::gpk::SFolderInMemory & out_loaded, const ::gpk::vcst_t nameFileSrc)					{
+gpk::err_t			gpk::folderUnpack			(::gpk::SFolderInMemory & out_loaded, const ::gpk::vcst_t nameFileSrc)					{
 	::gpk::au0_t					rawFileInMemory				= {};
 	gpk_necall(gpk::fileToMemory(nameFileSrc, rawFileInMemory), "Failed to load pak file: %s.", nameFileSrc);
 	gpk_necall(gpk::folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %s.", nameFileSrc);
 	return 0;
 }
 
-::gpk::error_t			gpk::folderToDisk			(const ::gpk::SFolderPackage & folderPackage, const ::gpk::vcst_t nameFileDst)			{
+gpk::err_t			gpk::folderToDisk			(const ::gpk::SFolderPackage & folderPackage, const ::gpk::vcst_t nameFileDst)			{
 	const ::gpk::SPackHeader 	& fileHeader				= folderPackage.PackageInfo;
 	const ::gpk::au0_t			& compressedTableFiles		= folderPackage.CompressedTableFiles		;
 	const ::gpk::au0_t			& compressedContentsPacked	= folderPackage.CompressedContentsPacked	;
@@ -153,7 +153,7 @@ stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 }
 
 stxp	uint32_t		DEFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
-::gpk::error_t			gpk::folderPack				(::gpk::SFolderPackage & output, const ::gpk::vcst_t nameFolderSrc) {
+gpk::err_t			gpk::folderPack				(::gpk::SFolderPackage & output, const ::gpk::vcst_t nameFolderSrc) {
 	::gpk::SPackHeader 			& fileHeader			= output.PackageInfo = {};
 	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
 	::gpk::asc_t					finalPathName			= {};
@@ -181,7 +181,7 @@ stxp	uint32_t		DEFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 }
 
 stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
-::gpk::error_t			gpk::folderUnpack			(::gpk::SFolderInMemory & output, vcu0_c & rawFileInMemory)		{
+gpk::err_t			gpk::folderUnpack			(::gpk::SFolderInMemory & output, vcu0_c & rawFileInMemory)		{
 	const ::gpk::SPackHeader	& header					= *(::gpk::SPackHeader*)&rawFileInMemory[0];
 	output.Names	.resize(header.TotalFileCount);
 	output.Contents	.resize(header.TotalFileCount);
@@ -204,7 +204,7 @@ stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	return 0;
 }
 
-::gpk::error_t			gpk::folderLoad			
+gpk::err_t			gpk::folderLoad			
 	( const ::gpk::vcst_t	nameFolderSrc 
 	, ::gpk::au0_t		& tableFiles				
 	, ::gpk::au0_t		& contentsPacked			
@@ -239,7 +239,7 @@ stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 }
 
 // Write folder to disk.
-::gpk::error_t			gpk::folderToDisk			(const ::gpk::SFolderInMemory & virtualFolder, ::gpk::vcst_t destinationPath)				{
+gpk::err_t			gpk::folderToDisk			(const ::gpk::SFolderInMemory & virtualFolder, ::gpk::vcst_t destinationPath)				{
 	char						bufferFormat	[32]		= {};
 	::gpk::asc_t					finalPathName				= {};
 	finalPathName.resize(8 * 1024);
@@ -253,7 +253,7 @@ stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 		snprintf(finalPathName.begin(), finalPathName.size(), bufferFormat, destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u):'%s'. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t					lenPath						= (uint32_t)strlen(finalPathName.begin());
-		::gpk::error_t				indexSlash					= ::gpk::findLastSlash(::gpk::vcst_t{finalPathName.begin(), uint32_t(-1)});
+		gpk::err_t				indexSlash					= ::gpk::findLastSlash(::gpk::vcst_t{finalPathName.begin(), uint32_t(-1)});
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash]	= 0;
 			lenPath						= (uint32_t)strlen(finalPathName.begin());
@@ -268,21 +268,21 @@ stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	return 0;
 }
 
-::gpk::error_t			gpk::folderPackToDisk		(const ::gpk::vcst_t nameFileDst,	const ::gpk::vcst_t nameFolderSrc)		{
+gpk::err_t			gpk::folderPackToDisk		(const ::gpk::vcst_t nameFileDst,	const ::gpk::vcst_t nameFolderSrc)		{
 	::gpk::SFolderPackage		folderPackage;
 	gpk_necall(gpk::folderPack(folderPackage, nameFolderSrc), "Failed to pack folder: %s.", nameFolderSrc.begin());
 	gpk_necall(gpk::folderToDisk(folderPackage, nameFileDst), "Failed to pack folder: %s.", nameFolderSrc.begin());
 	return 0;
 }
 
-::gpk::error_t			gpk::folderUnpackToDisk		(const ::gpk::vcst_t namePathDst, const ::gpk::vcst_t nameFileSrc)		{
+gpk::err_t			gpk::folderUnpackToDisk		(const ::gpk::vcst_t namePathDst, const ::gpk::vcst_t nameFileSrc)		{
 	::gpk::SFolderInMemory		virtualFolder				= {};
 	gpk_necall(gpk::folderUnpack(virtualFolder, nameFileSrc), "Failed to unpack file: %s.", nameFileSrc);
 	gpk_necall(gpk::folderToDisk(virtualFolder, namePathDst), "Failed to write folder to disk. Disk full or insufficient permissions. File name: %s. Destionation Path: %s.", nameFileSrc, namePathDst);
 	return 0;
 }
 
-::gpk::error_t			gpk::inflateToMemory  		(::gpk::au0_t & tempCache, ::gpk::vcsc_c & fileName, ::gpk::au0_t & output) {
+gpk::err_t			gpk::inflateToMemory  		(::gpk::au0_t & tempCache, ::gpk::vcsc_c & fileName, ::gpk::au0_t & output) {
 	gpk_necs(gpk::fileToMemory(fileName, tempCache));
 	info_printf("File size: %u.", tempCache.size());
 
@@ -291,7 +291,7 @@ stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	return 0; 
 }
 
-::gpk::error_t			gpk::deflateFromMemory		(::gpk::au0_t & tempCache, ::gpk::vcsc_c & fileName, vcu0_c & input) {
+gpk::err_t			gpk::deflateFromMemory		(::gpk::au0_t & tempCache, ::gpk::vcsc_c & fileName, vcu0_c & input) {
 	info_printf("Input size: %u.", input.size());
 	gpk_necs(gpk::arrayDeflate(input, tempCache));
 
@@ -299,7 +299,7 @@ stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	return ::gpk::fileFromMemory(fileName, tempCache);
 }
 
-::gpk::error_t			gpk::fileFromMemorySecure	(::gpk::SLoadCache & recycle, ::gpk::vcsc_c & fileName, vcu0_c & key, const bool deflate, vcu0_c & blockBytes) {
+gpk::err_t			gpk::fileFromMemorySecure	(::gpk::SLoadCache & recycle, ::gpk::vcsc_c & fileName, vcu0_c & key, const bool deflate, vcu0_c & blockBytes) {
 	if(false == deflate && 0 == key.size())
 		recycle.Encrypted		= blockBytes;
 	else {
@@ -317,7 +317,7 @@ stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	return 0;
 }
 
-::gpk::error_t			gpk::fileToMemorySecure		(::gpk::SLoadCache & recycle, ::gpk::vcsc_c & fileName, vcu0_c & key, const bool deflate, ::gpk::au0_t & loadedBytes)								{
+gpk::err_t			gpk::fileToMemorySecure		(::gpk::SLoadCache & recycle, ::gpk::vcsc_c & fileName, vcu0_c & key, const bool deflate, ::gpk::au0_t & loadedBytes)								{
 	::gpk::vcst_t					strFilename					= {fileName.begin(), fileName.size()};
 	if(false == deflate && 0 == key.size()) {
 		gpk_necall(gpk::fileToMemory(strFilename, loadedBytes), "Failed to read file: %.*s.", GPK_VIEW_ARGS(fileName));

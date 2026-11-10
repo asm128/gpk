@@ -27,7 +27,7 @@ namespace gpk
 #	define LEAVE_SHARED_SECTION(Name)							(Name).unlock()
 #	define DELETE_SHARED_SECTION(Name)							(0)
 
-	stainli ::gpk::error_t	sleep	(uint32_t milliseconds)		noexcept	{ std::this_thread::sleep_for (std::chrono::milliseconds(milliseconds)); return 0; }
+	stin gpk::err_t	sleep	(uint32_t milliseconds)		noexcept	{ std::this_thread::sleep_for (std::chrono::milliseconds(milliseconds)); return 0; }
 #elif defined(GPK_WINDOWS)
 #	if (defined( _WIN64 ) || defined( WIN64 ))
 #		define gpk__sync_increment(nCount)							( InterlockedIncrement64		( &(nCount) ) )
@@ -46,7 +46,7 @@ namespace gpk
 #	define LEAVE_SHARED_SECTION(Name)			LeaveCriticalSection (&Name)
 #	define DELETE_SHARED_SECTION(Name)			DeleteCriticalSection(&Name)
 
-	stainli	::gpk::error_t	sleep	(uint32_t milliseconds)		noexcept	{ Sleep(milliseconds); return 0; }
+	stin	gpk::err_t	sleep	(uint32_t milliseconds)		noexcept	{ Sleep(milliseconds); return 0; }
 #else
 #	define gpk__sync_increment(nCount)			(++(nCount))
 #	define gpk__sync_decrement(nCount)			(--(nCount))
@@ -58,9 +58,9 @@ namespace gpk
 #	define DELETE_SHARED_SECTION(Name)			(0)
 
 #	ifdef GPK_ATMEL
-	stainli ::gpk::error_t	sleep	(uint32_t milliseconds)		noexcept	{ ::delay(milliseconds); return 0; }
+	stin gpk::err_t	sleep	(uint32_t milliseconds)		noexcept	{ ::delay(milliseconds); return 0; }
 #	else
-	stainli ::gpk::error_t	sleep	(uint32_t milliseconds)		noexcept	{ std::this_thread::sleep_for (std::chrono::milliseconds(milliseconds)); return 0; }
+	stin gpk::err_t	sleep	(uint32_t milliseconds)		noexcept	{ std::this_thread::sleep_for (std::chrono::milliseconds(milliseconds)); return 0; }
 #	endif
 #endif
 

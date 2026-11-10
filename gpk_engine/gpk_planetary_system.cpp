@@ -1,12 +1,12 @@
 #include "gpk_planetary_system.h"
 
-::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcsc_t jsonFilePath) { 
+gpk::err_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcsc_t jsonFilePath) { 
 	::gpk::SJSONFile			jsonFile					= {};
 	gpk_necs(gpk::jsonFileRead(jsonFile, jsonFilePath));
 	return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
 }
 
-::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, const ::gpk::SJSONReader & jsonData) {
+gpk::err_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, const ::gpk::SJSONReader & jsonData) {
 	::gpk::avcsc_t				stellarBodyNames			= {};
 	::gpk::as2_t					stellarBodyIndices;
 	gpk_necs(gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));

@@ -23,7 +23,7 @@ namespace gpk
 	};
 
 	tplt<tpnm _tNCO>
-	::gpk::error_t			ref_release				(::gpk::gref<_tNCO>* * gpk_reference) {
+	gpk::err_t			ref_release				(::gpk::gref<_tNCO>* * gpk_reference) {
 		typedef	::gpk::gref<_tNCO>	TRef;
 		TRef						* oldRef				= *gpk_reference;
 		*gpk_reference			= 0;

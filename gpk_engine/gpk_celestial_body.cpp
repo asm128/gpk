@@ -1,7 +1,7 @@
 #include "gpk_celestial_body.h"
 #include "gpk_stdstring.h"
 
-::gpk::error_t			gpk::printStar		(const ::gpk::SDetailStar & body) {
+gpk::err_t			gpk::printStar		(const ::gpk::SDetailStar & body) {
 	info_printf(
 		" \nGm					: %u"
 		" \nVolume				: %u"
@@ -39,7 +39,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::printPlanet		(const ::gpk::SDetailPlanet & body) {
+gpk::err_t			gpk::printPlanet		(const ::gpk::SDetailPlanet & body) {
 	info_printf(
 		" \nGravity					: %f"
 		" \nSurfacePressure			: %u"
@@ -69,7 +69,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::printCelestialBody	(const ::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type) {
+gpk::err_t			gpk::printCelestialBody	(const ::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type) {
 	info_printf(
 		" \nMass				: %f"
 		" \nDiameter			: %u"
@@ -114,7 +114,7 @@
 	return ::gpk::get_value_camelcased<::gpk::PLANET_TYPE>(bodyType);
 }
 
-::gpk::error_t			gpk::loadPlanet		(::gpk::SDetailPlanet & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
+gpk::err_t			gpk::loadPlanet		(::gpk::SDetailPlanet & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
 	::gpk::vcsc_t					subtype;
 	ws_if_failed(::gpk::jsonObjectGetAsString (jsonData, jsonIndexStellarBody, "subtype"				, subtype					));
 	body.Subtype			= ::gpk::bodySubtypeFromString(subtype);
@@ -131,7 +131,7 @@
 	return 0; 
 }
 
-::gpk::error_t			gpk::loadStar		(::gpk::SDetailStar & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
+gpk::err_t			gpk::loadStar		(::gpk::SDetailStar & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "gm"						, body.Gm					));
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "volume"					, body.Volume				));
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "volumetric_mean_radius"	, body.VolumetricMeanRadius	));
@@ -151,7 +151,7 @@
 	return 0; 
 }
 
-::gpk::error_t			gpk::loadCelestialBody(::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
+gpk::err_t			gpk::loadCelestialBody(::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
 	ws_if_failed(::gpk::jsonObjectGetAsDecimal(jsonData, jsonIndexStellarBody, "escape_velocity"		, body.EscapeVelocity		));
 	ws_if_failed(::gpk::jsonObjectGetAsDecimal(jsonData, jsonIndexStellarBody, "mass"					, body.Mass					));
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "diameter"				, body.Diameter				));

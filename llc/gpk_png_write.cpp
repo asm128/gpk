@@ -31,13 +31,13 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu0_t & buf, uint32_t crc)									
 	return c;
 }
 
-::gpk::error_t			gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au0_t & out_Bytes)		{
-	stacxpr	const uint8_t		signature	[8]			= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
+gpk::err_t			gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au0_t & out_Bytes)		{
+	stxp	const uint8_t		signature	[8]			= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
 	::gpk::au0_t				safe_Bytes				= {};
 	safe_Bytes.append(signature);
 
 	uint32_t					chunkSize				= sizeof(::gpk::SPNGIHDR);
-	stacxpr	const uint8_t		typeIHDR	[4]			= {'I', 'H', 'D', 'R'};
+	stxp	const uint8_t		typeIHDR	[4]			= {'I', 'H', 'D', 'R'};
 	int32_t						crc						= 0;
 	::gpk::SPNGIHDR				imageHeader				= {};
 	imageHeader.Size				= in_imageView.metrics();
@@ -86,7 +86,7 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu0_t & buf, uint32_t crc)									
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();
 
-	stacxpr	const uint8_t			typeIDAT	[4]			= {'I', 'D', 'A', 'T'};
+	stxp	const uint8_t			typeIDAT	[4]			= {'I', 'D', 'A', 'T'};
 	safe_Bytes.append(typeIDAT);
 	safe_Bytes.append(deflated);
 	crc							= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
@@ -95,7 +95,7 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu0_t & buf, uint32_t crc)									
 
 	chunkSize					= 0;
 	crc							= 0;
-	stacxpr	const uint8_t			typeIEND	[4]			= {'I', 'E', 'N', 'D'};
+	stxp	const uint8_t			typeIEND	[4]			= {'I', 'E', 'N', 'D'};
 	be2le(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();

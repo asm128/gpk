@@ -16,24 +16,24 @@
 
 namespace gpk
 {
-	tydf	error_t	(*log_print_t)		(const char * text);
-	error_t			_base_log_print		(const char * text);
-	tydf	error_t	(*log_write_t)		(const char * text, u2_t textLen);
-	error_t			_base_log_write		(const char * text, u2_t textLen);
-	stin	error_t	base_log_write		(const char* text, u2_t textLen)	{ rtrn _base_log_write(text, textLen); }
-	stin	error_t	base_log_print		(const char* text)					{ rtrn _base_log_print(text); }
+	tydf	err_t	(*log_print_t)		(const char * text);
+	err_t			_base_log_print		(const char * text);
+	tydf	err_t	(*log_write_t)		(const char * text, u2_t textLen);
+	err_t			_base_log_write		(const char * text, u2_t textLen);
+	stin	err_t	base_log_write		(const char* text, u2_t textLen)	{ rtrn _base_log_write(text, textLen); }
+	stin	err_t	base_log_print		(const char* text)					{ rtrn _base_log_print(text); }
 
 #ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-	stin	error_t	base_log_print_P	(const char* text)	{ rtrn base_log_print(text); }
-	stin	error_t	base_log_print_F	(const char* text)	{ rtrn base_log_print(text); }
+	stin	err_t	base_log_print_P	(const char* text)	{ rtrn base_log_print(text); }
+	stin	err_t	base_log_print_F	(const char* text)	{ rtrn base_log_print(text); }
 #else
-	tydf	error_t	(*log_print_P_t)	(const __FlashStringHelper * text);
-			error_t	_base_log_print_P	(const __FlashStringHelper * text);
-	stin	error_t	base_log_print_P	(const __FlashStringHelper * text)	{ rtrn _base_log_print_P(text); }
-	stin	error_t	base_log_print_F	(const __FlashStringHelper * text)	{ rtrn base_log_print_P(F(text)); }
+	tydf	err_t	(*log_print_P_t)	(const __FlashStringHelper * text);
+			err_t	_base_log_print_P	(const __FlashStringHelper * text);
+	stin	err_t	base_log_print_P	(const __FlashStringHelper * text)	{ rtrn _base_log_print_P(text); }
+	stin	err_t	base_log_print_F	(const __FlashStringHelper * text)	{ rtrn base_log_print_P(F(text)); }
 #endif
-	error_t			setupDefaultLogCallbacks();
-	error_t			setupLogCallbacks
+	err_t			setupDefaultLogCallbacks();
+	err_t			setupLogCallbacks
 		( log_print_t	funcLogPrint
 		, log_write_t	funcLogWrite
 		);

@@ -7,27 +7,27 @@ namespace gpk
 {
 	struct SDialogSlider;
 	::gpk::cid_t			sliderCreate		(::gpk::SDialog					& dialog);
-	::gpk::error_t			sliderSetValue		(::gpk::SDialogSlider			& control, int64_t value);
-	::gpk::error_t			sliderUpdate		(::gpk::SDialogSlider			& control);
+	gpk::err_t			sliderSetValue		(::gpk::SDialogSlider			& control, int64_t value);
+	gpk::err_t			sliderUpdate		(::gpk::SDialogSlider			& control);
 
 	struct SDialogCheckBox;
 	::gpk::cid_t			checkBoxCreate		(::gpk::SDialog					& dialog);
-	::gpk::error_t			checkBoxUpdate		(::gpk::SDialogCheckBox			& control);
+	gpk::err_t			checkBoxUpdate		(::gpk::SDialogCheckBox			& control);
 
 	struct SDialogEditBox;
 	::gpk::cid_t			editBoxCreate		(::gpk::SDialog					& dialog);
-	::gpk::error_t			editBoxUpdate		(::gpk::SDialogEditBox			& control);
+	gpk::err_t			editBoxUpdate		(::gpk::SDialogEditBox			& control);
 
 	struct SDialogViewport;
 	::gpk::cid_t			viewportCreate		(::gpk::SDialog					& dialog);
-	::gpk::error_t			viewportUpdate		(::gpk::SDialogViewport			& control);
-	::gpk::error_t			viewportFold		(::gpk::SDialogViewport			& control, bool fold);
-	::gpk::error_t			viewportAdjustSize	(::gpk::n2<int16_t>		& sizeViewport, const ::gpk::n2<int16_t> & sizeClient);
+	gpk::err_t			viewportUpdate		(::gpk::SDialogViewport			& control);
+	gpk::err_t			viewportFold		(::gpk::SDialogViewport			& control, bool fold);
+	gpk::err_t			viewportAdjustSize	(::gpk::n2<int16_t>		& sizeViewport, const ::gpk::n2<int16_t> & sizeClient);
 
-	stainli	::gpk::cid_t	sliderCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogSlider		>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = sliderCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
-	stainli	::gpk::cid_t	checkBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogCheckBox	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = checkBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
-	stainli	::gpk::cid_t	editBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogEditBox	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = editBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
-	stainli	::gpk::cid_t	viewportCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogViewport	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = viewportCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stin	::gpk::cid_t	sliderCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogSlider		>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = sliderCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stin	::gpk::cid_t	checkBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogCheckBox	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = checkBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stin	::gpk::cid_t	editBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogEditBox	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = editBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stin	::gpk::cid_t	viewportCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogViewport	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = viewportCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
 
 #pragma pack(push, 1)
 	struct SDialogViewportSettings {
@@ -50,7 +50,7 @@ namespace gpk
 		SDialogViewportSettings	Settings			= {};
 		SDialogViewportSettings	SettingsOld			= {};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::viewportUpdate(*this); }
+		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::viewportUpdate(*this); }
 	};
 #pragma pack(pop)
 
@@ -58,17 +58,17 @@ namespace gpk
 		::gpk::minmax<uint32_t>	Selection			= {};
 		::gpk::apod<sc_t>		String				= {};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::editBoxUpdate(*this); }
+		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::editBoxUpdate(*this); }
 	};
 
 	struct SDialogCheckBox : public ::gpk::IDialogControl {
 		bool					Checked				= false;
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::checkBoxUpdate(*this); }
+		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::checkBoxUpdate(*this); }
 	};
 
 	struct SDialogSlider : public ::gpk::IDialogControl {
-		typedef	::gpk::function<::gpk::error_t(::gpk::vcsc_t & format, int64_t value, const ::gpk::minmax<int64_t> & limits)>	
+		typedef	::gpk::function<gpk::err_t(::gpk::vcsc_t & format, int64_t value, const ::gpk::minmax<int64_t> & limits)>	
 								TCallback;
 
 		cid_t					IdButton			= (cid_t)-1;
@@ -83,12 +83,12 @@ namespace gpk
 			return 0; 
 		};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::sliderUpdate(*this); }
+		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::sliderUpdate(*this); }
 	};
 
 	tplt<tpnm _tValue>
 	struct SDialogTuner : public ::gpk::IDialogControl {
-		typedef	::gpk::function<::gpk::error_t(::gpk::vcsc_t & format, _tValue value, const ::gpk::minmax<_tValue> & limits)>	
+		typedef	::gpk::function<gpk::err_t(::gpk::vcsc_t & format, _tValue value, const ::gpk::minmax<_tValue> & limits)>	
 								TCallback;
 
 		cid_t					IdDecrease			= -1;
@@ -104,7 +104,7 @@ namespace gpk
 			return 0; 
 		};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn) { 
+		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn) { 
 			::gpk::SDialog				& dialog			= *Dialog;
 			::gpk::SControlTable		& controlTable		= dialog.GUI->Controls;
 			for(uint32_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {
@@ -129,7 +129,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t			SetValue			(_tValue value)	{
+		gpk::err_t			SetValue			(_tValue value)	{
 			if(value < ValueLimits.Min)
 				value					= ValueLimits.Min;
 			else if(value > ValueLimits.Max)
@@ -170,7 +170,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tValue>	
-	stainli	::gpk::cid_t	tunerCreate							(::gpk::SDialog & dialog, ::gpk::pnco<::gpk::SDialogTuner<_tValue>>	& createdControl)	 { 
+	stin	::gpk::cid_t	tunerCreate							(::gpk::SDialog & dialog, ::gpk::pnco<::gpk::SDialogTuner<_tValue>>	& createdControl)	 { 
 		::gpk::cid_t				index								= -1; 
 		gpk_necs(index = ::gpk::tunerCreate<_tValue>(dialog)); 
 		dialog.Controls[index].as(createdControl); 

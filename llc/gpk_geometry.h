@@ -131,19 +131,19 @@ namespace gpk
 #pragma pack(pop)
 
 #ifndef GPK_ATMEL
-	::gpk::error_t		geometryBuildCircleSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle			& params);
-	::gpk::error_t		geometryBuildDisc			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc			& params);
-	::gpk::error_t		geometryBuildBox			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox			& params);
-	::gpk::error_t		geometryBuildSphere			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere			& params);
-	::gpk::error_t		geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
-	::gpk::error_t		geometryBuildCylinder		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
-	::gpk::error_t		geometryBuildGrid			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid			& params);
-	::gpk::error_t		geometryBuildHelixHalf		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);	// TODO: Rewrite
-	::gpk::error_t		geometryBuildHelix			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
-	::gpk::error_t		geometryBuildFigure0		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
-	::gpk::error_t		geometryBuildRingSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
-	::gpk::error_t		geometryBuildRingFlat		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
-	::gpk::error_t		geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube			& params);
+	gpk::err_t		geometryBuildCircleSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle			& params);
+	gpk::err_t		geometryBuildDisc			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc			& params);
+	gpk::err_t		geometryBuildBox			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox			& params);
+	gpk::err_t		geometryBuildSphere			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere			& params);
+	gpk::err_t		geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
+	gpk::err_t		geometryBuildCylinder		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
+	gpk::err_t		geometryBuildGrid			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid			& params);
+	gpk::err_t		geometryBuildHelixHalf		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);	// TODO: Rewrite
+	gpk::err_t		geometryBuildHelix			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
+	gpk::err_t		geometryBuildFigure0		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
+	gpk::err_t		geometryBuildRingSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
+	gpk::err_t		geometryBuildRingFlat		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
+	gpk::err_t		geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube			& params);
 #endif
 } // namespace
 

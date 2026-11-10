@@ -1,7 +1,7 @@
 #include "gpk_gui_viewport.h"
 #include "gpk_label.h"
 
-::gpk::error_t			gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & viewport)			{
+gpk::err_t			gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & viewport)			{
 	const ::gpk::n2u0_t			fontCharSize			= gui.Fonts[gui.SelectedFont]->CharSize;
 	int16_t						heightTitleBar			= fontCharSize.y + 4;
 	uint32_t					widthTarget				= 800;

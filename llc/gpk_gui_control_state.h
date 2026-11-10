@@ -11,7 +11,7 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	typedef	int16_t			cid_t;
-	stacxpr	cid_t			CID_INVALID		= cid_t(-1);
+	stxp	cid_t			CID_INVALID		= cid_t(-1);
 
 	typedef	const cid_t		ccid_t;
 	typedef	apod<cid_t>		acid;
@@ -28,7 +28,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Updated	, 0x40U);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Action		, 0x80U);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Unused		, 0xFFU);
-	stacxpr	GUI_CONTROL_FLAG	GUI_CONTROL_FLAG_All	= GUI_CONTROL_FLAG_Unused;
+	stxp	GUI_CONTROL_FLAG	GUI_CONTROL_FLAG_All	= GUI_CONTROL_FLAG_Unused;
 
 	inxp	GUI_CONTROL_FLAG	isHidden		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hidden	); }
 	inxp	GUI_CONTROL_FLAG	isDisabled		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Disabled	); }
@@ -66,7 +66,7 @@ namespace gpk
 		GUI_CONTROL_FLAG	Set		= {};
 	};
 
-	stainli	::gpk::error_t	eventEnqueueGuiControlStateChange(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::cid_t iControl, GUI_CONTROL_FLAG oldState, GUI_CONTROL_FLAG newState) {
+	stin	gpk::err_t	eventEnqueueGuiControlStateChange(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::cid_t iControl, GUI_CONTROL_FLAG oldState, GUI_CONTROL_FLAG newState) {
 		SChangeControlState			stateChange				= {iControl};
 		stateChange.Clear		= ::gpk::bit_clear(oldState, newState);
 		stateChange.Set			= ::gpk::bit_clear(newState, oldState);
@@ -121,7 +121,7 @@ namespace gpk
 		inxp	bool		IsUnused		()	const	noexcept	{ return isUnused   (Flag); }
 
 	};
-	stacxpr	size_t SIZEOF_SCONTROL	= sizeof(SControlState);
+	stxp	size_t SIZEOF_SCONTROL	= sizeof(SControlState);
 #pragma pack(pop)
 
 } // namespace

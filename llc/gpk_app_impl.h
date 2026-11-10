@@ -6,19 +6,19 @@
 #include "gpk_timer.h"
 
 #define GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)				\
-	::gpk::error_t	setup		(_mainClass& app);									\
-	::gpk::error_t	cleanup		(_mainClass& app);									\
-	::gpk::error_t	update		(_mainClass& app, bool systemRequestedExit);		\
-	::gpk::error_t	draw		(_mainClass& app);									\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleVersion	()															{ return 1; }	\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleCreate	(void**	instanceApp, ::gpk::SRuntimeValues* runtimeValues)	{ try { *instanceApp = new _mainClass{*runtimeValues};												return 0;		} catch(...) {} return -1; }	\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleDelete	(void**	instanceApp)										{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleSetup		(void*	instanceApp)										{ try { const ::gpk::error_t result = setup		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleCleanup	(void*	instanceApp)										{ try { const ::gpk::error_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleUpdate	(void*	instanceApp, bool systemRequestedExit)				{ try { const ::gpk::error_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleRender	(void*	instanceApp)										{ try { const ::gpk::error_t result = draw		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-	::gpk::error_t	GPK_STDCALL	gpk_moduleTitle		(sc_t* out_title, uint32_t *maxCount)						{	\
-		stacxpr	const sc_t mylmoduleTitle[] = _moduleTitle;												\
+	gpk::err_t	setup		(_mainClass& app);									\
+	gpk::err_t	cleanup		(_mainClass& app);									\
+	gpk::err_t	update		(_mainClass& app, bool systemRequestedExit);		\
+	gpk::err_t	draw		(_mainClass& app);									\
+	gpk::err_t	GPK_STDCALL	gpk_moduleVersion	()															{ return 1; }	\
+	gpk::err_t	GPK_STDCALL	gpk_moduleCreate	(void**	instanceApp, ::gpk::SRuntimeValues* runtimeValues)	{ try { *instanceApp = new _mainClass{*runtimeValues};												return 0;		} catch(...) {} return -1; }	\
+	gpk::err_t	GPK_STDCALL	gpk_moduleDelete	(void**	instanceApp)										{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
+	gpk::err_t	GPK_STDCALL	gpk_moduleSetup		(void*	instanceApp)										{ try { const gpk::err_t result = setup		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+	gpk::err_t	GPK_STDCALL	gpk_moduleCleanup	(void*	instanceApp)										{ try { const gpk::err_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+	gpk::err_t	GPK_STDCALL	gpk_moduleUpdate	(void*	instanceApp, bool systemRequestedExit)				{ try { const gpk::err_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
+	gpk::err_t	GPK_STDCALL	gpk_moduleRender	(void*	instanceApp)										{ try { const gpk::err_t result = draw		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+	gpk::err_t	GPK_STDCALL	gpk_moduleTitle		(sc_t* out_title, uint32_t *maxCount)						{	\
+		stxp	const sc_t mylmoduleTitle[] = _moduleTitle;												\
 		if(0 == out_title) 																				\
 			return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
 		memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\
@@ -44,7 +44,7 @@
 
 #	if defined(GPK_WINDOWS)
 #		define GPK_SYSTEM_OS_ENTRY_POINT()														\
-			static	::gpk::error_t	rtMain				(::gpk::SRuntimeValues & runtimeValues);	\
+			static	gpk::err_t	rtMain				(::gpk::SRuntimeValues & runtimeValues);	\
 			int						main				(int argc, sc_t *argv[], sc_t *envp[])	{	\
 				GPK_RO_INIT_MULTITHREADED();										\
 				::gpk::SRuntimeValues		runtimeValues					= {};	\
@@ -88,7 +88,7 @@
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)									\
 		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)											\
 		GPK_SYSTEM_OS_ENTRY_POINT()																			\
-		::gpk::error_t			rtMain		(::gpk::SRuntimeValues & runtimeValues)	{						\
+		gpk::err_t			rtMain		(::gpk::SRuntimeValues & runtimeValues)	{						\
 		{																									\
 			GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																\
 			{																								\
@@ -98,7 +98,7 @@
 				gpk_necs(::setup(*app));																	\
 				info_printf("%s", "Application instance initialized successfully. Executing main loop...");	\
 				while(true) {																				\
-					::gpk::error_t			updateResult		= ::update(*app, false);					\
+					gpk::err_t			updateResult		= ::update(*app, false);					\
 					bi_if(1 == updateResult);																\
 					be_if(::gpk::failed(updateResult));														\
 					e_if(::draw(*app));																		\
@@ -112,7 +112,7 @@
 	}
 
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT_MT(_mainClass, _moduleTitle)											\
-		static	::gpk::error_t	rtMain		(::gpk::SRuntimeValues & runtimeValues);								\
+		static	gpk::err_t	rtMain		(::gpk::SRuntimeValues & runtimeValues);								\
 		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)													\
 		GPK_SYSTEM_OS_ENTRY_POINT()																					\
 																													\
@@ -136,13 +136,13 @@
 			info_printf("%s", "Render thread done.");																\
 		}																											\
 																													\
-		static	::gpk::error_t	threadRenderStart	(::SRuntimeState& runtimeState)	{								\
+		static	gpk::err_t	threadRenderStart	(::SRuntimeState& runtimeState)	{								\
 			_beginthread(threadRender, 0, &runtimeState);															\
 			return 0;																								\
 		}																											\
 																													\
-		static	::gpk::error_t	grt_Loop		(::SRuntimeState & runtimeState)	{								\
-			::gpk::error_t				updateResult	= ::update(*runtimeState.Application, false);				\
+		static	gpk::err_t	grt_Loop		(::SRuntimeState & runtimeState)	{								\
+			gpk::err_t				updateResult	= ::update(*runtimeState.Application, false);				\
 			if(1 == updateResult || ::gpk::failed(updateResult)) {														\
 				is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);												\
 				es_if(::gpk::failed(updateResult));																		\
@@ -174,7 +174,7 @@
 			return updateResult;								\
 		}														\
 																\
-		static	::gpk::error_t	rtMain			(::gpk::SRuntimeValues & runtimeValues)	{	\
+		static	gpk::err_t	rtMain			(::gpk::SRuntimeValues & runtimeValues)	{	\
 			GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();									\
 			SRuntimeState				runtimeState	= {};					\
 			{																	\

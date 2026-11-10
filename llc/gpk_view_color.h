@@ -18,8 +18,8 @@ namespace gpk
 	tydf	::gpk::view<const ::gpk::u8rgba	>	vcrgba	, vc8rgba	;
 	tydf	::gpk::view<const ::gpk::u8rgb	>	vcrgb	, vc8rgb		;
 
-	::gpk::error_t 		vcu82bgra8	(vcu0_c & bytes, ::gpk::bgra8 & colorToSet);
-	::gpk::error_t 		vcu82bgr8	(vcu0_c & bytes, ::gpk::bgr8 & colorToSet);
+	gpk::err_t 		vcu82bgra8	(vcu0_c & bytes, ::gpk::bgra8 & colorToSet);
+	gpk::err_t 		vcu82bgr8	(vcu0_c & bytes, ::gpk::bgr8 & colorToSet);
 } // namespace
 
 #endif // GPK_VIEW_COLOR_H_23627

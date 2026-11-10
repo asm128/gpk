@@ -19,7 +19,7 @@
 
 using ::gpk::sc_t;
 
-static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)													{
+static	gpk::err_t	updateDPI									(::gpk::SFramework & framework)													{
 #if defined(GPK_WINDOWS)
 	if(0 != framework.RootWindow.PlatformDetail.WindowHandle) {
 		RECT			rcWindow									= {};
@@ -46,7 +46,7 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 #endif
 	return 0;
 }
-::gpk::error_t			gpk::updateFramework						(::gpk::SFramework& framework)													{
+gpk::err_t			gpk::updateFramework						(::gpk::SFramework& framework)													{
 	if(0 == framework.GUI.get_ref())
 		framework.GUI.create();
 	::gpk::SWindow				& mainWindow								= framework.RootWindow;
@@ -123,9 +123,9 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 		}
 		}
 	}
-	::gpk::error_t				updateResult		= 0;
+	gpk::err_t				updateResult		= 0;
 #else
-	::gpk::error_t				updateResult		= ::gpk::windowUpdate(mainWindow);
+	gpk::err_t				updateResult		= ::gpk::windowUpdate(mainWindow);
 #endif
 	rees_if(gpk::failed(updateResult));
 	rvis_if(1, mainWindow.Closed);
@@ -343,7 +343,7 @@ static	void					initWndClass								(::HINSTANCE hInstance, const TCHAR* classNa
 	wndClassToInit.style			= CS_DBLCLKS;
 }
 #elif defined(GPK_XCB)
-static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
+static	gpk::err_t	xcbWindowCreate								(::gpk::SWindow & window) {
 	if(0 == window.PlatformDetail.Connection) {
 		window.PlatformDetail.Connection														= xcb_connect(NULL, NULL);
 	}
@@ -381,7 +381,7 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 }
 #endif
 
-::gpk::error_t			gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
+gpk::err_t			gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
 #if defined(GPK_WINDOWS)
 	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle);
 	::gpk::windowUpdate(mainWindow);
@@ -393,7 +393,7 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 	return 0;
 }
 
-::gpk::error_t			gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
+gpk::err_t			gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
 	if(0 == displayInput.get_ref())
 		displayInput.create();
 

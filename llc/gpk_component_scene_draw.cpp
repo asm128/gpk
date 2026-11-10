@@ -1,7 +1,7 @@
 #include "gpk_component_scene.h"
 #include "gpk_raster_lh.h"
 
-static	::gpk::error_t	drawOrderedVertices
+static	gpk::err_t	drawOrderedVertices
 	( ::gpk::SNodeRenderer					& renderer
 	, const ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::m4f32				matrixWVP
@@ -52,7 +52,7 @@ static	::gpk::error_t	drawOrderedVertices
 	return 0;
 }
 
-::gpk::error_t			gpk::nodeRendererDrawNode
+gpk::err_t			gpk::nodeRendererDrawNode
 	( ::gpk::SNodeRenderer					& renderer
 	, uint32_t								iNode
 	, const ::gpk::m4f32			& view
@@ -84,7 +84,7 @@ static	::gpk::error_t	drawOrderedVertices
 	return 0;
 }
 
-::gpk::error_t			gpk::nodeRendererDraw
+gpk::err_t			gpk::nodeRendererDraw
 	( ::gpk::SNodeRenderer					& renderer
 	, int32_t								iCamera
 	, ::gpk::g8bgra	target_image

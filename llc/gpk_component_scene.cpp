@@ -8,7 +8,7 @@
 usng ::gpk::sc_t;
 
 tplt<tpnm _tNumber>
-static	::gpk::error_t	jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcsc_t in_string, _tNumber & out_value){
+static	gpk::err_t	jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcsc_t in_string, _tNumber & out_value){
 	readerCache								= {};
 	gpk_necs(gpk::jsonParse(readerCache, in_string));
 	const ::gpk::SJSONToken						& jsonValue				= *readerCache[1]->Token;
@@ -22,10 +22,10 @@ static	::gpk::error_t	jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk:
 	return 0;
 }
 
-stainli	::gpk::error_t			floatRead				(::gpk::SJSONReader & readerCache, ::gpk::vcsc_t in_string, float	 & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
-stainli	::gpk::error_t			integerRead				(::gpk::SJSONReader & readerCache, ::gpk::vcsc_t in_string, int32_t & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
+stin	gpk::err_t			floatRead				(::gpk::SJSONReader & readerCache, ::gpk::vcsc_t in_string, float	 & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
+stin	gpk::err_t			integerRead				(::gpk::SJSONReader & readerCache, ::gpk::vcsc_t in_string, int32_t & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
 
-static	::gpk::error_t	createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFile & stlFile, ::gpk::vcs componentName)  {
+static	gpk::err_t	createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFile & stlFile, ::gpk::vcs componentName)  {
 	::gpk::SNodeRenderer						& renderer				= scene.Renderer;
 	int32_t										indexNewNode			= renderer.Nodes.push_back(componentName, {});
 	::gpk::SRenderNode							& newNode				= renderer.Nodes[indexNewNode];
@@ -76,7 +76,7 @@ static	::gpk::error_t	createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SS
 	return scene.Components.push_back(componentName, newComponentGroup);
 }
 
-static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcsc_t filename, ::gpk::SKeyedArrayPOD<int16_t> & indices)  {
+static	gpk::err_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcsc_t filename, ::gpk::SKeyedArrayPOD<int16_t> & indices)  {
 	::gpk::apod<sc_t>							rawMat					= {};
 	::gpk::fileToMemory(filename, rawMat);
 
@@ -149,7 +149,7 @@ static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vc
 	return 0;
 }
 
-static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t filename)  {
+static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t filename)  {
 	::gpk::apod<sc_t>							rawObj					= {};
 	gpk_necall(gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %.*s.", GPK_VIEW_ARGS(filename));
 
@@ -288,14 +288,14 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 	return 0;
 }
 
-::gpk::error_t			gpk::SComponentScene::CreateFromFile		(::gpk::vcs filename)		{
+gpk::err_t			gpk::SComponentScene::CreateFromFile		(::gpk::vcs filename)		{
 	::gpk::vcsc_t								extension				= {};
 	::gpk::apod<sc_t>						ext_lwr					= {};
 	gpk_necall(filename.slice(extension, filename.size() - 4, 4), "File extension not supported for file '%s'", filename.begin());
 	gpk_necs(ext_lwr.append(extension));
 	::gpk::tolower(ext_lwr);
-	stacxpr	::gpk::vcsc_t						str_stl					= {4, ".stl"};
-	stacxpr	::gpk::vcsc_t						str_obj					= {4, ".obj"};
+	stxp	::gpk::vcsc_t						str_stl					= {4, ".stl"};
+	stxp	::gpk::vcsc_t						str_obj					= {4, ".obj"};
 	if(ext_lwr == str_stl) {
 		::gpk::SSTLFile							stlFile					= {};
 		gpk_necall(gpk::stlFileLoad(filename, stlFile), "Failed to load file '%.*s'.", GPK_VIEW_ARGS(filename));

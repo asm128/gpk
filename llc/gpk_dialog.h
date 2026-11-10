@@ -27,11 +27,11 @@ namespace gpk
 		constexpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();
 
-		virtual	::gpk::error_t	Resize				(const ::gpk::n2<uint16_t> & newSize)				{ (void)newSize; return 0; }
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn)	= 0;
+		virtual	gpk::err_t	Resize				(const ::gpk::n2<uint16_t> & newSize)				{ (void)newSize; return 0; }
+		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn)	= 0;
 	};
 	//tplt<tpnm _TDialogControl>
-	//::gpk::error_t				dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
+	//gpk::err_t				dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
 	//	::gpk::gpk_ref<_TDialogControl>								* newRef							= 0;
 	//	ree_if(0 == ::gpk::ref_create(&newRef));
 	//	createdControl.set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);
@@ -74,9 +74,9 @@ namespace gpk
 								SDialog			(::gpk::pobj<::gpk::SGUI> & gui);
 								SDialog			();
 
-		inline	::gpk::error_t	Focused			()	const	noexcept	{ return FocusedCurrent; }
+		inline	gpk::err_t	Focused			()	const	noexcept	{ return FocusedCurrent; }
 
-		::gpk::error_t			Focus			(cid_t iControl)		{ 
+		gpk::err_t			Focus			(cid_t iControl)		{ 
 			ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
 			FocusedPrevious	= FocusedCurrent; 
 			FocusedCurrent	= iControl; 
@@ -118,7 +118,7 @@ namespace gpk
 			return index;
 		}
 
-		::gpk::error_t			Update			()		{
+		gpk::err_t			Update			()		{
 			if(0 == GUI.get_ref())
 				GUI.create();
 

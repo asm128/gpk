@@ -10,8 +10,8 @@
 
 namespace gpk
 {
-	::gpk::error_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu1_t & keys);
-	::gpk::error_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
+	gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu1_t & keys);
+	gpk::err_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SInputBox {
 		cid_t					IdRoot				= {};
@@ -22,15 +22,15 @@ namespace gpk
 		bool					Editing				= false;
 
 
-		inline	::gpk::error_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
-		::gpk::error_t			Edit				(::gpk::SGUI & gui, bool editing) {
+		inline	gpk::err_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
+		gpk::err_t			Edit				(::gpk::SGUI & gui, bool editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
 			return one_if(Editing);
 		}
 #ifndef GPK_ATMEL		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
+		gpk::err_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
@@ -38,7 +38,7 @@ namespace gpk
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
 			gpk_necs(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](::gpk::cid_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
-					return ::gpk::error_t(handledControl = iControl);
+					return gpk::err_t(handledControl = iControl);
 
 				return 0;
 			}));
@@ -102,7 +102,7 @@ namespace gpk
 #endif // GPK_ATMEL
 	};
 
-	::gpk::error_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
+	gpk::err_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
 } // namespace
 
 #endif // GPK_GUI_INPUTBOX_H_23627

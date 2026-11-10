@@ -21,7 +21,7 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 	return idMenu;
 }
 
-::gpk::error_t			gpk::editorCreate	(::gpk::SEditor & editor) {
+gpk::err_t			gpk::editorCreate	(::gpk::SEditor & editor) {
 	if(!editor.UI.GUI)
 		editor.UI.GUI.create();
 
@@ -35,7 +35,7 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 	return 0;
 }
 
-::gpk::error_t			gpk::editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> queuedEvents) {
+gpk::err_t			gpk::editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> queuedEvents) {
 	::gpk::acid					controlsToProcess	= {};
 
 	::gpk::SGUI					& gui				= *editor.UI.GUI;

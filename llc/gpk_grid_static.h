@@ -11,14 +11,14 @@ namespace gpk
 		typedef	T			TCell;
 		typedef	grid<T>		TGridView;
 
-		stacxpr	uint32_t	Width									= (uint32_t)_sizeWidth;
-		stacxpr	uint32_t	Depth									= (uint32_t)_sizeDepth;
+		stxp	uint32_t	Width									= (uint32_t)_sizeWidth;
+		stxp	uint32_t	Depth									= (uint32_t)_sizeDepth;
 
 				TCell		Cells	[_sizeDepth][_sizeWidth]		= {};
 
 		inxp				grid_static								()																		: grid<T>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
-		::gpk::error_t		read					(const int8_t* input, uint32_t* inout_bytesRead)						{
+		gpk::err_t		read					(const int8_t* input, uint32_t* inout_bytesRead)						{
 			ree_if(0 == input, "%s", "Invalid input pointer!");
 			TGridView															inputGrid								= {(T*)input, Width, Depth};
 			*inout_bytesRead												+= sizeof(T) * Width * Depth;
@@ -29,7 +29,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t		write									(int8_t* output, uint32_t* inout_bytesWritten)		const				{
+		gpk::err_t		write									(int8_t* output, uint32_t* inout_bytesWritten)		const				{
 			ree_if(0 == output && 0 == inout_bytesWritten, "%s", "Invalid input!");
 			if(0 != inout_bytesWritten)
 				*inout_bytesWritten												+= sizeof(T) * Width * Depth;	// Just return the size required to store this.

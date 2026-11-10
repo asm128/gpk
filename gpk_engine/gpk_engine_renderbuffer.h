@@ -46,20 +46,20 @@ namespace gpk
 		SRenderBufferDescription	Desc			= {};
 		::gpk::au0_t				Data			= {};
 
-		::gpk::error_t				Save			(::gpk::apod<uint8_t> & output)	const	{ 			
+		gpk::err_t				Save			(::gpk::apod<uint8_t> & output)	const	{ 			
 			gpk_necs(gpk::savePOD	(output, Desc));
 			gpk_necs(gpk::saveView(output, Data));
 			return 0; 
 		}
 
-		::gpk::error_t				Load			(::gpk::vcu0_t & input)	{ 
+		gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
 			gpk_necs(gpk::loadPOD (input, Desc));
 			gpk_necs(gpk::loadView(input, Data));
 			return 0;
 		}
 	};
 
-	::gpk::error_t				createBuffers
+	gpk::err_t				createBuffers
 		( uint32_t						vertexCount
 		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
 		, ::gpk::pobj<SRenderBuffer>	& pVertices

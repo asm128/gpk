@@ -3,23 +3,23 @@
 #include "gpk_json_expression.h"
 #include "gpk_chrono.h"
 
-::gpk::error_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port) {
+gpk::err_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port) {
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"remote_ip"  }, jsonConfig, parentNode, remote_ip));
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"remote_port"}, jsonConfig, parentNode, remote_port));
 	info_printf("Remote server address '%.*s:%.*s'", GPK_VIEW_ARGS(remote_ip), GPK_VIEW_ARGS(remote_port));
 	return 0;
 }
 
-::gpk::error_t		gpk::setupGUI			(::gpk::SClientUI & clientUI, ::gpk::SGUI & gui)		{
+gpk::err_t		gpk::setupGUI			(::gpk::SClientUI & clientUI, ::gpk::SGUI & gui)		{
 	gpk_necs(clientUI.Root = ::gpk::createScreenLayout(gui));
 
-	stacxpr	::gpk::n2u1_t	CONTROL_SIZE			= {192, 20};
+	stxp	::gpk::n2u1_t	CONTROL_SIZE			= {192, 20};
 	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_CLIENT_INPUT>(gui, clientUI.Input, clientUI.Root, CONTROL_SIZE, ::gpk::ALIGN_BOTTOM_RIGHT));
 	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_CLIENT_INFO> (gui, clientUI.Info , clientUI.Root, CONTROL_SIZE, ::gpk::ALIGN_TOP_LEFT));
 	return 0;
 }
 
-::gpk::error_t		gpk::clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui) {
+gpk::err_t		gpk::clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui) {
 	gpk_necs(gpk::tcpipAddress(client.RemoteIp, client.RemotePort, client.UDP.AddressConnect));
 	gpk_necs(gpk::clientConnect(client.UDP)); 
 
@@ -35,7 +35,7 @@
 	return ::gpk::controlTextSet(gui, client.UI.Info[::gpk::UI_CLIENT_INFO_ConnectedSince], {client.UI.TextConnectedSince});
 }
 
-::gpk::error_t		gpk::processGUIEvent	(::gpk::SClient & client, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
+gpk::err_t		gpk::processGUIEvent	(::gpk::SClient & client, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
 	switch(screenEvent.Type) {
 	default: break;
 	case ::gpk::EVENT_GUI_CONTROL_StateChange: {
@@ -65,7 +65,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::updateGUI		(::gpk::SClient & client, ::gpk::SGUI & gui) {
+gpk::err_t			gpk::updateGUI		(::gpk::SClient & client, ::gpk::SGUI & gui) {
 	sc_t						buf [128]			= {};
 	uint32_t					dots				= ::gpk::timeCurrent() % 4;
 	::gpk::asc_t				textConnecting		= ::gpk::vcs{"Connecting"};
@@ -100,7 +100,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui) {
+gpk::err_t			gpk::clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui) {
 	if(client.UDP.State == gpk::UDP_CONNECTION_STATE_IDLE) {
 		client.QueueReceived.clear();
 		gpk_necs(gpk::connectionPayloadCollect(client.UDP, client.QueueReceived));

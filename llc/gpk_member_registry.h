@@ -40,17 +40,17 @@ namespace gpk {
 #pragma pack(push, 1)
 	tplt <tpnm... _tArgs>	struct member_registry {
 		sinx	const uint32_t										get_member_count				()							noexcept	{ return (uint32_t)sizeof...(_tArgs);							}
-		stainli	const ::gpk::view<const ::gpk::STypeIdentifier	>&	get_types						()										{ static const ::gpk::STypeIdentifier	results[] = {{{			_tArgs::get_member_namespace(), (uint32_t)-1}, {_tArgs::get_member_type_name(), (uint32_t)-1}}...,	{}	}; static const ::gpk::view<const ::gpk::STypeIdentifier	> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::label			>&	get_names						()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_name			(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::label			>&	get_display_names				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_display_name	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::label			>&	get_descriptions				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_description	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::DATA_TYPE		>	get_data_type_ids				()							noexcept	{ static const ::gpk::DATA_TYPE			results[] = {			_tArgs::get_member_data_type_id	()					...,					::gpk::DATA_TYPE_UNKNOWN	}; return results; }
-		stainli	const ::gpk::view<const uint32_t				>&	get_member_sizes				()							noexcept	{ static const uint32_t					results[] = {(uint32_t)	_tArgs::get_member_size			()					...,											 0	}; static const ::gpk::view<const uint32_t				> results_view = {results}; return results_view;	}
+		stin	const ::gpk::view<const ::gpk::STypeIdentifier	>&	get_types						()										{ static const ::gpk::STypeIdentifier	results[] = {{{			_tArgs::get_member_namespace(), (uint32_t)-1}, {_tArgs::get_member_type_name(), (uint32_t)-1}}...,	{}	}; static const ::gpk::view<const ::gpk::STypeIdentifier	> results_view = {results}; return results_view;	}
+		stin	const ::gpk::view<const ::gpk::label			>&	get_names						()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_name			(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
+		stin	const ::gpk::view<const ::gpk::label			>&	get_display_names				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_display_name	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
+		stin	const ::gpk::view<const ::gpk::label			>&	get_descriptions				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_description	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
+		stin	const ::gpk::view<const ::gpk::DATA_TYPE		>	get_data_type_ids				()							noexcept	{ static const ::gpk::DATA_TYPE			results[] = {			_tArgs::get_member_data_type_id	()					...,					::gpk::DATA_TYPE_UNKNOWN	}; return results; }
+		stin	const ::gpk::view<const uint32_t				>&	get_member_sizes				()							noexcept	{ static const uint32_t					results[] = {(uint32_t)	_tArgs::get_member_size			()					...,											 0	}; static const ::gpk::view<const uint32_t				> results_view = {results}; return results_view;	}
 	}; // struct
 #	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 
 	tplt<tpnm _tStruct>
-	inline	::gpk::error_t					get_member_registry()	{ return _tStruct::get_member_registry(); }
+	inline	gpk::err_t					get_member_registry()	{ return _tStruct::get_member_registry(); }
 #pragma pack(pop)
 } // namespace
 

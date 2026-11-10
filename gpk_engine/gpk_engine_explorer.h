@@ -56,10 +56,10 @@ namespace gpk
 	//	SEditorControlText	EditorControlText	= {};
 	//};
 
-	::gpk::error_t				editorCreate	(::gpk::SEditor & editor);
-	::gpk::error_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
-	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
-	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
+	gpk::err_t				editorCreate	(::gpk::SEditor & editor);
+	gpk::err_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
+	//gpk::err_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
+	//gpk::err_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
 } // namespace
 
 #endif // GPK_ENGINE_EXPLORER_H_23627

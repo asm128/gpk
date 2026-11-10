@@ -33,7 +33,7 @@ namespace gpk
 	typedef line3<int32_t>	line3i32;
 	typedef line3<int64_t>	line3i64;
 
-	tplt<tpnm T> stacxpr	T	orient2d3d	(const ::gpk::line3<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ 
+	tplt<tpnm T> stxp	T	orient2d3d	(const ::gpk::line3<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ 
 		return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); 
 	}
 #pragma pack(pop)

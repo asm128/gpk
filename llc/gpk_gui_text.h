@@ -9,10 +9,10 @@
 
 namespace gpk
 {
-	sinx	::gpk::error_t	textLineCalcWidth				(::gpk::n2u0_c & sizeCharCell, ::gpk::vcst_c & text0)		{ return (::gpk::error_t)(sizeCharCell.x * text0.size()); }
+	sinx	gpk::err_t	textLineCalcWidth				(::gpk::n2u0_c & sizeCharCell, ::gpk::vcst_c & text0)		{ return (gpk::err_t)(sizeCharCell.x * text0.size()); }
 
 	tplt<tpnm _tColor>
-	static	::gpk::error_t	textLineDrawFixedSize			(::gpk::grid<_tColor> & target, const ::gpk::grid<_tColor> & viewTextureFont, uint16_t characterCellsX, int16_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, ::gpk::vcst_c & text0, const ::gpk::n2s1_t dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static	gpk::err_t	textLineDrawFixedSize			(::gpk::grid<_tColor> & target, const ::gpk::grid<_tColor> & viewTextureFont, uint16_t characterCellsX, int16_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, ::gpk::vcst_c & text0, const ::gpk::n2s1_t dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		for(int32_t iChar = 0, charCount = (int32_t)text0.size(); iChar < charCount; ++iChar) {
 			const uc_t					charToDraw						= (uc_t)text0[iChar];
 			int16_t						coordTableX						= charToDraw % characterCellsX;
@@ -28,7 +28,7 @@ namespace gpk
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	tplt<tpnm _tColor>
-	static	::gpk::error_t	textLineDrawFixedSizeLit		(::gpk::grid<_tColor> & target, const ::gpk::view_bit<uint64_t> & viewTextureFont, const ::gpk::n2u2_t & viewMetrics, uint16_t characterCellsX, int16_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const ::gpk::n2s1_t dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static	gpk::err_t	textLineDrawFixedSizeLit		(::gpk::grid<_tColor> & target, const ::gpk::view_bit<uint64_t> & viewTextureFont, const ::gpk::n2u2_t & viewMetrics, uint16_t characterCellsX, int16_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const ::gpk::n2s1_t dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		::gpk::apod<::gpk::n2u1_t>	dstCoords;
 		for(int32_t iChar = 0, charCount = (int32_t)text0.size(); iChar < charCount; ++iChar) {
 			const uc_t					charToDraw						= (uc_t)text0[iChar];
@@ -47,21 +47,21 @@ namespace gpk
 	}
 
 	tplt<tpnm _tColor>
-	static	::gpk::error_t	textLineDrawAlignedFixedSize	(::gpk::grid<_tColor> & targetView, const ::gpk::grid<_tColor> & fontAtlas, uint16_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static	gpk::err_t	textLineDrawAlignedFixedSize	(::gpk::grid<_tColor> & targetView, const ::gpk::grid<_tColor> & fontAtlas, uint16_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		const ::gpk::n2s1_t			dstTextOffset					= {int16_t((targetSize.x >> 1) - (::gpk::textLineCalcWidth(sizeCharCell, text0) >> 1)), };
 		uint16_t					dstOffsetY						= int16_t(lineOffset * sizeCharCell.y);
 		return ::gpk::textLineDrawFixedSize(targetView, fontAtlas, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset);
 	}
 
 	tplt<tpnm _tColor>
-	static	::gpk::error_t	textLineDrawAlignedFixedSizeLit	(::gpk::grid<_tColor> & targetView, const ::gpk::view_bit<uint64_t> & fontAtlas, const ::gpk::n2u2_t & viewMetrics, uint16_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static	gpk::err_t	textLineDrawAlignedFixedSizeLit	(::gpk::grid<_tColor> & targetView, const ::gpk::view_bit<uint64_t> & fontAtlas, const ::gpk::n2u2_t & viewMetrics, uint16_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		const ::gpk::n2s1_t			dstTextOffset					= {int16_t((targetSize.x >> 1) - (::gpk::textLineCalcWidth(sizeCharCell, text0) >> 1)), };
 		uint16_t					dstOffsetY						= int16_t(lineOffset * sizeCharCell.y);
 		return ::gpk::textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);
 	}
 
 	tplt<tpnm _tColor>
-	static	::gpk::error_t	textLineRaster					(const ::gpk::n2u2_t & targetMetrics, const ::gpk::n2u0_t & fontCharSize, const ::gpk::rect2<int16_t> & targetRect, const ::gpk::imgmono<_tColor> & fontTexture, ::gpk::vcst_c & textToRaster, ::gpk::apod<::gpk::n2u1_t> & dstCoords)		{
+	static	gpk::err_t	textLineRaster					(const ::gpk::n2u2_t & targetMetrics, const ::gpk::n2u0_t & fontCharSize, const ::gpk::rect2<int16_t> & targetRect, const ::gpk::imgmono<_tColor> & fontTexture, ::gpk::vcst_c & textToRaster, ::gpk::apod<::gpk::n2u1_t> & dstCoords)		{
 		const int32_t				charsPerRow						= fontTexture.Pitch / fontCharSize.x;
 		for(uint32_t iChar = 0, countChars = textToRaster.size(); iChar < countChars; ++iChar) {
 			const uc_t					charToDraw						= (uc_t)textToRaster[iChar];

@@ -30,7 +30,7 @@ namespace gpk
 		::gpk::n3f2_t			Emission		= {};
 		float					SpecularPower	= {};
 	};
-	stacxpr size_t		SRENDERMATERIALSIZE = sizeof(SRenderMaterial);
+	stxp size_t		SRENDERMATERIALSIZE = sizeof(SRenderMaterial);
 
 	struct SRenderNodeConstants {
 		::gpk::SRenderMaterial	Material				= {};
@@ -41,7 +41,7 @@ namespace gpk
 		::gpk::n3f2_t			NodeSize				= {}; 
 		float					PaddingC				= 0;
 	};
-	stacxpr size_t		SRENDERNODECONSTANTSSIZE = sizeof(SRenderNodeConstants);
+	stxp size_t		SRENDERNODECONSTANTSSIZE = sizeof(SRenderNodeConstants);
 
 
 	GDEFINE_ENUM_TYPE(LIGHT_TYPE, uint8_t);
@@ -88,7 +88,7 @@ namespace gpk
 
 		uint32_t							size			()											const	{ return RenderNodes.size(); }
 
-		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
+		gpk::err_t						Save			(::gpk::apod<uint8_t> & output) const { 
 			gpk_necs(gpk::saveView(output, RenderNodes	));
 			gpk_necs(gpk::saveView(output, Flags			));
 			gpk_necs(gpk::saveView(output, Transforms		));
@@ -113,7 +113,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t						Load			(::gpk::vcu0_t & input) {
+		gpk::err_t						Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadView(input, RenderNodes		));
 			gpk_necs(gpk::loadView(input, Flags			));
 			gpk_necs(gpk::loadView(input, Transforms		));
@@ -154,7 +154,7 @@ namespace gpk
 			}
 			return 0;
 		}
-		::gpk::error_t						Create		()	{
+		gpk::err_t						Create		()	{
 			gpk_necs(Transforms		.push_back({}));
 			gpk_necs(BaseTransforms	.push_back({}));
 			gpk_necs(Lights			.push_back({}));
@@ -163,7 +163,7 @@ namespace gpk
 			return RenderNodes.push_back({(uint32_t)-1});
 		}
 
-		::gpk::error_t						Clone		(uint32_t iNode)	{
+		gpk::err_t						Clone		(uint32_t iNode)	{
 			gpk_necs(Transforms		.push_back(::gpk::SRenderNodeConstants					{Transforms		[iNode]}));
 			gpk_necs(BaseTransforms	.push_back(::gpk::SRenderNodeConstants					{BaseTransforms	[iNode]}));
 			gpk_necs(Lights			.push_back(::gpk::pobj<::gpk::apod<::gpk::SLight	>>	{Lights			[iNode]}));
@@ -172,7 +172,7 @@ namespace gpk
 			return RenderNodes.push_back(::gpk::SRenderNode{RenderNodes	[iNode]});
 		}
 
-		::gpk::error_t						Delete		(uint32_t indexNode)	{
+		gpk::err_t						Delete		(uint32_t indexNode)	{
 			gpk_necs(Transforms			.remove_unordered(indexNode));
 			gpk_necs(BaseTransforms		.remove_unordered(indexNode));
 			gpk_necs(Lights				.remove_unordered(indexNode));

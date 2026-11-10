@@ -22,7 +22,7 @@ using gpk::sc_t, gpk::sc_c;
 	}
 }
 
-::gpk::error_t			gpk::wcstombs					(::gpk::apod<sc_t> & output, const ::gpk::view<wchar_t> input)	{
+gpk::err_t			gpk::wcstombs					(::gpk::apod<sc_t> & output, const ::gpk::view<wchar_t> input)	{
 	if(0 == input.size())
 		return 0;
 
@@ -37,7 +37,7 @@ using gpk::sc_t, gpk::sc_c;
 	return sizeNeededForMultiByte;
 }
 
-::gpk::error_t			gpk::mbstowcs					(::gpk::apod<wchar_t> & output, ::gpk::vcsc_c input)	{
+gpk::err_t			gpk::mbstowcs					(::gpk::apod<wchar_t> & output, ::gpk::vcsc_c input)	{
 	if(0 == input.size())
 		return 0;
 

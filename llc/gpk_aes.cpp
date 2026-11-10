@@ -413,7 +413,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t * bu
 	}
 }
 
-::gpk::error_t			gpk::aesEncode			(vcu0_c & messageToEncrypt, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputEncrypted)	{
+gpk::err_t			gpk::aesEncode			(vcu0_c & messageToEncrypt, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputEncrypted)	{
 	uint8_t													iv		[::gpk::AES_SIZEIV]				= {};
 	const double											fraction								= (1.0 / (65535>>1)) * 255.0;
 	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
@@ -425,11 +425,11 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t * bu
 	return 0;
 }
 
-::gpk::error_t			gpk::aesDecode			(vcu0_c & messageEncrypted, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputDecrypted)	{
+gpk::err_t			gpk::aesDecode			(vcu0_c & messageEncrypted, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputDecrypted)	{
 	return ::gpk::aesDecode({messageEncrypted.begin(), messageEncrypted.size() - ::gpk::AES_SIZEIV}, {&messageEncrypted[messageEncrypted.size() - ::gpk::AES_SIZEIV], ::gpk::AES_SIZEIV}, encryptionKey, level, outputDecrypted);
 }
 
-::gpk::error_t			gpk::aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputEncrypted) {
+gpk::err_t			gpk::aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputEncrypted) {
 	ree_if(0 == messageToEncrypt.size(), "Cannot encode empty message at address %p.", messageToEncrypt);
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %" GPK_FMT_U2 ".", encryptionKey.size());
 	int8_t													excedent								= messageToEncrypt.size() % ::gpk::AES_SIZEBLOCK;
@@ -446,7 +446,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t * bu
 	return 0;
 }
 
-::gpk::error_t			gpk::aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputDecrypted) {
+gpk::err_t			gpk::aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputDecrypted) {
 	ree_if(0 == messageEncrypted.size(), "Cannot encode empty message at address %p.", messageEncrypted.begin());
 	ree_if(messageEncrypted.size() % ::gpk::AES_SIZEBLOCK, "Invalid data length: %" GPK_FMT_U2 ".", messageEncrypted.size());
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %" GPK_FMT_U2 ".", encryptionKey.size());

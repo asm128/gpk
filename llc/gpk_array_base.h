@@ -13,7 +13,7 @@ namespace gpk
 	tpl_vtArgs	void			clear					(_tArgs&&... args)							{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
 	tpl_vtArgs	err_t			resize					(u2_t newSize, _tArgs&&... args)		{
 		u2_c					oldSizes	[]			= {args.size	()..., 0};
-		const ::gpk::error_t			results		[]			= {args.resize	(newSize)..., 0};
+		const gpk::err_t			results		[]			= {args.resize	(newSize)..., 0};
 		for(u2_t i = 0; i < ::gpk::size(results); ++i)
 			if_failed(results[i]) {
 				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (int32_t)newSize);
@@ -26,7 +26,7 @@ namespace gpk
 	}
 	tpl_vtArgs	err_t			resize_obj				(u2_t newSize, _tArgs&&... args)		{
 		u2_c					oldSizes	[]			= {args.size	()..., 0};
-		const ::gpk::error_t			results		[]			= {args.resize	(newSize,{})..., 0};
+		const gpk::err_t			results		[]			= {args.resize	(newSize,{})..., 0};
 		for(u2_t i = 0; i < ::gpk::size(results); ++i)
 			if_failed(results[i]) {
 				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (int32_t)newSize);
@@ -69,12 +69,12 @@ namespace gpk
 		TArray&					oper =				(const TArray &	 other)					= delete;
 		TArray&					oper =				(const TArray && other)					= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		static	::gpk::error_t	alloc_with_reserve		(u2_c newCount, T* & reserved)	noexcept	{ 
+		static	gpk::err_t	alloc_with_reserve		(u2_c newCount, T* & reserved)	noexcept	{ 
 			u2_t					newSize					= 0;
 			gpk_necall(calc_reserve_count(newCount, newSize), "Too large. newCount: %" GPK_FMT_S2 ".", newCount);
 			u2_c				bytesToAllocate			= szof(T) * (newSize + 1);
 			if(bool(reserved = (T*)::gpk::gpk_malloc(bytesToAllocate)))
-				return (::gpk::error_t)newSize;
+				return (gpk::err_t)newSize;
 			error_printf("failed to reserve %" GPK_FMT_U2 " bytes.", bytesToAllocate);
 			GPK_PLATFORM_CRT_CHECK_MEMORY();
 			return -1;

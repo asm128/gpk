@@ -234,7 +234,7 @@ namespace gpk {
 		const _tValue &					operator[]					(uint32_t index)	const		{ return Values[index]; }
 
 		const uint32_t &				size						()				const noexcept	{ return Names.size(); }
-		::gpk::error_t					push_back					(::gpk::vcsc_t name, const _tValue & value) {
+		gpk::err_t					push_back					(::gpk::vcsc_t name, const _tValue & value) {
 			gpk_necs(Names.push_back(name));
 			return Values.push_back(value);
 		}
@@ -271,7 +271,7 @@ namespace gpk {
 		::gpk::SRendererCache								RenderCache				= {};
 	};
 
-	::gpk::error_t					nodeRendererDrawNode
+	gpk::err_t					nodeRendererDrawNode
 		( ::gpk::SNodeRenderer			& renderer
 		, uint32_t						iNode
 		, const ::gpk::m4f32			& view
@@ -281,7 +281,7 @@ namespace gpk {
 		, ::gpk::grid<uint32_t>			target_depth
 		);
 
-	::gpk::error_t					nodeRendererDraw
+	gpk::err_t					nodeRendererDraw
 		( ::gpk::SNodeRenderer			& renderer
 		, int32_t						iCamera
 		, ::gpk::g8bgra					target_image
@@ -301,8 +301,8 @@ namespace gpk {
 
 		::gpk::SNodeRenderer							Renderer				= {};
 
-		::gpk::error_t									Create					(::gpk::vcst_t name);
-		::gpk::error_t									CreateFromFile			(::gpk::vcst_t filename);
+		gpk::err_t									Create					(::gpk::vcst_t name);
+		gpk::err_t									CreateFromFile			(::gpk::vcst_t filename);
 	};
 } // namespace
 

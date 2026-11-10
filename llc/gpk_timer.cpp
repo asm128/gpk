@@ -7,7 +7,7 @@
 #elif defined(GPK_CMSIS)
 #endif
 
-stacxpr	double			MICROSECOND_SCALE		= 0.000001;
+stxp	double			MICROSECOND_SCALE		= 0.000001;
 
 void					gpk::STimer::Reset		()				noexcept				{
 	LastTimeSeconds			= double(LastTimeMicroseconds = 0);

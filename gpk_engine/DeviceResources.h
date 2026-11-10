@@ -1,4 +1,4 @@
-﻿#include "gpk_d3d.h"
+#include "gpk_d3d.h"
 #include "gpk_grid.h"
 
 #include <dxgi1_4.h>
@@ -17,24 +17,24 @@ namespace DX
 {
 #if defined(_DEBUG)
 	// Check for SDK Layer support.
-	stainli bool	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, nullptr, 0, D3D11_SDK_VERSION, nullptr, nullptr, nullptr)); }
+	stin bool	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, nullptr, 0, D3D11_SDK_VERSION, nullptr, nullptr, nullptr)); }
 #endif
 	// Converts a length in device-independent pixels (DIPs) to a length in physical pixels. Round to nearest integer.
-	stainli float	ConvertDipsToPixels			(float dips, float dpi)		{ stacxpr	float dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
+	stin float	ConvertDipsToPixels			(float dips, float dpi)		{ stxp	float dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
 
 	namespace DisplayMetrics
 	{
-		stacxpr	bool	SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
-		stacxpr	float	DpiThreshold				= 192.0f;	// 200% of standard desktop display.
-		stacxpr	float	WidthThreshold				= 1920.f;	// 1080p width.
-		stacxpr	float	HeightThreshold				= 1080.f;	// 1080p height.
+		stxp	bool	SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
+		stxp	float	DpiThreshold				= 192.0f;	// 200% of standard desktop display.
+		stxp	float	WidthThreshold				= 1920.f;	// 1080p width.
+		stxp	float	HeightThreshold				= 1080.f;	// 1080p height.
 		// The default thresholds that define a "high resolution" display. If the thresholds are exceeded and SupportHighResolutions is false, the dimensions will be scaled by 50%.
 	};
 
 	// Provides an interface for an application that owns DeviceResources to be notified of the device being lost or created.
 	struct IDeviceNotify {
 		virtual void			OnDeviceLost				() = 0;
-		virtual ::gpk::error_t	OnDeviceRestored			() = 0;
+		virtual gpk::err_t	OnDeviceRestored			() = 0;
 	};
 
 	// Controls all the DirectX device resources
@@ -78,14 +78,14 @@ namespace DX
 		D2D1::Matrix3x2F						m_orientationTransform2D	= {};
 		DirectX::XMFLOAT4X4						m_orientationTransform3D	= {};
 
-		inline	::gpk::error_t					Initialize					()									{
+		inline	gpk::err_t					Initialize					()									{
 			gpk_necs(CreateIndependentResources());
 			gpk_necs(CreateDeviceResources());
 			return 0;
 		}
 
 		// These resources need to be recreated every time the window size is changed.
-		::gpk::error_t							CreateSizeDependentResources()	{
+		gpk::err_t							CreateSizeDependentResources()	{
 			// These resources need to be recreated every time the window size is changed.
 			// Clear the previous window size specific context.
 			ID3D11RenderTargetView						* nullViews	[]				= {{}};
@@ -151,7 +151,7 @@ namespace DX
 	
 			// Set the proper orientation for the swap chain, and generate 2D and 3D matrix transformations for rendering to the rotated swap chain. Note the rotation angle for the 2D and 3D transforms are different.
 			// This is due to the difference in coordinate spaces. Additionally, the 3D matrix is specified explicitly to avoid rounding errors.
-			stacxpr	DirectX::XMFLOAT4X4				
+			stxp	DirectX::XMFLOAT4X4				
 				ZROTATION0
 					( 1.0f, 0.0f, 0.0f, 0.0f
 					, 0.0f, 1.0f, 0.0f, 0.0f
@@ -232,7 +232,7 @@ namespace DX
 			return rotation;
 		}
 
-		::gpk::error_t							CreateIndependentResources	() {
+		gpk::err_t							CreateIndependentResources	() {
 			D2D1_FACTORY_OPTIONS						options						= {};	// Initialize Direct2D resources.
 		#if defined(_DEBUG)
 			options.debugLevel						= D2D1_DEBUG_LEVEL_INFORMATION;		// If the project is in a debug build, enable Direct2D debugging via SDK Layers.
@@ -281,9 +281,9 @@ namespace DX
 		D2D1::Matrix3x2F						GetOrientationTransform2D	()	const									{ return m_orientationTransform2D; }
 
 		void									RegisterDeviceNotify		(DX::IDeviceNotify * deviceNotify)			{ m_deviceNotify = deviceNotify; }
-		::gpk::error_t							SetLogicalSize				(const ::gpk::n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			gpk_necs(CreateSizeDependentResources()); } return 0; } 
-		::gpk::error_t							SetCurrentOrientation		(::gpk::GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	gpk_necs(CreateSizeDependentResources()); } return 0; } 
-		::gpk::error_t							SetDpi						(float dpi)									{
+		gpk::err_t							SetLogicalSize				(const ::gpk::n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			gpk_necs(CreateSizeDependentResources()); } return 0; } 
+		gpk::err_t							SetCurrentOrientation		(::gpk::GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	gpk_necs(CreateSizeDependentResources()); } return 0; } 
+		gpk::err_t							SetDpi						(float dpi)									{
 			if (dpi != m_dpi) {
 				m_dpi									= dpi;
 				RECT										rect						= {};
@@ -296,15 +296,15 @@ namespace DX
 		}
 
 		// Call this method when the app suspends. It provides a hint to the driver that the app is entering an idle state and that temporary buffers can be reclaimed for use by other apps.
-		::gpk::error_t							Trim						() {
+		gpk::err_t							Trim						() {
 			::gpk::pcom<IDXGIDevice3>				dxgiDevice;
 			gpk_necs(m_d3dDevice.as(&dxgiDevice));
 			dxgiDevice->Trim();
 		}
 
 		// Recreate all device resources and set them back to the current state.
-		::gpk::error_t							ValidateDevice				()											{ return ::gpk::d3dDeviceValidate(m_d3dDevice) ? HandleDeviceLost() : 0; }
-		::gpk::error_t							HandleDeviceLost			()											{
+		gpk::err_t							ValidateDevice				()											{ return ::gpk::d3dDeviceValidate(m_d3dDevice) ? HandleDeviceLost() : 0; }
+		gpk::err_t							HandleDeviceLost			()											{
 			m_swapChain								= nullptr;
 			if (m_deviceNotify) 
 				m_deviceNotify->OnDeviceLost();
@@ -317,7 +317,7 @@ namespace DX
 			return 0;
 		}
 
-		::gpk::error_t							SetWindow					(HWND window)		{
+		gpk::err_t							SetWindow					(HWND window)		{
 			m_window								= window;
 
 			RECT										rect						= {};
@@ -334,7 +334,7 @@ namespace DX
 		}
 
 		// Present the contents of the swap chain to the screen.
-		::gpk::error_t							Present						() {
+		gpk::err_t							Present						() {
 			DXGI_PRESENT_PARAMETERS						parameters					= {};
 			HRESULT										hr							= m_swapChain->Present1(1, 0, &parameters);	// The first argument instructs DXGI to block until VSync, putting the application to sleep until the next VSync. This ensures we don't waste any cycles rendering frames that will never be displayed to the screen.
 			m_d3dContext->DiscardView1(m_d3dRenderTargetView, nullptr, 0);	// Discard the contents of the render target. This is a valid operation only when the existing contents will be entirely overwritten. If dirty or scroll rects are used, this call should be removed.
@@ -361,7 +361,7 @@ namespace DX
 
 
 		// Configures the Direct3D device, and stores handles to it and the device context.
-		::gpk::error_t							CreateDeviceResources		() {
+		gpk::err_t							CreateDeviceResources		() {
 			// This flag adds support for surfaces with a different color channel ordering than the API default. It is required for compatibility with Direct2D.
 			uint32_t									creationFlags				= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 		#if defined(_DEBUG)
@@ -370,7 +370,7 @@ namespace DX
 		#endif
 
 			// This array defines the set of DirectX hardware feature levels this app will support. Note the ordering should be preserved. Don't forget to declare your application's minimum required feature level in its description. All applications are assumed to support 9.1 unless otherwise stated.
-			stacxpr	D3D_FEATURE_LEVEL					featureLevels	[]			=
+			stxp	D3D_FEATURE_LEVEL					featureLevels	[]			=
 				{ D3D_FEATURE_LEVEL_12_1
 				, D3D_FEATURE_LEVEL_12_0
 				, D3D_FEATURE_LEVEL_11_1

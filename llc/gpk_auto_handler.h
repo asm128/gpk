@@ -12,7 +12,7 @@ namespace gpk
 		typedef	auto_handler<_tHandle, _vDefault>	TWrapper;
 
 				_tHandle							Handle							= _vDefault;
-		stacxpr	const _tHandle						VDefault						= _vDefault;
+		stxp	const _tHandle						VDefault						= _vDefault;
 
 		inxp										auto_handler					()								noexcept	= default;
 		inxp										auto_handler					(const _tHandle & other)		noexcept	= delete;

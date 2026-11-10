@@ -52,9 +52,9 @@ namespace gpk
 
 		::gpk::aobj<TMessageQueue>				MessagesToProcess	= {};	// A queue per client.
 
-		::gpk::error_t							Stop				()												{ return ::gpk::serverStop(Server); }
-		::gpk::error_t							Start				(uint16_t portNumber, int16_t adapterIndex=0)	{ return ::gpk::serverStart(Server, portNumber, adapterIndex); }
-		::gpk::error_t							Update				()	{ return 0; }
+		gpk::err_t							Stop				()												{ return ::gpk::serverStop(Server); }
+		gpk::err_t							Start				(uint16_t portNumber, int16_t adapterIndex=0)	{ return ::gpk::serverStart(Server, portNumber, adapterIndex); }
+		gpk::err_t							Update				()	{ return 0; }
 	};
 
 	GDEFINE_ENUM_TYPE(UI_LOBBY_USER, uint8_t);
@@ -105,7 +105,7 @@ namespace gpk
 			e_if(failed(::gpk::inputBoxCreate(InputBox, gui, Dialog.Root)));
 		}
 
-		::gpk::error_t						Connect				() { 
+		gpk::err_t						Connect				() { 
 			Client.State								= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 			if(NetworkThread.joinable()) {
 				NetworkThread.join();
@@ -120,7 +120,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t								Update				(const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> frameEvents) { 
+		gpk::err_t								Update				(const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> frameEvents) { 
 			if(!Dialog.Input) {
 				Dialog.Input								= inputState;
 			}
@@ -192,7 +192,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t								Draw				(::gpk::g8bgra target) { 
+		gpk::err_t								Draw				(::gpk::g8bgra target) { 
 			return ::gpk::guiDraw(*Dialog.GUI, target);
 		}
 	};

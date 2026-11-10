@@ -13,7 +13,7 @@ namespace gpk
 		::gpk::au0_t					Contents;
 		::gpk::au0_t					LoadCache;
 
-		::gpk::error_t					AddFile			(::gpk::vcsc_t fileName, ::gpk::vu8 fileContents) {
+		gpk::err_t					AddFile			(::gpk::vcsc_t fileName, ::gpk::vu8 fileContents) {
 			const uint32_t						ssizes[]		= {Ranges.size(), Contents.size(), Names.size()};
 			uint32_t							itemIndex;
 			::gpk::resize(::gpk::min<const uint32_t>(ssizes), Ranges, Contents, Names);
@@ -26,14 +26,14 @@ namespace gpk
 			}
 			return itemIndex;
 		}
-		::gpk::error_t					AddFile			(::gpk::vcsc_t filePath) {
+		gpk::err_t					AddFile			(::gpk::vcsc_t filePath) {
 			LoadCache.clear();
 			gpk_necs(gpk::fileToMemory(filePath, LoadCache));
 			return AddFile(filePath, LoadCache);
 		}
-		::gpk::error_t					GetFile			(uint32_t index, ::gpk::vcu0_t & view)		const	{ return (view = {&Contents[Ranges[index].Offset], Ranges[index].Count}).size(); }
-		::gpk::error_t					GetFile			(::gpk::vcsc_t filePath, ::gpk::vcu0_t & view)	const	{
-			::gpk::error_t						index			= -1;
+		gpk::err_t					GetFile			(uint32_t index, ::gpk::vcu0_t & view)		const	{ return (view = {&Contents[Ranges[index].Offset], Ranges[index].Count}).size(); }
+		gpk::err_t					GetFile			(::gpk::vcsc_t filePath, ::gpk::vcu0_t & view)	const	{
+			gpk::err_t						index			= -1;
 			gpk_necall(index = ::gpk::find(filePath, ::gpk::vcvcc{Names}), "File not found: '%s'", toString(filePath).begin());
 			return GetFile(index, view);
 		}

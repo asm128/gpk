@@ -22,9 +22,9 @@ namespace gpk
 		, I2C_MODE_DMA
 		};
 
-	::gpk::error_t i2cInit (SI2CDevice & device);
-	::gpk::error_t i2cRead (SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::I2C_MODE mode, uint32_t timeout);
-	::gpk::error_t i2cWrite(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::I2C_MODE mode, uint32_t timeout);
+	gpk::err_t i2cInit (SI2CDevice & device);
+	gpk::err_t i2cRead (SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::I2C_MODE mode, uint32_t timeout);
+	gpk::err_t i2cWrite(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::I2C_MODE mode, uint32_t timeout);
 } // namespace
 
 

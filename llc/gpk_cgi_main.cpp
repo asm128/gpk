@@ -2,8 +2,8 @@
 
 using gpk::sc_t;
 
-::gpk::error_t			gpk_cgi_generate_output					(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<sc_t> & output);
-::gpk::error_t			gpk::cgiMain							(int argc, sc_t** argv, sc_t**envv)	{
+gpk::err_t			gpk_cgi_generate_output					(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<sc_t> & output);
+gpk::err_t			gpk::cgiMain							(int argc, sc_t** argv, sc_t**envv)	{
 		(void)(envv);
 		::gpk::SCGIRuntimeValues								runtimeValues;
 		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const sc_t**)argv, (uint32_t)argc});

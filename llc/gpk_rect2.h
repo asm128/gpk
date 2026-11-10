@@ -41,7 +41,7 @@ namespace gpk
 #pragma pack(pop)
 
 	tplt<tpnm T>
-	stacxpr	bool	in_range	(const ::gpk::n2<T>& pointToTest, const ::gpk::rect2<T>& area)	noexcept	{
+	stxp	bool	in_range	(const ::gpk::n2<T>& pointToTest, const ::gpk::rect2<T>& area)	noexcept	{
 		return	::gpk::in_range(pointToTest.x, area.Offset.x, (T)(area.Offset.x + area.Size.x))
 			&&	::gpk::in_range(pointToTest.y, area.Offset.y, (T)(area.Offset.y + area.Size.y))
 			;

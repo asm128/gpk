@@ -50,7 +50,7 @@ namespace gpk
 		}
 
 		int							SpawnForcedDirected	(double stabilityFactor, const ::gpk::n3f2_t & position, const ::gpk::n3f2_t & direction, float speed, float brightness, float lifetime)	{
-			stacxpr	double					randUnit			= ::gpk::math_2pi / RAND_MAX;
+			stxp	double					randUnit			= ::gpk::math_2pi / RAND_MAX;
 			::gpk::n3f2_t					finalDirection		= {0, 1, 0};
 			finalDirection.RotateX(rand() * randUnit);
 			finalDirection.RotateY(rand() * randUnit);
@@ -58,9 +58,9 @@ namespace gpk
 			return SpawnForced(position, ::gpk::interpolate_linear(finalDirection, direction, stabilityFactor), speed, brightness, lifetime);
 		}
 
-		::gpk::error_t				Update				(float secondsLastFrame)	{
-			stacxpr	uint32_t				maxRange			= 200;
-			stacxpr	uint32_t				maxRangeSquared		= maxRange * maxRange;
+		gpk::err_t				Update				(float secondsLastFrame)	{
+			stxp	uint32_t				maxRange			= 200;
+			stxp	uint32_t				maxRangeSquared		= maxRange * maxRange;
 			memcpy(PositionPrev.begin(), Particles.Position.begin(), Particles.Position.size() * sizeof(::gpk::n3f2_t));
 			Particles.IntegrateSpeed(secondsLastFrame);
 			for(uint32_t iShot = 0; iShot < Particles.Position.size(); ++iShot) {
@@ -73,7 +73,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t				Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t				Save				(::gpk::au0_t & output)	const	{ 
 			gpk_necs(Particles.Save(output));
 			gpk_necs(gpk::saveView(output, PositionDraw	));
 			gpk_necs(gpk::saveView(output, PositionPrev	));
@@ -85,7 +85,7 @@ namespace gpk
 			return 0; 
 		}
 
-		::gpk::error_t				Load				(::gpk::vcu0_t & input)			{ 
+		gpk::err_t				Load				(::gpk::vcu0_t & input)			{ 
 			gpk_necs(Particles.Load(input));
 			gpk_necs(gpk::loadView(input, PositionPrev	));
 			gpk_necs(gpk::loadView(input, PositionDraw	));
@@ -252,7 +252,7 @@ namespace gpk
 		::gpk::apobj<::gpk::an3f32>	WeaponTargets	= {};	// One per weapon
 
 		int32_t						Clear					()		{ ::gpk::clear(Weapons, Shots, WeaponTargets); return 0; }
-		::gpk::error_t				Save					(::gpk::au0_t & output)	const	{ 
+		gpk::err_t				Save					(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::saveView(output, Weapons));
 			info_printf("Saved %s, %i", "Weapons", Weapons.size());
 			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
@@ -264,7 +264,7 @@ namespace gpk
 			}
 			return 0;
 		}
-		::gpk::error_t				Load				(::gpk::vcu0_t & input) { 
+		gpk::err_t				Load				(::gpk::vcu0_t & input) { 
 			Weapons.clear();
 			gpk_necs(gpk::loadView(input, Weapons));
 			Shots.resize(Weapons.size());

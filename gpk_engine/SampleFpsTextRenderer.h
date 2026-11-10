@@ -1,4 +1,4 @@
-﻿#include "DeviceResources.h"
+#include "DeviceResources.h"
 
 #include "gpk_array_ptr.h"
 
@@ -22,11 +22,11 @@ namespace gpk
 		::gpk::pcom<IDWriteTextLayout3>			TextLayout						= {};
 		::gpk::pcom<IDWriteTextFormat2>			TextFormat						= {};
 
-		::gpk::error_t							CreateDeviceResources	(ID2D1DeviceContext * d2dContext) { WhiteBrush = {}; gpk_hrcall(d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &WhiteBrush)); return 0; }
+		gpk::err_t							CreateDeviceResources	(ID2D1DeviceContext * d2dContext) { WhiteBrush = {}; gpk_hrcall(d2dContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &WhiteBrush)); return 0; }
 		void									ReleaseDeviceResources	() { WhiteBrush = {}; }
 
 		// Initializes D2D resources used for text 
-		::gpk::error_t							Initialize		(const ::gpk::pobj<DX::D3DDeviceResources> & deviceResources)  {
+		gpk::err_t							Initialize		(const ::gpk::pobj<DX::D3DDeviceResources> & deviceResources)  {
 			DeviceResources									= deviceResources;
 			// Create device independent resources
 			::gpk::pcom<IDWriteTextFormat>						textFormat						= {};
@@ -38,7 +38,7 @@ namespace gpk
 		}
 
 		// Updates the text to be displayed.
-		::gpk::error_t									Update							(double /*frameSeconds*/, double /*totalSeconds*/, uint32_t framesPerSecond) {
+		gpk::err_t									Update							(double /*frameSeconds*/, double /*totalSeconds*/, uint32_t framesPerSecond) {
 			// Update display text.
 			uint32_t											fps								= framesPerSecond;
 			Text											= (fps > 0) ? std::to_wstring(fps) + L" FPS" : L" - FPS";
@@ -53,7 +53,7 @@ namespace gpk
 		}
 
 		// Renders a frame to the screen.
-		::gpk::error_t									Render							() {
+		gpk::err_t									Render							() {
 			ID2D1DeviceContext									* context						= DeviceResources->GetD2DDeviceContext();
 			const ::gpk::n2f2_t								logicalSize						= DeviceResources->GetLogicalSize();
 

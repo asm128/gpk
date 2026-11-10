@@ -20,7 +20,7 @@ namespace gpk
 		uint8_t			Padding1				= {};
 		uint32_t		Padding4				= {};
 	};
-	stacxpr	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
+	stxp	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
 
 	struct SStageTime {
 		uint64_t		Started					= {};	// Timestamp
@@ -53,7 +53,7 @@ namespace gpk
 			return Current;
 		}
 	};
-	stacxpr	size_t SIZE_SRELATIVESPEED = sizeof(SRelativeSpeed);
+	stxp	size_t SIZE_SRELATIVESPEED = sizeof(SRelativeSpeed);
 
 	struct SRelativeTime {
 		float			Scale					= 1.0f;
@@ -75,7 +75,7 @@ namespace gpk
 			return realSeconds * Scale;
 		}
 	};
-	stacxpr	size_t SIZE_SRELATIVETIME = sizeof(SRelativeTime);
+	stxp	size_t SIZE_SRELATIVETIME = sizeof(SRelativeTime);
 
 	struct SStageState {
 		SStageSetup		Constants				= {};	// This sets up the root/default game mode
@@ -83,7 +83,7 @@ namespace gpk
 		SRelativeTime	SimulatedTime			= {};	// this one represents the elapsed virtual-reality time. It gets scaled by special effects.
 		SRelativeSpeed	BackgroundSpeed			= {};	// this one represents the speed in which the background planets and stars move. 
 	};
-	stacxpr	size_t SIZE_SSTAGESTATE = sizeof(SStageState);
+	stxp	size_t SIZE_SSTAGESTATE = sizeof(SStageState);
 #pragma pack(pop)
 } // namespace
 

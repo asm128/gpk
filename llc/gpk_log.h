@@ -109,14 +109,14 @@
 #	define rews_if_failed(gpkl_call)			if_fail_ve(-1, (gpkl_call))
 #	define reis_if_failed(gpkl_call)			if_fail_ve(-1, (gpkl_call))
 #	define reas_if_failed(gpkl_call)			if_fail_ve(-1, (gpkl_call))
-#	define re_if_failed(condition, format, ...)	re_if (0 > gpk::error_t(condition), format, __VA_ARGS__)
-#	define rw_if_failed(condition, format, ...)	rw_if (0 > gpk::error_t(condition), format, __VA_ARGS__)
-#	define ri_if_failed(condition, format, ...)	ri_if (0 > gpk::error_t(condition), format, __VA_ARGS__)
-#	define ra_if_failed(condition, format, ...)	ra_if (0 > gpk::error_t(condition), format, __VA_ARGS__)
-#	define res_if_failed(condition)				res_if(0 > gpk::error_t(condition))
-#	define rws_if_failed(condition)				rws_if(0 > gpk::error_t(condition))
-#	define ris_if_failed(condition)				ris_if(0 > gpk::error_t(condition))
-#	define ras_if_failed(condition)				ras_if(0 > gpk::error_t(condition))
+#	define re_if_failed(condition, format, ...)	re_if (0 > gpk::err_t(condition), format, __VA_ARGS__)
+#	define rw_if_failed(condition, format, ...)	rw_if (0 > gpk::err_t(condition), format, __VA_ARGS__)
+#	define ri_if_failed(condition, format, ...)	ri_if (0 > gpk::err_t(condition), format, __VA_ARGS__)
+#	define ra_if_failed(condition, format, ...)	ra_if (0 > gpk::err_t(condition), format, __VA_ARGS__)
+#	define res_if_failed(condition)				res_if(0 > gpk::err_t(condition))
+#	define rws_if_failed(condition)				rws_if(0 > gpk::err_t(condition))
+#	define ris_if_failed(condition)				ris_if(0 > gpk::err_t(condition))
+#	define ras_if_failed(condition)				ras_if(0 > gpk::err_t(condition))
 #	define e_if_failed		if_fail_ef
 #	define w_if_failed		if_fail_wf
 #	define i_if_failed		if_fail_if

@@ -106,9 +106,9 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcu0_c	& input);
-	::gpk::error_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, FILE			* input);
-	::gpk::error_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input);
+	gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcu0_c	& input);
+	gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, FILE			* input);
+	gpk::err_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input);
 }
 
 #endif // GPK_RO_RSW_H_23627

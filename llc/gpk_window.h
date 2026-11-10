@@ -23,7 +23,7 @@ namespace gpk
 	struct SWindowPlatformDetail {
 #if defined(GPK_WINDOWS)
 		typedef	::gpk::bgra			TOSWindowNativeTexel;
-		stacxpr	::gpk::astatic<TCHAR, 256>	DefaultRootWindowClassName	= {TEXT("GPK_WINDOW")};
+		stxp	::gpk::astatic<TCHAR, 256>	DefaultRootWindowClassName	= {TEXT("GPK_WINDOW")};
 
 		::HWND								WindowHandle				= {};
 		::WNDCLASSEX						WindowClass					= {sizeof(::WNDCLASSEX), CS_DBLCLKS, 0, 0, 0, 0, 0, 0, 0, 0, DefaultRootWindowClassName.begin(), 0};
@@ -74,13 +74,13 @@ namespace gpk
 		bool								FullScreen				: 1;
 	};
 
-	::gpk::error_t						windowPresentTarget		(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
-	::gpk::error_t						windowUpdate			(::gpk::SWindow & windowInstance);
-	::gpk::error_t						windowUpdateTick		(::gpk::SWindow & windowInstance);
-	::gpk::error_t						fullScreenExit			(::gpk::SWindow & windowInstance);
-	::gpk::error_t						fullScreenEnter			(::gpk::SWindow & windowInstance);
+	gpk::err_t						windowPresentTarget		(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
+	gpk::err_t						windowUpdate			(::gpk::SWindow & windowInstance);
+	gpk::err_t						windowUpdateTick		(::gpk::SWindow & windowInstance);
+	gpk::err_t						fullScreenExit			(::gpk::SWindow & windowInstance);
+	gpk::err_t						fullScreenEnter			(::gpk::SWindow & windowInstance);
 
-	stainli ::gpk::error_t				fullScreenToggle		(::gpk::SWindow & windowInstance) { 
+	stin gpk::err_t				fullScreenToggle		(::gpk::SWindow & windowInstance) { 
 		return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); 
 	}
 

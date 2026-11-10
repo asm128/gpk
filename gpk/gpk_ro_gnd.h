@@ -72,9 +72,9 @@ namespace gpk
 	};
 
 	//709655609
-	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, ::gpk::vu0_c		& input);
-	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, FILE				* input);
-	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, ::gpk::vcst_c	& input);
+	gpk::err_t							gndFileLoad						(SGNDFileContents& loaded, ::gpk::vu0_c		& input);
+	gpk::err_t							gndFileLoad						(SGNDFileContents& loaded, FILE				* input);
+	gpk::err_t							gndFileLoad						(SGNDFileContents& loaded, ::gpk::vcst_c	& input);
 
 	struct SModelNodeGND {
 		::gpk::apod<::gpk::n3f2_t>				Normals			;
@@ -130,7 +130,7 @@ namespace gpk
 		, TILE_FACE_FACING_LEFT
 		};
 
-	::gpk::error_t							gndGenerateFaceGeometry
+	gpk::err_t							gndGenerateFaceGeometry
 		( const ::gpk::apod<STileSkinGND		>	lstTileTextureData
 		, const ::gpk::apod<STileGeometryGND	>	lstTileGeometryData
 		, const ::gpk::STiledTerrainMetricsGND		tileMapMetrics
@@ -140,7 +140,7 @@ namespace gpk
 		, ::gpk::grid<::gpk::STileMapping>			& out_mapping
 		);
 
-	::gpk::error_t							blendGNDNormals		(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
+	gpk::err_t							blendGNDNormals		(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // namespace

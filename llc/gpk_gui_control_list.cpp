@@ -17,7 +17,7 @@
 	return controlId;
 }
 
-::gpk::error_t			gpk::controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
+gpk::err_t			gpk::controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	menu					= {};
 	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
 	gui.Controls.Placement	[menu.IdControl].Border				= {};
@@ -28,7 +28,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
+gpk::err_t			gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	const ::gpk::SRasterFont	& selectedFont			= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t				idControl				= menu.IdControls[iItem];
@@ -78,7 +78,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::controlListPush	(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode)				{
+gpk::err_t			gpk::controlListPush	(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode)				{
 	if(menu.IdControl == -1)
 		gpk_necs(gpk::controlListInitialize(gui, menu));
 
@@ -96,7 +96,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
+gpk::err_t			gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
 	const ::gpk::n2f3_t			targetSize					= {256.0, 256.0};
 	palette.IdControl		= ::gpk::controlCreate(gui);
 
@@ -108,7 +108,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::g8bgra& colors)			{
+gpk::err_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::g8bgra& colors)			{
 	if(-1 == palette.IdControl)
 		::gpk::paletteGridInitialize(gui, palette);
 

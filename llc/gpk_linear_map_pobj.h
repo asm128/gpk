@@ -21,20 +21,20 @@ namespace gpk
 		inline	TPObj&				operator[]		(::gpk::vcsc_t key)			{ return Elements[Names.find(key)]; }
 
 		inxp	uint32_t			size			()											const	{ return Names.size(); }
-		inline	::gpk::error_t		find			(::gpk::vcsc_c key, uint32_t offset = 0)	const	{ return Names.find(key, offset); }
+		inline	gpk::err_t		find			(::gpk::vcsc_c key, uint32_t offset = 0)	const	{ return Names.find(key, offset); }
 
-		::gpk::error_t				push_back		(const ::gpk::pobj<T> & instance, ::gpk::vcsc_c name = {})	{ 
+		gpk::err_t				push_back		(const ::gpk::pobj<T> & instance, ::gpk::vcsc_c name = {})	{ 
 			Names.push_back(name); 
 			return Elements.push_back(instance); 
 		}
 
-		inline	::gpk::error_t		Create			(const ::gpk::vcsc_t name = {})									{ return push_back({}, name); }
-		::gpk::error_t				Delete			(uint32_t index)												{ 
+		inline	gpk::err_t		Create			(const ::gpk::vcsc_t name = {})									{ return push_back({}, name); }
+		gpk::err_t				Delete			(uint32_t index)												{ 
 			Names.remove_unordered(index); 
 			return Elements.remove_unordered(index); 
 		}
 
-		::gpk::error_t				Clone			(uint32_t index)												{ 
+		gpk::err_t				Clone			(uint32_t index)												{ 
 			int32_t							iNew;
 			gpk_necall(iNew = Create(Names[index]), "index: %i", index);
 			const TPObj						& srcElement	= Elements[index];
@@ -47,7 +47,7 @@ namespace gpk
 			return iNew; 
 		}
 
-		::gpk::error_t				Save			(::gpk::au0_t & output) const { 
+		gpk::err_t				Save			(::gpk::au0_t & output) const { 
 			gpk_necs(output.append(::gpk::vcu0_t{(const uint8_t*)&Elements.size(), 4}));
 			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Save(output), "iEntity: %i", iEntity);
@@ -57,7 +57,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t				Load			(::gpk::vcu0_t & input) {
+		gpk::err_t				Load			(::gpk::vcu0_t & input) {
 			gpk_necs(Elements.resize(*(uint32_t*)input.begin()));
 			input						= {input.begin() + sizeof(uint32_t), input.size() - 4};
 			gpk_necall(Names.resize(Elements.size()), "size: %i", Elements.size());

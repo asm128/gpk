@@ -44,21 +44,21 @@ namespace gpk
 		double						ListeningSince		= {};
 	};
 
-	::gpk::error_t			loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter);
-	::gpk::error_t			serverStart			(::gpk::SServer & server, ::gpk::SGUI & gui);
-	::gpk::error_t			serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui);
-	::gpk::error_t			setupGUI			(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui);
-	::gpk::error_t			processGUIEvent		(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent);
+	gpk::err_t			loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter);
+	gpk::err_t			serverStart			(::gpk::SServer & server, ::gpk::SGUI & gui);
+	gpk::err_t			serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui);
+	gpk::err_t			setupGUI			(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui);
+	gpk::err_t			processGUIEvent		(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent);
 
 	tplt<tpnm _tEvent, tpnm _tState> 
-	::gpk::error_t			processUDPEvents
+	gpk::err_t			processUDPEvents
 		( ::gpk::vcpobj<SServer>	servers
 		, _tState					& state
-		, const ::std::function<::gpk::error_t(uint32_t iServer, uint32_t iClient, _tState &, const _tEvent &)>	
+		, const ::std::function<gpk::err_t(uint32_t iServer, uint32_t iClient, _tState &, const _tEvent &)>	
 										& funcProcessServerRequest
 		) {
 		for(uint32_t iServer = 0; iServer < servers.size(); ++iServer) {
-			const ::std::function<::gpk::error_t(uint32_t iClient, _tState &, const _tEvent &)>	
+			const ::std::function<gpk::err_t(uint32_t iClient, _tState &, const _tEvent &)>	
 										funcProcessRequest		= [iServer, funcProcessServerRequest](uint32_t iClient, _tState & customState, const _tEvent & customEvent) {
 				return funcProcessServerRequest(iServer, iClient, customState, customEvent);
 			};

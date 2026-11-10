@@ -4,7 +4,7 @@
 
 #include "gpk_file.h"
 
-::gpk::error_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, const ::gpk::SMeshManager & engineMeshes, const ::gpk::SRenderBufferManager & engineBuffers, ::gpk::array_com<ID3D11Buffer> & indexBuffers, ::gpk::array_com<ID3D11Buffer> & vertexBuffers)	{
+gpk::err_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, const ::gpk::SMeshManager & engineMeshes, const ::gpk::SRenderBufferManager & engineBuffers, ::gpk::array_com<ID3D11Buffer> & indexBuffers, ::gpk::array_com<ID3D11Buffer> & vertexBuffers)	{
 	for(uint32_t iMesh = 0; iMesh < engineMeshes.size(); ++iMesh) {
 		const ::gpk::pobj<::gpk::SGeometryMesh>		& mesh									= engineMeshes[iMesh];
 		if(!mesh)
@@ -67,7 +67,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::d3dCreateTexturesFromEngineSurfaces	(ID3D11Device* pDevice, const ::gpk::SSurfaceManager & engineSurfaces, ::gpk::array_com<ID3D11ShaderResourceView> & shaderResourceViews) {
+gpk::err_t			gpk::d3dCreateTexturesFromEngineSurfaces	(ID3D11Device* pDevice, const ::gpk::SSurfaceManager & engineSurfaces, ::gpk::array_com<ID3D11ShaderResourceView> & shaderResourceViews) {
 	for(uint32_t iSurface = 0; iSurface < engineSurfaces.size(); ++iSurface) {
 		const ::gpk::SSurface						& surface			= *engineSurfaces[iSurface];
 		D3D11_TEXTURE2D_DESC						desc				= {surface.Desc.Dimensions.x, surface.Desc.Dimensions.y, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE};
@@ -93,7 +93,7 @@
 }
 
 //
-::gpk::error_t			gpk::d3dCreatePixelShadersFromEngineShaders	(ID3D11Device* pDevice, const ::gpk::SShaderManager & engineShaders, ::gpk::array_com<ID3D11PixelShader> & pixelShaders) {
+gpk::err_t			gpk::d3dCreatePixelShadersFromEngineShaders	(ID3D11Device* pDevice, const ::gpk::SShaderManager & engineShaders, ::gpk::array_com<ID3D11PixelShader> & pixelShaders) {
 	for(uint32_t iShader = 0; iShader < engineShaders.size(); ++iShader) {
 		const ::gpk::vcsc_t								shaderName				= engineShaders.Names[iShader];
 

@@ -12,22 +12,22 @@
 namespace gpk
 {
 	tplt<tpnm TUnknown> 
-	::gpk::error_t		safe_release	(TUnknown ** storage) { 
+	gpk::err_t		safe_release	(TUnknown ** storage) { 
 		IUnknown*				p				= *storage;
 		if(p) { 
 			(*storage)			= 0; 
-			return (::gpk::error_t)p->Release(); 
+			return (gpk::err_t)p->Release(); 
 		} 
 		return 0;
 	}
 
 	tplt<tpnm TUnknown> 
-	::gpk::error_t		safe_addref		(TUnknown ** storage, TUnknown * toAcquire) { 
-		::gpk::error_t			result			= 0;
+	gpk::err_t		safe_addref		(TUnknown ** storage, TUnknown * toAcquire) { 
+		gpk::err_t			result			= 0;
 		IUnknown*				p				= *storage;
 		*storage			= toAcquire;
 		if(toAcquire)
-			result = (::gpk::error_t)toAcquire->AddRef();
+			result = (gpk::err_t)toAcquire->AddRef();
 
 		if(p)
 			p->Release(); 
@@ -71,7 +71,7 @@ namespace gpk
 		inxp	TRef*			get				()							const	noexcept	{ return Unknown; }
 
 		tplt<tpnm _tNCOOther>
-		inline	::gpk::error_t	as				(_tNCOOther** other)				noexcept	{ 
+		inline	gpk::err_t	as				(_tNCOOther** other)				noexcept	{ 
 			_tNCOOther*					old				= *other;
 			*other					= {};
 			HRESULT						hr				= Unknown ? Unknown->QueryInterface(__uuidof(_tNCOOther), (void**)other) : 0;
@@ -81,7 +81,7 @@ namespace gpk
 		}
 
 		tplt<tpnm _tNCOOther>
-		inline	::gpk::error_t	as				(::gpk::ptr_com<_tNCOOther>& other)	noexcept	{ 
+		inline	gpk::err_t	as				(::gpk::ptr_com<_tNCOOther>& other)	noexcept	{ 
 			::gpk::ptr_com<_tNCOOther>	old				= other;
 			other					= {};
 			HRESULT						hr				= Unknown ? Unknown->QueryInterface(__uuidof(_tNCOOther), (void**)&other) : 0;
