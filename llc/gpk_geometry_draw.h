@@ -19,7 +19,7 @@ namespace gpk
 		, const ::gpk::n3f2_t				& lightVector
 		, const ::gpk::rgbaf				& lightColor
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::SLight3>		& lightPoints
 		, ::gpk::apod<::gpk::rgbaf>			& lightColors

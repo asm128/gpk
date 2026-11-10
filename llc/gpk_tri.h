@@ -10,37 +10,37 @@ namespace gpk
 	struct tri { 
 		_tVertex	A, B, C; 
 
-		cxpr		tri()															= default;
-		cxpr		tri(const tri & other)											= default;
-		cxpr		tri(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
+		cxpr		tri		()																= default;
+		cxpr		tri		(const tri & other)												= default;
+		cxpr		tri		(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
 
 		GPK_DEFAULT_OPERATOR(tri<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};
-	typedef	tri<sc_t>		trichar;
-	typedef	tri<uc_t>	triuchar;
-	typedef	tri<float>		trif32;
-	typedef	tri<double>		trif64;
-	typedef	tri<uint8_t>	triu8;
-	typedef	tri<uint16_t>	triu16;
-	typedef	tri<uint32_t>	triu32;
-	typedef	tri<uint64_t>	triu64;
-	typedef	tri<int8_t>		trii8;
-	typedef	tri<int16_t>	trii16;
-	typedef	tri<int32_t>	trii32;
-	typedef	tri<int64_t>	trii64;
+	tydf tri<sc_t> trisc_t; tdcs trisc_t trisc_c;
+	tydf tri<uc_t> triuc_t; tdcs triuc_t triuc_c;
+	tydf tri<u0_t> triu0_t; tdcs triu0_t triu0_c;
+	tydf tri<u1_t> triu1_t; tdcs triu1_t triu1_c;
+	tydf tri<u2_t> triu2_t; tdcs triu2_t triu2_c;
+	tydf tri<u3_t> triu3_t; tdcs triu3_t triu3_c;
+	tydf tri<s0_t> tris0_t; tdcs tris0_t tris0_c;
+	tydf tri<s1_t> tris1_t; tdcs tris1_t tris1_c;
+	tydf tri<s2_t> tris2_t; tdcs tris2_t tris2_c;
+	tydf tri<s3_t> tris3_t; tdcs tris3_t tris3_c;
+	tydf tri<f2_t> trif2_t; tdcs trif2_t trif2_c;
+	tydf tri<f3_t> trif3_t; tdcs trif3_t trif3_c;
 
-	//typedef	minmax<trichar>		minmaxtrichar;
-	//typedef	minmax<triuchar>	minmaxtriuchar;
-	//typedef	minmax<trif32>		minmaxtrif32;
-	//typedef	minmax<trif64>		minmaxtrif64;
-	//typedef	minmax<triu8 >		minmaxtriu8;
-	//typedef	minmax<triu16>		minmaxtriu16;
-	//typedef	minmax<triu32>		minmaxtriu32;
-	//typedef	minmax<triu64>		minmaxtriu64;
-	//typedef	minmax<trii8 >		minmaxtrii8;
-	//typedef	minmax<trii16>		minmaxtrii16;
-	//typedef	minmax<trii32>		minmaxtrii32;
-	//typedef	minmax<trii64>		minmaxtrii64;
+	//typedef	minmax<trisc_t>		minmaxtrichar;
+	//typedef	minmax<triuc_t>		minmaxtriuchar;
+	//typedef	minmax<trif2_t>		minmaxtrif32;
+	//typedef	minmax<trif3_t>		minmaxtrif64;
+	//typedef	minmax<triu0_t >	minmaxtriu8;
+	//typedef	minmax<triu1_t>		minmaxtriu16;
+	//typedef	minmax<triu2_t>		minmaxtriu32;
+	//typedef	minmax<triu3_t>		minmaxtriu64;
+	//typedef	minmax<tris0_t >	minmaxtrii8;
+	//typedef	minmax<tris1_t>		minmaxtrii16;
+	//typedef	minmax<tris2_t>		minmaxtrii32;
+	//typedef	minmax<tris3_t>		minmaxtrii64;
 #pragma pack(pop)
 } // namespace 
 

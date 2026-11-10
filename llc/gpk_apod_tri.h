@@ -8,18 +8,18 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	typedef	::gpk::apod<::gpk::trichar	>	atric	, atrichar		;
-	typedef	::gpk::apod<::gpk::triuchar>	atriuc	, atriuchar		;
-	typedef	::gpk::apod<::gpk::trif32	>	atrif32	;
-	typedef	::gpk::apod<::gpk::trif64	>	atrif64	;
-	typedef	::gpk::apod<::gpk::triu8	>	atriu8	;
-	typedef	::gpk::apod<::gpk::triu16	>	atriu16	;
-	typedef	::gpk::apod<::gpk::triu32	>	atriu32	;
-	typedef	::gpk::apod<::gpk::triu64	>	atriu64	;
-	typedef	::gpk::apod<::gpk::trii8	>	atrii8		;
-	typedef	::gpk::apod<::gpk::trii16	>	atrii16	;
-	typedef	::gpk::apod<::gpk::trii32	>	atrii32	;
-	typedef	::gpk::apod<::gpk::trii64	>	atrii64	;
+	typedef	::gpk::apod<::gpk::trisc_t	>	atric	, atrichar		;
+	typedef	::gpk::apod<::gpk::triuc_t>	atriuc	, atriuchar		;
+	typedef	::gpk::apod<::gpk::trif2_t	>	atrif32	;
+	typedef	::gpk::apod<::gpk::trif3_t	>	atrif64	;
+	typedef	::gpk::apod<::gpk::triu0_t	>	atriu8	;
+	typedef	::gpk::apod<::gpk::triu1_t	>	atriu16	;
+	typedef	::gpk::apod<::gpk::triu2_t	>	atriu32	;
+	typedef	::gpk::apod<::gpk::triu3_t	>	atriu64	;
+	typedef	::gpk::apod<::gpk::tris0_t	>	atrii8		;
+	typedef	::gpk::apod<::gpk::tris1_t	>	atrii16	;
+	typedef	::gpk::apod<::gpk::tris2_t	>	atrii32	;
+	typedef	::gpk::apod<::gpk::tris3_t	>	atrii64	;
 
 	tplt<tpnm _tVertex>
 	using		atri	= ::gpk::apod<::gpk::tri<_tVertex>>;

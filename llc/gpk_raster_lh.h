@@ -34,8 +34,8 @@ namespace gpk
 		, ::gpk::grid<uint32_t>	depthBuffer
 		);
 	int				drawTriangle		(::gpk::g8bgra pixels, const ::gpk::tri2i16 & triangle, ::gpk::bgra color);
-	int				drawTriangle		(::gpk::n2u2_t targetSize, const ::gpk::tri3f32 & triangle, ::gpk::apod<::gpk::n2s1_t> & pixelCoords, ::gpk::apod<::gpk::trif32> & proportions, ::gpk::grid<uint32_t> depthBuffer);
-	int				drawTriangle		(::gpk::n2u2_t targetSize, const ::gpk::tri2f32 & triangle, ::gpk::apod<::gpk::n2s1_t> & pixelCoords, ::gpk::apod<::gpk::trif32> & proportions);
+	int				drawTriangle		(::gpk::n2u2_t targetSize, const ::gpk::tri3f32 & triangle, ::gpk::apod<::gpk::n2s1_t> & pixelCoords, ::gpk::apod<::gpk::trif2_t> & proportions, ::gpk::grid<uint32_t> depthBuffer);
+	int				drawTriangle		(::gpk::n2u2_t targetSize, const ::gpk::tri2f32 & triangle, ::gpk::apod<::gpk::n2s1_t> & pixelCoords, ::gpk::apod<::gpk::trif2_t> & proportions);
 	int				drawQuadTriangle
 		( ::gpk::g8bgra					targetPixels
 		, const ::gpk::SGeometryQuads	& geometry
@@ -45,7 +45,7 @@ namespace gpk
 		, const ::gpk::n3f2_t			& lightVector
 		, const ::gpk::bgra				color
 		, ::gpk::apod<::gpk::n2s1_t>	& pixelCoords
-		, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 		, ::gpk::grid<uint32_t>			depthBuffer
 		);
 	int				drawQuadTriangle
@@ -56,7 +56,7 @@ namespace gpk
 		, const ::gpk::m4f32				& matrixTransformView
 		, const ::gpk::n3f2_t				& lightVector
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
@@ -71,7 +71,7 @@ namespace gpk
 		, const ::gpk::m4f32				& matrixTransformView
 		, const ::gpk::n3f2_t				& lightVector
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
@@ -84,14 +84,14 @@ namespace gpk
 		, ::gpk::tri3f32					triangle
 		, const ::gpk::m4f32				& matrixTransformView
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::grid<uint32_t>				depthBuffer
 		);
 	int				drawQuadTriangle
 		( ::gpk::n2u2_c						& targetSize
 		, const ::gpk::tri3f32				& triangleScreen
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::grid<uint32_t>				depthBuffer
 		);
 	int				drawTriangle
@@ -103,7 +103,7 @@ namespace gpk
 		, const ::gpk::n3f2_t				& lightVector
 		, ::gpk::bgra						color
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::grid<uint32_t>				depthBuffer
 		);
 	int				drawTriangle
@@ -114,7 +114,7 @@ namespace gpk
 		, const ::gpk::m4f32				& matrixTransformView
 		, const ::gpk::n3f2_t				& lightVector
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::grid<uint32_t>				depthBuffer
 		);
@@ -127,7 +127,7 @@ namespace gpk
 		, const ::gpk::n3f2_t				& lightVector
 		, const ::gpk::rgbaf				& lightColor
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::SLight3>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
@@ -141,7 +141,7 @@ namespace gpk
 		, const ::gpk::tri2f32				& triangleTexCoords
 		, const ::gpk::n3f2_t				& lightVector
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
@@ -155,7 +155,7 @@ namespace gpk
 		, const ::gpk::tri2f32				& triangleTexCoords
 		, const ::gpk::n3f2_t				& lightVector
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors

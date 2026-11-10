@@ -61,12 +61,12 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SVOXFileHeader {
-		::gpk::astatic<sc_t, 4>						MagicNumber				= {};
+		::gpk::astsc_t<4>						MagicNumber				= {};
 		uint32_t											Version					= {};
 	};
 
 	struct SVOXChunkHeader {
-		::gpk::astatic<sc_t, 4>	Type					= {};
+		::gpk::astsc_t<4>	Type					= {};
 		uint32_t				ChunkSize				= 0;	// | num bytes of chunk content (N)
 		uint32_t				ChildChunks				= 0;	// | num bytes of children chunks (M)
 

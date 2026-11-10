@@ -85,7 +85,7 @@ namespace gpk
 
 	struct SRenderCache {
 		::gpk::apod<::gpk::n2s1_t>	TrianglePixelCoords			= {};
-		::gpk::apod<::gpk::trif32>	TrianglePixelWeights		= {};
+		::gpk::apod<::gpk::trif2_t>	TrianglePixelWeights		= {};
 		::gpk::apod<::gpk::n2s1_t>	WireframePixelCoords		= {};
 
 		::gpk::apod<::gpk::tri3f32>	TransformedNormalsVertex	= {};

@@ -61,7 +61,7 @@ namespace gpk
 		uint32_t								ShadeType;
 		uint8_t									Alpha;
 		sc_t									Unknown[16];
-		::gpk::aobj<::gpk::astatic<sc_t, 40>>	TextureNames;
+		::gpk::aobj<::gpk::astsc_t<40>>	TextureNames;
 		sc_t									RootNodeName[40];
 		::gpk::aobj<::gpk::SRSMNode>			Nodes;
 	};
@@ -73,7 +73,7 @@ namespace gpk
 		::gpk::apod<::gpk::n3f2_t>				Normals			;
 		::gpk::apod<::gpk::n3f2_t>				Vertices		;
 		::gpk::apod<::gpk::n2f2_t>				UVs				;
-		::gpk::apod<::gpk::triu32>				VertexIndices	;
+		::gpk::apod<::gpk::triu2_t>				VertexIndices	;
 		int32_t									TextureIndex	;
 		int32_t									RSMNodeIndex	;
 		//::gpk::as2_t					SkinIndices		; // one per triangle (VertexIndices.size() / 3)

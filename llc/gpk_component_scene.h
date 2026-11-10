@@ -201,7 +201,7 @@ namespace gpk {
 	typedef	::gpk::apod<::gpk::n2f2_t		>	TTexCoordBuffer			;
 	typedef	::gpk::apod<::gpk::SBlendIndices>	TBlendIndicesBuffer		;
 	typedef	::gpk::apod<::gpk::n2s1_t		>	TPixelCoordBuffer		;
-	typedef	::gpk::apod<::gpk::trif32		>	TTriangleWeightBuffer	;
+	typedef	::gpk::apod<::gpk::trif2_t		>	TTriangleWeightBuffer	;
 
 	struct SRendererCache {
 		::gpk::au2_t					NodesToRender					= {};

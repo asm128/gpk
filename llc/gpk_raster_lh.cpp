@@ -238,7 +238,7 @@ gpk::err_t			gpk::drawTriangle
 	( const ::gpk::n2u2_t			targetSize
 	, const ::gpk::tri3f32			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& proportions
+	, ::gpk::apod<::gpk::trif2_t>	& proportions
 	, ::gpk::grid<uint32_t>		depthBuffer
 	)	{
 	// Compute triangle bounding box
@@ -299,7 +299,7 @@ gpk::err_t			gpk::drawTriangle
 	( const ::gpk::n2u2_t			targetSize
 	, const ::gpk::tri2f32			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& proportions
+	, ::gpk::apod<::gpk::trif2_t>	& proportions
 	)	{
 	// Compute triangle bounding box
 	int16_t						minX					= (int16_t)::min3(triangle.A.x, triangle.B.x, triangle.C.x);
@@ -346,7 +346,7 @@ gpk::err_t			gpk::drawPixels
 	, const ::gpk::tri2f32				& triangleTexCoords
 	, const ::gpk::n3f2_t				& lightVector
 	, ::gpk::apod<::gpk::n2s1_t>			& pixelCoords
-	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 	, ::gpk::gc8bgra					textureImage
 	, ::gpk::apod<::gpk::n3f2_t>			& lightPoints
 	, ::gpk::a8bgra			& lightColors
@@ -358,7 +358,7 @@ gpk::err_t			gpk::drawPixels
 	int32_t						countPixels				= 0;
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		::gpk::n2s1_t				pixelCoord				= pixelCoords		[iPixelCoord];
-		const ::gpk::trif32			& vertexWeights			= pixelVertexWeights[iPixelCoord];
+		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		const ::gpk::n2f2_t			texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
 		const ::gpk::n3f2_t			position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
 		const ::gpk::rgbaf			texelColor				= textureImage.size() ? textureImage[(uint32_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(uint32_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x] : ::gpk::bgra{::gpk::GRAY};
@@ -392,7 +392,7 @@ gpk::err_t			gpk::drawPixels
 	, const ::gpk::tri2f32			& triangleTexCoords
 	, const ::gpk::n3f2_t			& lightVector
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
@@ -405,7 +405,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	( const ::gpk::n2u2_t			& targetSize
 	, const ::gpk::tri3f32		& triangleScreen
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 	, ::gpk::grid<uint32_t>		depthBuffer
 	) {
 	return ::gpk::drawTriangle(targetSize, triangleScreen, pixelCoords, pixelVertexWeights, depthBuffer);
@@ -416,7 +416,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, ::gpk::tri3f32				triangle
 	, const ::gpk::m4f32			& matrixTransformVP
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 	, ::gpk::grid<uint32_t>		depthBuffer
 	) {
 	::gpk::transform(triangle, matrixTransformVP);
@@ -436,7 +436,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, const ::gpk::m4f32			& matrixTransformVP
 	, const ::gpk::n3f2_t			& lightVector
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
@@ -453,7 +453,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, const ::gpk::m4f32			& matrixTransformVP
 	, const ::gpk::n3f2_t			& lightVector
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
@@ -479,7 +479,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, const ::gpk::n3f2_t			& lightVector
 	, const ::gpk::bgra				color
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 	, ::gpk::grid<uint32_t>		depthBuffer
 	) {
 	::gpk::tri3f32				triangle			= geometry.Triangles	[iTriangle];
@@ -512,7 +512,7 @@ gpk::err_t			gpk::drawTriangle
 	, const ::gpk::n3f2_t			& lightVector
 	, const ::gpk::bgra				color
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
-	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
 	, ::gpk::grid<uint32_t>		depthBuffer
 	) {
 	::gpk::tri3f32				triangle			= geometry.Triangles	[iTriangle];
@@ -528,7 +528,7 @@ gpk::err_t			gpk::drawTriangle
 	int32_t						countPixels				= 0;
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
-		const ::gpk::trif32			& vertexWeights			= pixelVertexWeights[iPixelCoord];
+		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
 		double						lightFactor				= normal.Dot(lightVector);
@@ -545,7 +545,7 @@ gpk::err_t			gpk::drawTriangle
 	, const ::gpk::m4f32				& matrixTransformView
 	, const ::gpk::n3f2_t				& lightVector
 	, ::gpk::apod<::gpk::n2s1_t>			& pixelCoords
-	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::grid<uint32_t>			depthBuffer
 	) {
@@ -564,7 +564,7 @@ gpk::err_t			gpk::drawTriangle
 	const ::gpk::n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
-		const ::gpk::trif32			& vertexWeights			= pixelVertexWeights[iPixelCoord];
+		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
 
@@ -588,7 +588,7 @@ gpk::err_t			gpk::drawTriangle
 	, const ::gpk::n3f2_t				& lightVector
 	, const ::gpk::rgbaf				& lightColor
 	, ::gpk::apod<::gpk::n2s1_t>			& pixelCoords
-	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
+	, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::SLight3>		& lightPoints
 	, ::gpk::a8bgra			& lightColors
@@ -612,7 +612,7 @@ gpk::err_t			gpk::drawTriangle
 	const ::gpk::n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
-		const ::gpk::trif32			& vertexWeights			= pixelVertexWeights[iPixelCoord];
+		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
