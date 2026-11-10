@@ -4,7 +4,7 @@
 
 using namespace gpk;
 
-// Retains part 0 as the base file and writes file.01, file.02, ... for subsequent parts.
+// Preserves the source and writes file.00, file.01, ... parts.
 static ::gpk::err_t					splitterMain					(::gpk::SRuntimeValues & runtimeValues)	{
 	const ::gpk::SCommandLineArgs	& args							= runtimeValues.EntryPointArgs;
 	if_true_vef(-1, 1 > args.Positionals.size(), "Usage:\n\t%.*s [filename]", GPK_VIEW_ARGS(args.ProgramName));

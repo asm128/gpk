@@ -8,8 +8,8 @@ nmsp gpk
 {
 	err_t			with				(vcst_t filepath, vcst_t mode, const function<err_t(FILE*&)> & funcFile);	//
 
-	err_t			fileJoin			(vcst_t fileNameDst);								// Joins a file split into file.split.## parts.
-	err_t			fileSplit			(vcst_t fileNameSrc, u2_c partSize);		// Writes file.0, file.1, ...; returns part count. Failure retains completed/partial parts.
+	err_t			fileJoin			(vcst_t fileNameDst);								// Joins a file split into file.00, file.01, ... parts.
+	err_t			fileSplit			(vcst_t fileNameSrc, u2_c partSize);		// Writes file.00, file.01, ...; returns part count. Failure retains completed/partial parts.
 	s3_t			fileSize			(vcst_t fileName);
 	err_t			fileLastWriteTime	(vcst_t fileName, s3_t & modified);
 	err_t			fileDelete			(vcst_t fileName);

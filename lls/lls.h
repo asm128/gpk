@@ -55,7 +55,7 @@ namespace lls
 			return 0;
 		}
 
-		::gpk::err_t			GetPlayerFilePath			(const uint64_t time, const ::gpk::vcst_t & playerName, ::gpk::asc_t & playerFilePath)	const	{
+		::gpk::err_t			GetPlayerFilePath			(const uint64_t time, const ::gpk::vcst_t & playerName, ::gpk::string & playerFilePath)	const	{
 			::gpk::string					b64PlayerName				= {};
 			do { if_fail_fe(::gpk::base64Encode(playerName, b64PlayerName)); } while(0);
 			return ::gpk::append_strings

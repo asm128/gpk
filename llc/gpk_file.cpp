@@ -122,12 +122,11 @@ sttc gpk::err_t fileSplitSmall(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 	if_fail_fe(gpk::fileToMemory(fileNameSrc, fileInMemory));
 	cnst u2_t			countParts = fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
 	if_true_fe(countParts > 0x7FFFFFFFU);
-	gpk::string			fileNameDst;
+	char				fileNameDst[1024] = {};
 	for(u2_t iPart = 0; iPart < countParts; ++iPart) {
 		cnst u2_t		offsetPart = sizePartMax * iPart;
-		fileNameDst.clear();
-		if_fail_fe(gpk::append_strings(fileNameDst, fileNameSrc, '.', iPart));
-		info_printf("Creating part %u: '%.*s'.", iPart, GPK_VIEW_ARGS(fileNameDst));
+		if_fail_fe(gpk::sprintf_s(fileNameDst, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameSrc), iPart));
+		info_printf("Creating part %u: '%s'.", iPart, fileNameDst);
 		cnst u2_t		countBytes = gpk::min(sizePartMax, fileInMemory.size() - offsetPart);
 		if_fail_fe(gpk::fileFromMemory(fileNameDst, gpk::vcs0_t{fileInMemory.begin() + offsetPart, countBytes}));
 	}
@@ -138,11 +137,10 @@ sttc gpk::err_t fileSplitSmall(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 sttc gpk::err_t fileSplitLarge(gpk::vcst_t fileNameSrc, u2_c sizePartMax, u3_c sizeFile) {
 	gpk::au0_t			buffer;
 	cnst u3_t			countParts = sizeFile / sizePartMax + one_if(sizeFile % sizePartMax);
-	gpk::string			fileNameDst;
+	char				fileNameDst[1024] = {};
 	u3_t				offset = 0;
 	for(u2_t iPart = 0; iPart < countParts; ++iPart) {
-		fileNameDst.clear();
-		if_fail_fe(gpk::append_strings(fileNameDst, fileNameSrc, '.', iPart));
+		if_fail_fe(gpk::sprintf_s(fileNameDst, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameSrc), iPart));
 		cnst u3_t		partSize = gpk::min(sizeFile - offset, (u3_t)sizePartMax);
 		u3_t			partOffset = 0;
 		while(partOffset < partSize) {
@@ -171,9 +169,9 @@ gpk::err_t gpk::fileSplit(vcst_t fileNameSrc, u2_c sizePartMax) {
 }
 // Joins a file split into file.## parts.
 gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
-	string					fileNameSrc				= {};
+	char					fileNameSrc[1024]			= {};
 	::gpk::u2_t				iPart					= 0;
-	if_fail_fe(gpk::append_strings(fileNameSrc, fileNameDst, '.', iPart));
+	if_fail_fe(gpk::sprintf_s(fileNameSrc, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameDst), iPart));
 	::FILE					* fpDest					= 0;
 	gpk::string				finalPathName				= fileNameDst;
 	if_fail_fef(gpk::fopen_s(fpDest, finalPathName, GPK_OPEN_MODE_WRITE), "%.*s", GPK_VIEW_ARGS(finalPathName));
@@ -181,9 +179,8 @@ gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
 	gpk::apod<s0_t>			fileInMemory				= {};
 	// Load each .split part and write it to the destionation file.
 	while(0 == gpk::fileToMemory(fileNameSrc, fileInMemory)) {	// Load first part and write it to the joined file.
-		if_true_fef(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fpDest), "Write operation failed. Disk full? File size: %" GPK_FMT_U2 ". File name: %.*s.", fileInMemory.size(), GPK_VIEW_ARGS(fileNameSrc));
-		fileNameSrc.clear();
-		if_fail_fe(gpk::append_strings(fileNameSrc, fileNameDst, '.', ++iPart));
+		if_true_fef(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fpDest), "Write operation failed. Disk full? File size: %" GPK_FMT_U2 ". File name: %s.", fileInMemory.size(), fileNameSrc);
+		if_fail_fe(gpk::sprintf_s(fileNameSrc, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameDst), ++iPart));
 		fileInMemory.clear();
 	}
 	fclose(fpDest);
