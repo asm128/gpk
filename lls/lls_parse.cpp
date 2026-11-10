@@ -179,7 +179,7 @@ static	::gpk::err_t	parseCommand		(::gpk::apobj<::lls::EventLLS> & queue, ::gpk:
 	const _tEnum				command				= ::gpk::get_value<_tEnum>(commandName);
 	if(::gpk::get_value_count<_tEnum>() <= command)
 		return -1;  /// having an error message here makes it too verbose
-	info_printf("Command matched for %.*s: %s(args:%s).", ::gpk::get_enum_namep(command), ::gpk::get_value_namep(command), GPK_VIEW_ARGS(commandArgs));
+	info_printf("Command matched for %s: %s(args:%.*s).", ::gpk::get_enum_namep(command), ::gpk::get_value_namep(command), GPK_VIEW_ARGS(commandArgs));
 	do { if_fail_fe(::interpretArgsAndEnqueue(queue, command, commandArgs)); } while(0);
 	return command;
 }
