@@ -1,4 +1,4 @@
-#include "application.h"
+#include "test_gpk_gui.h"
 #include "gpk_bitmap_file.h"
 #include "gpk_encoding.h"
 #include "gpk_label.h"

@@ -1,4 +1,4 @@
-#include "application.h"
+#include "test_gpk_dialog.h"
 #include "gpk_png.h"
 #include "gpk_grid_copy.h"
 #include "gpk_grid_scale.h"
