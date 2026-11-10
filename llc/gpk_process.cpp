@@ -7,7 +7,7 @@
 #	include <unistd.h>
 #endif
 
-gpk::err_t			gpk::environmentBlockViews		(const ::gpk::vcsc_t & environmentBlock, ::gpk::aobj<::gpk::TKeyValConstString> & out_Views)	{
+gpk::err_t			gpk::environmentBlockViews		(const ::gpk::vcsc_t & environmentBlock, ::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>> & out_Views)	{
 	uint32_t					offsetEndVar					= 0;
 	while(offsetEndVar < environmentBlock.size() - 1) {
 		uint32_t					offsetBeginVar					= offsetEndVar + (offsetEndVar ? 1 : 0);
@@ -15,7 +15,7 @@ gpk::err_t			gpk::environmentBlockViews		(const ::gpk::vcsc_t & environmentBlock
 			break;
 		::gpk::vcsc_t					viewEnvironVar					= {}; // {&environmentBlock[offsetBeginVar], offsetEndVar - offsetBeginVar};
 		gpk_necs(environmentBlock.slice(viewEnvironVar, offsetBeginVar, offsetEndVar - offsetBeginVar));
-		::gpk::TKeyValConstString	newKeyVal						= {};
+		::gpk::kv<vcsc_t, vcsc_t>	newKeyVal						= {};
 		if(-1 != ::gpk::keyval_split({viewEnvironVar.begin(), viewEnvironVar.size()}, newKeyVal))
 			out_Views.push_back(newKeyVal);
 		else if(viewEnvironVar.size()) {

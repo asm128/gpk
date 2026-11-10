@@ -17,7 +17,7 @@ gpk::err_t			gpk::jsonCompareNumber		(cnst gpk::SJSONNode & node, cnst gpk::view
 gpk::err_t			gpk::jsonMapToFields
 (	gpk::as2_t											& indicesOfFields
 ,	cnst gpk::view<cnst gpk::SJSONFieldBinding>	fields
-,	cnst gpk::view<cnst gpk::TKeyValConstChar>	fieldMaps
+,	cnst gpk::view<cnst gpk::kv<vcsc_t, vcsc_t>>	fieldMaps
 ) {
 	for(u2_t iMap = 0; iMap < fieldMaps.size(); ++iMap)
 	for(u2_t iField = 0; iField < fields.size(); ++iField) {
@@ -33,7 +33,7 @@ gpk::err_t			gpk::jsonMapToFields
 gpk::err_t			gpk::jsonFieldsToMap
 (	gpk::as2_t											& indicesOfMaps
 ,	cnst gpk::view<cnst gpk::SJSONFieldBinding>	fields
-,	cnst gpk::view<cnst gpk::TKeyValConstChar>	fieldMaps
+,	cnst gpk::view<cnst gpk::kv<vcsc_t, vcsc_t>>	fieldMaps
 ) {
 	u2_t					countFields					= fields.size();
 	for(u2_t iField = 0; iField < countFields; ++iField) {

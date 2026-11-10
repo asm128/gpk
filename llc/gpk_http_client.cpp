@@ -223,7 +223,7 @@ gpk::err_t			gpk::httpClientRequest
 	bChunked						= false;
 	out_received.Headers.resize(headerLines.size());
 	for(uint32_t iLine = 0; iLine < headerLines.size(); ++iLine) {
-		::gpk::TKeyValConstString					& header						= out_received.Headers[iLine];
+		::gpk::kv<vcsc_t, vcsc_t>					& header						= out_received.Headers[iLine];
 		if(-1 == ::gpk::token_split(':', headerLines[iLine], header)) {
 			header.Key								= {headerLines[iLine].begin(), headerLines[iLine].size()};
 			//::gpk::view_char							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};

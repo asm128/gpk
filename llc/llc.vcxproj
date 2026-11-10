@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval.h" />
+    <ClInclude Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval_view.h" />
     <ClInclude Include="gpk_adam7.h" />
     <ClInclude Include="gpk_aes.h" />
     <ClInclude Include="gpk_align.h" />
@@ -59,6 +61,7 @@
     <ClInclude Include="gpk_bit.h" />
     <ClInclude Include="gpk_bitmap_target.h" />
     <ClInclude Include="gpk_block.h" />
+    <ClInclude Include="gpk_block_container.h" />
     <ClInclude Include="gpk_block_container_nts.h" />
     <ClInclude Include="gpk_broker.h" />
     <ClInclude Include="gpk_camera.h" />
@@ -89,6 +92,7 @@
     <ClInclude Include="gpk_gpio.h" />
     <ClInclude Include="gpk_i2c.h" />
     <ClInclude Include="gpk_keyed_bit_array.h" />
+    <ClInclude Include="gpk_keyval_old.h" />
     <ClInclude Include="gpk_lifecycle.h" />
     <ClInclude Include="gpk_linear_map_pobj.h" />
     <ClInclude Include="gpk_log_level.h" />
@@ -243,6 +247,7 @@
     <ClInclude Include="gpk_queue_async.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval_view.cpp" />
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
     <ClCompile Include="gpk_append_tcpip.cpp" />

@@ -152,7 +152,7 @@ namespace gpk
 #pragma pack(push, 1)
 	struct SHTTPAPIRequest {
 		::gpk::aobj<::gpk::vcsc_t>				QueryStringElements			= {};
-		::gpk::aobj<::gpk::TKeyValConstString>	QueryStringKeyVals			= {};
+		::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	QueryStringKeyVals			= {};
 		::gpk::vcsc_t							Ip							= {};
 		::gpk::vcsc_t							Port						= {};
 		::gpk::vcsc_t							Script						= {};

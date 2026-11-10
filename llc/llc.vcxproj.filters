@@ -768,6 +768,21 @@
     <ClInclude Include="gpk_lifecycle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_event_primitives.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyval_old.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block_container.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -993,6 +1008,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_keyval_old.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@
 using ::gpk::sc_c;
 
 gpk::err_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
-	const ::gpk::aobj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
+	const ::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	& environViews					= runtimeValues.EnvironViews;
 	::gpk::vcsc_t									remoteAddr;
 	const bool										isCGIEnviron					= -1 != ::gpk::find(::gpk::vcs{"REMOTE_ADDR"}, environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
 	requestReceived.IsCGIEnviron				= isCGIEnviron;
@@ -14,7 +14,7 @@ gpk::err_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, c
 		::gpk::writeCGIEnvironToFile(environViews);
 
 	{	// Try to load query from querystring and request body
-		const int32_t								offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
+		const int32_t								offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>>{environViews.begin(), environViews.size()});
 		::gpk::apod<sc_t>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
 		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (int8_t)requestReceived.Method)
@@ -44,7 +44,7 @@ gpk::err_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, c
 				::gpk::querystring_split(requestReceived.QueryString, requestReceived.QueryStringElements);
 				requestReceived.QueryStringKeyVals.resize(requestReceived.QueryStringElements.size());
 				for(uint32_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
-					::gpk::TKeyValConstString								& keyValDst				= requestReceived.QueryStringKeyVals[iKeyVal];
+					::gpk::kv<vcsc_t, vcsc_t>								& keyValDst				= requestReceived.QueryStringKeyVals[iKeyVal];
 					::gpk::keyval_split(requestReceived.QueryStringElements[iKeyVal], keyValDst);
 				}
 			}
@@ -169,7 +169,7 @@ static	gpk::err_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, cons
 
 gpk::err_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<::gpk::sc_c*> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine	= argv;
-	::gpk::aobj<::gpk::TKeyValConstString>	& environViews	= cgiRuntimeValues.EnvironViews;
+	::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	& environViews	= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
 	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
 	//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
@@ -181,7 +181,7 @@ gpk::err_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeVal
 		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
 		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
 		for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
-			::gpk::TKeyValConstString	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
+			::gpk::kv<vcsc_t, vcsc_t>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
 			::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
 		}
 	}

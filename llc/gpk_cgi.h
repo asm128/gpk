@@ -7,7 +7,7 @@
 namespace gpk
 {
 	gpk::err_t				querystring_split			(::gpk::vcsc_c & input_string, ::gpk::aobj<::gpk::vcsc_t> & output_views);
-	gpk::err_t				writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews);
+	gpk::err_t				writeCGIEnvironToFile		(::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> environViews);
 } // namespace
 
 #endif // GPK_WEB_CGI

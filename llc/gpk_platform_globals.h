@@ -73,7 +73,7 @@
 #	endif
 #endif
 
-#if defined GPK_ANDROID
+#ifdef GPK_ANDROID
 #	define GPK_DISABLE_CPP_EXCEPTIONS
 #endif
 

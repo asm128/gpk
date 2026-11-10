@@ -9,7 +9,7 @@ namespace gpk
 	struct SHTTPResponse {
 		::gpk::apod<sc_t>						Body;
 		::gpk::apod<sc_t>						HeaderData;
-		::gpk::aobj<::gpk::TKeyValConstString>	Headers;
+		::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	Headers;
 	};
 
 	gpk::err_t					httpClientRequest

@@ -348,7 +348,7 @@ namespace gpk
 
 	tydf ::gpk::SKeyVal<::gpk::vcst_t, ::gpk::aobj<::gpk::vcst_t>>	TKeyValConstStringArray;
 	//------------------------------------------------------------------------------------------------------------
-	err_t							keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
+	err_t							keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>> & output);
 
 	err_t							filterPrefix					(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c prefix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded = false);
 	err_t							filterPostfix					(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c prefix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded = false);

@@ -34,7 +34,7 @@ gpk::err_t			gpk::querystring_split	(::gpk::vcsc_c & input_string, ::gpk::aobj<:
 	return 0;
 }
 
-gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews)	{
+gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> environViews)	{
 	::gpk::au0_t				environmentBlockToSave			= {};
 	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {
@@ -57,7 +57,7 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstS
 		temp.push_back('\r');
 		temp.push_back('\n');
 		::gpk::fileFromMemory({tempName}, temp);
-		::gpk::aobj<::gpk::TKeyValConstString>	environViewsTest;
+		::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	environViewsTest;
 		::gpk::keyValConstStringDeserialize(environmentBlockToSave, environViewsTest);
 		//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
 		//	info_printf("CGI Environ (original): '%.*s = %.*s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key), GPK_VIEW_ARGS(environViews[iEnviron].Val));

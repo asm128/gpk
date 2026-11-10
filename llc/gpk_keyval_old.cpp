@@ -26,7 +26,7 @@ gpk::err_t			gpk::join				(::gpk::asc_t & output, char separator, ::gpk::vcvsc_t
 	return sprintfable;
 }
 
-gpk::err_t			gpk::token_split		(char valueSeparator, const ::gpk::vcst_t & input_string, TKeyValConstChar & output_views)	{
+gpk::err_t			gpk::token_split		(char valueSeparator, const ::gpk::vcst_t & input_string, kv<vcsc_t, vcsc_t> & output_views)	{
 	int32_t						indexSeparator;
 	if_fail_wf(indexSeparator = ::gpk::find(valueSeparator, input_string), "'%c' character not found.", valueSeparator);
 	output_views.Key		= {input_string.begin(), (uint32_t)indexSeparator};
@@ -41,13 +41,13 @@ gpk::err_t			gpk::token_split		(char valueSeparator, const ::gpk::vcst_t & input
 	return output_views.Val.size();
 }
 
-gpk::err_t			gpk::find				(const ::gpk::vcst_t & keyToFind, const ::gpk::view<const ::gpk::TKeyValConstString> & keyvals, ::gpk::vcsc_t & out_val)		{
+gpk::err_t			gpk::find				(const ::gpk::vcst_t & keyToFind, const ::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> & keyvals, ::gpk::vcsc_t & out_val)		{
 	gpk::err_t				index					= ::gpk::find(keyToFind, keyvals);
 	out_val					= (-1 == index) ? ::gpk::vcst_t{} : keyvals[index].Val;
 	return index;
 }
 
-gpk::err_t			gpk::keyvalNumeric		(const ::gpk::vcst_t & key, const ::gpk::view<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
+gpk::err_t			gpk::keyvalNumeric		(const ::gpk::vcst_t & key, const ::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> keyVals, uint64_t * outputNumber)	{
 	ree_if(0 == outputNumber, "%s", "Output number cannot point to a null address.");
 	gpk::err_t				indexKey				= ::gpk::find(key, keyVals);
 	if(-1 != indexKey)
@@ -56,7 +56,7 @@ gpk::err_t			gpk::keyvalNumeric		(const ::gpk::vcst_t & key, const ::gpk::view<c
 	return indexKey;
 }
 
-gpk::err_t			gpk::keyValVerify		(const ::gpk::view<::gpk::TKeyValConstString> & environViews, ::gpk::vcsc_c & keyToVerify, ::gpk::vcsc_c & valueToVerify)	{
+gpk::err_t			gpk::keyValVerify		(const ::gpk::view<::gpk::kv<vcsc_t, vcsc_t>> & environViews, ::gpk::vcsc_c & keyToVerify, ::gpk::vcsc_c & valueToVerify)	{
 	for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey) {
 		if(environViews[iKey].Key == keyToVerify)
 			return (environViews[iKey].Val == valueToVerify) ? iKey : -1;
@@ -64,11 +64,11 @@ gpk::err_t			gpk::keyValVerify		(const ::gpk::view<::gpk::TKeyValConstString> & 
 	return -1;
 }
 
-gpk::err_t			gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstString> & keyVals, const view<vcsc_c> & keysToSave, ::gpk::au0_t & output)	{
-	::gpk::apod<::gpk::TKeyValConstString>	keyValsToSave					= {};
+gpk::err_t			gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> & keyVals, const view<vcsc_c> & keysToSave, ::gpk::au0_t & output)	{
+	::gpk::apod<::gpk::kv<vcsc_t, vcsc_t>>	keyValsToSave					= {};
 	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
-			const ::gpk::TKeyValConstString	& kvToCheck						= keyVals[iKey];
+			const ::gpk::kv<vcsc_t, vcsc_t>	& kvToCheck						= keyVals[iKey];
 			::gpk::vcsc_c				& keyToSave						= keysToSave[iRef];
 			if(kvToCheck.Key == keyToSave)
 				keyValsToSave.push_back(kvToCheck);
@@ -83,7 +83,7 @@ gpk::err_t			gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TK
 	return 0;
 }
 
-gpk::err_t			gpk::keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::TKeyValConstString> & output)	{
+gpk::err_t			gpk::keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>> & output)	{
 	uint32_t					offset								= 0;
 	u2_c				keysToRead							= *(u2_c*)input.begin();
 	offset					+= (uint32_t)szof(uint32_t);

@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	gpk::err_t			environmentBlockViews		(::gpk::vcsc_c & environmentBlock, ::gpk::aobj<TKeyValConstString> & out_Views);	
+	gpk::err_t			environmentBlockViews		(::gpk::vcsc_c & environmentBlock, ::gpk::aobj<kv<vcsc_t, vcsc_t>> & out_Views);	
 	gpk::err_t			environmentBlockFromEnviron	(::gpk::apod<sc_t> & environmentBlock);
 } // namespace
 

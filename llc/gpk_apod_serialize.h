@@ -56,7 +56,7 @@ namespace gpk
 	tplTstin		err_t	loadView					(vcs0_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
 	tplTstin		err_t	loadView					(vcsc_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
 
-	err_t					keyValConstStringSerialize	(cnst view<cnst TKeyValConstString> & keyVals, const view<vcsc_c> & keysToSave, au0_t & output);
+	err_t					keyValConstStringSerialize	(cnst view<cnst kv<vcsc_t, vcsc_t>> & keyVals, const view<vcsc_c> & keysToSave, au0_t & output);
 } // namespace
 
 #endif // GPK_APOD_SERIALIZE_H_23627

@@ -175,8 +175,8 @@ namespace gpk
 		JSON_TYPE		Type					= {};
 	};
 
-	err_t			jsonMapToFields			(as2_t & indicesOfFields, cnst view<cnst SJSONFieldBinding> fields, cnst view<cnst TKeyValConstChar> fieldMaps);
-	err_t			jsonFieldsToMap			(as2_t & indicesOfFields, cnst view<cnst SJSONFieldBinding> fields, cnst view<cnst TKeyValConstChar> fieldMaps);
+	err_t			jsonMapToFields			(as2_t & indicesOfFields, cnst view<cnst SJSONFieldBinding> fields, cnst view<cnst kv<vcsc_t, vcsc_t>> fieldMaps);
+	err_t			jsonFieldsToMap			(as2_t & indicesOfFields, cnst view<cnst SJSONFieldBinding> fields, cnst view<cnst kv<vcsc_t, vcsc_t>> fieldMaps);
 } // namespace
 
 #endif // GPK_JSON_H_23627
