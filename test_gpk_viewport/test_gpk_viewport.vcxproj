@@ -107,7 +107,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; winmm.lib; xaudio2.lib; comctl32.lib; ole32.lib; dxguid.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
       <ModuleDefinitionFile>..\..\gpk\llc\gpk_module_exports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -128,7 +128,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; winmm.lib; xaudio2.lib; comctl32.lib; ole32.lib; dxguid.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
       <ModuleDefinitionFile>..\..\gpk\llc\gpk_module_exports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -153,7 +153,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; winmm.lib; xaudio2.lib; comctl32.lib; ole32.lib; dxguid.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
       <ModuleDefinitionFile>..\..\gpk\llc\gpk_module_exports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -178,15 +178,15 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; winmm.lib; xaudio2.lib; comctl32.lib; ole32.lib; dxguid.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
       <ModuleDefinitionFile>..\..\gpk\llc\gpk_module_exports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="application.cpp" />
+    <ClCompile Include="test_gpk_viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
+    <ClInclude Include="test_gpk_viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
