@@ -17,7 +17,7 @@ static ::gpk::err_t						pakMain						(::gpk::SRuntimeValues & runtimeValues)	{
 	vcst_c						nameFileDst		= s_nameFileDst.Storage;
 	vcst_c						nameFolderSrc	= args.Positionals[0];
 	if_fail_fef(gpk::folderPackToDisk(nameFileDst, nameFolderSrc), "Failed to pack folder '%.*s' to file '%.*s'.", GPK_VIEW_ARGS(nameFolderSrc), GPK_VIEW_ARGS(nameFileDst));
-	info_printf("Successfully written '%s'?", nameFileDst);
+	info_printf("Successfully written '%.*s'.", GPK_VIEW_ARGS(nameFileDst));
 	for(::gpk::u2_t iArg = 2; iArg < args.Positionals.size(); ++iArg)
 		info_printf("Unknown parameter: %.*s.", GPK_VIEW_ARGS(args.Positionals[iArg]));
 	return 0;

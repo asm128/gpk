@@ -70,11 +70,11 @@ static	gpk::err_t LoadBitmapFromBMPFile		(const ::gpk::vcst_t & szFileName, ::gp
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteDC	(hMemDC);
 
-	::gpk::apod<sc_t>			filename					= szFileName;
+	::gpk::string				filename					= szFileName;
 	filename.resize(filename.size() - 3);
 	::gpk::append_strings(filename, "png");
 
-	::gpk::vcst_t					pngfn						= {filename};
+	::gpk::vcst_t					pngfn						= {filename.begin(), filename.size()};
 	::gpk::au0_t					filebytes;
 	::gpk::pngFileWrite(out_ImageView, filebytes);
 	::gpk::fileFromMemory(pngfn, filebytes);

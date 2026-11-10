@@ -4,7 +4,7 @@
 
 using namespace gpk;
 
-// Joins a file split into file.split.## parts.
+// Appends file.01, file.02, ... onto the base part file.
 static ::gpk::err_t					joinerMain						(::gpk::SRuntimeValues & runtimeValues)	{
 	const ::gpk::SCommandLineArgs	& args							= runtimeValues.EntryPointArgs;
 	if_true_vef(-1, 1 > args.Positionals.size(), "Usage:\n\t%.*s [filename]", GPK_VIEW_ARGS(args.ProgramName));
