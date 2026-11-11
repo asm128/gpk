@@ -171,6 +171,7 @@
     <ClCompile Include="test_llc_base64.cpp" />
     <ClCompile Include="test_llc_deflate.cpp" />
     <ClCompile Include="test_llc_enum.cpp" />
+    <ClCompile Include="test_llc_event.cpp" />
     <ClCompile Include="test_llc_expression.cpp" />
     <ClCompile Include="test_llc_index.cpp" />
     <ClCompile Include="test_llc_index_catalog.cpp" />

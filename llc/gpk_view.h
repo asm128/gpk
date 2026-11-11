@@ -256,19 +256,19 @@ nmsp gpk
 
 #ifdef GPK_ARDUINO
 #   ifdef GPK_ESP8266
-        ndin		oper		String			()  cnst   { return String(Data); }
+        ndin		oper	String					()  cnst   { return String(Data); }
 #   else
-        ndin		oper		String			()  cnst   { return String(Data, Count); }
+        ndin		oper	String					()  cnst   { return String(Data, Count); }
 #   endif
 #endif
-		ndix		b8_t		oper==			(view_const_string other)	csnx	{ rtrn view<sc_c>::oper==(other); }
-		ndix		b8_t		oper!=			(view_const_string other)	csnx	{ rtrn !oper==(other); }
-		tplN2undix	b8_t		oper==			(sc_c (&other)[N])			csnx	{ rtrn view<sc_c>::oper==(view_const_string(other)); }
-		tplN2undix	b8_t		oper!=			(sc_c (&other)[N])			csnx	{ rtrn !oper==(other); }
+		ndix		b8_t	oper==					(view_const_string other)	csnx	{ rtrn view<sc_c>::oper==(other); }
+		ndix		b8_t	oper!=					(view_const_string other)	csnx	{ rtrn !oper==(other); }
+		tplN2undix	b8_t	oper==					(sc_c (&other)[N])			csnx	{ rtrn view<sc_c>::oper==(view_const_string(other)); }
+		tplN2undix	b8_t	oper!=					(sc_c (&other)[N])			csnx	{ rtrn !oper==(other); }
 
-		ndix		sc_c*		begin			()							csnx	{ rtrn (Data && Count) ? Data : ""; }
-		ndix		sc_c*		end				()							csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
-		ndix		oper		sc_c* 			()							csnx	{ rtrn begin(); }
+		ndix		sc_c*	begin					()							csnx	{ rtrn (Data && Count) ? Data : ""; }
+		ndix		sc_c*	end						()							csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
+		ndix		oper	sc_c* 					()							csnx	{ rtrn begin(); }
 	};
 	//tplN2u	bool	view_string	::oper==	(sc_c (&other)[N])	cnst	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
 	tydf	view_const_string	vcst_t;
