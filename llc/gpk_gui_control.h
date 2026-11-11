@@ -21,7 +21,7 @@ nmsp gpk
 	tydf	rect<cid_t>		rectcid;
 
 	tplt<u2_t _sizeArray>	
-	usng	astcid	= ::gpk::astatic<cid_t, _sizeArray>;
+	usng	astcid	= astatic<cid_t, _sizeArray>;
 
 	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Default	, 0);
@@ -29,12 +29,12 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Flat		, 2);
 
 	GDEFINE_ENUM_TYPE(GUI_CONTROL_LIMIT, u0_t);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Left		, ::gpk::ALIGN_LEFT		);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Top		, ::gpk::ALIGN_TOP		);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Right		, ::gpk::ALIGN_RIGHT	);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Bottom	, ::gpk::ALIGN_BOTTOM	);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Outer		, ::gpk::ALIGN_FAR		);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Inner		, ::gpk::ALIGN_NEAR		);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Left		, ALIGN_LEFT		);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Top		, ALIGN_TOP		);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Right		, ALIGN_RIGHT	);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Bottom	, ALIGN_BOTTOM	);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Outer		, ALIGN_FAR		);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Inner		, ALIGN_NEAR		);
 	
 
 	GDEFINE_ENUM_TYPE (GUI_CONTROL_METRICS_FLAG, u1_t);
@@ -52,45 +52,45 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YOffsetMax	, 1 << 11);
 
 	struct SControlPlacement {
-		::gpk::rect2s1_t			Area				= {{}, {16, 16}};
-		::gpk::rectu1_t				Margin				= {1, 1, 1, 1};
-		::gpk::rectu1_t				Border				= {1, 1, 1, 1};
-		::gpk::ALIGN				Align				= ::gpk::ALIGN_TOP_LEFT;
+		rect2s1_t			Area				= {{}, {16, 16}};
+		rectu1_t				Margin				= {1, 1, 1, 1};
+		rectu1_t				Border				= {1, 1, 1, 1};
+		ALIGN				Align				= ALIGN_TOP_LEFT;
 		GUI_CONTROL_LIMIT			RelativeBorderSize	: 4;
 		GUI_CONTROL_LIMIT			RelativeMarginSize	: 4;
 		GUI_CONTROL_METRICS_FLAG	RelativeMetrics		= {};
 	}; 
 
-	sinx	::gpk::rectu1_t	controlNCRect		(const ::gpk::SControlPlacement & ctl)	nxpt	{ return ctl.Border + ctl.Margin; }
-	stxp	::gpk::n2u1_t	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	nxpt	{ const rectu1_t rc = controlNCRect(ctl); return ::gpk::n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
-	sinx	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
-	sinx	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
+	sinx	rectu1_t	controlNCRect		(const SControlPlacement & ctl)	nxpt	{ return ctl.Border + ctl.Margin; }
+	stxp	n2u1_t	controlNCSpacing	(const SControlPlacement & ctl)	nxpt	{ const rectu1_t rc = controlNCRect(ctl); return n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
+	sinx	void			controlNCSpacing	(const SControlPlacement & ctl, rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
+	sinx	void			controlNCSpacing	(const SControlPlacement & ctl, n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, u0_t)
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, u1_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, NORMAL				, 0);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DISABLED			, 1);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, HOVER				, 2);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, PRESSED				, 3);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED			, 4);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_DISABLED	, 5);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_HOVER		, 6);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_PRESSED	, 7);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, ACTION				, 8);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, OUTDATED			, 9);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, COUNT				, 10);
-	
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, HIDDEN				, 1);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DISABLED			, 2);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, HOVER				, 3);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, PRESSED				, 4);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DRAGGING			, 5);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED			, 6);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_HIDDEN		, 7);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_DISABLED	, 8);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_HOVER		, 9);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_PRESSED	,10);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_DRAGGING	,11);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, OUTDATED			,12);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, COUNT				,13);
 
 	struct SControlDraw {
 		u0_t			ColorMode			: 2;
 		u0_t			FrameOut			: 1;
 		u0_t			NoBorder			: 1;	// skip drawing border area
 		u0_t			NoClient			: 1;	// skip drawing client area
-		
-		bool			UseNewPalettes		: 1;	// -- Legacy property (don't use in the new implementation!)
-
+		u0_t			UseNewPalettes		: 1;
 		s1_t			ColorTheme			= 0;
-		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>	
-						Palettes			= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
+		asts1_t<GUI_CONTROL_PALETTE_COUNT>	
+						Palettes			= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}};
 	};
 
 	enum CONTROL_AREA_BASE : u0_t 
@@ -115,7 +115,6 @@ nmsp gpk
 		, GUI_CONTROL_AREA_OLD_BORDER_BOTTOM
 		, GUI_CONTROL_AREA_OLD_COUNT
 		};
-
 
 	enum UI_CONTROL_AREA : u0_t
 		{ UI_CONTROL_AREA_BACKGROUND		= 0
@@ -142,29 +141,29 @@ nmsp gpk
 		};
 
 	struct SControlRectangle {
-		::gpk::rect2s1_t				Local				= {};
-		::gpk::rect2s1_t				Global				= {};
+		rect2s1_t				Local				= {};
+		rect2s1_t				Global				= {};
 	};
 
 	struct SControlArea {
-		::gpk::SControlRectangle	Total				= {};
-		::gpk::SControlRectangle	Client				= {};
-		::gpk::rect2s1_t			Text				= {};
-		::gpk::rect2s1_t			Rectangles	[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {};
-		::gpk::tri2s1_t				Triangles	[8]		= {};
+		SControlRectangle	Total				= {};
+		SControlRectangle	Client				= {};
+		rect2s1_t			Text				= {};
+		rect2s1_t			Rectangles	[GUI_CONTROL_AREA_OLD_COUNT]	= {};
+		tri2s1_t				Triangles	[8]		= {};
 	};
 
 	struct SControlRectangleGPU {
-		::gpk::rect2f2_t			Local				= {};
-		::gpk::rect2f2_t			Global				= {};
+		rect2f2_t			Local				= {};
+		rect2f2_t			Global				= {};
 	};
 
 	struct SControlAreaGPU {
-		::gpk::SControlRectangleGPU	Total				= {};
-		::gpk::SControlRectangleGPU	Client				= {};
-		::gpk::rect2f2_t			Text				= {};
-		::gpk::rect2f2_t			Rectangles	[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {};
-		::gpk::tri2f2_t				Triangles	[8]		= {};
+		SControlRectangleGPU	Total				= {};
+		SControlRectangleGPU	Client				= {};
+		rect2f2_t			Text				= {};
+		rect2f2_t			Rectangles	[GUI_CONTROL_AREA_OLD_COUNT]	= {};
+		tri2f2_t				Triangles	[8]		= {};
 	};
 
 	struct SControlAttachId {
@@ -173,69 +172,72 @@ nmsp gpk
 	};
 
 	struct SControlConstraints {
-		::gpk::n2cid				AttachSizeToControl	= {-1, -1};
-		::gpk::n2<bool>				AttachSizeToText	= {};
-		::gpk::rectcid				DockToControl		= {-1, -1, -1, -1};
-		::gpk::minmax2s1_t			SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
+		n2cid				AttachSizeToControl	= {-1, -1};
+		n2<bool>				AttachSizeToText	= {};
+		rectcid				DockToControl		= {-1, -1, -1, -1};
+		minmax2s1_t			SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
 
 	struct SControlText {
-		::gpk::vcst_t					Text				= {};
-		::gpk::ALIGN				Align				= ::gpk::ALIGN_CENTER;
-		::gpk::minmaxu1_t			Selection			= {0, 1};
+		vcst_t					Text				= {};
+		ALIGN				Align				= ALIGN_CENTER;
+		minmaxu1_t			Selection			= {0, 1};
 		s1_t						FontSelected		= -1;
 	};
 
 	struct SControlTheme {
-		::gpk::astatic<::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>, ::gpk::GUI_CONTROL_PALETTE_COUNT>
+		astatic<astu2_t<UI_CONTROL_AREA_COUNT>, GUI_CONTROL_PALETTE_COUNT>
 									ColorCombos			= {};
 	};
 #pragma pack(pop)
 
 	struct SControlImage {
-		::gpk::rtbgra8d32			Temp				= {};
-		::gpk::g8bgra				Image				= {};
-		::gpk::n2s1_t				ImageOffset			= {};
-		u0_t						ImageAlign			= ::gpk::ALIGN_CENTER;
+		rtbgra8d32			Temp				= {};
+		g8bgra				Image				= {};
+		n2s1_t				ImageOffset			= {};
+		u0_t						ImageAlign			= ALIGN_CENTER;
 		u0_t						ImageInvertX		: 1;
 		u0_t						ImageInvertY		: 1;
 		u0_t						Rotation			: 2;
 	};
 
 	struct SControlTable {
-		::gpk::apod<::gpk::SControlState		>	States			= {};
-		::gpk::apod<::gpk::SControlPlacement	>	Placement		= {};
-		::gpk::apod<::gpk::SControlArea			>	Area			= {};
-		::gpk::apod<::gpk::SControlConstraints	>	Constraints		= {};
-		::gpk::apod<::gpk::SControlDraw			>	Draw			= {};
-		::gpk::aobj<::gpk::SControlText			>	Text			= {};
-		::gpk::aobj<::gpk::SControlImage		>	Images			= {};
-		::gpk::aobj<::gpk::acid					>	Children		= {};
+		apod<SControlState		>	States			= {};
+		apod<SControlState		>	StatesPrevious	= {};
+		apod<SControlPlacement	>	Placement		= {};
+		apod<SControlArea			>	Area			= {};
+		apod<SControlConstraints	>	Constraints		= {};
+		apod<SControlDraw			>	Draw			= {};
+		aobj<SControlText			>	Text			= {};
+		aobj<SControlImage		>	Images			= {};
+		aobj<acid					>	Children		= {};
 		//
-		::gpk::apobj<::gpk::SEventSystem		>	EventQueue		= {};
+		apobj<SEventSystem		>	EventQueue		= {};
 
-		inln	bool		SetHovered		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
-		inln	bool		SetPressed		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
-		inln	bool		SetHidden		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
-		inln	bool		SetFocused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
-		inln	bool		SetSelected		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
+		inln	bool		SetUnused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
+	 	inln	bool		SetHidden		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
 		inln	bool		SetDisabled		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
+		inln	bool		SetHovered		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
+		inln	bool		SetFocused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
+		inln	bool		SetPressed		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
+		inln	bool		SetDragging		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetDragging(iControl, EventQueue, value); }
+		inln	bool		SetSelected		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
 		inln	bool		SetUpdated		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
 		inln	bool		SetAction		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
-		inln	bool		SetUnused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
 
-		inln	bool		IsHovered		(cid_t iControl)		csnx	{ return States[iControl].IsHovered  (); }
-		inln	bool		IsPressed		(cid_t iControl)		csnx	{ return States[iControl].IsPressed  (); }
+		inln	bool		IsUnused		(cid_t iControl)		csnx	{ return States[iControl].IsUnused   (); }
 		inln	bool		IsHidden		(cid_t iControl)		csnx	{ return States[iControl].IsHidden   (); }
-		inln	bool		IsFocused		(cid_t iControl)		csnx	{ return States[iControl].IsFocused  (); }
-		inln	bool		IsSelected		(cid_t iControl)		csnx	{ return States[iControl].IsSelected (); }
 		inln	bool		IsDisabled		(cid_t iControl)		csnx	{ return States[iControl].IsDisabled (); }
+		inln	bool		IsHovered		(cid_t iControl)		csnx	{ return States[iControl].IsHovered  (); }
+		inln	bool		IsFocused		(cid_t iControl)		csnx	{ return States[iControl].IsFocused  (); }
+		inln	bool		IsPressed		(cid_t iControl)		csnx	{ return States[iControl].IsPressed  (); }
+		inln	bool		IsDragging		(cid_t iControl)		csnx	{ return States[iControl].IsDragging (); }
+		inln	bool		IsSelected		(cid_t iControl)		csnx	{ return States[iControl].IsSelected (); }
 		inln	bool		IsUpdated		(cid_t iControl)		csnx	{ return States[iControl].IsUpdated  (); }
 		inln	bool		IsAction		(cid_t iControl)		csnx	{ return States[iControl].IsAction   (); }
-		inln	bool		IsUnused		(cid_t iControl)		csnx	{ return States[iControl].IsUnused   (); }
 	};
 
-	::gpk::cid_t		controlCreate					(::gpk::SControlTable & gui, ::gpk::vs1_t defaultColors);
+	cid_t		controlCreate					(SControlTable & gui, vs1_t defaultColors);
 } // nmsp
 
 #endif // GPK_GUI_CONTROL_H_23627

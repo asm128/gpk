@@ -152,7 +152,7 @@ static	gpk::err_t clearMenuHierarchy	(::gpk::SGUI & gui, ::gpk::SDesktop & deskt
 
 static	s3_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::SInput & input, ::gpk::cid_t iViewport)							{
 	::gpk::SViewport			& vp				= desktop.Items.Viewports[iViewport];
-	if(gui.Controls.States[vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]].IsAction())
+	if(gui.Controls.IsAction(vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]))
 		::gpk::desktopDeleteViewport(gui, desktop, iViewport);
 	else if(gui.Controls.IsPressed(vp.IdControls[::gpk::VIEWPORT_CONTROL_TITLE]))
 		::pushToFrontAndDisplace(gui, vp.IdControl, input);
@@ -186,13 +186,12 @@ s3_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, 
 	for(u2_t iControlToProcess = 0, countControls = controlsToProcess.size(); iControlToProcess < countControls; ++iControlToProcess) {
 		const u2_t				iControl							= controlsToProcess[iControlToProcess];
 		const ::gpk::SControlArea	& controlMetrics					= gui.Controls.Area[iControl];
-		const ::gpk::SControlState	& controlState						= gui.Controls.States[iControl];
 		if(iControl != (u2_t)desktop.IdControl)
 			inControlArea			= inControlArea || ::gpk::in_range(gui.CursorPos.s1(), controlMetrics.Total.Global);
 		//if(controlState.Pressed && (s2_t)iControl != app.Desktop.IdControl)
 		//	anyControlPressed															= true;
 
-		if(controlState.IsAction()) {
+		if(gui.Controls.IsAction((::gpk::cid_t)iControl)) {
 			info_printf("Executed %u.", iControl);
 			::clearMenuHierarchy(gui, desktop);
 		}
@@ -211,7 +210,7 @@ s3_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, 
 		const ::gpk::SControlState			& parentItemState	= gui.Controls.States[parentMenu.IdControls[menu.IndexParentItem]];
 		if(parentItemState.IsHovered()) {
 			::unhideMenuHierarchy(gui, desktop, menu);
-			if(parentItemState.IsAction()) {
+			if(gui.Controls.IsAction(parentMenu.IdControls[menu.IndexParentItem])) {
 				::clearMenuHierarchy(gui, desktop);
 				::selectMenuHierarchy(gui, desktop, menu);
 				selectedMenu																= true;
@@ -244,7 +243,7 @@ s3_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, 
 		::gpk::SControlList																& menu								= menus[iMenu];
 		bool																			eventFound							= false;
 		for(u2_t iItem = 0, countItems = menu.IdControls.size(); iItem < countItems; ++iItem) {
-			if(false == gui.Controls.States[menu.IdControls[iItem]].IsAction())
+			if(false == gui.Controls.IsAction(menu.IdControls[iItem]))
 				continue;
 			if(desktop.Children[iMenu].size() < menu.IdControls.size())
 				desktop.Children[iMenu].resize(menu.IdControls.size(), -1);

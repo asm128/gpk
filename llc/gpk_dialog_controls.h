@@ -45,6 +45,7 @@ nmsp gpk
 		cid_t					IdMaximize			= -1;
 		cid_t					IdScrollBarX		= -1;
 		cid_t					IdScrollBarY		= -1;
+		cid_t					IdResizeBottomRight	= -1;
 		cid_t					IdTitle				= -1;
 		cid_t					IdClient			= -1;
 		SDialogViewportSettings	Settings			= {};

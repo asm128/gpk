@@ -19,6 +19,7 @@ static	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8b
 		const ::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>	
 									& colorCombo		= theme.ColorCombos
 			[ bDisabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+			: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
 			: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
 			: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
 			: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
@@ -31,6 +32,7 @@ static	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8b
 		const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>	& colorCombo											=
 			gui.Colors->Palettes[controlDraw.Palettes
 				[ bDisabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+				: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
 				: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
 				: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
 				: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
@@ -64,6 +66,7 @@ static	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8b
 }
 static	::gpk::GUI_CONTROL_PALETTE	paletteIndexFromState	(bool disabled, const ::gpk::SControlState & controlState)					{
 	return disabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+		: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
 		: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
 		: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
 		: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER

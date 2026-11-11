@@ -1,4 +1,6 @@
 #include "gpk_gui.h"
+#include "gpk_label.h"
+#include "gpk_array_static.h"
 
 #ifndef GPK_GUI_CONTROL_LIST_H_23627
 #define GPK_GUI_CONTROL_LIST_H_23627
@@ -65,7 +67,19 @@ nmsp gpk
 	err_t			controlListInitialize	(SGUI & gui, SControlList & menu);
 	err_t			controlListArrange		(SGUI & gui, SControlList & menu);
 	err_t			controlListPush			(SGUI & gui, SControlList & menu, vcst_c & text, s3_t eventCode = -1);
+	err_t			controlListCreate		(SGUI & gui, SControlList & menu, view<cnst asc_t> text, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT);
 	err_t			controlListCreate		(SGUI & gui, SControlList & menu, view<vcst_c> text, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT);
+	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<T> stringifiable, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
+		if_fail_fe(controlListInitialize(gui, menu));
+		menu.Orientation	= orientation;
+		if(parent != CID_INVALID)
+			if_fail_fe(controlSetParent(gui, menu.IdControl, parent));
+		for(u2_t iControl = 0; iControl < stringifiable.size(); ++iControl) {
+			const auto itemView = ::gpk::str(stringifiable[iControl]);
+			if_fail_fe(controlListPush(gui, menu, label(itemView)));
+		}
+		return 0;
+	}
 
 	struct SPaletteGrid {
 		cid_t					IdControl				= -1;

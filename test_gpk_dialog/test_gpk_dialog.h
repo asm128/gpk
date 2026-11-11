@@ -11,6 +11,7 @@
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 	GPK_USING_TYPEINT();
+	stxp ::gpk::u0_t DIALOG_VIEWPORT_COUNT = 3;
 
 	GDEFINE_ENUM_TYPE (UI_PROFILE, u0_t);
 	GDEFINE_ENUM_VALUE(UI_PROFILE, Name				, 0);
@@ -20,6 +21,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::SFramework				Framework;
 		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen	= {};
 		::gpk::aobj<::gpk::img8bgra>	PNGImages	= {};
+		::gpk::u2_t					FrameIndex	= 0;
 
 		::gpk::cid_t					IdExit		= -1;
 
@@ -32,7 +34,10 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		int32_t							Slider;
 		int32_t							NumericTuner;
 		int32_t							CheckBox;
-		int32_t							Viewport;
+		::gpk::astatic<::gpk::cid_t, DIALOG_VIEWPORT_COUNT>
+									Viewports			= {};
+		::gpk::SControlList			ListEnumNames		= {};
+		::gpk::SControlList			ListEnumValues		= {};
 
 										SApplication				(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};

@@ -18,43 +18,46 @@ nmsp gpk
 	tydf	view<cid_t>		vcid;
 	tydf	view<ccid_t>	vccid;
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG, u0_t)
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG, u1_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Hidden		, 0x01U);	// Prevents from drawing the control and its children
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Disabled	, 0x02U);	// Prevents the control from responding to user interaction
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Hovered	, 0x04U);	// Modifies behavior depending on whether the mouse pointer top is inside the control area.
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Pressed	, 0x08U);	// Modifies behavior depending on whether the control is being pressed by holding the mouse button, a key or a touch event.
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Focused	, 0x10U);	// Modified behavior depending on wether the control is selected for receiving user input.
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Selected	, 0x20U);	// 
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Updated	, 0x40U);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Action		, 0x80U);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Focused	, 0x08U);	// Modified behavior depending on wether the control is selected for receiving user input.
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Pressed	, 0x10U);	// Modifies behavior depending on whether the control is being pressed by holding the mouse button, a key or a touch event.
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Dragging	, 0x20U);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Selected	, 0x40U);	// 
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Updated	, 0x80U);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Action		, 0x100U);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Unused		, 0xFFU);
 	stxp	GUI_CONTROL_FLAG	GUI_CONTROL_FLAG_All	= GUI_CONTROL_FLAG_Unused;
+	inxp	GUI_CONTROL_FLAG	setFlag			(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
 
+	inxp	GUI_CONTROL_FLAG	isUnused		(const GUI_CONTROL_FLAG state)										nxpt	{ return bit_test(state, GUI_CONTROL_FLAG_Unused); }
 	inxp	GUI_CONTROL_FLAG	isHidden		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hidden	); }
 	inxp	GUI_CONTROL_FLAG	isDisabled		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Disabled	); }
 	inxp	GUI_CONTROL_FLAG	isHovered		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered	); }
-	inxp	GUI_CONTROL_FLAG	isPressed		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed	); }
 	inxp	GUI_CONTROL_FLAG	isFocused		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Focused	); }
+	inxp	GUI_CONTROL_FLAG	isPressed		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed	); }
+	inxp	GUI_CONTROL_FLAG	isDragging		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Dragging	); }
 	inxp	GUI_CONTROL_FLAG	isSelected		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Selected	); }
 	inxp	GUI_CONTROL_FLAG	isUpdated		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Updated	); }
 	inxp	GUI_CONTROL_FLAG	isAction		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Action	); }
-	inxp	GUI_CONTROL_FLAG	isUnused		(const GUI_CONTROL_FLAG state)										nxpt	{ return bit_test(state, GUI_CONTROL_FLAG_Unused); }
 
-	inxp	GUI_CONTROL_FLAG	setFlag			(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
+	inxp	GUI_CONTROL_FLAG	setUnused		(GUI_CONTROL_FLAG & state, bool value)								nxpt	{ return state = bit_set(state, GUI_CONTROL_FLAG_Unused, value); }
 	inxp	GUI_CONTROL_FLAG	setHidden		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
 	inxp	GUI_CONTROL_FLAG	setDisabled		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Disabled	, value); }
 	inxp	GUI_CONTROL_FLAG	setHovered		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hovered	, value); }
+	inxp	GUI_CONTROL_FLAG	setFocused		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Focused	, value); }
 	inxp	GUI_CONTROL_FLAG	setPressed		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ 
 		return (value == false && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed) && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered)) 
 			? state = bit_set_masked(bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value), mask, GUI_CONTROL_FLAG_Action, true)
 			: state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value)
 			; 
 	}
-	inxp	GUI_CONTROL_FLAG	setFocused		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Focused	, value); }
+	inxp	GUI_CONTROL_FLAG	setDragging		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Dragging	, value); }
 	inxp	GUI_CONTROL_FLAG	setSelected		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Selected	, value); }
 	inxp	GUI_CONTROL_FLAG	setUpdated		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Updated	, value); }
 	inxp	GUI_CONTROL_FLAG	setAction		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Action	, value); }
-	inxp	GUI_CONTROL_FLAG	setUnused		(GUI_CONTROL_FLAG & state, bool value)								nxpt	{ return state = bit_set(state, GUI_CONTROL_FLAG_Unused, value); }
 
 
 	GDEFINE_ENUM_TYPE (EVENT_GUI_CONTROL, u0_t)
@@ -108,6 +111,7 @@ nmsp gpk
 		bool				SetSelected		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setSelected(Flag, Mask, value); })); }
 		bool				SetDisabled		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDisabled(Flag, Mask, value); })); }
 		bool				SetUpdated		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUpdated (Flag, Mask, value); })); }
+		bool				SetDragging		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDragging(Flag, Mask, value); })); }
 		bool				SetAction		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setAction  (Flag, Mask, value); })); }
 		bool				SetUnused		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUnused  (Flag, value);       })); }
 		inxp	bool		IsHovered		()	csnx	{ return isHovered  (Flag, Mask); }
@@ -117,6 +121,7 @@ nmsp gpk
 		inxp	bool		IsSelected		()	csnx	{ return isSelected (Flag, Mask); }
 		inxp	bool		IsDisabled		()	csnx	{ return isDisabled (Flag, Mask); }
 		inxp	bool		IsUpdated		()	csnx	{ return isUpdated  (Flag, Mask); }
+		inxp	bool		IsDragging		()	csnx	{ return isDragging (Flag, Mask); }
 		inxp	bool		IsAction		()	csnx	{ return isAction   (Flag, Mask); }
 		inxp	bool		IsUnused		()	csnx	{ return isUnused   (Flag); }
 

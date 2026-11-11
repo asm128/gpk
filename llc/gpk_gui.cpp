@@ -196,15 +196,15 @@ static	gpk::err_t uiColorsSetupDefault (::gpk::SGUIColors & guiColors) {
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::LIGHTGRAY	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY * 1.1	,::gpk::LIGHTGRAY * 1.1	,}});::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::CYAN		, ::gpk::YELLOW	, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	, ::gpk::DARKCYAN / 2.0	,}}); ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::RED		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DRAGGING				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::RED		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::ORANGE	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED	]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER		]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED		]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_ACTION				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DRAGGING	]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
 	return 0;
 }
-
 static	gpk::err_t uiColorsSetupDefault (::gpk::pobj<::gpk::SGUIColors> & guiColors) {
 	if(!guiColors) {
 		static ::gpk::pobj<::gpk::SGUIColors>	globalDefaultColors			= {};
@@ -502,8 +502,10 @@ static	::gpk::cid_t	updateGUIControlHovered	(::gpk::SGUI & gui, ::gpk::cid_t iCo
 	if(controlState.IsHovered()) {
 		if(inputSystem.ButtonDown(0) && false == controlState.IsPressed())
 			gui.Controls.SetPressed(iControl, true);
-		else if(inputSystem.ButtonUp(0))
+		else if(inputSystem.ButtonUp(0)) {
 			gui.Controls.SetPressed(iControl, false);
+			gui.Controls.SetDragging(iControl, false);
+		}
 	}
 	else {
 		if(false == disabled) {
@@ -530,13 +532,18 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 			}
 		}
 	}
-	if(controlHovered == -1 && ::gpk::in_range(gui.CursorPos.s1(), gui.Controls.Area[iControl].Total.Global))
+	if(controlHovered == -1 && ::gpk::in_range(gui.CursorPos.s1(), gui.Controls.Area[iControl].Total.Global)) {
+		if(controlState.IsPressed() && input.MouseCurrent.ButtonState[0] && input.MouseCurrent.Position != input.MousePrevious.Position)
+			gui.Controls.SetDragging(iControl, true);
 		controlHovered			= ::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl));
+	}
 	else {
 		gui.Controls.SetHovered(iControl, false);
 
-		if(input.ButtonUp(0)) 
+		if(input.ButtonUp(0)) {
 			gui.Controls.SetPressed(iControl, false);
+			gui.Controls.SetDragging(iControl, false);
+		}
 	}
 	return controlHovered;
 }
@@ -546,6 +553,7 @@ gpk::err_t 		gpk::guiProcessInput	(::gpk::SGUI & gui, const ::gpk::SInput & inpu
 		return 0;
 
 	gui.Controls.EventQueue.clear();
+	// shouldn't this be somewhere else? gui.Controls.StatesPrevious = gui.Controls.States;
 	if_true_e(failed(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)));
 	::gpk::cid_t				controlHovered			= -1;
 	::gpk::acid					rootControlsToProcess	= {};
@@ -582,10 +590,19 @@ gpk::err_t 		gpk::guiProcessInput	(::gpk::SGUI & gui, const ::gpk::SInput & inpu
 	for(u2_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {
 		if(iControl != (u2_t)controlHovered) {
 			gui.Controls.SetHovered((::gpk::cid_t)iControl, false);;
-			if(0 == input.MouseCurrent.ButtonState[0])
+			if(0 == input.MouseCurrent.ButtonState[0]) {
 				gui.Controls.SetPressed((::gpk::cid_t)iControl, false);
+				gui.Controls.SetDragging((::gpk::cid_t)iControl, false);
+			}
 		}
 	}
+
+	//for(u2_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {
+	//	const ::gpk::GUI_CONTROL_FLAG	statePrevious		= gui.Controls.StatesPrevious[iControl].Flag;
+	//	const ::gpk::GUI_CONTROL_FLAG	stateCurrent		= gui.Controls.States[iControl].Flag;
+	//	if(statePrevious != stateCurrent)
+	//		if_fail_fe(::gpk::eventEnqueueGuiControlStateChange(gui.Controls.EventQueue, (::gpk::cid_t)iControl, statePrevious, stateCurrent));
+	//}
 
 	return controlHovered;
 }
@@ -670,14 +687,15 @@ gpk::err_t 		gpk::controlFontSet		(::gpk::SGUI & gui, ::gpk::cid_t iControl, s1_
 }
 
 static	gpk::err_t controlInstanceReset	(::gpk::SControlTable & controlTable, ::gpk::cid_t iControl, ::gpk::vs1_t defaultColors)										{
-	controlTable.States		[iControl]	= {};
-	controlTable.Placement	[iControl]	= {};
-	controlTable.Area		[iControl]	= {};
-	controlTable.Constraints[iControl]	= {};
-	controlTable.Draw		[iControl]	= {};
-	controlTable.Text		[iControl]	= {};
-	controlTable.Children	[iControl]	= ::gpk::vcid{};
-	controlTable.Images		[iControl]	= {};
+	controlTable.States			[iControl]	= {};
+	controlTable.StatesPrevious	[iControl]	= {};
+	controlTable.Placement		[iControl]	= {};
+	controlTable.Area			[iControl]	= {};
+	controlTable.Constraints	[iControl]	= {};
+	controlTable.Draw			[iControl]	= {};
+	controlTable.Text			[iControl]	= {};
+	controlTable.Children		[iControl]	= ::gpk::vcid{};
+	controlTable.Images			[iControl]	= {};
 	
 	::gpk::SControlDraw			& controlDraw			= controlTable.Draw[iControl];
 	for(u2_t iColor = 0, countColors = ::gpk::min(controlDraw.Palettes.size(), defaultColors.size()); iColor < countColors; ++iColor)
@@ -698,6 +716,7 @@ static	gpk::err_t controlInstanceReset	(::gpk::SControlTable & controlTable, ::g
 	::gpk::cid_t				iControl				= -1;
 	if_fail_fe(iControl = (::gpk::cid_t)::gpk::resize(controlTable.States.size() + 1
 		, controlTable.States
+		, controlTable.StatesPrevious
 		, controlTable.Placement
 		, controlTable.Area
 		, controlTable.Constraints
