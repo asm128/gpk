@@ -11,6 +11,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 usns gpk;
 
+stxp	::gpk::n2u1_t			PLAYER_UI_SIZE			= {320, 40};
+
 err_t			cleanup		(::gme::SApplication & app)						{ return mainWindowDestroy(app.Framework.RootWindow); }
 err_t			setup		(::gme::SApplication & app)						{
 	SFramework				& framework					= app.Framework;
@@ -22,6 +24,15 @@ err_t			setup		(::gme::SApplication & app)						{
 	SGUI						& gui						= *framework.GUI;
 	gui.ColorModeDefault												= GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ASCII_COLOR_DARKGREEN * 16 + 7;
+	::gpk::ALIGN					playerAlign				= ::gpk::ALIGN_BOTTOM_LEFT;
+	::gpk::n2s1_t				playerPosition				= {};
+	::gpk::guiCreateControlList<::gme::UI_PROFILE>(gui, app.DialogMain.Root, PLAYER_UI_SIZE, playerPosition, playerAlign, ::gpk::ALIGN_CENTER, app.ControlsDialogHome);
+	if_fail_fe(::gpk::inputBoxCreate(app.InputBox, *app.DialogMain.GUI, app.DialogMain.Root));
+	gui.Controls.SetHidden(app.InputBox.IdRoot, true);
+	gui.Controls.Placement[app.InputBox.IdRoot].Align				= playerAlign;
+	gui.Controls.Placement[app.InputBox.IdRoot].Area.Offset.x	= 240;
+	if_fail_fe(::gpk::controlFontSet(gui, app.ControlsDialogHome[::gme::UI_PROFILE_Name], 10));
+	if_fail_fe(::gpk::controlTextSet(gui, app.ControlsDialogHome[::gme::UI_PROFILE_Name], app.PlayerName));
 	app.IdExit															= controlCreate(gui);
 	SControlPlacement					& controlExit				= gui.Controls.Placement[app.IdExit];
 	controlExit.Area													= {{}, {64, 20}};
@@ -76,9 +87,30 @@ err_t			update		(::gme::SApplication & app, bool exitSignal)	{
 	if_true_vi(APPLICATION_STATE_EXIT, APPLICATION_STATE_EXIT == updateFramework(app.Framework));
 
 	SGUI					& gui			= *framework.GUI;
-	acid					toProcess		= {};
-	if(1 == guiProcessControls(gui, [&app](cid_t iControl) { return one_if(iControl == app.IdExit); }))
-		return 1;
+	if_fail_fe(::gpk::controlTextSet(gui, app.ControlsDialogHome[::gme::UI_PROFILE_Name], app.PlayerName));
+	::gpk::acid			controlsToProcess	= {};
+	::gpk::guiGetProcessableControls(gui, controlsToProcess);
+	if(s2_t result = app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, controlsToProcess)) {
+		if(result == INT_MAX) {
+			::gpk::vcsc_t		trimmed					= {app.InputBox.Text.begin(), ::gpk::min(app.InputBox.Text.size(), 16U)};
+			::gpk::trim(trimmed);
+			if(trimmed.size())
+				app.PlayerName							= ::gpk::label(trimmed);
+			app.InputBox.Edit(gui, false);
+		}
+	}
+	else {
+		if(1 == ::gpk::guiProcessControls(gui, controlsToProcess, [&app, &gui](u2_t iControl) {
+			if(iControl == (u2_t)app.IdExit)
+				return 1;
+			if(iControl == (u2_t)app.ControlsDialogHome[::gme::UI_PROFILE_Name]) {
+				app.InputBox.SetText(gui, gui.Controls.Text[app.ControlsDialogHome[::gme::UI_PROFILE_Name]].Text);
+				app.InputBox.Edit(gui, true);
+			}
+			return 0;
+		}))
+			return 1;
+	}
 
 	app.DialogMain.Update();
 	//timer.Frame();
