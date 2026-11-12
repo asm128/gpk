@@ -70,7 +70,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -116,7 +116,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -139,7 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -188,7 +188,14 @@
     <ClInclude Include="parser-priv.h" />
     <ClInclude Include="rules.h" />
     <ClInclude Include="vmod.h" />
+    <ClInclude Include="xkbcommon-compat.h" />
+    <ClInclude Include="xkbcommon-compose.h" />
+    <ClInclude Include="xkbcommon-keysyms.h" />
+    <ClInclude Include="xkbcommon-names.h" />
+    <ClInclude Include="xkbcommon-x11.h" />
+    <ClInclude Include="xkbcommon.h" />
     <ClInclude Include="xkbcomp-priv.h" />
+    <ClInclude Include="xkbregistry.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
