@@ -66,6 +66,7 @@ static	gpk::err_t dialogInitialize				(::gpk::SDialog & dialog) {
 	gui.Controls.Placement		[dialog.Root].Border				= {};
 	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl	= {dialog.Root, dialog.Root};
 	gui.Controls.States			[dialog.Root].Mask					&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
+	gui.Controls.States			[dialog.Root].Mask					&= ~::gpk::GUI_CONTROL_FLAG_Action;
 	gui.Controls.States			[dialog.Root].Mask					&= ~::gpk::GUI_CONTROL_FLAG_Dragging;
 	gui.Controls.States			[dialog.Root].Mask					&= ~::gpk::GUI_CONTROL_FLAG_Pressed;
 	dialog.DefaultControlDraw.FrameOut			= 1;
@@ -274,6 +275,8 @@ gpk::err_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
 		control.Margin			= {};
 		controlTable.Constraints[idControl].AttachSizeToControl.x	= idControl;
 		controlTable.States[idControl].Mask		= dialog.DefaultControlMask;
+		controlTable.States[idControl].Mask		&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
+		controlTable.States[idControl].Mask		&= ~::gpk::GUI_CONTROL_FLAG_Action;
 		controlTable.Draw [idControl].Palettes	= dialog.Colors->Viewport;
 	}
 	{ // Create section title
