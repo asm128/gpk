@@ -34,17 +34,18 @@ nmsp gpk
 		( log_print_t	funcLogPrint
 		, log_write_t	funcLogWrite
 		);
-	tpl_vtArgs
-	sinx	void	dummy				(_tArgs&&...)		{}
+	tpl_vtArgs	sinx	void	dummy		(_tArgs&&...)		{}
+#ifdef GPK_WINDOWS
+	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ throw(""); }
+#elif defined(GPK_ARDUINO) && defined(GPK_ESP32)
+#	define						gpk_throw(...)				do { ::gpk::sleep(500); throw(__VA_ARGS__); } while(0)
+#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
+	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ __builtin_trap(); }
+#else
+	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ ::gpk::sleep(500); char * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (char)i; } 
+#endif
 } // nmsp
 
-#ifdef GPK_WINDOWS
-#	define gpk_throw(...)								throw(__VA_ARGS__)
-#elif defined(GPK_ARDUINO) && defined(GPK_ESP32)
-#	define gpk_throw(...)								do { ::gpk::sleep(500); throw(__VA_ARGS__); } while(0)
-#else
-#	define gpk_throw(...)								do { ::gpk::sleep(500); char * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (char)i; ::gpk::dummy(__VA_ARGS__); } while(0)
-#endif
 
 #define block_log(gpk_logFunction, statement, textToLog) { gpk_logFunction(textToLog); statement; }	// Block with a statement preceded by a log call.
 #ifdef GPK_WINDOWS

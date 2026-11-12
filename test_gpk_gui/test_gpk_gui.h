@@ -1,4 +1,3 @@
-#include "gpk_engine.h"
 #include "gpk_window.h"
 #include "gpk_gui.h"
 #include "gpk_gui_control_list.h"
@@ -16,18 +15,18 @@ stct SSampleGUIInspector {
 };
 
 stct SSampleGUI {
-	::gpk::SEngine		Engine			= {};
 	::gpk::SWindow		& Window;
 	::gpk::pobj<::gpk::SGUI>	GUIHandle	= {};
 	::gpk::SGUI			& GUI;
 
 	SSampleGUI(::gpk::SWindow & window, ::gpk::pobj<::gpk::SGUI> & gui) : Window(window), GUIHandle(gui), GUI(*gui) {}
 	::gpk::cid_t		ControlMode				= ::gpk::CID_INVALID;
-	::gpk::astcid<3>	ControlsTheme			= {};
 	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
-	::gpk::cid_t		ViewportPresets			= ::gpk::CID_INVALID;
+	::gpk::cid_t		ViewportPalette			= ::gpk::CID_INVALID;
+	::gpk::SControlGrid	GridPaletteTones			= {};
+	::gpk::SControlGrid	GridPaletteShades		= {};
 	::gpk::cid_t		ViewportStates			= ::gpk::CID_INVALID;
-	::gpk::astcid<8>	ControlsState			= {};
+	::gpk::SControlGrid	GridStates				= {};
 	::gpk::cid_t		ControlLive				= ::gpk::CID_INVALID;
 	SSampleGUIInspector	InspectorLive			= {};
 	SSampleGUIInspector	InspectorHovered		= {};
@@ -37,8 +36,9 @@ stct SSampleGUI {
 	::gpk::cid_t		ControlAlignmentTitle	= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlAlignmentRoot	= ::gpk::CID_INVALID;
 	::gpk::astcid<9>	ControlsAlignment		= {};
-	::gpk::astcid<6>	ControlsKeyboard		= {};
-	::gpk::u0_t			Theme					= 0;
+	::gpk::astcid<3>	ControlsKeyboard		= {};
+	::gpk::u2_t			PaletteTone				= 0;
+	::gpk::u2_t			PaletteShade			= 0;
 };
 
 ::gpk::err_t		sampleGUISetup				(SSampleGUI & app);

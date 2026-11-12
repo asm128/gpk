@@ -116,6 +116,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -139,6 +140,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -162,6 +164,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -185,6 +188,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -199,6 +203,9 @@
       <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
     </Lib>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
