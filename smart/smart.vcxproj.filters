@@ -15,23 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="s3d_xcb_framework.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="s3d_xcb_texture_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="s3d_serial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="s3d_xcb_framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="s3d_xcb_texture_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="s3d_serial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
