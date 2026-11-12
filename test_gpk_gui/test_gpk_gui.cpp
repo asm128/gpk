@@ -83,8 +83,8 @@ err_t			setup		(::gme::SApplication & app)						{
 		if((iChild / 9) == 5)
 			gui.Controls.Constraints[controlTestChild0].AttachSizeToText	= {true, true};
 	}
-	const vcst_c						labelsAction[]				= {"Exit", "Theme", "3D Mode", "Palette Mode"};
-	if_fail_fe(controlListCreate(gui, app.ActionList, {labelsAction}, controlTestRoot));
+	stxp vcst_c						labelsAction[]				= {"Exit", "Theme", "3D Mode", "Palette Mode"};
+	if_fail_fe(controlListCreate(gui, app.ActionList, view<vcst_c>{labelsAction}, controlTestRoot));
 	app.IdExit			= app.ActionList.IdControls[0];
 	app.IdTheme			= app.ActionList.IdControls[1];
 	app.IdMode			= app.ActionList.IdControls[2];

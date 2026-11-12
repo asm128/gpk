@@ -357,17 +357,23 @@ gpk::err_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)												
 		}
 	}
 	else if(controlResizeState.IsDragging()) {
-		::gpk::n2s1_t				mouseDeltas			= (dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position).s1();
+		::gpk::n2s1_t				mouseDeltas			= dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position;
 		if(mouseDeltas.x || mouseDeltas.y) {
 			mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 			mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
+			::gpk::SControlPlacement	& controlClient			= controlTable.Placement[control.IdClient];
+			mouseDeltas.x								= ::gpk::max(mouseDeltas.x, (s1_t)-controlClient.Area.Size.x);
+			mouseDeltas.y								= ::gpk::max(mouseDeltas.y, (s1_t)-controlClient.Area.Size.y);
 			controlMain.Area.Size						+= mouseDeltas;
-			controlTable.Placement[control.IdClient].Area.Size	+= mouseDeltas;
+			controlClient.Area.Size						+= mouseDeltas;
 			if_fail_fe(::gpk::controlMetricsInvalidate(gui, control.IdGUIControl));
 		}
 	}
-	else if(controlTable.IsAction(control.IdTitle))
-		if_fail_fe(gpk::viewportFold(control, control.Settings.Unfolded));
+	else {
+		if(controlTable.IsAction(control.IdTitle) && false == control.Settings.Dragging)
+			if_fail_fe(gpk::viewportFold(control, control.Settings.Unfolded));
+		control.Settings.Dragging	= false;
+	}
 
 	if(control.Settings.Unfolded != control.SettingsOld.Unfolded)
 		if(true == control.Settings.Unfolded) {

@@ -67,20 +67,38 @@ nmsp gpk
 	err_t			controlListInitialize	(SGUI & gui, SControlList & menu);
 	err_t			controlListArrange		(SGUI & gui, SControlList & menu);
 	err_t			controlListPush			(SGUI & gui, SControlList & menu, vcst_c & text, s3_t eventCode = -1);
-	err_t			controlListCreate		(SGUI & gui, SControlList & menu, view<cnst asc_t> text, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT);
-	err_t			controlListCreate		(SGUI & gui, SControlList & menu, view<vcst_c> text, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT);
-	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<T> stringifiable, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
+	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<T>  stringifiable, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
 		if_fail_fe(controlListInitialize(gui, menu));
 		menu.Orientation	= orientation;
 		if(parent != CID_INVALID)
 			if_fail_fe(controlSetParent(gui, menu.IdControl, parent));
 		for(u2_t iControl = 0; iControl < stringifiable.size(); ++iControl) {
 			const auto itemView = ::gpk::str(stringifiable[iControl]);
-			if_fail_fe(controlListPush(gui, menu, label(itemView)));
+			if_fail_fe(controlListPush(gui, menu, label(itemView.Storage)));
 		}
 		return 0;
 	}
-
+	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<const view<T>> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
+		if_fail_fe(controlListInitialize(gui, menu));
+		menu.Orientation	= orientation;
+		if(parent != CID_INVALID)
+			if_fail_fe(controlSetParent(gui, menu.IdControl, parent));
+		for(u2_t iControl = 0; iControl < strings.size(); ++iControl)
+			if_fail_fe(controlListPush(gui, menu, ::gpk::str(strings[iControl])));
+		return 0;
+	}
+	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<const apod<T>> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
+		if_fail_fe(controlListInitialize(gui, menu));
+		menu.Orientation	= orientation;
+		if(parent != CID_INVALID)
+			if_fail_fe(controlSetParent(gui, menu.IdControl, parent));
+		for(u2_t iControl = 0; iControl < strings.size(); ++iControl)
+			if_fail_fe(controlListPush(gui, menu, ::gpk::str(strings[iControl])));
+		return 0;
+	}
+	stin	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<vcst_c> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT)		{ return controlListCreate(gui, menu, view<vcsc_c>{strings.begin(), strings.size()}, parent, orientation); }
+	stin	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<vstr_c> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT)		{ return controlListCreate(gui, menu, view<vsc_c> {strings.begin(), strings.size()}, parent, orientation); }
+	stin	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<cnst string> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT)	{ return controlListCreate(gui, menu, view<asc_c> {strings.begin(), strings.size()}, parent, orientation); }
 	struct SPaletteGrid {
 		cid_t					IdControl				= -1;
 		acid				IdControls				= {};

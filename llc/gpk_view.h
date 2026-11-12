@@ -244,7 +244,7 @@ nmsp gpk
 	tydf	view<vf2_c>	vcvf2_t;	tdcs	vcvf2_t	vcvf2_c;
 	tydf	view<vf3_c>	vcvf3_t;	tdcs	vcvf3_t	vcvf3_c;
 	
-	struct view_const_string : view<sc_c> {
+	struct view_const_string : vcsc_c {
 		inxp				view_const_string		()										nxpt	= dflt;
 		inxp				view_const_string		(cnst view<sc_c> & other)				nxpt	: view(other)			{}
 							view_const_string		(sc_c * storage, u2_t length)					: view(storage, length)	{ Count = (length == (u2_t)-1) ? (u2_t)strlen(storage) : length; }

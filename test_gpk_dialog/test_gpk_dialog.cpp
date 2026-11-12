@@ -183,7 +183,7 @@ err_t			setup		(::gme::SApplication & app)						{
 	::gpk::pobj<::gpk::SDialogViewport>	viewportEnum		= {};
 	if_fail_fe(app.DialogMain.Get(app.Viewports[0], viewportEnum));
 	::gpk::enum_definition<::gpk::GUI_CONTROL_PALETTE> & enumDefinition = ::gpk::get_enum<::gpk::GUI_CONTROL_PALETTE>();
-	if_fail_fe(::gpk::controlListCreate(gui, app.ListEnumNames, enumDefinition.Names, viewportEnum->IdClient, ::gpk::DIRECTION_DOWN));
+	if_fail_fe(::gpk::controlListCreate(gui, app.ListEnumNames, {enumDefinition.Names}, viewportEnum->IdClient, ::gpk::DIRECTION_DOWN));
 	if_fail_fe(::gpk::controlListCreate(gui, app.ListEnumValues, enumDefinition.Values, viewportEnum->IdClient, ::gpk::DIRECTION_DOWN));
 	gui.Controls.Constraints[app.ListEnumNames.IdControl].AttachSizeToControl = {-1, app.ListEnumNames.IdControl};
 	gui.Controls.Constraints[app.ListEnumValues.IdControl].AttachSizeToControl = {-1, app.ListEnumValues.IdControl};
