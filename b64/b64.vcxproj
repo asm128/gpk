@@ -87,6 +87,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../../gpk/llc;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
     <Link>
@@ -107,6 +109,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../../gpk/llc;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
     <Link>
@@ -129,6 +133,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../../gpk/llc;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
     <Link>
@@ -153,6 +159,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>../../gpk/llc;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
     <Link>
