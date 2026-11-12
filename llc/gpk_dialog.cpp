@@ -250,7 +250,7 @@ gpk::err_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
 	if_fail_fe(index = dialog.Create(viewport));
 	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= true;
 	controlTable.Draw[viewport->IdGUIControl].FrameOut			= true;
-	//controlTable.Modes[viewport->IdGUIControl].NoHover			= true;
+	controlTable.States[viewport->IdGUIControl].Mask			&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 	controlTable.Placement[viewport->IdGUIControl].Margin		= {};
 	::gpk::memcpy_s(controlTable.Draw[viewport->IdGUIControl].Palettes.Storage, dialog.Colors->Viewport.Storage);
 	{ // Create close control
