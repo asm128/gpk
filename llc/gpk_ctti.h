@@ -1,4 +1,4 @@
-#include "gpk_typeint.h"
+#include "gpk_view.h"
 
 #ifndef GPK_CTTI_H
 #define GPK_CTTI_H
@@ -231,6 +231,14 @@ namespace gpk
 		SCTTISpan	Name		= {};
 		SCTTISpan	Initializer	= {};
 		TEnum		Value		= {};
+		bool		ValueResolved	= false;
+	};
+
+	tplt<size_t NDeclaration>
+	stct SCTTIEnumViews {
+		vcst_t	Names		[NDeclaration]	= {};
+		vcst_t	Initializers	[NDeclaration]	= {};
+		u2_t	Count					= {};
 	};
 
 	tplt<tpnm TEnum, size_t NDeclaration>
@@ -327,7 +335,11 @@ namespace gpk
 				rtrn result;
 			}
 
-			result.Values[result.Count++] = {valueName, initializer, {}};
+			cnst bool valueResolved = initializer.empty() && (0 == result.Count || result.Values[result.Count - 1].ValueResolved);
+			cnst TEnum value = valueResolved
+				? result.Count ? (TEnum)(result.Values[result.Count - 1].Value + 1) : (TEnum)0
+				: TEnum{};
+			result.Values[result.Count++] = {valueName, initializer, value, valueResolved};
 			cursor = commaOffset < textLength ? commaOffset + 1 : textLength;
 		}
 	}
@@ -350,10 +362,32 @@ namespace gpk
 				? iValue ? TUnderlying(TUnderlying(result.Values[iValue - 1].Value) + 1) : 0
 				: explicitValues[iValue];
 			result.Values[iValue].Value = (TEnum)value;
+			result.Values[iValue].ValueResolved = true;
 		}
 		result.ValuesCompiled = true;
 		rtrn result;
 	}
+
+	tplt<tpnm TEnum, size_t NDeclaration>
+	inxp SCTTIEnumViews<NDeclaration> cttiEnumViewsMake(cnst SCTTIEnumParseResult<TEnum, NDeclaration> & metadata) nxpt {
+		SCTTIEnumViews<NDeclaration> result = {};
+		result.Count = metadata.Count;
+		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue) {
+			cnst SCTTIEnumValue<TEnum> & value = metadata.Values[iValue];
+			result.Names[iValue] = {&metadata.SourceText[value.Name.Offset], value.Name.Count};
+			result.Initializers[iValue] = {&metadata.SourceText[value.Initializer.Offset], value.Initializer.Count};
+		}
+		rtrn result;
+	}
+
+	tplt<tpnm T>
+	stct SCTTIEnumRegistry;
+
+	tplt<tpnm T>
+	inxp cnst auto & cttiEnum() nxpt { rtrn SCTTIEnumRegistry<T>::Value; }
+
+	tplt<tpnm T>
+	inxp cnst auto & cttiEnumViews() nxpt { rtrn SCTTIEnumRegistry<T>::Views; }
 }
 
 #define GPK_CTTI_JOIN_2(left, right)	left##right
@@ -362,6 +396,21 @@ namespace gpk
 	extern stct __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__);							\
 	tplt<> stct gpk::SCTTIStructRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__))> {	\
 		inline static constexpr auto Value = ::gpk::cttiParseStruct(#__VA_ARGS__);							\
+		inline static constexpr ::gpk::vcst_t File = __FILE__;										\
+		inline static constexpr ::gpk::u2_t Line = __LINE__;										\
+		inline static constexpr ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
+		inline static constexpr bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
+	}
+
+#define CTTI_ENUM(...)																				\
+	extern enum __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__);								\
+	tplt<> stct gpk::SCTTIEnumRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__))> {	\
+		inline static constexpr auto Value = ::gpk::cttiParseEnum<decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__))>(#__VA_ARGS__);\
+		inline static constexpr auto Views = ::gpk::cttiEnumViewsMake(Value);								\
+		inline static constexpr ::gpk::vcst_t File = __FILE__;										\
+		inline static constexpr ::gpk::u2_t Line = __LINE__;										\
+		inline static constexpr ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
+		inline static constexpr bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
 	}
 
 #define GPK_CTTI_PARENS ()
@@ -376,9 +425,14 @@ namespace gpk
 #define GPK_CTTI_ENUM_VALUES_AGAIN() GPK_CTTI_ENUM_VALUES_I
 
 #define GPK_CTTI_ENUM_VALUE(IntType, entry) []() cxpr { stct SValue { IntType entry; }; rtrn ::gpk::cttiFirstMember(SValue{}); }()
-#define CTTI_ENUM(EnumName, IntType, ...)															\
+#define CTTI_ENUM_COMPILED(EnumName, IntType, ...)												\
 	enum EnumName : IntType { __VA_ARGS__ };														\
 	stxp IntType EnumName##_gpk_ctti_values[] = {GPK_CTTI_ENUM_VALUES(GPK_CTTI_ENUM_VALUE, IntType, __VA_ARGS__)};	\
-	stxp auto EnumName##_gpk_ctti = ::gpk::cttiParseEnum<EnumName>(#EnumName " : " #IntType " { " #__VA_ARGS__ " }", EnumName##_gpk_ctti_values)
+	stxp auto EnumName##_gpk_ctti = ::gpk::cttiParseEnum<EnumName>(#EnumName " : " #IntType " { " #__VA_ARGS__ " }", EnumName##_gpk_ctti_values);\
+	stxp auto EnumName##_gpk_ctti_views = ::gpk::cttiEnumViewsMake(EnumName##_gpk_ctti);				\
+	stxp ::gpk::vcst_t EnumName##_gpk_ctti_file = __FILE__;									\
+	stxp ::gpk::u2_t EnumName##_gpk_ctti_line = __LINE__;									\
+	stxp ::gpk::uP_t EnumName##_gpk_ctti_size = sizeof(EnumName);							\
+	stxp bool EnumName##_gpk_ctti_is_pod = __is_pod(EnumName)
 
 #endif // GPK_CTTI_H

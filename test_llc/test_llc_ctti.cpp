@@ -28,6 +28,10 @@ GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_FIND			, 18, "The CTTI enum regi
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, STRUCT_NAME		, 19, "The CTTI struct exposed an incorrect name.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_DECLARATION_NAME, 20, "The complete CTTI enum declaration exposed an incorrect name.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_COMPILED_VALUES, 21, "The CTTI enum declaration lost its compiler-evaluated values.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_FULL_DECLARATION, 22, "The one-argument CTTI enum declaration was parsed incorrectly.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_SOURCE_ONLY, 23, "The source-only CTTI enum value resolution is incorrect.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_VIEWS, 24, "The CTTI enum view projection is incorrect.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, TYPE_FACTS, 25, "The CTTI compiler type facts are incorrect.");
 
 CTTI_STCT(
 	SCTTIJSONTest0 {
@@ -39,20 +43,28 @@ CTTI_STCT(
 	}
 	);
 
-CTTI_ENUM(SCTTIEnumTest, gpk::u1_t,
+CTTI_ENUM_COMPILED(SCTTIEnumTest, gpk::u1_t,
 	CTTIEnumNone	= 3,
 	CTTIEnumRead,
 	CTTIEnumWrite	= CTTIEnumRead + 4,
 	CTTIEnumAlias	= CTTIEnumWrite
 	);
 
-CTTI_ENUM(SCTTIEnumSingle, gpk::u0_t, SCTTIEnumSingleValue = 9);
-CTTI_ENUM(SCTTIEnumBoundary, gpk::u0_t,
+CTTI_ENUM_COMPILED(SCTTIEnumSingle, gpk::u0_t, SCTTIEnumSingleValue = 9);
+CTTI_ENUM_COMPILED(SCTTIEnumBoundary, gpk::u0_t,
 	SCTTIEnumBoundary00, SCTTIEnumBoundary01, SCTTIEnumBoundary02, SCTTIEnumBoundary03,
 	SCTTIEnumBoundary04, SCTTIEnumBoundary05, SCTTIEnumBoundary06, SCTTIEnumBoundary07,
 	SCTTIEnumBoundary08, SCTTIEnumBoundary09, SCTTIEnumBoundary10, SCTTIEnumBoundary11,
 	SCTTIEnumBoundary12, SCTTIEnumBoundary13, SCTTIEnumBoundary14, SCTTIEnumBoundary15,
 	SCTTIEnumBoundary16
+	);
+
+CTTI_ENUM(
+	SCTTIEnumFull : gpk::u1_t {
+		SCTTIEnumFullNone,
+		SCTTIEnumFullRead,
+		SCTTIEnumFullWrite
+	}
 	);
 
 CTTI_STCT(
@@ -72,9 +84,17 @@ CTTI_STCT(
 	}
 	);
 
+CTTI_STCT(
+	SCTTIPODTest {
+		gpk::u2_t Value;
+	}
+	);
+
 stxp auto cttiBraceValue		= ::gpk::cttiStruct<SCTTIJSONTestBraceValue>();
 stxp auto cttiNumericModifier	= ::gpk::cttiStruct<SCTTIJSONTestNumericModifier>();
 stxp auto cttiJSONMetadata		= ::gpk::cttiStruct<SCTTIJSONTest0>();
+stxp auto cttiEnumFull			= ::gpk::cttiEnum<SCTTIEnumFull>();
+stxp auto cttiEnumFullViews		= ::gpk::cttiEnumViews<SCTTIEnumFull>();
 static_assert(cttiJSONMetadata.Success(), "The CTTI JSON test declaration must be valid at compile time.");
 static_assert(::gpk::cttiSpanEquals(cttiJSONMetadata.SourceText, cttiJSONMetadata.StructName, "SCTTIJSONTest0"), "The CTTI struct name must come from the complete declaration.");
 static_assert(::gpk::CTTI_PARSE_ERROR_INVALID_MEMBER_NAME == cttiBraceValue.Error, "Brace initialization is outside the positional CTTI grammar.");
@@ -87,6 +107,16 @@ static_assert(SCTTIEnumTest_gpk_ctti.Values[1].Value == CTTIEnumRead, "Implicit 
 static_assert(SCTTIEnumTest_gpk_ctti.Values[2].Value == CTTIEnumWrite, "Explicit enum values must use the compiler-evaluated expression.");
 static_assert(1 == SCTTIEnumSingle_gpk_ctti.Count && SCTTIEnumSingleValue == SCTTIEnumSingle_gpk_ctti.Values[0].Value, "The single-value enum route must preserve its compiled value.");
 static_assert(17 == SCTTIEnumBoundary_gpk_ctti.Count && SCTTIEnumBoundary16 == SCTTIEnumBoundary_gpk_ctti.Values[16].Value, "The enum registry must not inherit the former sixteen-value implementation ceiling.");
+static_assert(cttiEnumFull.Success() && 3 == cttiEnumFull.Count, "The complete one-argument enum declaration must parse at compile time.");
+static_assert(::gpk::cttiSpanEquals(cttiEnumFull.SourceText, cttiEnumFull.EnumName, "SCTTIEnumFull"), "The complete enum declaration must expose its name.");
+static_assert(false == cttiEnumFull.ValuesCompiled, "The complete enum declaration remains source-only until compiler-value capture is merged.");
+static_assert(cttiEnumFull.Values[0].ValueResolved && 0 == cttiEnumFull.Values[0].Value, "The first implicit enum value must resolve to zero.");
+static_assert(cttiEnumFull.Values[2].ValueResolved && 2 == cttiEnumFull.Values[2].Value, "Implicit enum values must resolve in declaration order.");
+static_assert(3 == cttiEnumFullViews.Count && cttiEnumFullViews.Names[1] == "SCTTIEnumFullRead", "Enum names must be exposed as compile-time string views.");
+static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::File.size() && ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Line, "Struct source provenance must be retained.");
+static_assert(sizeof(SCTTIPODTest) == ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Size, "Struct size must come from the completed compiler type.");
+static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::IsPOD, "The POD struct must be identified without std traits.");
+static_assert(sizeof(SCTTIEnumFull) == ::gpk::SCTTIEnumRegistry<SCTTIEnumFull>::Size && ::gpk::SCTTIEnumRegistry<SCTTIEnumFull>::IsPOD, "Enum compiler facts must be retained.");
 
 tplt<size_t NDeclaration>
 sttc ::gpk::vcst_t cttiSpanView
@@ -129,7 +159,9 @@ sttc ::gpk::err_t cttiMemberJSON
 			if_fail_fe(output.append(::gpk::vcst_t{"null"}));
 		}
 		else {
-			if_fail_fe(output.append(::cttiSpanView(metadata, member.Value)));
+			cnst ::gpk::vcst_t value = ::cttiSpanView(metadata, member.Value);
+			cnst bool floatSuffix = value.size() && ('f' == value[value.size() - 1] || 'F' == value[value.size() - 1]);
+			if_fail_fe(output.append({value.begin(), value.size() - floatSuffix}));
 		}
 		if_fail_fe(output.append(::gpk::vcst_t{",\"modifiers\":["}));
 		bool firstModifier = true;
@@ -158,12 +190,12 @@ sttc ::gpk::err_t cttiMemberJSON
 ::gpk::err_t test_ctti(STestRunnerState &, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
 	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_PARSE_RESULT          , false == cttiJSONMetadata.Success());
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_STRUCT_NAME           , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.StructName) != "SCTTIJSONTest0", "Unexpected struct name:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.StructName)));
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_COUNT          , cttiJSONMetadata.Count != 4, "Member count:%u, expected:4.", cttiJSONMetadata.Count);
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_COUNT          , cttiJSONMetadata.Count != 5, "Member count:%u, expected:5.", cttiJSONMetadata.Count);
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MODIFIERS             , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[0].Modifiers) != "inline static const", "Unexpected modifiers:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[0].Modifiers)));
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_TYPE_NAME             , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].TypeName) != "gpk::view<gpk::sc_c>", "Unexpected type:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].TypeName)));
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_NAME           , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Name) != "Capacity", "Unexpected name:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Name)));
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_VALUE          , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Value) != "\"Factory::Build<Value>(7)\"", "Unexpected value:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Value)));
-	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_MEMBER_VALUE          , false == cttiJSONMetadata.Members[3].Value.empty());
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_TYPE_NAME             , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].TypeName) != "f3_t", "Unexpected type:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].TypeName)));
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_NAME           , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Name) != "Height", "Unexpected name:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Name)));
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_VALUE          , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[2].Value) != "\"Factory::Build<Value>(7)\"", "Unexpected value:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[2].Value)));
+	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_MEMBER_VALUE          , false == cttiJSONMetadata.Members[4].Value.empty());
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_BRACE_VALUE           , ::gpk::CTTI_PARSE_ERROR_INVALID_MEMBER_NAME != cttiBraceValue.Error);
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_NUMERIC_MODIFIER      , ::gpk::CTTI_PARSE_ERROR_INVALID_MODIFIER != cttiNumericModifier.Error);
 	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_ENUM_PARSE_RESULT     , false == SCTTIEnumTest_gpk_ctti.Success());
@@ -179,11 +211,17 @@ sttc ::gpk::err_t cttiMemberJSON
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_VALUE            , SCTTIEnumTest_gpk_ctti.Values[2].Value != CTTIEnumWrite);
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_VALUE            , SCTTIEnumTest_gpk_ctti.Values[3].Value != CTTIEnumAlias);
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_FIND             , SCTTIEnumTest_gpk_ctti.Find("CTTIEnumAlias") != 3);
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , ::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.EnumName) != "SCTTIEnumFull", "Unexpected complete enum name:'%.*s'.", GPK_VIEW_ARGS(::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.EnumName)));
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , ::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.UnderlyingType) != "gpk::u1_t", "Unexpected complete enum type:'%.*s'.", GPK_VIEW_ARGS(::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.UnderlyingType)));
+	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY      , cttiEnumFull.ValuesCompiled);
+	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY      , false == cttiEnumFull.Values[2].ValueResolved || 2 != cttiEnumFull.Values[2].Value);
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS            , cttiEnumFullViews.Names[0] != "SCTTIEnumFullNone", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFullViews.Names[0]));
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS            , cttiEnumFullViews.Names[2] != "SCTTIEnumFullWrite", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFullViews.Names[2]));
 
 	::gpk::string output;
 	cnst ::gpk::err_t buildResult = ::cttiMemberJSON(cttiJSONMetadata, output);
 	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_JSON_BUILD, ::gpk::failed(buildResult));
-	stxp ::gpk::vcst_t expected = "{\"Weight\":{\"type\":\"float\",\"value\":234.25,\"modifiers\":[\"inline\",\"static\",\"const\"]},\"Capacity\":{\"type\":\"gpk::view<gpk::sc_c>\",\"value\":\"Factory::Build<Value>(7)\",\"modifiers\":[\"volatile\"]},\"Enabled\":{\"type\":\"bool\",\"value\":true,\"modifiers\":[\"static\",\"const\"]},\"Count\":{\"type\":\"gpk::u2_t\",\"value\":null,\"modifiers\":[]}}";
+	stxp ::gpk::vcst_t expected = "{\"Weight\":{\"type\":\"float\",\"value\":234.25,\"modifiers\":[\"inline\",\"static\",\"const\"]},\"Height\":{\"type\":\"f3_t\",\"value\":234.25,\"modifiers\":[\"stxp\"]},\"Capacity\":{\"type\":\"gpk::view<gpk::sc_c>\",\"value\":\"Factory::Build<Value>(7)\",\"modifiers\":[\"volatile\"]},\"Enabled\":{\"type\":\"bool\",\"value\":true,\"modifiers\":[\"static\",\"const\"]},\"Count\":{\"type\":\"gpk::u2_t\",\"value\":null,\"modifiers\":[]}}";
 	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_JSON_TEXT, output != expected, "Actual:'%.*s'; expected:'%.*s'.", GPK_VIEW_ARGS(output), GPK_VIEW_ARGS(expected));
 
 	::gpk::SJSONReader reader;
@@ -192,6 +230,6 @@ sttc ::gpk::err_t cttiMemberJSON
 	if(::gpk::failed(parseResult))
 		rtrn 0;
 	cnst ::gpk::err_t keyCount = ::gpk::jsonObjectKeyCount(reader, 0);
-	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_JSON_KEY_COUNT, keyCount != 4, "Key count:%i, expected:4.", keyCount);
+	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_JSON_KEY_COUNT, keyCount != 5, "Key count:%i, expected:5.", keyCount);
 	rtrn 0;
 }

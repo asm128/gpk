@@ -248,7 +248,13 @@ nmsp gpk
 	struct view_const_string : vcsc_c {
 		inxp				view_const_string		()										nxpt	= dflt;
 		inxp				view_const_string		(cnst view<sc_c> & other)				nxpt	: view(other)			{}
-							view_const_string		(sc_c * storage, u2_t length)					: view(storage, length)	{ Count = (length == (u2_t)-1) ? (u2_t)strlen(storage) : length; }
+		inxp				view_const_string		(sc_c * storage, u2_t length)					: view()	{
+			Data = storage;
+			Count = length;
+			if_true_tef(0 == storage && 0 != length, "%" GPK_FMT_U2 " -> 0.", length);
+			if((u2_t)-1 == length)
+				for(Count = 0; storage[Count]; ++Count) {}
+		}
 		tplN2u		inxp	view_const_string		(sc_c (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{
 			for(Count = 0; Count < ::gpk::min(N, length); ++Count)
 				if(0 == storage[Count])
