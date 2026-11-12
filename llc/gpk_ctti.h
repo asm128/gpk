@@ -311,50 +311,21 @@ namespace gpk
 			gpk_ctti = ::gpk::cttiParseStruct(#structName, #members);			\
 	}
 
-#define GPK_CTTI_CAT_(a, b) a##b
-#define GPK_CTTI_CAT(a, b) GPK_CTTI_CAT_(a, b)
-#define GPK_CTTI_ARG_COUNT_(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15,_16,count,...) count
-#define GPK_CTTI_ARG_COUNT(...) GPK_CTTI_ARG_COUNT_I((__VA_ARGS__,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1))
-#define GPK_CTTI_ARG_COUNT_I(arguments) GPK_CTTI_ARG_COUNT_ arguments
-#define GPK_CTTI_MAP_1(f,t,e0) f(t,e0)
-#define GPK_CTTI_MAP_2(f,t,e0,e1) f(t,e0),f(t,e1)
-#define GPK_CTTI_MAP_3(f,t,e0,e1,e2) f(t,e0),f(t,e1),f(t,e2)
-#define GPK_CTTI_MAP_4(f,t,e0,e1,e2,e3) f(t,e0),f(t,e1),f(t,e2),f(t,e3)
-#define GPK_CTTI_MAP_5(f,t,e0,e1,e2,e3,e4) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4)
-#define GPK_CTTI_MAP_6(f,t,e0,e1,e2,e3,e4,e5) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5)
-#define GPK_CTTI_MAP_7(f,t,e0,e1,e2,e3,e4,e5,e6) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6)
-#define GPK_CTTI_MAP_8(f,t,e0,e1,e2,e3,e4,e5,e6,e7) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7)
-#define GPK_CTTI_MAP_9(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8)
-#define GPK_CTTI_MAP_10(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8),f(t,e9)
-#define GPK_CTTI_MAP_11(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8),f(t,e9),f(t,e10)
-#define GPK_CTTI_MAP_12(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8),f(t,e9),f(t,e10),f(t,e11)
-#define GPK_CTTI_MAP_13(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8),f(t,e9),f(t,e10),f(t,e11),f(t,e12)
-#define GPK_CTTI_MAP_14(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8),f(t,e9),f(t,e10),f(t,e11),f(t,e12),f(t,e13)
-#define GPK_CTTI_MAP_15(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8),f(t,e9),f(t,e10),f(t,e11),f(t,e12),f(t,e13),f(t,e14)
-#define GPK_CTTI_MAP_16(f,t,e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15) f(t,e0),f(t,e1),f(t,e2),f(t,e3),f(t,e4),f(t,e5),f(t,e6),f(t,e7),f(t,e8),f(t,e9),f(t,e10),f(t,e11),f(t,e12),f(t,e13),f(t,e14),f(t,e15)
-#define GPK_CTTI_MAP_CALL_1(arguments) GPK_CTTI_MAP_1 arguments
-#define GPK_CTTI_MAP_CALL_2(arguments) GPK_CTTI_MAP_2 arguments
-#define GPK_CTTI_MAP_CALL_3(arguments) GPK_CTTI_MAP_3 arguments
-#define GPK_CTTI_MAP_CALL_4(arguments) GPK_CTTI_MAP_4 arguments
-#define GPK_CTTI_MAP_CALL_5(arguments) GPK_CTTI_MAP_5 arguments
-#define GPK_CTTI_MAP_CALL_6(arguments) GPK_CTTI_MAP_6 arguments
-#define GPK_CTTI_MAP_CALL_7(arguments) GPK_CTTI_MAP_7 arguments
-#define GPK_CTTI_MAP_CALL_8(arguments) GPK_CTTI_MAP_8 arguments
-#define GPK_CTTI_MAP_CALL_9(arguments) GPK_CTTI_MAP_9 arguments
-#define GPK_CTTI_MAP_CALL_10(arguments) GPK_CTTI_MAP_10 arguments
-#define GPK_CTTI_MAP_CALL_11(arguments) GPK_CTTI_MAP_11 arguments
-#define GPK_CTTI_MAP_CALL_12(arguments) GPK_CTTI_MAP_12 arguments
-#define GPK_CTTI_MAP_CALL_13(arguments) GPK_CTTI_MAP_13 arguments
-#define GPK_CTTI_MAP_CALL_14(arguments) GPK_CTTI_MAP_14 arguments
-#define GPK_CTTI_MAP_CALL_15(arguments) GPK_CTTI_MAP_15 arguments
-#define GPK_CTTI_MAP_CALL_16(arguments) GPK_CTTI_MAP_16 arguments
-#define GPK_CTTI_MAP_DISPATCH(count, arguments) GPK_CTTI_MAP_DISPATCH_I(count, arguments)
-#define GPK_CTTI_MAP_DISPATCH_I(count, arguments) GPK_CTTI_CAT(GPK_CTTI_MAP_CALL_, count)(arguments)
+#define GPK_CTTI_PARENS ()
+#define GPK_CTTI_EXPAND(...) GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(__VA_ARGS__))))
+#define GPK_CTTI_EXPAND_5(...) GPK_CTTI_EXPAND_4(GPK_CTTI_EXPAND_4(GPK_CTTI_EXPAND_4(GPK_CTTI_EXPAND_4(__VA_ARGS__))))
+#define GPK_CTTI_EXPAND_4(...) GPK_CTTI_EXPAND_3(GPK_CTTI_EXPAND_3(GPK_CTTI_EXPAND_3(GPK_CTTI_EXPAND_3(__VA_ARGS__))))
+#define GPK_CTTI_EXPAND_3(...) GPK_CTTI_EXPAND_2(GPK_CTTI_EXPAND_2(GPK_CTTI_EXPAND_2(GPK_CTTI_EXPAND_2(__VA_ARGS__))))
+#define GPK_CTTI_EXPAND_2(...) GPK_CTTI_EXPAND_1(GPK_CTTI_EXPAND_1(GPK_CTTI_EXPAND_1(GPK_CTTI_EXPAND_1(__VA_ARGS__))))
+#define GPK_CTTI_EXPAND_1(...) __VA_ARGS__
+#define GPK_CTTI_ENUM_VALUES(function, type, ...) __VA_OPT__(GPK_CTTI_EXPAND(GPK_CTTI_ENUM_VALUES_I(function, type, __VA_ARGS__)))
+#define GPK_CTTI_ENUM_VALUES_I(function, type, entry, ...) function(type, entry) __VA_OPT__(, GPK_CTTI_ENUM_VALUES_AGAIN GPK_CTTI_PARENS (function, type, __VA_ARGS__))
+#define GPK_CTTI_ENUM_VALUES_AGAIN() GPK_CTTI_ENUM_VALUES_I
 
 #define GPK_CTTI_ENUM_VALUE(IntType, entry) []() cxpr { stct SValue { IntType entry; }; rtrn ::gpk::cttiFirstMember(SValue{}); }()
 #define CTTI_ENUM(EnumName, IntType, ...)															\
 	enum EnumName : IntType { __VA_ARGS__ };														\
-	stxp IntType EnumName##_gpk_ctti_values[] = {GPK_CTTI_MAP_DISPATCH(GPK_CTTI_ARG_COUNT(__VA_ARGS__), (GPK_CTTI_ENUM_VALUE, IntType, __VA_ARGS__))};	\
+	stxp IntType EnumName##_gpk_ctti_values[] = {GPK_CTTI_ENUM_VALUES(GPK_CTTI_ENUM_VALUE, IntType, __VA_ARGS__)};	\
 	stxp auto EnumName##_gpk_ctti = ::gpk::cttiParseEnum<EnumName>(#EnumName, #IntType, #__VA_ARGS__, EnumName##_gpk_ctti_values)
 
 #endif // GPK_CTTI_H

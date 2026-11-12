@@ -45,7 +45,8 @@ CTTI_ENUM(SCTTIEnumBoundary, gpk::u0_t,
 	SCTTIEnumBoundary00, SCTTIEnumBoundary01, SCTTIEnumBoundary02, SCTTIEnumBoundary03,
 	SCTTIEnumBoundary04, SCTTIEnumBoundary05, SCTTIEnumBoundary06, SCTTIEnumBoundary07,
 	SCTTIEnumBoundary08, SCTTIEnumBoundary09, SCTTIEnumBoundary10, SCTTIEnumBoundary11,
-	SCTTIEnumBoundary12, SCTTIEnumBoundary13, SCTTIEnumBoundary14, SCTTIEnumBoundary15
+	SCTTIEnumBoundary12, SCTTIEnumBoundary13, SCTTIEnumBoundary14, SCTTIEnumBoundary15,
+	SCTTIEnumBoundary16
 	);
 
 CTTI_STCT(SCTTIJSONTestBraceValue,
@@ -72,7 +73,7 @@ static_assert(2 == SCTTIEnumTest_gpk_ctti.Find("CTTIEnumWrite"), "The CTTI enum 
 static_assert(SCTTIEnumTest_gpk_ctti.Values[1].Value == CTTIEnumRead, "Implicit enum values must use the compiled enum sequence.");
 static_assert(SCTTIEnumTest_gpk_ctti.Values[2].Value == CTTIEnumWrite, "Explicit enum values must use the compiler-evaluated expression.");
 static_assert(1 == SCTTIEnumSingle_gpk_ctti.Count && SCTTIEnumSingleValue == SCTTIEnumSingle_gpk_ctti.Values[0].Value, "The single-value enum route must preserve its compiled value.");
-static_assert(16 == SCTTIEnumBoundary_gpk_ctti.Count && SCTTIEnumBoundary15 == SCTTIEnumBoundary_gpk_ctti.Values[15].Value, "The sixteen-value enum route must preserve the complete sequence.");
+static_assert(17 == SCTTIEnumBoundary_gpk_ctti.Count && SCTTIEnumBoundary16 == SCTTIEnumBoundary_gpk_ctti.Values[16].Value, "The enum registry must not inherit the former sixteen-value implementation ceiling.");
 
 tplt<size_t NStructName, size_t NMemberText>
 sttc ::gpk::vcst_t cttiSpanView
