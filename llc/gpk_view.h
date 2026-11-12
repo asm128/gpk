@@ -62,13 +62,14 @@ nmsp gpk
 			rtrn ::gpk::equal(other.begin(), begin(), size());
 		}
 		// Methods
-		inxp	u2_t			byte_count		()														csnx	{ rtrn u2_t(Count * sizeof(T));	}
-		inxp	u3_t			bit_count		()														csnx	{ rtrn byte_count() * 8ULL;			}
-		inxp	u2_c&			size			()														csnx	{ rtrn Count;				}
-		inxp	TCnst*			begin			()														csnx	{ rtrn Data;				}
-		inxp	TCnst*			end				()														csnx	{ rtrn begin() + Count;	}
-		inln	T*				begin			()														nxpt	{ rtrn Data;				}
-		inln	T*				end				()														nxpt	{ rtrn begin() + Count;	}
+		inxp	view<u0_c>		bytes			() 									csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
+		inxp	u2_t			byte_count		()									csnx	{ rtrn u2_t(Count * sizeof(T));	}
+		inxp	u3_t			bit_count		()									csnx	{ rtrn byte_count() * 8ULL;			}
+		inxp	u2_c&			size			()									csnx	{ rtrn Count;				}
+		inxp	TCnst*			begin			()									csnx	{ rtrn Data;				}
+		inxp	TCnst*			end				()									csnx	{ rtrn begin() + Count;	}
+		inln	T*				begin			()									nxpt	{ rtrn Data;				}
+		inln	T*				end				()									nxpt	{ rtrn begin() + Count;	}
 		err_t					slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
 			if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
 			u2_c					newSize			= Count - offset;

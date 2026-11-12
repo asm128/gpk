@@ -9,18 +9,12 @@
 #include "gpk_string_compose.h"
 #include "gpk_system_key.h"
 
-stxp ::gpk::u0_t SAMPLE_GUI_THEME_COUNT = 3;
-stxp ::gpk::u0_t PALETTE_SHADE_COUNT = 16;
-stxp ::gpk::u0_t THEME_COUNT = SAMPLE_GUI_THEME_COUNT;
 stxp ::gpk::u0_t STATE_COUNT = 8;
 stxp ::gpk::u0_t ALIGNMENT_COUNT = 9;
+stxp ::gpk::u2_t PALETTE_SHADE_COUNT = 16;
+stxp ::gpk::u2_t PALETTE_TONE_COLUMNS = 9;
 stxp ::gpk::s1_t FONT_BODY = 6; // 8x12
 stxp ::gpk::s1_t FONT_TITLE = 7; // 8x16
-
-GDEFINE_ENUM_TYPE(SAMPLE_GUI_THEME, ::gpk::u0_t);
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, AZURE, 0, "Azure");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, AMBER, 1, "Amber");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, MONO , 2, "Mono");
 
 GDEFINE_ENUM_TYPE(SAMPLE_GUI_INSPECTOR_FIELD, ::gpk::u0_t);
 GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, ID     , 0);
@@ -28,95 +22,6 @@ GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, STATE  , 1);
 GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, PALETTE, 2);
 GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, ALIGN  , 3);
 GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, TEXT   , 4);
-
-sttc ::gpk::vcst_t sampleGUIThemeText(::gpk::u0_t theme) {
-	rtrn ::gpk::get_value_descv((SAMPLE_GUI_THEME)(theme % SAMPLE_GUI_THEME_COUNT));
-}
-
-sttc ::gpk::SColorBGRA sampleGUIThemeColor(::gpk::u0_t theme) nxpt {
-	stxp ::gpk::SColorBGRA colors[SAMPLE_GUI_THEME_COUNT] =
-		{ {248, 208,  72}
-		, { 32, 176, 248}
-		, {232, 232, 232}
-		};
-	rtrn colors[theme % SAMPLE_GUI_THEME_COUNT];
-}
-
-sttc ::gpk::SColorBGRA sampleGUIShade(::gpk::SColorBGRA color, ::gpk::u0_t shade) nxpt {
-	shade = ::gpk::min(shade, (::gpk::u0_t)(PALETTE_SHADE_COUNT - 1));
-	rtrn color * ((PALETTE_SHADE_COUNT - (::gpk::f2_t)shade) / PALETTE_SHADE_COUNT);
-}
-
-sttc ::gpk::SColorBGRA sampleGUIDesaturate(::gpk::SColorBGRA color) nxpt {
-	cnst ::gpk::u0_t gray = (::gpk::u0_t)(((::gpk::u2_t)color.r + color.g + color.b) / 3);
-	rtrn
-		{ (::gpk::u0_t)((color.b + (::gpk::u1_t)gray * 2) / 3)
-		, (::gpk::u0_t)((color.g + (::gpk::u1_t)gray * 2) / 3)
-		, (::gpk::u0_t)((color.r + (::gpk::u1_t)gray * 2) / 3)
-		};
-}
-
-sttc ::gpk::u0_t sampleGUIStateShade(::gpk::u0_t state) nxpt {
-	stxp ::gpk::u0_t shades[::gpk::GUI_CONTROL_PALETTE_COUNT] = {8, 10, 5, 11, 4, 7, 2, 7, 1, 13};
-	rtrn shades[state % ::gpk::GUI_CONTROL_PALETTE_COUNT];
-}
-
-sttc ::gpk::u0_t sampleGUIStateBorderOffset(::gpk::u0_t state) nxpt {
-	stxp ::gpk::u0_t offsets[::gpk::GUI_CONTROL_PALETTE_COUNT] = {5, 1, 7, 3, 0, 1, 7, 3, 5, 5};
-	rtrn offsets[state % ::gpk::GUI_CONTROL_PALETTE_COUNT];
-}
-
-sttc ::gpk::SColorBGRA sampleGUITextColor(::gpk::SColorBGRA background) nxpt {
-	cnst ::gpk::u2_t luminance = (::gpk::u2_t)background.r * 299 + (::gpk::u2_t)background.g * 587 + (::gpk::u2_t)background.b * 114;
-	rtrn ::sampleGUIShade({255, 255, 255}, luminance > 150000 ? 15 : 1);
-}
-
-sttc ::gpk::err_t sampleGUIResourcesCreate(::gpk::SGUI & gui) {
-	if_true_fe(0 == gui.Colors.create());
-	if_fail_fe(gui.Colors->Palettes.resize(SAMPLE_GUI_THEME_COUNT * ::gpk::GUI_CONTROL_PALETTE_COUNT));
-	for(::gpk::u0_t iTheme = 0; iTheme < SAMPLE_GUI_THEME_COUNT; ++iTheme)
-	for(::gpk::u0_t iState = 0; iState < ::gpk::GUI_CONTROL_PALETTE_COUNT; ++iState) {
-		::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT> & palette = gui.Colors->Palettes[iTheme * ::gpk::GUI_CONTROL_PALETTE_COUNT + iState];
-		::gpk::SColorBGRA tone = ::sampleGUIThemeColor(iTheme);
-		if(iState == ::gpk::GUI_CONTROL_PALETTE_DISABLED || iState == ::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED)
-			tone = ::sampleGUIDesaturate(tone);
-		cnst ::gpk::u0_t shade = ::sampleGUIStateShade(iState);
-		cnst ::gpk::SColorBGRA base = ::sampleGUIShade(tone, shade);
-		cnst ::gpk::u0_t borderOffset = ::sampleGUIStateBorderOffset(iState);
-		cnst ::gpk::u0_t borderShade = shade > 7
-			? (::gpk::u0_t)(shade > borderOffset ? shade - borderOffset : 0)
-			: (::gpk::u0_t)::gpk::min((::gpk::u2_t)shade + borderOffset, (::gpk::u2_t)PALETTE_SHADE_COUNT - 1);
-		cnst ::gpk::SColorBGRA borderColor = ::sampleGUIShade(tone, borderShade);
-		for(::gpk::u2_t iArea = 0; iArea < palette.size(); ++iArea)
-			palette[iArea] = ::sampleGUIShade(tone, (::gpk::u0_t)::gpk::min((::gpk::u2_t)shade + 5, (::gpk::u2_t)PALETTE_SHADE_COUNT - 1));
-		palette[::gpk::UI_CONTROL_AREA_BACKGROUND] = ::sampleGUIShade(tone, (::gpk::u0_t)::gpk::min((::gpk::u2_t)shade + 6, (::gpk::u2_t)PALETTE_SHADE_COUNT - 1));
-		palette[::gpk::UI_CONTROL_AREA_CLIENT] = base;
-		palette[::gpk::UI_CONTROL_AREA_BORDER_LEFT] = borderColor;
-		palette[::gpk::UI_CONTROL_AREA_BORDER_TOP] = borderColor;
-		palette[::gpk::UI_CONTROL_AREA_BORDER_RIGHT] = borderColor;
-		palette[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM] = borderColor;
-		palette[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND] = ::sampleGUIShade(tone, (::gpk::u0_t)::gpk::min((::gpk::u2_t)shade + 2, (::gpk::u2_t)PALETTE_SHADE_COUNT - 1));
-		palette[::gpk::UI_CONTROL_AREA_TEXT_FACE] = ::sampleGUITextColor(base);
-	}
-	::gpk::SRasterFontManager fonts = {};
-	if_fail_fe(::gpk::rasterFontDefaults(fonts));
-	gui.Fonts = fonts.Fonts;
-	rtrn 0;
-}
-
-sttc void sampleGUIControlThemeApply(::gpk::SGUI & gui, ::gpk::cid_t idControl, ::gpk::u0_t theme) nxpt {
-	if(::gpk::controlInvalid(gui, idControl))
-		rtrn;
-	::gpk::SControlDraw & draw = gui.Controls.Draw[idControl];
-	draw.UseNewPalettes = true;
-	for(::gpk::u0_t iState = 0; iState < ::gpk::GUI_CONTROL_PALETTE_COUNT; ++iState)
-		draw.Palettes[iState] = (::gpk::s1_t)((theme % SAMPLE_GUI_THEME_COUNT) * ::gpk::GUI_CONTROL_PALETTE_COUNT + iState);
-}
-
-sttc void sampleGUIThemeApply(::gpk::SGUI & gui, ::gpk::u0_t theme) nxpt {
-	for(::gpk::u2_t iControl = 0; iControl < gui.Controls.Draw.size(); ++iControl)
-		::sampleGUIControlThemeApply(gui, (::gpk::cid_t)iControl, theme);
-}
 
 sttc ::gpk::ALIGN sampleGUIControlAlignment(::gpk::u0_t alignment) nxpt {
 	stxp ::gpk::ALIGN horizontal[] = {::gpk::ALIGN_LEFT, ::gpk::ALIGN_HCENTER, ::gpk::ALIGN_RIGHT};
@@ -162,24 +67,42 @@ sttc ::gpk::err_t sampleGUIControlCreate(SSampleGUI & app, ::gpk::cid_t & idCont
 	placement.Margin = {2, 2, 2, 2};
 	placement.Border = {3, 3, 3, 3};
 	::gpk::SControlDraw & draw = app.GUI.Controls.Draw[idControl];
-	draw.UseNewPalettes = true;
 	draw.ColorMode = ::gpk::GUI_COLOR_MODE_Default;
 	app.GUI.Controls.Text[idControl].Text = text;
 	app.GUI.Controls.Text[idControl].FontSelected = font;
 	rtrn 0;
 }
 
-sttc void sampleGUIThemeApply(SSampleGUI & app) nxpt {
-	::sampleGUIThemeApply(app.GUI, app.Theme);
-	for(::gpk::u0_t iTheme = 0; iTheme < THEME_COUNT; ++iTheme)
-		app.GUI.Controls.SetSelected(app.ControlsTheme[iTheme], app.Theme == iTheme);
-}
-
 sttc void sampleGUIStateCardsApply(SSampleGUI & app) nxpt {
 	for(::gpk::u0_t iState = 0; iState < STATE_COUNT; ++iState) {
-		::gpk::SControlState & state = app.GUI.Controls.States[app.ControlsState[iState]];
+		::gpk::SControlState & state = app.GUI.Controls.States[::gpk::controlGridControl(app.GridStates, iState)];
 		cnst ::gpk::GUI_CONTROL_FLAG updated = (::gpk::GUI_CONTROL_FLAG)(state.Flag & ::gpk::GUI_CONTROL_FLAG_Updated);
 		state.Flag = (::gpk::GUI_CONTROL_FLAG)(updated | ::sampleGUIStateFlags(iState));
+	}
+}
+
+sttc ::gpk::u2_t sampleGUIPaletteToneCount(cnst SSampleGUI & app) nxpt {
+	if(!app.GUI.Colors || !app.GUI.Colors->ControlThemes)
+		rtrn 0;
+	rtrn app.GUI.Colors->ControlThemes->size() / PALETTE_SHADE_COUNT;
+}
+
+sttc void sampleGUIPalettePickerApply(SSampleGUI & app) nxpt {
+	cnst ::gpk::u2_t toneCount = ::sampleGUIPaletteToneCount(app);
+	if(0 == toneCount)
+		rtrn;
+	app.PaletteTone %= toneCount;
+	app.PaletteShade %= PALETTE_SHADE_COUNT;
+	app.GUI.ThemeDefault = (::gpk::u1_t)(app.PaletteTone * PALETTE_SHADE_COUNT + app.PaletteShade);
+	for(::gpk::u2_t iTone = 0; iTone < toneCount; ++iTone) {
+		cnst ::gpk::cid_t idControl = ::gpk::controlGridControl(app.GridPaletteTones, iTone);
+		app.GUI.Controls.Draw[idControl].ColorTheme = (::gpk::s1_t)(iTone * PALETTE_SHADE_COUNT + app.PaletteShade + 1);
+		app.GUI.Controls.SetSelected(idControl, iTone == app.PaletteTone);
+	}
+	for(::gpk::u2_t iShade = 0; iShade < PALETTE_SHADE_COUNT; ++iShade) {
+		cnst ::gpk::cid_t idControl = ::gpk::controlGridControl(app.GridPaletteShades, iShade);
+		app.GUI.Controls.Draw[idControl].ColorTheme = (::gpk::s1_t)(app.PaletteTone * PALETTE_SHADE_COUNT + iShade + 1);
+		app.GUI.Controls.SetSelected(idControl, iShade == app.PaletteShade);
 	}
 }
 
@@ -282,6 +205,9 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 	}
 	if_fail_fe(idViewport = ::gpk::viewportCreate(*app.Dialog, viewport));
 	::gpk::SControlTable & controls = app.GUI.Controls;
+	controls.Draw[viewport->IdGUIControl      ].UseNewPalettes = false;
+	controls.Draw[viewport->IdClose           ].UseNewPalettes = false;
+	controls.Draw[viewport->IdResizeBottomRight].UseNewPalettes = false;
 	::gpk::SControlPlacement & root = controls.Placement[viewport->IdGUIControl];
 	root.Area = area;
 	root.Border = {3, 3, 3, 3};
@@ -298,35 +224,48 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 ::gpk::err_t sampleGUISetup(SSampleGUI & app) {
 	app.GUI.SelectedFont = FONT_BODY;
 	app.GUI.ColorModeDefault = ::gpk::GUI_COLOR_MODE_3D;
-	if_fail_fe(::sampleGUIResourcesCreate(app.GUI));
+	::gpk::pobj<::gpk::SDialogViewport> viewportPalette = {};
+	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportPalette, viewportPalette, "PALETTE", {{20, 18}, {300, 104}}));
+	cnst ::gpk::u2_t toneCount = ::sampleGUIPaletteToneCount(app);
+	if_true_fe(0 == toneCount);
+	app.PaletteTone = toneCount >= 3 ? toneCount - 3 : 0;
+	app.PaletteShade = 8;
+	::gpk::aobj<::gpk::vcst_t> toneTexts = {};
+	::gpk::aobj<::gpk::vcst_t> shadeTexts = {};
+	if_fail_fe(toneTexts.resize(toneCount));
+	if_fail_fe(shadeTexts.resize(PALETTE_SHADE_COUNT));
+	if_fail_fe(::gpk::controlGridCreate(app.GUI, app.GridPaletteTones, ::gpk::view<::gpk::vcst_t>{toneTexts}, PALETTE_TONE_COLUMNS, {16, 16}, {1, 1}, viewportPalette->IdClient));
+	if_fail_fe(::gpk::controlGridCreate(app.GUI, app.GridPaletteShades, ::gpk::view<::gpk::vcst_t>{shadeTexts}, 8, {16, 16}, {1, 1}, viewportPalette->IdClient));
+	app.GUI.Controls.Placement[app.GridPaletteTones.IdControl].Area.Offset = {4, 4};
+	app.GUI.Controls.Placement[app.GridPaletteShades.IdControl].Area.Offset = {157, 4};
 	::gpk::pobj<::gpk::SDialogViewport> viewportStates = {};
 	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportStates, viewportStates, "CONTROL STATES", {{20, 120}, {360, 214}}));
-	::gpk::pobj<::gpk::SDialogViewport> viewportPresets = {};
-	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportPresets, viewportPresets, "PALETTE PRESETS", {{20, 18}, {270, 74}}));
 
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlMode, "Mode: 3D", {{720, 18}, {184, 42}}, FONT_BODY));
-	for(::gpk::u0_t iTheme = 0; iTheme < THEME_COUNT; ++iTheme) {
-		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsTheme[iTheme], ::sampleGUIThemeText(iTheme), {{(::gpk::s1_t)(4 + 84 * iTheme), 4}, {84, 27}}, FONT_BODY, ::gpk::ALIGN_TOP_LEFT));
-		if_fail_fe(::gpk::controlSetParent(app.GUI, app.ControlsTheme[iTheme], viewportPresets->IdClient));
-	}
-
+	::gpk::astatic<::gpk::vcst_t, STATE_COUNT> stateTexts = {};
 	for(::gpk::u0_t iState = 0; iState < STATE_COUNT; ++iState) {
-		cnst ::gpk::s1_t x = (::gpk::s1_t)(8 + 180 * (iState % 2));
-		cnst ::gpk::s1_t y = (::gpk::s1_t)(6 + 42 * (iState / 2));
 		::gpk::SControlState state = {};
 		state.Flag = ::sampleGUIStateFlags(iState);
 		::gpk::string stateText = {};
 		if_fail_fe(::sampleGUIStateDescribe(state, state.IsDisabled(), stateText));
 		cnst ::gpk::vcst_t stateTextView = {stateText.begin(), stateText.size()};
 		cnst ::gpk::label stateLabel = stateTextView;
-		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsState[iState], stateLabel, {{x, y}, {156, 36}}, FONT_BODY));
-		if_fail_fe(::gpk::controlSetParent(app.GUI, app.ControlsState[iState], viewportStates->IdClient));
+		stateTexts[iState] = stateLabel;
+	}
+	if_fail_fe(::gpk::controlGridCreate(app.GUI, app.GridStates, ::gpk::view<::gpk::vcst_t>{stateTexts}, 2, {156, 36}, {24, 6}, viewportStates->IdClient));
+	app.GUI.Controls.Placement[app.GridStates.IdControl].Area.Offset = {8, 6};
+	for(::gpk::u0_t iState = 0; iState < STATE_COUNT; ++iState) {
+		cnst ::gpk::cid_t idControl = ::gpk::controlGridControl(app.GridStates, iState);
+		app.GUI.Controls.Placement[idControl].Margin = {2, 2, 2, 2};
+		app.GUI.Controls.Placement[idControl].Border = {3, 3, 3, 3};
+		app.GUI.Controls.Text[idControl].FontSelected = FONT_BODY;
+		app.GUI.Controls.Draw[idControl].ColorMode = ::gpk::GUI_COLOR_MODE_Default;
 	}
 	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorLive, "LIVE", {{24, 68}, {286, 134}}));
 	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorHovered, "HOVERED", {{323, 68}, {286, 134}}));
 	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorFocused, "FOCUSED", {{622, 68}, {286, 134}}));
 	app.ControlLive = app.InspectorLive.IdTitle;
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlHelp, "TAB FOCUS | ENTER/SPACE ACTIVATE | ESC/EXIT CLOSE | PALETTES SHARE ONE 16-SHADE TONE", {{136, 18}, {772, 36}}, FONT_BODY, ::gpk::ALIGN_BOTTOM_LEFT));
+	if_fail_fe(::sampleGUIControlCreate(app, app.ControlHelp, "TAB FOCUS | ENTER/SPACE ACTIVATE | ESC/EXIT CLOSE", {{136, 18}, {772, 36}}, FONT_BODY, ::gpk::ALIGN_BOTTOM_LEFT));
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlExit, "EXIT", {{24, 18}, {96, 36}}, FONT_BODY, ::gpk::ALIGN_BOTTOM_LEFT));
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlAlignmentTitle, "CONTROL / TEXT ALIGNMENT", {{24, 18}, {332, 42}}, FONT_BODY, ::gpk::ALIGN_TOP_RIGHT));
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlAlignmentRoot, "", {{24, 76}, {332, 446}}, -1, ::gpk::ALIGN_TOP_RIGHT));
@@ -336,13 +275,10 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 		if_fail_fe(::gpk::controlSetParent(app.GUI, app.ControlsAlignment[iAlignment], app.ControlAlignmentRoot));
 	}
 	app.ControlsKeyboard[0] = app.ControlMode;
-	for(::gpk::u0_t iTheme = 0; iTheme < THEME_COUNT; ++iTheme) {
-		app.ControlsKeyboard[1 + iTheme] = app.ControlsTheme[iTheme];
-	}
-	app.ControlsKeyboard[4] = app.ControlLive;
-	app.ControlsKeyboard[5] = app.ControlExit;
+	app.ControlsKeyboard[1] = app.ControlLive;
+	app.ControlsKeyboard[2] = app.ControlExit;
 
-	::sampleGUIThemeApply(app);
+	::sampleGUIPalettePickerApply(app);
 	::sampleGUIStateCardsApply(app);
 	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorLive, app.ControlLive));
 	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorHovered, ::gpk::CID_INVALID));
@@ -357,15 +293,19 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 		rtrn ::gpk::APPLICATION_STATE_EXIT;
 	if(app.GUI.Controls.IsAction(app.ControlMode))
 		app.GUI.ColorModeDefault = app.GUI.ColorModeDefault == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_Flat : ::gpk::GUI_COLOR_MODE_3D;
-	for(::gpk::u0_t iTheme = 0; iTheme < THEME_COUNT; ++iTheme)
-		if(app.GUI.Controls.IsAction(app.ControlsTheme[iTheme]))
-			app.Theme = iTheme;
+	cnst ::gpk::u2_t toneCount = ::sampleGUIPaletteToneCount(app);
+	for(::gpk::u2_t iTone = 0; iTone < toneCount; ++iTone)
+		if(app.GUI.Controls.IsAction(::gpk::controlGridControl(app.GridPaletteTones, iTone)))
+			app.PaletteTone = iTone;
+	for(::gpk::u2_t iShade = 0; iShade < PALETTE_SHADE_COUNT; ++iShade)
+		if(app.GUI.Controls.IsAction(::gpk::controlGridControl(app.GridPaletteShades, iShade)))
+			app.PaletteShade = iShade;
 	if(app.GUI.Controls.IsAction(app.ControlLive))
 		app.GUI.Controls.SetSelected(app.ControlLive, false == app.GUI.Controls.IsSelected(app.ControlLive));
 	cnst ::gpk::cid_t idHovered = ::sampleGUIHoveredControl(app);
 	cnst ::gpk::cid_t idFocused = ::sampleGUIFocusedControl(app);
 	if_fail_fe(::gpk::controlTextSet(app.GUI, app.ControlMode, app.GUI.ColorModeDefault == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::vcst_t{"Mode: 3D"} : ::gpk::vcst_t{"Mode: Flat"}));
-	::sampleGUIThemeApply(app);
+	::sampleGUIPalettePickerApply(app);
 	::sampleGUIStateCardsApply(app);
 	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorLive, app.ControlLive));
 	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorHovered, idHovered));
@@ -386,9 +326,7 @@ stct SApplication {
 	SSampleGUI			Sample;
 
 	SApplication(::gpk::SRuntimeValues & runtimeValues)
-		: Framework(runtimeValues, {}), Sample(Framework.RootWindow, Framework.GUI) {
-		if_fail_e(::gpk::rasterFontDefaults(Sample.Engine.Scene->Graphics->Fonts));
-	}
+		: Framework(runtimeValues, {}), Sample(Framework.RootWindow, Framework.GUI) {}
 };
 
 ::gpk::err_t setup(SApplication & app) {

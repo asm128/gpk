@@ -71,20 +71,20 @@ nmsp gpk
 			if_fail_fe(result = base64Encode(*(vcu0_t*)&inputView, *(au0_t*)&outputStorage));
 		return result;
 	}																	 
-	stin	err_t	base64Encode	(vcu0_c & in_binary, asc_t & out_base64) { rtrn base64Encode		(in_binary, *(au0_t*)&out_base64); }
-	stin	err_t	base64EncodeFS	(vcu0_c & in_binary, asc_t & out_base64) { rtrn base64EncodeFS		(in_binary, *(au0_t*)&out_base64); }
-	stin	err_t	base64Encode	(vcsc_c & in_binary, asc_t & out_base64) { rtrn base64Encode		(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
-	stin	err_t	base64EncodeFS	(vcsc_c & in_binary, asc_t & out_base64) { rtrn base64EncodeFS		(*(vcu0_t*)&in_binary, *(au0_t*)&out_base64); }
+	stin	err_t	base64Encode	(vcu0_c & in_binary, asc_t & out_base64) { rtrn base64Encode		(in_binary, *(au0_t*)(void*)&out_base64); }
+	stin	err_t	base64EncodeFS	(vcu0_c & in_binary, asc_t & out_base64) { rtrn base64EncodeFS		(in_binary, *(au0_t*)(void*)&out_base64); }
+	stin	err_t	base64Encode	(vcsc_c & in_binary, asc_t & out_base64) { rtrn base64Encode		(in_binary.bytes(), *(au0_t*)(void*)&out_base64); }
+	stin	err_t	base64EncodeFS	(vcsc_c & in_binary, asc_t & out_base64) { rtrn base64EncodeFS		(in_binary.bytes(), *(au0_t*)(void*)&out_base64); }
+	
+	stin	err_t	base64Decode	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64Decode		(in_base64.bytes(), out_binary	); }
+	stin	err_t	base64DecodeFS	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64DecodeFS	(in_base64.bytes(), out_binary	); }
+	stin	err_t	base64Decode	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64Decode		(in_base64.bytes(), *(au0_t*)(void*)&out_binary); }
+	stin	err_t	base64DecodeFS	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64DecodeFS	(in_base64.bytes(), *(au0_t*)(void*)&out_binary); }
 
-	stin	err_t	base64Decode	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64Decode		(*(vcu0_t*)&in_base64, out_binary	); }
-	stin	err_t	base64DecodeFS	(vcst_t in_base64	, au0_t  & out_binary) { rtrn base64DecodeFS	(*(vcu0_t*)&in_base64, out_binary	); }
-	stin	err_t	base64Decode	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64Decode		(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
-	stin	err_t	base64DecodeFS	(vcst_t in_base64	, asc_t  & out_binary) { rtrn base64DecodeFS	(*(vcu0_t*)&in_base64, *(au0_t*)&out_binary); }
-
-	stin	err_t	base64Encode	(vcsc_c & in_binary, au0_t & out_base64) { rtrn base64Encode		(*(vcu0_t*)&in_binary, out_base64	); }
-	stin	err_t	base64Decode	(vcu0_c & in_base64, asc_t & out_binary) { rtrn base64Decode		(in_base64, *(au0_t*)&out_binary	); }
-	stin	err_t	base64EncodeFS	(vcsc_c & in_binary, au0_t & out_base64) { rtrn base64EncodeFS		(*(vcu0_t*)&in_binary, out_base64	); }
-	stin	err_t	base64DecodeFS	(vcu0_c & in_base64, asc_t & out_binary) { rtrn base64DecodeFS		(in_base64, *(au0_t*)&out_binary	); }
+	stin	err_t	base64Encode	(vcsc_c & in_binary, au0_t & out_base64) { rtrn base64Encode		(in_binary.bytes(), out_base64	); }
+	stin	err_t	base64Decode	(vcu0_c & in_base64, asc_t & out_binary) { rtrn base64Decode		(in_base64, *(au0_t*)(void*)&out_binary	); }
+	stin	err_t	base64EncodeFS	(vcsc_c & in_binary, au0_t & out_base64) { rtrn base64EncodeFS		(in_binary.bytes(), out_base64	); }
+	stin	err_t	base64DecodeFS	(vcu0_c & in_base64, asc_t & out_binary) { rtrn base64DecodeFS		(in_base64, *(au0_t*)(void*)&out_binary	); }
 
 
 } // nmsp

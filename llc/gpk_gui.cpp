@@ -20,31 +20,18 @@ gpk::err_t 		gpk::controlInvalid			(const ::gpk::SGUI & gui, cid_t iControl)				
 }
 
 static	gpk::err_t paletteSetupDefault			(::gpk::a8bgra & palette, const ::gpk::view<const ::gpk::bgra> & colors, u2_t iShades)	{
+	if_true_fe(0 == iShades);
 	const u2_t				newPaletteSize				= colors.size() * iShades;
 	if(palette.size() < newPaletteSize)
 		if_fail_fe(palette.resize(newPaletteSize));
 
 	for(u2_t iTone = 0; iTone < colors.size(); ++iTone)
-		palette[iTone * iShades]	= colors[iTone];
-
-	for(u2_t iShade = 0; iShade < iShades; ++iShade) {
-		const ::gpk::bgra			& baseColor					= palette[iShade * iShades];
-		::gpk::bgra					& paletteItem				= palette[iShade];
-		paletteItem				= baseColor;
-	}
-
-	for(u2_t iTone = 1; iTone < colors.size(); ++iTone)
 		for(u2_t iShade = 0; iShade < iShades; ++iShade) {
-			if(0 == (iShade % iShades))
-				continue;
-
 			const s2_t				toneIndex					= iTone * iShades;
 			const ::gpk::bgra			& baseColor					= colors[iTone];
 			::gpk::bgra					& paletteItem				= palette[toneIndex + iShade];
 			paletteItem				= ::gpk::rgbaf(baseColor) / (f2_t)iShades * (iShades - (f2_t)iShade);
 			paletteItem.a			= 0xFF;
-			verbose_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
-			verbose_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);
 		}
 
 	return 0;
@@ -161,6 +148,10 @@ static	gpk::err_t initDefaults		(::gpk::pobj<::gpk::a8bgra> & palette, ::gpk::po
 
 		, ::gpk::BROWN
 		, ::gpk::LIGHTORANGE
+		// Additional UI tones. The common generator produces their 16-shade ranges.
+		, ::gpk::SColorBGRA{248, 208,  72} // Azure
+		, ::gpk::SColorBGRA{ 32, 176, 248} // Amber
+		, ::gpk::SColorBGRA{232, 232, 232} // Mono
 	};
 	for(u2_t iColor = 0; iColor < ::gpk::size(paletteColors); ++iColor) 
 		paletteColors[iColor].a = 255;
