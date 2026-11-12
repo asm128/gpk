@@ -2,6 +2,8 @@
 #include "gpk_app_impl.h"
 #include "gpk_cstring.h"
 #include "gpk_framework.h"
+#include "gpk_dialog_controls.h"
+#include "gpk_label.h"
 #include "gpk_runtime.h"
 #include "gpk_string.h"
 #include "gpk_string_compose.h"
@@ -12,41 +14,23 @@ stxp ::gpk::u0_t PALETTE_SHADE_COUNT = 16;
 stxp ::gpk::u0_t THEME_COUNT = SAMPLE_GUI_THEME_COUNT;
 stxp ::gpk::u0_t STATE_COUNT = 8;
 stxp ::gpk::u0_t ALIGNMENT_COUNT = 9;
+stxp ::gpk::s1_t FONT_BODY = 6; // 8x12
+stxp ::gpk::s1_t FONT_TITLE = 7; // 8x16
 
 GDEFINE_ENUM_TYPE(SAMPLE_GUI_THEME, ::gpk::u0_t);
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, AZURE, 0, "Palette: Azure");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, AMBER, 1, "Palette: Amber");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, MONO , 2, "Palette: Mono");
+GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, AZURE, 0, "Azure");
+GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, AMBER, 1, "Amber");
+GDEFINE_ENUM_VALUED(SAMPLE_GUI_THEME, MONO , 2, "Mono");
 
-GDEFINE_ENUM_TYPE(SAMPLE_GUI_STATE, ::gpk::u0_t);
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, NORMAL           , 0                                                                  , "NORMAL");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, HOVERED          , ::gpk::GUI_CONTROL_FLAG_Hovered                                    , "HOVERED");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, PRESSED          , ::gpk::GUI_CONTROL_FLAG_Pressed                                    , "PRESSED");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, DISABLED         , ::gpk::GUI_CONTROL_FLAG_Disabled                                   , "DISABLED");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, SELECTED         , ::gpk::GUI_CONTROL_FLAG_Selected                                   , "SELECTED");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, SELECTED_HOVERED , ::gpk::GUI_CONTROL_FLAG_Selected | ::gpk::GUI_CONTROL_FLAG_Hovered, "SELECTED + HOVERED");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, SELECTED_PRESSED , ::gpk::GUI_CONTROL_FLAG_Selected | ::gpk::GUI_CONTROL_FLAG_Pressed, "SELECTED + PRESSED");
-GDEFINE_ENUM_VALUED(SAMPLE_GUI_STATE, SELECTED_DISABLED, ::gpk::GUI_CONTROL_FLAG_Selected | ::gpk::GUI_CONTROL_FLAG_Disabled, "SELECTED + DISABLED");
-GDEFINE_ENUM_VALUE (SAMPLE_GUI_STATE, FOCUSED          , ::gpk::GUI_CONTROL_FLAG_Focused);
-GDEFINE_ENUM_VALUE (SAMPLE_GUI_STATE, ACTION           , ::gpk::GUI_CONTROL_FLAG_Action);
-
-GDEFINE_ENUM_TYPE(SAMPLE_GUI_ALIGNMENT, ::gpk::u0_t);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, TOP_LEFT     , ::gpk::ALIGN_TOP_LEFT);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, CENTER_TOP   , ::gpk::ALIGN_CENTER_TOP);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, TOP_RIGHT    , ::gpk::ALIGN_TOP_RIGHT);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, CENTER_LEFT  , ::gpk::ALIGN_CENTER_LEFT);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, CENTER       , ::gpk::ALIGN_CENTER);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, CENTER_RIGHT , ::gpk::ALIGN_CENTER_RIGHT);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, BOTTOM_LEFT  , ::gpk::ALIGN_BOTTOM_LEFT);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, CENTER_BOTTOM, ::gpk::ALIGN_CENTER_BOTTOM);
-GDEFINE_ENUM_VALUE(SAMPLE_GUI_ALIGNMENT, BOTTOM_RIGHT , ::gpk::ALIGN_BOTTOM_RIGHT);
+GDEFINE_ENUM_TYPE(SAMPLE_GUI_INSPECTOR_FIELD, ::gpk::u0_t);
+GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, ID     , 0);
+GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, STATE  , 1);
+GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, PALETTE, 2);
+GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, ALIGN  , 3);
+GDEFINE_ENUM_VALUE(SAMPLE_GUI_INSPECTOR_FIELD, TEXT   , 4);
 
 sttc ::gpk::vcst_t sampleGUIThemeText(::gpk::u0_t theme) {
 	rtrn ::gpk::get_value_descv((SAMPLE_GUI_THEME)(theme % SAMPLE_GUI_THEME_COUNT));
-}
-
-sttc ::gpk::vcst_t sampleGUIThemeName(::gpk::u0_t theme) {
-	rtrn ::gpk::get_value_namev((SAMPLE_GUI_THEME)(theme % SAMPLE_GUI_THEME_COUNT));
 }
 
 sttc ::gpk::SColorBGRA sampleGUIThemeColor(::gpk::u0_t theme) nxpt {
@@ -134,16 +118,26 @@ sttc void sampleGUIThemeApply(::gpk::SGUI & gui, ::gpk::u0_t theme) nxpt {
 		::sampleGUIControlThemeApply(gui, (::gpk::cid_t)iControl, theme);
 }
 
-sttc ::gpk::vcst_t sampleGUIStateText(::gpk::u0_t state) {
-	rtrn ::gpk::get_value_descv(::gpk::get_enum<SAMPLE_GUI_STATE>().get_value_by_index(state < STATE_COUNT ? state : 0));
+sttc ::gpk::ALIGN sampleGUIControlAlignment(::gpk::u0_t alignment) nxpt {
+	stxp ::gpk::ALIGN horizontal[] = {::gpk::ALIGN_LEFT, ::gpk::ALIGN_HCENTER, ::gpk::ALIGN_RIGHT};
+	stxp ::gpk::ALIGN vertical  [] = {::gpk::ALIGN_TOP , ::gpk::ALIGN_VCENTER, ::gpk::ALIGN_BOTTOM};
+	rtrn horizontal[alignment % 3] | vertical[(alignment / 3) % 3];
 }
 
-sttc ::gpk::ALIGN	sampleGUIControlAlignment	(::gpk::u0_t alignment) nxpt	{ rtrn (::gpk::ALIGN)::gpk::get_enum<SAMPLE_GUI_ALIGNMENT>().get_value_by_index(alignment % ALIGNMENT_COUNT); }
-sttc ::gpk::ALIGN	sampleGUITextAlignment		(::gpk::u0_t alignment) nxpt	{ rtrn (::gpk::ALIGN)::gpk::get_enum<SAMPLE_GUI_ALIGNMENT>().get_value_by_index(ALIGNMENT_COUNT - 1 - alignment % ALIGNMENT_COUNT); }
-sttc ::gpk::vcst_t	sampleGUIAlignmentText		(::gpk::u0_t alignment)			{ rtrn ::gpk::get_enum<SAMPLE_GUI_ALIGNMENT>().get_label_by_index(alignment % ALIGNMENT_COUNT); }
+sttc ::gpk::ALIGN	sampleGUITextAlignment	(::gpk::u0_t alignment) nxpt	{ rtrn ::sampleGUIControlAlignment((::gpk::u0_t)(ALIGNMENT_COUNT - 1 - alignment % ALIGNMENT_COUNT)); }
+sttc ::gpk::vcst_t	sampleGUIAlignmentText	(::gpk::u0_t alignment)			{ rtrn ::gpk::get_value_namev(::sampleGUIControlAlignment(alignment)); }
 
 sttc ::gpk::GUI_CONTROL_FLAG sampleGUIStateFlags(::gpk::u0_t state) nxpt {
-	rtrn (::gpk::GUI_CONTROL_FLAG)::gpk::get_enum<SAMPLE_GUI_STATE>().get_value_by_index(state < STATE_COUNT ? state : 0);
+	switch(state % STATE_COUNT) {
+	default: rtrn {};
+	case 1: rtrn ::gpk::GUI_CONTROL_FLAG_Hovered;
+	case 2: rtrn ::gpk::GUI_CONTROL_FLAG_Pressed;
+	case 3: rtrn ::gpk::GUI_CONTROL_FLAG_Disabled;
+	case 4: rtrn ::gpk::GUI_CONTROL_FLAG_Selected;
+	case 5: rtrn ::gpk::GUI_CONTROL_FLAG_Selected | ::gpk::GUI_CONTROL_FLAG_Hovered;
+	case 6: rtrn ::gpk::GUI_CONTROL_FLAG_Selected | ::gpk::GUI_CONTROL_FLAG_Pressed;
+	case 7: rtrn ::gpk::GUI_CONTROL_FLAG_Selected | ::gpk::GUI_CONTROL_FLAG_Disabled;
+	}
 }
 
 sttc ::gpk::GUI_CONTROL_PALETTE sampleGUIControlPalette(bool disabled, cnst ::gpk::SControlState & state) nxpt {
@@ -197,14 +191,14 @@ sttc ::gpk::err_t sampleGUIStateFlagAppend(::gpk::string & text, ::gpk::vcst_t f
 
 sttc ::gpk::err_t sampleGUIStateDescribe(cnst ::gpk::SControlState & state, bool disabled, ::gpk::string & text) {
 	text.clear();
-	if(state.IsSelected()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(SAMPLE_GUI_STATE_SELECTED)));
-	if(state.IsHovered ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(SAMPLE_GUI_STATE_HOVERED )));
-	if(state.IsPressed ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(SAMPLE_GUI_STATE_PRESSED )));
-	if(state.IsFocused ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(SAMPLE_GUI_STATE_FOCUSED )));
-	if(disabled          ) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(SAMPLE_GUI_STATE_DISABLED)));
-	if(state.IsAction  ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(SAMPLE_GUI_STATE_ACTION  )));
+	if(state.IsSelected()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(::gpk::GUI_CONTROL_FLAG_Selected)));
+	if(state.IsHovered ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(::gpk::GUI_CONTROL_FLAG_Hovered )));
+	if(state.IsPressed ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(::gpk::GUI_CONTROL_FLAG_Pressed )));
+	if(state.IsFocused ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(::gpk::GUI_CONTROL_FLAG_Focused )));
+	if(disabled          ) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(::gpk::GUI_CONTROL_FLAG_Disabled)));
+	if(state.IsAction  ()) if_fail_fe(::sampleGUIStateFlagAppend(text, ::gpk::get_value_namev(::gpk::GUI_CONTROL_FLAG_Action  )));
 	if(0 == text.size())
-		if_fail_fe(::gpk::append_string(text, ::gpk::get_value_namev(SAMPLE_GUI_STATE_NORMAL)));
+		if_fail_fe(::gpk::append_string(text, ::gpk::get_value_namev(::gpk::GUI_CONTROL_PALETTE_NORMAL)));
 	rtrn text.size();
 }
 
@@ -218,11 +212,6 @@ sttc ::gpk::err_t sampleGUIControlTextSetOwned(SSampleGUI & app, ::gpk::cid_t id
 	rtrn ::gpk::controlTextSet(app.GUI, idControl, {storage.Storage, text.size()});
 }
 
-sttc ::gpk::vcst_t sampleGUIControlName(cnst SSampleGUI & app, ::gpk::cid_t idControl) {
-
-	rtrn app.GUI.Controls.Text[idControl].Text;
-}
-
 sttc ::gpk::cid_t sampleGUIHoveredControl(cnst SSampleGUI & app) nxpt {
 	for(::gpk::u2_t iControl = 0; iControl < app.GUI.Controls.States.size(); ++iControl)
 		if(false == ::gpk::controlInvalid(app.GUI, (::gpk::cid_t)iControl) && app.GUI.Controls.IsHovered((::gpk::cid_t)iControl))
@@ -230,68 +219,119 @@ sttc ::gpk::cid_t sampleGUIHoveredControl(cnst SSampleGUI & app) nxpt {
 	rtrn ::gpk::CID_INVALID;
 }
 
-sttc ::gpk::err_t sampleGUILiveTextUpdate(SSampleGUI & app) {
-	cnst ::gpk::SControlState & state = app.GUI.Controls.States[app.ControlLive];
-	cnst bool disabled = 0 != ::gpk::controlDisabled(app.GUI, app.ControlLive);
+sttc ::gpk::cid_t sampleGUIFocusedControl(cnst SSampleGUI & app) nxpt {
+	for(::gpk::u2_t iControl = 0; iControl < app.GUI.Controls.States.size(); ++iControl)
+		if(false == ::gpk::controlInvalid(app.GUI, (::gpk::cid_t)iControl) && app.GUI.Controls.IsFocused((::gpk::cid_t)iControl))
+			rtrn (::gpk::cid_t)iControl;
+	rtrn ::gpk::CID_INVALID;
+}
+
+sttc ::gpk::err_t sampleGUIInspectorCreate(SSampleGUI & app, SSampleGUIInspector & inspector, ::gpk::vcst_t title, cnst ::gpk::rect2s1_t & area) {
+	if_fail_fe(::sampleGUIControlCreate(app, inspector.IdRoot, "", area, -1));
+	app.GUI.Controls.Placement[inspector.IdRoot].Align = ::gpk::ALIGN_BOTTOM_LEFT;
+	cnst ::gpk::s1_t clientWidth = (::gpk::s1_t)(area.Size.x - ::gpk::controlNCSpacing(app.GUI.Controls.Placement[inspector.IdRoot]).x);
+	if_fail_fe(::sampleGUIControlCreate(app, inspector.IdTitle, title, {{0, 0}, {clientWidth, 30}}, FONT_BODY));
+	if_fail_fe(::gpk::controlSetParent(app.GUI, inspector.IdTitle, inspector.IdRoot));
+	::gpk::enum_definition<SAMPLE_GUI_INSPECTOR_FIELD> & fields = ::gpk::get_enum<SAMPLE_GUI_INSPECTOR_FIELD>();
+	if_fail_fe(::gpk::controlListCreate(app.GUI, inspector.Names, {fields.Names}, inspector.IdRoot, ::gpk::DIRECTION_DOWN));
+	sttc cnst ::gpk::vcst_t emptyValues[] = {"NONE", "-", "-", "-", "-"};
+	if_fail_fe(::gpk::controlListCreate(app.GUI, inspector.Values, {emptyValues}, inspector.IdRoot, ::gpk::DIRECTION_DOWN));
+	app.GUI.Controls.Placement[inspector.Names.IdControl].Area = {{0, 34}, {88, 90}};
+	app.GUI.Controls.Placement[inspector.Values.IdControl].Area = {{88, 34}, {(::gpk::s1_t)(clientWidth - 88), 90}};
+	for(::gpk::u0_t iControl = 0; iControl < fields.Names.size(); ++iControl) {
+		app.GUI.Controls.Text[inspector.Names.IdControls[iControl]].Align = ::gpk::ALIGN_CENTER_RIGHT;
+		app.GUI.Controls.Text[inspector.Values.IdControls[iControl]].Align = ::gpk::ALIGN_CENTER_LEFT;
+	}
+	rtrn 0;
+}
+
+sttc ::gpk::err_t sampleGUIInspectorValueSet(SSampleGUI & app, SSampleGUIInspector & inspector, SAMPLE_GUI_INSPECTOR_FIELD field, ::gpk::vcst_t value) {
+	rtrn ::sampleGUIControlTextSetOwned(app, inspector.Values.IdControls[field], inspector.TextValues[field], value);
+}
+
+sttc ::gpk::err_t sampleGUIInspectorUpdate(SSampleGUI & app, SSampleGUIInspector & inspector, ::gpk::cid_t idControl) {
+	if(::gpk::controlInvalid(app.GUI, idControl)) {
+		if_fail_fe(::sampleGUIInspectorValueSet(app, inspector, SAMPLE_GUI_INSPECTOR_FIELD_ID, "NONE"));
+		for(::gpk::u0_t iField = SAMPLE_GUI_INSPECTOR_FIELD_STATE; iField <= SAMPLE_GUI_INSPECTOR_FIELD_TEXT; ++iField)
+			if_fail_fe(::sampleGUIInspectorValueSet(app, inspector, (SAMPLE_GUI_INSPECTOR_FIELD)iField, "-"));
+		rtrn 0;
+	}
+	cnst ::gpk::SControlState & state = app.GUI.Controls.States[idControl];
+	cnst bool disabled = 0 != ::gpk::controlDisabled(app.GUI, idControl);
 	::gpk::string stateText = {};
 	if_fail_fe(::sampleGUIStateDescribe(state, disabled, stateText));
 	cnst ::gpk::GUI_CONTROL_PALETTE palette = ::sampleGUIControlPalette(disabled, state);
 	cnst ::gpk::vcst_t paletteName = ::gpk::get_value_namev(palette);
-	cnst ::gpk::s1_t paletteSlot = app.GUI.Controls.Draw[app.ControlLive].Palettes[palette];
+	cnst ::gpk::s1_t paletteSlot = app.GUI.Controls.Draw[idControl].Palettes[palette];
 	::gpk::astsc_t<512> text = {};
-	cnst ::gpk::err_t length = ::gpk::sprintf_s(text.Storage, "LIVE | STATE:%.*s | PALETTE:%.*s [%i] | CLICK TO TOGGLE SELECTED", (int)stateText.size(), stateText.begin(), (int)paletteName.size(), paletteName.begin(), paletteSlot);
+	::gpk::err_t length = ::gpk::sprintf_s(text.Storage, "#%i", idControl);
 	if_fail_fe(length);
-	rtrn ::sampleGUIControlTextSetOwned(app, app.ControlLive, app.TextLive, {text.Storage, (::gpk::u2_t)length});
+	if_fail_fe(::sampleGUIInspectorValueSet(app, inspector, SAMPLE_GUI_INSPECTOR_FIELD_ID, {text.Storage, (::gpk::u2_t)length}));
+	if_fail_fe(::sampleGUIInspectorValueSet(app, inspector, SAMPLE_GUI_INSPECTOR_FIELD_STATE, stateText));
+	if_fail_fe(length = ::gpk::sprintf_s(text.Storage, "%.*s [%i]", (int)paletteName.size(), paletteName.begin(), paletteSlot));
+	if_fail_fe(::sampleGUIInspectorValueSet(app, inspector, SAMPLE_GUI_INSPECTOR_FIELD_PALETTE, {text.Storage, (::gpk::u2_t)length}));
+	if_fail_fe(::sampleGUIInspectorValueSet(app, inspector, SAMPLE_GUI_INSPECTOR_FIELD_ALIGN, ::gpk::get_value_namev(app.GUI.Controls.Placement[idControl].Align)));
+	rtrn ::sampleGUIInspectorValueSet(app, inspector, SAMPLE_GUI_INSPECTOR_FIELD_TEXT, ::gpk::get_value_namev(app.GUI.Controls.Text[idControl].Align));
 }
 
-sttc ::gpk::err_t sampleGUIInspectorTextUpdate(SSampleGUI & app, ::gpk::cid_t idHovered) {
-	cnst ::gpk::vcst_t themeName = ::sampleGUIThemeName(app.Theme);
-	cnst ::gpk::vcst_t modeName = app.GUI.ColorModeDefault == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::vcst_t{"3D"} : ::gpk::vcst_t{"FLAT"};
-	::gpk::astsc_t<512> text = {};
-	::gpk::err_t length = 0;
-	if(::gpk::controlInvalid(app.GUI, idHovered))
-		length = ::gpk::sprintf_s(text.Storage, "GUI | THEME:%.*s | MODE:%.*s | HOVER:NONE", (int)themeName.size(), themeName.begin(), (int)modeName.size(), modeName.begin());
-	else {
-		cnst ::gpk::SControlState & state = app.GUI.Controls.States[idHovered];
-		cnst bool disabled = 0 != ::gpk::controlDisabled(app.GUI, idHovered);
-		::gpk::string stateText = {};
-		if_fail_fe(::sampleGUIStateDescribe(state, disabled, stateText));
-		cnst ::gpk::GUI_CONTROL_PALETTE palette = ::sampleGUIControlPalette(disabled, state);
-		cnst ::gpk::vcst_t paletteName = ::gpk::get_value_namev(palette);
-		cnst ::gpk::vcst_t controlName = ::sampleGUIControlName(app, idHovered);
-		cnst ::gpk::vcst_t controlAlignName = ::gpk::get_value_namev(app.GUI.Controls.Placement[idHovered].Align);
-		cnst ::gpk::vcst_t textAlignName = ::gpk::get_value_namev(app.GUI.Controls.Text[idHovered].Align);
-		cnst ::gpk::s1_t paletteSlot = app.GUI.Controls.Draw[idHovered].Palettes[palette];
-		length = ::gpk::sprintf_s(text.Storage, "GUI | THEME:%.*s | MODE:%.*s | HOVER #%i %.*s | STATE:%.*s | PALETTE:%.*s [%i] | ALIGN:%.*s / TEXT:%.*s", (int)themeName.size(), themeName.begin(), (int)modeName.size(), modeName.begin(), idHovered, (int)controlName.size(), controlName.begin(), (int)stateText.size(), stateText.begin(), (int)paletteName.size(), paletteName.begin(), paletteSlot, (int)controlAlignName.size(), controlAlignName.begin(), (int)textAlignName.size(), textAlignName.begin());
+sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idViewport, ::gpk::pobj<::gpk::SDialogViewport> & viewport, ::gpk::vcst_t title, cnst ::gpk::rect2s1_t & area) {
+	if(!app.Dialog) {
+		if(0 == app.Dialog.create(app.GUIHandle))
+			rtrn ::gpk::OS_NO_MEMORY;
+		app.Dialog->Input = app.Window.Input;
 	}
-	if_fail_fe(length);
-	rtrn ::sampleGUIControlTextSetOwned(app, app.ControlInspector, app.TextInspector, {text.Storage, (::gpk::u2_t)length});
+	if_fail_fe(idViewport = ::gpk::viewportCreate(*app.Dialog, viewport));
+	::gpk::SControlTable & controls = app.GUI.Controls;
+	::gpk::SControlPlacement & root = controls.Placement[viewport->IdGUIControl];
+	root.Area = area;
+	root.Border = {3, 3, 3, 3};
+	root.Margin = {1, 1, 1, 1};
+	controls.Text[viewport->IdTitle].Text = title;
+	controls.Text[viewport->IdTitle].FontSelected = FONT_BODY;
+	controls.Placement[viewport->IdTitle].Border = {2, 2, 2, 2};
+	controls.Placement[viewport->IdClient].Area.Size = {(::gpk::s1_t)(area.Size.x - 8), (::gpk::s1_t)(area.Size.y - 32)};
+	controls.Placement[viewport->IdClient].Border = {1, 1, 1, 1};
+	viewport->SettingsOld = viewport->Settings;
+	rtrn ::gpk::controlMetricsInvalidate(app.GUI, viewport->IdGUIControl);
 }
 
 ::gpk::err_t sampleGUISetup(SSampleGUI & app) {
-	app.GUI.SelectedFont = 2;
+	app.GUI.SelectedFont = FONT_BODY;
 	app.GUI.ColorModeDefault = ::gpk::GUI_COLOR_MODE_3D;
 	if_fail_fe(::sampleGUIResourcesCreate(app.GUI));
+	::gpk::pobj<::gpk::SDialogViewport> viewportStates = {};
+	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportStates, viewportStates, "CONTROL STATES", {{20, 120}, {360, 214}}));
+	::gpk::pobj<::gpk::SDialogViewport> viewportPresets = {};
+	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportPresets, viewportPresets, "PALETTE PRESETS", {{20, 18}, {270, 74}}));
 
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlTitle, "LLC GUI CONTROL PALETTES AND STATES", {{24, 18}, {650, 42}}, 3));
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlMode, "Mode: 3D", {{742, 18}, {184, 42}}, 2));
+	if_fail_fe(::sampleGUIControlCreate(app, app.ControlMode, "Mode: 3D", {{720, 18}, {184, 42}}, FONT_BODY));
 	for(::gpk::u0_t iTheme = 0; iTheme < THEME_COUNT; ++iTheme) {
-		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsTheme[iTheme], ::sampleGUIThemeText(iTheme), {{(::gpk::s1_t)(24 + 226 * iTheme), 76}, {206, 40}}, 2));
+		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsTheme[iTheme], ::sampleGUIThemeText(iTheme), {{(::gpk::s1_t)(4 + 84 * iTheme), 4}, {84, 27}}, FONT_BODY, ::gpk::ALIGN_TOP_LEFT));
+		if_fail_fe(::gpk::controlSetParent(app.GUI, app.ControlsTheme[iTheme], viewportPresets->IdClient));
 	}
 
 	for(::gpk::u0_t iState = 0; iState < STATE_COUNT; ++iState) {
-		cnst ::gpk::s1_t x = (::gpk::s1_t)(24 + 226 * (iState % 4));
-		cnst ::gpk::s1_t y = (::gpk::s1_t)(140 + 88 * (iState / 4));
-		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsState[iState], ::sampleGUIStateText(iState), {{x, y}, {206, 68}}, 2));
+		cnst ::gpk::s1_t x = (::gpk::s1_t)(8 + 180 * (iState % 2));
+		cnst ::gpk::s1_t y = (::gpk::s1_t)(6 + 42 * (iState / 2));
+		::gpk::SControlState state = {};
+		state.Flag = ::sampleGUIStateFlags(iState);
+		::gpk::string stateText = {};
+		if_fail_fe(::sampleGUIStateDescribe(state, state.IsDisabled(), stateText));
+		cnst ::gpk::vcst_t stateTextView = {stateText.begin(), stateText.size()};
+		cnst ::gpk::label stateLabel = stateTextView;
+		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsState[iState], stateLabel, {{x, y}, {156, 36}}, FONT_BODY));
+		if_fail_fe(::gpk::controlSetParent(app.GUI, app.ControlsState[iState], viewportStates->IdClient));
 	}
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlLive, "LIVE", {{24, 138}, {884, 64}}, 2, ::gpk::ALIGN_BOTTOM_LEFT));
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlInspector, "GUI | HOVER:NONE", {{24, 68}, {884, 56}}, 1, ::gpk::ALIGN_BOTTOM_LEFT));
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlHelp, "TAB FOCUS | ENTER/SPACE ACTIVATE | ESC/EXIT CLOSE | PALETTES SHARE ONE 16-SHADE TONE", {{136, 18}, {772, 36}}, 1, ::gpk::ALIGN_BOTTOM_LEFT));
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlExit, "EXIT", {{24, 18}, {96, 36}}, 2, ::gpk::ALIGN_BOTTOM_LEFT));
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlAlignmentTitle, "CONTROL ALIGNMENT / OPPOSITE TEXT ALIGNMENT", {{24, 18}, {332, 42}}, 1, ::gpk::ALIGN_TOP_RIGHT));
+	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorLive, "LIVE", {{24, 68}, {286, 134}}));
+	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorHovered, "HOVERED", {{323, 68}, {286, 134}}));
+	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorFocused, "FOCUSED", {{622, 68}, {286, 134}}));
+	app.ControlLive = app.InspectorLive.IdTitle;
+	if_fail_fe(::sampleGUIControlCreate(app, app.ControlHelp, "TAB FOCUS | ENTER/SPACE ACTIVATE | ESC/EXIT CLOSE | PALETTES SHARE ONE 16-SHADE TONE", {{136, 18}, {772, 36}}, FONT_BODY, ::gpk::ALIGN_BOTTOM_LEFT));
+	if_fail_fe(::sampleGUIControlCreate(app, app.ControlExit, "EXIT", {{24, 18}, {96, 36}}, FONT_BODY, ::gpk::ALIGN_BOTTOM_LEFT));
+	if_fail_fe(::sampleGUIControlCreate(app, app.ControlAlignmentTitle, "CONTROL / TEXT ALIGNMENT", {{24, 18}, {332, 42}}, FONT_BODY, ::gpk::ALIGN_TOP_RIGHT));
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlAlignmentRoot, "", {{24, 76}, {332, 446}}, -1, ::gpk::ALIGN_TOP_RIGHT));
 	for(::gpk::u0_t iAlignment = 0; iAlignment < ALIGNMENT_COUNT; ++iAlignment) {
-		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsAlignment[iAlignment], ::sampleGUIAlignmentText(iAlignment), {{0, 0}, {108, 58}}, 1, ::sampleGUIControlAlignment(iAlignment)));
+		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsAlignment[iAlignment], ::sampleGUIAlignmentText(iAlignment), {{0, 0}, {108, 58}}, FONT_BODY, ::sampleGUIControlAlignment(iAlignment)));
 		app.GUI.Controls.Text[app.ControlsAlignment[iAlignment]].Align = ::sampleGUITextAlignment(iAlignment);
 		if_fail_fe(::gpk::controlSetParent(app.GUI, app.ControlsAlignment[iAlignment], app.ControlAlignmentRoot));
 	}
@@ -304,8 +344,9 @@ sttc ::gpk::err_t sampleGUIInspectorTextUpdate(SSampleGUI & app, ::gpk::cid_t id
 
 	::sampleGUIThemeApply(app);
 	::sampleGUIStateCardsApply(app);
-	if_fail_fe(::sampleGUILiveTextUpdate(app));
-	if_fail_fe(::sampleGUIInspectorTextUpdate(app, ::gpk::CID_INVALID));
+	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorLive, app.ControlLive));
+	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorHovered, ::gpk::CID_INVALID));
+	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorFocused, ::gpk::CID_INVALID));
 	rtrn ::gpk::guiUpdateMetrics(app.GUI, app.Window.Size, false);
 }
 
@@ -322,11 +363,14 @@ sttc ::gpk::err_t sampleGUIInspectorTextUpdate(SSampleGUI & app, ::gpk::cid_t id
 	if(app.GUI.Controls.IsAction(app.ControlLive))
 		app.GUI.Controls.SetSelected(app.ControlLive, false == app.GUI.Controls.IsSelected(app.ControlLive));
 	cnst ::gpk::cid_t idHovered = ::sampleGUIHoveredControl(app);
+	cnst ::gpk::cid_t idFocused = ::sampleGUIFocusedControl(app);
 	if_fail_fe(::gpk::controlTextSet(app.GUI, app.ControlMode, app.GUI.ColorModeDefault == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::vcst_t{"Mode: 3D"} : ::gpk::vcst_t{"Mode: Flat"}));
 	::sampleGUIThemeApply(app);
 	::sampleGUIStateCardsApply(app);
-	if_fail_fe(::sampleGUILiveTextUpdate(app));
-	if_fail_fe(::sampleGUIInspectorTextUpdate(app, idHovered));
+	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorLive, app.ControlLive));
+	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorHovered, idHovered));
+	if_fail_fe(::sampleGUIInspectorUpdate(app, app.InspectorFocused, idFocused));
+	if_fail_fe(app.Dialog->Update());
 	rtrn ::gpk::guiUpdateMetrics(app.GUI, app.Window.Size, false);
 }
 
@@ -342,7 +386,7 @@ stct SApplication {
 	SSampleGUI			Sample;
 
 	SApplication(::gpk::SRuntimeValues & runtimeValues)
-		: Framework(runtimeValues, {}), Sample(Framework.RootWindow, *Framework.GUI) {
+		: Framework(runtimeValues, {}), Sample(Framework.RootWindow, Framework.GUI) {
 		if_fail_e(::gpk::rasterFontDefaults(Sample.Engine.Scene->Graphics->Fonts));
 	}
 };
