@@ -177,35 +177,35 @@ gpk::err_t 		gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeVal
 
 	{
 		::gpk::vcst_t					querystring;
-		::gpk::find("QUERY_STRING", environViews, querystring);
-		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
-		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
+		if_fail_fe(::gpk::find("QUERY_STRING", environViews, querystring));
+		if_fail_fe(::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements));
+		if_fail_fe(cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size()));
 		for(u2_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
 			::gpk::kv<vcst_t>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
-			::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
+			if_fail_fe(::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst));
 		}
 	}
 	{
 		::gpk::vcst_t					contentype;
-		::gpk::find("CONTENT_TYPE", environViews, contentype);
+		if_fail_fe(::gpk::find("CONTENT_TYPE", environViews, contentype));
 		if(contentype.size())
-			::cgiLoadContentType(cgiRuntimeValues.Content.Type, contentype);
+			if_fail_fe(::cgiLoadContentType(cgiRuntimeValues.Content.Type, contentype));
 	}
 	{
 		::gpk::vcst_t					remoteIP	;
 		::gpk::vcst_t					remotePORT	;
-		::gpk::find("REMOTE_IP", environViews, remoteIP	);
-		::gpk::find("REMOTE_PORT", environViews, remotePORT	);
-		::cgiLoadAddr(cgiRuntimeValues.RemoteIP, remoteIP, remotePORT);
+		if_fail_fe(::gpk::find("REMOTE_IP", environViews, remoteIP	));
+		if_fail_fe(::gpk::find("REMOTE_PORT", environViews, remotePORT	));
+		if_fail_fe(::cgiLoadAddr(cgiRuntimeValues.RemoteIP, remoteIP, remotePORT));
 	}
 	{
 		::gpk::vcst_t								contentLength;
-		::gpk::find("CONTENT_LENGTH"	, environViews, contentLength);
+		if_fail_fe(::gpk::find("CONTENT_LENGTH"	, environViews, contentLength));
 		cgiRuntimeValues.Content.Length						= 0;
-		::gpk::parseIntegerDecimal(contentLength, cgiRuntimeValues.Content.Length);
+		if_fail_fe(::gpk::parseIntegerDecimal(contentLength, cgiRuntimeValues.Content.Length));
 	}
-	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
-	fread(cgiRuntimeValues.Content.Body.begin(), 1, cgiRuntimeValues.Content.Length, stdin);
+	if_fail_fe(cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length));
+	if_true_fe(cgiRuntimeValues.Content.Length != fread(cgiRuntimeValues.Content.Body.begin(), 1, cgiRuntimeValues.Content.Length, stdin));
 	//memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());
 	//u2_t												iChar							= 0;
 	//int														iArg							= 0;
