@@ -227,7 +227,7 @@ nmsp gpk
 		//
 		inxp				genum_value				()										= default;
 		inxp				genum_value				(const genum_value & other)				= default;
-							genum_value				(const T & value)													: Value((T)value), Name(get_enum<T>().get_value_name(value))		{}
+							genum_value				(const T & value)													: Value((T)value), Name(get_enum<T>().get_value_namev(value))		{}
 #ifndef GPK_ESP8266
 							genum_value				(const T & value, vcst_t name)										: Value((T)value), Name(name), Title(name), Description(name)			{ get_enum<T>().add_value(value, name, name, name);			}
 							genum_value				(const T & value, vcst_t name, vcst_t description)					: Value((T)value), Name(name), Title(name), Description(description)	{ get_enum<T>().add_value(value, name, name, description);	}
@@ -241,11 +241,11 @@ nmsp gpk
 	};
 
 	tplt <tpnm TEnum, size_t nameLen>
-	TEnum						get_value			(const char (&valueLabel)[nameLen])	{ return get_enum<TEnum>().get_value(vcst_t{valueLabel}); }
-	tplt <tpnm TEnum>	TEnum	get_value			(vcst_t valueLabel)					{ return get_enum<TEnum>().get_value(valueLabel); }
+	TEnum										get_value			(const char (&valueLabel)[nameLen])	{ return get_enum<TEnum>().get_value(vcst_t{valueLabel}); }
+	tplt <tpnm TEnum>			TEnum			get_value			(vcst_t valueLabel)					{ return get_enum<TEnum>().get_value(valueLabel); }
 
-	tplt <tpnm TEnum>	TEnum	get_value_camelcased(vcst_t uncased)					{
-		string						camelCased;
+	tplt <tpnm TEnum>			TEnum			get_value_camelcased(vcst_t uncased)					{
+		string			camelCased;
 		camelCase(uncased, camelCased);
 		return get_enum<TEnum>().get_value(camelCased);
 	}

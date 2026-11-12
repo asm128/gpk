@@ -14,6 +14,21 @@ stct SSampleGUIInspector {
 	::gpk::astsc_t<512>	TextValues[5]	= {};
 };
 
+stct SFontPicker {
+	::gpk::cid_t		IdViewport		= ::gpk::CID_INVALID;
+	::gpk::SControlGrid	Grid			= {};
+	::gpk::aobj<::gpk::string>	Labels	= {};
+	::gpk::u2_t			Selected		= 0;
+};
+
+stct SPalettePicker {
+	::gpk::cid_t		IdViewport		= ::gpk::CID_INVALID;
+	::gpk::SControlGrid	GridTones		= {};
+	::gpk::SControlGrid	GridShades		= {};
+	::gpk::u2_t			Tone			= 0;
+	::gpk::u2_t			Shade			= 0;
+};
+
 stct SSampleGUI {
 	::gpk::SWindow		& Window;
 	::gpk::pobj<::gpk::SGUI>	GUIHandle	= {};
@@ -22,9 +37,8 @@ stct SSampleGUI {
 	SSampleGUI(::gpk::SWindow & window, ::gpk::pobj<::gpk::SGUI> & gui) : Window(window), GUIHandle(gui), GUI(*gui) {}
 	::gpk::cid_t		ControlMode				= ::gpk::CID_INVALID;
 	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
-	::gpk::cid_t		ViewportPalette			= ::gpk::CID_INVALID;
-	::gpk::SControlGrid	GridPaletteTones			= {};
-	::gpk::SControlGrid	GridPaletteShades		= {};
+	SPalettePicker		PalettePicker			= {};
+	SFontPicker			FontPicker				= {};
 	::gpk::cid_t		ViewportStates			= ::gpk::CID_INVALID;
 	::gpk::SControlGrid	GridStates				= {};
 	::gpk::cid_t		ControlLive				= ::gpk::CID_INVALID;
@@ -37,8 +51,6 @@ stct SSampleGUI {
 	::gpk::cid_t		ControlAlignmentRoot	= ::gpk::CID_INVALID;
 	::gpk::astcid<9>	ControlsAlignment		= {};
 	::gpk::astcid<3>	ControlsKeyboard		= {};
-	::gpk::u2_t			PaletteTone				= 0;
-	::gpk::u2_t			PaletteShade			= 0;
 };
 
 ::gpk::err_t		sampleGUISetup				(SSampleGUI & app);

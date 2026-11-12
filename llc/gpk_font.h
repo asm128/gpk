@@ -38,7 +38,7 @@ nmsp gpk
 	}
 	tplt<tpnm _sizeChunk>
 	err_t	rasterFontLoadB64	(imgmono<_sizeChunk> & image, const n2u0_t & charSize, vcst_t base64String) {
-		return rasterFontLoadB64(image, charSize, *(vcu0_c*)&base64String);
+		return rasterFontLoadB64(image, charSize, base64String.bytes());
 	}
 };
 

@@ -24,4 +24,4 @@ namespace gpk
 }
 
 
-#endif GPK_INDEX_PATH_H_261109
+#endif // GPK_INDEX_PATH_H_261109
