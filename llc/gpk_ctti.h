@@ -1,9 +1,9 @@
-#include "llc_typeint.h"
+#include "gpk_typeint.h"
 
-#ifndef LLC_CTTI_H
-#define LLC_CTTI_H
+#ifndef GPK_CTTI_H
+#define GPK_CTTI_H
 
-namespace llc
+namespace gpk
 {
 	enum CTTI_TYPE : u0_t
 		{ CTTI_TYPE_UNKNOWN
@@ -130,9 +130,9 @@ namespace llc
 
 	tplt<size_t N>
 	inxp CTTI_TYPE cttiType(cnst sc_t (&text)[N], SCTTISpan span) nxpt {
-		if(cttiSpanStartsWith(text, span, "::llc::"))
+		if(cttiSpanStartsWith(text, span, "::gpk::"))
 			span.Offset += 7, span.Count -= 7;
-		else if(cttiSpanStartsWith(text, span, "llc::"))
+		else if(cttiSpanStartsWith(text, span, "gpk::"))
 			span.Offset += 5, span.Count -= 5;
 
 		rtrn
@@ -256,4 +256,4 @@ namespace llc
 	}
 }
 
-#endif // LLC_CTTI_H
+#endif // GPK_CTTI_H

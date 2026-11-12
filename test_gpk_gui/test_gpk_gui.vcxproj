@@ -71,14 +71,14 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\gpk\gpk; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\gpk\gpk; ..\..\gpk\gpk_engine; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; gpk_engine.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <ModuleDefinitionFile>..\..\gpk\llc\gpk_module_exports.def</ModuleDefinitionFile>
     </Link>
@@ -136,6 +136,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_gpk_gui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\gpk_engine\gpk_engine.vcxproj">
+      <Project>{976fe3ea-9fd1-4066-9003-0e8513f9d900}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

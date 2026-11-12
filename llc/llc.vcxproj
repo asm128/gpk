@@ -231,6 +231,7 @@
     <ClInclude Include="gpk_sync.h" />
     <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_timer.h" />
+    <ClInclude Include="gpk_ctti.h" />
     <ClInclude Include="gpk_typeint.h" />
     <ClInclude Include="gpk_type_identifier.h" />
     <ClInclude Include="gpk_type_registry.h" />

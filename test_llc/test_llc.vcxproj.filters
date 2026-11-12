@@ -51,6 +51,9 @@
     <ClCompile Include="test_llc_base64.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_ctti.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="test_llc_deflate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

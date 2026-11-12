@@ -516,6 +516,9 @@
     <ClInclude Include="gpk_typeint.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_ctti.h">
+      <Filter>type</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_view.h">
       <Filter>view</Filter>
     </ClInclude>
