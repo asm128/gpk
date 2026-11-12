@@ -9,4 +9,7 @@
   <PropertyGroup>
     <LocalDebuggerCommandArgumentsHistory>gme|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArgumentsHistory>gme|</LocalDebuggerCommandArgumentsHistory>
+  </PropertyGroup>
 </Project>
