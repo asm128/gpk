@@ -28,7 +28,7 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Selected	, 0x40U);	// 
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Updated	, 0x80U);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Action		, 0x100U);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Unused		, 0xFFU);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Unused		, 0xFFFFU);
 	stxp	GUI_CONTROL_FLAG	GUI_CONTROL_FLAG_All	= GUI_CONTROL_FLAG_Unused;
 	inxp	GUI_CONTROL_FLAG	setFlag			(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
 
