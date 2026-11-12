@@ -138,8 +138,7 @@ static int frameReceive(socket_handle_t socketHandle, PEER_FRAME & type, ::gpk::
 	if(sizeFrame > PEER_FRAME_MAX || typeValue < (uint8_t)PEER_FRAME::HELLO || typeValue > (uint8_t)PEER_FRAME::RESULT)
 		return -1;
 	payload.clear();
-	if(::gpk::failed(payload.resize(sizeFrame)))
-		return -1;
+	if_fail_fe(payload.resize(sizeFrame));
 	if(sizeFrame && 0 != ::socketReceiveAll(socketHandle, payload.begin(), payload.size()))
 		return -1;
 	type = (PEER_FRAME)typeValue;

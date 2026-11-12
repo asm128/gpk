@@ -17,6 +17,8 @@ namespace gpk
 	enum CTTI_PARSE_ERROR : u0_t
 		{ CTTI_PARSE_ERROR_NONE
 		, CTTI_PARSE_ERROR_INVALID_STRUCT_NAME
+		, CTTI_PARSE_ERROR_EXPECTED_OPEN_BRACE
+		, CTTI_PARSE_ERROR_EXPECTED_CLOSE_BRACE
 		, CTTI_PARSE_ERROR_INVALID_MODIFIER
 		, CTTI_PARSE_ERROR_EXPECTED_TYPE
 		, CTTI_PARSE_ERROR_EXPECTED_MEMBER_NAME
@@ -37,11 +39,11 @@ namespace gpk
 		SCTTISpan	Value		= {};
 	};
 
-	tplt<size_t NStructName, size_t NMemberText>
+	tplt<size_t NDeclaration>
 	stct SCTTIParseResult {
-		sc_t				StructName	[NStructName]	= {};
-		sc_t				MemberText	[NMemberText]	= {};
-		SCTTIMember		Members		[NMemberText]	= {};
+		sc_t				SourceText	[NDeclaration]	= {};
+		SCTTISpan			StructName				= {};
+		SCTTIMember		Members		[NDeclaration]	= {};
 		u2_t				Count					= {};
 		u2_t				ErrorOffset				= {};
 		CTTI_PARSE_STATE	State					= CTTI_PARSE_STATE_STRUCT_NAME;
@@ -102,28 +104,43 @@ namespace gpk
 		cnst auto & [result] = source;
 		rtrn result;
 	}
-	tplt<size_t NStructName, size_t NMemberText>
-	inxp SCTTIParseResult<NStructName, NMemberText> cttiParseStruct(cnst sc_t (&structName)[NStructName], cnst sc_t (&memberText)[NMemberText]) nxpt {
-		static_assert(NStructName <= 0xFFFFFFFFULL && NMemberText <= 0xFFFFFFFFULL, "CTTI source text exceeds the supported size.");
-		SCTTIParseResult<NStructName, NMemberText> result = {};
-		for(u2_t iChar = 0; iChar < NStructName; ++iChar)
-			result.StructName[iChar] = structName[iChar];
-		for(u2_t iChar = 0; iChar < NMemberText; ++iChar)
-			result.MemberText[iChar] = memberText[iChar];
+	tplt<size_t NDeclaration>
+	inxp SCTTIParseResult<NDeclaration> cttiParseStruct(cnst sc_t (&declaration)[NDeclaration]) nxpt {
+		static_assert(NDeclaration <= 0xFFFFFFFFULL, "CTTI source text exceeds the supported size.");
+		SCTTIParseResult<NDeclaration> result = {};
+		for(u2_t iChar = 0; iChar < NDeclaration; ++iChar)
+			result.SourceText[iChar] = declaration[iChar];
 
-		cnst SCTTISpan structNameSpan = cttiTrim(result.StructName, 0, (u2_t)NStructName - 1);
-		if(false == cttiIdentifier(result.StructName, structNameSpan)) {
+		SCTTISpan sourceSpan = cttiTrim(result.SourceText, 0, (u2_t)NDeclaration - 1);
+		if(sourceSpan.Count && ';' == result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1])
+			sourceSpan = cttiTrim(result.SourceText, sourceSpan.Offset, sourceSpan.Count - 1);
+		cnst u2_t openBrace = cttiFind(result.SourceText, sourceSpan, '{');
+		if(openBrace == sourceSpan.Offset + sourceSpan.Count) {
+			result.Error		= CTTI_PARSE_ERROR_EXPECTED_OPEN_BRACE;
+			result.State		= CTTI_PARSE_STATE_STRUCT_NAME;
+			result.ErrorOffset	= openBrace;
+			rtrn result;
+		}
+		if(0 == sourceSpan.Count || '}' != result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1]) {
+			result.Error		= CTTI_PARSE_ERROR_EXPECTED_CLOSE_BRACE;
+			result.State		= CTTI_PARSE_STATE_MEMBER_NAME;
+			result.ErrorOffset	= sourceSpan.Offset + sourceSpan.Count;
+			rtrn result;
+		}
+
+		result.StructName = cttiTrim(result.SourceText, sourceSpan.Offset, openBrace - sourceSpan.Offset);
+		if(false == cttiIdentifier(result.SourceText, result.StructName)) {
 			result.Error		= CTTI_PARSE_ERROR_INVALID_STRUCT_NAME;
 			result.State		= CTTI_PARSE_STATE_STRUCT_NAME;
-			result.ErrorOffset	= cttiIdentifierError(result.StructName, structNameSpan);
+			result.ErrorOffset	= cttiIdentifierError(result.SourceText, result.StructName);
 			rtrn result;
 		}
 
 		result.State = CTTI_PARSE_STATE_MODIFIERS;
-		u2_t		cursor			= 0;
-		cnst u2_t	textLength		= (u2_t)NMemberText - 1;
+		u2_t		cursor			= openBrace + 1;
+		cnst u2_t	textLength		= sourceSpan.Offset + sourceSpan.Count - 1;
 		while(true) {
-			while(cursor < textLength && cttiSpace(result.MemberText[cursor]))
+			while(cursor < textLength && cttiSpace(result.SourceText[cursor]))
 				++cursor;
 			if(cursor == textLength) {
 				result.State = CTTI_PARSE_STATE_COMPLETE;
@@ -131,7 +148,7 @@ namespace gpk
 			}
 
 			cnst u2_t declarationOffset = cursor;
-			cursor = cttiFind(result.MemberText, {cursor, textLength - cursor}, ';');
+			cursor = cttiFind(result.SourceText, {cursor, textLength - cursor}, ';');
 			if(cursor == textLength) {
 				result.Error		= CTTI_PARSE_ERROR_EXPECTED_SEMICOLON;
 				result.State		= CTTI_PARSE_STATE_MEMBER_NAME;
@@ -139,38 +156,38 @@ namespace gpk
 				rtrn result;
 			}
 
-			cnst SCTTISpan segment = cttiTrim(result.MemberText, declarationOffset, cursor - declarationOffset);
-			cnst u2_t equalOffset = cttiFind(result.MemberText, segment, '=');
-			cnst SCTTISpan declaration = cttiTrim(result.MemberText, segment.Offset, equalOffset - segment.Offset);
+			cnst SCTTISpan segment = cttiTrim(result.SourceText, declarationOffset, cursor - declarationOffset);
+			cnst u2_t equalOffset = cttiFind(result.SourceText, segment, '=');
+			cnst SCTTISpan declarationSpan = cttiTrim(result.SourceText, segment.Offset, equalOffset - segment.Offset);
 			cnst SCTTISpan memberValue = (equalOffset < segment.Offset + segment.Count)
-				? cttiTrim(result.MemberText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
+				? cttiTrim(result.SourceText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
 				: SCTTISpan{};
 
-			u2_t nameOffset = declaration.Offset + declaration.Count;
-			while(nameOffset > declaration.Offset && cttiNamePart(result.MemberText[nameOffset - 1]))
+			u2_t nameOffset = declarationSpan.Offset + declarationSpan.Count;
+			while(nameOffset > declarationSpan.Offset && cttiNamePart(result.SourceText[nameOffset - 1]))
 				--nameOffset;
-			cnst SCTTISpan memberName = {nameOffset, declaration.Offset + declaration.Count - nameOffset};
-			if(false == cttiIdentifier(result.MemberText, memberName)) {
+			cnst SCTTISpan memberName = {nameOffset, declarationSpan.Offset + declarationSpan.Count - nameOffset};
+			if(false == cttiIdentifier(result.SourceText, memberName)) {
 				result.Error		= CTTI_PARSE_ERROR_INVALID_MEMBER_NAME;
 				result.State		= CTTI_PARSE_STATE_MEMBER_NAME;
-				result.ErrorOffset	= cttiIdentifierError(result.MemberText, memberName);
+				result.ErrorOffset	= cttiIdentifierError(result.SourceText, memberName);
 				rtrn result;
 			}
 
-			cnst SCTTISpan beforeName = cttiTrim(result.MemberText, declaration.Offset, nameOffset - declaration.Offset);
+			cnst SCTTISpan beforeName = cttiTrim(result.SourceText, declarationSpan.Offset, nameOffset - declarationSpan.Offset);
 			if(beforeName.empty()) {
 				result.Error		= CTTI_PARSE_ERROR_EXPECTED_TYPE;
 				result.State		= CTTI_PARSE_STATE_TYPE;
-				result.ErrorOffset	= declaration.Offset;
+				result.ErrorOffset	= declarationSpan.Offset;
 				rtrn result;
 			}
 			u2_t typeOffset = beforeName.Offset + beforeName.Count;
-			while(typeOffset > beforeName.Offset && false == cttiSpace(result.MemberText[typeOffset - 1]))
+			while(typeOffset > beforeName.Offset && false == cttiSpace(result.SourceText[typeOffset - 1]))
 				--typeOffset;
 			cnst SCTTISpan typeName = {typeOffset, beforeName.Offset + beforeName.Count - typeOffset};
-			cnst SCTTISpan modifiers = cttiTrim(result.MemberText, beforeName.Offset, typeOffset - beforeName.Offset);
+			cnst SCTTISpan modifiers = cttiTrim(result.SourceText, beforeName.Offset, typeOffset - beforeName.Offset);
 			for(u2_t iChar = 0; iChar < modifiers.Count; ++iChar) {
-				cnst sc_t character = result.MemberText[modifiers.Offset + iChar];
+				cnst sc_t character = result.SourceText[modifiers.Offset + iChar];
 				if(false == cttiSpace(character) && false == cttiNameStart(character)) {
 					result.Error		= CTTI_PARSE_ERROR_INVALID_MODIFIER;
 					result.State		= CTTI_PARSE_STATE_MODIFIERS;
@@ -184,6 +201,12 @@ namespace gpk
 		}
 	}
 
+	tplt<tpnm T>
+	stct SCTTIStructRegistry;
+
+	tplt<tpnm T>
+	inxp cnst auto & cttiStruct() nxpt { rtrn SCTTIStructRegistry<T>::Value; }
+
 	enum CTTI_ENUM_PARSE_STATE : u0_t
 		{ CTTI_ENUM_PARSE_STATE_ENUM_NAME
 		, CTTI_ENUM_PARSE_STATE_UNDERLYING_TYPE
@@ -195,6 +218,8 @@ namespace gpk
 	enum CTTI_ENUM_PARSE_ERROR : u0_t
 		{ CTTI_ENUM_PARSE_ERROR_NONE
 		, CTTI_ENUM_PARSE_ERROR_INVALID_ENUM_NAME
+		, CTTI_ENUM_PARSE_ERROR_EXPECTED_OPEN_BRACE
+		, CTTI_ENUM_PARSE_ERROR_EXPECTED_CLOSE_BRACE
 		, CTTI_ENUM_PARSE_ERROR_EXPECTED_UNDERLYING_TYPE
 		, CTTI_ENUM_PARSE_ERROR_INVALID_VALUE_NAME
 		, CTTI_ENUM_PARSE_ERROR_EXPECTED_VALUE_INITIALIZER
@@ -208,14 +233,15 @@ namespace gpk
 		TEnum		Value		= {};
 	};
 
-	tplt<tpnm TEnum, size_t NEnumName, size_t NUnderlyingType, size_t NValueText>
+	tplt<tpnm TEnum, size_t NDeclaration>
 	stct SCTTIEnumParseResult {
-		sc_t				EnumName		[NEnumName]		= {};
-		sc_t				UnderlyingType	[NUnderlyingType]	= {};
-		sc_t				ValueText		[NValueText]		= {};
-		SCTTIEnumValue<TEnum>	Values			[NValueText]		= {};
+		sc_t				SourceText		[NDeclaration]	= {};
+		SCTTISpan			EnumName				= {};
+		SCTTISpan			UnderlyingType			= {};
+		SCTTIEnumValue<TEnum>	Values			[NDeclaration]	= {};
 		u2_t				Count						= {};
 		u2_t				ErrorOffset					= {};
+		bool				ValuesCompiled				= false;
 		CTTI_ENUM_PARSE_STATE	State						= CTTI_ENUM_PARSE_STATE_ENUM_NAME;
 		CTTI_ENUM_PARSE_ERROR	Error						= CTTI_ENUM_PARSE_ERROR_NONE;
 
@@ -223,70 +249,76 @@ namespace gpk
 		tplt<size_t N>
 		inxp s2_t	Find(cnst sc_t (&name)[N]) cnst nxpt {
 			for(u2_t iValue = 0; iValue < Count; ++iValue)
-				if(cttiSpanEquals(ValueText, Values[iValue].Name, name))
+				if(cttiSpanEquals(SourceText, Values[iValue].Name, name))
 					rtrn (s2_t)iValue;
 			rtrn -1;
 		}
 	};
 
-	tplt<tpnm TEnum, tpnm TUnderlying, size_t NEnumName, size_t NUnderlyingType, size_t NValueText, size_t NValues>
-	inxp SCTTIEnumParseResult<TEnum, NEnumName, NUnderlyingType, NValueText> cttiParseEnum
-		( cnst sc_t (&enumName)[NEnumName]
-		, cnst sc_t (&underlyingType)[NUnderlyingType]
-		, cnst sc_t (&valueText)[NValueText]
-		, cnst TUnderlying (&explicitValues)[NValues]
-		) nxpt {
-		SCTTIEnumParseResult<TEnum, NEnumName, NUnderlyingType, NValueText> result = {};
-		for(u2_t iChar = 0; iChar < NEnumName; ++iChar)
-			result.EnumName[iChar] = enumName[iChar];
-		for(u2_t iChar = 0; iChar < NUnderlyingType; ++iChar)
-			result.UnderlyingType[iChar] = underlyingType[iChar];
-		for(u2_t iChar = 0; iChar < NValueText; ++iChar)
-			result.ValueText[iChar] = valueText[iChar];
+	tplt<tpnm TEnum, size_t NDeclaration>
+	inxp SCTTIEnumParseResult<TEnum, NDeclaration> cttiParseEnum(cnst sc_t (&declaration)[NDeclaration]) nxpt {
+		SCTTIEnumParseResult<TEnum, NDeclaration> result = {};
+		for(u2_t iChar = 0; iChar < NDeclaration; ++iChar)
+			result.SourceText[iChar] = declaration[iChar];
 
-		cnst SCTTISpan enumNameSpan = cttiTrim(result.EnumName, 0, (u2_t)NEnumName - 1);
-		if(false == cttiIdentifier(result.EnumName, enumNameSpan)) {
-			result.Error		= CTTI_ENUM_PARSE_ERROR_INVALID_ENUM_NAME;
-			result.State		= CTTI_ENUM_PARSE_STATE_ENUM_NAME;
-			result.ErrorOffset	= cttiIdentifierError(result.EnumName, enumNameSpan);
+		SCTTISpan sourceSpan = cttiTrim(result.SourceText, 0, (u2_t)NDeclaration - 1);
+		if(sourceSpan.Count && ';' == result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1])
+			sourceSpan = cttiTrim(result.SourceText, sourceSpan.Offset, sourceSpan.Count - 1);
+		cnst u2_t openBrace = cttiFind(result.SourceText, sourceSpan, '{');
+		if(openBrace == sourceSpan.Offset + sourceSpan.Count) {
+			result.Error		= CTTI_ENUM_PARSE_ERROR_EXPECTED_OPEN_BRACE;
+			result.ErrorOffset	= openBrace;
 			rtrn result;
 		}
-		cnst SCTTISpan underlyingTypeSpan = cttiTrim(result.UnderlyingType, 0, (u2_t)NUnderlyingType - 1);
-		if(underlyingTypeSpan.empty()) {
+		if(0 == sourceSpan.Count || '}' != result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1]) {
+			result.Error		= CTTI_ENUM_PARSE_ERROR_EXPECTED_CLOSE_BRACE;
+			result.State		= CTTI_ENUM_PARSE_STATE_VALUE_NAME;
+			result.ErrorOffset	= sourceSpan.Offset + sourceSpan.Count;
+			rtrn result;
+		}
+
+		cnst SCTTISpan header = cttiTrim(result.SourceText, sourceSpan.Offset, openBrace - sourceSpan.Offset);
+		cnst u2_t typeOffset = cttiFind(result.SourceText, header, ':');
+		result.EnumName = cttiTrim(result.SourceText, header.Offset, typeOffset - header.Offset);
+		if(false == cttiIdentifier(result.SourceText, result.EnumName)) {
+			result.Error		= CTTI_ENUM_PARSE_ERROR_INVALID_ENUM_NAME;
+			result.State		= CTTI_ENUM_PARSE_STATE_ENUM_NAME;
+			result.ErrorOffset	= cttiIdentifierError(result.SourceText, result.EnumName);
+			rtrn result;
+		}
+		result.UnderlyingType = typeOffset < header.Offset + header.Count
+			? cttiTrim(result.SourceText, typeOffset + 1, header.Offset + header.Count - typeOffset - 1)
+			: SCTTISpan{};
+		if(result.UnderlyingType.empty()) {
 			result.Error		= CTTI_ENUM_PARSE_ERROR_EXPECTED_UNDERLYING_TYPE;
 			result.State		= CTTI_ENUM_PARSE_STATE_UNDERLYING_TYPE;
+			result.ErrorOffset	= typeOffset;
 			rtrn result;
 		}
 
 		result.State = CTTI_ENUM_PARSE_STATE_VALUE_NAME;
-		u2_t cursor = 0;
-		cnst u2_t textLength = (u2_t)NValueText - 1;
+		u2_t cursor = openBrace + 1;
+		cnst u2_t textLength = sourceSpan.Offset + sourceSpan.Count - 1;
 		while(true) {
-			while(cursor < textLength && cttiSpace(result.ValueText[cursor]))
+			while(cursor < textLength && cttiSpace(result.SourceText[cursor]))
 				++cursor;
 			if(cursor == textLength) {
 				result.State = CTTI_ENUM_PARSE_STATE_COMPLETE;
 				rtrn result;
 			}
-			if(result.Count >= NValues) {
-				result.Error		= CTTI_ENUM_PARSE_ERROR_VALUE_COUNT;
-				result.ErrorOffset	= cursor;
-				rtrn result;
-			}
-
-			cnst u2_t commaOffset = cttiFind(result.ValueText, {cursor, textLength - cursor}, ',');
-			cnst SCTTISpan segment = cttiTrim(result.ValueText, cursor, commaOffset - cursor);
-			cnst u2_t equalOffset = cttiFind(result.ValueText, segment, '=');
-			cnst SCTTISpan valueName = cttiTrim(result.ValueText, segment.Offset, equalOffset - segment.Offset);
-			if(false == cttiIdentifier(result.ValueText, valueName)) {
+			cnst u2_t commaOffset = cttiFind(result.SourceText, {cursor, textLength - cursor}, ',');
+			cnst SCTTISpan segment = cttiTrim(result.SourceText, cursor, commaOffset - cursor);
+			cnst u2_t equalOffset = cttiFind(result.SourceText, segment, '=');
+			cnst SCTTISpan valueName = cttiTrim(result.SourceText, segment.Offset, equalOffset - segment.Offset);
+			if(false == cttiIdentifier(result.SourceText, valueName)) {
 				result.Error		= CTTI_ENUM_PARSE_ERROR_INVALID_VALUE_NAME;
-				result.ErrorOffset	= cttiIdentifierError(result.ValueText, valueName);
+				result.ErrorOffset	= cttiIdentifierError(result.SourceText, valueName);
 				rtrn result;
 			}
 
 			cnst bool hasInitializer = equalOffset < segment.Offset + segment.Count;
 			cnst SCTTISpan initializer = hasInitializer
-				? cttiTrim(result.ValueText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
+				? cttiTrim(result.SourceText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
 				: SCTTISpan{};
 			if(hasInitializer && initializer.empty()) {
 				result.Error		= CTTI_ENUM_PARSE_ERROR_EXPECTED_VALUE_INITIALIZER;
@@ -295,20 +327,41 @@ namespace gpk
 				rtrn result;
 			}
 
-			cnst TUnderlying value = hasInitializer
-				? explicitValues[result.Count]
-				: result.Count ? TUnderlying(TUnderlying(result.Values[result.Count - 1].Value) + 1) : 0;
-			result.Values[result.Count++] = {valueName, initializer, (TEnum)value};
+			result.Values[result.Count++] = {valueName, initializer, {}};
 			cursor = commaOffset < textLength ? commaOffset + 1 : textLength;
 		}
 	}
+
+	tplt<tpnm TEnum, tpnm TUnderlying, size_t NDeclaration, size_t NValues>
+	inxp SCTTIEnumParseResult<TEnum, NDeclaration> cttiParseEnum
+		( cnst sc_t (&declaration)[NDeclaration]
+		, cnst TUnderlying (&explicitValues)[NValues]
+		) nxpt {
+		SCTTIEnumParseResult<TEnum, NDeclaration> result = cttiParseEnum<TEnum>(declaration);
+		if(false == result.Success())
+			rtrn result;
+		if(result.Count != NValues) {
+			result.Error		= CTTI_ENUM_PARSE_ERROR_VALUE_COUNT;
+			result.ErrorOffset	= result.EnumName.Offset;
+			rtrn result;
+		}
+		for(u2_t iValue = 0; iValue < result.Count; ++iValue) {
+			cnst TUnderlying value = result.Values[iValue].Initializer.empty()
+				? iValue ? TUnderlying(TUnderlying(result.Values[iValue - 1].Value) + 1) : 0
+				: explicitValues[iValue];
+			result.Values[iValue].Value = (TEnum)value;
+		}
+		result.ValuesCompiled = true;
+		rtrn result;
+	}
 }
 
-#define CTTI_STCT(structName, members)											\
-	stct structName {															\
-		members;																\
-		stxp SCTTIParseResult<::gpk::size(#structName), ::gpk::size(#members)>	\
-			gpk_ctti = ::gpk::cttiParseStruct(#structName, #members);			\
+#define GPK_CTTI_JOIN_2(left, right)	left##right
+#define GPK_CTTI_JOIN(left, right)	GPK_CTTI_JOIN_2(left, right)
+#define CTTI_STCT(...)																				\
+	extern stct __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__);							\
+	tplt<> stct gpk::SCTTIStructRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__))> {	\
+		inline static constexpr auto Value = ::gpk::cttiParseStruct(#__VA_ARGS__);							\
 	}
 
 #define GPK_CTTI_PARENS ()
@@ -326,6 +379,6 @@ namespace gpk
 #define CTTI_ENUM(EnumName, IntType, ...)															\
 	enum EnumName : IntType { __VA_ARGS__ };														\
 	stxp IntType EnumName##_gpk_ctti_values[] = {GPK_CTTI_ENUM_VALUES(GPK_CTTI_ENUM_VALUE, IntType, __VA_ARGS__)};	\
-	stxp auto EnumName##_gpk_ctti = ::gpk::cttiParseEnum<EnumName>(#EnumName, #IntType, #__VA_ARGS__, EnumName##_gpk_ctti_values)
+	stxp auto EnumName##_gpk_ctti = ::gpk::cttiParseEnum<EnumName>(#EnumName " : " #IntType " { " #__VA_ARGS__ " }", EnumName##_gpk_ctti_values)
 
 #endif // GPK_CTTI_H

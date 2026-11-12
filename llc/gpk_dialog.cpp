@@ -250,9 +250,22 @@ gpk::err_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
 	if_fail_fe(index = dialog.Create(viewport));
 	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= true;
 	controlTable.Draw[viewport->IdGUIControl].FrameOut			= true;
-	//controlTable.Modes[viewport->IdGUIControl].NoHover			= true;
+	controlTable.States[viewport->IdGUIControl].Mask			&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 	controlTable.Placement[viewport->IdGUIControl].Margin		= {};
 	::gpk::memcpy_s(controlTable.Draw[viewport->IdGUIControl].Palettes.Storage, dialog.Colors->Viewport.Storage);
+	{ // Create close control
+		::gpk::cid_t				idControl;
+		if_fail_fe(viewport->IdClose = idControl = ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl));
+		::gpk::SControlPlacement	& control				= controlTable.Placement[idControl];
+		control.Area.Size		= {heightOfField, heightOfField};
+		control.Align			= ::gpk::ALIGN_TOP_RIGHT;
+		controlTable.Constraints[idControl].AttachSizeToControl	= {-1, -1};
+		controlTable.States[idControl].Mask		= dialog.DefaultControlMask;
+		controlTable.Draw[idControl].UseNewPalettes	= true;
+		controlTable.Draw[idControl].Palettes		= dialog.Colors->ViewportTitle;
+		controlTable.Text[idControl].Text			= "X";
+		controlTable.Text[idControl].Align			= ::gpk::ALIGN_CENTER;
+	}
 	{ // Create bottom-right resize control
 		::gpk::cid_t				idControl;
 		if_fail_fe(viewport->IdResizeBottomRight = idControl = ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl));
@@ -289,6 +302,7 @@ gpk::err_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
 		control.Align			= ::gpk::ALIGN_TOP_LEFT;
 		control.Margin.Left		= 4;
 		controlTable.Constraints[idControl].AttachSizeToControl.x	= idControl;
+		controlTable.Constraints[idControl].DockToControl.Right	= viewport->IdClose;
 		controlTable.States[idControl].Mask		= dialog.DefaultControlMask;
 		controlTable.Draw [idControl].Palettes	= dialog.Colors->ViewportTitle;
 		controlTable.Text [idControl].Text		= "Viewport";
@@ -348,6 +362,10 @@ gpk::err_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)												
 	::gpk::SDialog				& dialog				= *control.Dialog;
 	::gpk::SGUI					& gui					= *dialog.GUI;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
+	if(controlTable.IsAction(control.IdClose)) {
+		controlTable.SetHidden(control.IdGUIControl, true);
+		return 0;
+	}
 	::gpk::SControlPlacement	& controlMain			= controlTable.Placement[control.IdGUIControl];
 	::gpk::SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
 	::gpk::SControlState		& controlResizeState	= controlTable.States[control.IdResizeBottomRight];
