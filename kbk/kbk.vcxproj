@@ -18,10 +18,54 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="atom.h" />
+    <ClInclude Include="context.h" />
+    <ClInclude Include="darray.h" />
+    <ClInclude Include="keymap-compare.h" />
+    <ClInclude Include="keymap-formats.h" />
+    <ClInclude Include="keymap.h" />
+    <ClInclude Include="keysym.h" />
+    <ClInclude Include="ks_tables.h" />
+    <ClInclude Include="messages-codes.h" />
+    <ClInclude Include="rmlvo.h" />
+    <ClInclude Include="scanner-utils.h" />
+    <ClInclude Include="text.h" />
+    <ClInclude Include="utf8-decoding.h" />
+    <ClInclude Include="utf8.h" />
+    <ClInclude Include="util-list.h" />
+    <ClInclude Include="util-mem.h" />
+    <ClInclude Include="utils-checked-arithmetic.h" />
+    <ClInclude Include="utils-numbers.h" />
+    <ClInclude Include="utils-paths.h" />
+    <ClInclude Include="utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="atom.c" />
+    <ClCompile Include="context-priv.c" />
+    <ClCompile Include="context.c" />
+    <ClCompile Include="keymap-compare.c" />
+    <ClCompile Include="keymap-formats.c" />
+    <ClCompile Include="keymap-priv.c" />
+    <ClCompile Include="keymap.c" />
+    <ClCompile Include="keysym-case-mappings.c" />
+    <ClCompile Include="keysym-utf.c" />
+    <ClCompile Include="keysym.c" />
+    <ClCompile Include="registry.c" />
+    <ClCompile Include="rmlvo.c" />
+    <ClCompile Include="scanner-utils.c" />
+    <ClCompile Include="state.c" />
+    <ClCompile Include="text.c" />
+    <ClCompile Include="utf8-decoding.c" />
+    <ClCompile Include="utf8.c" />
+    <ClCompile Include="util-list.c" />
+    <ClCompile Include="utils-paths.c" />
+    <ClCompile Include="utils.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{a0f8ffb0-ac11-4929-b731-afa1be6b2cda}</ProjectGuid>
+    <ProjectGuid>{42F5AAE1-6251-4258-826F-51497361CD90}</ProjectGuid>
     <RootNamespace>kbk</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -49,7 +93,7 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" >
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -70,7 +114,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
 
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -94,7 +138,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
 
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -118,7 +162,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
 
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -142,7 +186,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../gpk/llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../gpk/llc; $(SolutionDir)../gpk; ../kbc; ../k11 ;../kbk;  ;../kcm; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
 
       <LanguageStandard_C>stdc17</LanguageStandard_C>
