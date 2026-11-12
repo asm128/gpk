@@ -121,8 +121,7 @@ static int eventReceive(socket_handle_t socketHandle, ::gpk::EventTransfer & eve
 	if(0 == sizeFrame || sizeFrame > 1024U * 1024U)
 		return -1;
 	::gpk::au0_t serialized;
-	if(::gpk::failed(serialized.resize(sizeFrame)))
-		return -1;
+	if_fail_fe(serialized.resize(sizeFrame));
 	if(0 != ::socketReceiveAll(socketHandle, serialized.begin(), serialized.size()))
 		return -1;
 	::gpk::vcu0_t input = serialized;
