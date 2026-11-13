@@ -184,12 +184,11 @@ gpk::err_t			gpk::sliderSetValue		(::gpk::SDialogSlider & slider, s3_t value)			
 	const f3_t				proportion				= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
 	::gpk::SControlPlacement	& controlButton			= controlTable.Placement[slider.IdButton];
-	::gpk::SControlPlacement	& controlSlider			= controlTable.Placement[slider.IdGUIControl];
-	::gpk::n2f3_t				ncSpacing				= ::gpk::controlNCSpacing(controlSlider).f3();
+	cnst ::gpk::n2f3_t			controlSliderSize		= controlTable.Area[slider.IdGUIControl].Client.Global.Size.f3();
 	if(slider.Vertical)	
-		controlButton.Area.Offset.y	= s1_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
+		controlButton.Area.Offset.y	= s1_t((controlSliderSize.y - controlButton.Area.Size.y) * proportion);
 	else				
-		controlButton.Area.Offset.x	= s1_t((controlSlider.Area.Size.x - controlButton.Area.Size.x - ncSpacing.x) * proportion);
+		controlButton.Area.Offset.x	= s1_t((controlSliderSize.x - controlButton.Area.Size.x) * proportion);
 
 	::gpk::SControlConstraints	& buttonConstraints		= controlTable.Constraints[slider.IdButton];
 	if(slider.Vertical) {
@@ -440,6 +439,24 @@ gpk::err_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)												
 		constraintsScroll.AttachSizeToControl				= {-1, control.IdScrollBarY};
 		constraintsScroll.DockToControl						= {-1, -1, -1, -1};
 		controlTable.SetHidden(control.IdScrollBarY, false == control.Settings.ScrollBarY || false == control.Settings.Unfolded);
+	}
+	if(false == ::gpk::controlInvalid(gui, control.IdScrollBarX)) {
+		if(controlTable.States[control.IdScrollBarX].Parent != control.IdClient)
+			if_fail_fe(::gpk::controlSetParent(gui, control.IdScrollBarX, control.IdClient));
+		::gpk::SControlPlacement	& placementScroll		= controlTable.Placement[control.IdScrollBarX];
+		placementScroll.Area.Offset							= {};
+		placementScroll.Area.Size.y							= 12;
+		placementScroll.Align								= ::gpk::ALIGN_BOTTOM_LEFT;
+		::gpk::SControlConstraints	& constraintsScroll		= controlTable.Constraints[control.IdScrollBarX];
+		constraintsScroll.AttachSizeToControl				= {control.IdScrollBarX, -1};
+		constraintsScroll.DockToControl						= {-1, -1, control.Settings.ScrollBarY ? control.IdScrollBarY : -1, -1};
+		controlTable.SetHidden(control.IdScrollBarX, false == control.Settings.ScrollBarX || false == control.Settings.Unfolded);
+	}
+	if(control.Settings.ScrollBarX != control.SettingsOld.ScrollBarX || control.Settings.ScrollBarY != control.SettingsOld.ScrollBarY) {
+		if(false == ::gpk::controlInvalid(gui, control.IdScrollBarX))
+			if_fail_fe(::gpk::controlMetricsInvalidate(gui, control.IdScrollBarX));
+		if(false == ::gpk::controlInvalid(gui, control.IdScrollBarY))
+			if_fail_fe(::gpk::controlMetricsInvalidate(gui, control.IdScrollBarY));
 	}
 	control.SettingsOld		= control.Settings;
 	return 0;
