@@ -98,13 +98,21 @@ sttc gpk::err_t	testRunReportWrite		(cnst gpk::STestRunReport & run, gpk::err_t 
 #endif
 	::gpk::string config, json;
 	if_fail_fe(testJSONString(configuration, config));
-	if_fail_fe(::gpk::append_strings(json, "{\"schema_version\":1,\"name\":\"gpk_test_core\",\"configuration\":", config
-		, ",\"pointer_bits\":", (::gpk::u2_t)(sizeof(void*) * 8)
-		, ",\"status\":", status, ",\"duration_us\":", duration, ",\"seed_override\":"));
-	if(seedEnabled) { if_fail_fe(::gpk::append_strings(json, '"', seed, '"')); }
-	else { if_fail_fe(::gpk::append_strings(json, "null")); }
-	if_fail_fe(::gpk::append_strings(json, ",\"checks\":", checks, ",\"passed\":", checks - failures
-		, ",\"failed\":", failures, ",\"suites\":[", suites, "]}\n"));
+	if_fail_fe(::gpk::append_strings(json
+		, "{\"schema_version\":1,\"name\":\"gpk_test_core\",\"configuration\":", config
+		, ",\"pointer_bits\":", ::gpk::str(sizeof(void*) * 8), ",\"status\":", ::gpk::str(status)
+		, ",\"duration_us\":", ::gpk::str(duration), ",\"seed_override\":")
+	);
+	if(seedEnabled) {
+		if_fail_fe(::gpk::append_strings(json, '"', ::gpk::str(seed), '"'));
+	}
+	else {
+		if_fail_fe(::gpk::append_strings(json, "null"));
+	}
+	if_fail_fe(::gpk::append_strings(json
+		, ",\"checks\":", ::gpk::str(checks), ",\"passed\":", ::gpk::str(checks - failures)
+		, ",\"failed\":", ::gpk::str(failures), ",\"suites\":[", suites, "]}\n")
+	);
 	rtrn testReportWrite(run.Folder, "results.json", json);
 }
 

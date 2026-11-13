@@ -185,6 +185,7 @@
     <ClCompile Include="test_llc_linear_map.cpp" />
     <ClCompile Include="test_llc_packed_int.cpp" />
     <ClCompile Include="test_llc_png.cpp" />
+    <ClCompile Include="test_llc_string.cpp" />
     <ClCompile Include="test_llc_view_serialize.cpp" />
   </ItemGroup>
   <ItemGroup>

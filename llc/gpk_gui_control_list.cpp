@@ -103,15 +103,12 @@ gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, const vcst_t&
 	if(menu.IdControl == -1)
 		if_fail_fe(gpk::controlListInitialize(gui, menu));
 
-	const cid_t					idControl				= controlCreate(gui);
-	if_fail_fef(idControl, "%s", "Failed to create control! Out of memory?");
-	controlSetParent(gui, idControl, menu.IdControl);
-	SControlPlacement	& control				= gui.Controls.Placement[idControl];
-	SControlText			& controlText			= gui.Controls.Text		[idControl];
-	control		.Margin		= {4, 2, 4, 2};
-	controlText	.Text		= {text.begin(), text.size()};
-	controlText	.Align		= ALIGN_CENTER_LEFT;
-	menu.IdControls	.push_back(idControl);
+	SControlPlacement	control					= {};
+	control.Margin								= {4, 2, 4, 2};
+	cid_t				idControl					= CID_INVALID;
+	if_fail_fe(guiCreateControlList(gui, menu.Orientation, view<vcst_c>{&text, 1}, menu.IdControl, control, ALIGN_CENTER_LEFT, vcid{&idControl, 1}));
+	gui.Controls.Constraints[idControl].AttachSizeToText	= {};
+	if_fail_fe(menu.IdControls.push_back(idControl));
 	gpk::controlListArrange(gui, menu);
 	return 0;
 }
@@ -191,7 +188,8 @@ gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, const
 gpk::cid_t			gpk::guiCreateControlList	(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, const SControlPlacement & args, ALIGN textAlign, vcid out_ids) {
 	cid_t					result						= -1;
 	for(u1_t iButton = 0; iButton < buttonText.size(); ++iButton) {
-		cid_t				idControl					= controlCreate(gui);
+		cid_t				idControl					= {};
+		if_fail_fe(idControl = controlCreate(gui));
 		if(out_ids.size() > iButton)
 			out_ids[iButton]		= idControl;
 

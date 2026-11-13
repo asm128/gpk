@@ -8,13 +8,11 @@
 nmsp gpk
 {
 #if defined(GPK_WINDOWS)	// These functions exist in order to help with loading some images from a third-party game. Otherwise their use is discouraged in favor of png* functions.
-	err_t 		bmpFileLoad	(const s0_t		* source	, a8bgra & out_Colors, g8bgra & out_ImageView);
-	err_t 		bmpFileLoad	(FILE				* source	, a8bgra & out_Colors, g8bgra & out_ImageView);
-	err_t 		bmpFileLoad	(const vcst_t	& filename	, a8bgra & out_Colors, g8bgra & out_ImageView);
+			err_t bmpFileLoad	(vcu0_t source, a8bgra & out_Colors, g8bgra & out_ImageView);
+			err_t bmpFileLoad	(vcst_t filename, a8bgra & out_Colors, g8bgra & out_ImageView);
 
-	stin	err_t bmpFileLoad	(const s0_t		* source	, img8bgra & out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	stin	err_t bmpFileLoad	(FILE				* source	, img8bgra & out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	stin	err_t bmpFileLoad	(const vcst_t	& filename	, img8bgra & out_Texture)	{ return bmpFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
+	stin	err_t bmpFileLoad	(vcu0_t source  , img8bgra & out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
+	stin	err_t bmpFileLoad	(vcst_t filename, img8bgra & out_Texture)	{ return bmpFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
 #endif
 }
 

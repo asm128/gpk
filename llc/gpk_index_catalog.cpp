@@ -103,7 +103,7 @@ gpk::err_t			gpk::outputSearchScript		(string & output, view<cnst SItemViews> in
 		const SWordIndices		& element = wordSet[iWord];
 		if_fail_fe(output.push_back('['));
 		for(u2_t iArticle = 0; iArticle < element.Indices.size(); ++iArticle) {
-			if_fail_fe(append_strings(output, element.Indices[iArticle]));
+			if_fail_fe(append_strings(output, str(element.Indices[iArticle])));
 			if(iArticle < (element.Indices.size() - 1))
 				if_fail_fe(output.push_back(','));
 		}
@@ -114,7 +114,7 @@ gpk::err_t			gpk::outputSearchScript		(string & output, view<cnst SItemViews> in
 	if_fail_fe(append_strings(output, "];"
 		, "\nvar idList=["));
 	for(u2_t iArticle = 0; iArticle < indicesToDisplay.size(); ++iArticle) {
-		if_fail_fe(append_strings(output, iArticle));
+		if_fail_fe(append_strings(output, str(iArticle)));
 		if(iArticle < (indicesToDisplay.size() - 1))
 			if_fail_fe(output.push_back(','));
 	}
@@ -124,7 +124,7 @@ gpk::err_t			gpk::outputSearchScript		(string & output, view<cnst SItemViews> in
 		const SItemViews		& ad			= indicesToDisplay[iArticle];
 		if_fail_fe(output.push_back('['));
 		for(u2_t iBarrio = 0; iBarrio < ad.Barrio.size(); ++iBarrio) {
-			if_fail_fe(append_strings(output, ad.Barrio[iBarrio]));
+			if_fail_fe(append_strings(output, str(ad.Barrio[iBarrio])));
 			if(iBarrio < (ad.Barrio.size() - 1))
 				if_fail_fe(output.push_back(','));
 		}

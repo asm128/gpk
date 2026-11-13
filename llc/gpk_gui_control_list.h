@@ -81,7 +81,7 @@ nmsp gpk
 		if(parent != CID_INVALID)
 			if_fail_fe(controlSetParent(gui, menu.IdControl, parent));
 		for(u2_t iControl = 0; iControl < strings.size(); ++iControl)
-			if_fail_fe(controlListPush(gui, menu, ::gpk::str(strings[iControl])));
+			if_fail_fe(controlListPush(gui, menu, ::gpk::str(view<sc_c>((sc_c*)(strings[iControl].begin()), strings[iControl].size()))));
 		return 0;
 	}
 	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<const apod<T>> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
@@ -90,7 +90,7 @@ nmsp gpk
 		if(parent != CID_INVALID)
 			if_fail_fe(controlSetParent(gui, menu.IdControl, parent));
 		for(u2_t iControl = 0; iControl < strings.size(); ++iControl)
-			if_fail_fe(controlListPush(gui, menu, ::gpk::str(strings[iControl])));
+			if_fail_fe(controlListPush(gui, menu, ::gpk::str(view<sc_c>((sc_c*)(strings[iControl].begin()), strings[iControl].size())))); //::gpk::str(strings[iControl])));
 		return 0;
 	}
 	stin	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<vcst_c> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT)		{ return controlListCreate(gui, menu, view<vcsc_c>{strings.begin(), strings.size()}, parent, orientation); }

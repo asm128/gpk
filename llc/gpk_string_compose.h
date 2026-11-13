@@ -6,7 +6,9 @@
 
 nmsp gpk
 {
-	tplTstin	err_t	append_string			(asc_t & output, cnst T & arg)		{ rtrn output.append(str(arg)); }
+	stin		err_t	append_string			(asc_t & output, vcst_t arg)		{ rtrn output.append(vcst_t{arg}); }
+	tplTstin	err_t	append_string			(asc_t & output, view<cnst T> arg)	{ rtrn output.append(vcst_t{arg}); }
+	stin		err_t	append_string			(asc_t & output, sc_c arg)			{ rtrn output.push_back(arg); }
 	tpl_vtArgs	err_t	append_strings			(asc_t & output, _tArgs&&... args)	{ 
 		err_t					err			= 0;
 		s2_c					results[]	= {err = (failed(err) ? -1 : append_string(output, args))..., 0}; 

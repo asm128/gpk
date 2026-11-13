@@ -32,8 +32,6 @@ nmsp gpk
 
         ndin        oper    vcst_t      ()                      cnst    { return {Data, Count}; }
         ndin        oper    vstr_t      ()                              { return {Data, Count}; }
-        ndin        oper    sc_c*       ()                      cnst    { return vcst_t{Data, Count}; }
-        ndin        oper    sc_t*       ()                              { return vstr_t{Data, Count}; }
 
         ndin        sc_c*   begin       ()                      cnst    { return vcst_t{Data, Count}.begin(); }
         ndin        sc_c*   end         ()                      cnst    { return vcst_t{Data, Count}.end  (); }
@@ -43,7 +41,7 @@ nmsp gpk
     }; // struct
 
 #ifdef GPK_ARDUINO
-    ndsi        string  str         (cnst IPAddress & s)            { return s.GPK_VIEW_ARGS(); }
+    ndsi        string  str         (cnst IPAddress & s)            { return s.toString(); }
 #endif
                 err_t   camelCase   (vcst_t input, asc_t & camelCased);
 

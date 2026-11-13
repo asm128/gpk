@@ -1,6 +1,7 @@
 #include "gpk_window.h"
 #include "gpk_gui.h"
 #include "gpk_gui_control_list.h"
+#include "gpk_control_grid.h"
 #include "gpk_dialog.h"
 
 #ifndef TEST_GPK_GUI_H_23627
@@ -48,8 +49,7 @@ stct SSampleGUI {
 	::gpk::cid_t		ControlHelp				= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlExit				= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlAlignmentTitle	= ::gpk::CID_INVALID;
-	::gpk::cid_t		ControlAlignmentRoot	= ::gpk::CID_INVALID;
-	::gpk::astcid<9>	ControlsAlignment		= {};
+	::gpk::SControlGrid	GridAlignments	= {};
 	::gpk::astcid<3>	ControlsKeyboard		= {};
 };
 

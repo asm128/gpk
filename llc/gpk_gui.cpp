@@ -183,17 +183,72 @@ static	gpk::err_t paletteSetupDefaultColors	(::gpk::pobj<::gpk::a8bgra> & palett
 }
 
 static	gpk::err_t uiColorsSetupDefault (::gpk::SGUIColors & guiColors) {
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::GRAY	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::LIGHTGRAY	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY * 1.1	,::gpk::LIGHTGRAY * 1.1	,}});::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,	 ::gpk::LIGHTGRAY * 1.1	,
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::CYAN		, ::gpk::YELLOW	, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	, ::gpk::DARKCYAN / 2.0	,}}); ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,	  ::gpk::DARKCYAN / 2.0	,
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::RED		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DRAGGING				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::RED		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::ORANGE	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED	]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER		]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED		]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DRAGGING	]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED				]	= (u1_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::BLUE, ::gpk::GRAY, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::LIGHTGRAY, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1,
+		::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1,
+		::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1, ::gpk::LIGHTGRAY * 1.1,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::CYAN, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {},
+		::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0,
+		::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0,
+		::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0, ::gpk::DARKCYAN / 2.0,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::RED, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DRAGGING] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::RED, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::ORANGE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DRAGGING] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED] = (u1_t)guiColors.Palettes.push_back({{
+		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
+		::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
+	}});
 	return 0;
 }
 static	gpk::err_t uiColorsSetupDefault (::gpk::pobj<::gpk::SGUIColors> & guiColors) {
