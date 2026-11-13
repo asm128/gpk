@@ -9,7 +9,8 @@ stxp ::gpk::u0_t FILE_VIEWPORT_TEXT  = 1;
 
 sttc ::gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, ::gpk::u0_t index, ::gpk::vcst_t title, cnst ::gpk::rect2s1_t & area) {
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
-	if_fail_fe(viewer.Viewports[index] = ::gpk::viewportCreate(*viewer.Dialog, viewport));
+	if_fail_fe(::gpk::viewportCreate(*viewer.Dialog, viewport));
+	viewer.Viewports[index] = viewport->IdGUIControl;
 	::gpk::SControlTable & controls = viewer.GUI.Controls;
 	::gpk::SControlPlacement & root = controls.Placement[viewport->IdGUIControl];
 	root.Area = area;
@@ -25,7 +26,7 @@ sttc ::gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, ::gpk::u0_t ind
 
 sttc ::gpk::err_t fileViewerViewportAreaSet(SFileViewer & viewer, ::gpk::u0_t index, cnst ::gpk::rect2s1_t & area) {
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
-	if_fail_fe(viewer.Dialog->Get(viewer.Viewports[index], viewport));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[index], viewport));
 	viewer.GUI.Controls.Placement[viewport->IdGUIControl].Area = area;
 	viewer.GUI.Controls.Placement[viewport->IdClient].Area.Size = {(::gpk::s1_t)(area.Size.x - 8), (::gpk::s1_t)(area.Size.y - 32)};
 	rtrn ::gpk::controlMetricsInvalidate(viewer.GUI, viewport->IdGUIControl);
@@ -49,7 +50,7 @@ sttc ::gpk::err_t fileViewerLayoutSet(SFileViewer & viewer, FILE_VIEWER_LAYOUT l
 
 sttc ::gpk::err_t fileViewerListCreate(SFileViewer & viewer, ::gpk::SControlList & list, ::gpk::u0_t viewportIndex) {
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
-	if_fail_fe(viewer.Dialog->Get(viewer.Viewports[viewportIndex], viewport));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[viewportIndex], viewport));
 	if_fail_fe(::gpk::controlListInitialize(viewer.GUI, list));
 	list.Orientation = ::gpk::DIRECTION_DOWN;
 	if_fail_fe(::gpk::controlSetParent(viewer.GUI, list.IdControl, viewport->IdClient));
@@ -80,11 +81,11 @@ sttc ::gpk::err_t fileViewerListRowPush(SFileViewer & viewer, ::gpk::SControlLis
 	rtrn 0;
 }
 
-sttc ::gpk::err_t fileViewerScrollCreate(SFileViewer & viewer, ::gpk::u0_t viewportIndex, bool vertical, ::gpk::cid_t & idScrollBar) {
+sttc ::gpk::err_t fileViewerScrollCreate(SFileViewer & viewer, ::gpk::u0_t viewportIndex, bool vertical) {
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
 	::gpk::pobj<::gpk::SDialogSlider> scrollbar = {};
-	if_fail_fe(viewer.Dialog->Get(viewer.Viewports[viewportIndex], viewport));
-	if_fail_fe(idScrollBar = ::gpk::sliderCreate(*viewer.Dialog, scrollbar));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[viewportIndex], viewport));
+	if_fail_fe(::gpk::sliderCreate(*viewer.Dialog, scrollbar));
 	scrollbar->Vertical = vertical;
 	scrollbar->FuncValueFormat = [](::gpk::vcst_t & format, ::gpk::s3_t, cnst ::gpk::minmax<::gpk::s3_t> &) { format = ""; rtrn 0; };
 	scrollbar->ValueLimits = {0, 1};
@@ -100,33 +101,37 @@ sttc ::gpk::err_t fileViewerScrollCreate(SFileViewer & viewer, ::gpk::u0_t viewp
 	rtrn 0;
 }
 
-sttc ::gpk::err_t fileViewerListWindowUpdate(SFileViewer & viewer, ::gpk::SControlList & list, ::gpk::u2_t itemCount, ::gpk::u0_t viewportIndex) {
+sttc ::gpk::err_t fileViewerListWindowUpdate(SFileViewer & viewer, ::gpk::SControlList & list, cnst ::gpk::aobj<::gpk::string> & items, ::gpk::u0_t viewportIndex) {
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
 	::gpk::pobj<::gpk::SDialogSlider> scrollbar = {};
-	if_fail_fe(viewer.Dialog->Get(viewer.Viewports[viewportIndex], viewport));
-	if_fail_fe(viewer.Dialog->Get(viewer.ScrollBars[viewportIndex], scrollbar));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[viewportIndex], viewport));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbar));
+	if(items.size() && 0 == list.IdControls.size())
+		if_fail_fe(::fileViewerListRowPush(viewer, list, {}, true));
 	cnst ::gpk::s1_t rowHeight = list.IdControls.size() ? ::gpk::max((::gpk::s1_t)1, viewer.GUI.Controls.Placement[list.IdControls[0]].Area.Size.y) : 1;
 	cnst ::gpk::s3_t visibleCount = ::gpk::max((::gpk::s3_t)1, (::gpk::s3_t)viewer.GUI.Controls.Placement[viewport->IdClient].Area.Size.y / rowHeight);
-	cnst ::gpk::s3_t maxOffset = ::gpk::max((::gpk::s3_t)0, (::gpk::s3_t)itemCount - visibleCount);
+	while(list.IdControls.size() < ::gpk::min(items.size(), (::gpk::u2_t)visibleCount))
+		if_fail_fe(::fileViewerListRowPush(viewer, list, {}, true));
+	cnst ::gpk::s3_t maxOffset = ::gpk::max((::gpk::s3_t)0, (::gpk::s3_t)items.size() - visibleCount);
 	scrollbar->ValueLimits = {0, ::gpk::max((::gpk::s3_t)1, maxOffset)};
 	if_fail_fe(::gpk::sliderSetValue(*scrollbar, maxOffset ? scrollbar->ValueCurrent : 0));
 	viewport->Settings.ScrollBarY = 0 != maxOffset;
 	cnst ::gpk::s3_t firstVisible = maxOffset ? scrollbar->ValueCurrent : 0;
-	bool changed = false;
 	for(::gpk::u2_t iControl = 0; iControl < list.IdControls.size(); ++iControl) {
 		cnst ::gpk::cid_t idControl = list.IdControls[iControl];
-		cnst bool visible = iControl < itemCount && iControl >= (::gpk::u2_t)firstVisible && iControl < (::gpk::u2_t)(firstVisible + visibleCount);
-		if(viewer.GUI.Controls.IsHidden(idControl) == visible) {
-			viewer.GUI.Controls.SetHidden(idControl, false == visible);
-			changed = true;
-		}
+		cnst ::gpk::u2_t iItem = (::gpk::u2_t)firstVisible + iControl;
+		::gpk::vcst_t text = {};
+		if(iControl < (::gpk::u2_t)visibleCount && iItem < items.size())
+			text = items[iItem];
+		if(viewer.GUI.Controls.Text[idControl].Text != text)
+			if_fail_fe(::gpk::controlTextSet(viewer.GUI, idControl, text));
 	}
-	if(changed)
-		if_fail_fe(::gpk::controlListArrange(viewer.GUI, list));
 	rtrn 0;
 }
 
 sttc ::gpk::err_t fileViewerTextLoad(SFileViewer & viewer, ::gpk::vcst_t path) {
+	for(::gpk::u2_t iControl = 0; iControl < viewer.Lines.IdControls.size(); ++iControl)
+		if_fail_fe(::gpk::controlTextSet(viewer.GUI, viewer.Lines.IdControls[iControl], {}));
 	viewer.FileLines.clear();
 	viewer.FileText.clear();
 	viewer.FileLineWidthMax = 0;
@@ -144,13 +149,13 @@ sttc ::gpk::err_t fileViewerTextLoad(SFileViewer & viewer, ::gpk::vcst_t path) {
 			break;
 		remaining = next;
 	} while(true);
-	::gpk::pobj<::gpk::SDialogSlider> scrollbar = {};
-	if_fail_fe(viewer.Dialog->Get(viewer.ScrollBars[FILE_VIEWPORT_TEXT], scrollbar));
-	if_fail_fe(::gpk::sliderSetValue(*scrollbar, 0));
-	if_fail_fe(viewer.Dialog->Get(viewer.ScrollBarX, scrollbar));
-	if_fail_fe(::gpk::sliderSetValue(*scrollbar, 0));
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
-	if_fail_fe(viewer.Dialog->Get(viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	::gpk::pobj<::gpk::SDialogSlider> scrollbar = {};
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbar));
+	if_fail_fe(::gpk::sliderSetValue(*scrollbar, 0));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewport->IdScrollBarX, scrollbar));
+	if_fail_fe(::gpk::sliderSetValue(*scrollbar, 0));
 	viewer.GUI.Controls.Text[viewport->IdTitle].Text = ::gpk::label(path);
 	rtrn 0;
 }
@@ -159,9 +164,9 @@ sttc ::gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer) {
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
 	::gpk::pobj<::gpk::SDialogSlider> scrollbarY = {};
 	::gpk::pobj<::gpk::SDialogSlider> scrollbarX = {};
-	if_fail_fe(viewer.Dialog->Get(viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
-	if_fail_fe(viewer.Dialog->Get(viewer.ScrollBars[FILE_VIEWPORT_TEXT], scrollbarY));
-	if_fail_fe(viewer.Dialog->Get(viewer.ScrollBarX, scrollbarX));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbarY));
+	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewport->IdScrollBarX, scrollbarX));
 	if(0 == viewer.Lines.IdControls.size())
 		if_fail_fe(::fileViewerListRowPush(viewer, viewer.Lines, {}, false));
 	cnst ::gpk::s1_t rowHeight = ::gpk::max((::gpk::s1_t)1, viewer.GUI.Controls.Placement[viewer.Lines.IdControls[0]].Area.Size.y);
@@ -241,18 +246,15 @@ sttc ::gpk::err_t fileViewerSelectionUpdate(SFileViewer & viewer) {
 	if_fail_fe(::fileViewerViewportCreate(viewer, FILE_VIEWPORT_TEXT , "SELECT A FILE", {{480, 72}, {760, 560}}));
 	if_fail_fe(::fileViewerListCreate(viewer, viewer.Files, FILE_VIEWPORT_FILES));
 	if_fail_fe(::fileViewerListCreate(viewer, viewer.Lines, FILE_VIEWPORT_TEXT));
-	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_FILES, true, viewer.ScrollBars[FILE_VIEWPORT_FILES]));
-	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_TEXT , true, viewer.ScrollBars[FILE_VIEWPORT_TEXT ]));
-	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_TEXT , false, viewer.ScrollBarX));
-	::gpk::SPathContents pathContents = {};
-	if_fail_fe(::gpk::pathList(rootPath, pathContents, [](::gpk::b8_t folder, ::gpk::vcst_c &) { rtrn folder ? 1 : 0; }, {}));
-	for(::gpk::u2_t iFile = 0; iFile < pathContents.Files.size(); ++iFile)
-		if_fail_fe(::fileViewerListRowPush(viewer, viewer.Files, pathContents.Files[iFile], true));
+	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_FILES, true));
+	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_TEXT , true));
+	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_TEXT , false));
+	if_fail_fe(::gpk::pathList(rootPath, viewer.PathContents, [](::gpk::b8_t folder, ::gpk::vcst_c &) { rtrn folder ? 1 : 0; }, {}));
 	if_fail_fe(::fileViewerLayoutSet(viewer, layout));
 	if(FILE_VIEWER_LAYOUT_SPLIT == layout)
 		for(::gpk::u0_t iViewport = 0; iViewport < viewer.Viewports.size(); ++iViewport) {
 			::gpk::pobj<::gpk::SDialogViewport> viewport = {};
-			if_fail_fe(viewer.Dialog->Get(viewer.Viewports[iViewport], viewport));
+			if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[iViewport], viewport));
 			viewport->Settings.DisplacementLockX = true;
 			viewport->Settings.DisplacementLockY = true;
 			viewer.GUI.Controls.SetHidden(viewport->IdResizeBottomRight, true);
@@ -265,7 +267,7 @@ sttc ::gpk::err_t fileViewerSelectionUpdate(SFileViewer & viewer) {
 	if_fail_fe(viewer.Dialog->Update());
 	if(FILE_VIEWER_LAYOUT_SPLIT == layout)
 		if_fail_fe(::fileViewerLayoutSet(viewer, layout));
-	if_fail_fe(::fileViewerListWindowUpdate(viewer, viewer.Files, viewer.Files.IdControls.size(), FILE_VIEWPORT_FILES));
+	if_fail_fe(::fileViewerListWindowUpdate(viewer, viewer.Files, viewer.PathContents.Files, FILE_VIEWPORT_FILES));
 	if_fail_fe(::fileViewerTextWindowUpdate(viewer));
 	rtrn ::gpk::guiUpdateMetrics(viewer.GUI, viewer.Window.Size, false);
 }

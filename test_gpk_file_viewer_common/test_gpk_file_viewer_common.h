@@ -2,6 +2,7 @@
 #include "gpk_dialog.h"
 #include "gpk_dialog_controls.h"
 #include "gpk_gui_control_list.h"
+#include "gpk_path.h"
 
 #ifndef TEST_GPK_FILE_VIEWER_COMMON_H_23627
 #define TEST_GPK_FILE_VIEWER_COMMON_H_23627
@@ -17,13 +18,12 @@ stct SFileViewer {
 
 	::gpk::pobj<::gpk::SDialog>	Dialog		= {};
 	::gpk::astcid<2>			Viewports	= {};
-	::gpk::astcid<2>			ScrollBars	= {};
-	::gpk::cid_t				ScrollBarX	= -1;
 	::gpk::SControlList			Files		= {};
 	::gpk::SControlList			Lines		= {};
+	::gpk::SPathContents		PathContents= {};
 	::gpk::string				FileText	= {};
 	::gpk::apod<::gpk::vcst_t>	FileLines	= {};
-	::gpk::u2_t				FileLineWidthMax = 0;
+	::gpk::u2_t					FileLineWidthMax = 0;
 
 	SFileViewer(::gpk::SWindow & window, ::gpk::pobj<::gpk::SGUI> & gui) : Window(window), GUIHandle(gui), GUI(*gui) {}
 };
