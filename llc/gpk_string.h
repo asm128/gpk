@@ -18,7 +18,7 @@ nmsp gpk
         tplN2uinln          string      (sc_c (&other)[N])              : asc_t(vcst_t(other))                                  {}
 #ifdef GPK_ARDUINO
         inln                string      (cnst String & other)           : asc_t(vcst_t{other.begin(), (u2_t)other.length()})    {}
-        inln                string      (cnst IPAddress & other)        : string(other.GPK_VIEW_ARGS())                              {}
+        inln                string      (cnst IPAddress & other)        : string(other.GPK_VIEW_ARGS())                         {}
 #   ifdef GPK_ESP8266
         ndin        oper    String      ()                      cnst    { return String(Data); }
 #   else
@@ -30,8 +30,9 @@ nmsp gpk
         tplN2uinln  b8_t    oper==      (sc_c (&other)[N])      cnst    { rtrn oper==(vcst_t{other}); }
         tplN2uinln  b8_t    oper!=      (sc_c (&other)[N])      cnst    { rtrn oper!=(vcst_t{other}); }
 
-        ndin        oper    vcst_t      ()                      cnst    { return {Data, Count}; }
         ndin        oper    vstr_t      ()                              { return {Data, Count}; }
+        ndin        oper    vcst_t      ()                      cnst    { return {Data, Count}; }
+		ndin	    oper	sc_c* 		()			        	csnx	{ rtrn begin(); }
 
         ndin        sc_c*   begin       ()                      cnst    { return vcst_t{Data, Count}.begin(); }
         ndin        sc_c*   end         ()                      cnst    { return vcst_t{Data, Count}.end  (); }
