@@ -40,6 +40,7 @@ static	gpk::err_t paletteSetupDefault			(::gpk::a8bgra & palette, const ::gpk::v
 static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> & palette, s2_t iColor, ::gpk::SControlTheme & theme, u2_t iShades)	{
 	::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	]	= {};
 	::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	]	= {};
+	::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboDragging									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DRAGGING	]	= {};
 	::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	]	= {};
 	::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER	]	= {};
 	::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL	]	= {};
@@ -47,6 +48,12 @@ static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> &
 	//const s2_t														colorBase												= iColor / iShades;
 	const s2_t														colorShade												= iColor % iShades;
 	const s2_t														colorText												= (::gpk::ASCII_COLOR_WHITE * iShades);
+	const s2_t														halfShades												= (s2_t)iShades / 2;
+	const s2_t														selectedShades										= (s2_t)iShades / 4;
+	const s2_t														colorSelected											= iColor + ((colorShade < halfShades) ? selectedShades : -selectedShades);
+	const s2_t														selectedShade											= colorSelected % iShades;
+	const s2_t														colorDragging											= iColor + ((colorShade < halfShades) ? 1 : -1);
+	const s2_t														draggingShade											= colorDragging % iShades;
 
 	colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
 	colorComboDisabled	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
@@ -60,14 +67,21 @@ static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> &
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
-	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText + 7 : colorText + 9;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 15;
 //
-	colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 8;
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= colorDragging;
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (draggingShade > 7) ? colorText : colorText + 15;
+//
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= colorSelected;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= colorSelected;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= colorSelected;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= colorSelected;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= colorSelected;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (selectedShade > 7) ? colorText + 4 : colorText + 12;
 //
 	colorComboHover 	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
 	colorComboHover 	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
@@ -81,12 +95,14 @@ static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> &
 	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
 	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
 	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
-	colorComboNormal	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 15;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText + 4: colorText + 12;
 
 	colorComboDisabled	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboDisabled	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboPressed		[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboPressed 	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboDragging	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboDragging	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboHover 	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboHover		[::gpk::UI_CONTROL_AREA_BACKGROUND];
@@ -182,7 +198,24 @@ static	gpk::err_t paletteSetupDefaultColors	(::gpk::pobj<::gpk::a8bgra> & palett
 	return 0;
 }
 
+static	gpk::err_t uiColorsShade
+	( ::gpk::asttc<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT> & output
+	, const ::gpk::asttc<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT> & base
+	, u2_t shade
+	, u2_t shades
+	) {
+	if_true_fe(0 == shades);
+	if_true_fe(shade >= shades);
+	for(u2_t iArea = 0; iArea < output.size(); ++iArea) {
+		output[iArea] = ::gpk::rgbaf(base[iArea]) / (f2_t)shades * (f2_t)(shades - shade);
+		output[iArea].a = base[iArea].a;
+	}
+	return 0;
+}
+
 static	gpk::err_t uiColorsSetupDefault (::gpk::SGUIColors & guiColors) {
+	stxp u2_t shades = 16;
+	::gpk::asttc<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT> shaded = {};
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL] = (u1_t)guiColors.Palettes.push_back({{
 		::gpk::BLUE, ::gpk::GRAY, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
 		::gpk::WHITE, ::gpk::WHITE,
@@ -207,42 +240,18 @@ static	gpk::err_t uiColorsSetupDefault (::gpk::SGUIColors & guiColors) {
 		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
 		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
 	}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DRAGGING] = (u1_t)guiColors.Palettes.push_back({{
-		::gpk::RED, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
-		::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-	}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED] = (u1_t)guiColors.Palettes.push_back({{
-		::gpk::ORANGE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
-		::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-	}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED] = (u1_t)guiColors.Palettes.push_back({{
-		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
-		::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-	}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER] = (u1_t)guiColors.Palettes.push_back({{
-		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
-		::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-	}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED] = (u1_t)guiColors.Palettes.push_back({{
-		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
-		::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-	}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DRAGGING] = (u1_t)guiColors.Palettes.push_back({{
-		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
-		::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-		::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE, ::gpk::WHITE,
-	}});
+	if_fail_fe(::uiColorsShade(shaded, guiColors.Palettes[guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL]], 1, shades));
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DRAGGING] = (u1_t)guiColors.Palettes.push_back(shaded);
+	if_fail_fe(::uiColorsShade(shaded, guiColors.Palettes[guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL]], 8, shades));
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED] = (u1_t)guiColors.Palettes.push_back(shaded);
+	if_fail_fe(::uiColorsShade(shaded, guiColors.Palettes[guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED]], 8, shades));
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED] = (u1_t)guiColors.Palettes.push_back(shaded);
+	if_fail_fe(::uiColorsShade(shaded, guiColors.Palettes[guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER]], 8, shades));
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER] = (u1_t)guiColors.Palettes.push_back(shaded);
+	if_fail_fe(::uiColorsShade(shaded, guiColors.Palettes[guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED]], 8, shades));
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED] = (u1_t)guiColors.Palettes.push_back(shaded);
+	if_fail_fe(::uiColorsShade(shaded, guiColors.Palettes[guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DRAGGING]], 8, shades));
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DRAGGING] = (u1_t)guiColors.Palettes.push_back(shaded);
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED] = (u1_t)guiColors.Palettes.push_back({{
 		::gpk::BLUE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {},
 		::gpk::WHITE, ::gpk::WHITE,

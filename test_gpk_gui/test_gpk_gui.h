@@ -36,7 +36,9 @@ stct SSampleGUI {
 	::gpk::SGUI			& GUI;
 
 	SSampleGUI(::gpk::SWindow & window, ::gpk::pobj<::gpk::SGUI> & gui) : Window(window), GUIHandle(gui), GUI(*gui) {}
+	bool				UseNewPalettes			= false;
 	::gpk::cid_t		ControlMode				= ::gpk::CID_INVALID;
+	::gpk::cid_t		ControlGeometry			= ::gpk::CID_INVALID;
 	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
 	SPalettePicker		PalettePicker			= {};
 	SFontPicker			FontPicker				= {};
@@ -50,7 +52,7 @@ stct SSampleGUI {
 	::gpk::cid_t		ControlExit				= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlAlignmentTitle	= ::gpk::CID_INVALID;
 	::gpk::SControlGrid	GridAlignments	= {};
-	::gpk::astcid<3>	ControlsKeyboard		= {};
+	::gpk::astcid<4>	ControlsKeyboard		= {};
 };
 
 ::gpk::err_t		sampleGUISetup				(SSampleGUI & app);

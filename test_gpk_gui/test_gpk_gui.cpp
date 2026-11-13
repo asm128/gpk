@@ -35,6 +35,12 @@ sttc ::gpk::err_t sampleGUIControlCreate(SSampleGUI & app, ::gpk::cid_t & idCont
 	rtrn 0;
 }
 
+sttc ::gpk::err_t sampleGUIGeometryModeApply(SSampleGUI & app) {
+	for(::gpk::u2_t iControl = 0; iControl < app.GUI.Controls.Draw.size(); ++iControl)
+		app.GUI.Controls.Draw[iControl].UseNewPalettes = app.UseNewPalettes;
+	rtrn ::gpk::controlTextSet(app.GUI, app.ControlGeometry, app.UseNewPalettes ? ::gpk::vcst_t{"Geometry: Areas"} : ::gpk::vcst_t{"Geometry: Indexed"});
+}
+
 sttc void sampleGUIStateCardsApply(SSampleGUI & app) nxpt {
 	cnst ::gpk::enum_definition<::gpk::GUI_CONTROL_FLAG> & stateDefinition = ::gpk::get_enum<::gpk::GUI_CONTROL_FLAG>();
 	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState) {
@@ -221,7 +227,7 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 	if_fail_fe(app.FontPicker.Labels.resize(app.GUI.Fonts.size()));
 	for(::gpk::u2_t iFont = 0; iFont < app.GUI.Fonts.size(); ++iFont) {
 		cnst ::gpk::n2u0_t charSize = app.GUI.Fonts[iFont]->CharSize;
-		if_fail_fe(::gpk::append_strings(app.FontPicker.Labels[iFont], charSize.x, "x", charSize.y));
+		if_fail_fe(::gpk::append_strings(app.FontPicker.Labels[iFont], ::gpk::str(charSize.x), "x", ::gpk::str(charSize.y)));
 	}
 	if_fail_fe(::gpk::controlGridCreate(app.GUI, app.FontPicker.Grid, ::gpk::view<::gpk::string>{app.FontPicker.Labels}, viewportFonts->IdClient, ::gpk::DIRECTION_RIGHT, 2, {152, 28}, {4, 6}, {1, 0}));
 	cnst ::gpk::enum_definition<::gpk::GUI_CONTROL_FLAG> & stateDefinition = ::gpk::get_enum<::gpk::GUI_CONTROL_FLAG>();
@@ -229,10 +235,13 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportStates, viewportStates, "CONTROL STATES", {{20, 120}, {360, (::gpk::s1_t)(42 + stateDefinition.Values.size() * 18)}}));
 
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlMode, "Mode: 3D", {{720, 18}, {184, 42}}, FONT_BODY));
+	if_fail_fe(::sampleGUIControlCreate(app, app.ControlGeometry, "Geometry: Indexed", {{720, 66}, {184, 42}}, FONT_BODY));
 	::gpk::aobj<::gpk::vcst_t> stateCells = {};
 	if_fail_fe(stateCells.resize(stateDefinition.Values.size() * 2));
-	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState)
+	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState) {
 		stateCells[iState] = stateDefinition.Names[iState];
+		stateCells[stateDefinition.Values.size() + iState] = stateDefinition.Names[iState];
+	}
 	if_fail_fe(::gpk::controlGridCreate(app.GUI, app.GridStates, ::gpk::view<::gpk::vcst_t>{stateCells}, viewportStates->IdClient, ::gpk::DIRECTION_DOWN, 2, {168, 18}, {0, 0}, {8, 6}));
 	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState) {
 		cnst ::gpk::cid_t idName = app.GridStates[0].IdControls[iState];
@@ -263,9 +272,11 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 		app.GUI.Controls.Text[idControl].FontSelected = FONT_BODY;
 	}
 	app.ControlsKeyboard[0] = app.ControlMode;
-	app.ControlsKeyboard[1] = app.ControlLive;
-	app.ControlsKeyboard[2] = app.ControlExit;
+	app.ControlsKeyboard[1] = app.ControlGeometry;
+	app.ControlsKeyboard[2] = app.ControlLive;
+	app.ControlsKeyboard[3] = app.ControlExit;
 
+	if_fail_fe(::sampleGUIGeometryModeApply(app));
 	if_fail_fe(::sampleGUIPalettePickerApply(app));
 	::sampleGUIFontPickerApply(app);
 	::sampleGUIStateCardsApply(app);
@@ -282,6 +293,8 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 		rtrn ::gpk::APPLICATION_STATE_EXIT;
 	if(app.GUI.Controls.IsAction(app.ControlMode))
 		app.GUI.ColorModeDefault = app.GUI.ColorModeDefault == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_Flat : ::gpk::GUI_COLOR_MODE_3D;
+	if(app.GUI.Controls.IsAction(app.ControlGeometry))
+		app.UseNewPalettes = !app.UseNewPalettes;
 	cnst ::gpk::u2_t toneCount = ::sampleGUIPaletteToneCount(app);
 	for(::gpk::u2_t iTone = 0; iTone < toneCount; ++iTone)
 		if(app.GUI.Controls.IsAction(::gpk::controlGridControl(app.PalettePicker.GridTones, iTone)))
@@ -300,6 +313,7 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 	cnst ::gpk::cid_t idHovered = ::sampleGUIHoveredControl(app);
 	cnst ::gpk::cid_t idFocused = ::sampleGUIFocusedControl(app);
 	if_fail_fe(::gpk::controlTextSet(app.GUI, app.ControlMode, app.GUI.ColorModeDefault == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::vcst_t{"Mode: 3D"} : ::gpk::vcst_t{"Mode: Flat"}));
+	if_fail_fe(::sampleGUIGeometryModeApply(app));
 	if_fail_fe(::sampleGUIPalettePickerApply(app));
 	::sampleGUIFontPickerApply(app);
 	::sampleGUIStateCardsApply(app);

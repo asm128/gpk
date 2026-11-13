@@ -9,4 +9,7 @@
   <PropertyGroup>
     <LocalDebuggerCommandArgumentsHistory>modules.gpk|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArgumentsHistory>modules.gpk|</LocalDebuggerCommandArgumentsHistory>
+  </PropertyGroup>
 </Project>
