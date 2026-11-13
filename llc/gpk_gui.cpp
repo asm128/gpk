@@ -669,8 +669,11 @@ gpk::err_t 		gpk::guiDeselect		(::gpk::SGUI & gui)	{
 }
 
 gpk::err_t 		gpk::guiSelect			(::gpk::SGUI & gui, ::gpk::cid_t controlToSelect)	{
-	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) 
-		gui.Controls.SetSelected((::gpk::cid_t)iControl, controlToSelect == (::gpk::cid_t)iControl);
+	if_true_fe(::gpk::controlInvalid(gui, controlToSelect));
+	cnst ::gpk::cid_t parent = gui.Controls.States[controlToSelect].Parent;
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
+		if(gui.Controls.States[iControl].Parent == parent)
+			gui.Controls.SetSelected((::gpk::cid_t)iControl, controlToSelect == (::gpk::cid_t)iControl);
 
 	return 0;
 }

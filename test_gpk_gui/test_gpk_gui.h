@@ -1,4 +1,3 @@
-#include "gpk_window.h"
 #include "gpk_gui.h"
 #include "gpk_gui_control_list.h"
 #include "gpk_control_grid.h"
@@ -19,27 +18,25 @@ stct SFontPicker {
 	::gpk::cid_t		IdViewport		= ::gpk::CID_INVALID;
 	::gpk::SControlGrid	Grid			= {};
 	::gpk::aobj<::gpk::string>	Labels	= {};
-	::gpk::u2_t			Selected		= 0;
 };
 
 stct SPalettePicker {
 	::gpk::cid_t		IdViewport		= ::gpk::CID_INVALID;
-	::gpk::SControlGrid	GridTones		= {};
+	::gpk::SControlGrid	GridTones[2]	= {};
 	::gpk::SControlGrid	GridShades		= {};
-	::gpk::u2_t			Tone			= 0;
-	::gpk::u2_t			Shade			= 0;
 };
 
 stct SSampleGUI {
-	::gpk::SWindow		& Window;
 	::gpk::pobj<::gpk::SGUI>	GUIHandle	= {};
-	::gpk::SGUI			& GUI;
 
-	SSampleGUI(::gpk::SWindow & window, ::gpk::pobj<::gpk::SGUI> & gui) : Window(window), GUIHandle(gui), GUI(*gui) {}
+	SSampleGUI(::gpk::pobj<::gpk::SGUI> & gui) : GUIHandle(gui) {}
 	bool				UseNewPalettes			= false;
 	::gpk::cid_t		ControlMode				= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlGeometry			= ::gpk::CID_INVALID;
 	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
+	::gpk::acid			ViewportIds			= {};
+	::gpk::SControlList	ListViewports			= {};
+	::gpk::SControlList	ListExit			= {};
 	SPalettePicker		PalettePicker			= {};
 	SFontPicker			FontPicker				= {};
 	::gpk::cid_t		ViewportStates			= ::gpk::CID_INVALID;
@@ -49,14 +46,15 @@ stct SSampleGUI {
 	SSampleGUIInspector	InspectorLive			= {};
 	SSampleGUIInspector	InspectorHovered		= {};
 	SSampleGUIInspector	InspectorFocused		= {};
-	::gpk::cid_t		ControlHelp				= ::gpk::CID_INVALID;
+	::gpk::cid_t		ControlScreenshot		= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlExit				= ::gpk::CID_INVALID;
+	bool				ScreenshotRequested		= false;
 	::gpk::cid_t		ViewportAlignments		= ::gpk::CID_INVALID;
 	::gpk::astcid<9>	ControlsAlignment		= {};
 	::gpk::astcid<4>	ControlsKeyboard		= {};
 };
 
-::gpk::err_t		sampleGUISetup				(SSampleGUI & app);
+::gpk::err_t		sampleGUISetup				(SSampleGUI & app, ::gpk::pobj<::gpk::SInput> & input);
 ::gpk::err_t		sampleGUIUpdate				(SSampleGUI & app, bool systemRequestedExit);
 ::gpk::err_t		sampleGUIDraw				(SSampleGUI & app, ::gpk::g8bgra target);
 
