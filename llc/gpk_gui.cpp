@@ -51,6 +51,7 @@ static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> &
 	const s2_t														halfShades												= (s2_t)iShades / 2;
 	const s2_t														selectedShades										= (s2_t)iShades / 4;
 	const s2_t														colorSelected											= iColor + ((colorShade < halfShades) ? selectedShades : -selectedShades);
+	const s2_t														selectedShade											= colorSelected % iShades;
 	const s2_t														colorDragging											= iColor + ((colorShade < halfShades) ? 1 : -1);
 	const s2_t														draggingShade											= colorDragging % iShades;
 
@@ -66,21 +67,21 @@ static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> &
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
-	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText + 15 : colorText;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 15;
 //
 	colorComboDragging	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= colorDragging;
 	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
 	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
 	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
 	colorComboDragging	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (draggingShade > 7) ? colorDragging - 3 : colorDragging + 3;
-	colorComboDragging	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (draggingShade > 7) ? colorText + 15 : colorText;
+	colorComboDragging	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (draggingShade > 7) ? colorText : colorText + 15;
 //
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= colorSelected;
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= colorSelected;
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= colorSelected;
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= colorSelected;
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= colorSelected;
-	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 8;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (selectedShade > 7) ? colorText + 4 : colorText + 12;
 //
 	colorComboHover 	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
 	colorComboHover 	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
@@ -94,7 +95,7 @@ static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> &
 	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
 	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
 	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
-	colorComboNormal	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 15;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText + 4: colorText + 12;
 
 	colorComboDisabled	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboDisabled	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND];
