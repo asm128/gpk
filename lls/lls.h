@@ -55,13 +55,13 @@ namespace lls
 			return 0;
 		}
 
-		::gpk::err_t			GetPlayerFilePath			(const uint64_t time, const ::gpk::vcst_t & playerName, ::gpk::string & playerFilePath)	const	{
+		::gpk::err_t			GetPlayerFilePath			(const u3_t time, const ::gpk::vcst_t & playerName, ::gpk::string & playerFilePath)	const	{
 			::gpk::string					b64PlayerName				= {};
-			do { if_fail_fe(::gpk::base64Encode(playerName, b64PlayerName)); } while(0);
+			if_fail_fe(::gpk::base64Encode(playerName, b64PlayerName));
 			return ::gpk::append_strings
 				( playerFilePath
 				, SavegameFolder, "/", b64PlayerName
-				, time, ExtensionProfile
+				, ::gpk::str(time), ExtensionProfile
 				);
 		}
 	};

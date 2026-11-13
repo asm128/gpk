@@ -6,7 +6,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommandArgumentsHistory>modules|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup>
     <LocalDebuggerCommandArgumentsHistory>modules|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
 </Project>

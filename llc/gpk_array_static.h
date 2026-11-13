@@ -15,8 +15,8 @@ nmsp gpk
 		tydf		view<T>				V;
 		T			Storage	[N]			;
 
-		inln	oper		view<T>			()								{ rtrn {Storage, N}; }
-		inxp	oper		view<TCnst>		()						csnx	{ rtrn {Storage, N}; }
+		inln	oper		view<T>			()								{ rtrn Storage; }
+		inxp	oper		view<TCnst>		()						csnx	{ rtrn Storage; }
 
 		inln	TCnst&		oper[]			(u2_t index)			cnst	{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
 		inln	T&			oper[]			(u2_t index)					{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
@@ -52,59 +52,84 @@ nmsp gpk
 	};
 #pragma pack(pop)
 
-	tplTN2usng	asttc		= ::gpk::array_static<T, N>;
-	tplTN2usng	astatic		= ::gpk::array_static<T, N>;
+	tplTN2usng	asttc		= array_static<T, N>;
+	tplTN2usng	astatic		= array_static<T, N>;
 
-	tplN2uusng	astvcst_t	= ::gpk::astatic<::gpk::vcst_t	, N>;	
-	tplN2uusng	astvstr_t	= ::gpk::astatic<::gpk::vstr_t	, N>;	
+	tplN2uusng	astvcst_t	= astatic<vcst_t	, N>;	
+	tplN2uusng	astvstr_t	= astatic<vstr_t	, N>;	
 
-	tplN2uusng	astb8_t		= ::gpk::astatic<b8_t, N>; tplN2uusng	astb8_c	= const ::gpk::astb8_t<N>; 
-	tplN2uusng	astuc_t		= ::gpk::astatic<uc_t, N>; tplN2uusng	astuc_c	= const ::gpk::astuc_t<N>; 
-	tplN2uusng	astsc_t		= ::gpk::astatic<sc_t, N>; tplN2uusng	astsc_c	= const ::gpk::astsc_t<N>; 
-	tplN2uusng	astu0_t		= ::gpk::astatic<u0_t, N>; tplN2uusng	astu0_c	= const ::gpk::astu0_t<N>; 
-	tplN2uusng	astu1_t		= ::gpk::astatic<u1_t, N>; tplN2uusng	astu1_c	= const ::gpk::astu1_t<N>; 
-	tplN2uusng	astu2_t		= ::gpk::astatic<u2_t, N>; tplN2uusng	astu2_c	= const ::gpk::astu2_t<N>; 
-	tplN2uusng	astu3_t		= ::gpk::astatic<u3_t, N>; tplN2uusng	astu3_c	= const ::gpk::astu3_t<N>; 
-	tplN2uusng	asts0_t		= ::gpk::astatic<s0_t, N>; tplN2uusng	asts0_c	= const ::gpk::asts0_t<N>; 
-	tplN2uusng	asts1_t		= ::gpk::astatic<s1_t, N>; tplN2uusng	asts1_c	= const ::gpk::asts1_t<N>; 
-	tplN2uusng	asts2_t		= ::gpk::astatic<s2_t, N>; tplN2uusng	asts2_c	= const ::gpk::asts2_t<N>; 
-	tplN2uusng	asts3_t		= ::gpk::astatic<s3_t, N>; tplN2uusng	asts3_c	= const ::gpk::asts3_t<N>; 
-	tplN2uusng	astf2_t		= ::gpk::astatic<f2_t, N>; tplN2uusng	astf2_c	= const ::gpk::astf2_t<N>; 
-	tplN2uusng	astf3_t		= ::gpk::astatic<f3_t, N>; tplN2uusng	astf3_c	= const ::gpk::astf3_t<N>; 
+	tplN2uusng	astb8_t		= astatic<b8_t, N>; tplN2uusng	astb8_c	= const astb8_t<N>; 
+	tplN2uusng	astuc_t		= astatic<uc_t, N>; tplN2uusng	astuc_c	= const astuc_t<N>; 
+	tplN2uusng	astsc_t		= astatic<sc_t, N>; tplN2uusng	astsc_c	= const astsc_t<N>; 
+	tplN2uusng	astu0_t		= astatic<u0_t, N>; tplN2uusng	astu0_c	= const astu0_t<N>; 
+	tplN2uusng	astu1_t		= astatic<u1_t, N>; tplN2uusng	astu1_c	= const astu1_t<N>; 
+	tplN2uusng	astu2_t		= astatic<u2_t, N>; tplN2uusng	astu2_c	= const astu2_t<N>; 
+	tplN2uusng	astu3_t		= astatic<u3_t, N>; tplN2uusng	astu3_c	= const astu3_t<N>; 
+	tplN2uusng	asts0_t		= astatic<s0_t, N>; tplN2uusng	asts0_c	= const asts0_t<N>; 
+	tplN2uusng	asts1_t		= astatic<s1_t, N>; tplN2uusng	asts1_c	= const asts1_t<N>; 
+	tplN2uusng	asts2_t		= astatic<s2_t, N>; tplN2uusng	asts2_c	= const asts2_t<N>; 
+	tplN2uusng	asts3_t		= astatic<s3_t, N>; tplN2uusng	asts3_c	= const asts3_t<N>; 
+	tplN2uusng	astf2_t		= astatic<f2_t, N>; tplN2uusng	astf2_c	= const astf2_t<N>; 
+	tplN2uusng	astf3_t		= astatic<f3_t, N>; tplN2uusng	astf3_c	= const astf3_t<N>; 
 
-	tplN2uusng	astvcu0_t 	= ::gpk::astatic<::gpk::vcu0_t 	, N>; 
-	tplN2uusng	astvcu1_t	= ::gpk::astatic<::gpk::vcu1_t	, N>; 
-	tplN2uusng	astvcu2_t	= ::gpk::astatic<::gpk::vcu2_t	, N>; 
-	tplN2uusng	astvcu3_t	= ::gpk::astatic<::gpk::vcu3_t	, N>; 
-	tplN2uusng	astvcs0_t 	= ::gpk::astatic<::gpk::vcs0_t 	, N>; 
-	tplN2uusng	astvcs1_t	= ::gpk::astatic<::gpk::vcs1_t	, N>; 
-	tplN2uusng	astvcs2_t	= ::gpk::astatic<::gpk::vcs2_t	, N>; 
-	tplN2uusng	astvcs3_t	= ::gpk::astatic<::gpk::vcs3_t	, N>; 
-	tplN2uusng	astvcf2_t	= ::gpk::astatic<::gpk::vcf2_t	, N>; 
-	tplN2uusng	astvcf3_t	= ::gpk::astatic<::gpk::vcf3_t	, N>; 
+	tplN2uusng	astvcu0_t 	= astatic<vcu0_t 	, N>; 
+	tplN2uusng	astvcu1_t	= astatic<vcu1_t	, N>; 
+	tplN2uusng	astvcu2_t	= astatic<vcu2_t	, N>; 
+	tplN2uusng	astvcu3_t	= astatic<vcu3_t	, N>; 
+	tplN2uusng	astvcs0_t 	= astatic<vcs0_t 	, N>; 
+	tplN2uusng	astvcs1_t	= astatic<vcs1_t	, N>; 
+	tplN2uusng	astvcs2_t	= astatic<vcs2_t	, N>; 
+	tplN2uusng	astvcs3_t	= astatic<vcs3_t	, N>; 
+	tplN2uusng	astvcf2_t	= astatic<vcf2_t	, N>; 
+	tplN2uusng	astvcf3_t	= astatic<vcf3_t	, N>; 
 	
-	tplTN2sinx	u2_t	size		(::gpk::astatic<T, N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N);				}
-	tplTN2sinx	u2_t	byte_count	(::gpk::astatic<T, N> /*viewToTest*/)	nxpt	{ rtrn u2_t(sizeof(T) * N);	}
+	tplTN2sinx	u2_t	size		(asttc<T, N> & /*viewToTest*/)	nxpt	{ rtrn u2_t(N);				}
+	tplTN2sinx	u2_t	byte_count	(asttc<T, N> & /*viewToTest*/)	nxpt	{ rtrn u2_t(sizeof(T) * N);	}
+	tplTN2sinx	err_t	find		(cnst T & element, cnst astatic<T, N> & target, u2_t offset = 0)		{ rtrn find(element, view<cnst T>{target.begin(), target.size()}, offset); }
+	tplN2ustin	vstr_t	str			(astsc_t<N> & arg)			{ rtrn arg.Storage; }
+	tplN2usinx	vcst_t	str			(astsc_c<N> & arg)	nxpt	{ rtrn arg.Storage; }
 
+	tplt<u2_t N>
+	stct static_string :  astsc_t<N> {
+		usng	astsc_t<N>	::Storage;
+		u2_t					Count			= {};
 
-	tplTN2sinx	err_t	find		(cnst T & element, cnst astatic<T, N> & target, u2_t offset = 0)		{ rtrn ::gpk::find(element, ::gpk::view<cnst T>{target.begin(), target.size()}, offset); }
-	tplN2ustin	vstr_t	str			(astsc_t<N> & arg)	{ rtrn arg.Storage; }
-	tplN2ustin	vcst_t	str			(astsc_c<N> & arg)	{ rtrn arg.Storage; }
-	stin astsc_t< 7>	str			(u1_t arg)	{ astsc_t< 7> dest = {}; sprintf_s(dest.Storage, "%u" , arg); rtrn dest; }
-	stin astsc_t<12>	str			(u2_t arg)	{ astsc_t<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U2, arg); rtrn dest; }
-	stin astsc_t<22>	str			(u3_t arg)	{ astsc_t<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U3, arg); rtrn dest; }
-	stin astsc_t< 8>	str			(s1_t arg)	{ astsc_t< 8> dest = {}; sprintf_s(dest.Storage, "%i", arg); rtrn dest; }
-	stin astsc_t<13>	str			(s2_t arg)	{ astsc_t<13> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S2, arg); rtrn dest; }
-	stin astsc_t<22>	str			(s3_t arg)	{ astsc_t<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S3, arg); rtrn dest; }
-	stin astsc_t<64>	str			(f2_t arg)	{ astsc_t<64> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
-	stin astsc_t<384>	str			(f3_t arg)	{ astsc_t<384> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
-	stxp astsc_t<5 >	str			(u0_t arg) {
+		inxp					static_string	()						{}
+		inxp					static_string	(astsc_c<N> & other)	: astsc_t<N>(other), Count(vcst_t(other.Storage).size()) {}
+
+		inln	static_string&	oper=			(astsc_c<N> & other)	{ Count = vcst_t(other.Storage).size(); return astsc_t<N>::oper=(other); }
+
+		inln	oper			vstr_t			()						{ rtrn Storage; }
+		inxp	oper			vcst_t			()				csnx	{ rtrn Storage; }
+		ndix	oper			sc_c* 			()				csnx	{ rtrn begin(); }
+
+		inxp	u2_t			byte_count		()				csnx	{ rtrn vcst_t{Storage}.byte_count	(); } 
+		inxp	u2_t			bit_count		()				csnx	{ rtrn vcst_t{Storage}.bit_count	(); } 
+		inxp	u2_t			size			()				csnx	{ rtrn vcst_t{Storage}.size			(); }
+		inln	sc_t*			begin			()				nxpt	{ rtrn vstr_t{Storage}.begin(); }
+		inln	sc_t*			end				()				nxpt	{ rtrn vstr_t{Storage}.end  (); }
+		inxp	sc_c*			begin			()				csnx	{ rtrn vcst_t{Storage}.begin(); }
+		inxp	sc_c*			end				()				csnx	{ rtrn vcst_t{Storage}.end  (); }
+	};
+	tplN2uusng			sstring		= static_string<N>;
+	tplTN2sinx	u2_t	size		(const sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
+	tplTN2sinx	u2_t	byte_count	(const sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
+
+	stin sstring<64>	str			(f2_t arg)	{ astsc_t< 64> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
+	stin sstring<384>	str			(f3_t arg)	{ astsc_t<384> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
+	stin sstring< 7>	str			(u1_t arg)	{ astsc_t<  7> dest = {}; sprintf_s(dest.Storage, "%u" , arg); rtrn dest; }
+	stin sstring<12>	str			(u2_t arg)	{ astsc_t< 12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U2, arg); rtrn dest; }
+	stin sstring<22>	str			(u3_t arg)	{ astsc_t< 22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U3, arg); rtrn dest; }
+	stin sstring< 8>	str			(s1_t arg)	{ astsc_t<  8> dest = {}; sprintf_s(dest.Storage, "%i", arg); rtrn dest; }
+	stin sstring<13>	str			(s2_t arg)	{ astsc_t< 13> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S2, arg); rtrn dest; }
+	stin sstring<22>	str			(s3_t arg)	{ astsc_t< 22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S3, arg); rtrn dest; }
+	stxp sstring<5 >	str			(u0_t arg) {
 		rtrn	(arg >= 100) ?	astsc_t<5>{digit<2>(arg), digit<1>(arg), digit<0>(arg), 0}
 			:	(arg >=  10) ?	astsc_t<5>{digit<1>(arg), digit<0>(arg), 0}
 			:					astsc_t<5>{digit<0>(arg), 0}
 			;
 	}
-	stxp astsc_t<5 >	str			(s0_t arg) {
+	stxp sstring<5 >	str			(s0_t arg) {
 		rtrn	(arg >=    0) ?	str(u0_t(arg))
 			:	(arg <= -100) ?	astsc_t<5>{'-', digit<2>((s1_t)-arg), digit<1>((s1_t)-arg), digit<0>((s1_t)-arg)}
 			:	(arg <=  -10) ?	astsc_t<5>{'-', digit<1>((s1_t)-arg), digit<0>((s1_t)-arg)}

@@ -12,7 +12,7 @@ gpk::err_t 		gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyb
 	}
 	keys.push_back('!');
 	keys.push_back('?');
-	if_fail_fe(gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu1_t{keys}));
+	if_fail_fe(gpk::virtualKeyboardSetup(gui, vk, 32, keys));
 	gui.Controls.SetHidden(vk.IdRoot, true);
 	return vk.IdRoot;
 }

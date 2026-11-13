@@ -32,5 +32,6 @@ sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues) {
 		, GPK_TEST_SUITE(json_expression)
 		, GPK_TEST_SUITE(png)
 		, GPK_TEST_SUITE(array_static)
+		, GPK_TEST_SUITE(string)
 		);
 }

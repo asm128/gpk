@@ -321,13 +321,7 @@ nmsp gpk
 	ndsi		sc_c*	b82sc			(bool b)					nxpt	{ rtrn b ? VCC_TRUE : VCC_FALSE; }
 	stin		sc_c*	b82sc			(bool b, vcst_t & output)	nxpt	{ rtrn output = b ? VCC_TRUE : VCC_FALSE; }
 	stin		bool	cst2b8			(vcst_t b)					nxpt	{ rtrn b.size() && b != VCC_FALSE; }
-
-	stin		vstr_t	str				(vstr_t & arg)				nxpt	{ rtrn arg; }
-	stin		vcst_t	str				(cnst vstr_t & arg)			nxpt	{ rtrn arg; }
-	stin		vcst_t	str				(cnst vcst_t & arg)			nxpt	{ rtrn arg; }
-	stin		vstr_t	str				(vs0_t arg)					nxpt	{ rtrn arg; }
-	stin		vcst_t	str				(vcs0_t arg)				nxpt	{ rtrn arg; }
-	tplN2usinx	vstr_t	str				(sc_t (&arg)[N])			nxpt	{ rtrn arg; }
+	stin		vcst_t	str				(vcst_t arg)				nxpt	{ rtrn arg; }
 	tplN2usinx	vcst_t	str				(sc_c (&arg)[N])			nxpt	{ rtrn arg; }
 	sinx		vcst_t	str				(cnst bool arg)				nxpt	{ rtrn arg ? VCC_TRUE : VCC_FALSE; }
 	//
