@@ -9,4 +9,7 @@
   <PropertyGroup>
     <LocalDebuggerCommandArgumentsHistory>modules|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArgumentsHistory>modules|</LocalDebuggerCommandArgumentsHistory>
+  </PropertyGroup>
 </Project>

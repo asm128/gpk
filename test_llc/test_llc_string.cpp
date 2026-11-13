@@ -75,7 +75,7 @@ GDEFINE_ENUM_VALUED(STRING_TEST_RESULT, STR_U0_APPEND_TEXT	, 15, "append_strings
 			);
 
 		::gpk::asc_t composed;
-		cnst ::gpk::err_t composeResult = ::gpk::append_strings(composed, (::gpk::u0_t)iValue, "x");
+		cnst ::gpk::err_t composeResult = ::gpk::append_strings(composed, ::gpk::str((::gpk::u0_t)iValue), "x");
 		GPK_TEST_CHECKF(errors, STRING_TEST_RESULT_STR_U0_APPEND_RESULT, ::gpk::failed(composeResult), "value:%u result:%i", iValue, composeResult);
 		expected[expectedLength] = 'x';
 		expected[expectedLength + 1] = 0;

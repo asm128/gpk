@@ -87,6 +87,7 @@ static	gpk::err_t themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> &
 	colorComboDisabled	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboPressed		[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboPressed 	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboPressed 	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	theme.ColorCombos	[::gpk::GUI_CONTROL_PALETTE_DRAGGING	]	= colorComboPressed;
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboSelected	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND];
 	colorComboHover 	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboHover		[::gpk::UI_CONTROL_AREA_BACKGROUND];
