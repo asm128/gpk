@@ -13,31 +13,18 @@ GPK_USING_N2();
 static	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8bgra & target, bool bDisabled)				{
 	::gpk::SControlState		& controlState		= gui.Controls.States	[iControl];
 	::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw	[iControl];
+	cnst ::gpk::GUI_CONTROL_PALETTE	paletteIndex		= ::gpk::paletteIndexFromState(bDisabled, controlState);
 	::gpk::bgra					colorFace			= {0xFF, 0x00, 0xFF, 0xFF};
 	if(0 == gui.Controls.Draw[iControl].UseNewPalettes) {
 		const ::gpk::SControlTheme	& theme				= (*gui.Colors->ControlThemes)[(0 == controlDraw.ColorTheme) ? gui.ThemeDefault : controlDraw.ColorTheme - 1];
 		const ::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>	
-									& colorCombo		= theme.ColorCombos
-			[ bDisabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
-			: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
-			: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
-			: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
-			: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
-			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
-			];
+									& colorCombo		= theme.ColorCombos[paletteIndex];
 		colorFace				= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE]];
 		//const ::gpk::bgra			colorBack			= gui.Palette[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND]];
 	}
 	else {
 		const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>	& colorCombo											=
-			gui.Colors->Palettes[controlDraw.Palettes
-				[ bDisabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
-				: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
-				: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
-				: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
-				: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
-				: ::gpk::GUI_CONTROL_PALETTE_NORMAL
-				]]
+			gui.Colors->Palettes[controlDraw.Palettes[paletteIndex]]
 				;
 		colorFace				= colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE];
 	}
@@ -64,15 +51,6 @@ static	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8b
 	}
 	return 0;
 }
-static	::gpk::GUI_CONTROL_PALETTE	paletteIndexFromState	(bool disabled, const ::gpk::SControlState & controlState)					{
-	return disabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
-		: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
-		: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
-		: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
-		: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
-		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
-		;
-}
 static	gpk::err_t fillColorTableBorders3D			(const ::gpk::SControlState & controlState, ::gpk::view<::gpk::bgra> & colors)					{
 	f3_t						bright;
 	f3_t						shaded;
@@ -87,7 +65,7 @@ static	gpk::err_t fillColorTableBorders3D			(const ::gpk::SControlState & contro
 }
 static	gpk::err_t fillColorTableNew				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControlState & controlState, const ::gpk::SControlDraw & controlDraw, bool disabled, ::gpk::v8bgra & colors)					{
 	const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>
-								& colorCombo					= gui.Colors->Palettes[controlDraw.Palettes[::paletteIndexFromState(disabled, controlState)]];
+							& colorCombo					= gui.Colors->Palettes[controlDraw.Palettes[::gpk::paletteIndexFromState(disabled, controlState)]];
 	//colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND	]	= colorCombo[::gpk::UI_CONTROL_AREA_BACKGROUND	];
 	colors[::gpk::GUI_CONTROL_AREA_OLD_CLIENT		]	= colorCombo[::gpk::UI_CONTROL_AREA_CLIENT		];
 	if(colorMode == ::gpk::GUI_COLOR_MODE_3D || colorMode == ::gpk::GUI_COLOR_MODE_Default)
@@ -102,7 +80,7 @@ static	gpk::err_t fillColorTableNew				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE
 static	gpk::err_t fillColorTableOld				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControlState & controlState, const ::gpk::SControlDraw & controlDraw, bool disabled, ::gpk::v8bgra & colors)					{
 	const ::gpk::SControlTheme	& theme							= (*gui.Colors->ControlThemes)[(0 == controlDraw.ColorTheme) ? gui.ThemeDefault : controlDraw.ColorTheme - 1];
 	const ::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>	
-								& colorCombo					= theme.ColorCombos[::paletteIndexFromState(disabled, controlState)];
+								& colorCombo					= theme.ColorCombos[::gpk::paletteIndexFromState(disabled, controlState)];
 	//colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND	]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BACKGROUND	]];
 	colors[::gpk::GUI_CONTROL_AREA_OLD_CLIENT		]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_CLIENT		]];
 	if(colorMode == ::gpk::GUI_COLOR_MODE_3D || colorMode == ::gpk::GUI_COLOR_MODE_Default)

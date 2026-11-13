@@ -97,54 +97,15 @@ nmsp gpk
 	stin	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<vstr_c> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT)		{ return controlListCreate(gui, menu, view<vsc_c> {strings.begin(), strings.size()}, parent, orientation); }
 	stin	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<cnst string> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT)	{ return controlListCreate(gui, menu, view<asc_c> {strings.begin(), strings.size()}, parent, orientation); }
 
-	struct SControlGrid {
-		cid_t					IdControl				= CID_INVALID;
-		n2u2_t				Metrics					= {};
-		n2s1_t				CellSize				= {};
-		n2s1_t				Spacing					= {};
-		aobj<SControlList>	Rows					= {};
-	};
-
-	err_t			controlGridInitialize	(SGUI & gui, SControlGrid & grid, cid_t parent = CID_INVALID);
-	err_t			controlGridArrange		(SGUI & gui, SControlGrid & grid);
-	stin	cid_t	controlGridControl		(cnst SControlGrid & grid, cnst n2u2_t & cell) {
-		if(cell.y >= grid.Rows.size() || cell.x >= grid.Rows[cell.y].IdControls.size())
-			return CID_INVALID;
-		return grid.Rows[cell.y].IdControls[cell.x];
-	}
-	stin	cid_t	controlGridControl		(cnst SControlGrid & grid, u2_t index) {
-		if(0 == grid.Metrics.x)
-			return CID_INVALID;
-		return controlGridControl(grid, {index % grid.Metrics.x, index / grid.Metrics.x});
-	}
-	tplT	err_t	controlGridCreate		(SGUI & gui, SControlGrid & grid, view<T> stringifiable, u2_t columnCount, cnst n2s1_t & cellSize, cnst n2s1_t & spacing = {}, cid_t parent = CID_INVALID, ALIGN textAlign = ALIGN_CENTER) {
-		if_true_fe(0 == columnCount);
-		if_true_fe(0 >= cellSize.x || 0 >= cellSize.y);
-		if_true_fe(0 > spacing.x || 0 > spacing.y);
-		if_fail_fe(controlGridInitialize(gui, grid, parent));
-		grid.Metrics	= {columnCount, (u2_t)((stringifiable.size() + columnCount - 1) / columnCount)};
-		grid.CellSize	= cellSize;
-		grid.Spacing	= spacing;
-		if_fail_fe(grid.Rows.resize(grid.Metrics.y));
-		for(u2_t row = 0; row < grid.Metrics.y; ++row) {
-			cnst u2_t	rowBegin	= row * columnCount;
-			cnst u2_t	rowSize		= ::gpk::min(columnCount, stringifiable.size() - rowBegin);
-			if_fail_fe(controlListCreate(gui, grid.Rows[row], view<cnst T>{stringifiable.begin() + rowBegin, rowSize}, grid.IdControl, DIRECTION_RIGHT));
-			for(u2_t column = 0; column < rowSize; ++column)
-				gui.Controls.Text[grid.Rows[row].IdControls[column]].Align = textAlign;
-		}
-		return controlGridArrange(gui, grid);
-	}
-
 	struct SPaletteGrid {
-		cid_t					IdControl				= -1;
-		acid				IdControls				= {};
+		cid_t			IdControl				= -1;
+		acid			IdControls				= {};
 		g8bgra			Colors					= {};
 	};
 
 	struct SEditBox {
-		cid_t					IdControl				= -1;
-		acid				IdControls				= {};
+		cid_t			IdControl				= -1;
+		acid			IdControls				= {};
 		g8bgra			Colors					= {};
 	};
 

@@ -31,7 +31,7 @@ nmsp gpk
 		apod<asttc<bgra, UI_CONTROL_AREA_COUNT>>
 											Palettes;
 	};
-
+	
 	struct SGUI {
 		n2u1_t				LastSize			= {};
 		n2f2_t				CursorPos			= {};
@@ -48,30 +48,30 @@ nmsp gpk
 		bool								InputModeTouch		= true;
 	};
 
-	err_t			guiProcessInput					(SGUI & gui, const SInput & input, vpobj<SEventSystem> in_Events = {});
-	err_t			guiUpdateMetrics				(SGUI & gui, const n2u1_t & targetSize, bool forceUpdate);
-	err_t			guiDraw							(SGUI & gui, g8bgra target);
-	err_t			guiGetProcessableControls		(const SGUI & gui, acid & controlIndices);
-	err_t			guiDeselect						(SGUI & gui);
-	err_t			guiSelect						(SGUI & gui, cid_t controlToSelect);
+	err_t				guiProcessInput					(SGUI & gui, const SInput & input, vpobj<SEventSystem> in_Events = {});
+	err_t				guiUpdateMetrics				(SGUI & gui, const n2u1_t & targetSize, bool forceUpdate);
+	err_t				guiDraw							(SGUI & gui, g8bgra target);
+	err_t				guiGetProcessableControls		(const SGUI & gui, acid & controlIndices);
+	err_t				guiDeselect						(SGUI & gui);
+	err_t				guiSelect						(SGUI & gui, cid_t controlToSelect);
 
-	err_t			controlDelete					(SGUI & gui, cid_t iControl, bool recursive = true);
-	cid_t 			controlCreate					(SGUI & gui);
-	cid_t			controlCreateChild				(SGUI & gui, cid_t iParent);
-	err_t			controlSetParent				(SGUI & gui, cid_t iControl, cid_t iParent);
-	err_t			controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
-	err_t			controlTextSet					(SGUI & gui, cid_t iControl, vcst_t text);
-	err_t			controlFontSet					(SGUI & gui, cid_t iControl, s1_t iFont);
-	//err_t			controlUpdateMetrics			(SGUI & gui, s2_t iControl, const n2<u2_t> & targetSize);
-	err_t			controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, const n2u1_t & targetSize, bool forceUpdate);
-	err_t			controlMetricsInvalidate		(SGUI & gui, cid_t iControl);
-	err_t			controlHidden					(const SGUI & gui, cid_t iControl);
-	err_t			controlDisabled					(const SGUI & gui, cid_t iControl);
-	err_t			controlInvalid					(const SGUI & gui, cid_t iControl);
+	err_t				controlDelete					(SGUI & gui, cid_t iControl, bool recursive = true);
+	cid_t 				controlCreate					(SGUI & gui);
+	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
+	err_t				controlSetParent				(SGUI & gui, cid_t iControl, cid_t iParent);
+	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
+	err_t				controlTextSet					(SGUI & gui, cid_t iControl, vcst_t text);
+	err_t				controlFontSet					(SGUI & gui, cid_t iControl, s1_t iFont);
+	//err_t				controlUpdateMetrics			(SGUI & gui, s2_t iControl, const n2<u2_t> & targetSize);
+	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, const n2u1_t & targetSize, bool forceUpdate);
+	err_t				controlMetricsInvalidate		(SGUI & gui, cid_t iControl);
+	err_t				controlHidden					(const SGUI & gui, cid_t iControl);
+	err_t				controlDisabled					(const SGUI & gui, cid_t iControl);
+	err_t				controlInvalid					(const SGUI & gui, cid_t iControl);
 
 
-	err_t			guiProcessControls				(const SGUI & gui, const function<err_t(cid_t iControl)> & funcOnExecute);
-	err_t			guiProcessControls				(const SGUI & gui, vcid controlsToProcess, const function<err_t(cid_t iControl)> & funcOnExecute);
+	err_t				guiProcessControls				(const SGUI & gui, const function<err_t(cid_t iControl)> & funcOnExecute);
+	err_t				guiProcessControls				(const SGUI & gui, vcid controlsToProcess, const function<err_t(cid_t iControl)> & funcOnExecute);
 } // nmsp
 
 #endif // GPK_GUI_H_23627

@@ -44,18 +44,28 @@ gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)										
 		control.Area.Size.y		= fontCharSize.y + controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
+		case DIRECTION_LEFT	:
 		case DIRECTION_RIGHT	:
 			control.Area.Size.x		= s1_t(fontCharSize.x * controlText.Text.size() + controlNCSpacing(control).x);
 			control.Area.Offset.x	= 0;
 			if(-1 != iPreviousVisible)
 				controlConstraints.DockToControl.Right	= iPreviousVisible;
 			break;
-		case DIRECTION_DOWN:
+		case DIRECTION_UP	:
+		case DIRECTION_DOWN	:
 			controlConstraints.AttachSizeToControl.x	= menu.IdControl;
 			control.Area.Offset.y	= 0;
-			if(-1 != iPreviousVisible)
-				controlConstraints.DockToControl.Bottom	= iPreviousVisible;
 			break;
+		}
+		if(-1 != iPreviousVisible) {
+			if(DIRECTION_LEFT == menu.Orientation)
+				controlConstraints.DockToControl.Left	= iPreviousVisible;
+			else if(DIRECTION_UP == menu.Orientation)
+				controlConstraints.DockToControl.Top		= iPreviousVisible;
+			else if(DIRECTION_DOWN == menu.Orientation)
+				controlConstraints.DockToControl.Bottom	= iPreviousVisible;
+			else
+				controlConstraints.DockToControl.Right	= iPreviousVisible;
 		}
 		iPreviousVisible			= idControl;
 	}
@@ -71,17 +81,19 @@ gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)										
 		SControlText			& controlText		= gui.Controls.Text		[idControl];
 		switch(menu.Orientation) {
 		default:
+		case DIRECTION_LEFT	:
 		case DIRECTION_RIGHT	:
 			controlMenu.Area.Size.x	+= gui.Controls.Placement[idControl].Area.Size.x;
 			controlMenu.Area.Size.y	= max(controlMenu.Area.Size.y, gui.Controls.Placement[idControl].Area.Size.y);
 			break;
+		case DIRECTION_UP		:
 		case DIRECTION_DOWN		:
 			controlMenu.Area.Size.y	+= gui.Controls.Placement[idControl].Area.Size.y;
 			controlMenu.Area.Size.x	= max(controlMenu.Area.Size.x, (s1_t)(controlText.Text.size() * fontCharSize.x + controlNCSpacing(control).x));
 			break;
 		}
 	}
-	if(DIRECTION_DOWN == menu.Orientation)
+	if(DIRECTION_DOWN == menu.Orientation || DIRECTION_UP == menu.Orientation)
 		controlMenu.Area.Size.x	+= 16;
 
 	return 0;
@@ -102,48 +114,6 @@ gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, const vcst_t&
 	menu.IdControls	.push_back(idControl);
 	gpk::controlListArrange(gui, menu);
 	return 0;
-}
-
-gpk::err_t		gpk::controlGridInitialize	(SGUI & gui, SControlGrid & grid, cid_t parent) {
-	grid								= {};
-	if_fail_fe(grid.IdControl = controlCreate(gui));
-	SControlPlacement	& placement		= gui.Controls.Placement	[grid.IdControl];
-	SControlDraw		& draw			= gui.Controls.Draw		[grid.IdControl];
-	SControlState		& state			= gui.Controls.States		[grid.IdControl];
-	placement.Border					= {};
-	placement.Margin					= {};
-	draw.NoClient						= true;
-	state.Mask							&= ~GUI_CONTROL_FLAG_Hovered;
-	if(parent != CID_INVALID)
-		if_fail_fe(controlSetParent(gui, grid.IdControl, parent));
-	return 0;
-}
-
-gpk::err_t		gpk::controlGridArrange		(SGUI & gui, SControlGrid & grid) {
-	if_true_fe(grid.IdControl == CID_INVALID);
-	cnst n2s1_t	gridSize		=
-		{ (s1_t)(grid.Metrics.x * grid.CellSize.x + (grid.Metrics.x ? grid.Metrics.x - 1 : 0) * grid.Spacing.x)
-		, (s1_t)(grid.Metrics.y * grid.CellSize.y + (grid.Metrics.y ? grid.Metrics.y - 1 : 0) * grid.Spacing.y)
-		};
-	gui.Controls.Placement[grid.IdControl].Area.Size	= gridSize;
-	for(u2_t row = 0; row < grid.Rows.size(); ++row) {
-		SControlList		& list			= grid.Rows[row];
-		SControlPlacement	& rowPlacement	= gui.Controls.Placement[list.IdControl];
-		rowPlacement.Area					= {{0, (s1_t)(row * (grid.CellSize.y + grid.Spacing.y))}, {gridSize.x, grid.CellSize.y}};
-		rowPlacement.Align					= ALIGN_TOP_LEFT;
-		gui.Controls.Draw[list.IdControl].NoClient	= true;
-		gui.Controls.States[list.IdControl].Mask		&= ~GUI_CONTROL_FLAG_Hovered;
-		for(u2_t column = 0; column < list.IdControls.size(); ++column) {
-			cnst cid_t		idControl	= list.IdControls[column];
-			SControlPlacement	& placement	= gui.Controls.Placement[idControl];
-			SControlConstraints	& constraints	= gui.Controls.Constraints[idControl];
-			placement.Area					= {{(s1_t)(column * (grid.CellSize.x + grid.Spacing.x)), 0}, grid.CellSize};
-			placement.Align					= ALIGN_TOP_LEFT;
-			constraints.AttachSizeToControl	= {CID_INVALID, CID_INVALID};
-			constraints.DockToControl		= {CID_INVALID, CID_INVALID, CID_INVALID, CID_INVALID};
-		}
-	}
-	return controlMetricsInvalidate(gui, grid.IdControl);
 }
 
 gpk::err_t 		gpk::paletteGridInitialize	(SGUI & gui, SPaletteGrid& palette)				{

@@ -62,9 +62,9 @@ nmsp gpk
 	}; 
 
 	sinx	rectu1_t	controlNCRect		(const SControlPlacement & ctl)	nxpt	{ return ctl.Border + ctl.Margin; }
-	stxp	n2u1_t	controlNCSpacing	(const SControlPlacement & ctl)	nxpt	{ const rectu1_t rc = controlNCRect(ctl); return n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
-	sinx	void			controlNCSpacing	(const SControlPlacement & ctl, rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
-	sinx	void			controlNCSpacing	(const SControlPlacement & ctl, n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
+	stxp	n2u1_t		controlNCSpacing	(const SControlPlacement & ctl)	nxpt	{ const rectu1_t rc = controlNCRect(ctl); return n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
+	sinx	void		controlNCSpacing	(const SControlPlacement & ctl, rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
+	sinx	void		controlNCSpacing	(const SControlPlacement & ctl, n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
 
 	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, u1_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, NORMAL				, 0);
@@ -81,7 +81,15 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_DRAGGING	,11);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, OUTDATED			,12);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, COUNT				,13);
-
+	sinx	GUI_CONTROL_PALETTE	paletteIndexFromState			(bool disabled, const SControlState & controlState) {
+		return disabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+			: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
+			: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
+			: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+			: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
+			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
+			;
+	}
 	struct SControlDraw {
 		u0_t			ColorMode			: 2;
 		u0_t			FrameOut			: 1;
