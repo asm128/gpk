@@ -134,9 +134,9 @@ sttc ::gpk::cid_t sampleGUIFocusedControl(cnst SSampleGUI & app) nxpt {
 	rtrn ::gpk::CID_INVALID;
 }
 
-sttc ::gpk::err_t sampleGUIInspectorCreate(SSampleGUI & app, SSampleGUIInspector & inspector, ::gpk::vcst_t title, cnst ::gpk::rect2s1_t & area) {
+sttc ::gpk::err_t sampleGUIInspectorCreate(SSampleGUI & app, SSampleGUIInspector & inspector, ::gpk::vcst_t title, cnst ::gpk::rect2s1_t & area, ::gpk::cid_t idParent) {
 	if_fail_fe(::sampleGUIControlCreate(app, inspector.IdRoot, "", area, -1));
-	app.GUI.Controls.Placement[inspector.IdRoot].Align = ::gpk::ALIGN_BOTTOM_LEFT;
+	if_fail_fe(::gpk::controlSetParent(app.GUI, inspector.IdRoot, idParent));
 	cnst ::gpk::s1_t clientWidth = (::gpk::s1_t)(area.Size.x - ::gpk::controlNCSpacing(app.GUI.Controls.Placement[inspector.IdRoot]).x);
 	if_fail_fe(::sampleGUIControlCreate(app, inspector.IdTitle, title, {{0, 0}, {clientWidth, 30}}, FONT_BODY));
 	if_fail_fe(::gpk::controlSetParent(app.GUI, inspector.IdTitle, inspector.IdRoot));
@@ -252,24 +252,28 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 		app.GUI.Controls.Draw[idName].ColorMode = app.GUI.Controls.Draw[idState].ColorMode = ::gpk::GUI_COLOR_MODE_Default;
 		app.GUI.Controls.Draw[idState].UseNewPalettes = true;
 	}
-	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorLive, "LIVE", {{24, 68}, {286, 134}}));
-	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorHovered, "HOVERED", {{323, 68}, {286, 134}}));
-	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorFocused, "FOCUSED", {{622, 68}, {286, 134}}));
+	::gpk::pobj<::gpk::SDialogViewport> viewportInspectors = {};
+	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportInspectors, viewportInspectors, "INSPECTORS", {{400, 18}, {310, 456}}));
+	app.GUI.Controls.Placement[viewportInspectors->IdGUIControl].Align = ::gpk::ALIGN_TOP_RIGHT;
+	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorLive, "LIVE", {{4, 4}, {286, 134}}, viewportInspectors->IdClient));
+	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorHovered, "HOVERED", {{4, 140}, {286, 134}}, viewportInspectors->IdClient));
+	if_fail_fe(::sampleGUIInspectorCreate(app, app.InspectorFocused, "FOCUSED", {{4, 276}, {286, 134}}, viewportInspectors->IdClient));
 	app.ControlLive = app.InspectorLive.IdTitle;
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlHelp, "TAB FOCUS | ENTER/SPACE ACTIVATE | ESC/EXIT CLOSE", {{136, 18}, {772, 36}}, FONT_BODY, ::gpk::ALIGN_BOTTOM_LEFT));
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlExit, "EXIT", {{24, 18}, {96, 36}}, FONT_BODY, ::gpk::ALIGN_BOTTOM_LEFT));
-	if_fail_fe(::sampleGUIControlCreate(app, app.ControlAlignmentTitle, "ALIGNMENTS", {{24, 18}, {332, 42}}, FONT_BODY, ::gpk::ALIGN_TOP_RIGHT));
-	cnst ::gpk::enum_definition<::gpk::ALIGN> & alignmentDefinition = ::gpk::get_enum<::gpk::ALIGN>();
-	::gpk::aobj<::gpk::vcst_t> alignmentPrimitiveNames = {};
-	for(::gpk::u2_t iAlignment = 0; iAlignment < alignmentDefinition.Values.size(); ++iAlignment) {
-		cnst ::gpk::u0_t alignment = alignmentDefinition.Values[iAlignment];
-		if(0 == alignment || 0 == (alignment & (alignment - 1)))
-			if_fail_fe(alignmentPrimitiveNames.push_back(alignmentDefinition.Names[iAlignment]));
-	}
-	if_fail_fe(::gpk::controlGridCreate(app.GUI, app.GridAlignments, ::gpk::view<::gpk::vcst_t>{alignmentPrimitiveNames}, ::gpk::CID_INVALID, ::gpk::DIRECTION_RIGHT, 3, {108, 56}, {0, 0}, {24, 76}, ::gpk::ALIGN_TOP_RIGHT));
-	for(::gpk::u2_t iAlignment = 0; iAlignment < alignmentPrimitiveNames.size(); ++iAlignment) {
-		cnst ::gpk::cid_t idControl = ::gpk::controlGridControl(app.GridAlignments, iAlignment);
-		app.GUI.Controls.Text[idControl].FontSelected = FONT_BODY;
+	::gpk::pobj<::gpk::SDialogViewport> viewportAlignments = {};
+	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportAlignments, viewportAlignments, "CONTROL / TEXT ALIGNMENT", {{20, 18}, {360, 500}}));
+	app.GUI.Controls.Placement[viewportAlignments->IdGUIControl].Align = ::gpk::ALIGN_TOP_RIGHT;
+	sttc cnst ::gpk::ALIGN horizontal[] = {::gpk::ALIGN_LEFT, ::gpk::ALIGN_HCENTER, ::gpk::ALIGN_RIGHT};
+	sttc cnst ::gpk::ALIGN vertical  [] = {::gpk::ALIGN_TOP , ::gpk::ALIGN_VCENTER, ::gpk::ALIGN_BOTTOM};
+	for(::gpk::u0_t y = 0; y < 3; ++y)
+	for(::gpk::u0_t x = 0; x < 3; ++x) {
+		cnst ::gpk::u0_t iAlignment = (::gpk::u0_t)(y * 3 + x);
+		cnst ::gpk::ALIGN controlAlign = (::gpk::ALIGN)(vertical[y] | horizontal[x]);
+		cnst ::gpk::ALIGN textAlign = (::gpk::ALIGN)(vertical[2 - y] | horizontal[2 - x]);
+		if_fail_fe(::sampleGUIControlCreate(app, app.ControlsAlignment[iAlignment], ::gpk::get_value_namev(controlAlign), {{4, 4}, {108, 58}}, FONT_BODY, controlAlign));
+		app.GUI.Controls.Text[app.ControlsAlignment[iAlignment]].Align = textAlign;
+		if_fail_fe(::gpk::controlSetParent(app.GUI, app.ControlsAlignment[iAlignment], viewportAlignments->IdClient));
 	}
 	app.ControlsKeyboard[0] = app.ControlMode;
 	app.ControlsKeyboard[1] = app.ControlGeometry;

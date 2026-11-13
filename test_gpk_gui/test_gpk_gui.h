@@ -45,13 +45,14 @@ stct SSampleGUI {
 	::gpk::cid_t		ViewportStates			= ::gpk::CID_INVALID;
 	::gpk::SControlGrid	GridStates				= {};
 	::gpk::cid_t		ControlLive				= ::gpk::CID_INVALID;
+	::gpk::cid_t		ViewportInspectors		= ::gpk::CID_INVALID;
 	SSampleGUIInspector	InspectorLive			= {};
 	SSampleGUIInspector	InspectorHovered		= {};
 	SSampleGUIInspector	InspectorFocused		= {};
 	::gpk::cid_t		ControlHelp				= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlExit				= ::gpk::CID_INVALID;
-	::gpk::cid_t		ControlAlignmentTitle	= ::gpk::CID_INVALID;
-	::gpk::SControlGrid	GridAlignments	= {};
+	::gpk::cid_t		ViewportAlignments		= ::gpk::CID_INVALID;
+	::gpk::astcid<9>	ControlsAlignment		= {};
 	::gpk::astcid<4>	ControlsKeyboard		= {};
 };
 
