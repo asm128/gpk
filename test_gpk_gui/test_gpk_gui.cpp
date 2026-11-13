@@ -238,8 +238,10 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 	if_fail_fe(::sampleGUIControlCreate(app, app.ControlGeometry, "Geometry: Indexed", {{720, 66}, {184, 42}}, FONT_BODY));
 	::gpk::aobj<::gpk::vcst_t> stateCells = {};
 	if_fail_fe(stateCells.resize(stateDefinition.Values.size() * 2));
-	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState)
+	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState) {
 		stateCells[iState] = stateDefinition.Names[iState];
+		stateCells[stateDefinition.Values.size() + iState] = stateDefinition.Names[iState];
+	}
 	if_fail_fe(::gpk::controlGridCreate(app.GUI, app.GridStates, ::gpk::view<::gpk::vcst_t>{stateCells}, viewportStates->IdClient, ::gpk::DIRECTION_DOWN, 2, {168, 18}, {0, 0}, {8, 6}));
 	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState) {
 		cnst ::gpk::cid_t idName = app.GridStates[0].IdControls[iState];
