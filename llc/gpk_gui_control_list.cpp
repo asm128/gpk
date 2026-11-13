@@ -87,7 +87,7 @@ gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)										
 	return 0;
 }
 
-gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, const vcst_t& text, s3_t eventCode)				{
+gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, const vcst_t& text)				{
 	if(menu.IdControl == -1)
 		if_fail_fe(gpk::controlListInitialize(gui, menu));
 
@@ -100,7 +100,6 @@ gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, const vcst_t&
 	controlText	.Text		= {text.begin(), text.size()};
 	controlText	.Align		= ALIGN_CENTER_LEFT;
 	menu.IdControls	.push_back(idControl);
-	menu.Events		.push_back(eventCode);
 	gpk::controlListArrange(gui, menu);
 	return 0;
 }

@@ -178,7 +178,6 @@
     <ClInclude Include="gpk_framework.h" />
     <ClInclude Include="gpk_circuit.h" />
     <ClInclude Include="gpk_gui_control_list.h" />
-    <ClInclude Include="gpk_gui_desktop.h" />
     <ClInclude Include="gpk_raster_lh.h" />
     <ClInclude Include="gpk_encoding.h" />
     <ClInclude Include="gpk_enum.h" />
@@ -314,7 +313,6 @@
     <ClCompile Include="gpk_window.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_gui_control_list.cpp" />
-    <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_expression.cpp" />
@@ -426,7 +424,6 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -457,7 +454,6 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -490,7 +486,6 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -525,7 +520,6 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>

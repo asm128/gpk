@@ -136,7 +136,6 @@
 #include "gpk_block_container.h"
 #include "gpk_block_container_nts.h"
 #include "gpk_quad.h"
-#include "gpk_gui_desktop.h"
 #include "gpk_line2.h"
 #include "gpk_line3.h"
 #include "gpk_image.h"

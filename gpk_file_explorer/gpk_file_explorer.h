@@ -17,18 +17,6 @@ namespace gfe
 		::gpk::SDialog					DialogMain							= {};
 
 		::gpk::cid_t					IdExit								= -1;
-		::gpk::cid_t					Viewport								= -1;
-		::gpk::pobj<::gpk::SDialogSlider>	ScrollY								= {};
-		::gpk::SPathTree				ExplorerTree							= {};
-		::gpk::aobj<::gpk::string>		ExplorerPaths						= {};
-		::gpk::aobj<::gpk::string>		ExplorerLabels						= {};
-		::gpk::aobj<::gpk::string>		ExpandedPaths						= {};
-		::gpk::SControlList				ExplorerControls						= {};
-		::gpk::string					ExplorerPath							= {};
-		::gpk::b8_t						RootExpanded							= true;
-		::gpk::u2_t						ExplorerPageSize						= 0;
-		::gpk::s3_t						ExplorerOffset							= -1;
-		::gpk::s3_t						ExplorerScrollMax						= -1;
 
 		::std::mutex					LockGUI;
 		::std::mutex					LockRender;

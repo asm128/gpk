@@ -54,19 +54,16 @@ nmsp gpk
 	}
 
 	struct SControlList {
-		cid_t					IdControl				= (cid_t)-1;
+		cid_t			IdControl				= (cid_t)-1;
 		DIRECTION		Orientation				= DIRECTION_RIGHT;
-		cid_t					IndexParentList			= (cid_t)-1;
-		cid_t					IndexParentItem			= (cid_t)-1;
-		acid				IdControls				= {};
-		cid_t					IdSelected				= (cid_t)-1;
-		acid				IdMultiselect			= {};
-		as3_t			Events					= {};
+		cid_t			IndexParentList			= (cid_t)-1;
+		cid_t			IndexParentItem			= (cid_t)-1;
+		acid			IdControls				= {};
 	};
 
 	err_t			controlListInitialize	(SGUI & gui, SControlList & menu);
 	err_t			controlListArrange		(SGUI & gui, SControlList & menu);
-	err_t			controlListPush			(SGUI & gui, SControlList & menu, vcst_c & text, s3_t eventCode = -1);
+	err_t			controlListPush			(SGUI & gui, SControlList & menu, vcst_c & text);
 	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<T>  stringifiable, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
 		if_fail_fe(controlListInitialize(gui, menu));
 		menu.Orientation	= orientation;
