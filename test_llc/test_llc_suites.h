@@ -22,6 +22,7 @@ usns gpk;
 ::gpk::err_t test_index_path		(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_json_expression	(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_png				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_array_static		(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_view_serialize	(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 
 #endif //TEST_GPK_CORE_SUITES_H

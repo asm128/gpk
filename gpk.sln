@@ -45,7 +45,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "brt", "brt\brt.vcxproj", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFBAEE40-9B8F-4DFE-B2FE-002CB669ED51}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		json_expression_notation.txt = json_expression_notation.txt
 		LineCounter.py = LineCounter.py
+		VisualStudio.md = VisualStudio.md
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cut", "cut\cut.vcxproj", "{33A71630-3237-45D7-87DE-A05A9C0F7148}"

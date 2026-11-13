@@ -75,6 +75,9 @@
     <ClCompile Include="test_llc_index_catalog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_array_static.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_llc_suites.h">
