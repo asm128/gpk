@@ -145,6 +145,19 @@ nmsp gpk
 			return 0;
 		}
 	};
+
+	tplt<tpnm _TDialogControl>
+	gpk::err_t		dialogControlGet	(SDialog & dialog, cid_t idGUIControl, ::gpk::pnco<_TDialogControl> & control) {
+		control = {};
+		for(u2_t iControl = 0; iControl < dialog.Controls.size(); ++iControl) {
+			if(0 == dialog.Controls[iControl].get_ref() || dialog.Controls[iControl]->IdGUIControl != idGUIControl)
+				continue;
+			dialog.Controls[iControl].as(control);
+			break;
+		}
+		if_true_fef(0 == control.get_ref(), "Dialog control not found for GUI control id: %i.", idGUIControl);
+		return 0;
+	}
 }
 
 #endif // GPK_DIALOG_H_23627
