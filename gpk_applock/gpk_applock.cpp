@@ -56,18 +56,17 @@ sttc gpk::err_t		configureKey	(HKEY & key, b8_t install, vcst_t filterKeyPath, v
 sttc gpk::err_t		configureLock	(b8_t install, vcst_t keyPath, vcst_t filterPath, vcst_t debugger) {
 	gpk::string				filterKeyPath;
 	if_fail_fe(gpk::append_strings(filterKeyPath, keyPath, filterPath.size() ? appLock.FILTER_PATH : vcst_t{}));
+	if(0 == filterPath.size()) {
+		gpk::string			staleFilterKeyPath;
+		if_fail_fe(gpk::append_strings(staleFilterKeyPath, keyPath, appLock.FILTER_PATH));
+		if_fail_fe(configureFilter(false, keyPath, staleFilterKeyPath));
+	}
 	auto_hkey				key;
 	gpk::astsc_t<4096>		existing		= {};
 	DWORD					bytes			= existing.size();
 	LRESULT result;
 	if_fail_fe(configureKey(key.Handle, install, filterKeyPath, debugger));
 	if_true_fe((result = RegGetValue(key, 0, "Debugger", RRF_RT_REG_SZ, 0, existing.Storage, &bytes)) && ERROR_FILE_NOT_FOUND != result);
-	if(ERROR_SUCCESS == result && debugger != vcst_t{existing.Storage, (u2_t)-1}) {
-		if(false == install)
-			return 0;
-		error_printf("Refusing to replace a different IFEO Debugger for %.*s.", GPK_VIEW_ARGS(filterKeyPath));
-		return ERROR_ALREADY_EXISTS;
-	}
 	if(false == install && ERROR_FILE_NOT_FOUND == result)
 		return 0;
 	if_fail_fe(configureValue(install, key, "Debugger", REG_SZ, debugger.begin(), debugger.size() + 1));
