@@ -44,22 +44,22 @@ nmsp gpk
 		f3_t					ListeningSince		= {};
 	};
 
-	err_t			loadServerConfig	(const SJSONReader & jsonConfig, s2_t parentNode, vcst_t & port, vcst_t & adapter);
+	err_t			loadServerConfig	(cnst SJSONReader & jsonConfig, s2_t parentNode, vcst_t & port, vcst_t & adapter);
 	err_t			serverStart			(SServer & server, SGUI & gui);
 	err_t			serverUpdate		(SServer & server, SGUI & gui);
 	err_t			setupGUI			(SServerUI & serverUI, SGUI & gui);
-	err_t			processGUIEvent		(SServer & server, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent);
+	err_t			processGUIEvent		(SServer & server, SGUI & gui, cnst SEventView<EVENT_GUI_CONTROL> & screenEvent);
 
 	tplt<tpnm _tEvent, tpnm _tState> 
 	err_t			processConnectionEvents
 		( vcpobj<SServer>	servers
 		, _tState					& state
-		, const ::std::function<err_t(u2_t iServer, u2_t iClient, _tState &, const _tEvent &)>	
+		, cnst ::std::function<err_t(u2_t iServer, u2_t iClient, _tState &, cnst _tEvent &)>	
 										& funcProcessServerRequest
 		) {
 		for(u2_t iServer = 0; iServer < servers.size(); ++iServer) {
-			const ::std::function<err_t(u2_t iClient, _tState &, const _tEvent &)>	
-										funcProcessRequest		= [iServer, funcProcessServerRequest](u2_t iClient, _tState & customState, const _tEvent & customEvent) {
+			cnst ::std::function<err_t(u2_t iClient, _tState &, cnst _tEvent &)>	
+										funcProcessRequest		= [iServer, funcProcessServerRequest](u2_t iClient, _tState & customState, cnst _tEvent & customEvent) {
 				return funcProcessServerRequest(iServer, iClient, customState, customEvent);
 			};
 			if_fail_fe(processEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));

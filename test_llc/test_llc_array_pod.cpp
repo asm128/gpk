@@ -12,7 +12,7 @@ GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, VIEW_CONSTRUCTION			, 4, "array_pod<>
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, COPY_CONSTRUCTION			, 5, "array_pod<> copy construction did not produce independent equal storage.");
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, MOVE_CONSTRUCTION			, 6, "array_pod<> move construction did not transfer its allocation.");
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, MOVE_SOURCE					, 7, "A moved-from array_pod<> did not become an empty null range.");
-GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, CONST_VIEW					, 8, "array_pod<> did not expose its counted const view.");
+GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, CONST_VIEW					, 8, "array_pod<> did not expose its counted cnst view.");
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, COPY_ASSIGNMENT				, 9, "array_pod<> copy assignment did not produce independent equal storage.");
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, VIEW_ASSIGNMENT				, 10, "array_pod<> did not copy its assigned view.");
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, ARRAY_ASSIGNMENT				, 11, "array_pod<> did not copy its assigned array.");
@@ -82,7 +82,7 @@ GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, ERASE_NULL					, 78, "array_pod<>::er
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, ERASE_UNRELATED				, 79, "array_pod<>::erase() accepted unrelated storage.");
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, ERASE_MISALIGNED				, 80, "array_pod<>::erase() accepted a misaligned element address.");
 GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, RESIZE_INVALID_FILLED_COUNT	, 81, "array_pod<>::resize(count, value) accepted an unsupported count.");
-GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, ASC_CONST					, 82, "str(const asc_t&) did not preserve the counted array through conversion.");
+GDEFINE_ENUM_VALUED(ARRAY_POD_TEST_RESULT, ASC_CONST					, 82, "str(cnst asc_t&) did not preserve the counted array through conversion.");
 
 tplt<tpnm TCall>
 sttc ::gpk::err_t podExpectedFailure(TCall call) {
@@ -107,7 +107,7 @@ sttc ::gpk::err_t podFailureCheck(::gpk::ATestError & errors, ARRAY_POD_TEST_RES
 }
 
 tplt<tpnm T>
-sttc bool podTerminatorMismatch(cnst ::gpk::apod<T> & value) {
+sttc b8_t podTerminatorMismatch(cnst ::gpk::apod<T> & value) {
 	rtrn value.begin() && value.begin()[value.size()] != T{};
 }
 
@@ -123,7 +123,7 @@ sttc ::gpk::err_t testPodConstruction(::gpk::ATestError & errors) {
 	if_fail_fe(podCheck(errors, ARRAY_POD_TEST_RESULT_INITIALIZER_CONSTRUCTION, initialized, {expected}));
 	GPK_TEST_CHECKF(errors, ARRAY_POD_TEST_RESULT_TERMINATOR, podTerminatorMismatch(initialized) , "initializer terminator mismatch. size:%u, terminator:%" GPK_FMT_S3 "." , initialized.size(), (::gpk::s3_t)initialized.begin()[initialized.size()] );
 
-	::gpk::view<const T> converted = initialized;
+	::gpk::view<cnst T> converted = initialized;
 	GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, converted.begin() != initialized.begin());
 	GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, converted.size() != initialized.size());
 	GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, 0 != ::memcmp(converted.begin(), initialized.begin(), initialized.byte_count()));

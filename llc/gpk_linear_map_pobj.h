@@ -15,15 +15,15 @@ nmsp gpk
 		aobj<TPObj>				Elements		= {};
 		aobj<vcst_t>			Names			= {};
 
-		inln	const TPObj&	oper[]		(u2_t index)	const	{ return Elements[index]; }
+		inln	cnst TPObj&	oper[]		(u2_t index)	cnst	{ return Elements[index]; }
 		inln	TPObj&			oper[]		(u2_t index)			{ return Elements[index]; }
-		inln	const TPObj&	oper[]		(vcst_t key)	const	{ return Elements[Names.find(key)]; }
+		inln	cnst TPObj&	oper[]		(vcst_t key)	cnst	{ return Elements[Names.find(key)]; }
 		inln	TPObj&			oper[]		(vcst_t key)			{ return Elements[Names.find(key)]; }
 
-		inxp	u2_t			size			()								const	{ return Names.size(); }
-		inln	err_t			find			(vcst_t key, u2_t offset = 0)	const	{ return Names.find(key, offset); }
+		inxp	u2_t			size			()								cnst	{ return Names.size(); }
+		inln	err_t			find			(vcst_t key, u2_t offset = 0)	cnst	{ return Names.find(key, offset); }
 
-		err_t					push_back		(const pobj<T> & instance, vcst_t name = {})	{
+		err_t					push_back		(cnst pobj<T> & instance, vcst_t name = {})	{
 			err_t						index			= 0;
 			if_fail_fe(index = Names.push_back(name));
 			cnst err_t				elementIndex	= Elements.push_back(instance);
@@ -45,7 +45,7 @@ nmsp gpk
 			if_true_fef(index >= size(), "Invalid index:%u. Element count:%u.", index, size());
 			s2_t							iNew;
 			if_fail_fef(iNew = Create(Names[index]), "index: %i", index);
-			const TPObj						& srcElement	= Elements[index];
+			cnst TPObj						& srcElement	= Elements[index];
 			if(srcElement) {
 				TPObj							& newElement	= Elements[iNew];
 				if(!newElement && 0 == newElement.create()) {
@@ -57,10 +57,10 @@ nmsp gpk
 			return iNew;
 		}
 
-		err_t					Save			(au0_t & output) const {
+		err_t					Save			(au0_t & output) cnst {
 			if_true_fef(Names.size() != Elements.size(), "Name count:%u. Element count:%u.", Names.size(), Elements.size());
 			au0_t				serialized		= {};
-			cnst u2_t		elementCount	= Elements.size();
+			u2_c		elementCount	= Elements.size();
 			if_fail_fe(savePOD(serialized, elementCount));
 			for(u2_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				if_true_fef(0 == Elements[iEntity], "Null element at index:%u.", iEntity);

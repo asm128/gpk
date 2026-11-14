@@ -55,14 +55,14 @@ nmsp gpk
 		u2_t				ChannelMask				= 0;
 		u2_t				nChannels				= 0;
 		X3DAUDIO_DSP_SETTINGS	dspSettings				= {};
-		bool					Playing					= false;
+		b8_t					Playing					= false;
 
 	HRESULT					PrepareAudio			(::gpk::vcst_t & wavname, IXAudio2*	pXAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice);
 	};
 
 	// Struct to hold audio game state
 	struct AUDIO_STATE {
-		bool					bInitialized			= false;
+		b8_t					bInitialized			= false;
 
 		// XAudio2
 #ifdef USING_XAUDIO2_7_DIRECTX
@@ -94,10 +94,10 @@ nmsp gpk
 		::gpk::n3f2_t			vListenerPos			= {};
 		::gpk::n3f2_t			vEmitterPos				= {};
 		f2_t					fListenerAngle			= (f2_t)(::gpk::math_pi_2 * .5);
-		bool					fUseListenerCone		= true;
-		bool					fUseInnerRadius			= true;
-		bool					fUseRedirectToLFE		= 0;
-		bool					Playing					= false;
+		b8_t					fUseListenerCone		= true;
+		b8_t					fUseInnerRadius			= true;
+		b8_t					fUseRedirectToLFE		= 0;
+		b8_t					Playing					= false;
 		f2_t					FrequencyRatio			= 1.0f;
 #ifdef USING_XAUDIO2_7_DIRECTX
 		u2_t				SampleRateOriginal		= 0;
@@ -112,7 +112,7 @@ nmsp gpk
 		gpk::err_t 		PrepareAudio			(::gpk::vcst_t wavname);
 		gpk::err_t 		UpdateAudio				(f3_t fElapsedTime);
 		gpk::err_t 		SetReverb				(int nReverb);
-		gpk::err_t 		PauseAudio				(bool resume);
+		gpk::err_t 		PauseAudio				(b8_t resume);
 		gpk::err_t 		CleanupAudio			();
 
 		gpk::err_t 		PlayWave				(::gpk::vcst_t wavname);

@@ -10,15 +10,15 @@
 
 nmsp gpk
 {
-	tpl_vtArgs	err_t			clear					(_tArgs&&... args)				nxpt	{ const s2_t results[] = {args.clear()..., 0}; for(cnst s2_t result : results) if(result < 0) rtrn result; rtrn 0; }
+	tpl_vtArgs	err_t			clear					(_tArgs&&... args)				nxpt	{ cnst s2_t results[] = {args.clear()..., 0}; for(cnst s2_t result : results) if(result < 0) rtrn result; rtrn 0; }
 	tpl_vtArgs	err_t			resize					(u2_t newSize, _tArgs&&... args)		{
 		u2_c					oldSizes	[]			= {args.size	()..., 0};
-		const gpk::err_t 		results		[]			= {args.resize	(newSize)..., 0};
+		cnst gpk::err_t 		results		[]			= {args.resize	(newSize)..., 0};
 		for(u2_t i = 0; i < ::gpk::size(results); ++i)
 			if_failed(results[i]) {
 				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (s2_t)newSize);
 				s2_t							j						= 0;
-				const s2_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};
+				cnst s2_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};
 				(void)dummy;
 				return -1;
 			}
@@ -26,12 +26,12 @@ nmsp gpk
 	}
 	tpl_vtArgs	err_t			resize_obj				(u2_t newSize, _tArgs&&... args)		{
 		u2_c					oldSizes	[]			= {args.size	()..., 0};
-		const gpk::err_t 		results		[]			= {args.resize	(newSize,{})..., 0};
+		cnst gpk::err_t 		results		[]			= {args.resize	(newSize,{})..., 0};
 		for(u2_t i = 0; i < ::gpk::size(results); ++i)
 			if_failed(results[i]) {
 				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (s2_t)newSize);
 				s2_t							j						= 0;
-				const s2_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};
+				cnst s2_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};
 				(void)dummy;
 				return -1;
 			}
@@ -40,7 +40,7 @@ nmsp gpk
 	// Base for arrays that keeps track of its actual size.
 #pragma pack(push, 1)
 	tplT class array_base : public view<T> {
-		static	err_t 	calc_reserve_count		(u2_c newCountRequested, u2_t & outCount)	nxpt	{ 
+		sttc	err_t 	calc_reserve_count		(u2_c newCountRequested, u2_t & outCount)	nxpt	{ 
 			stxp	u2_t			MAX_COUNT				= 0x3FFFFFFFU;
 			if(MAX_COUNT < newCountRequested)
 				return (u2_t)-1;
@@ -63,17 +63,17 @@ nmsp gpk
 		inln					~array_base				()							nxpt	{ if(0 == NoAlloc) ::gpk::safe_gpk_free(Data); }
 
 		inxp					array_base				()							nxpt	: Size(0), NoAlloc(0) {}
-		inxp					array_base				(const TArray &	 other)		nxpt	= delete;
-		inxp					array_base				(const TArray && other)		nxpt	= delete;
+		inxp					array_base				(cnst TArray &	 other)		nxpt	= delete;
+		inxp					array_base				(cnst TArray && other)		nxpt	= delete;
 
-		TArray&					oper =				(const TArray &	 other)					= delete;
-		TArray&					oper =				(const TArray && other)					= delete;
+		TArray&					oper =				(cnst TArray &	 other)					= delete;
+		TArray&					oper =				(cnst TArray && other)					= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		static	gpk::err_t alloc_with_reserve		(u2_c newCount, T* & reserved)	nxpt	{ 
+		sttc	gpk::err_t alloc_with_reserve		(u2_c newCount, T* & reserved)	nxpt	{ 
 			u2_t					newSize					= 0;
 			if_fail_fef(calc_reserve_count(newCount, newSize), "Too large. newCount: %" GPK_FMT_S2 ".", newCount);
 			u2_c				bytesToAllocate			= szof(T) * (newSize + 1);
-			if(bool(reserved = (T*)::gpk::gpk_malloc(bytesToAllocate)))
+			if(b8_t(reserved = (T*)::gpk::gpk_malloc(bytesToAllocate)))
 				return (::gpk::err_t)newSize;
 			error_printf("failed to reserve %" GPK_FMT_U2 " bytes.", bytesToAllocate);
 			GPK_PLATFORM_CRT_CHECK_MEMORY();

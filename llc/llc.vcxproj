@@ -96,7 +96,6 @@
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_encoding.h" />
     <ClInclude Include="gpk_enum.h" />
-    <ClInclude Include="gpk_error.h" />
     <ClInclude Include="gpk_eval.h" />
     <ClInclude Include="gpk_event.h" />
     <ClInclude Include="gpk_event_input.h" />
@@ -259,15 +258,15 @@
     <ClInclude Include="gpk_xml_reader.h" />
     <ClInclude Include="keyed_bit_array.h" />
     <ClInclude Include="llc.h" />
- </ItemGroup>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
-    <ClCompile Include="gpk_append_tcpip.cpp" />
     <ClCompile Include="gpk_append_css.cpp" />
     <ClCompile Include="gpk_append_html.cpp" />
     <ClCompile Include="gpk_append_js.cpp" />
     <ClCompile Include="gpk_append_json.cpp" />
+    <ClCompile Include="gpk_append_tcpip.cpp" />
     <ClCompile Include="gpk_append_xml.cpp" />
     <ClCompile Include="gpk_args.cpp" />
     <ClCompile Include="gpk_array.cpp" />
@@ -275,82 +274,80 @@
     <ClCompile Include="gpk_base64.cpp" />
     <ClCompile Include="gpk_block.cpp" />
     <ClCompile Include="gpk_broker.cpp" />
-    <ClCompile Include="gpk_circuit.cpp" />
     <ClCompile Include="gpk_cgi.cpp" />
     <ClCompile Include="gpk_cgi_main.cpp" />
     <ClCompile Include="gpk_cgi_module.cpp" />
     <ClCompile Include="gpk_cgi_runtime.cpp" />
     <ClCompile Include="gpk_chrono.cpp" />
+    <ClCompile Include="gpk_circuit.cpp" />
     <ClCompile Include="gpk_component_scene.cpp" />
     <ClCompile Include="gpk_component_scene_draw.cpp" />
+    <ClCompile Include="gpk_control_grid.cpp" />
     <ClCompile Include="gpk_crc.cpp" />
     <ClCompile Include="gpk_d3d.cpp" />
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_debug.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
+    <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_event_device.h" />
+    <ClCompile Include="gpk_expression.cpp" />
+    <ClCompile Include="gpk_file.cpp" />
     <ClCompile Include="gpk_file_pack.cpp" />
+    <ClCompile Include="gpk_font.cpp" />
+    <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_framework_module.cpp" />
     <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_geometry_draw.cpp" />
+    <ClCompile Include="gpk_geometry_lh.cpp" />
     <ClCompile Include="gpk_gltf.cpp" />
+    <ClCompile Include="gpk_gui.cpp" />
+    <ClCompile Include="gpk_gui_control_list.cpp" />
+    <ClCompile Include="gpk_gui_draw.cpp" />
     <ClCompile Include="gpk_gui_inputbox.cpp" />
     <ClCompile Include="gpk_gui_theme.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
+    <ClCompile Include="gpk_http_client.cpp" />
+    <ClCompile Include="gpk_https_client.cpp" />
     <ClCompile Include="gpk_i2c.cpp" />
     <ClCompile Include="gpk_index.cpp" />
+    <ClCompile Include="gpk_index_catalog.cpp" />
     <ClCompile Include="gpk_index_path.cpp" />
-    <ClCompile Include="gpk_keyval_view.cpp" />
-    <ClCompile Include="gpk_isa.h" />
-    <ClCompile Include="gpk_particle.cpp" />
-    <ClCompile Include="gpk_path.cpp" />
-    <ClCompile Include="gpk_platform_error.cpp" />
-    <ClCompile Include="gpk_process_linux.cpp" />
-    <ClCompile Include="gpk_process_win32.cpp" />
-    <ClCompile Include="gpk_spi.cpp" />
-    <ClCompile Include="gpk_string_compose.cpp" />
-    <ClCompile Include="gpk_string_time.cpp" />
-    <ClCompile Include="gpk_test_core.cpp" />
-    <ClCompile Include="gpk_typeint.cpp" />
-    <ClCompile Include="gpk_virtual_keyboard.cpp" />
-    <ClCompile Include="gpk_voxel_geometry.cpp" />
-    <ClCompile Include="gpk_window.cpp" />
-    <ClCompile Include="gpk_framework.cpp" />
-    <ClCompile Include="gpk_gui_control_list.cpp" />
-    <ClCompile Include="gpk_control_grid.cpp" />
-    <ClCompile Include="gpk_raster_lh.cpp" />
-    <ClCompile Include="gpk_encoding.cpp" />
-    <ClCompile Include="gpk_expression.cpp" />
-    <ClCompile Include="gpk_scene.cpp" />
-    <ClCompile Include="gpk_geometry_lh.cpp" />
-    <ClCompile Include="gpk_gui.cpp" />
-    <ClCompile Include="gpk_gui_draw.cpp" />
-    <ClCompile Include="gpk_https_client.cpp" />
-    <ClCompile Include="gpk_http_client.cpp" />
     <ClCompile Include="gpk_json.cpp" />
     <ClCompile Include="gpk_json_expression.cpp" />
+    <ClCompile Include="gpk_keyval_view.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_log.cpp" />
     <ClCompile Include="gpk_mapblock.cpp" />
     <ClCompile Include="gpk_noise.cpp" />
     <ClCompile Include="gpk_parse.cpp" />
+    <ClCompile Include="gpk_particle.cpp" />
+    <ClCompile Include="gpk_path.cpp" />
+    <ClCompile Include="gpk_platform_error.cpp" />
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_process.cpp" />
+    <ClCompile Include="gpk_process_linux.cpp" />
+    <ClCompile Include="gpk_process_win32.cpp" />
+    <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
+    <ClCompile Include="gpk_scene.cpp" />
+    <ClCompile Include="gpk_spi.cpp" />
     <ClCompile Include="gpk_stdstring.cpp" />
-    <ClCompile Include="gpk_string.cpp" />
     <ClCompile Include="gpk_stl.cpp" />
-    <ClCompile Include="gpk_file.cpp" />
+    <ClCompile Include="gpk_string.cpp" />
+    <ClCompile Include="gpk_string_compose.cpp" />
     <ClCompile Include="gpk_string_helper.cpp" />
+    <ClCompile Include="gpk_string_time.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />
+    <ClCompile Include="gpk_test_core.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_view.cpp" />
+    <ClCompile Include="gpk_virtual_keyboard.cpp" />
+    <ClCompile Include="gpk_voxel_geometry.cpp" />
+    <ClCompile Include="gpk_window.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />
-    <ClCompile Include="gpk_font.cpp" />
-    <ClCompile Include="gpk_index_catalog.cpp" />
     <ClCompile Include="llc.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -398,7 +395,7 @@
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)=='Release'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -516,5 +513,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets"> </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
 </Project>

@@ -76,7 +76,7 @@ GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TREE_ENSURE_STATE		, 78, "jsonTreeE
 static_assert(szof(::gpk::JSON_PARSE_OPTION) == szof(::gpk::u1_t), "JSON parse options must use one uniform 16-bit field.");
 static_assert(szof(::gpk::SJSONParseOptions) == szof(::gpk::JSON_PARSE_OPTION), "bit_field<> must not add storage overhead.");
 
-tydf ::gpk::view<const ::gpk::vcst_t> TJSONConstViews;
+tydf ::gpk::view<cnst ::gpk::vcst_t> TJSONConstViews;
 tydf ::gpk::err_t (*TJSONObjectValueGet)(cnst ::gpk::SJSONNode &, TJSONConstViews, ::gpk::vcst_t);
 tydf ::gpk::err_t (*TJSONObjectKeyList)(cnst ::gpk::SJSONNode &, TJSONConstViews, ::gpk::aobj<::gpk::vcst_t> &);
 tydf ::gpk::err_t (*TJSONObjectIndexedKeyList)(cnst ::gpk::SJSONNode &, TJSONConstViews, ::gpk::as2_t &, ::gpk::aobj<::gpk::vcst_t> &);
@@ -85,13 +85,13 @@ tydf ::gpk::err_t (*TJSONCompareSharedViews)(cnst ::gpk::SJSONNode &, cnst ::gpk
 tydf ::gpk::err_t (*TJSONWrite)(cnst ::gpk::SJSONNode *, TJSONConstViews, ::gpk::string &);
 tydf ::gpk::err_t (*TJSONArraySplit)(cnst ::gpk::SJSONNode &, TJSONConstViews, ::gpk::u2_t, ::gpk::aobj<::gpk::string> &);
 
-static_assert(::gpk::is_cnst<TJSONConstViews::T>::Value, "JSON view collections must expose const view descriptors.");
-static_assert(::gpk::is_cnst<::gpk::vcst_t::T>::Value, "String views must expose const characters.");
+static_assert(::gpk::is_cnst<TJSONConstViews::T>::Value, "JSON view collections must expose cnst view descriptors.");
+static_assert(::gpk::is_cnst<::gpk::vcst_t::T>::Value, "String views must expose cnst characters.");
 static_assert(requires {
 	static_cast<TJSONObjectValueGet>(&::gpk::jsonObjectValueGet);
 	static_cast<TJSONObjectKeyList>(&::gpk::jsonObjectKeyList);
 	static_cast<TJSONObjectIndexedKeyList>(&::gpk::jsonObjectKeyList);
-	}, "JSON object access must preserve const view collections.");
+	}, "JSON object access must preserve cnst view collections.");
 static_assert(requires {
 	static_cast<TJSONCompare>(&::gpk::jsonCompareNumber);
 	static_cast<TJSONCompare>(&::gpk::jsonCompareArray);
@@ -99,13 +99,13 @@ static_assert(requires {
 	static_cast<TJSONCompareSharedViews>(&::gpk::jsonCompareNumber);
 	static_cast<TJSONCompareSharedViews>(&::gpk::jsonCompareArray);
 	static_cast<TJSONCompareSharedViews>(&::gpk::jsonCompareObject);
-	}, "JSON comparison must preserve const view collections.");
+	}, "JSON comparison must preserve cnst view collections.");
 static_assert(requires {
 	static_cast<TJSONWrite>(&::gpk::jsonWrite);
 	static_cast<TJSONArraySplit>(&::gpk::jsonArraySplit);
-	}, "JSON serialization must preserve const view collections.");
+	}, "JSON serialization must preserve cnst view collections.");
 
-sttc bool jsonTextMismatch(::gpk::vcst_t actual, ::gpk::vcst_t expected) {
+sttc b8_t jsonTextMismatch(::gpk::vcst_t actual, ::gpk::vcst_t expected) {
 	rtrn actual.size() != expected.size() || (actual.size() && 0 != memcmp(actual.begin(), expected.begin(), actual.size()));
 }
 
@@ -117,7 +117,7 @@ sttc ::gpk::err_t testJSONStructure(::gpk::ATestError & errors, cnst ::gpk::SJSO
 		cnst ::gpk::vcst_t & tokenView = reader.View[iToken];
 		always_printf("JSON token:%u type:%s parent:%i span:%u..%u text:'%.*s'.", iToken, ::gpk::get_value_namep(token.Type), token.ParentIndex, token.Span.Begin, token.Span.End, GPK_VIEW_ARGS(tokenView));
 		cnst ::gpk::pobj<::gpk::SJSONNode> & node = reader.Tree[iToken];
-		cnst bool hasParent = token.ParentIndex >= 0 && (::gpk::u2_t)token.ParentIndex < reader.Tree.size();
+		b8_c hasParent = token.ParentIndex >= 0 && (::gpk::u2_t)token.ParentIndex < reader.Tree.size();
 		GPK_TEST_REQUIREF(errors, JSON_READER_TEST_RESULT_TOKEN_SPAN_ORDER, token.Span.Begin > token.Span.End , "Token:%u span:%u..%u." , iToken, token.Span.Begin, token.Span.End );
 		GPK_TEST_REQUIREF(errors, JSON_READER_TEST_RESULT_TOKEN_SPAN_BOUNDS, token.Span.End > input.size() , "Token:%u end:%u, input size:%u." , iToken, token.Span.End, input.size() );
 		GPK_TEST_CHECKF(errors, JSON_READER_TEST_RESULT_TOKEN_VIEW_SIZE, tokenView.size() != token.Span.End - token.Span.Begin , "Token:%u view size:%u, span size:%u." , iToken, tokenView.size(), token.Span.End - token.Span.Begin );
@@ -179,9 +179,9 @@ sttc ::gpk::err_t testJSONReset(::gpk::ATestError & errors) {
 	GPK_TEST_REQUIREF(errors, JSON_READER_TEST_RESULT_RESET_ROOT_PRESENT, 0 == reader.Tree.size() , "Cached tree nodes:%u, expected at least one." , reader.Tree.size() );
 	GPK_TEST_REQUIREF(errors, JSON_READER_TEST_RESULT_RESET_ROOT_REFERENCE, 0 == reader.Tree[0].get_ref() , "Cached root reference:%p, expected non-null." , reader.Tree[0].get_ref() );
 	::gpk::u2_c treeSize = reader.Tree.size();
-	cnst ::gpk::view<const ::gpk::pobj<::gpk::SJSONNode>> treeStorage = {reader.Tree.begin(), reader.Tree.size()};
-	cnst ::gpk::view<const ::gpk::gref<::gpk::SJSONNode>> rootReference = {reader.Tree[0].get_ref(), 1};
-	cnst ::gpk::view<const ::gpk::pobj<::gpk::SJSONNode>> childStorage = {reader.Tree[0]->Children.begin(), reader.Tree[0]->Children.size()};
+	cnst ::gpk::view<cnst ::gpk::pobj<::gpk::SJSONNode>> treeStorage = {reader.Tree.begin(), reader.Tree.size()};
+	cnst ::gpk::view<cnst ::gpk::gref<::gpk::SJSONNode>> rootReference = {reader.Tree[0].get_ref(), 1};
+	cnst ::gpk::view<cnst ::gpk::pobj<::gpk::SJSONNode>> childStorage = {reader.Tree[0]->Children.begin(), reader.Tree[0]->Children.size()};
 	cnst ::gpk::err_t result = reader.Reset();
 	GPK_TEST_CHECKF(errors, JSON_READER_TEST_RESULT_RESET_RESULT, ::gpk::failed(result), "Reset result:%i.", result);
 	GPK_TEST_CHECKF(errors, JSON_READER_TEST_RESULT_RESET_TOKENS, reader.Token.size(), "Tokens after reset:%u.", reader.Token.size());

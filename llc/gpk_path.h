@@ -29,17 +29,17 @@ nmsp gpk
 		err_t					Reset	()						{ rtrn ::gpk::clear(Name, Info); }
 	};
 
-	err_t						pathList				(SPathTree & output, vcst_t pathToList, function<err_t(bool, vcst_c&)> filter);
+	err_t						pathList				(SPathTree & output, vcst_t pathToList, function<err_t(b8_t, vcst_c&)> filter);
 	err_t						pathList				(SPathTree & output, vcst_t pathToList, vcst_t extension = {});
-	//err_t						pathList				(const SPathTree & input, aobj<string> & output, vcst_t extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
+	//err_t						pathList				(cnst SPathTree & input, aobj<string> & output, vcst_t extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
 
 	stct SPathContents {
 		aobj<string>			Files					= {};
 		aobj<SPathContents>		Folders					= {};
 	};
 	err_t						pathCreate				(vcst_t folderName, sc_c separator = '/');	// Recursive
-	err_t						pathList				(const SPathContents & input, aobj<string> & output, vcst_t extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
-	err_t						pathList				(const SPathContents & input, aobj<vcst_t> & output, vcst_t extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
+	err_t						pathList				(cnst SPathContents & input, aobj<string> & output, vcst_t extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
+	err_t						pathList				(cnst SPathContents & input, aobj<vcst_t> & output, vcst_t extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
 	err_t						pathList				(vcst_t pathToList, SPathContents & output, vcst_t extension = {});		// Recursive
 	stin	err_t				pathList				(vcst_t pathToList, aobj<string> & output, vcst_t extension = {}) {
 		SPathContents			tree					= {};
@@ -64,7 +64,7 @@ nmsp gpk
 	}
 	err_t						pathStem				(vcst_t path, vcst_t & stem);
 
-	err_t						pathList				(vcst_t pathToList, SPathContents & outputTree, function<err_t(bool, vcst_c&)> onItem, gpk::vcst_c extension);
+	err_t						pathList				(vcst_t pathToList, SPathContents & outputTree, function<err_t(b8_t, vcst_c&)> onItem, gpk::vcst_c extension);
 } // nmsp
 
 #endif // GPK_PATH_H_23627

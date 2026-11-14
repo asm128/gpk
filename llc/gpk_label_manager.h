@@ -7,11 +7,11 @@ nmsp gpk
 {
 	class CLabelManager	{
 #if defined(GPK_ARDUINO)
-		stxp	const u2_t	BLOCK_SIZE	= 1024 >> 1;
+		stxp	u2_c	BLOCK_SIZE	= 1024 >> 1;
 #elif defined(GPK_ESP32)
-		stxp	const u2_t	BLOCK_SIZE	= 1024 * 4;
+		stxp	u2_c	BLOCK_SIZE	= 1024 * 4;
 #else
-		stxp	const u2_t	BLOCK_SIZE	= 1024 * 64;
+		stxp	u2_c	BLOCK_SIZE	= 1024 * 64;
 #endif
 		block_container_nts<BLOCK_SIZE>	Characters;
 		vcst_t							Empty;
@@ -35,7 +35,7 @@ nmsp gpk
 		err_t							Save						(au0_t & output)	cnst	{
 			if_fail_fe(gpk::saveView(output, Counts));
 			for(u2_t iArray = 0; iArray < Counts.size(); ++iArray) {
-				if_fail_fe(output.append((const u0_t*)Texts[iArray], Counts[iArray]));
+				if_fail_fe(output.append((cnst u0_t*)Texts[iArray], Counts[iArray]));
 			}
 			return 0;
 		}
@@ -45,7 +45,7 @@ nmsp gpk
 			u2_t					offsetByte					= 0;
 			for(u2_t iArray = 0; iArray < Counts.size(); ++iArray) {
 				u2_t					elementCount				= Counts[iArray];
-				if_fail_fe(Characters.push_sequence((const sc_t*)&input[offsetByte], elementCount, out_view));
+				if_fail_fe(Characters.push_sequence((sc_c*)&input[offsetByte], elementCount, out_view));
 				offsetByte				+= elementCount;
 				if_fail_fe(Texts.push_back(out_view.begin()));
 			}
@@ -53,14 +53,14 @@ nmsp gpk
 			return 0;
 		}
 
-		err_t							Index		(const vcst_t & elements) {
+		err_t							Index		(cnst vcst_t & elements) {
 			if_true_vef(-1, elements.size() >= CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
 
 			for(u2_t iView = 0, countLabels = Texts.size(); iView < countLabels; ++iView) {
 				if(elements.size() != Counts[iView])
 					continue;
 
-				const sc_t								* pStored					= Texts[iView];
+				sc_c								* pStored					= Texts[iView];
 				if(0 == memcmp(pStored, elements.begin(), elements.byte_count()))
 					return iView;
 			}
@@ -73,12 +73,12 @@ nmsp gpk
 			}
 
 			u2_t								ntslen						= 0;
-			for(const u2_t countChars = min(inout_view.size(), CLabelManager::BLOCK_SIZE - 1); ntslen < countChars; ++ntslen) {
+			for(u2_c countChars = min(inout_view.size(), CLabelManager::BLOCK_SIZE - 1); ntslen < countChars; ++ntslen) {
 				if(0 == inout_view[ntslen])
 					break;
 			}
 
-			const u2_t							viewIndex					= (u2_t)Index({inout_view.begin(), ntslen});
+			u2_c							viewIndex					= (u2_t)Index({inout_view.begin(), ntslen});
 			if(viewIndex < Texts.size()) {
 				inout_view				= {Texts[viewIndex], Counts[viewIndex]};
 				return viewIndex;

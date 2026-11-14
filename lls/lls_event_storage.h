@@ -11,8 +11,8 @@ namespace lls
 	GDEFINE_ENUM_VALUE(ADMIN_GAME, Hide			, 1);
 	GDEFINE_ENUM_VALUE(ADMIN_GAME, Seek			, 2); 
 	GDEFINE_ENUM_VALUE(ADMIN_GAME, Reset		, 3); 
-	typedef	::gpk::SEvent		<ADMIN_GAME>	EventAdminGame;
-	typedef	::gpk::SEventView	<ADMIN_GAME>	EViewAdminGame;
+	tydf	::gpk::SEvent		<ADMIN_GAME>	EventAdminGame;
+	tydf	::gpk::SEventView	<ADMIN_GAME>	EViewAdminGame;
 #pragma pack(pop)
 } // namespace
 

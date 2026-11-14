@@ -7,9 +7,9 @@ GPK_USING_APOD();
 GPK_USING_N2();
 GPK_USING_N3();
 
-static	gpk::err_t drawOrderedVertices
+sttc	gpk::err_t drawOrderedVertices
 	( ::gpk::SNodeRenderer					& renderer
-	, const ::gpk::SRenderNode				& nodeToDraw
+	, cnst ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::m4f2_t				matrixWVP
 	, ::gpk::g8bgra	target_image
 	, ::gpk::grid<u2_t>			target_depth
@@ -61,19 +61,19 @@ static	gpk::err_t drawOrderedVertices
 gpk::err_t 		gpk::nodeRendererDrawNode
 	( ::gpk::SNodeRenderer					& renderer
 	, u2_t								iNode
-	, const ::gpk::m4f2_t			& view
-	, const ::gpk::m4f2_t			& projection
-	, const ::gpk::m4f2_t			& viewProjection
+	, cnst ::gpk::m4f2_t			& view
+	, cnst ::gpk::m4f2_t			& projection
+	, cnst ::gpk::m4f2_t			& viewProjection
 	, ::gpk::g8bgra	target_image
 	, ::gpk::grid<u2_t>			target_depth
 	) {
 	if(0 == target_image.size())
 		return 1;
-	const ::gpk::SRenderNode					& nodeToDraw			= renderer.Nodes[iNode];
+	cnst ::gpk::SRenderNode					& nodeToDraw			= renderer.Nodes[iNode];
 	if_true_vwf(2, -1 == nodeToDraw.Vertices, "No vertices to draw for node %i. Better skip this call for invisible nodes.", iNode);
 
-	const ::gpk::m4f2_t				& matrixWorld			= (-1 == nodeToDraw.Transform) ? ::gpk::m4f2_t::GetIdentity() : renderer.Transforms[nodeToDraw.Transform].Matrix;
-	const ::gpk::m4f2_t				& matrixWorldInverse	= (-1 == nodeToDraw.Transform) ? ::gpk::m4f2_t::GetIdentity() : renderer.Transforms[nodeToDraw.Transform].MatrixInverse;
+	cnst ::gpk::m4f2_t				& matrixWorld			= (-1 == nodeToDraw.Transform) ? ::gpk::m4f2_t::GetIdentity() : renderer.Transforms[nodeToDraw.Transform].Matrix;
+	cnst ::gpk::m4f2_t				& matrixWorldInverse	= (-1 == nodeToDraw.Transform) ? ::gpk::m4f2_t::GetIdentity() : renderer.Transforms[nodeToDraw.Transform].MatrixInverse;
 	::gpk::m4f2_t						matrixWVP				= matrixWorld * viewProjection;
 	if(nodeToDraw.Indices >= 0) { // draw indexed triangles
 
@@ -95,7 +95,7 @@ gpk::err_t 		gpk::nodeRendererDraw
 	, s2_t								iCamera
 	, ::gpk::g8bgra	target_image
 	, ::gpk::grid<u2_t>			target_depth
-	, bool									drawHidden
+	, b8_t									drawHidden
 	) {
 	if(0 == target_image.size())
 		return 1;
@@ -103,7 +103,7 @@ gpk::err_t 		gpk::nodeRendererDraw
 	::gpk::m4f2_t						matrixView				= ::gpk::m4f2_t::GetIdentity();
 	::gpk::m4f2_t						matrixProjection		= ::gpk::m4f2_t::GetIdentity();
 	::gpk::m4f2_t						matrixVP				= ::gpk::m4f2_t::GetIdentity();
-	const f3_t								aspectRatio				= target_image.metrics().x / (f3_t)target_image.metrics().y;
+	cnst f3_t								aspectRatio				= target_image.metrics().x / (f3_t)target_image.metrics().y;
 	::gpk::SCamera								& camera				= renderer.Cameras[iCamera];
 	matrixView.LookAt(camera.Position, camera.Target, camera.Up);
 	matrixProjection.FieldOfView(camera.Angle, aspectRatio, camera.ClipPlanes.Min, camera.ClipPlanes.Max);
@@ -111,13 +111,13 @@ gpk::err_t 		gpk::nodeRendererDraw
 	matrixVP								= matrixView * matrixProjection;
 
 	for(u2_t iNode = 0; iNode < renderer.Nodes.size(); ++iNode) {
-		const ::gpk::SRenderNode					& nodeToRender			= renderer.Nodes[iNode];
+		cnst ::gpk::SRenderNode					& nodeToRender			= renderer.Nodes[iNode];
 		if(drawHidden || false == nodeToRender.Hidden) {
 			renderer.RenderCache.NodesToRender.push_back(iNode);
 			::gpk::au2_t						& nodeLights			= renderer.RenderCache.NodeLights[renderer.RenderCache.NodeLights.push_back({})];
 			::gpk::n3f2_t						nodePosition			= (-1 == nodeToRender.Transform) ? ::gpk::n3f2_t{} : renderer.Transforms[nodeToRender.Transform].Matrix.GetTranslation();
 			for(u2_t iLight = 0; iLight < renderer.Lights.size(); ++iLight) {
-				const ::gpk::SLight							& light					= renderer.Lights[iLight];
+				cnst ::gpk::SLight							& light					= renderer.Lights[iLight];
 				if(light.Type & ::gpk::GLIGHT_STATE_ENABLED) {
 					if((light.Position - nodePosition).LengthSquared() < light.RangeSquared) {
 						nodeLights.push_back(iLight);
@@ -127,7 +127,7 @@ gpk::err_t 		gpk::nodeRendererDraw
 		}
 	}
 	for(u2_t iNode = 0; iNode < renderer.RenderCache.NodesToRender.size(); ++iNode) {
-		const u2_t												indexNode				= renderer.RenderCache.NodesToRender[iNode];
+		u2_c												indexNode				= renderer.RenderCache.NodesToRender[iNode];
 		if_fail_ef(::gpk::nodeRendererDrawNode(renderer, indexNode, matrixView, matrixProjection, matrixVP, target_image, target_depth), "Failed to render node %i", indexNode);
 	}
 	return 0;

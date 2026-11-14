@@ -6,7 +6,7 @@ gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & planetarySystem, vcst
 	return planetarySystemSetup(planetarySystem, jsonFile.Reader);
 }
 
-gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & solarSystem, const SJSONReader & jsonData) {
+gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & solarSystem, cnst SJSONReader & jsonData) {
 	aobj<vcst_t>		stellarBodyNames			= {};
 	as2_t				stellarBodyIndices;
 	if_fail_fe(gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));
@@ -17,7 +17,7 @@ gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & solarSystem, const SJ
 	f2_t						fFurthest					= 0;
 
 	for(u2_t iPlanet = 0; iPlanet < stellarBodyIndices.size(); ++iPlanet) {
-		const s2_t				jsonIndexStellarBody		= stellarBodyIndices[iPlanet];
+		cnst s2_t				jsonIndexStellarBody		= stellarBodyIndices[iPlanet];
 		s2_t						indexProperty;
 
 		if_failed(indexProperty = jsonObjectValueGet(jsonData, jsonIndexStellarBody + 2, "parent")) {
@@ -29,8 +29,8 @@ gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & solarSystem, const SJ
 		// Load planet properties.
 		if_fail_cw(indexProperty = jsonObjectValueGet(jsonData, jsonIndexStellarBody + 2, "type")); // ?? no type? shouldn't happen
 
-		const vcst_t			strType						= jsonData.View[indexProperty]; 
-		const CELESTIAL_BODY	bodyType					= bodyTypeFromString(strType);
+		cnst vcst_t			strType						= jsonData.View[indexProperty]; 
+		cnst CELESTIAL_BODY	bodyType					= bodyTypeFromString(strType);
 		SCelestialBody		bodyProperties				= {};
 		if_fail_cw(loadCelestialBody(bodyProperties, bodyType, jsonData, jsonIndexStellarBody + 2));
 		if(fFurthest < bodyProperties.Orbit.Radius) {

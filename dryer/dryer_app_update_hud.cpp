@@ -1,7 +1,7 @@
 #include "dryer_app.h"
 
-static void							timeFormat				(::gpk::vstr_t output)		{
-	static constexpr const char				* month_names[]			= {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+sttc void							timeFormat				(::gpk::vstr_t output)		{
+	sttc constexpr cnst sc_t				* month_names[]			= {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 	time_t									rawtime					= {};
     time ( &rawtime );
 #ifndef GPK_WINDOWS
@@ -15,8 +15,8 @@ static void							timeFormat				(::gpk::vstr_t output)		{
 }
 
 template <typename _tScreen>
-sttc gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, s2_t idControl, bool isOn) {
-	const ::gpk::cid_t						controlIndex			= screen.ControlIds[idControl];
+sttc gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, s2_t idControl, b8_t isOn) {
+	cnst ::gpk::cid_t						controlIndex			= screen.ControlIds[idControl];
 	::dry::SControlImages					& icons					= screen.ControlIcons[idControl];
 	if(-1 != controlIndex)
 		gui.Controls.Images[controlIndex].Image = isOn ? icons.On.View : icons.Off.View;
@@ -25,7 +25,7 @@ sttc gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, s2_t idC
 
 gpk::err_t dry::updateScreenHUD	(::dry::SApplication & app) {
 	::gpk::SGUI								& gui					= *app.Framework.GUI;
-	char									bufferTime	[64]		= {};
+	sc_t									bufferTime	[64]		= {};
 	::timeFormat(bufferTime);
 	if(::gpk::vcst_t{bufferTime} != ::gpk::vcst_t{app.TimeString.Storage}) {
 		::gpk::memcpy_s(app.TimeString.Storage, bufferTime);

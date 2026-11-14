@@ -9,8 +9,8 @@ nmsp gpk
 		::gpk::aobj<vcst_t>				Names;
 		::gpk::au2_t				MemberCount;
 
-		static	STypeRegistry&	GetGlobalInstance	()	nxpt	{
-			static STypeRegistry		instance;
+		sttc	STypeRegistry&	GetGlobalInstance	()	nxpt	{
+			sttc STypeRegistry		instance;
 			return instance;
 		}
 	};
@@ -33,7 +33,7 @@ nmsp gpk
 		sinx	::gpk::vcst_t	gpk_type_name			()		nxpt	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
 		sinx	u2_t		gpk_type_name_len		()		nxpt	{ return ::gpk::size(#_structName) - 1; }					\
 	};																																\
-	static	const int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
+	sttc	cnst int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
 
 #define GPK_STRUCT_MEMBER_DESC_NAME(_name)	_gpk_dsc_##_name
 

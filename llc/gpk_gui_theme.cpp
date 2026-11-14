@@ -17,16 +17,16 @@ gpk::err_t gpk::guiSetupDefaultFonts	(SGUI & gui)			{
 
 usns gpk;
 
-sttc gpk::err_t	paletteSetupDefault		(a8bgra & palette, const view<const bgra> & colors, u2_t iShades)	{
+sttc gpk::err_t	paletteSetupDefault		(a8bgra & palette, cnst view<cnst bgra> & colors, u2_t iShades)	{
 	if_true_fe(0 == iShades);
-	const u2_t				newPaletteSize				= colors.size() * iShades;
+	u2_c				newPaletteSize				= colors.size() * iShades;
 	if(palette.size() < newPaletteSize)
 		if_fail_fe(palette.resize(newPaletteSize));
 
 	for(u2_t iTone = 0; iTone < colors.size(); ++iTone)
 		for(u2_t iShade = 0; iShade < iShades; ++iShade) {
-			const s2_t				toneIndex					= iTone * iShades;
-			const bgra			& baseColor					= colors[iTone];
+			cnst s2_t				toneIndex					= iTone * iShades;
+			cnst bgra			& baseColor					= colors[iTone];
 			bgra					& paletteItem				= palette[toneIndex + iShade];
 			paletteItem				= rgbaf(baseColor) / (f2_t)iShades * (iShades - (f2_t)iShade);
 			paletteItem.a			= 0xFF;
@@ -35,7 +35,7 @@ sttc gpk::err_t	paletteSetupDefault		(a8bgra & palette, const view<const bgra> &
 	return 0;
 }
 
-sttc gpk::err_t themeSetupDefault	(const view<const bgra> & palette, s2_t iColor, SControlTheme & theme, u2_t iShades)	{
+sttc gpk::err_t themeSetupDefault	(cnst view<cnst bgra> & palette, s2_t iColor, SControlTheme & theme, u2_t iShades)	{
 	astu2_t<UI_CONTROL_AREA_COUNT>		& colorComboDisabled									= theme.ColorCombos[GUI_CONTROL_PALETTE_DISABLED	]	= {};
 	astu2_t<UI_CONTROL_AREA_COUNT>		& colorComboPressed 									= theme.ColorCombos[GUI_CONTROL_PALETTE_PRESSED	]	= {};
 	astu2_t<UI_CONTROL_AREA_COUNT>		& colorComboDragging									= theme.ColorCombos[GUI_CONTROL_PALETTE_DRAGGING	]	= {};
@@ -43,7 +43,7 @@ sttc gpk::err_t themeSetupDefault	(const view<const bgra> & palette, s2_t iColor
 	astu2_t<UI_CONTROL_AREA_COUNT>		& colorComboHover 										= theme.ColorCombos[GUI_CONTROL_PALETTE_HOVER	]	= {};
 	astu2_t<UI_CONTROL_AREA_COUNT>		& colorComboNormal										= theme.ColorCombos[GUI_CONTROL_PALETTE_NORMAL	]	= {};
 
-	//const s2_t														colorBase												= iColor / iShades;
+	//cnst s2_t														colorBase												= iColor / iShades;
 	s2_c			colorShade												= iColor % iShades;
 	s2_c			colorText												= (ASCII_COLOR_WHITE * iShades);
 	s2_c			halfShades												= (s2_t)iShades / 2;
@@ -114,18 +114,18 @@ sttc gpk::err_t themeSetupDefault	(const view<const bgra> & palette, s2_t iColor
 	return 0;
 }
 
-static	gpk::err_t themeSetupDefault	(const a8bgra & palette, apod<SControlTheme>& themes, u2_t iShades)	{
+sttc	gpk::err_t themeSetupDefault	(cnst a8bgra & palette, apod<SControlTheme>& themes, u2_t iShades)	{
 	for(u2_t iColor = 0; iColor < palette.size(); ++iColor) {
-		const s2_t				indexTheme			= themes.push_back({});
+		cnst s2_t				indexTheme			= themes.push_back({});
 		SControlTheme		& theme				= themes[indexTheme];
 		::themeSetupDefault(palette, iColor, theme, iShades);
 	}
 	return 0;
 }
 
-static	gpk::err_t initDefaults		(pobj<a8bgra> & palette, pobj<apod<SControlTheme>> & controlThemes) {
+sttc	gpk::err_t initDefaults		(pobj<a8bgra> & palette, pobj<apod<SControlTheme>> & controlThemes) {
 	stxp	u2_t			iShades				= 16;
-	static	bgra			paletteColors []	=
+	sttc	bgra			paletteColors []	=
 		// 16 Base colors
 		{ SColorRGBA{ASCII_COLOR_INDEX_0	}
 		, SColorRGBA{ASCII_COLOR_INDEX_1	}
@@ -183,9 +183,9 @@ static	gpk::err_t initDefaults		(pobj<a8bgra> & palette, pobj<apod<SControlTheme
 	return 0;
 }
 
-static	gpk::err_t paletteSetupDefaultColors	(pobj<a8bgra> & palette, pobj<apod<SControlTheme>> & controlThemes)	{
-	static papod<bgra>			globalDefaultPalette		= {};
-	static papod<SControlTheme>	globalDefaultTheme			= {};
+sttc	gpk::err_t paletteSetupDefaultColors	(pobj<a8bgra> & palette, pobj<apod<SControlTheme>> & controlThemes)	{
+	sttc papod<bgra>			globalDefaultPalette		= {};
+	sttc papod<SControlTheme>	globalDefaultTheme			= {};
 	
 	if(!globalDefaultPalette || 0 == globalDefaultPalette->size()) 
 		::initDefaults(globalDefaultPalette, globalDefaultTheme);
@@ -195,9 +195,9 @@ static	gpk::err_t paletteSetupDefaultColors	(pobj<a8bgra> & palette, pobj<apod<S
 	return 0;
 }
 
-static	gpk::err_t uiColorsShade
+sttc	gpk::err_t uiColorsShade
 	( asttc<bgra, UI_CONTROL_AREA_COUNT> & output
-	, const asttc<bgra, UI_CONTROL_AREA_COUNT> & base
+	, cnst asttc<bgra, UI_CONTROL_AREA_COUNT> & base
 	, u2_t shade
 	, u2_t shades
 	) {
@@ -210,7 +210,7 @@ static	gpk::err_t uiColorsShade
 	return 0;
 }
 
-static	gpk::err_t uiColorsSetupDefault (SGUIColors & guiColors) {
+sttc	gpk::err_t uiColorsSetupDefault (SGUIColors & guiColors) {
 	stxp u2_t shades = 16;
 	asttc<bgra, UI_CONTROL_AREA_COUNT> shaded = {};
 	guiColors.DefaultColors[GUI_CONTROL_PALETTE_NORMAL] = (u1_t)guiColors.Palettes.push_back({{
@@ -259,7 +259,7 @@ static	gpk::err_t uiColorsSetupDefault (SGUIColors & guiColors) {
 }
 gpk::err_t gpk::guiSetupDefaultColors (pobj<SGUIColors> & guiColors) {
 	if(!guiColors) {
-		static pobj<SGUIColors>	globalDefaultColors			= {};
+		sttc pobj<SGUIColors>	globalDefaultColors			= {};
 		if(!globalDefaultColors) {
 			if_fail_fe(::uiColorsSetupDefault(*globalDefaultColors.create()));
 			if_fail_fe(::paletteSetupDefaultColors(globalDefaultColors->Palette, globalDefaultColors->ControlThemes));

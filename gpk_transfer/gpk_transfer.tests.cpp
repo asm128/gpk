@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <cstring>
 
+usns  gpk;
+
 struct SMemoryTransferConsumer {
 	::gpk::au0_t				Source			= {};
 	::gpk::au0_t				Committed		= {};
@@ -13,13 +15,13 @@ struct SMemoryTransferConsumer {
 	uint32_t					Rollbacks			= 0;
 };
 
-static bool bytesEqual	(const ::gpk::vcu0_t & a, const ::gpk::vcu0_t & b) {
+sttc b8_t bytesEqual	(cnst ::gpk::vcu0_t & a, cnst ::gpk::vcu0_t & b) {
 	return a.size() == b.size() && (0 == a.size() || 0 == ::memcmp(a.begin(), b.begin(), a.size()));
 }
 
-static ::gpk::STransferConsumer senderCallbacks	(SMemoryTransferConsumer & memory) {
+sttc ::gpk::STransferConsumer senderCallbacks	(SMemoryTransferConsumer & memory) {
 	::gpk::STransferConsumer consumer;
-	consumer.ReadSourceRange	= [&memory](const ::gpk::STransferManifest &, const ::gpk::STransferRange & range, ::gpk::au0_t & output) {
+	consumer.ReadSourceRange	= [&memory](cnst ::gpk::STransferManifest &, cnst ::gpk::STransferRange & range, ::gpk::au0_t & output) {
 		if(range.Offset > memory.Source.size() || range.Count > memory.Source.size() - range.Offset)
 			return (::gpk::err_t)-1;
 		output.resize((::gpk::u2_t)range.Count);
@@ -30,10 +32,10 @@ static ::gpk::STransferConsumer senderCallbacks	(SMemoryTransferConsumer & memor
 	return consumer;
 }
 
-static ::gpk::STransferConsumer receiverCallbacks	(SMemoryTransferConsumer & memory, const ::gpk::vcu0_t expected) {
+sttc ::gpk::STransferConsumer receiverCallbacks	(SMemoryTransferConsumer & memory, cnst ::gpk::vcu0_t expected) {
 	::gpk::STransferConsumer consumer;
-	consumer.ResolveCommitted	= [](const ::gpk::STransferManifest &) { return (::gpk::err_t)0; };
-	consumer.ResolveProvisional	= [&memory](const ::gpk::STransferManifest & manifest) {
+	consumer.ResolveCommitted	= [](cnst ::gpk::STransferManifest &) { return (::gpk::err_t)0; };
+	consumer.ResolveProvisional	= [&memory](cnst ::gpk::STransferManifest & manifest) {
 		if(memory.Transaction != manifest.Id) {
 			memory.Transaction	= manifest.Id;
 			memory.Provisional.resize((::gpk::u2_t)manifest.Size);
@@ -43,26 +45,26 @@ static ::gpk::STransferConsumer receiverCallbacks	(SMemoryTransferConsumer & mem
 		}
 		return (::gpk::err_t)0;
 	};
-	consumer.WriteProvisionalRange	= [&memory](const ::gpk::STransferManifest &, const ::gpk::STransferRange & range, ::gpk::vcu0_t data) {
+	consumer.WriteProvisionalRange	= [&memory](cnst ::gpk::STransferManifest &, cnst ::gpk::STransferRange & range, ::gpk::vcu0_t data) {
 		if(range.Offset > memory.Provisional.size() || range.Count > memory.Provisional.size() - range.Offset || data.size() != range.Count)
 			return (::gpk::err_t)-1;
 		::memcpy(memory.Provisional.begin() + range.Offset, data.begin(), data.size());
 		memory.Durable.push_back(range);
 		return (::gpk::err_t)0;
 	};
-	consumer.QueryDurableRanges	= [&memory](const ::gpk::STransferManifest &, ::gpk::apod<::gpk::STransferRange> & output) {
+	consumer.QueryDurableRanges	= [&memory](cnst ::gpk::STransferManifest &, ::gpk::apod<::gpk::STransferRange> & output) {
 		output	= memory.Durable;
 		return (::gpk::err_t)0;
 	};
-	consumer.ValidateProvisional	= [&memory, expected](const ::gpk::STransferManifest & manifest) {
+	consumer.ValidateProvisional	= [&memory, expected](cnst ::gpk::STransferManifest & manifest) {
 		return manifest.Size == expected.size() && ::bytesEqual(memory.Provisional, expected) ? (::gpk::err_t)0 : (::gpk::err_t)-1;
 	};
-	consumer.CommitProvisional	= [&memory](const ::gpk::STransferManifest &) {
+	consumer.CommitProvisional	= [&memory](cnst ::gpk::STransferManifest &) {
 		memory.Committed	= memory.Provisional;
 		++memory.Commits;
 		return (::gpk::err_t)0;
 	};
-	consumer.RollbackProvisional	= [&memory](const ::gpk::STransferManifest &) {
+	consumer.RollbackProvisional	= [&memory](cnst ::gpk::STransferManifest &) {
 		memory.Provisional.clear();
 		memory.Durable.clear();
 		memory.Transaction	= 0;
@@ -72,7 +74,7 @@ static ::gpk::STransferConsumer receiverCallbacks	(SMemoryTransferConsumer & mem
 	return consumer;
 }
 
-static int check	(bool condition, const char * text) {
+sttc int check	(b8_t condition, cnst sc_t * text) {
 	::printf("[%s] %s\n", condition ? "PASS" : "FAIL", text);
 	return condition ? 0 : 1;
 }
@@ -86,12 +88,12 @@ int main() {
 		senderMemory.Source[iByte]	= (::gpk::u0_t)((iByte * 31U + 7U) & 0xFFU);
 	receiverMemory.Committed.resize(11);
 	::memcpy(receiverMemory.Committed.begin(), "old-version", 11);
-	const ::gpk::au0_t originalCommitted	= receiverMemory.Committed;
+	cnst ::gpk::au0_t originalCommitted	= receiverMemory.Committed;
 
 	::gpk::STransferManifest manifest;
 	manifest.Id		= 1;
 	manifest.Size	= senderMemory.Source.size();
-	const char resourceName[]	= "stash/example.bin";
+	cnst sc_t resourceName[]	= "stash/example.bin";
 	manifest.Resource.resize(sizeof(resourceName) - 1);
 	::memcpy(manifest.Resource.begin(), resourceName, sizeof(resourceName) - 1);
 	manifest.Digest.push_back(0xA5);
@@ -99,8 +101,8 @@ int main() {
 	::gpk::STransferState senderState;
 	::gpk::STransferState receiverState;
 	senderState.BlockSize	= 32768;
-	const ::gpk::STransferConsumer sender	= ::senderCallbacks(senderMemory);
-	const ::gpk::STransferConsumer receiver	= ::receiverCallbacks(receiverMemory, senderMemory.Source);
+	cnst ::gpk::STransferConsumer sender	= ::senderCallbacks(senderMemory);
+	cnst ::gpk::STransferConsumer receiver	= ::receiverCallbacks(receiverMemory, senderMemory.Source);
 	::gpk::TTransferQueue toReceiver;
 	::gpk::TTransferQueue toSender;
 
@@ -138,13 +140,13 @@ int main() {
 	failures += ::check(0 == ::gpk::transferProcess(senderState, sender, *toSender[0], toReceiver), "sender released committed transaction state");
 	toSender.clear();
 
-	const ::gpk::au0_t committedBeforeRollback	= receiverMemory.Committed;
+	cnst ::gpk::au0_t committedBeforeRollback	= receiverMemory.Committed;
 	manifest.Id	= 2;
 	failures += ::check(0 == ::gpk::transferEnqueueCreate(senderState, manifest, toReceiver), "second transaction created");
 	failures += ::check(0 == ::gpk::transferProcess(receiverState, receiver, *toReceiver[0], toSender), "second provisional resource resolved");
 	toReceiver.clear();
 	toSender.clear();
-	const ::gpk::STransferRange partialRange	= {0, 1024};
+	cnst ::gpk::STransferRange partialRange	= {0, 1024};
 	failures += ::check(0 == ::gpk::transferEnqueueWrite(manifest.Id, partialRange, {senderMemory.Source.begin(), (::gpk::u2_t)partialRange.Count}, toReceiver), "partial WRITE event queued");
 	failures += ::check(0 == ::gpk::transferProcess(receiverState, receiver, *toReceiver[0], toSender), "partial range written only to provisional resource");
 	toReceiver.clear();
@@ -165,7 +167,7 @@ int main() {
 	receiverMemory.Durable.push_back({0, senderState.BlockSize});
 	receiverMemory.Committed.resize(10);
 	::memcpy(receiverMemory.Committed.begin(), "resume-old", 10);
-	const ::gpk::au0_t committedBeforeResume	= receiverMemory.Committed;
+	cnst ::gpk::au0_t committedBeforeResume	= receiverMemory.Committed;
 	failures += ::check(0 == ::gpk::transferEnqueueCreate(senderState, manifest, toReceiver), "resumed transaction created");
 	failures += ::check(0 == ::gpk::transferProcess(receiverState, receiver, *toReceiver[0], toSender), "receiver recovered consumer-owned durable ranges");
 	toReceiver.clear();
@@ -186,16 +188,16 @@ int main() {
 	manifest.Id	= 4;
 	::gpk::au0_t wrongExpected	= senderMemory.Source;
 	wrongExpected[0]	^= 0xFF;
-	const ::gpk::STransferConsumer rejectingReceiver	= ::receiverCallbacks(receiverMemory, wrongExpected);
-	const ::gpk::au0_t committedBeforeValidationFailure	= receiverMemory.Committed;
-	const uint32_t rollbacksBeforeValidationFailure	= receiverMemory.Rollbacks;
+	cnst ::gpk::STransferConsumer rejectingReceiver	= ::receiverCallbacks(receiverMemory, wrongExpected);
+	cnst ::gpk::au0_t committedBeforeValidationFailure	= receiverMemory.Committed;
+	cnst uint32_t rollbacksBeforeValidationFailure	= receiverMemory.Rollbacks;
 	failures += ::check(0 == ::gpk::transferEnqueueCreate(senderState, manifest, toReceiver), "validation-failure transaction created");
 	failures += ::check(0 == ::gpk::transferProcess(receiverState, rejectingReceiver, *toReceiver[0], toSender), "validation-failure provisional resource resolved");
 	toReceiver.clear();
 	failures += ::check(0 == ::gpk::transferProcess(senderState, sender, *toSender[0], toReceiver), "validation-failure source ranges produced");
 	toSender.clear();
 	for(::gpk::u2_t iEvent = 0; iEvent < toReceiver.size(); ++iEvent) {
-		const ::gpk::err_t result	= ::gpk::transferProcess(receiverState, rejectingReceiver, *toReceiver[iEvent], toSender);
+		cnst ::gpk::err_t result	= ::gpk::transferProcess(receiverState, rejectingReceiver, *toReceiver[iEvent], toSender);
 		failures += ::check((iEvent + 1 == toReceiver.size()) ? ::gpk::failed(result) : (0 == result), "range handled with validation failure deferred until completion");
 	}
 	toReceiver.clear();

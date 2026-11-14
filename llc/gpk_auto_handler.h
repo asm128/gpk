@@ -12,18 +12,18 @@ nmsp gpk
 		tydf	auto_handler<_tHandle, _vDefault>	TWrapper;
 
 				_tHandle							Handle							= _vDefault;
-		stxp	const _tHandle						VDefault						= _vDefault;
+		stxp	cnst _tHandle						VDefault						= _vDefault;
 
 		inxp										auto_handler					()								nxpt	= default;
-		inxp										auto_handler					(const _tHandle & other)		nxpt	= delete;
-		inxp										auto_handler					(const TWrapper & other)		nxpt	= delete;
+		inxp										auto_handler					(cnst _tHandle & other)		nxpt	= delete;
+		inxp										auto_handler					(cnst TWrapper & other)		nxpt	= delete;
 
-		inxp	oper							const _tHandle&					()						csnx	{ return Handle;		}
+		inxp	oper							cnst _tHandle&					()						csnx	{ return Handle;		}
 
-		inln	TWrapper							oper=						(const _tHandle & other)		nxpt	= delete;
+		inln	TWrapper							oper=						(cnst _tHandle & other)		nxpt	= delete;
 		inln	_tHandle*							oper&						()								nxpt	{ return &Handle;		}
 #if !defined(GPK_ATMEL)
-		inxp	const _tHandle*						oper&						()						csnx	{ return &Handle;		}
+		inxp	cnst _tHandle*						oper&						()						csnx	{ return &Handle;		}
 #endif
 	};
 } // nmsp

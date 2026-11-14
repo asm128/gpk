@@ -10,8 +10,8 @@ nmsp gpk
 	//------------------------------------------------------------------------------------------------------------
 	tplt <tpnm T, tpnm TTarget>
 	::gpk::rect2<T>&		realignRectangle
-		(	const ::gpk::n2<TTarget>	& targetSize
-		,	const ::gpk::rect2<T>		& rectangleToRealign
+		(	cnst ::gpk::n2<TTarget>	& targetSize
+		,	cnst ::gpk::rect2<T>		& rectangleToRealign
 		,	::gpk::rect2<T>				& rectangleRealigned
 		,	ALIGN						align
 		)	nxpt	{
@@ -28,8 +28,8 @@ nmsp gpk
 
 	tplt <tpnm T>
 	::gpk::rect2<T>&		dockRectangle
-		(	const ::gpk::rect2<T>	& rectangleToDockTo
-		,	const ::gpk::rect2<T>	& rectangleToDock
+		(	cnst ::gpk::rect2<T>	& rectangleToDockTo
+		,	cnst ::gpk::rect2<T>	& rectangleToDock
 		,	::gpk::rect2<T>			& rectangleDocked
 		,	ALIGN					align
 		)	nxpt	{

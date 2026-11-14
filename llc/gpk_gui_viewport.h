@@ -1,4 +1,5 @@
 #include "gpk_gui.h"
+#include "gpk_ctti.h"
 
 #ifndef GPK_GUI_VIEWPORT_H_23627
 #define GPK_GUI_VIEWPORT_H_23627

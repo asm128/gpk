@@ -29,13 +29,13 @@ namespace fs = ::std::filesystem;
 
 #ifdef _WIN32
 using socket_handle_t = SOCKET;
-static constexpr socket_handle_t SOCKET_HANDLE_INVALID = INVALID_SOCKET;
+sttc constexpr socket_handle_t SOCKET_HANDLE_INVALID = INVALID_SOCKET;
 #else
 using socket_handle_t = int;
-static constexpr socket_handle_t SOCKET_HANDLE_INVALID = -1;
+sttc constexpr socket_handle_t SOCKET_HANDLE_INVALID = -1;
 #endif
 
-static void socketClose(socket_handle_t socketHandle) {
+sttc void socketClose(socket_handle_t socketHandle) {
 	if(SOCKET_HANDLE_INVALID == socketHandle)
 		return;
 #ifdef _WIN32
@@ -45,7 +45,7 @@ static void socketClose(socket_handle_t socketHandle) {
 #endif
 }
 
-static bool socketInitialize() {
+sttc b8_t socketInitialize() {
 #ifdef _WIN32
 	WSADATA data = {};
 	return 0 == ::WSAStartup(MAKEWORD(2, 2), &data);
@@ -54,31 +54,31 @@ static bool socketInitialize() {
 #endif
 }
 
-static void socketShutdown() {
+sttc void socketShutdown() {
 #ifdef _WIN32
 	::WSACleanup();
 #endif
 }
 
-static void socketTimeout(socket_handle_t socketHandle) {
+sttc void socketTimeout(socket_handle_t socketHandle) {
 #ifdef _WIN32
-	const DWORD timeout = 30000;
-	::setsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
-	::setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
+	cnst DWORD timeout = 30000;
+	::setsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, (cnst sc_t*)&timeout, sizeof(timeout));
+	::setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, (cnst sc_t*)&timeout, sizeof(timeout));
 #else
-	const timeval timeout = {30, 0};
+	cnst timeval timeout = {30, 0};
 	::setsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 	::setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 #endif
 }
 
-static bool socketSendAll(socket_handle_t socketHandle, const void * data, size_t size) {
-	const char * cursor = (const char*)data;
+sttc b8_t socketSendAll(socket_handle_t socketHandle, cnst void * data, size_t size) {
+	cnst sc_t * cursor = (cnst sc_t*)data;
 	while(size) {
 #ifdef _WIN32
-		const int sent = ::send(socketHandle, cursor, (int)size, 0);
+		cnst int sent = ::send(socketHandle, cursor, (int)size, 0);
 #else
-		const ssize_t sent = ::send(socketHandle, cursor, size, 0);
+		cnst ssize_t sent = ::send(socketHandle, cursor, size, 0);
 #endif
 		if(0 >= sent)
 			return false;
@@ -89,13 +89,13 @@ static bool socketSendAll(socket_handle_t socketHandle, const void * data, size_
 }
 
 // 0: success, 1: orderly close, -1: error.
-static int socketReceiveAll(socket_handle_t socketHandle, void * data, size_t size) {
-	char * cursor = (char*)data;
+sttc int socketReceiveAll(socket_handle_t socketHandle, void * data, size_t size) {
+	sc_t * cursor = (sc_t*)data;
 	while(size) {
 #ifdef _WIN32
-		const int received = ::recv(socketHandle, cursor, (int)size, 0);
+		cnst int received = ::recv(socketHandle, cursor, (int)size, 0);
 #else
-		const ssize_t received = ::recv(socketHandle, cursor, size, 0);
+		cnst ssize_t received = ::recv(socketHandle, cursor, size, 0);
 #endif
 		if(0 == received)
 			return 1;
@@ -114,19 +114,19 @@ enum class PEER_FRAME : uint8_t {
 	RESULT		= 3,
 };
 );
-static constexpr uint32_t PEER_FRAME_MAX = 16U * 1024U * 1024U;
+sttc constexpr uint32_t PEER_FRAME_MAX = 16U * 1024U * 1024U;
 
-static bool frameSend(socket_handle_t socketHandle, PEER_FRAME type, const void * data, size_t size) {
+sttc b8_t frameSend(socket_handle_t socketHandle, PEER_FRAME type, cnst void * data, size_t size) {
 	if(size > PEER_FRAME_MAX)
 		return false;
-	const uint8_t typeValue = (uint8_t)type;
-	const uint32_t sizeNetwork = ::htonl((uint32_t)size);
+	cnst uint8_t typeValue = (uint8_t)type;
+	cnst uint32_t sizeNetwork = ::htonl((uint32_t)size);
 	return ::socketSendAll(socketHandle, &typeValue, sizeof(typeValue))
 		&& ::socketSendAll(socketHandle, &sizeNetwork, sizeof(sizeNetwork))
 		&& (0 == size || ::socketSendAll(socketHandle, data, size));
 }
 
-static int frameReceive(socket_handle_t socketHandle, PEER_FRAME & type, ::gpk::au0_t & payload) {
+sttc int frameReceive(socket_handle_t socketHandle, PEER_FRAME & type, ::gpk::au0_t & payload) {
 	uint8_t typeValue = 0;
 	int result = ::socketReceiveAll(socketHandle, &typeValue, sizeof(typeValue));
 	if(result)
@@ -135,7 +135,7 @@ static int frameReceive(socket_handle_t socketHandle, PEER_FRAME & type, ::gpk::
 	result = ::socketReceiveAll(socketHandle, &sizeNetwork, sizeof(sizeNetwork));
 	if(result)
 		return result;
-	const uint32_t sizeFrame = ::ntohl(sizeNetwork);
+	cnst uint32_t sizeFrame = ::ntohl(sizeNetwork);
 	if(sizeFrame > PEER_FRAME_MAX || typeValue < (uint8_t)PEER_FRAME::HELLO || typeValue > (uint8_t)PEER_FRAME::RESULT)
 		return -1;
 	payload.clear();
@@ -146,14 +146,14 @@ static int frameReceive(socket_handle_t socketHandle, PEER_FRAME & type, ::gpk::
 	return 0;
 }
 
-static bool eventSend(socket_handle_t socketHandle, const ::gpk::EventTransfer & eventToSend) {
+sttc b8_t eventSend(socket_handle_t socketHandle, cnst ::gpk::EventTransfer & eventToSend) {
 	::gpk::au0_t serialized;
 	if(::gpk::failed(eventToSend.Save(serialized)) || serialized.size() > 1024U * 1024U)
 		return false;
 	return ::frameSend(socketHandle, PEER_FRAME::TRANSFER, serialized.begin(), serialized.size());
 }
 
-static int eventLoad(::gpk::vcu0_t serialized, ::gpk::EventTransfer & eventReceived) {
+sttc int eventLoad(::gpk::vcu0_t serialized, ::gpk::EventTransfer & eventReceived) {
 	::gpk::vcu0_t input = serialized;
 	return ::gpk::failed(eventReceived.Load(input)) || input.size() ? -1 : 0;
 }
@@ -161,15 +161,15 @@ static int eventLoad(::gpk::vcu0_t serialized, ::gpk::EventTransfer & eventRecei
 struct SPeerPlan {
 	::std::string	Resource	= {};
 	::std::string	Request		= {};
-	bool			Run			= false;
+	b8_t			Run			= false;
 };
 
-static bool helloSend(socket_handle_t socketHandle, const SPeerPlan & plan) {
+sttc b8_t helloSend(socket_handle_t socketHandle, cnst SPeerPlan & plan) {
 	::gpk::au0_t payload;
 	::gpk::au0_t request;
-	const ::gpk::u0_t version = 1;
-	const ::gpk::u0_t sending = plan.Resource.empty() ? 0 : 1;
-	const ::gpk::u0_t run = plan.Run ? 1 : 0;
+	cnst ::gpk::u0_t version = 1;
+	cnst ::gpk::u0_t sending = plan.Resource.empty() ? 0 : 1;
+	cnst ::gpk::u0_t run = plan.Run ? 1 : 0;
 	if(::gpk::failed(request.resize((::gpk::u2_t)plan.Request.size())))
 		return false;
 	if(plan.Request.size())
@@ -182,7 +182,7 @@ static bool helloSend(socket_handle_t socketHandle, const SPeerPlan & plan) {
 	return ::frameSend(socketHandle, PEER_FRAME::HELLO, payload.begin(), payload.size());
 }
 
-static bool helloLoad(::gpk::vcu0_t payload, SPeerPlan & plan) {
+sttc b8_t helloLoad(::gpk::vcu0_t payload, SPeerPlan & plan) {
 	::gpk::u0_t version = 0;
 	::gpk::u0_t sending = 0;
 	::gpk::u0_t run = 0;
@@ -195,24 +195,24 @@ static bool helloLoad(::gpk::vcu0_t payload, SPeerPlan & plan) {
 	|| 1 != version || 1 < sending || 1 < run || (run && false == sending))
 		return false;
 	plan.Resource = sending ? "pending" : "";
-	plan.Request.assign((const char*)request.begin(), request.size());
+	plan.Request.assign((cnst sc_t*)request.begin(), request.size());
 	plan.Run = 0 != run;
 	return true;
 }
 
-static bool queueSend(socket_handle_t socketHandle, const ::gpk::TTransferQueue & queue) {
+sttc b8_t queueSend(socket_handle_t socketHandle, cnst ::gpk::TTransferQueue & queue) {
 	for(::gpk::u2_t iEvent = 0; iEvent < queue.size(); ++iEvent)
-		if(false == (bool)queue[iEvent] || false == ::eventSend(socketHandle, *queue[iEvent]))
+		if(false == (b8_t)queue[iEvent] || false == ::eventSend(socketHandle, *queue[iEvent]))
 			return false;
 	return true;
 }
 
-static bool resumeSendBounded
+sttc b8_t resumeSendBounded
 	( socket_handle_t socketHandle
 	, ::gpk::STransferState & state
-	, const ::gpk::STransferConsumer & consumer
-	, const ::gpk::STransferManifest & manifest
-	, const ::gpk::EventTransfer & resumeEvent
+	, cnst ::gpk::STransferConsumer & consumer
+	, cnst ::gpk::STransferManifest & manifest
+	, cnst ::gpk::EventTransfer & resumeEvent
 	) {
 	::gpk::vcu0_t input = resumeEvent.Data;
 	::gpk::STransferRanges durable;
@@ -229,11 +229,11 @@ static bool resumeSendBounded
 			range.Count = manifest.Size - range.Offset;
 		ranges.push_back(range);
 	}
-	::std::sort(ranges.begin(), ranges.end(), [] (const ::gpk::STransferRange & a, const ::gpk::STransferRange & b) { return a.Offset < b.Offset; });
+	::std::sort(ranges.begin(), ranges.end(), [] (cnst ::gpk::STransferRange & a, cnst ::gpk::STransferRange & b) { return a.Offset < b.Offset; });
 
 	auto sendMissing = [&] (::gpk::u3_t begin, ::gpk::u3_t end) {
 		while(begin < end) {
-			const ::gpk::STransferRange range = {begin, ::gpk::min((::gpk::u3_t)state.BlockSize, end - begin)};
+			cnst ::gpk::STransferRange range = {begin, ::gpk::min((::gpk::u3_t)state.BlockSize, end - begin)};
 			::gpk::apod<::gpk::STransferRange> requested;
 			if(::gpk::failed(requested.push_back(range)))
 				return false;
@@ -249,24 +249,24 @@ static bool resumeSendBounded
 	};
 
 	::gpk::u3_t cursor = 0;
-	for(const ::gpk::STransferRange & range : ranges) {
+	for(cnst ::gpk::STransferRange & range : ranges) {
 		if(cursor < range.Offset && false == sendMissing(cursor, range.Offset))
 			return false;
-		const ::gpk::u3_t rangeEnd = range.Offset + range.Count;
+		cnst ::gpk::u3_t rangeEnd = range.Offset + range.Count;
 		if(rangeEnd > cursor)
 			cursor = rangeEnd;
 	}
 	return cursor >= manifest.Size || sendMissing(cursor, manifest.Size);
 }
 
-static bool resourceValid(const ::std::string & resource) {
+sttc b8_t resourceValid(cnst ::std::string & resource) {
 	if(resource.empty() || '/' == resource[0] || '\\' == resource[0] || ::std::string::npos != resource.find('\\') || ::std::string::npos != resource.find(':'))
 		return false;
 	size_t offset = 0;
 	while(offset <= resource.size()) {
-		const size_t separator = resource.find('/', offset);
-		const size_t length = (::std::string::npos == separator ? resource.size() : separator) - offset;
-		const ::std::string component = resource.substr(offset, length);
+		cnst size_t separator = resource.find('/', offset);
+		cnst size_t length = (::std::string::npos == separator ? resource.size() : separator) - offset;
+		cnst ::std::string component = resource.substr(offset, length);
 		if(component.empty() || "." == component || ".." == component)
 			return false;
 		if(::std::string::npos == separator)
@@ -276,12 +276,12 @@ static bool resourceValid(const ::std::string & resource) {
 	return true;
 }
 
-static bool manifestResource(const ::gpk::STransferManifest & manifest, ::std::string & resource) {
-	resource.assign((const char*)manifest.Resource.begin(), manifest.Resource.size());
+sttc b8_t manifestResource(cnst ::gpk::STransferManifest & manifest, ::std::string & resource) {
+	resource.assign((cnst sc_t*)manifest.Resource.begin(), manifest.Resource.size());
 	return ::resourceValid(resource);
 }
 
-static bool resourcePath(const fs::path & root, const ::gpk::STransferManifest & manifest, fs::path & output) {
+sttc b8_t resourcePath(cnst fs::path & root, cnst ::gpk::STransferManifest & manifest, fs::path & output) {
 	::std::string resource;
 	if(false == ::manifestResource(manifest, resource))
 		return false;
@@ -289,7 +289,7 @@ static bool resourcePath(const fs::path & root, const ::gpk::STransferManifest &
 	return true;
 }
 
-static bool fileFlush(FILE * file) {
+sttc b8_t fileFlush(FILE * file) {
 	if(0 != ::fflush(file))
 		return false;
 #ifdef _WIN32
@@ -299,7 +299,7 @@ static bool fileFlush(FILE * file) {
 #endif
 }
 
-static bool fileSeek(FILE * file, uint64_t offset) {
+sttc b8_t fileSeek(FILE * file, uint64_t offset) {
 #ifdef _WIN32
 	return 0 == ::_fseeki64(file, (__int64)offset, SEEK_SET);
 #else
@@ -307,7 +307,7 @@ static bool fileSeek(FILE * file, uint64_t offset) {
 #endif
 }
 
-static FILE * fileOpen(const fs::path & path, const char * mode) {
+sttc FILE * fileOpen(cnst fs::path & path, cnst sc_t * mode) {
 #ifdef _WIN32
 	FILE * file = nullptr;
 	return 0 == ::fopen_s(&file, path.string().c_str(), mode) ? file : nullptr;
@@ -316,7 +316,7 @@ static FILE * fileOpen(const fs::path & path, const char * mode) {
 #endif
 }
 
-static bool fileDigest(const fs::path & filePath, uint64_t & sizeFile, uint64_t & digest) {
+sttc b8_t fileDigest(cnst fs::path & filePath, uint64_t & sizeFile, uint64_t & digest) {
 	::std::error_code error;
 	sizeFile = fs::file_size(filePath, error);
 	if(error || sizeFile > 0xFFFFFFFFULL)
@@ -328,7 +328,7 @@ static bool fileDigest(const fs::path & filePath, uint64_t & sizeFile, uint64_t 
 	if(false == input.good())
 		return false;
 	if(sizeFile)
-		input.read((char*)bytes.begin(), (::std::streamsize)sizeFile);
+		input.read((sc_t*)bytes.begin(), (::std::streamsize)sizeFile);
 	if(false == input.good() && false == input.eof())
 		return false;
 	::gpk::u3_t digestFramework = 0;
@@ -338,7 +338,7 @@ static bool fileDigest(const fs::path & filePath, uint64_t & sizeFile, uint64_t 
 	return true;
 }
 
-static bool manifestBuild(uint64_t id, const fs::path & sourceRoot, const ::std::string & resource, ::gpk::STransferManifest & manifest) {
+sttc b8_t manifestBuild(uint64_t id, cnst fs::path & sourceRoot, cnst ::std::string & resource, ::gpk::STransferManifest & manifest) {
 	if(false == ::resourceValid(resource))
 		return false;
 	uint64_t sizeFile = 0;
@@ -361,13 +361,13 @@ static bool manifestBuild(uint64_t id, const fs::path & sourceRoot, const ::std:
 struct SFileEndpoint {
 	fs::path		SourceRoot			= {};
 	fs::path		CommittedRoot		= {};
-	bool			CommitObserved		= false;
+	b8_t			CommitObserved		= false;
 	uint64_t		LastCommittedId		= 0;
 	::std::string	LastCommittedResource	= {};
 	fs::path		LastCommittedPath	= {};
 };
 
-static bool transferPaths(const SFileEndpoint & endpoint, const ::gpk::STransferManifest & manifest, fs::path & committed, fs::path & provisional, fs::path & ranges) {
+sttc b8_t transferPaths(cnst SFileEndpoint & endpoint, cnst ::gpk::STransferManifest & manifest, fs::path & committed, fs::path & provisional, fs::path & ranges) {
 	if(false == ::resourcePath(endpoint.CommittedRoot, manifest, committed))
 		return false;
 	provisional = fs::path(committed.string() + ".part." + ::std::to_string(manifest.Id));
@@ -375,9 +375,9 @@ static bool transferPaths(const SFileEndpoint & endpoint, const ::gpk::STransfer
 	return true;
 }
 
-static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
+sttc ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 	::gpk::STransferConsumer consumer;
-	consumer.ResolveCommitted = [&endpoint](const ::gpk::STransferManifest & manifest) {
+	consumer.ResolveCommitted = [&endpoint](cnst ::gpk::STransferManifest & manifest) {
 		fs::path committed, provisional, ranges;
 		if(false == ::transferPaths(endpoint, manifest, committed, provisional, ranges))
 			return (::gpk::err_t)-1;
@@ -385,7 +385,7 @@ static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 		fs::create_directories(committed.parent_path(), error);
 		return error ? (::gpk::err_t)-1 : (::gpk::err_t)0;
 	};
-	consumer.ResolveProvisional = [&endpoint](const ::gpk::STransferManifest & manifest) {
+	consumer.ResolveProvisional = [&endpoint](cnst ::gpk::STransferManifest & manifest) {
 		fs::path committed, provisional, ranges;
 		if(false == ::transferPaths(endpoint, manifest, committed, provisional, ranges))
 			return (::gpk::err_t)-1;
@@ -396,33 +396,33 @@ static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 		FILE * file = ::fileOpen(provisional, "w+b");
 		if(nullptr == file)
 			return (::gpk::err_t)-1;
-		bool success = true;
+		b8_t success = true;
 		if(manifest.Size)
 			success = ::fileSeek(file, manifest.Size - 1) && EOF != ::fputc(0, file);
 		success = success && ::fileFlush(file);
 		::fclose(file);
 		return success ? (::gpk::err_t)0 : (::gpk::err_t)-1;
 	};
-	consumer.ReadSourceRange = [&endpoint](const ::gpk::STransferManifest & manifest, const ::gpk::STransferRange & range, ::gpk::au0_t & output) {
+	consumer.ReadSourceRange = [&endpoint](cnst ::gpk::STransferManifest & manifest, cnst ::gpk::STransferRange & range, ::gpk::au0_t & output) {
 		fs::path source;
 		if(false == ::resourcePath(endpoint.SourceRoot, manifest, source) || range.Count > 0xFFFFFFFFULL)
 			return (::gpk::err_t)-1;
 		FILE * file = ::fileOpen(source, "rb");
 		if(nullptr == file)
 			return (::gpk::err_t)-1;
-		const bool resized = ::gpk::succeeded(output.resize((::gpk::u2_t)range.Count));
-		const bool success = resized && ::fileSeek(file, range.Offset) && range.Count == ::fread(output.begin(), 1, (size_t)range.Count, file);
+		b8_c resized = ::gpk::succeeded(output.resize((::gpk::u2_t)range.Count));
+		b8_c success = resized && ::fileSeek(file, range.Offset) && range.Count == ::fread(output.begin(), 1, (size_t)range.Count, file);
 		::fclose(file);
 		return success ? (::gpk::err_t)0 : (::gpk::err_t)-1;
 	};
-	consumer.WriteProvisionalRange = [&endpoint](const ::gpk::STransferManifest & manifest, const ::gpk::STransferRange & range, ::gpk::vcu0_t data) {
+	consumer.WriteProvisionalRange = [&endpoint](cnst ::gpk::STransferManifest & manifest, cnst ::gpk::STransferRange & range, ::gpk::vcu0_t data) {
 		fs::path committed, provisional, ranges;
 		if(false == ::transferPaths(endpoint, manifest, committed, provisional, ranges) || data.size() != range.Count)
 			return (::gpk::err_t)-1;
 		FILE * file = ::fileOpen(provisional, "r+b");
 		if(nullptr == file)
 			return (::gpk::err_t)-1;
-		bool success = ::fileSeek(file, range.Offset) && data.size() == ::fwrite(data.begin(), 1, data.size(), file) && ::fileFlush(file);
+		b8_t success = ::fileSeek(file, range.Offset) && data.size() == ::fwrite(data.begin(), 1, data.size(), file) && ::fileFlush(file);
 		::fclose(file);
 		if(false == success)
 			return (::gpk::err_t)-1;
@@ -433,7 +433,7 @@ static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 		::fclose(file);
 		return success ? (::gpk::err_t)0 : (::gpk::err_t)-1;
 	};
-	consumer.QueryDurableRanges = [&endpoint](const ::gpk::STransferManifest & manifest, ::gpk::apod<::gpk::STransferRange> & output) {
+	consumer.QueryDurableRanges = [&endpoint](cnst ::gpk::STransferManifest & manifest, ::gpk::apod<::gpk::STransferRange> & output) {
 		output.clear();
 		fs::path committed, provisional, ranges;
 		if(false == ::transferPaths(endpoint, manifest, committed, provisional, ranges))
@@ -450,7 +450,7 @@ static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 		::fclose(file);
 		return (::gpk::err_t)0;
 	};
-	consumer.ValidateProvisional = [&endpoint](const ::gpk::STransferManifest & manifest) {
+	consumer.ValidateProvisional = [&endpoint](cnst ::gpk::STransferManifest & manifest) {
 		fs::path committed, provisional, ranges;
 		if(false == ::transferPaths(endpoint, manifest, committed, provisional, ranges) || manifest.Digest.size() != sizeof(uint64_t))
 			return (::gpk::err_t)-1;
@@ -460,7 +460,7 @@ static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 		::memcpy(&expected, manifest.Digest.begin(), sizeof(expected));
 		return ::fileDigest(provisional, sizeFile, digest) && sizeFile == manifest.Size && digest == expected ? (::gpk::err_t)0 : (::gpk::err_t)-1;
 	};
-	consumer.CommitProvisional = [&endpoint](const ::gpk::STransferManifest & manifest) {
+	consumer.CommitProvisional = [&endpoint](cnst ::gpk::STransferManifest & manifest) {
 		fs::path committed, provisional, ranges;
 		if(false == ::transferPaths(endpoint, manifest, committed, provisional, ranges))
 			return (::gpk::err_t)-1;
@@ -482,7 +482,7 @@ static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 		endpoint.LastCommittedPath = committed;
 		return (::gpk::err_t)0;
 	};
-	consumer.RollbackProvisional = [&endpoint](const ::gpk::STransferManifest & manifest) {
+	consumer.RollbackProvisional = [&endpoint](cnst ::gpk::STransferManifest & manifest) {
 		fs::path committed, provisional, ranges;
 		if(false == ::transferPaths(endpoint, manifest, committed, provisional, ranges))
 			return (::gpk::err_t)-1;
@@ -496,26 +496,26 @@ static ::gpk::STransferConsumer fileConsumer(SFileEndpoint & endpoint) {
 }
 
 struct SExecutionResult {
-	bool			Launched	= false;
+	b8_t			Launched	= false;
 	int32_t			ExitCode	= -1;
 	::gpk::au0_t	Output		= {};
 };
 
-static void executionOutputAppend(::gpk::au0_t & output, const void * data, size_t size) {
-	static constexpr size_t OUTPUT_MAX = 1024U * 1024U;
+sttc void executionOutputAppend(::gpk::au0_t & output, cnst void * data, size_t size) {
+	sttc constexpr size_t OUTPUT_MAX = 1024U * 1024U;
 	if(output.size() >= OUTPUT_MAX || 0 == size)
 		return;
-	const size_t available = OUTPUT_MAX - output.size();
-	const size_t count = size < available ? size : available;
-	const ::gpk::u2_t offset = output.size();
+	cnst size_t available = OUTPUT_MAX - output.size();
+	cnst size_t count = size < available ? size : available;
+	cnst ::gpk::u2_t offset = output.size();
 	if(::gpk::failed(output.resize(offset + (::gpk::u2_t)count)))
 		return;
 	::memcpy(output.begin() + offset, data, count);
 }
 
-static bool resultSend(socket_handle_t socketHandle, const SExecutionResult & result) {
+sttc b8_t resultSend(socket_handle_t socketHandle, cnst SExecutionResult & result) {
 	::gpk::au0_t payload;
-	const ::gpk::u0_t launched = result.Launched ? 1 : 0;
+	cnst ::gpk::u0_t launched = result.Launched ? 1 : 0;
 	if(::gpk::failed(::gpk::savePOD(payload, launched))
 	|| ::gpk::failed(::gpk::savePOD(payload, result.ExitCode))
 	|| ::gpk::failed(::gpk::saveView(payload, result.Output)))
@@ -523,7 +523,7 @@ static bool resultSend(socket_handle_t socketHandle, const SExecutionResult & re
 	return ::frameSend(socketHandle, PEER_FRAME::RESULT, payload.begin(), payload.size());
 }
 
-static bool resultLoad(::gpk::vcu0_t payload, SExecutionResult & result) {
+sttc b8_t resultLoad(::gpk::vcu0_t payload, SExecutionResult & result) {
 	::gpk::u0_t launched = 0;
 	::gpk::vcu0_t output;
 	if(::gpk::failed(::gpk::loadPOD(payload, launched))
@@ -537,15 +537,15 @@ static bool resultLoad(::gpk::vcu0_t payload, SExecutionResult & result) {
 	return true;
 }
 
-static SExecutionResult executableRun(const fs::path & executable) {
+sttc SExecutionResult executableRun(cnst fs::path & executable) {
 	SExecutionResult result;
 #ifdef _WIN32
 	SECURITY_ATTRIBUTES security = {sizeof(security), nullptr, TRUE};
 	HANDLE pipeRead = nullptr;
 	HANDLE pipeWrite = nullptr;
-	if(false == (bool)::CreatePipe(&pipeRead, &pipeWrite, &security, 0))
+	if(false == (b8_t)::CreatePipe(&pipeRead, &pipeWrite, &security, 0))
 		return result;
-	if(false == (bool)::SetHandleInformation(pipeRead, HANDLE_FLAG_INHERIT, 0)) {
+	if(false == (b8_t)::SetHandleInformation(pipeRead, HANDLE_FLAG_INHERIT, 0)) {
 		::CloseHandle(pipeRead);
 		::CloseHandle(pipeWrite);
 		return result;
@@ -558,22 +558,22 @@ static SExecutionResult executableRun(const fs::path & executable) {
 	startup.hStdOutput = pipeWrite;
 	startup.hStdError = pipeWrite;
 	PROCESS_INFORMATION process = {};
-	const ::std::string executableText = executable.string();
+	cnst ::std::string executableText = executable.string();
 	::std::string commandLine = '"' + executableText + '"';
-	::std::vector<char> commandMutable(commandLine.begin(), commandLine.end());
+	::std::vector<sc_t> commandMutable(commandLine.begin(), commandLine.end());
 	commandMutable.push_back(0);
-	const ::std::string workingDirectory = executable.parent_path().string();
-	const BOOL created = ::CreateProcessA
+	cnst ::std::string workingDirectory = executable.parent_path().string();
+	cnst BOOL created = ::CreateProcessA
 		( executableText.c_str(), commandMutable.data(), nullptr, nullptr, TRUE, CREATE_NO_WINDOW
 		, nullptr, workingDirectory.empty() ? nullptr : workingDirectory.c_str(), &startup, &process
 		);
 	::CloseHandle(pipeWrite);
-	if(false == (bool)created) {
+	if(false == (b8_t)created) {
 		::CloseHandle(pipeRead);
 		return result;
 	}
 	result.Launched = true;
-	char buffer[4096];
+	sc_t buffer[4096];
 	DWORD readCount = 0;
 	while(::ReadFile(pipeRead, buffer, sizeof(buffer), &readCount, nullptr) && readCount)
 		::executionOutputAppend(result.Output, buffer, readCount);
@@ -585,15 +585,15 @@ static SExecutionResult executableRun(const fs::path & executable) {
 	::CloseHandle(process.hThread);
 	::CloseHandle(process.hProcess);
 #else
-	const ::std::string executableText = executable.string();
-	const ::std::string argumentZero = executable.filename().string();
-	const ::std::string workingDirectory = executable.parent_path().string();
+	cnst ::std::string executableText = executable.string();
+	cnst ::std::string argumentZero = executable.filename().string();
+	cnst ::std::string workingDirectory = executable.parent_path().string();
 	if(0 != ::chmod(executableText.c_str(), 0700))
 		return result;
 	int outputPipe[2] = {-1, -1};
 	if(0 != ::pipe(outputPipe))
 		return result;
-	const pid_t child = ::fork();
+	cnst pid_t child = ::fork();
 	if(0 == child) {
 		::close(outputPipe[0]);
 		::dup2(outputPipe[1], STDOUT_FILENO);
@@ -601,7 +601,7 @@ static SExecutionResult executableRun(const fs::path & executable) {
 		::close(outputPipe[1]);
 		if(false == workingDirectory.empty())
 			::chdir(workingDirectory.c_str());
-		::execl(executableText.c_str(), argumentZero.c_str(), (char*)nullptr);
+		::execl(executableText.c_str(), argumentZero.c_str(), (sc_t*)nullptr);
 		::_exit(127);
 	}
 	::close(outputPipe[1]);
@@ -610,7 +610,7 @@ static SExecutionResult executableRun(const fs::path & executable) {
 		return result;
 	}
 	result.Launched = true;
-	char buffer[4096];
+	sc_t buffer[4096];
 	ssize_t readCount = 0;
 	while(0 < (readCount = ::read(outputPipe[0], buffer, sizeof(buffer))))
 		::executionOutputAppend(result.Output, buffer, (size_t)readCount);
@@ -626,32 +626,32 @@ static SExecutionResult executableRun(const fs::path & executable) {
 	return result;
 }
 
-static socket_handle_t socketListen(uint16_t port) {
-	const socket_handle_t listener = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+sttc socket_handle_t socketListen(uint16_t port) {
+	cnst socket_handle_t listener = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(SOCKET_HANDLE_INVALID == listener)
 		return SOCKET_HANDLE_INVALID;
 	int reuse = 1;
-	::setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuse, sizeof(reuse));
+	::setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, (cnst sc_t*)&reuse, sizeof(reuse));
 	sockaddr_in address = {};
 	address.sin_family = AF_INET;
 	address.sin_port = ::htons(port);
 	address.sin_addr.s_addr = ::htonl(INADDR_ANY);
-	if(0 != ::bind(listener, (const sockaddr*)&address, sizeof(address)) || 0 != ::listen(listener, 1)) {
+	if(0 != ::bind(listener, (cnst sockaddr*)&address, sizeof(address)) || 0 != ::listen(listener, 1)) {
 		::socketClose(listener);
 		return SOCKET_HANDLE_INVALID;
 	}
 	return listener;
 }
 
-static socket_handle_t socketConnect(const char * host, uint16_t port) {
+sttc socket_handle_t socketConnect(cnst sc_t * host, uint16_t port) {
 	for(uint32_t iAttempt = 0; iAttempt < 100; ++iAttempt) {
-		const socket_handle_t socketHandle = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		cnst socket_handle_t socketHandle = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		if(SOCKET_HANDLE_INVALID == socketHandle)
 			return SOCKET_HANDLE_INVALID;
 		sockaddr_in address = {};
 		address.sin_family = AF_INET;
 		address.sin_port = ::htons(port);
-		if(1 == ::inet_pton(AF_INET, host, &address.sin_addr) && 0 == ::connect(socketHandle, (const sockaddr*)&address, sizeof(address))) {
+		if(1 == ::inet_pton(AF_INET, host, &address.sin_addr) && 0 == ::connect(socketHandle, (cnst sockaddr*)&address, sizeof(address))) {
 			::socketTimeout(socketHandle);
 			return socketHandle;
 		}
@@ -661,12 +661,12 @@ static socket_handle_t socketConnect(const char * host, uint16_t port) {
 	return SOCKET_HANDLE_INVALID;
 }
 
-static uint64_t transactionId(bool connector) {
-	const uint64_t role = connector ? 0x8000000000000000ULL : 0;
+sttc uint64_t transactionId(b8_t connector) {
+	cnst uint64_t role = connector ? 0x8000000000000000ULL : 0;
 	return role | ((uint64_t)::std::chrono::high_resolution_clock::now().time_since_epoch().count() & 0x7FFFFFFFFFFFFFFFULL);
 }
 
-static int peerSession(socket_handle_t peer, const fs::path & sourceRoot, const fs::path & committedRoot, const SPeerPlan & localPlan, bool connector) {
+sttc int peerSession(socket_handle_t peer, cnst fs::path & sourceRoot, cnst fs::path & committedRoot, cnst SPeerPlan & localPlan, b8_t connector) {
 	SPeerPlan effectiveLocalPlan = localPlan;
 	PEER_FRAME frameType = {};
 	::gpk::au0_t framePayload;
@@ -695,17 +695,17 @@ static int peerSession(socket_handle_t peer, const fs::path & sourceRoot, const 
 	}
 
 	SFileEndpoint endpoint = {sourceRoot, committedRoot};
-	const ::gpk::STransferConsumer consumer = ::fileConsumer(endpoint);
+	cnst ::gpk::STransferConsumer consumer = ::fileConsumer(endpoint);
 	::gpk::STransferState state;
-	const bool localSending = false == effectiveLocalPlan.Resource.empty();
-	const bool remoteSending = false == remotePlan.Resource.empty();
-	bool localTransferDone = false == localSending;
-	bool remoteTransferDone = false == remoteSending;
-	bool localResultDone = false == effectiveLocalPlan.Run;
-	bool remoteResultSent = false == remotePlan.Run;
+	b8_c localSending = false == effectiveLocalPlan.Resource.empty();
+	b8_c remoteSending = false == remotePlan.Resource.empty();
+	b8_t localTransferDone = false == localSending;
+	b8_t remoteTransferDone = false == remoteSending;
+	b8_t localResultDone = false == effectiveLocalPlan.Run;
+	b8_t remoteResultSent = false == remotePlan.Run;
 	int remoteExecutionResult = 0;
 	uint64_t localId = 0;
-	bool localStarted = false;
+	b8_t localStarted = false;
 	::gpk::STransferManifest localManifest;
 
 	if(localSending) {
@@ -769,7 +769,7 @@ static int peerSession(socket_handle_t peer, const fs::path & sourceRoot, const 
 		}
 
 		::gpk::TTransferQueue outgoing;
-		const ::gpk::err_t processResult = ::gpk::transferProcess(state, consumer, incoming, outgoing);
+		cnst ::gpk::err_t processResult = ::gpk::transferProcess(state, consumer, incoming, outgoing);
 		if(false == ::queueSend(peer, outgoing) || ::gpk::failed(processResult))
 			return 1;
 		if(completedId == localId && localSending) {
@@ -781,7 +781,7 @@ static int peerSession(socket_handle_t peer, const fs::path & sourceRoot, const 
 			::printf("Committed '%s' from peer.\n", endpoint.LastCommittedResource.c_str());
 			remoteTransferDone = true;
 			if(remotePlan.Run) {
-				const SExecutionResult execution = ::executableRun(endpoint.LastCommittedPath);
+				cnst SExecutionResult execution = ::executableRun(endpoint.LastCommittedPath);
 				if(false == ::resultSend(peer, execution))
 					return 1;
 				remoteResultSent = true;
@@ -795,8 +795,8 @@ static int peerSession(socket_handle_t peer, const fs::path & sourceRoot, const 
 	return remoteExecutionResult;
 }
 
-static int runListener(uint16_t port, const fs::path & sourceRoot, const fs::path & committedRoot, const SPeerPlan & plan, bool once) {
-	const socket_handle_t listener = ::socketListen(port);
+sttc int runListener(uint16_t port, cnst fs::path & sourceRoot, cnst fs::path & committedRoot, cnst SPeerPlan & plan, b8_t once) {
+	cnst socket_handle_t listener = ::socketListen(port);
 	if(SOCKET_HANDLE_INVALID == listener) {
 		::fprintf(stderr, "Could not listen on 0.0.0.0:%u.\n", port);
 		return 1;
@@ -805,13 +805,13 @@ static int runListener(uint16_t port, const fs::path & sourceRoot, const fs::pat
 	::fflush(stdout);
 	int result = 0;
 	do {
-		const socket_handle_t peer = ::accept(listener, nullptr, nullptr);
+		cnst socket_handle_t peer = ::accept(listener, nullptr, nullptr);
 		if(SOCKET_HANDLE_INVALID == peer) {
 			result = 1;
 			break;
 		}
 		::socketTimeout(peer);
-		const int sessionResult = ::peerSession(peer, sourceRoot, committedRoot, plan, false);
+		cnst int sessionResult = ::peerSession(peer, sourceRoot, committedRoot, plan, false);
 		::socketClose(peer);
 		if(sessionResult) {
 			::fprintf(stderr, "GPK transfer peer session failed.\n");
@@ -822,18 +822,18 @@ static int runListener(uint16_t port, const fs::path & sourceRoot, const fs::pat
 	return result;
 }
 
-static int runConnector(const char * host, uint16_t port, const fs::path & sourceRoot, const fs::path & committedRoot, const SPeerPlan & plan) {
-	const socket_handle_t peer = ::socketConnect(host, port);
+sttc int runConnector(cnst sc_t * host, uint16_t port, cnst fs::path & sourceRoot, cnst fs::path & committedRoot, cnst SPeerPlan & plan) {
+	cnst socket_handle_t peer = ::socketConnect(host, port);
 	if(SOCKET_HANDLE_INVALID == peer) {
 		::fprintf(stderr, "Could not connect to %s:%u.\n", host, port);
 		return 1;
 	}
-	const int result = ::peerSession(peer, sourceRoot, committedRoot, plan, true);
+	cnst int result = ::peerSession(peer, sourceRoot, committedRoot, plan, true);
 	::socketClose(peer);
 	return result;
 }
 
-static int generateFile(const fs::path & path, uint64_t size) {
+sttc int generateFile(cnst fs::path & path, uint64_t size) {
 	::std::error_code error;
 	fs::create_directories(path.parent_path(), error);
 	if(error)
@@ -842,18 +842,18 @@ static int generateFile(const fs::path & path, uint64_t size) {
 	if(nullptr == file)
 		return 1;
 	for(uint64_t iByte = 0; iByte < size; ++iByte) {
-		const uint8_t value = (uint8_t)((iByte * 31U + 7U) & 0xFFU);
+		cnst uint8_t value = (uint8_t)((iByte * 31U + 7U) & 0xFFU);
 		if(1 != ::fwrite(&value, 1, 1, file)) {
 			::fclose(file);
 			return 1;
 		}
 	}
-	const bool success = ::fileFlush(file);
+	b8_c success = ::fileFlush(file);
 	::fclose(file);
 	return success ? 0 : 1;
 }
 
-static void printUsage(const char * executable) {
+sttc void printUsage(cnst sc_t * executable) {
 	::printf("Usage:\n");
 	::printf("  %s --listen PORT SOURCE_ROOT COMMITTED_ROOT [RESOURCE [--run]]\n", executable);
 	::printf("  %s --listen-once PORT SOURCE_ROOT COMMITTED_ROOT [RESOURCE [--run]]\n", executable);
@@ -861,7 +861,7 @@ static void printUsage(const char * executable) {
 	::printf("  %s --generate FILE SIZE\n", executable);
 }
 
-static bool planParse(int argumentCount, char ** arguments, int resourceIndex, SPeerPlan & plan) {
+sttc b8_t planParse(int argumentCount, sc_t ** arguments, int resourceIndex, SPeerPlan & plan) {
 	for(int iArgument = resourceIndex; iArgument < argumentCount; ++iArgument) {
 		if(0 == ::strcmp(arguments[iArgument], "--run")) {
 			if(plan.Resource.empty() || plan.Run)
@@ -888,7 +888,7 @@ static bool planParse(int argumentCount, char ** arguments, int resourceIndex, S
 	return true;
 }
 
-int main(int argumentCount, char ** arguments) {
+int main(int argumentCount, sc_t ** arguments) {
 	if(false == ::socketInitialize())
 		return 1;
 	int result = 1;

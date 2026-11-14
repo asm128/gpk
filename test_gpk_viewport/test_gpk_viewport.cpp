@@ -102,8 +102,8 @@ err_t			setup		(::gme::SApplication & app)						{
 	return 0;
 }
 
-err_t			update				(::gme::SApplication & app, bool exitSignal)	{
-	static STimer		timer;
+err_t			update				(::gme::SApplication & app, b8_t exitSignal)	{
+	sttc STimer		timer;
 	if_true_vi(APPLICATION_STATE_EXIT, exitSignal);
 	{
 		::gpk::lock_guard			lock			(app.LockRender);
@@ -115,7 +115,7 @@ err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	SGUI					& gui			= *framework.GUI;
 	acid					controlsToProcess	= {};
 	if_fail_fe(guiGetProcessableControls(gui, controlsToProcess));
-	if(const s2_t result = app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, controlsToProcess))
+	if(cnst s2_t result = app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, controlsToProcess))
 		if(result == INT_MAX) {
 			pobj<SDialogViewport>	viewport	= {};
 			app.DialogMain.Controls[app.Viewport].as(viewport);
@@ -143,7 +143,7 @@ err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 		scene.ViewMatrix.LookAt(scene.Camera.Position, scene.Camera.Target, scene.CameraUp);
 		pobj<SDialogViewport>									viewport									= {};
 		app.DialogMain.Controls[app.Viewport].as(viewport);
-		const n2u1_t											offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
+		cnst n2u1_t											offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
 		scene.Projection.FieldOfView(.25 * math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar);
 		scene.Projection															= scene.ViewMatrix * scene.Projection;
 		scene.LightPos.Normalize();
@@ -156,7 +156,7 @@ err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	}
 
 	timer.Frame();
-	snprintf(app.StringFrameRateUpdate, size(app.StringFrameRateUpdate) - 2, "Last frame time (update): %fs.", (float)timer.LastTimeSeconds);
+	snprintf(app.StringFrameRateUpdate, size(app.StringFrameRateUpdate) - 2, "Last frame time (update): %fs.", (f2_t)timer.LastTimeSeconds);
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	gui.Controls.Text[app.IdFrameRateUpdate].Text							= app.StringFrameRateUpdate;
 	controlMetricsInvalidate(gui, app.IdFrameRateUpdate);
@@ -165,14 +165,14 @@ err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 
 
 err_t			draw			(::gme::SApplication & app)							{
-	static STimer		timer;
+	sttc STimer		timer;
 	SFramework			& framework		= app.Framework;
 	SGUI					& gui			= *framework.GUI;
 
 	pobj<rtbgra8d32>	buffer3d	= app.Buffer3D;
 	pobj<SDialogViewport>	viewport	= {};
 	app.DialogMain.Controls[app.Viewport].as(viewport);
-	const n2u1_t											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
+	cnst n2u1_t											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
 	buffer3d->resize(offscreenMetrics.Cast<uint32_t>(), {0, 0, 0, 0}, (uint32_t)-1);
 
 	apod<tri3f2_t>				& triangle3dList							= app.VertexCache.Triangle3dTransformed	;

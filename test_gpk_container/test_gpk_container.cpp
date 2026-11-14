@@ -4,11 +4,11 @@
 
 usns gpk;
 
-static	const char				test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};
+sttc	cnst sc_t				test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};
 
 int test_array_pod() {
-	static	const asc_t	aconst_0			= vcst_t{"Hello"};
-	static	const asc_t	aconst_1			{test_chars};
+	sttc	cnst asc_t	aconst_0			= vcst_t{"Hello"};
+	sttc	cnst asc_t	aconst_1			{test_chars};
 	asc_t			atest_0				= "Again ";
 	asc_t			atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
@@ -20,14 +20,14 @@ int test_array_pod() {
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());
 	OutputDebugString("\n\n");
 
-	view<const char>			vtest_0(aconst_0), vtest_1{atest_1};
+	view<cnst sc_t>			vtest_0(aconst_0), vtest_1{atest_1};
 	atest_0						= vtest_0;
 	atest_1						= aconst_1;
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());
 	OutputDebugString("\n\n");
 
-	char							popped				= 0;									    
+	sc_t							popped				= 0;									    
 	if_fail_fe(atest_0.pop_back		());						always_printf("pop_back             : %u, %.*s"		, atest_0.size(), GPK_VIEW_ARGS(atest_0));
 	if_fail_fe(atest_1.pop_back		(popped));					always_printf("pop_back             : %u, %.*s, '%c'"	, atest_1.size(), GPK_VIEW_ARGS(atest_1), popped);
 	if_fail_fe(atest_1.push_back		(popped = '$'));			always_printf("push_back            : %u, %.*s"		, atest_1.size(), GPK_VIEW_ARGS(atest_1));
@@ -96,10 +96,10 @@ int test_array_pod() {
 }
 
 int test_array_obj() {
-	const aobj<char>			aconst_0			= vcst_t{"Hello"};
-	const aobj<char>			aconst_1			{test_chars};
-	aobj<char>				atest_0				= "Again ";
-	aobj<char>				atest_1				= {'L', 'a', 't', 'e', 'r'};
+	cnst aobj<sc_t>			aconst_0			= vcst_t{"Hello"};
+	cnst aobj<sc_t>			aconst_1			{test_chars};
+	aobj<sc_t>				atest_0				= "Again ";
+	aobj<sc_t>				atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 
 	always_printf("test_chars: %u, %u, %s", (u2_t )strlen(test_chars), (u2_t )size(test_chars), test_chars);
@@ -109,14 +109,14 @@ int test_array_obj() {
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());
 	OutputDebugString("\n\n");
 
-	view<const char>			vtest_0(aconst_0), vtest_1{atest_1};
+	view<cnst sc_t>			vtest_0(aconst_0), vtest_1{atest_1};
 	atest_1						= aconst_1;
 	atest_0						= vtest_0;
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());
 	OutputDebugString("\n\n");
 
-	char							popped				= 0;									    
+	sc_t							popped				= 0;									    
 	if_fail_fe(atest_0.pop_back		(popped));					always_printf("pop_back             : %u, %.*s", atest_0.size(), GPK_VIEW_ARGS(atest_0));
 	if_fail_fe(atest_1.pop_back		());						always_printf("pop_back             : %u, %.*s", atest_1.size(), GPK_VIEW_ARGS(atest_1));
 	if_fail_fe(atest_0.push_back		(popped));					always_printf("push_back            : %u, %.*s", atest_0.size(), GPK_VIEW_ARGS(atest_0));
@@ -184,7 +184,7 @@ int test_array_obj() {
 	return 0;
 }
 
-static err_t testContainerMain(SRuntimeValues &) {
+sttc err_t testContainerMain(SRuntimeValues &) {
 	if_fail_fe(test_array_pod());
 	if_fail_fe(test_array_obj());
 	return EXIT_SUCCESS;

@@ -13,7 +13,7 @@ nmsp gpk
 	err_t	appendXmlTag		(string & output, vcst_t tagName, vcst_t tagAttributes = {}, vcst_t innerHtml = {});
 	err_t	appendXmlTag		(string & output, vcst_t tagName, vcst_t tagAttributes, cnst FAppend & funcAppend);
 	err_t	appendXmlTag		(string & output, vcst_t tagName, vcst_t tagAttributes, cnst function<err_t()> & funcAppend);
-	err_t	appendXmlTag		(string & output, vcst_t tagName, cnst function<err_t()> & funcAppendAttributes, const function<err_t()> & funcAppend);
+	err_t	appendXmlTag		(string & output, vcst_t tagName, cnst function<err_t()> & funcAppendAttributes, cnst function<err_t()> & funcAppend);
 
 } // nmsp 
 

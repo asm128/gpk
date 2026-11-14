@@ -9,7 +9,7 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(C_TYPE, unsigned	, 0x00);
 	GDEFINE_ENUM_VALUE(C_TYPE, signed	, 0x10);
 	GDEFINE_ENUM_VALUE(C_TYPE, float	, 0x20);
-	GDEFINE_ENUM_VALUE(C_TYPE, char		, 0x41);
+	GDEFINE_ENUM_VALUE(C_TYPE, sc_t		, 0x41);
 	GDEFINE_ENUM_VALUE(C_TYPE, apod		, 0x80);
 	// 
 	GDEFINE_ENUM_VALUE(C_TYPE, u0_t, C_TYPE_unsigned	| 1);
@@ -43,7 +43,7 @@ nmsp gpk
 		::gpk::au1_t					Offsets;
 		::gpk::apod<::gpk::C_TYPE>	Types;
 
-		gpk::err_t 			push_any		(const ::gpk::C_TYPE type, const ::gpk::vcst_t label, const vcu0_t & defaultValue) { 
+		gpk::err_t 			push_any		(cnst ::gpk::C_TYPE type, cnst ::gpk::vcst_t label, cnst vcu0_t & defaultValue) { 
 			if_true_vef(Labels.size() > (u2_t)Labels.find(label), "'%.*s' already exists.", GPK_VIEW_ARGS(label));
 			if_fail_fe(Types.push_back(type));
 			if_fail_fe(Offsets.push_back((u1_t)DefaultData.size()));
@@ -52,9 +52,9 @@ nmsp gpk
 		}
 
 		tplt<tpnm _tValue>
-		gpk::err_t 			push_any		(const ::gpk::vcst_t label, const _tValue defaultValue) { 
-			const ::gpk::C_TYPE				type			= ::gpk::toCType(defaultValue); 
-			return push_any(type, label, ::gpk::vcu0_t{(const u0_t*)&defaultValue, type & 0xF}); 
+		gpk::err_t 			push_any		(cnst ::gpk::vcst_t label, cnst _tValue defaultValue) { 
+			cnst ::gpk::C_TYPE				type			= ::gpk::toCType(defaultValue); 
+			return push_any(type, label, ::gpk::vcu0_t{(cnst u0_t*)&defaultValue, type & 0xF}); 
 		}
 
 		gpk::err_t 			push_u8			(::gpk::vcst_t label, u0_t    defaultValue = (u0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }

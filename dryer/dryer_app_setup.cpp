@@ -3,7 +3,7 @@
 
 #include "gpk_png.h"
 
-static const ::dry::SControlParams			control_list_hud			[]	=
+sttc cnst ::dry::SControlParams			control_list_hud			[]	=
 	{	{DRY_MENU_COLOR_MODE		, ::dry::SCREEN_CONTROL_HUD_DIALOG		, -1								,  true, true, false, false, ::gpk::ALIGN_CENTER_TOP	, {{}, {0, 40}}, {1, 1, 1, 1}, {4, 4, 4, 4}}
 	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HUD_DOOR		, ::dry::SCREEN_CONTROL_HUD_DIALOG	, false, true, false, false, ::gpk::ALIGN_CENTER_RIGHT	, {{ 10, 0}, {48, 40}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_lock-off.024.png"		, "../smart-data/icons/icon_lock-on.024.png"		, {}}
 	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HUD_ETHERNET	, ::dry::SCREEN_CONTROL_HUD_DIALOG	, false, true, false, false, ::gpk::ALIGN_CENTER_LEFT	, {{  0, 0}, {48, 40}}, {}, {}, ""				, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_ethernet-off.024.png"	, "../smart-data/icons/icon_ethernet-on.024.png"	, {}}
@@ -13,7 +13,7 @@ static const ::dry::SControlParams			control_list_hud			[]	=
 	,	{::gpk::GUI_COLOR_MODE_Flat	, ::dry::SCREEN_CONTROL_HUD_CALENDAR	, ::dry::SCREEN_CONTROL_HUD_DIALOG	, false, true, false, false, ::gpk::ALIGN_CENTER		, {{  0, 0}, {32, 40}}, {}, {}, "Jan 01 | 23:59", ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "", "", {true,}}
 	};
 
-static const ::dry::SControlParams			control_list_menu			[]	=
+sttc cnst ::dry::SControlParams			control_list_menu			[]	=
 	{	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MENU_DIALOG			, -1								,  true, true				, false, false, ::gpk::ALIGN_CENTER_BOTTOM	, {{}, {  0, 24}}, {0, 1, 0, 1}, {}}
 	//,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MENU_HOME			, ::dry::SCREEN_CONTROL_MENU_DIALOG	, false, BACKGROUND_3D_ONLY , false, false, ::gpk::ALIGN_CENTER_LEFT	, {{0, 0}			, {128, 40}}, {2, 2, 2, 2}, {6, 6, 10, 6}, "Simplified View", ::gpk::ALIGN_CENTER}
 	//,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MENU_HOME			, ::dry::SCREEN_CONTROL_MENU_DIALOG	, false, BACKGROUND_3D_ONLY , false, false, ::gpk::ALIGN_CENTER_LEFT	, {{0, 0}			, { 88, 40}}, {2, 2, 2, 2}, {6, 6, 10, 6}, "Home"			, ::gpk::ALIGN_CENTER_RIGHT, ::gpk::ALIGN_LEFT, "../smart-data/icons/icon_menu-home.024.png"	}
@@ -22,7 +22,7 @@ static const ::dry::SControlParams			control_list_menu			[]	=
 	//,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MENU_CONFIG			, ::dry::SCREEN_CONTROL_MENU_DIALOG	, false, BACKGROUND_3D_ONLY , false, false, ::gpk::ALIGN_CENTER_LEFT	, {{88+168+88, 0}	, {104, 40}}, {2, 2, 2, 2}, {6, 6, 10, 6}, "Config"			, ::gpk::ALIGN_CENTER_RIGHT, ::gpk::ALIGN_LEFT, "../smart-data/icons/icon_menu-config.024.png"	}
 	};
 
-static const ::dry::SControlParams			control_list_modal			[]	=
+sttc cnst ::dry::SControlParams			control_list_modal			[]	=
 	{	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MODAL_DIALOG		, -1								, false, false,  true,  true, ::gpk::ALIGN_CENTER		, {{}, {}}, {2, 2, 2, 2}, {}, "Close the door correctly to start drying"	, ::gpk::ALIGN_CENTER}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MODAL_ICON_START	, ::dry::SCREEN_CONTROL_MODAL_DIALOG, true,  true, false, false	, ::gpk::ALIGN_CENTER_TOP	, {{  0, 16}, {48, 48}}, {}, {}, "", ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_play.032.png"}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MODAL_ICON_STOP		, ::dry::SCREEN_CONTROL_MODAL_DIALOG, true,  true, false, false	, ::gpk::ALIGN_CENTER_TOP	, {{  0, 16}, {48, 48}}, {}, {}, "", ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, "../smart-data/icons/icon_stop.032.png"}
@@ -34,7 +34,7 @@ static const ::dry::SControlParams			control_list_modal			[]	=
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_MODAL_CANCEL		, ::dry::SCREEN_CONTROL_MODAL_DIALOG, false, false, false, false, ::gpk::ALIGN_CENTER_BOTTOM, {{ 96, 24}, {72, 40}}, {3, 3, 3, 3}, {}, "Cancel"	, ::gpk::ALIGN_CENTER}
 	};
 
-static const ::dry::SControlParams			control_list_spool_info		[]	=
+sttc cnst ::dry::SControlParams			control_list_spool_info		[]	=
 	{ 	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG			, -1,  true, true, true, true, ::gpk::ALIGN_CENTER_TOP}
 	, 	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_SPOOL_INFO_TITLE			, ::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG, true, false, true, true, ::gpk::ALIGN_CENTER_TOP, {{0, 24 * 0		}, { 64, 30}}, {3, 3, 3, 3}, {}, "Spool Scanned!", ::gpk::ALIGN_CENTER}
 	, 	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_SPOOL_INFO_LABEL_BRAND		, ::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG, false, false, false, false, ::gpk::ALIGN_CENTER_TOP, {{0, 24 * 1 + 6	}, {256, 24}}, {1, 1, 1, 1}, {2,}, "Brand"		, ::gpk::ALIGN_CENTER_LEFT}
@@ -53,15 +53,15 @@ static const ::dry::SControlParams			control_list_spool_info		[]	=
 	, 	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_SPOOL_SIZE	, ::dry::SCREEN_CONTROL_SPOOL_INFO_LABEL_SPOOL_SIZE	, true, false, true, false, ::gpk::ALIGN_CENTER_RIGHT, {{}, {72, 22}}, {1, 1, 1, 1}, {}, "750g"					, ::gpk::ALIGN_CENTER}
 	};
 
-static const ::dry::SControlParams			control_list_load_filament	[]	=
+sttc cnst ::dry::SControlParams			control_list_load_filament	[]	=
 	{	{::gpk::GUI_COLOR_MODE_Flat, ::dry::SCREEN_CONTROL_LOAD_FILAMENT_DIALOG	, -1,  true, true}
 	};
 
-static const ::dry::SControlParams			control_list_info			[]	=
+sttc cnst ::dry::SControlParams			control_list_info			[]	=
 	{	{::gpk::GUI_COLOR_MODE_Flat, ::dry::SCREEN_CONTROL_INFO_DIALOG	, -1,  true, true}
 	};
 
-static const ::dry::SControlParams			control_list_config			[]	=
+sttc cnst ::dry::SControlParams			control_list_config			[]	=
 	{	{::gpk::GUI_COLOR_MODE_Flat, ::dry::SCREEN_CONTROL_CONFIG_DIALOG, -1,  true, true}
 	};
 
@@ -72,7 +72,7 @@ sttc gpk::err_t						setupScreenHUD				(::dry::SApplication & app)	{
 
 sttc gpk::err_t						setupScreenMenu				(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Menu, ::control_list_menu);
-	const ::gpk::cid_t								indexControlMenuItem		= app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_HOME];
+	cnst ::gpk::cid_t								indexControlMenuItem		= app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_HOME];
 	if(-1 == indexControlMenuItem)
 		return 1;
 	app.Framework.GUI->Controls.SetSelected(indexControlMenuItem, true);
@@ -89,14 +89,14 @@ sttc gpk::err_t						setupScreenSpoolInfo		(::dry::SApplication & app)	{
 
 sttc gpk::err_t						setupScreenModal			(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Modal, ::control_list_modal);
-	const ::dry::SCREEN_CONTROL_MODAL				controlsToHide	[]			=
+	cnst ::dry::SCREEN_CONTROL_MODAL				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_MODAL_DIALOG
 		, ::dry::SCREEN_CONTROL_MODAL_ICON_STOP
 		, ::dry::SCREEN_CONTROL_MODAL_YES
 		, ::dry::SCREEN_CONTROL_MODAL_NO
 		};
 	for(u2_t  iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
-		const ::gpk::cid_t								indexControl			= app.Screens.Modal.ControlIds[controlsToHide[iControl]];
+		cnst ::gpk::cid_t								indexControl			= app.Screens.Modal.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
@@ -106,11 +106,11 @@ sttc gpk::err_t						setupScreenModal			(::dry::SApplication & app)	{
 
 ::gpk::err_t								dry::setupScreenLoadFilament		(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.LoadFilament, ::control_list_load_filament);
-	const ::dry::SCREEN_CONTROL_LOAD_FILAMENT		controlsToHide	[]			=
+	cnst ::dry::SCREEN_CONTROL_LOAD_FILAMENT		controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_LOAD_FILAMENT_DIALOG
 		};
 	for(u2_t  iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
-		const ::gpk::cid_t								indexControl			= app.Screens.LoadFilament.ControlIds[controlsToHide[iControl]];
+		cnst ::gpk::cid_t								indexControl			= app.Screens.LoadFilament.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
@@ -120,11 +120,11 @@ sttc gpk::err_t						setupScreenModal			(::dry::SApplication & app)	{
 
 ::gpk::err_t								dry::setupScreenInfo		(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Info, ::control_list_info);
-	const ::dry::SCREEN_CONTROL_INFO				controlsToHide	[]			=
+	cnst ::dry::SCREEN_CONTROL_INFO				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_INFO_DIALOG
 		};
 	for(u2_t  iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
-		const ::gpk::cid_t								indexControl			= app.Screens.Info.ControlIds[controlsToHide[iControl]];
+		cnst ::gpk::cid_t								indexControl			= app.Screens.Info.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
@@ -134,11 +134,11 @@ sttc gpk::err_t						setupScreenModal			(::dry::SApplication & app)	{
 
 ::gpk::err_t								dry::setupScreenConfig		(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Config, ::control_list_config);
-	const ::dry::SCREEN_CONTROL_CONFIG				controlsToHide	[]			=
+	cnst ::dry::SCREEN_CONTROL_CONFIG				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_CONFIG_DIALOG
 		};
 	for(u2_t  iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
-		const ::gpk::cid_t								indexControl			= app.Screens.Config.ControlIds[controlsToHide[iControl]];
+		cnst ::gpk::cid_t								indexControl			= app.Screens.Config.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
@@ -169,13 +169,13 @@ sttc gpk::err_t						setupScreens				(::dry::SApplication & app)	{
 }
 
 
-sttc gpk::err_t						setupGauge					(::dry::SGaugeFeeder	& feeder, const ::gpk::n2s1_t feederControlSize)	{
-	const ::gpk::circlef2_t							gaugeMetrics				= {feederControlSize.x / 2.0f - 4, feederControlSize.f2() / 2.0f};
+sttc gpk::err_t						setupGauge					(::dry::SGaugeFeeder	& feeder, cnst ::gpk::n2s1_t feederControlSize)	{
+	cnst ::gpk::circlef2_t							gaugeMetrics				= {feederControlSize.x / 2.0f - 4, feederControlSize.f2() / 2.0f};
 //#define GAUGE_LOW_RES
 #if defined(GAUGE_LOW_RES)
-	const u2_t 									resolution					= 12;
+	u2_c 									resolution					= 12;
 #else
-	const u2_t 									resolution					= 64;
+	u2_c 									resolution					= 64;
 #endif
 	::dry::gaugeBuildRadial(feeder, gaugeMetrics, resolution, 8);
 	feeder.Image.resize(feederControlSize.u2());
@@ -185,9 +185,9 @@ sttc gpk::err_t						setupGauge					(::dry::SGaugeFeeder	& feeder, const ::gpk::
 
 sttc gpk::err_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SGaugeFeeder & feeder, s2_t feederControlId)	{
 	::gpk::SGUI										& gui						= *app.Framework.GUI;
-	const s2_t									indexControlFeeder			= app.Screens.Home.ControlIds[feederControlId];
+	cnst s2_t									indexControlFeeder			= app.Screens.Home.ControlIds[feederControlId];
 	::gpk::SControlPlacement						& control					= gui.Controls.Placement[indexControlFeeder];
-	const ::gpk::n2s1_t								feederControlSize			= control.Area.Size;
+	cnst ::gpk::n2s1_t								feederControlSize			= control.Area.Size;
 	::setupGauge(feeder, feederControlSize);
 	gui.Controls.Images[indexControlFeeder].Image		= feeder.Image;
 	return 0;
@@ -215,7 +215,7 @@ sttc gpk::err_t						setupGauges					(::dry::SApplication & app)	{
 
 	::gpk::pobj<::gpk::rt<::gpk::bgra, u2_t >>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;
-	const auto								& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+	cnst auto								& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 	{ if_fail_fef(::gpk::guiUpdateMetrics(gui, guiRenderTargetMetrics.u1(), true), "Failed to update GUI metrics to {w: %i, h: %i}.", guiRenderTargetMetrics.x, guiRenderTargetMetrics.y); }
 	info_printf("Render target size: [%u x %u]", guiRenderTargetMetrics.x, guiRenderTargetMetrics.y);
 	return 0;

@@ -28,7 +28,7 @@ nmsp gpk
 		s2_t					ParentIndex;
 		EXPRESSION_READER_TYPE	Type;
 		sliceu2_t				Span;
-		bool					ClosingCondition				= false;
+		b8_t					ClosingCondition				= false;
 	};
 
 	struct SExpressionReaderState {
@@ -37,9 +37,9 @@ nmsp gpk
 		SExpressionToken		* CurrentElement				= 0;
 		s2_t					NestLevel						= 0;
 		sc_t					CharCurrent						= 0;
-		bool					Escaping						= false;
-		bool					ExpectsSeparator				= false;
-		bool					InsideString					= false;
+		b8_t					Escaping						= false;
+		b8_t					ExpectsSeparator				= false;
+		b8_t					InsideString					= false;
 		sc_t					ClosingQuotes					= '0';
 	};
 #pragma pack(pop)

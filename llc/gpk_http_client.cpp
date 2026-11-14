@@ -26,7 +26,7 @@ using gpk::string;
 gpk::err_t 		gpk::urlDecode					(vcst_t urlToDecode, string & decoded)		{
 	u2_t					decodedCharacters				= 0;
 	for(u2_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
-		const sc_t					currentChar						= urlToDecode[iChar];
+		sc_c					currentChar						= urlToDecode[iChar];
 		if('%' != currentChar) {
 			if_fail_fe(decoded.push_back((sc_t)(u0_t)currentChar));
 			continue;
@@ -40,7 +40,7 @@ gpk::err_t 		gpk::urlDecode					(vcst_t urlToDecode, string & decoded)		{
 	return decodedCharacters;
 }
 
-static	gpk::err_t httpRequestChunkedJoin			(vcst_t body, string & joined)		{
+sttc	gpk::err_t httpRequestChunkedJoin			(vcst_t body, string & joined)		{
 	u2_t									iBegin							= 0;
 	u2_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -63,7 +63,7 @@ static	gpk::err_t httpRequestChunkedJoin			(vcst_t body, string & joined)		{
 	return 0;
 }
 
-static	gpk::err_t httpClientRequestConstruct
+sttc	gpk::err_t httpClientRequestConstruct
 	(	::gpk::HTTP_METHOD	method
 	,	vcst_t				hostName
 	,	vcst_t				path
@@ -99,7 +99,7 @@ static	gpk::err_t httpClientRequestConstruct
 // get sockaddr, IPv4 or IPv6:
 void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
 gpk::err_t			gpk::httpClientRequest
-	(	const SIPv4End		& clientToConnect
+	(	cnst SIPv4End		& clientToConnect
 	,	HTTP_METHOD			method
 	,	vcst_t				hostName
 	,	vcst_t				path
@@ -109,7 +109,7 @@ gpk::err_t			gpk::httpClientRequest
 	) {
 	string				bytesRequest;
 	if_fail_fe(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest));
-	const SIPv4End		& address						= clientToConnect;
+	cnst SIPv4End		& address						= clientToConnect;
 
 	addrinfo					hints							= {};
     hints.ai_family			= AF_UNSPEC;
@@ -155,8 +155,8 @@ gpk::err_t			gpk::httpClientRequest
 	u2_t									totalBytes						= 0;
 	u2_t									stopOfHeader					= 0;
 	u2_t									contentLength					= 0;
-	bool										bChunked						= false;
-	//const ::gpk::vcst_t				viewEndOfChunk					= "\r\n0\r\n\r\n";
+	b8_t										bChunked						= false;
+	//cnst ::gpk::vcst_t				viewEndOfChunk					= "\r\n0\r\n\r\n";
     while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], ::gpk::min(buf.size() - totalBytes - 1, 1U), 0)) && 0 != numbytes) {
 		if_true_vef(-1, (totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
@@ -262,7 +262,7 @@ gpk::err_t			gpk::httpClientRequest
 }
 
 gpk::err_t 		gpk::httpClientRequest
-	(	const SIPv4End	& clientToConnect
+	(	cnst SIPv4End	& clientToConnect
 	,	HTTP_METHOD		method
 	,	vcst_t			hostName
 	,	vcst_t			path

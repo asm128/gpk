@@ -53,7 +53,7 @@ namespace dry
 		float									Humidity						= {};
 		u2_t 								Cycle							= {};
 		::gpk::string					 		Error							= {};
-		bool									DoorClosed						= {};
+		b8_t									DoorClosed						= {};
 	};
 
 	struct SDryerProgram {
@@ -79,15 +79,15 @@ namespace dry
 		float									Vacuum							= 0;
 		float									Humidity						= 100;
 
-		bool									DoorClosed						: 1;
-		bool									RunningPending					: 1;
-		bool									Running							: 1;
-		bool									CyclePrePreheating				: 1;
-		bool									CyclePreheating					: 1;
-		bool									CycleDrying						: 1;
-		bool									StoppedPending					: 1;
-		bool									Dryer							: 1;
-		bool									Pump							: 1;
+		b8_t									DoorClosed						: 1;
+		b8_t									RunningPending					: 1;
+		b8_t									Running							: 1;
+		b8_t									CyclePrePreheating				: 1;
+		b8_t									CyclePreheating					: 1;
+		b8_t									CycleDrying						: 1;
+		b8_t									StoppedPending					: 1;
+		b8_t									Dryer							: 1;
+		b8_t									Pump							: 1;
 	};
 #pragma pack(pop)
 
@@ -103,26 +103,26 @@ namespace dry
 
 		::gpk::refcount_t						CloseSerialThread				= 0;
 
-		volatile			s2_t				SerialLastTime					= 0;
-		static constexpr	s2_t				SERIAL_TIMEOUT					= 10;
+		vltl			s2_t				SerialLastTime					= 0;
+		sttc constexpr	s2_t				SERIAL_TIMEOUT					= 10;
 	};
 
 	::gpk::err_t							dryerSetup						(::dry::SDryer & dryer);
 	::gpk::err_t							dryerUpdate						(::dry::SDryer & dryer, u3_t  lastTimeMilliseconds);
 
-	static constexpr u0_t 				DRYER_MIN_TEMPERATURE			= 45;
+	sttc constexpr u0_t 				DRYER_MIN_TEMPERATURE			= 45;
 
-	static constexpr u2_t 				DRYER_MAX_TEMPERATURE			= 83;
-	static constexpr u2_t 				DRYER_MAX_PRESSURE				= 800;
-	static constexpr u2_t 				DRYER_MAX_TIME_PREHEATING		= 60;
-	static constexpr u2_t 				DRYER_MAX_TIME_SUBCYCLE			= 120;
-	static constexpr u2_t 				DRYER_MAX_SUBCYCLES				= 64;
+	sttc constexpr u2_t 				DRYER_MAX_TEMPERATURE			= 83;
+	sttc constexpr u2_t 				DRYER_MAX_PRESSURE				= 800;
+	sttc constexpr u2_t 				DRYER_MAX_TIME_PREHEATING		= 60;
+	sttc constexpr u2_t 				DRYER_MAX_TIME_SUBCYCLE			= 120;
+	sttc constexpr u2_t 				DRYER_MAX_SUBCYCLES				= 64;
 
-	static constexpr u2_t 				DRYER_DEFAULT_TEMPERATURE		= 45;
-	static constexpr u2_t 				DRYER_DEFAULT_PRESSURE			= 600;
-	static constexpr u2_t 				DRYER_DEFAULT_TIME_PREHEATING	= 10;
-	static constexpr u2_t 				DRYER_DEFAULT_TIME_SUBCYCLE		= 40;
-	static constexpr u2_t 				DRYER_DEFAULT_SUBCYCLES			= 3;
+	sttc constexpr u2_t 				DRYER_DEFAULT_TEMPERATURE		= 45;
+	sttc constexpr u2_t 				DRYER_DEFAULT_PRESSURE			= 600;
+	sttc constexpr u2_t 				DRYER_DEFAULT_TIME_PREHEATING	= 10;
+	sttc constexpr u2_t 				DRYER_DEFAULT_TIME_SUBCYCLE		= 40;
+	sttc constexpr u2_t 				DRYER_DEFAULT_SUBCYCLES			= 3;
 } // namespace
 
 #endif // DRYER_H_0927439821

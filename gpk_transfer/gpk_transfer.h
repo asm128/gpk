@@ -2,6 +2,8 @@
 #include "gpk_lifecycle.h"
 #include "gpk_event_device.h"
 
+usns  gpk;
+
 #ifndef GPK_TRANSFER_H_23627
 #define GPK_TRANSFER_H_23627
 
@@ -18,7 +20,7 @@ namespace gpk
 		au0_t				Resource		= {};
 		au0_t				Digest			= {};
 
-		err_t				Save			(au0_t & output) const;
+		err_t				Save			(au0_t & output) cnst;
 		err_t				Load			(vcu0_t & input);
 	};
 
@@ -26,7 +28,7 @@ namespace gpk
 		u3_t				Id				= 0;
 		apod<STransferRange>	Ranges			= {};
 
-		err_t				Save			(au0_t & output) const;
+		err_t				Save			(au0_t & output) cnst;
 		err_t				Load			(vcu0_t & input);
 	};
 
@@ -35,7 +37,7 @@ namespace gpk
 		STransferRange		Range			= {};
 		au0_t				Data			= {};
 
-		err_t				Save			(au0_t & output) const;
+		err_t				Save			(au0_t & output) cnst;
 		err_t				Load			(vcu0_t & input);
 	};
 
@@ -43,11 +45,11 @@ namespace gpk
 	using PEventTransfer			= pobj<EventTransfer>;
 	using TTransferQueue			= apobj<EventTransfer>;
 
-	using FTransferResolve		= ::std::function<err_t(const STransferManifest &)>;
-	using FTransferRead			= ::std::function<err_t(const STransferManifest &, const STransferRange &, au0_t &)>;
-	using FTransferWrite			= ::std::function<err_t(const STransferManifest &, const STransferRange &, vcu0_t)>;
-	using FTransferQuery			= ::std::function<err_t(const STransferManifest &, apod<STransferRange> &)>;
-	using FTransferFinalize		= ::std::function<err_t(const STransferManifest &)>;
+	using FTransferResolve		= ::std::function<err_t(cnst STransferManifest &)>;
+	using FTransferRead			= ::std::function<err_t(cnst STransferManifest &, cnst STransferRange &, au0_t &)>;
+	using FTransferWrite			= ::std::function<err_t(cnst STransferManifest &, cnst STransferRange &, vcu0_t)>;
+	using FTransferQuery			= ::std::function<err_t(cnst STransferManifest &, apod<STransferRange> &)>;
+	using FTransferFinalize		= ::std::function<err_t(cnst STransferManifest &)>;
 
 	struct STransferConsumer {
 		FTransferResolve		ResolveCommitted		= {};
@@ -61,8 +63,8 @@ namespace gpk
 	};
 
 	struct STransferTransaction {
-		bool				Active			= false;
-		bool				Source			= false;
+		b8_t				Active			= false;
+		b8_t				Source			= false;
 		STransferManifest	Manifest		= {};
 		apod<STransferRange>	Durable			= {};
 	};
@@ -72,21 +74,21 @@ namespace gpk
 		aobj<STransferTransaction>	Transactions	= {};
 	};
 
-	err_t	transferEventCreate		(EventTransfer & output, const STransferManifest & manifest);
-	err_t	transferEventResume		(EventTransfer & output, u3_t id, view<const STransferRange> durableRanges);
-	err_t	transferEventRead		(EventTransfer & output, u3_t id, view<const STransferRange> requestedRanges);
-	err_t	transferEventWrite		(EventTransfer & output, u3_t id, const STransferRange & range, vcu0_t data);
+	err_t	transferEventCreate		(EventTransfer & output, cnst STransferManifest & manifest);
+	err_t	transferEventResume		(EventTransfer & output, u3_t id, view<cnst STransferRange> durableRanges);
+	err_t	transferEventRead		(EventTransfer & output, u3_t id, view<cnst STransferRange> requestedRanges);
+	err_t	transferEventWrite		(EventTransfer & output, u3_t id, cnst STransferRange & range, vcu0_t data);
 	err_t	transferEventStop		(EventTransfer & output, u3_t id);
 	err_t	transferEventDestroy		(EventTransfer & output, u3_t id);
 
-	err_t	transferEnqueueCreate	(STransferState & state, const STransferManifest & manifest, TTransferQueue & output);
-	err_t	transferEnqueueResume	(u3_t id, view<const STransferRange> durableRanges, TTransferQueue & output);
-	err_t	transferEnqueueRead		(u3_t id, view<const STransferRange> requestedRanges, TTransferQueue & output);
-	err_t	transferEnqueueWrite	(u3_t id, const STransferRange & range, vcu0_t data, TTransferQueue & output);
+	err_t	transferEnqueueCreate	(STransferState & state, cnst STransferManifest & manifest, TTransferQueue & output);
+	err_t	transferEnqueueResume	(u3_t id, view<cnst STransferRange> durableRanges, TTransferQueue & output);
+	err_t	transferEnqueueRead		(u3_t id, view<cnst STransferRange> requestedRanges, TTransferQueue & output);
+	err_t	transferEnqueueWrite	(u3_t id, cnst STransferRange & range, vcu0_t data, TTransferQueue & output);
 	err_t	transferEnqueueStop		(u3_t id, TTransferQueue & output);
 	err_t	transferEnqueueDestroy	(u3_t id, TTransferQueue & output);
 
-	err_t	transferProcess			(STransferState & state, const STransferConsumer & consumer, const EventTransfer & input, TTransferQueue & output);
+	err_t	transferProcess			(STransferState & state, cnst STransferConsumer & consumer, cnst EventTransfer & input, TTransferQueue & output);
 }
 
 #endif // GPK_TRANSFER_H_23627

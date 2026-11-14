@@ -94,7 +94,7 @@ nmsp gpk
 		}
 
 		// This function messes up with the Entities array so be careful of not having any references to its contents or it may end up trying to access invalid memory
-		err_t				Clone				(u2_t iEntitySource, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+		err_t				Clone				(u2_t iEntitySource, b8_t cloneSkin, b8_t cloneSurfaces, b8_t cloneShaders) {
 			cnst SEntity		entitySource		= Entities[iEntitySource];
 			s2_t				iEntityNew			= Entities.Create();
 			SEntity				& entityNew			= Entities[iEntityNew];
@@ -116,7 +116,7 @@ nmsp gpk
 		}
 
 		inln	err_t		SetNodeSize			(u2_t iEntity, cnst n3f2_t & size)					{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].NodeSize = size; return 0; }
-		inln	err_t		SetMeshScale		(u2_t iEntity, cnst n3f2_t & scale, bool halfSizes)	{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.Scale(scale, true); 
+		inln	err_t		SetMeshScale		(u2_t iEntity, cnst n3f2_t & scale, b8_t halfSizes)	{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.Scale(scale, true); 
 			if(halfSizes) {
 				if_fail_fe(SetHalfSizes(iEntity, scale * .5f));
 				if_fail_fe(SetNodeSize(iEntity, scale));
@@ -126,7 +126,7 @@ nmsp gpk
 		inln	err_t		SetMeshPosition		(u2_t iEntity, cnst n3f2_t & position)				{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.SetTranslation(position, false); return 0; }
 		err_t				SetColorDiffuse		(u2_t iEntity, cnst rgbaf & diffuse)				{ Scene->Graphics->Skins[Scene->RenderNodes[GetRenderNode(iEntity)].Skin]->Material.Color.Diffuse = diffuse; return 0; }
 		err_t				SetShader			(u2_t iEntity, cnst function<TFuncPixelShader> & shader, vcst_t name) {
-			cnst u2_t					iShader				= Scene->RenderNodes[GetRenderNode(iEntity)].Shader;
+			u2_c					iShader				= Scene->RenderNodes[GetRenderNode(iEntity)].Shader;
 			Scene->Graphics->Shaders[iShader].create(shader);
 			Scene->Graphics->Shaders.Names[iShader] = name;
 			return 0;
@@ -141,8 +141,8 @@ nmsp gpk
 		inln	err_t		GetAcceleration		(u2_t iEntity, n3f2_t & acceleration)	cnst	{ Integrator.GetAcceleration(GetRigidBody(iEntity), acceleration);		return 0; }
 		inln	err_t		GetRotation			(u2_t iEntity, n3f2_t & velocity)		cnst	{ Integrator.GetRotation	(GetRigidBody(iEntity), velocity);			return 0; }
 		inln	err_t		GetOrientation		(u2_t iEntity, quatf2_t & orientation)	cnst	{ Integrator.GetOrientation	(GetRigidBody(iEntity), orientation);		return 0; }
-		inln	err_t		SetPhysicsActive	(u2_t iEntity, bool active)						{ Integrator.SetActive		(GetRigidBody(iEntity), active);			return 0; }
-		inln	err_t		SetCollides			(u2_t iEntity, bool collides)					{ Integrator.SetCollides	(GetRigidBody(iEntity), collides);			return 0; }
+		inln	err_t		SetPhysicsActive	(u2_t iEntity, b8_t active)						{ Integrator.SetActive		(GetRigidBody(iEntity), active);			return 0; }
+		inln	err_t		SetCollides			(u2_t iEntity, b8_t collides)					{ Integrator.SetCollides	(GetRigidBody(iEntity), collides);			return 0; }
 		inln	err_t		SetHalfSizes		(u2_t iEntity, cnst n3f2_t & halfSizes)			{ Integrator.SetHalfSizes	(GetRigidBody(iEntity), halfSizes);			return 0; }
 		inln	err_t		SetMass				(u2_t iEntity, f2_t mass)						{ Integrator.SetMass		(GetRigidBody(iEntity), mass);				return 0; }
 		inln	err_t		SetMassInverse		(u2_t iEntity, f2_t inverseMass)				{ Integrator.SetMassInverse	(GetRigidBody(iEntity), inverseMass);		return 0; }
@@ -153,7 +153,7 @@ nmsp gpk
 		inln	err_t		SetOrientation		(u2_t iEntity, cnst quatf2_t & orientation)		{ Integrator.SetOrientation	(GetRigidBody(iEntity), orientation);		return 0; }
 		inln	err_t		SetDampingLinear	(u2_t iEntity, f2_t damping)					{ Integrator.Masses[GetRigidBody(iEntity)].LinearDamping	= damping;	return 0; }
 		inln	err_t		SetDampingAngular	(u2_t iEntity, f2_t damping)					{ Integrator.Masses[GetRigidBody(iEntity)].AngularDamping	= damping;	return 0; }
-		err_t				SetHidden			(u2_t iEntity, bool hidden)						{ Scene->RenderNodes.Flags[GetRenderNode(iEntity)].NoDraw	= hidden;	return 0; }	
+		err_t				SetHidden			(u2_t iEntity, b8_t hidden)						{ Scene->RenderNodes.Flags[GetRenderNode(iEntity)].NoDraw	= hidden;	return 0; }	
 
 		err_t				ToggleHidden		(u2_t iEntity) {
 			SRenderNodeFlags			& flags				= Scene->RenderNodes.Flags[GetRenderNode(iEntity)];
@@ -187,7 +187,7 @@ nmsp gpk
 		err_t				CreateEntityFromGeometry
 			( vcst_t							name		
 			, cnst n3f2_t						halfSizes
-			, bool								createSkin
+			, b8_t								createSkin
 			, cnst _tParams						& params
 			, linear_map_pod<_tParams, u2_t>	& recycleRenderNodeMap
 			, cnst TGeometryFunc				& funcGeometry

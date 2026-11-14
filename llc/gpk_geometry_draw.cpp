@@ -1,13 +1,13 @@
 #include "gpk_geometry_draw.h"
 
 gpk::err_t 		gpk::drawTriangle
-	( const g8bgra				targetPixels
-	, const SGeometryBuffers		& geometry
-	, const u2_t						iTriangle
-	, const m4f2_t				& matrixTransform
-	, const m4f2_t				& matrixTransformView
-	, const n3f2_t				& lightVector
-	, const rgbaf				& lightColor
+	( cnst g8bgra				targetPixels
+	, cnst SGeometryBuffers		& geometry
+	, u2_c						iTriangle
+	, cnst m4f2_t				& matrixTransform
+	, cnst m4f2_t				& matrixTransformView
+	, cnst n3f2_t				& lightVector
+	, cnst rgbaf				& lightColor
 	, apod<n2s1_t>		& pixelCoords
 	, apod<trif2_t>		& pixelVertexWeights
 	, gc8bgra					textureImage
@@ -15,7 +15,7 @@ gpk::err_t 		gpk::drawTriangle
 	, apod<rgbaf>			& lightColors
 	, grid<u2_t>			depthBuffer
 	) {
-	triu2_t				triangleIndices		= *(const tri<u2_t>*)&geometry.PositionIndices[iTriangle * 3];
+	triu2_t				triangleIndices		= *(cnst tri<u2_t>*)&geometry.PositionIndices[iTriangle * 3];
 	tri3f2_t				triangleWorld		= {geometry.Positions[triangleIndices.A], geometry.Positions[triangleIndices.B], geometry.Positions[triangleIndices.C]};
 	tri3f2_t				triangle			= triangleWorld;
 	transform(triangle, matrixTransformView);
@@ -39,12 +39,12 @@ gpk::err_t 		gpk::drawTriangle
 	transform(triangleWorld, matrixTransform);
 	drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 
-	const tri3f2_t		triangleNormals			= {geometry.Normals[triangleIndices.A], geometry.Normals[triangleIndices.B], geometry.Normals[triangleIndices.C]};
-	const tri2f2_t		triangleTexCoords		= {geometry.TextureCoords[triangleIndices.A], geometry.TextureCoords[triangleIndices.B], geometry.TextureCoords[triangleIndices.C]};
-	const n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
+	cnst tri3f2_t		triangleNormals			= {geometry.Normals[triangleIndices.A], geometry.Normals[triangleIndices.B], geometry.Normals[triangleIndices.C]};
+	cnst tri2f2_t		triangleTexCoords		= {geometry.TextureCoords[triangleIndices.A], geometry.TextureCoords[triangleIndices.B], geometry.TextureCoords[triangleIndices.C]};
+	cnst n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
-		const n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
-		const trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
+		n2s1_c			pixelCoord				= pixelCoords		[iPixelCoord];
+		cnst trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 
 		n3f2_t				normal					= triangleWeight(vertexWeights, triangleNormals);
 		normal					= matrixTransform.TransformDirection(normal).Normalize();
@@ -55,7 +55,7 @@ gpk::err_t 		gpk::drawTriangle
 		rgbaf				fragmentColor			= {};
 
 		for(u2_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
-			const SLight3		& light					= lightPoints[iLight];
+			cnst SLight3		& light					= lightPoints[iLight];
 
 			n3f2_t				lightToPoint			= light.Position - position;
 			n3f2_t				vectorToLight			= lightToPoint;

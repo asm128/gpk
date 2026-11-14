@@ -26,10 +26,10 @@ nmsp gpk
 
 	// ---- Collision
 	// Returns the volume of a sphere. This is used to calculate how to recurse into the bounding volume tree. For a bounding sphere it is a simple calculation.
-	tplt<tpnm T> stxp f3_t	sphereSize		(const sphere<T> & sphere)								nxpt	{ return 1.3333333333333333 * math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
-	tplt<tpnm T> stxp bool	sphereOverlaps	(const sphere<T> & sphereA, const sphere<T> & sphereB)	nxpt	{
-		const f3_t	distanceSquared	= (sphereA.Center - sphereB.Center).LengthSquared();
-		const f3_t	radiiSum		= sphereA.Radius + sphereB.Radius;
+	tplt<tpnm T> stxp f3_t	sphereSize		(cnst sphere<T> & sphere)								nxpt	{ return 1.3333333333333333 * math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
+	tplt<tpnm T> stxp b8_t	sphereOverlaps	(cnst sphere<T> & sphereA, cnst sphere<T> & sphereB)	nxpt	{
+		cnst f3_t	distanceSquared	= (sphereA.Center - sphereB.Center).LengthSquared();
+		cnst f3_t	radiiSum		= sphereA.Radius + sphereB.Radius;
 		return distanceSquared < (radiiSum * radiiSum);	// check squared distance against squared radius
 	}
 #pragma pack(pop)

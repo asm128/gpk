@@ -44,11 +44,11 @@ nmsp gpk
 			err_t	tcpipAddressToSockaddr		(u0_t a1, u0_t a2, u0_t a3, u0_t a4, u1_t port, sockaddr_in & sockaddr);
 			err_t	tcpipAddressToSockaddr		(u2_t address, u1_t port, sockaddr_in & sockaddr);
 
-			err_t	tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4, u1_t* port);
-			err_t	tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, u2_t & address, u1_t & port);
+			err_t	tcpipAddressFromSockaddr	(cnst sockaddr_in & sockaddr, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4, u1_t* port);
+			err_t	tcpipAddressFromSockaddr	(cnst sockaddr_in & sockaddr, u2_t & address, u1_t & port);
 			err_t	tcpipAddress				(SOCKET socket, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4, u1_t* port);
 
-	stin	err_t	tcpipAddressToSockaddr		(const SIPv4End & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		
+	stin	err_t	tcpipAddressToSockaddr		(cnst SIPv4End & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		
 		( byte_at(addr.IP, 0)
 		, byte_at(addr.IP, 1)
 		, byte_at(addr.IP, 2)
@@ -56,7 +56,7 @@ nmsp gpk
 		, addr.Port, sockaddr
 		); 
 	}
-	stin	err_t	tcpipAddressFromSockaddr	(const sockaddr_in& sockaddr, SIPv4End & address)	{ u0_t addr[4] = {}; if_fail_fe(tcpipAddressFromSockaddr	(sockaddr	, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
+	stin	err_t	tcpipAddressFromSockaddr	(cnst sockaddr_in& sockaddr, SIPv4End & address)	{ u0_t addr[4] = {}; if_fail_fe(tcpipAddressFromSockaddr	(sockaddr	, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
 	stin	err_t	tcpipAddress				(SOCKET socket, SIPv4End & address)					{ u0_t addr[4] = {}; if_fail_fe(tcpipAddress				(socket		, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
 } // nmsp
 

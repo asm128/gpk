@@ -2,20 +2,16 @@
 #include "gpk_string_compose.h"
 
 gpk::err_t gpk::frameworkModuleUnload(SRuntimeModule & loadedModule) {
-	if_true_ve(OS_BUSY, loadedModule.Application);
 	if(0 == loadedModule.Handle)
 		rtrn 0;
-	if_zero_ve(OS_ERROR, GPK_FREE_MODULE(loadedModule.Handle));
-
+	if_zero_fe(GPK_FREE_MODULE(loadedModule.Handle));
 	loadedModule = {};
 	rtrn 0;
 }
 gpk::err_t gpk::frameworkModuleLoad(SRuntimeModule & loadedModule, cnst vcst_t & moduleName) {
-	if_true_ve(OS_BUSY, loadedModule.Handle);
 	string strModuleName;
 	if_fail_fe(append_strings(strModuleName, moduleName));
-	loadedModule.Handle = GPK_LOAD_MODULE(strModuleName.begin());
-	if_null_vef(OS_NOT_FOUND, loadedModule.Handle, "Cannot load module:%.*s.", GPK_VIEW_ARGS(moduleName));
+	if_null_fef(loadedModule.Handle = GPK_LOAD_MODULE(strModuleName.begin()), "moduleName:%.*s.", GPK_VIEW_ARGS(moduleName));
 
 	tydf SRuntimeModule::TRegistry TRegistry;
 	cnst view<cnst STypeIdentifier> & functionNames	= TRegistry::get_types();
@@ -28,7 +24,7 @@ gpk::err_t gpk::frameworkModuleLoad(SRuntimeModule & loadedModule, cnst vcst_t &
 			error_printf("Failed to load module function:%.*s.", GPK_VIEW_ARGS(functionNames[iMember].Name));
 			GPK_FREE_MODULE(loadedModule.Handle);
 			loadedModule = {};
-			rtrn OS_NOT_FOUND;
+			rtrn -1;
 		}
 	}
 	rtrn 0;

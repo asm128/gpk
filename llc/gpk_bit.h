@@ -6,13 +6,13 @@
 
 nmsp gpk
 {
-	tplTndsx	bool	bit_all			(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn (state & bitsToTest) == bitsToTest; }
-	tplTndsx	bool	bit_any			(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn 0 != (state & bitsToTest); }
+	tplTndsx	b8_t	bit_all			(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn (state & bitsToTest) == bitsToTest; }
+	tplTndsx	b8_t	bit_any			(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn 0 != (state & bitsToTest); }
 	tplTndsx	T		bit_clear		(cnst T state, cnst T bitsToClear)								nxpt	{ rtrn (state & bitsToClear)				? state & ~bitsToClear	: state; }
 	tplTndsx	T		bit_set			(cnst T state, cnst T bitsToSet  )								nxpt	{ rtrn ((state & bitsToSet) != bitsToSet)	? state | bitsToSet	: state; }
-	tplTndsx	T		bit_set			(cnst T state, cnst T bitsToSet, cnst bool value)				nxpt	{ rtrn value ? bit_set(state, bitsToSet) : bit_clear(state, bitsToSet); }
+	tplTndsx	T		bit_set			(cnst T state, cnst T bitsToSet, b8_c value)				nxpt	{ rtrn value ? bit_set(state, bitsToSet) : bit_clear(state, bitsToSet); }
 	tplTndsx	T		bit_test		(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn bit_all(state, bitsToTest) ? state : (T)0; }
-	tplTndsx	T		bit_set_masked	(cnst T state, cnst T mask, cnst T bitsToSet, cnst bool value)	nxpt	{ cnst T masked = T(mask & bitsToSet); rtrn masked ? bit_set(state, masked, value) : state; }
+	tplTndsx	T		bit_set_masked	(cnst T state, cnst T mask, cnst T bitsToSet, b8_c value)	nxpt	{ cnst T masked = T(mask & bitsToSet); rtrn masked ? bit_set(state, masked, value) : state; }
 	tplTndsx	T		bit_test_masked	(cnst T state, cnst T mask, cnst T value)						nxpt	{ cnst T masked = T(mask & value); rtrn masked ? bit_test(state, masked) : (T)0; }
 	tplTndsx	T		bit_true		(cnst T state, cnst T bitsToTest)								nxpt	{ rtrn bit_test(state, bitsToTest); }
 	tplTndsx	T		bit_false		(cnst T state, cnst T bitsToTest)								nxpt	{
@@ -55,17 +55,17 @@ nmsp gpk
 
 		T						Value			= {};
 
-		inxp	bool			oper==			(cnst bit_field & other)			csnx	{ rtrn Value == other.Value; }
-		inxp	bool			oper!=			(cnst bit_field & other)			csnx	{ rtrn Value != other.Value; }
+		inxp	b8_t			oper==			(cnst bit_field & other)			csnx	{ rtrn Value == other.Value; }
+		inxp	b8_t			oper!=			(cnst bit_field & other)			csnx	{ rtrn Value != other.Value; }
 
 		inxp					bit_field		()									nxpt	= default;
 		inxp					bit_field		(T value)							nxpt	: Value(value) {}
 		inxp	oper			T&				()									nxpt	{ rtrn Value; }
 		inxp	oper	cnst	T&				()									csnx	{ rtrn Value; }
-		inxp	bool			All				(T bitsToTest)						csnx	{ rtrn ::gpk::bit_all(Value, bitsToTest); }
-		inxp	bool			Any				(T bitsToTest)						csnx	{ rtrn ::gpk::bit_any(Value, bitsToTest); }
+		inxp	b8_t			All				(T bitsToTest)						csnx	{ rtrn ::gpk::bit_all(Value, bitsToTest); }
+		inxp	b8_t			Any				(T bitsToTest)						csnx	{ rtrn ::gpk::bit_any(Value, bitsToTest); }
 		inln	bit_field&		Clear			(T bitsToClear)						nxpt	{ Value = ::gpk::bit_clear(Value, bitsToClear); rtrn *this; }
-		inln	bit_field&		Set				(T bitsToSet, bool value = true)	nxpt	{ Value = ::gpk::bit_set(Value, bitsToSet, value); rtrn *this; }
+		inln	bit_field&		Set				(T bitsToSet, b8_t value = true)	nxpt	{ Value = ::gpk::bit_set(Value, bitsToSet, value); rtrn *this; }
 
 		tplt<u2_t index>
 		ndsx u2_t				Offset			()			nxpt { static_assert(index < FIELD_COUNT, "bit_field<> index out of range."); rtrn bit_field_offset<index, fieldWidths...>(); }

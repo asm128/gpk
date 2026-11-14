@@ -13,7 +13,7 @@ nmsp gpk
 	};
 
 	err_t				httpClientRequest
-		(	const SIPv4End	& remoteAddress
+		(	cnst SIPv4End	& remoteAddress
 		,	HTTP_METHOD		method
 		,	vcst_t			hostName
 		,	vcst_t			path
@@ -23,7 +23,7 @@ nmsp gpk
 		);
 
 	err_t				httpClientRequest
-		(	const SIPv4End	& remoteAddress
+		(	cnst SIPv4End	& remoteAddress
 		,	HTTP_METHOD		method
 		,	vcst_t			hostName
 		,	vcst_t			path
@@ -33,12 +33,12 @@ nmsp gpk
 		);
 
 	//err_t					httpsClientRequest
-	//	(	const SIPv4End			& remoteAddress
+	//	(	cnst SIPv4End			& remoteAddress
 	//	,	HTTP_METHOD			method
-	//	,	const vcst_t			& hostName
-	//	,	const vcst_t			& path
-	//	,	const vcst_t			& contentType
-	//	,	const vcst_t			& body
+	//	,	cnst vcst_t			& hostName
+	//	,	cnst vcst_t			& path
+	//	,	cnst vcst_t			& contentType
+	//	,	cnst vcst_t			& body
 	//	,	apod<sc_t>			& out_received
 	//	);
 

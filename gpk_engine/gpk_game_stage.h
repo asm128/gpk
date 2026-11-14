@@ -36,7 +36,7 @@ nmsp gpk
 		f2_t			AccelerationControl		= 0;
 
 		f2_t			ClampEpsilon			(f3_t epsilon = 0.0001) {
-			const f2_t			diff					= Target - Current;
+			cnst f2_t			diff					= Target - Current;
 			if(fabsf(diff < epsilon))
 				Current			= Target;
 			return diff;
@@ -46,7 +46,7 @@ nmsp gpk
 			if(AccelerationControl)
 				return Current += f2_t(seconds * Step * AccelerationControl);
 
-			const bool			slowdown				= Current > Target;
+			b8_c			slowdown				= Current > Target;
 			if(slowdown || Current < Target) {
 				Current			+= f2_t(seconds * Step) * (slowdown ? -1 : 1);
 				ClampEpsilon();

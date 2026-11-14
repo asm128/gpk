@@ -92,7 +92,7 @@ sttc gpk::err_t dialogInitialize				(SDialog & dialog) {
 	dialog.DefaultControlDraw.FrameOut			= 1;
 	dialog.DefaultControlDraw.UseNewPalettes	= 1;
 	if(!dialog.Colors) {
-		static pobj<SDialogColors>	globalDefaultColors			= {};
+		sttc pobj<SDialogColors>	globalDefaultColors			= {};
 		if(!globalDefaultColors) {
 			if_fail_fe(::dialogInitializeColors(*globalDefaultColors.create(), gui.Colors->Palettes));
 		}
@@ -109,7 +109,7 @@ gpk::SDialog::SDialog			(pobj<SGUI> & pgui)	{
 	GUI								= pgui;
 	::dialogInitialize(*this);
 }
-gpk::SDialog::SDialog			(const pobj<SGUI> & pgui)	{
+gpk::SDialog::SDialog			(cnst pobj<SGUI> & pgui)	{
 	GUI								= pgui;
 	if(!GUI)
 		GUI.create();
@@ -172,11 +172,11 @@ gpk::cid_t			gpk::sliderCreate							(SDialog & dialog)								{
 gpk::err_t			gpk::sliderSetValue		(SDialogSlider & slider, s3_t value)				{
 	SDialog				& dialog				= *slider.Dialog;
 	SControlTable		& controlTable			= dialog.GUI->Controls;
-	const s3_t					newValue				= max(min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);;
-	bool						updateMetrics			= slider.ValueCurrent != newValue;
+	cnst s3_t					newValue				= max(min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);;
+	b8_t						updateMetrics			= slider.ValueCurrent != newValue;
 	slider.ValueCurrent			= newValue;
 
-	const f3_t				proportion				= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
+	cnst f3_t				proportion				= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
 	SControlPlacement	& controlButton			= controlTable.Placement[slider.IdButton];
 	cnst n2f3_t			controlSliderSize		= controlTable.Area[slider.IdGUIControl].Client.Global.Size.f3();
@@ -206,22 +206,22 @@ gpk::err_t			gpk::sliderSetValue		(SDialogSlider & slider, s3_t value)				{
 gpk::err_t			gpk::sliderUpdate			(SDialogSlider	& slider)								{
 	SDialog				& dialog					= *slider.Dialog;
 	SControlTable		& controlTable				= dialog.GUI->Controls;
-	const s3_t				valueRange					= slider.ValueLimits.Max - slider.ValueLimits.Min;
+	cnst s3_t				valueRange					= slider.ValueLimits.Max - slider.ValueLimits.Min;
 	if(controlTable.States[slider.IdButton].IsPressed()) {
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			SInput											& input										= *dialog.Input;
-			//const SGUIZoom									& zoom										= dialog.GUI->Zoom;
+			//cnst SGUIZoom									& zoom										= dialog.GUI->Zoom;
 			//n2d												scale										=
 			//	{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 			//	, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 			//	};
-			const n2f3_t			controlSliderPos			= controlTable.Area[slider.IdGUIControl].Client.Global.Offset.f3();
-			const n2f3_t			controlSliderSize			= controlTable.Area[slider.IdGUIControl].Client.Global.Size.f3();
+			cnst n2f3_t			controlSliderPos			= controlTable.Area[slider.IdGUIControl].Client.Global.Offset.f3();
+			cnst n2f3_t			controlSliderSize			= controlTable.Area[slider.IdGUIControl].Client.Global.Size.f3();
 			n2f3_t				effectiveSize				= controlSliderSize - (controlTable.Placement[slider.IdButton].Area.Size).f3();;
 			//
 
 			n2f3_t				currentValue				= input.MouseCurrent.Position.f3();
-			const n2f3_t			valueUnit					= {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
+			cnst n2f3_t			valueUnit					= {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
 			currentValue			-= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f3() / 2.0;
 			currentValue.x			*= valueUnit.x;
 			currentValue.y			*= valueUnit.y;
@@ -232,14 +232,14 @@ gpk::err_t			gpk::sliderUpdate			(SDialogSlider	& slider)								{
 	else
 		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].IsPressed()) {	//
 			SInput				& input						= *dialog.Input;
-			const s3_t				valuePage					= max((s3_t)1LL, (valueRange > 10) ? (s3_t)(valueRange * .1) : valueRange / 2);
-			const n2<s1_t>	& controlButtonPosition		= controlTable.Area[slider.IdButton].Total.Global.Offset;
+			cnst s3_t				valuePage					= max((s3_t)1LL, (valueRange > 10) ? (s3_t)(valueRange * .1) : valueRange / 2);
+			cnst n2<s1_t>	& controlButtonPosition		= controlTable.Area[slider.IdButton].Total.Global.Offset;
 			if(slider.Vertical) {
-				const s3_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
+				cnst s3_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
 				if_fail_fe(gpk::sliderSetValue(slider, finalValue));
 			}
 			else {
-				const s3_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
+				cnst s3_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
 				if_fail_fe(gpk::sliderSetValue(slider, finalValue));
 			}
 		}
@@ -331,14 +331,14 @@ gpk::cid_t			gpk::viewportCreate		(SDialog & dialog) {
 	return index;
 }
 
-gpk::err_t			gpk::viewportAdjustSize	(n2<s1_t> & sizeViewport, const n2<s1_t> & sizeClient)		{
+gpk::err_t			gpk::viewportAdjustSize	(n2<s1_t> & sizeViewport, cnst n2<s1_t> & sizeClient)		{
 	sizeViewport			= sizeClient;
 	sizeViewport.x			+= 4;
 	sizeViewport.y			+= 4 + 1 + heightOfField;
 	return 0;
 }
 
-gpk::err_t			gpk::viewportFold		(SDialogViewport	& control, bool fold)														{
+gpk::err_t			gpk::viewportFold		(SDialogViewport	& control, b8_t fold)														{
 	if((fold && control.Settings.Unfolded) || (false == control.Settings.Unfolded && false == fold)) {
 		SDialog				& dialog				= *control.Dialog;
 		SGUI					& gui					= *dialog.GUI;
@@ -366,7 +366,7 @@ gpk::err_t			gpk::viewportFold		(SDialogViewport	& control, bool fold)										
 	return one_if(false == control.Settings.Unfolded);
 }
 
-sttc gpk::err_t viewportDrag		(SDialogViewport	& control, SControlPlacement & controlMain, SDialog & dialog, n2<bool> locked, n2s1_t mouseDeltas) {
+sttc gpk::err_t viewportDrag		(SDialogViewport	& control, SControlPlacement & controlMain, SDialog & dialog, n2<b8_t> locked, n2s1_t mouseDeltas) {
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
 	control.Settings.Dragging	= true;

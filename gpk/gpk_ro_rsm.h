@@ -65,9 +65,9 @@ nmsp gpk
 		sc_t									RootNodeName[40];
 		aobj<SRSMNode>			Nodes;
 	};
-	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, const vu0_t	& input);
+	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, cnst vu0_t	& input);
 	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, FILE				* input);
-	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, const vcst_t	& input);
+	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, cnst vcst_t	& input);
 
 	struct SModelNodeRSM {
 		apod<n3f2_t>				Normals			;
@@ -84,7 +84,7 @@ nmsp gpk
 		as2_t								IdChildren		;
 	};
 
-	gpk::err_t 						rsmGeometryGenerate	(const SRSMFileContents& input, view<SModelNodeRSM>& out_generated);
+	gpk::err_t 						rsmGeometryGenerate	(cnst SRSMFileContents& input, view<SModelNodeRSM>& out_generated);
 } // nmsp
 
 #endif // GPK_RSM_H_23627

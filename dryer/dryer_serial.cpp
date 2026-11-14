@@ -10,11 +10,11 @@ sttc gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSONRea
 		info_printf("Received reset value: '%.*s'", GPK_VIEW_ARGS(arg));
 		if(arg[0] == '1') {
 			if_fail_be(::s3d::serialWrite(app.Serial, "<ACK>"));
-			const u0_t 							temperature						= app.Dryer.State.Running
+			cnst u0_t 							temperature						= app.Dryer.State.Running
 				? (u0_t )app.Dryer.CurrentProgram.Temperature
 				: (u0_t )::dry::DRYER_MIN_TEMPERATURE
 				;
-			char									buffer[32]						= {};
+			sc_t									buffer[32]						= {};
 			snprintf(buffer, ::gpk::size(buffer)-2, "<TEMP %u>", temperature);
 			always_printf("Recovering to temperature: %u.", temperature);
 			if_fail_bef(::s3d::serialWrite(app.Serial, vcst_t{buffer}), "Failed to send serial command to set temperature to: %u.", temperature);
@@ -69,7 +69,7 @@ sttc gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSONRea
 			targetTemp			= (float)value;
 		}
 		if(app.Dryer.State.Running && targetTemp != app.Dryer.CurrentProgram.Temperature) {
-			char									buffer[32]						= {};
+			sc_t									buffer[32]						= {};
 			snprintf(buffer, ::gpk::size(buffer)-2, "<TEMP %u>", app.Dryer.CurrentProgram.Temperature);
 			always_printf("Setting target temperature: %u.", app.Dryer.CurrentProgram.Temperature);
 			if_fail_bef(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{buffer}), "Failed to send serial command to set temperature to: %u.", app.Dryer.CurrentProgram.Temperature);
@@ -110,13 +110,13 @@ sttc gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSONRea
 gpk::err_t dry::updateSerial		(::dry::SApplication & app) {
 	::gpk::apod<::gpk::u0_t>				bufferRead;
 #if defined(GPK_WINDOWS)
-	const ::gpk::vcst_t						portName				= "COM6";
+	cnst ::gpk::vcst_t						portName				= "COM6";
 #else
-	//const ::gpk::vcst_t						portName				= "/dev/ttyAMA0";
-	const ::gpk::vcst_t						portName				= "/dev/ttyACM0";
+	//cnst ::gpk::vcst_t						portName				= "/dev/ttyAMA0";
+	cnst ::gpk::vcst_t						portName				= "/dev/ttyACM0";
 
 #endif
-	const s2_t							baud					= 115200;
+	cnst s2_t							baud					= 115200;
 	gpk_sync_increment(app.ThreadClients);
 	::gpk::SJSONReader						jsonReader				= {};
 	while(gpk_sync_compare_exchange(app.ThreadClients, 0, 1) && (false == app.Framework.RootWindow.Closed)) {
@@ -144,7 +144,7 @@ gpk::err_t dry::updateSerial		(::dry::SApplication & app) {
 			::s3d::serialClose(app.Serial);
 			continue;
 		}
-		const ::gpk::vcst_t					messageText		= {(const ::gpk::sc_t*)bufferRead.begin(), bufferRead.size()};
+		cnst ::gpk::vcst_t					messageText		= {(cnst ::gpk::sc_t*)bufferRead.begin(), bufferRead.size()};
 		info_printf("read %d bytes: '%.*s'", nReadBytes, GPK_VIEW_ARGS(messageText));
 		::gpk::vcsc_t							trimmed			= messageText;
 		::gpk::trim(trimmed, trimmed, "<> \t\b\n\r");

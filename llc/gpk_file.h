@@ -6,7 +6,7 @@
 
 nmsp gpk
 {
-	err_t			with				(vcst_t filepath, vcst_t mode, const function<err_t(FILE*&)> & funcFile);	//
+	err_t			with				(vcst_t filepath, vcst_t mode, cnst function<err_t(FILE*&)> & funcFile);	//
 
 	err_t			fileJoin			(vcst_t fileNameDst);								// Joins a file split into file.00, file.01, ... parts.
 	err_t			fileSplit			(vcst_t fileNameSrc, u2_c partSize);		// Writes file.00, file.01, ...; returns part count. Failure retains completed/partial parts.
@@ -14,9 +14,9 @@ nmsp gpk
 	err_t			fileLastWriteTime	(vcst_t fileName, s3_t & modified);
 	err_t			fileDelete			(vcst_t fileName);
 
-	err_t			fileFromMemory		(vcst_t folderPath, vcst_t fileName, vcu0_t fileInMemory, bool append = false);
-	err_t			fileFromMemory		(vcst_t fileName, vcu0_t fileInMemory, bool append = false);
-	stin	err_t	fileFromMemory		(vcst_t fileName, vcst_t fileInMemory, bool append = false)									{ rtrn fileFromMemory	(fileName, vcu0_t{(u0_c*)fileInMemory.begin(), fileInMemory.size()}, append); }
+	err_t			fileFromMemory		(vcst_t folderPath, vcst_t fileName, vcu0_t fileInMemory, b8_t append = false);
+	err_t			fileFromMemory		(vcst_t fileName, vcu0_t fileInMemory, b8_t append = false);
+	stin	err_t	fileFromMemory		(vcst_t fileName, vcst_t fileInMemory, b8_t append = false)									{ rtrn fileFromMemory	(fileName, vcu0_t{(u0_c*)fileInMemory.begin(), fileInMemory.size()}, append); }
 
 	err_t			fileToMemory		(vcst_t fileName, au0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
 	err_t			fileToMemory		(vcst_t folderPath, vcst_t fileName, au0_t & fileBytes, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);

@@ -33,7 +33,7 @@ stxp	u2_t GPK_MAX_PATH = 256;
 gpk::err_t			gpk::pathCreate				(vcst_t pathName, sc_c separator) {
 	if_zero_fw(pathName.size());
 #ifndef GPK_ATMEL
-	char						folder[GPK_MAX_PATH]		= {};
+	sc_t						folder[GPK_MAX_PATH]		= {};
 	s2_t						offsetBar					= -1;
 	do {
 		++offsetBar;
@@ -84,8 +84,8 @@ gpk::err_t			gpk::pathStem				(vcst_t path, vcst_t & stem) {
 	rtrn filename.slice(stem, 0, filename.size());
 }
 
-stxp	bool			pathSeparator			(sc_c value) { rtrn '/' == value || '\\' == value; }
-stxp	bool			pathDriveLetter			(sc_c value) { rtrn ('A' <= value && value <= 'Z') || ('a' <= value && value <= 'z'); }
+stxp	b8_t			pathSeparator			(sc_c value) { rtrn '/' == value || '\\' == value; }
+stxp	b8_t			pathDriveLetter			(sc_c value) { rtrn ('A' <= value && value <= 'Z') || ('a' <= value && value <= 'z'); }
 
 gpk::err_t			gpk::pathBegin				(vcst_t path, vcst_t & output) {
 	u2_t					prefixSize				= 0;
@@ -116,7 +116,7 @@ gpk::err_t			gpk::pathBegin				(vcst_t path, vcst_t & output) {
 	rtrn output.size();
 }
 
-sttc	gpk::err_t	validatePathSeparators	(vcst_t path, bool allowUNC) {
+sttc	gpk::err_t	validatePathSeparators	(vcst_t path, b8_t allowUNC) {
 	for(u2_t iChar = 1; iChar < path.size(); ++iChar)
 		if_true_fef(::pathSeparator(path[iChar - 1]) && ::pathSeparator(path[iChar]) && false == (allowUNC && 1 == iChar)
 			, "Adjacent separators at offset %" GPK_FMT_U2 ": '%.*s'."
@@ -143,17 +143,17 @@ gpk::err_t			gpk::pathNormalize			(vcst_t path, string & output, sc_c separator)
 	if(0 == path.size())
 		rtrn output.clear();
 
-	cnst bool				isUNC					= path.size() > 1 && ::pathSeparator(path[0]) && ::pathSeparator(path[1]);
-	cnst bool				hasDrive				= path.size() > 1 && ::pathDriveLetter(path[0]) && ':' == path[1];
-	cnst bool				isAbsolute				= isUNC || (!hasDrive && ::pathSeparator(path[0])) || (hasDrive && path.size() > 2 && ::pathSeparator(path[2]));
+	b8_c				isUNC					= path.size() > 1 && ::pathSeparator(path[0]) && ::pathSeparator(path[1]);
+	b8_c				hasDrive				= path.size() > 1 && ::pathDriveLetter(path[0]) && ':' == path[1];
+	b8_c				isAbsolute				= isUNC || (!hasDrive && ::pathSeparator(path[0])) || (hasDrive && path.size() > 2 && ::pathSeparator(path[2]));
 	u2_t				iChar					= isUNC ? 2U : hasDrive ? 2U : isAbsolute ? 1U : 0U;
 	if(hasDrive && isAbsolute)
 		++iChar;
 
 	aobj<vcst_t>			segments;
-	cnst u2_t		protectedSegments		= isUNC ? 2U : 0U;
+	u2_c		protectedSegments		= isUNC ? 2U : 0U;
 	while(iChar < path.size()) {
-		cnst u2_t		segmentStart			= iChar;
+		u2_c		segmentStart			= iChar;
 		while(iChar < path.size() && false == ::pathSeparator(path[iChar]))
 			++iChar;
 		vcst_c			segment					= {path.begin() + segmentStart, iChar - segmentStart};
@@ -183,7 +183,7 @@ gpk::err_t			gpk::pathNormalize			(vcst_t path, string & output, sc_c separator)
 	else if(isAbsolute)
 		if_fail_fe(normalized.push_back(separator));
 	for(u2_t iSegment = 0; iSegment < segments.size(); ++iSegment) {
-		cnst bool				driveRelativeFirst		= hasDrive && false == isAbsolute && 0 == iSegment;
+		b8_c				driveRelativeFirst		= hasDrive && false == isAbsolute && 0 == iSegment;
 		if(normalized.size() && normalized[normalized.size() - 1] != separator && false == driveRelativeFirst)
 			if_fail_fe(normalized.push_back(separator));
 		if_fail_fe(normalized.append(segments[iSegment]));
@@ -218,7 +218,7 @@ gpk::err_t			gpk::pathAbsolute			(vcst_t path, string & output, sc_c separator) 
 	if_fail_fe(pathNormalize(path, normalized, '/'));
 	if(normalized.size() && '/' == normalized[0])
 		rtrn pathNormalize(normalized, output, separator);
-	char					currentPath[GPK_MAX_PATH]	= {};
+	sc_t					currentPath[GPK_MAX_PATH]	= {};
 	if_null_fef(getcwd(currentPath, size(currentPath)), "Failed to obtain the current directory while resolving '%.*s'.", (int)path.size(), path.begin());
 	string			absolute;
 	if_fail_fe(pathNameCompose(currentPath, normalized, absolute));
@@ -251,7 +251,7 @@ gpk::err_t			gpk::pathNameCompose		(vcst_t path, vcst_t fileName, asc_t & out_co
 	rtrn out_composed.size();
 }
 
-gpk::err_t			gpk::pathList				(const SPathContents & input, aobj<vcst_t> & output, vcst_c extension)					{
+gpk::err_t			gpk::pathList				(cnst SPathContents & input, aobj<vcst_t> & output, vcst_c extension)					{
 	gpk_path_debug("extension=\"%.*s\"", (int)extension.size(), extension.begin());
 	for(u2_t iFile = 0; iFile < input.Files.size(); ++iFile) {
 		vcst_c			& fileName					= input.Files[iFile];
@@ -270,7 +270,7 @@ gpk::err_t			gpk::pathList				(const SPathContents & input, aobj<vcst_t> & outpu
 	return 0;
 }
 
-gpk::err_t			gpk::pathList				(const SPathContents & input, aobj<string> & output, vcst_c extension)					{
+gpk::err_t			gpk::pathList				(cnst SPathContents & input, aobj<string> & output, vcst_c extension)					{
 	gpk_path_debug("extension=\"%.*s\"", (int)extension.size(), extension.begin());
 	for(u2_t iFile = 0; iFile < input.Files.size(); ++iFile) {
 		vcst_c			& fileName					= input.Files[iFile];
@@ -286,7 +286,7 @@ gpk::err_t			gpk::pathList				(const SPathContents & input, aobj<string> & outpu
 		}
 	}
 	for(u2_t iFolder = 0; iFolder < input.Folders.size(); ++iFolder	) {
-		const SPathContents	& childPath	= input.Folders[iFolder];
+		cnst SPathContents	& childPath	= input.Folders[iFolder];
 		if_fail_fef(gpk::pathList(childPath, output, extension), "output.size()=%" GPK_FMT_U2 ", extension=%.*s", output.size(), (int)extension.size(), extension.begin());
 	}
 	return 0;
@@ -309,11 +309,11 @@ gpk::err_t			gpk::pathList				(const SPathContents & input, aobj<string> & outpu
 
 
 #if !defined(GPK_ESP8266) // && !defined(GPK_ESP32) && !defined(GPK_ARDUINO) 
-stxp	const char		curDir	[]					= ".";
-stxp	const char		parDir	[]					= "..";
+stxp	cnst sc_t		curDir	[]					= ".";
+stxp	cnst sc_t		parDir	[]					= "..";
 #endif
 
-sttc gpk::err_t		pathListEntry			(vcst_t pathToList, gpk::SPathContents & pathContents, const gpk::function<err_t(bool, vcst_c&)> & onItem, vcst_c extension, vcst_t entryName, bool isFolder) {
+sttc gpk::err_t		pathListEntry			(vcst_t pathToList, gpk::SPathContents & pathContents, cnst gpk::function<err_t(b8_t, vcst_c&)> & onItem, vcst_c extension, vcst_t entryName, b8_t isFolder) {
 	if(0 == strcmp(entryName.begin(), curDir) || 0 == strcmp(entryName.begin(), parDir))
 		rtrn 0;
 	gpk::string				sPath						= {};
@@ -344,7 +344,7 @@ sttc gpk::err_t		pathListEntry			(vcst_t pathToList, gpk::SPathContents & pathCo
 	rtrn 0;
 }
 
-sttc gpk::err_t		pathListNative			(vcst_t pathToList, gpk::SPathContents & pathContents, const function<err_t(bool, vcst_c&)> & onItem, vcst_c extension) {
+sttc gpk::err_t		pathListNative			(vcst_t pathToList, gpk::SPathContents & pathContents, cnst function<err_t(b8_t, vcst_c&)> & onItem, vcst_c extension) {
 	err_t				result						= 0;
 #ifdef GPK_WINDOWS
 	gpk::string				sPath						= {};
@@ -364,7 +364,7 @@ sttc gpk::err_t		pathListNative			(vcst_t pathToList, gpk::SPathContents & pathC
 	struct dirent				* drnt						= nullptr;
 	while((drnt = readdir(dir))) {
 		cnst vcst_t		entryName						= {drnt->d_name, (u2_t)-1};
-		bool					isFolder						= drnt->d_type == DT_DIR;
+		b8_t					isFolder						= drnt->d_type == DT_DIR;
 		if(drnt->d_type == DT_UNKNOWN) {
 			gpk::string		entryPath;
 			if_fail_bef(result = pathNameCompose(pathToList, entryName, entryPath), "%s", drnt->d_name);
@@ -389,17 +389,17 @@ gpk::err_t			gpk::pathList				(vcst_t pathToList, SPathContents & pathContents, 
 	rtrn pathList(pathToList, pathContents, [](b8_t, vcst_c &) { rtrn 0; }, extension);
 }
 
-gpk::err_t			gpk::pathList				(vcst_t pathToList, SPathContents & pathContents, function<err_t(bool, vcst_c&)> onItem, vcst_c extension)						{
+gpk::err_t			gpk::pathList				(vcst_t pathToList, SPathContents & pathContents, function<err_t(b8_t, vcst_c&)> onItem, vcst_c extension)						{
 	vcst_t				pathLeft;
 	if_fail_fe(pathBegin(pathToList, pathLeft));
-	cnst bool					removeTrailingSlash		= pathToList.size() > pathLeft.size() && ::pathSeparator(pathToList[pathToList.size() - 1]);
+	b8_c					removeTrailingSlash		= pathToList.size() > pathLeft.size() && ::pathSeparator(pathToList[pathToList.size() - 1]);
 	string				withoutTrailingSlash		= removeTrailingSlash ? vcst_t{pathToList.begin(), pathToList.size() - 1} : pathToList;
 	rtrn ::pathListNative(withoutTrailingSlash, pathContents, onItem, extension);
 }
 
-sttc err_t		pathTreeScan			(SPathTree & output, au2_t & lengths, vcst_t path, cnst function<err_t(bool, vcst_c&)> & filter, u2_t level) {
+sttc err_t		pathTreeScan			(SPathTree & output, au2_t & lengths, vcst_t path, cnst function<err_t(b8_t, vcst_c&)> & filter, u2_t level) {
 	SPathContents unused;
-	rtrn pathList(path, unused, [&](bool folder, vcst_c & entry) -> err_t {
+	rtrn pathList(path, unused, [&](b8_t folder, vcst_c & entry) -> err_t {
 		err_t action = 0;
 		if(filter) {
 			if_fail_fe(action = filter(folder, entry));
@@ -409,7 +409,7 @@ sttc err_t		pathTreeScan			(SPathTree & output, au2_t & lengths, vcst_t path, cn
 		if_true_fef(level > 127, "Path nesting exceeds SPathInfo: '%.*s'.", GPK_VIEW_ARGS(entry));
 		vcst_t name;
 		if_fail_fe(pathFilename(entry, name));
-		cnst u2_t oldSize = output.Char.size(), index = lengths.size();
+		u2_c oldSize = output.Char.size(), index = lengths.size();
 		if_fail_fe(output.Char.append(name));
 		if_true_block_log(error_printf, failed(resize(index + 1, output.Info, lengths)), {
 			if_fail_e(output.Char.resize(oldSize));
@@ -438,7 +438,7 @@ sttc err_t		pathTreeBuild			(SPathTree & output, vcu2_t lengths) {
 		node->Info = &output.Info[i];
 		node->ObjectIndex = i;
 		if_fail_fe(node->Children.clear());
-		cnst u2_t level = node->Info->NestLevel;
+		u2_c level = node->Info->NestLevel;
 		node->Parent = level ? parents[level - 1] : nullptr;
 		parents[level] = node->Info->Folder ? (SPathNode*)node : nullptr;
 		if(node->Parent) {
@@ -448,7 +448,7 @@ sttc err_t		pathTreeBuild			(SPathTree & output, vcu2_t lengths) {
 	rtrn 0;
 }
 
-gpk::err_t			gpk::pathList			(SPathTree & output, vcst_t pathToList, function<err_t(bool, vcst_c&)> filter) {
+gpk::err_t			gpk::pathList			(SPathTree & output, vcst_t pathToList, function<err_t(b8_t, vcst_c&)> filter) {
 	// Keep a caller-supplied view into output alive across Reset().
 	output.Root = pathToList;
 	if_fail_fe(output.Reset());
@@ -461,7 +461,7 @@ gpk::err_t			gpk::pathList			(SPathTree & output, vcst_t pathToList, function<er
 }
 
 gpk::err_t			gpk::pathList			(SPathTree & output, vcst_t pathToList, vcst_t extension) {
-	rtrn pathList(output, pathToList, [&extension](bool folder, vcst_c & entry) -> err_t {
+	rtrn pathList(output, pathToList, [&extension](b8_t folder, vcst_c & entry) -> err_t {
 		if(folder || !extension.size())
 			rtrn 0;
 		vcst_t name, ending;

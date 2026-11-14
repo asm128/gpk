@@ -99,8 +99,8 @@ nmsp gpk
 	};
 #pragma pack(pop)
 	tplt<tpnm _tPOD> 
-	err_t 			loadView		(vcu0_t & input, apapod<_tPOD> & output, const u2_t index) { 
-		view<const _tPOD>	viewToLoad;
+	err_t 			loadView		(vcu0_t & input, apapod<_tPOD> & output, u2_c index) { 
+		view<cnst _tPOD>	viewToLoad;
 		if_fail_fef(loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
 			if(index >= output.size()) {
@@ -164,7 +164,7 @@ nmsp gpk
 		}
 
 
-		err_t 			Save				(au0_t & output)	const	{ 
+		err_t 			Save				(au0_t & output)	cnst	{ 
 			if_fail_fe(saveView(output, ShipScores	));
 			if_fail_fe(saveView(output, ShipCores	));
 			u2_t						totalEntityChildren	= 0;

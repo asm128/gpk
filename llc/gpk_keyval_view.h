@@ -6,7 +6,7 @@
 
 nmsp gpk
 {
-			err_t		token_split			(char valueSeparator, vcst_t input_string, keyval<vcst_t> & output_views);
+			err_t		token_split			(sc_t valueSeparator, vcst_t input_string, keyval<vcst_t> & output_views);
 	stin	err_t		keyval_split		(vcst_t input_string, keyval<vcst_t> & out_keyval)			{ return token_split('=', input_string, out_keyval); }
 
 	ndsc	err_t		keyValVerify		(view<cnst keyval<vcst_t>> environViews, vcst_t keyToVerify, vcst_t valueToVerify);

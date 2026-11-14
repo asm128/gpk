@@ -33,7 +33,7 @@ nmsp gpk
 	tydf line3<s2_t> line3s2_t; tdcs line3s2_t line3s2_c;
 	tydf line3<s3_t> line3s3_t; tdcs line3s3_t line3s3_c;
 
-	tplt<tpnm T> stxp	T	orient2d3d	(const line3<T> & segment, const n2<T> & point)	nxpt	{ 
+	tplt<tpnm T> stxp	T	orient2d3d	(cnst line3<T> & segment, cnst n2<T> & point)	nxpt	{ 
 		return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); 
 	}
 #pragma pack(pop)

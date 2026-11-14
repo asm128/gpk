@@ -7,9 +7,9 @@
 nmsp gpk 
 {
 	tplt<tpnm TPod>
-	gpk::err_t 			saveImage					(::gpk::au0_t & output, const ::gpk::grid<TPod> & input) {
+	gpk::err_t 			saveImage					(::gpk::au0_t & output, cnst ::gpk::grid<TPod> & input) {
 		if_fail_fe(gpk::savePOD(output, input.metrics())); 
-		if_fail_fe(gpk::saveView(output, ::gpk::view<const TPod>{input.begin(), input.size()})); 
+		if_fail_fe(gpk::saveView(output, ::gpk::view<cnst TPod>{input.begin(), input.size()})); 
 		return 0;
 	}
 

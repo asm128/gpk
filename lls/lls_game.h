@@ -38,7 +38,7 @@ namespace lls
 
 		::gpk::SEngine					Engine				= {};
 
-		::gpk::err_t					Save				(::gpk::au0_t & output)	const	{ 
+		::gpk::err_t					Save				(::gpk::au0_t & output)	cnst	{ 
 			do { if_fail_fe(Global.Save(output)); } while(0);
 			do { if_fail_fe(SolarSystem.Save(output)); } while(0);
 			do { if_fail_fe(World.Save(output)); } while(0);
@@ -60,10 +60,10 @@ namespace lls
 	::gpk::err_t					llsGameUpdate	(::lls::LLSGame & world, ::gpk::vpobj<::lls::EventLLS> inputEvents, ::gpk::apobj<::lls::EventLLS> & outputEvents, double secondsElapsed);
 	::gpk::err_t					llsGameDraw		(::lls::LLSGame & world
 		, ::gpk::rtbgra8d32			& backBuffer
-		, const ::gpk::n3f2_t		& cameraPosition
-		, const ::gpk::n3f2_t		& cameraTarget
-		, const ::gpk::n3f2_t		& cameraUp = {0, 1, 0}
-		, const ::gpk::minmaxf2_t	& nearFar = {.1f, 10000.f}
+		, cnst ::gpk::n3f2_t		& cameraPosition
+		, cnst ::gpk::n3f2_t		& cameraTarget
+		, cnst ::gpk::n3f2_t		& cameraUp = {0, 1, 0}
+		, cnst ::gpk::minmaxf2_t	& nearFar = {.1f, 10000.f}
 		);
 } // namespace
 

@@ -3,11 +3,11 @@
 GPK_USING_TYPEINT();
 
 
-static	gpk::err_t geometryVoxelFace
+sttc	gpk::err_t geometryVoxelFace
 	( ::gpk::SGeometryBuffers						& geometry
-	, const ::gpk::n3f2_t							& voxelPos
-	, const ::gpk::view<const ::gpk::n3f2_t>	& rawVertices
-	, const ::gpk::view<const u0_t>				& rawIndices
+	, cnst ::gpk::n3f2_t							& voxelPos
+	, cnst ::gpk::view<cnst ::gpk::n3f2_t>	& rawVertices
+	, cnst ::gpk::view<cnst u0_t>				& rawIndices
 	) {
 	::gpk::n3f2_t				vertices [4]				= {}; 
 	u2_t					indices  [6]				= {}; 
@@ -23,8 +23,8 @@ static	gpk::err_t geometryVoxelFace
 	return 0;
 }
 
-gpk::err_t 		gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<u0_t> & voxelMap) {
-	const ::gpk::n3<u0_t>	dimensions				= voxelMap.Dimensions;
+gpk::err_t 		gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, cnst ::gpk::SVoxelMap<u0_t> & voxelMap) {
+	cnst ::gpk::n3<u0_t>	dimensions				= voxelMap.Dimensions;
 
 	::gpk::SGeometryBuffers	& geometry				= output.Geometry;
 	::gpk::apod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;
@@ -35,19 +35,19 @@ gpk::err_t 		gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::g
 		aabbModel.Vertices[i].Scale(dimensions.f2());
 	}
 
-	::gpk::view<const ::gpk::bgra>	rgba					= voxelMap.Palette;
+	::gpk::view<cnst ::gpk::bgra>	rgba					= voxelMap.Palette;
 	if(0 == rgba.size())
 		rgba				= ::gpk::VOXEL_PALETTE;
 
-	const ::gpk::view<const ::gpk::SVoxel<u0_t>>	voxels					= voxelMap.Voxels;
+	cnst ::gpk::view<cnst ::gpk::SVoxel<u0_t>>	voxels					= voxelMap.Voxels;
 	for(u2_t iFace = 0; iFace < 6; ++iFace) {
 		::gpk::apod<::gpk::SGeometryGroup>	& faceSlices			= output.GeometrySlices[iFace];
 		::gpk::SAABBGeometry				& aabbSlice				= output.AABBSlices[iFace];
 
-		const ::gpk::n3s0_t					faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
+		cnst ::gpk::n3s0_t					faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
 		::gpk::vcu0_t						rawIndices				= ::gpk::VOXEL_FACE_INDICES		[iFace];
-		::gpk::view<const ::gpk::n3f2_t>	rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
-		::gpk::view<const ::gpk::n2f2_t>	rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
+		::gpk::view<cnst ::gpk::n3f2_t>	rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
+		::gpk::view<cnst ::gpk::n2f2_t>	rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
 
 		geometry.Normals.push_back(::gpk::VOXEL_NORMALS[iFace]);
 		geometry.TextureCoords.append(rawTexCoord);
@@ -62,7 +62,7 @@ gpk::err_t 		gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::g
 			::gpk::minmax<::gpk::n3f2_t>			aabbLimits					= {};
 
 			for(u2_t iVoxel = 0; iVoxel < voxels.size(); ++iVoxel) {
-				const ::gpk::SVoxel<u0_t>		voxel						= voxels[iVoxel];
+				cnst ::gpk::SVoxel<u0_t>		voxel						= voxels[iVoxel];
 				if(voxel.ColorIndex != iValue)
 					continue;
 
@@ -76,7 +76,7 @@ gpk::err_t 		gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::g
 				::gpk::bgra							color						= rgba[iValue ? iValue - 1 : 0];
 				u0_t								adjacentValue				= {};
 				voxelMap.GetValue((voxel.Position.s2() + faceDelta.s2()).u0(), adjacentValue);
-				bool								renderFace					= 0 == adjacentValue || color.a < 0xFF;
+				b8_t								renderFace					= 0 == adjacentValue || color.a < 0xFF;
 				if(false == renderFace)
 					continue;
 

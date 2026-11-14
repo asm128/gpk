@@ -43,16 +43,16 @@ nmsp gpk
 	stin	int	_snprintf_s		(sc_t * buffer, u2_t bufferSize, u2_t count, sc_c * format, ...)			{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= vsnprintf(buffer, count < bufferSize ? count + 1 : bufferSize, format, args);
+		cnst int		result			= vsnprintf(buffer, count < bufferSize ? count + 1 : bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
 
 	tplt<u2_t _bufferSize>
-	stin	int	_snprintf_s		(char (&buffer)[_bufferSize], u2_t count, sc_c * format, ...)				{
+	stin	int	_snprintf_s		(sc_t (&buffer)[_bufferSize], u2_t count, sc_c * format, ...)				{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= vsnprintf(buffer, count < _bufferSize ? count + 1 : _bufferSize, format, args);
+		cnst int		result			= vsnprintf(buffer, count < _bufferSize ? count + 1 : _bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
@@ -60,7 +60,7 @@ nmsp gpk
 	//stin	int	sprintf_s		(sc_t * buffer, u2_t bufferSize, sc_c * format, ...)							{
 	//	va_list			args			= {};
 	//	va_start(args, format);
-	//	const int		result			= vsprintf(buffer, format, args);
+	//	cnst int		result			= vsprintf(buffer, format, args);
 	//	va_end(args);
 	//	return result;
 	//}
@@ -69,16 +69,16 @@ nmsp gpk
 	stin	int	vsprintf_s		(sc_t * buffer, u2_t bufferSize, sc_c * format, ...)							{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= ::vsnprintf(buffer, bufferSize, format, args);
+		cnst int		result			= ::vsnprintf(buffer, bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
 
 	tplt<u2_t _bufferSize>
-	stin	int	sprintf_s		(char (&buffer)[_bufferSize], sc_c * format, ...)								{
+	stin	int	sprintf_s		(sc_t (&buffer)[_bufferSize], sc_c * format, ...)								{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= ::vsnprintf(buffer, _bufferSize, format, args);
+		cnst int		result			= ::vsnprintf(buffer, _bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
@@ -86,7 +86,7 @@ nmsp gpk
 	stin	int	sprintf_s		(sc_t * buffer , ::gpk::u2_t bufferSize, sc_c * format, ...)								{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= ::vsnprintf(buffer, bufferSize, format, args);
+		cnst int		result			= ::vsnprintf(buffer, bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
@@ -94,16 +94,16 @@ nmsp gpk
 	stin	int	vsprintf_s		(sc_t * buffer, u2_t bufferSize, sc_c * format, ...)							{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= std::vsnprintf(buffer, bufferSize, format, args);
+		cnst int		result			= std::vsnprintf(buffer, bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
 
 	tplt<u2_t _bufferSize>
-	stin	int	sprintf_s		(char (&buffer)[_bufferSize], sc_c * format, ...)								{
+	stin	int	sprintf_s		(sc_t (&buffer)[_bufferSize], sc_c * format, ...)								{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= std::vsnprintf(buffer, _bufferSize, format, args);
+		cnst int		result			= std::vsnprintf(buffer, _bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
@@ -111,14 +111,14 @@ nmsp gpk
 	stin	int	sprintf_s		(sc_t * buffer , u2_t bufferSize, sc_c * format, ...)								{
 		va_list			args			= {};
 		va_start(args, format);
-		const int		result			= std::vsnprintf(buffer, bufferSize, format, args);
+		cnst int		result			= std::vsnprintf(buffer, bufferSize, format, args);
 		va_end(args);
 		return result;
 	}
 #endif
-	tplt<u2_t _Size> stin	int	strcat_s		( char (&dst)[_Size], sc_c * src )						{ return strcat_s	(dst, _Size, src);				}
-	tplt<u2_t _Size> stin	int	strcpy_s		( char (&dst)[_Size], sc_c * src )						{ return strcpy_s	(dst, _Size, src);				}
-	tplt<u2_t _Size> stin	int	strncpy_s		( char (&dst)[_Size], sc_c * src )						{ return strncpy_s	(dst, src, _Size);				}
+	tplt<u2_t _Size> stin	int	strcat_s		( sc_t (&dst)[_Size], sc_c * src )						{ return strcat_s	(dst, _Size, src);				}
+	tplt<u2_t _Size> stin	int	strcpy_s		( sc_t (&dst)[_Size], sc_c * src )						{ return strcpy_s	(dst, _Size, src);				}
+	tplt<u2_t _Size> stin	int	strncpy_s		( sc_t (&dst)[_Size], sc_c * src )						{ return strncpy_s	(dst, src, _Size);				}
 	stin	int	_vsnprintf_s	( sc_t * buffer, u2_t bufferSize, u2_t count, sc_c * format, va_list args )	{ return vsnprintf	(buffer, count < bufferSize ? count + 1 : bufferSize, format, args);	}
 	stin	int	vsprintf_s		( sc_t * buffer, u2_t bufferSize, sc_c * format, va_list args )				{ return vsnprintf	(buffer, bufferSize, format, args);			}
 #if defined(GPK_WINDOWS)

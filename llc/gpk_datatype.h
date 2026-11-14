@@ -80,9 +80,9 @@ nmsp gpk
 		inxp	u2_t	ElementBytes	()							csnx	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
 		inxp	u2_t	TotalBytes		()							csnx	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
 
-		inxp	bool		IsSTL			()							csnx	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
-		inxp	bool		IsNonUniform	()							csnx	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
-		inxp	bool		IsUniform		()							csnx	{ return !IsNonUniform(); }
+		inxp	b8_t		IsSTL			()							csnx	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
+		inxp	b8_t		IsNonUniform	()							csnx	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
+		inxp	b8_t		IsUniform		()							csnx	{ return !IsNonUniform(); }
 
 		inxp				SDataTypeID		( ::gpk::DATA_TYPE typeId )			nxpt
 			: SizeInBits	(GTYPEID_ELEMENTSIZE	(typeId) - 1)
@@ -97,11 +97,11 @@ nmsp gpk
 		inxp				SDataTypeID
 			( u0_t	sizeInBits		= 1
 			, u2_t	elementCount	= 1
-			, bool		isFloat			= false
-			, bool		isSigned		= true
-			, bool		isNorm			= false
-			, bool		elementPad		= false
-			, bool		isBigEndian		= false
+			, b8_t		isFloat			= false
+			, b8_t		isSigned		= true
+			, b8_t		isNorm			= false
+			, b8_t		elementPad		= false
+			, b8_t		isBigEndian		= false
 			)					nxpt
 			: SizeInBits	(sizeInBits		- 1)
 			, ElementPad	(elementPad		? 1 : 0)
@@ -111,7 +111,7 @@ nmsp gpk
 			, IsNorm		(isNorm			? 1 : 0)
 			, IsSigned		(isSigned		? 0 : 1)
 		{}
-		inxp	oper	DATA_TYPE		()							const				{
+		inxp	oper	DATA_TYPE		()							cnst				{
 			return GTYPEID_MAKE
 				( !IsSigned
 				, IsNorm
@@ -122,7 +122,7 @@ nmsp gpk
 				, SizeInBits+1
 				);
 		}
-		inxp	bool		oper==		(const DATA_TYPE& other)	const				{
+		inxp	b8_t		oper==		(cnst DATA_TYPE& other)	cnst				{
 			return	u2_t(SizeInBits) + 1	==	u2_t(GTYPEID_ELEMENTSIZE	(other))
 				&&	ElementPad					==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
 				&&	u2_t(ElementCount) + 1	==	u2_t(GTYPEID_ELEMENTCOUNT	(other))
@@ -132,7 +132,7 @@ nmsp gpk
 				&&	IsSigned					==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
 				;
 		}
-		inxp	bool		oper==		(const SDataTypeID& other)	const				{
+		inxp	b8_t		oper==		(cnst SDataTypeID& other)	cnst				{
 			return	SizeInBits		==	other.SizeInBits
 				&&	ElementPad		==	other.ElementPad
 				&&	ElementCount	==	other.ElementCount

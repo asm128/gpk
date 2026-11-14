@@ -53,8 +53,8 @@ nmsp gpk
 		f2_t			Perihelion				= {};	// 46.0		// (10^6 km)	//
 		f2_t			Aphelion				= {};	// 69.8		// (10^6 km)	// 9
 		f2_t			LengthOfDay				= {};	//
-		bool			RingSystem				= {};	// false						//
-		bool			GlobalMagneticField		= {};	// true						// 19
+		b8_t			RingSystem				= {};	// false						//
+		b8_t			GlobalMagneticField		= {};	// true						// 19
 		PLANET_TYPE		Subtype					= {};
 	};
 
@@ -74,12 +74,12 @@ nmsp gpk
 	stxp	u2_t	s0planet				= szof(SDetailPlanet);
 	stxp	u2_t	s1star					= szof(SDetailStar);
 
-	err_t	loadStar				(SDetailStar    & body, const SJSONReader & jsonData, s2_t jsonIndexStellarBody);
-	err_t	loadPlanet				(SDetailPlanet  & body, const SJSONReader & jsonData, s2_t jsonIndexStellarBody);
-	err_t	loadCelestialBody		(SCelestialBody & body, CELESTIAL_BODY type, const SJSONReader & jsonData, s2_t jsonIndexStellarBody);
-	err_t	printStar				(const SDetailStar    & body);
-	err_t	printPlanet				(const SDetailPlanet  & body);
-	err_t	printCelestialBody		(const SCelestialBody & body, CELESTIAL_BODY type);
+	err_t	loadStar				(SDetailStar    & body, cnst SJSONReader & jsonData, s2_t jsonIndexStellarBody);
+	err_t	loadPlanet				(SDetailPlanet  & body, cnst SJSONReader & jsonData, s2_t jsonIndexStellarBody);
+	err_t	loadCelestialBody		(SCelestialBody & body, CELESTIAL_BODY type, cnst SJSONReader & jsonData, s2_t jsonIndexStellarBody);
+	err_t	printStar				(cnst SDetailStar    & body);
+	err_t	printPlanet				(cnst SDetailPlanet  & body);
+	err_t	printCelestialBody		(cnst SCelestialBody & body, CELESTIAL_BODY type);
 
 	CELESTIAL_BODY	bodyTypeFromString		(vcst_t bodyType);
 	PLANET_TYPE		bodySubtypeFromString	(vcst_t bodyType);

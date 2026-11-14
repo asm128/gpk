@@ -7,7 +7,7 @@ GPK_USING_N2		();
 GPK_USING_N3		();
 
 
-gpk::err_t 		gpk::initOrbitRotation	(::gpk::SBodyForces & orbitForces, ::gpk::AXIS rotationAxis, const ::gpk::quatf2_t & orbitOrientation, f3_t rotation_period, f3_t rotation_unit) {
+gpk::err_t 		gpk::initOrbitRotation	(::gpk::SBodyForces & orbitForces, ::gpk::AXIS rotationAxis, cnst ::gpk::quatf2_t & orbitOrientation, f3_t rotation_period, f3_t rotation_unit) {
 	orbitForces				= {};	
 	::gpk::orbitRotation(rotationAxis, rotation_period, rotation_unit, orbitOrientation, orbitForces.Rotation);
 	return 0;
@@ -42,7 +42,7 @@ gpk::err_t 		gpk::initOrbiterCenter	(::gpk::SBodyCenter & planetCenter, f3_t orb
 	return 0;
 }
 
-static	gpk::err_t initOrbiterBodyWithGravityCenter
+sttc	gpk::err_t initOrbiterBodyWithGravityCenter
 	( ::gpk::SBodyCenter	& planetCenter
 	, ::gpk::SBodyForces	& planetForces		
 	, ::gpk::AXIS			orbitAxis
@@ -71,7 +71,7 @@ gpk::err_t 		gpk::createOrbiter
 	, f3_t						rotation_period
 	, f3_t						rotation_unit
 	) {
-	const gpk::err_t 	indexFirstBody				= bodies.Create(2);
+	cnst gpk::err_t 	indexFirstBody				= bodies.Create(2);
 	::gpk::initOrbiterOrbit(bodies.Centers[indexFirstBody] = {}, bodies.Forces[indexFirstBody] = {}, orbital_inclination, orbital_period, orbital_unit);
 	::initOrbiterBodyWithGravityCenter
 		( bodies.Centers[indexFirstBody + 1] = {}

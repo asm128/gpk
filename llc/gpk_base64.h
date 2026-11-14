@@ -46,8 +46,8 @@ nmsp gpk
 
 	err_t			base64Encode	(cnst SBase64SymbolMap & symbolMap, vcu0_c & in_binary	, au0_t & out_base64);
 	err_t			base64Decode	(cnst SBase64SymbolMap & symbolMap, vcu0_c & in_base64	, au0_t & out_binary);
-	stin	err_t	base64Encode	(vcst_t base64Symbols, char base64PadSymbol, vcu0_c & in_binary, au0_t & out_base64) { rtrn base64Encode(base64SymbolMap(base64Symbols, base64PadSymbol), in_binary, out_base64); }
-	stin	err_t	base64Decode	(vcst_t base64Symbols, char base64PadSymbol, vcu0_c & in_base64, au0_t & out_binary) { rtrn base64Decode(base64SymbolMap(base64Symbols, base64PadSymbol), in_base64, out_binary); }
+	stin	err_t	base64Encode	(vcst_t base64Symbols, sc_t base64PadSymbol, vcu0_c & in_binary, au0_t & out_base64) { rtrn base64Encode(base64SymbolMap(base64Symbols, base64PadSymbol), in_binary, out_base64); }
+	stin	err_t	base64Decode	(vcst_t base64Symbols, sc_t base64PadSymbol, vcu0_c & in_base64, au0_t & out_binary) { rtrn base64Decode(base64SymbolMap(base64Symbols, base64PadSymbol), in_base64, out_binary); }
 
 	sinx	SBase64SymbolMap	B64_SYMBOL_MAP							= base64SymbolMap(b64Symbols, '=');
 	sinx	SBase64SymbolMap	B64_SYMBOL_MAP_FS						= base64SymbolMap(b64SymbolsFS, '=');

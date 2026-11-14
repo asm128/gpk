@@ -32,14 +32,14 @@ nmsp gpk
 			return Count -= 1;
 		}
 
-		err_t 		push_back		(const T & output)	{
+		err_t 		push_back		(cnst T & output)	{
 			if_true_fe(0 == free());
 			Storage[(Offset + Count) % mAx] = output;
 			return Count += 1;
 		}
 
 		tplt<u2_t _nBatch>
-		err_t 		append			(const T (&output)[_nBatch])	{
+		err_t 		append			(cnst T (&output)[_nBatch])	{
 			if_true_fe(Count + _nBatch > free());
 			Storage[(Offset + Count) % mAx] = output;
 			return Count += 1;
@@ -48,10 +48,10 @@ nmsp gpk
 		err_t 		left			()	csnx	{ return min(Count, size() - Offset); } // left side, first part
 		err_t 		right			()	csnx	{ return max((err_t)0, (err_t)Count - left()); } // right side, second part
 
-		inln	err_t left			(view<const T> & _left)	csnx	{ return slice(_left , Offset, left()); }
-		inln	err_t right			(view<const T> & _right)	csnx	{ return slice(_right, 0, right()); }
+		inln	err_t left			(view<cnst T> & _left)	csnx	{ return slice(_left , Offset, left()); }
+		inln	err_t right			(view<cnst T> & _right)	csnx	{ return slice(_right, 0, right()); }
 
-		err_t 		pair			(view<const T> & _left, view<const T> & _right)	csnx	{
+		err_t 		pair			(view<cnst T> & _left, view<cnst T> & _right)	csnx	{
 			if_fail_fe(left(_left));
 			if_fail_fe(right(_right));
 			return _left.size() + _right.size(); 
@@ -61,14 +61,14 @@ nmsp gpk
 		inxp	err_t used			()	csnx	{ return Count; }
 		inxp	err_t byte_count	()	csnx	{ return Count * szof(T); }
 
-//		err_t 		read			(const function<int()> & funcRemaining, const function<int(T *, u2_t)> & funcRead) {
+//		err_t 		read			(cnst function<int()> & funcRemaining, cnst function<int(T *, u2_t)> & funcRead) {
 //			return 0;	
 //		}	
-		err_t 		read			(const function<int()> & funcRemaining, const function<T()> & funcNext) {
+		err_t 		read			(cnst function<int()> & funcRemaining, cnst function<T()> & funcNext) {
 			u2_c			stop			= mAx - Count;
 			s2_t					readCount		= 0; 
 			while(readCount < stop)
-			switch(const err_t funcRemainingResult = funcRemaining()) {
+			switch(cnst err_t funcRemainingResult = funcRemaining()) {
 			case 0:
 				return readCount;
 			default:
@@ -79,7 +79,7 @@ nmsp gpk
 			return readCount;
 		}
 
-		err_t 		read		(u2_t countToRead, const function<int()> & funcRemaining, const function<T()> & funcNext) {
+		err_t 		read		(u2_t countToRead, cnst function<int()> & funcRemaining, cnst function<T()> & funcNext) {
 			u2_c			stop			= min(countToRead, mAx - Count);
 			for(s2_t readCount = 0; readCount < stop; ++readCount) {
 				if_true_vef(-readCount, 0 >= funcRemaining(), "%" GPK_FMT_S2 " < %" GPK_FMT_S2, readCount, countToRead);

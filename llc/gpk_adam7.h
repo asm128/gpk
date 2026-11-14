@@ -5,7 +5,7 @@
 
 nmsp gpk
 {
-	err_t			adam7Sizes			(view<n2u2_t> & imageSizes, const n2<u2_t> & imageSize);
+	err_t			adam7Sizes			(view<n2u2_t> & imageSizes, cnst n2<u2_t> & imageSize);
 	err_t			adam7ScaleIndex
 		( s2_t					iImage
 		, n2u2_t	&		offsetMultiplier

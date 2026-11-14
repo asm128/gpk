@@ -21,10 +21,10 @@ gpk::err_t 		gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboa
 	vk.Keys					= keys;
 
 	vk.IdRoot				= ::gpk::controlCreate(gui);
-	const ::gpk::n2u0_t			charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
-	const ::gpk::n2s1_t			sizeKey						= (charSize + ::gpk::n2u0_t{6, 6}).s1();
+	cnst ::gpk::n2u0_t			charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
+	cnst ::gpk::n2s1_t			sizeKey						= (charSize + ::gpk::n2u0_t{6, 6}).s1();
 	stxp	u1_t			SIZE_BUTTON					= 88;
-	const ::gpk::n2s1_t			sizeKeypad					= {s1_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), s1_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
+	cnst ::gpk::n2s1_t			sizeKeypad					= {s1_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), s1_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
 	{
 		::gpk::SControlPlacement	& controlRoot				= gui.Controls.Placement[vk.IdRoot];

@@ -30,13 +30,13 @@ nmsp gpk
 		inln	err_t	unlock		()	{ ::std::mutex::unlock(); rtrn 0; }
 #	elif defined(GPK_ESP8266)
 	stct mutex { //  { b8_c val = true; ; rtrn 0; }
-		vltl	bool	Lock		= {};
+		vltl	b8_t	Lock		= {};
 		inln	err_t	lock		()	{ rtrn 0; } //b8_c val = true; while(val) __atomic_exchange(&Lock, &val, &Lock, __ATOMIC_ACQ_REL); rtrn 0; }
 		inln	err_t	try_lock	()	{ rtrn 0; } //b8_c val = true; __atomic_exchange(&Lock, &val, &Lock, __ATOMIC_ACQ_REL); rtrn val ? -1 : 0; }
 		inln	err_t	unlock		()	{ rtrn 0; } //__sync_lock_release(&Lock); rtrn 0; }
 #	else // GPK_ARDUINO
 	stct mutex { //  { b8_c val = true; __atomic_exchange(&Lock, &val, &Lock, __ATOMIC_ACQ_REL); rtrn 0; }
-		vltl	bool	Lock		= {};
+		vltl	b8_t	Lock		= {};
 		inln	err_t	lock		()	{ while (__sync_lock_test_and_set(&Lock, true)); rtrn 0; }
 		inln	err_t	try_lock	()	{ rtrn __sync_lock_test_and_set(&Lock, true) ? -1 : 0; }
 		inln	err_t	unlock		()	{ __sync_lock_release(&Lock); rtrn 0; }

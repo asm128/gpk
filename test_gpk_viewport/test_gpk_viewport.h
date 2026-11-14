@@ -51,8 +51,8 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 		::gpk::cid_t					IdFrameRateUpdate				= -1;
 		::gpk::cid_t					IdFrameRateRender				= -1;
-		char							StringFrameRateUpdate	[256]	= {};
-		char							StringFrameRateRender	[256]	= {};
+		::gpk::sc_t						StringFrameRateUpdate	[256]	= {};
+		::gpk::sc_t						StringFrameRateRender	[256]	= {};
 
 		SViewportScene					Scene;
 

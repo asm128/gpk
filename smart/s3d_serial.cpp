@@ -71,18 +71,18 @@ usns gpk;
 	u2_t 					totalBytesRead		= 0;
 	::gpk::STimer				timerTimeout;
 	u3_t 					timeElapsed				= 0;
-	const u3_t 				timeoutInMicroseconds	= timeout * 1000;
+	cnst u3_t 				timeoutInMicroseconds	= timeout * 1000;
 	do {
 		timerTimeout.Frame();
 		timeElapsed				+= timerTimeout.LastTimeMicroseconds;
 		if(timeElapsed >= timeoutInMicroseconds)
 			return totalBytesRead;
-		char						byte					= {};
+		sc_t						byte					= {};
 #if !defined(GPK_WINDOWS)
 		int							rtcd					= tcdrain(serial.Handle);
 		printf("Waiting until UART buffer clears: %i\n", rtcd);
 		int							readBytes;
-		// read a char at a time
+		// read a sc_t at a time
 		if_fail_fe(readBytes = read(serial.Handle, &byte, 1));
 #else
 		DWORD						readBytes				= (DWORD)0;
@@ -112,16 +112,16 @@ usns gpk;
 	u2_t 					totalBytesRead			= 0;
 	::gpk::STimer				timerTimeout;
 	u3_t 					timeElapsed				= 0;
-	const u3_t 				timeoutInMicroseconds	= timeout * 1000;
+	cnst u3_t 				timeoutInMicroseconds	= timeout * 1000;
 	do {
 		timerTimeout.Frame();
 		timeElapsed				+= timerTimeout.LastTimeMicroseconds;
 		if(timeElapsed >= timeoutInMicroseconds)
 			return totalBytesRead;
-		char						byte					= {};
+		sc_t						byte					= {};
 #if !defined(GPK_WINDOWS)
 		int							readBytes;
-		if_fail_fe(readBytes = read(serial.Handle, &byte, 1));  // read a char at a time
+		if_fail_fe(readBytes = read(serial.Handle, &byte, 1));  // read a sc_t at a time
 #else
 		DWORD						readBytes				= (DWORD)0;
 		ClearCommError(serial.Handle, &serial.Errors, &serial.Status);

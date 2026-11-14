@@ -67,10 +67,10 @@ nmsp gpk
 		GUI_CONTROL_METRICS_FLAG	RelativeMetrics		= {};
 	}; 
 
-	sinx	rectu1_t	controlNCRect		(const SControlPlacement & ctl)	nxpt	{ return ctl.Border + ctl.Margin; }
-	stxp	n2u1_t		controlNCSpacing	(const SControlPlacement & ctl)	nxpt	{ const rectu1_t rc = controlNCRect(ctl); return n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
-	sinx	void		controlNCSpacing	(const SControlPlacement & ctl, rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
-	sinx	void		controlNCSpacing	(const SControlPlacement & ctl, n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
+	sinx	rectu1_t	controlNCRect		(cnst SControlPlacement & ctl)	nxpt	{ return ctl.Border + ctl.Margin; }
+	stxp	n2u1_t		controlNCSpacing	(cnst SControlPlacement & ctl)	nxpt	{ cnst rectu1_t rc = controlNCRect(ctl); return n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
+	sinx	void		controlNCSpacing	(cnst SControlPlacement & ctl, rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
+	sinx	void		controlNCSpacing	(cnst SControlPlacement & ctl, n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
 
 	CTTI_ENUM(
 	enum GUI_CONTROL_PALETTE : u1_t
@@ -90,7 +90,7 @@ nmsp gpk
 		, GUI_CONTROL_PALETTE_COUNT					
 		};
 		);
-	sinx	GUI_CONTROL_PALETTE	paletteIndexFromState			(bool disabled, const SControlState & controlState) {
+	sinx	GUI_CONTROL_PALETTE	paletteIndexFromState			(b8_t disabled, cnst SControlState & controlState) {
 		return disabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
 			: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
 			: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
@@ -176,7 +176,7 @@ nmsp gpk
 	};
 	struct SControlConstraints {
 		n2cid						AttachSizeToControl	= {-1, -1};
-		n2<bool>					AttachSizeToText	= {};
+		n2<b8_t>					AttachSizeToText	= {};
 		rectcid						DockToControl		= {-1, -1, -1, -1};
 		minmax2s1_t					SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
@@ -213,27 +213,27 @@ nmsp gpk
 		//
 		apobj<SEventSystem		>	EventQueue			= {};
 
-		inln	bool		SetUnused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
-	 	inln	bool		SetHidden		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
-		inln	bool		SetDisabled		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
-		inln	bool		SetHovered		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
-		inln	bool		SetFocused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
-		inln	bool		SetPressed		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
-		inln	bool		SetDragging		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetDragging(iControl, EventQueue, value); }
-		inln	bool		SetSelected		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
-		inln	bool		SetUpdated		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
-		inln	bool		SetAction		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
+		inln	b8_t		SetUnused		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
+	 	inln	b8_t		SetHidden		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
+		inln	b8_t		SetDisabled		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
+		inln	b8_t		SetHovered		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
+		inln	b8_t		SetFocused		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
+		inln	b8_t		SetPressed		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
+		inln	b8_t		SetDragging		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetDragging(iControl, EventQueue, value); }
+		inln	b8_t		SetSelected		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
+		inln	b8_t		SetUpdated		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
+		inln	b8_t		SetAction		(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
 
-		inln	bool		IsUnused		(cid_t iControl)		csnx	{ return States[iControl].IsUnused   (); }
-		inln	bool		IsHidden		(cid_t iControl)		csnx	{ return States[iControl].IsHidden   (); }
-		inln	bool		IsDisabled		(cid_t iControl)		csnx	{ return States[iControl].IsDisabled (); }
-		inln	bool		IsHovered		(cid_t iControl)		csnx	{ return States[iControl].IsHovered  (); }
-		inln	bool		IsFocused		(cid_t iControl)		csnx	{ return States[iControl].IsFocused  (); }
-		inln	bool		IsPressed		(cid_t iControl)		csnx	{ return States[iControl].IsPressed  (); }
-		inln	bool		IsDragging		(cid_t iControl)		csnx	{ return States[iControl].IsDragging (); }
-		inln	bool		IsSelected		(cid_t iControl)		csnx	{ return States[iControl].IsSelected (); }
-		inln	bool		IsUpdated		(cid_t iControl)		csnx	{ return States[iControl].IsUpdated  (); }
-		inln	bool		IsAction		(cid_t iControl)		csnx	{ return States[iControl].IsAction   (); }
+		inln	b8_t		IsUnused		(cid_t iControl)		csnx	{ return States[iControl].IsUnused   (); }
+		inln	b8_t		IsHidden		(cid_t iControl)		csnx	{ return States[iControl].IsHidden   (); }
+		inln	b8_t		IsDisabled		(cid_t iControl)		csnx	{ return States[iControl].IsDisabled (); }
+		inln	b8_t		IsHovered		(cid_t iControl)		csnx	{ return States[iControl].IsHovered  (); }
+		inln	b8_t		IsFocused		(cid_t iControl)		csnx	{ return States[iControl].IsFocused  (); }
+		inln	b8_t		IsPressed		(cid_t iControl)		csnx	{ return States[iControl].IsPressed  (); }
+		inln	b8_t		IsDragging		(cid_t iControl)		csnx	{ return States[iControl].IsDragging (); }
+		inln	b8_t		IsSelected		(cid_t iControl)		csnx	{ return States[iControl].IsSelected (); }
+		inln	b8_t		IsUpdated		(cid_t iControl)		csnx	{ return States[iControl].IsUpdated  (); }
+		inln	b8_t		IsAction		(cid_t iControl)		csnx	{ return States[iControl].IsAction   (); }
 	};
 
 	cid_t		controlCreate					(SControlTable & gui, vs1_t defaultColors);

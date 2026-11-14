@@ -15,7 +15,7 @@ usng gpk::err_t, gpk::SRuntimeValues, gpk::STestRunReport, gpk::aobj;
 sttc gpk::err_t testJSONString		(::gpk::vcst_t text, ::gpk::string & result) {
 	result.clear();
 	if_fail_fe(result.push_back('"'));
-	stxp char hex[] = "0123456789abcdef";
+	stxp sc_t hex[] = "0123456789abcdef";
 	for(::gpk::u2_t i = 0; i < text.size(); ++i) {
 		cnst auto c = (::gpk::u0_t)text[i];
 		if(c == '"' || c == '\\') { if_fail_fe(::gpk::append_strings(result, '\\', (::gpk::sc_t)c)); }
@@ -79,7 +79,7 @@ sttc gpk::err_t	testRunFolder			(::gpk::vcst_t parent, ::gpk::string & folder) {
 	rtrn ::gpk::pathCreate(folder);
 }
 
-sttc gpk::err_t	testRunReportWrite		(cnst gpk::STestRunReport & run, gpk::err_t status, ::gpk::u3_t duration, bool seedEnabled, ::gpk::u3_t seed) {
+sttc gpk::err_t	testRunReportWrite		(cnst gpk::STestRunReport & run, gpk::err_t status, ::gpk::u3_t duration, b8_t seedEnabled, ::gpk::u3_t seed) {
 	::gpk::u3_t checks = 0, failures = 0;
 	::gpk::string suites;
 	for(cnst auto & suite : run.Suites) {
@@ -148,8 +148,8 @@ gpk::err_t	gpk::testRunPrepare		(STestRunnerState & runner, SRuntimeValues & run
 		u2_t significantOffset = 0;
 		while(significantOffset < seedText.size() && '0' == seedText[significantOffset])
 			++significantOffset;
-		cnst u2_t significantLength = seedText.size() - significantOffset;
-		bool overflow = significantLength > seedMaximum.size();
+		u2_c significantLength = seedText.size() - significantOffset;
+		b8_t overflow = significantLength > seedMaximum.size();
 		for(u2_t iDigit = 0; false == overflow && significantLength == seedMaximum.size() && iDigit < significantLength; ++iDigit) {
 			if(seedText[significantOffset + iDigit] == seedMaximum[iDigit])
 				continue;
@@ -173,7 +173,7 @@ gpk::err_t	gpk::testRunSummary	(cnst ATestError & results, view<err_c> /*returnV
 	else {
 		always_printf("Test run completed in %" GPK_FMT_U3 " us: all %u checks passed across %u result groups.", microseconds, successCount, results.size());
 	}
-	rtrn failureCount; //(0 > returnValues.count([](err_c & returnValue) { return returnValue < 0; })) ? "" : failureCount ? ::gpk::OS_ERROR : 0;
+	rtrn failureCount; //(0 > returnValues.count([](err_c & returnValue) { return returnValue < 0; })) ? "" : failureCount ? ::gpk::((err_t)-1) : 0;
 }
 
 gpk::err_t	gpk::testRunFinish		(STestRunnerState & runner, cnst STestRunReport & run, cnst STestLogBuffer & log, err_t status, u3_t microseconds) {
@@ -199,7 +199,7 @@ gpk::err_t	gpk::testRunFinish		(STestRunnerState & runner, cnst STestRunReport &
 
 gpk::err_t	gpk::testReporting		(STestRunnerState & runner, ATestError & errors, vcst_t outputFolder) {
 	STestLogBuffer		captured			= {};
-	cnst bool			previousConsole		= runner.Console;
+	b8_c			previousConsole		= runner.Console;
 	sttc u2_t			forwarded			= 0;
 	forwarded	= 0;
 	u2_t				quietForwarded		= 0;

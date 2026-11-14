@@ -20,13 +20,13 @@ gpk::err_t	gpk::keyValConstStringSerialize	(view<cnst kv<vcst_t>> keyVals, view<
 	::gpk::apod<kv<vcst_t>>	keyValsToSave			= {};
 	for(u2_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 		for(u2_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
-			const kv<vcst_t>	& kvToCheck				= keyVals[iKey];
+			cnst kv<vcst_t>	& kvToCheck				= keyVals[iKey];
 			::gpk::vcst_c		& keyToSave				= keysToSave[iRef];
 			if(kvToCheck.Key == keyToSave)
 				keyValsToSave.push_back(kvToCheck);
 		}
 	}
-	output.append((const u0_t*)&keyValsToSave.size(), szof(u2_t));
+	output.append((cnst u0_t*)&keyValsToSave.size(), szof(u2_t));
 	u2_t					iOffset								= 0;
 	for(u2_t iKey = 0; iKey < keyValsToSave.size(); ++iKey) {
 		iOffset					+= saveView(output, keyValsToSave[iKey].Key);
@@ -61,7 +61,7 @@ gpk::err_t			gpk::querystring_split	(vcst_t input_string, aobj<vcst_t> & output_
 	slices.push_back({start, input_string.size()});
 	for(u2_t iSlice = 0; iSlice < slices.size(); ++iSlice) {
 		sliceu2_c		& slice				= slices[iSlice];
-		const u2_t			slicelen			= slice.End - slice.Begin;
+		u2_c			slicelen			= slice.End - slice.Begin;
 		if(slicelen) {
 		vcst_t				keyval				= {&input_string[slice.Begin], slicelen};
 			output_views.push_back(keyval);
@@ -70,7 +70,7 @@ gpk::err_t			gpk::querystring_split	(vcst_t input_string, aobj<vcst_t> & output_
 	return 0;
 }
 
-gpk::err_t			gpk::writeCGIEnvironToFile		(view<const kv<vcst_t>> environViews)	{
+gpk::err_t			gpk::writeCGIEnvironToFile		(view<cnst kv<vcst_t>> environViews)	{
 	au0_t				environmentBlockToSave			= {};
 	keyValConstStringSerialize(environViews, cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {
@@ -88,7 +88,7 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(view<const kv<vcst_t>> environViews)	{
 			return 1;
 
 		fileToMemory({tempName}, temp);
-		temp.append((const u0_t*)&curTime, sizeof(u3_t));
+		temp.append((cnst u0_t*)&curTime, sizeof(u3_t));
 		temp.append(environmentBlockToSave);
 		temp.push_back('\r');
 		temp.push_back('\n');

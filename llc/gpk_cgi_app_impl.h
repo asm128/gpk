@@ -21,7 +21,7 @@
 	gpk::err_t 		generate_output		(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output);			\
 	gpk::err_t 		cgiMain				(int argc, sc_t** argv, sc_t**envv)		{	\
 		::gpk::SCGIRuntimeValues	runtimeValues;											\
-		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const sc_t**)argv, (u2_t)argc});		\
+		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(sc_c**)argv, (u2_t)argc});		\
 		::gpk::apod<sc_t>			output;													\
 		if_fail_fe(::gpk::append_strings(output, "Content-type: application/json\r\n"));				\
 		::generate_output(runtimeValues, output);											\

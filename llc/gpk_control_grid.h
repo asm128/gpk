@@ -19,9 +19,9 @@ nmsp gpk
 	err_t			controlGridArrange
 		( SGUI & gui
 		, SControlGrid & grid
-		, cnst n2s1_t & cellSize
-		, cnst n2s1_t & spacing = {}
-		, cnst n2s1_t & offset = {}
+		, n2s1_c & cellSize
+		, n2s1_c & spacing = {}
+		, n2s1_c & offset = {}
 		, ALIGN align = ALIGN_TOP_LEFT
 		);
 
@@ -32,9 +32,9 @@ nmsp gpk
 		, cid_t parent
 		, DIRECTION direction
 		, u2_t columnCount
-		, cnst n2s1_t & cellSize
-		, cnst n2s1_t & spacing = {}
-		, cnst n2s1_t & offset = {}
+		, n2s1_c & cellSize
+		, n2s1_c & spacing = {}
+		, n2s1_c & offset = {}
 		, ALIGN align = ALIGN_TOP_LEFT
 		, ALIGN textAlign = ALIGN_CENTER
 		) {
@@ -44,13 +44,13 @@ nmsp gpk
 		if_true_fe(direction != DIRECTION_RIGHT && direction != DIRECTION_LEFT && direction != DIRECTION_DOWN && direction != DIRECTION_UP);
 		if_fail_fe(controlGridInitialize(gui, grid, parent));
 		cnst n2u2_t metrics = {columnCount, (u2_t)((stringifiable.size() + columnCount - 1) / columnCount)};
-		cnst bool horizontal = direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT;
-		cnst u2_t listCount = horizontal ? metrics.y : metrics.x;
-		cnst u2_t listCapacity = horizontal ? metrics.x : metrics.y;
+		b8_c horizontal = direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT;
+		u2_c listCount = horizontal ? metrics.y : metrics.x;
+		u2_c listCapacity = horizontal ? metrics.x : metrics.y;
 		if_fail_fe(grid.Lists.resize(listCount));
 		for(u2_t iList = 0; iList < listCount; ++iList) {
-			cnst u2_t listBegin = iList * listCapacity;
-			cnst u2_t listSize = ::gpk::min(listCapacity, stringifiable.size() - listBegin);
+			u2_c listBegin = iList * listCapacity;
+			u2_c listSize = ::gpk::min(listCapacity, stringifiable.size() - listBegin);
 			if_fail_fe(controlListCreate(gui, grid.Lists[iList], view<cnst T>{stringifiable.begin() + listBegin, listSize}, grid.IdControl, direction));
 			for(u2_t iControl = 0; iControl < listSize; ++iControl)
 				gui.Controls.Text[grid.Lists[iList].IdControls[iControl]].Align = textAlign;

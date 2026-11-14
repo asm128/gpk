@@ -48,7 +48,7 @@ GPK_USING_APOD    ();
 #pragma pack(push, 1)
 
 
-static	gpk::err_t LoadBitmapFromBMPFile		(const vcst_t & szFileName, gpk::a8bgra & out_Colors, gpk::g8bgra& out_ImageView, const gpk::bgra & alphaKey, bool* out_alphaFound)		{
+sttc	gpk::err_t LoadBitmapFromBMPFile		(cnst vcst_t & szFileName, gpk::a8bgra & out_Colors, gpk::g8bgra& out_ImageView, cnst gpk::bgra & alphaKey, b8_t* out_alphaFound)		{
 	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, gpk::string(szFileName).begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
 	if_true_vef(-1, phBitmap == NULL, "Failed to load bitmap file: %.*s.", GPK_VIEW_ARGS(szFileName));
 
@@ -61,8 +61,8 @@ static	gpk::err_t LoadBitmapFromBMPFile		(const vcst_t & szFileName, gpk::a8bgra
 	hOldBitmap				= (HBITMAP)SelectObject(hMemDC, phBitmap);
 	for(u2_t y = 0; y < out_ImageView.metrics().y; ++y)
 	for(u2_t x = 0; x < out_ImageView.metrics().x; ++x) {
-		const COLORREF				colpix						= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
-		const ::gpk::bgra			toWrite						= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
+		cnst COLORREF				colpix						= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
+		cnst ::gpk::bgra			toWrite						= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
 		out_ImageView[y][x]		= toWrite;
 		if(toWrite == alphaKey && out_alphaFound)
 			*out_alphaFound			= true;
@@ -116,7 +116,7 @@ static	gpk::err_t LoadBitmapFromBMPFile		(const vcst_t & szFileName, gpk::a8bgra
 
 gpk::err_t 		gpk::bmpFileLoad			(vcst_t filename, a8bgra & out_Colors, g8bgra & out_ImageView)	{ //
 #if defined(GPK_WINDOWS)
-	bool						isAlpha						= false;
+	b8_t						isAlpha						= false;
 	return ::LoadBitmapFromBMPFile(filename, out_Colors, out_ImageView, {0xFF, 0x00, 0xFF, 0xFF}, &isAlpha);
 #else
 	FILE						* source					= 0;
@@ -160,9 +160,9 @@ struct SHeaderInfoBMP {
 
 // Currently supporting only 24-bit bitmaps
 gpk::err_t 		gpk::bmpFileLoad	(vcu0_t source, a8bgra & out_Colors, g8bgra & out_ImageView)					{
-	cnst SHeaderFileBMP	& fileHeader		= *(const SHeaderFileBMP*)&source[0];
+	cnst SHeaderFileBMP	& fileHeader		= *(cnst SHeaderFileBMP*)&source[0];
 	if_true_vef(-1, 0 != memcmp(fileHeader.Type, "BM", 2), "%.*s", 2, fileHeader.Type);
-	cnst SHeaderInfoBMP	& infoHeader		= *(const SHeaderInfoBMP*)&source[sizeof(SHeaderFileBMP)];
+	cnst SHeaderInfoBMP	& infoHeader		= *(cnst SHeaderInfoBMP*)&source[sizeof(SHeaderFileBMP)];
 	if_true_vef(-1, infoHeader.Bpp != 24
 		&& infoHeader.Bpp != 32
 		&& infoHeader.Bpp != 8
@@ -171,7 +171,7 @@ gpk::err_t 		gpk::bmpFileLoad	(vcu0_t source, a8bgra & out_Colors, g8bgra & out_
 	if_true_vef(-1, 0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
 	out_Colors.resize(nPixelCount);
 	u0_c				* srcBytes					= &source[sizeof(SHeaderFileBMP) + sizeof(SHeaderInfoBMP)];
-	bool				b32Bit						= false;
+	b8_t				b32Bit						= false;
 	u2_t				colorSize					= 0;
 	s2_t				x, y, iPixel;
 	switch(infoHeader.Bpp) {
@@ -231,7 +231,7 @@ gpk::err_t 		gpk::bmpFileLoad	(vcu0_t source, a8bgra & out_Colors, g8bgra & out_
 //	size_t						readResult			= fread(&srcBytes[0], pixelSize, nPixelCount, source);
 //	if_true_vef(-1, readResult != (size_t)nPixelCount, "Failed to read file! File corrupt?");
 //	if_fail_fef(out_Colors.resize(nPixelCount), "Out of memory?");
-//	bool						b32Bit				= false;
+//	b8_t						b32Bit				= false;
 //	u2_t					colorSize			= 0;
 //	s2_t						x, y, linearIndexSrc;
 //	switch(infoHeader.Bpp) {

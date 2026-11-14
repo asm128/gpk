@@ -5,7 +5,7 @@
 usns gpk;
 
 
-gpk::err_t	gpk::STransferManifest::Save	(au0_t & output) const {
+gpk::err_t	gpk::STransferManifest::Save	(au0_t & output) cnst {
 	if_fail_fe(savePOD(output, Id));
 	if_fail_fe(savePOD(output, Size));
 	if_fail_fe(saveView(output, Resource));
@@ -24,20 +24,20 @@ gpk::err_t	gpk::STransferManifest::Load	(vcu0_t & input) {
 	return 0;
 }
 
-gpk::err_t	gpk::STransferRanges::Save	(au0_t & output) const {
+gpk::err_t	gpk::STransferRanges::Save	(au0_t & output) cnst {
 	if_fail_fe(savePOD(output, Id));
 	return saveView(output, Ranges);
 }
 
 gpk::err_t	gpk::STransferRanges::Load	(vcu0_t & input) {
-	view<const STransferRange>	ranges	= {};
+	view<cnst STransferRange>	ranges	= {};
 	if_fail_fe(loadPOD(input, Id));
 	if_fail_fe(loadView(input, ranges));
 	Ranges	= ranges;
 	return 0;
 }
 
-gpk::err_t	gpk::STransferWrite::Save	(au0_t & output) const {
+gpk::err_t	gpk::STransferWrite::Save	(au0_t & output) cnst {
 	if_fail_fe(savePOD(output, Id));
 	if_fail_fe(savePOD(output, Range));
 	return saveView(output, Data);
@@ -52,26 +52,26 @@ gpk::err_t	gpk::STransferWrite::Load	(vcu0_t & input) {
 	return 0;
 }
 
-static gpk::err_t	queueEvent	(const EventTransfer & eventToQueue, TTransferQueue & output) {
+sttc gpk::err_t	queueEvent	(cnst EventTransfer & eventToQueue, TTransferQueue & output) {
 	PEventTransfer	queued	= {};
 	queued->Type	= eventToQueue.Type;
 	queued->Data	= eventToQueue.Data;
-	const gpk::err_t indexEvent	= output.push_back(queued);
+	cnst gpk::err_t indexEvent	= output.push_back(queued);
 	return gpk::failed(indexEvent) ? indexEvent : 0;
 }
 
-static gpk::err_t	saveId	(gpk::EventTransfer & output, LIFECYCLE_COMMAND type, u3_t id) {
+sttc gpk::err_t	saveId	(gpk::EventTransfer & output, LIFECYCLE_COMMAND type, u3_t id) {
 	output.Data.clear();
 	output.Type	= type;
 	return savePOD(output.Data, id);
 }
 
-gpk::err_t	gpk::transferEventCreate	(EventTransfer & output, const STransferManifest & manifest) {
+gpk::err_t	gpk::transferEventCreate	(EventTransfer & output, cnst STransferManifest & manifest) {
 	output = LIFECYCLE_COMMAND_CREATE;
 	return manifest.Save(output.Data);
 }
 
-gpk::err_t	gpk::transferEventResume	(EventTransfer & output, u3_t id, view<const STransferRange> durableRanges) {
+gpk::err_t	gpk::transferEventResume	(EventTransfer & output, u3_t id, view<cnst STransferRange> durableRanges) {
 	output = LIFECYCLE_COMMAND_RESUME;
 	STransferRanges payload	= {};
 	payload.Id		= id;
@@ -79,13 +79,13 @@ gpk::err_t	gpk::transferEventResume	(EventTransfer & output, u3_t id, view<const
 	return payload.Save(output.Data);
 }
 
-static gpk::err_t	transferEventCommand	(EventTransfer & output, gpk::COMMAND command, gpk::vcu0_t payload) {
+sttc gpk::err_t	transferEventCommand	(EventTransfer & output, gpk::COMMAND command, gpk::vcu0_t payload) {
 	SEventCommand	operation	= {command, payload};
 	output = LIFECYCLE_COMMAND_UPDATE;
 	return operation.Save(output.Data);
 }
 
-gpk::err_t	gpk::transferEventRead	(EventTransfer & output, u3_t id, view<const STransferRange> requestedRanges) {
+gpk::err_t	gpk::transferEventRead	(EventTransfer & output, u3_t id, view<cnst STransferRange> requestedRanges) {
 	STransferRanges payload	= {};
 	payload.Id		= id;
 	payload.Ranges	= requestedRanges;
@@ -94,7 +94,7 @@ gpk::err_t	gpk::transferEventRead	(EventTransfer & output, u3_t id, view<const S
 	return ::transferEventCommand(output, COMMAND_Read, serialized);
 }
 
-gpk::err_t	gpk::transferEventWrite	(EventTransfer & output, u3_t id, const STransferRange & range, vcu0_t data) {
+gpk::err_t	gpk::transferEventWrite	(EventTransfer & output, u3_t id, cnst STransferRange & range, vcu0_t data) {
 	STransferWrite payload	= {};
 	payload.Id		= id;
 	payload.Range	= range;
@@ -112,15 +112,15 @@ gpk::err_t	gpk::transferEventDestroy	(EventTransfer & output, u3_t id) {
 	return ::saveId(output, LIFECYCLE_COMMAND_DESTROY, id);
 }
 
-static s2_t	transactionFind	(const gpk::STransferState & state, u3_t id) {
+sttc s2_t	transactionFind	(cnst gpk::STransferState & state, u3_t id) {
 	for(u2_t iTransaction = 0; iTransaction < state.Transactions.size(); ++iTransaction)
 		if(state.Transactions[iTransaction].Active && state.Transactions[iTransaction].Manifest.Id == id)
 			return (s2_t)iTransaction;
 	return -1;
 }
 
-static STransferTransaction * transactionEnsure	(STransferState & state, const STransferManifest & manifest, bool source) {
-	const s2_t indexFound	= ::transactionFind(state, manifest.Id);
+sttc STransferTransaction * transactionEnsure	(STransferState & state, cnst STransferManifest & manifest, b8_t source) {
+	cnst s2_t indexFound	= ::transactionFind(state, manifest.Id);
 	if(0 <= indexFound) {
 		STransferTransaction & transaction	= state.Transactions[indexFound];
 		transaction.Active	= true;
@@ -136,17 +136,17 @@ static STransferTransaction * transactionEnsure	(STransferState & state, const S
 			state.Transactions[iTransaction].Manifest	= manifest;
 			return &state.Transactions[iTransaction];
 		}
-	const gpk::err_t indexNew	= state.Transactions.push_back({true, source, manifest, {}});
+	cnst gpk::err_t indexNew	= state.Transactions.push_back({true, source, manifest, {}});
 	return failed(indexNew) ? nullptr : &state.Transactions[indexNew];
 }
 
-static void	transactionRelease	(STransferState & state, u3_t id) {
-	const s2_t indexTransaction	= ::transactionFind(state, id);
+sttc void	transactionRelease	(STransferState & state, u3_t id) {
+	cnst s2_t indexTransaction	= ::transactionFind(state, id);
 	if(0 <= indexTransaction)
 		state.Transactions[indexTransaction]	= {};
 }
 
-static void	rangesNormalize	(apod<STransferRange> & ranges, u3_t sizeTotal) {
+sttc void	rangesNormalize	(apod<STransferRange> & ranges, u3_t sizeTotal) {
 	u2_t countValid	= 0;
 	for(u2_t iRange = 0; iRange < ranges.size(); ++iRange) {
 		STransferRange range	= ranges[iRange];
@@ -158,7 +158,7 @@ static void	rangesNormalize	(apod<STransferRange> & ranges, u3_t sizeTotal) {
 	}
 	ranges.resize(countValid);
 	for(u2_t iRange = 1; iRange < ranges.size(); ++iRange) {
-		const STransferRange value	= ranges[iRange];
+		cnst STransferRange value	= ranges[iRange];
 		u2_t iInsert	= iRange;
 		while(iInsert && ranges[iInsert - 1].Offset > value.Offset) {
 			ranges[iInsert]	= ranges[iInsert - 1];
@@ -173,8 +173,8 @@ static void	rangesNormalize	(apod<STransferRange> & ranges, u3_t sizeTotal) {
 			continue;
 		}
 		STransferRange & previous	= ranges[countMerged - 1];
-		const u3_t previousEnd	= previous.Offset + previous.Count;
-		const u3_t currentEnd	= ranges[iRange].Offset + ranges[iRange].Count;
+		cnst u3_t previousEnd	= previous.Offset + previous.Count;
+		cnst u3_t currentEnd	= ranges[iRange].Offset + ranges[iRange].Count;
 		if(ranges[iRange].Offset <= previousEnd) {
 			if(currentEnd > previousEnd)
 				previous.Count	= currentEnd - previous.Offset;
@@ -185,19 +185,19 @@ static void	rangesNormalize	(apod<STransferRange> & ranges, u3_t sizeTotal) {
 	ranges.resize(countMerged);
 }
 
-static bool	rangesCover	(apod<STransferRange> ranges, u3_t sizeTotal) {
+sttc b8_t	rangesCover	(apod<STransferRange> ranges, u3_t sizeTotal) {
 	if(0 == sizeTotal)
 		return true;
 	::rangesNormalize(ranges, sizeTotal);
 	return 1 == ranges.size() && 0 == ranges[0].Offset && ranges[0].Count == sizeTotal;
 }
 
-static gpk::err_t	missingAppend	(apod<STransferRange> & output, u3_t begin, u3_t end, u2_t blockSize) {
+sttc gpk::err_t	missingAppend	(apod<STransferRange> & output, u3_t begin, u3_t end, u2_t blockSize) {
 	if(0 == blockSize)
 		return -1;
 	while(begin < end) {
-		const u3_t count	= min((u3_t)blockSize, end - begin);
-		const gpk::err_t indexRange	= output.push_back({begin, count});
+		cnst u3_t count	= min((u3_t)blockSize, end - begin);
+		cnst gpk::err_t indexRange	= output.push_back({begin, count});
 		if(failed(indexRange))
 			return indexRange;
 		begin	+= count;
@@ -205,7 +205,7 @@ static gpk::err_t	missingAppend	(apod<STransferRange> & output, u3_t begin, u3_t
 	return 0;
 }
 
-static gpk::err_t	missingBuild	(u3_t sizeTotal, apod<STransferRange> durable, u2_t blockSize, apod<STransferRange> & output) {
+sttc gpk::err_t	missingBuild	(u3_t sizeTotal, apod<STransferRange> durable, u2_t blockSize, apod<STransferRange> & output) {
 	output.clear();
 	::rangesNormalize(durable, sizeTotal);
 	u3_t cursor	= 0;
@@ -217,7 +217,7 @@ static gpk::err_t	missingBuild	(u3_t sizeTotal, apod<STransferRange> durable, u2
 	return cursor < sizeTotal ? ::missingAppend(output, cursor, sizeTotal, blockSize) : 0;
 }
 
-gpk::err_t	gpk::transferEnqueueCreate	(STransferState & state, const STransferManifest & manifest, TTransferQueue & output) {
+gpk::err_t	gpk::transferEnqueueCreate	(STransferState & state, cnst STransferManifest & manifest, TTransferQueue & output) {
 	if(nullptr == ::transactionEnsure(state, manifest, true))
 		return -1;
 	EventTransfer eventToQueue;
@@ -225,19 +225,19 @@ gpk::err_t	gpk::transferEnqueueCreate	(STransferState & state, const STransferMa
 	return ::queueEvent(eventToQueue, output);
 }
 
-gpk::err_t	gpk::transferEnqueueResume	(u3_t id, view<const STransferRange> durableRanges, TTransferQueue & output) {
+gpk::err_t	gpk::transferEnqueueResume	(u3_t id, view<cnst STransferRange> durableRanges, TTransferQueue & output) {
 	EventTransfer eventToQueue;
 	if_fail_fe(transferEventResume(eventToQueue, id, durableRanges));
 	return ::queueEvent(eventToQueue, output);
 }
 
-gpk::err_t	gpk::transferEnqueueRead	(u3_t id, view<const STransferRange> requestedRanges, TTransferQueue & output) {
+gpk::err_t	gpk::transferEnqueueRead	(u3_t id, view<cnst STransferRange> requestedRanges, TTransferQueue & output) {
 	EventTransfer eventToQueue;
 	if_fail_fe(transferEventRead(eventToQueue, id, requestedRanges));
 	return ::queueEvent(eventToQueue, output);
 }
 
-gpk::err_t	gpk::transferEnqueueWrite	(u3_t id, const STransferRange & range, vcu0_t data, TTransferQueue & output) {
+gpk::err_t	gpk::transferEnqueueWrite	(u3_t id, cnst STransferRange & range, vcu0_t data, TTransferQueue & output) {
 	EventTransfer eventToQueue;
 	if_fail_fe(transferEventWrite(eventToQueue, id, range, data));
 	return ::queueEvent(eventToQueue, output);
@@ -255,7 +255,7 @@ gpk::err_t	gpk::transferEnqueueDestroy	(u3_t id, TTransferQueue & output) {
 	return ::queueEvent(eventToQueue, output);
 }
 
-static gpk::err_t	transferFail	(STransferState & state, const STransferConsumer & consumer, const STransferManifest & manifest, TTransferQueue & output, gpk::err_t result) {
+sttc gpk::err_t	transferFail	(STransferState & state, cnst STransferConsumer & consumer, cnst STransferManifest & manifest, TTransferQueue & output, gpk::err_t result) {
 	if(consumer.RollbackProvisional)
 		consumer.RollbackProvisional(manifest);
 	transferEnqueueStop(manifest.Id, output);
@@ -263,8 +263,8 @@ static gpk::err_t	transferFail	(STransferState & state, const STransferConsumer 
 	return failed(result) ? result : -1;
 }
 
-static gpk::err_t	transferCommit	(STransferState & state, const STransferConsumer & consumer, const STransferManifest & manifest, TTransferQueue & output) {
-	if(false == (bool)consumer.ValidateProvisional || false == (bool)consumer.CommitProvisional)
+sttc gpk::err_t	transferCommit	(STransferState & state, cnst STransferConsumer & consumer, cnst STransferManifest & manifest, TTransferQueue & output) {
+	if(false == (b8_t)consumer.ValidateProvisional || false == (b8_t)consumer.CommitProvisional)
 		return ::transferFail(state, consumer, manifest, output, -1);
 	gpk::err_t result	= consumer.ValidateProvisional(manifest);
 	if(failed(result))
@@ -277,27 +277,27 @@ static gpk::err_t	transferCommit	(STransferState & state, const STransferConsume
 	return result;
 }
 
-static gpk::err_t	transferSendRanges	(STransferState & state, const STransferConsumer & consumer, u3_t id, view<const STransferRange> ranges, TTransferQueue & output) {
-	const s2_t indexTransaction	= ::transactionFind(state, id);
-	if(0 > indexTransaction || false == state.Transactions[indexTransaction].Source || false == (bool)consumer.ReadSourceRange)
+sttc gpk::err_t	transferSendRanges	(STransferState & state, cnst STransferConsumer & consumer, u3_t id, view<cnst STransferRange> ranges, TTransferQueue & output) {
+	cnst s2_t indexTransaction	= ::transactionFind(state, id);
+	if(0 > indexTransaction || false == state.Transactions[indexTransaction].Source || false == (b8_t)consumer.ReadSourceRange)
 		return -1;
-	const STransferManifest & manifest	= state.Transactions[indexTransaction].Manifest;
+	cnst STransferManifest & manifest	= state.Transactions[indexTransaction].Manifest;
 	for(u2_t iRange = 0; iRange < ranges.size(); ++iRange) {
-		const STransferRange & range	= ranges[iRange];
+		cnst STransferRange & range	= ranges[iRange];
 		if(0 == range.Count || range.Offset >= manifest.Size || range.Count > manifest.Size - range.Offset)
 			return -1;
 		au0_t data;
-		const gpk::err_t resultRead	= consumer.ReadSourceRange(manifest, range, data);
+		cnst gpk::err_t resultRead	= consumer.ReadSourceRange(manifest, range, data);
 		if(failed(resultRead) || data.size() != range.Count)
 			return failed(resultRead) ? resultRead : -1;
-		const gpk::err_t resultQueue	= transferEnqueueWrite(id, range, data, output);
+		cnst gpk::err_t resultQueue	= transferEnqueueWrite(id, range, data, output);
 		if(failed(resultQueue))
 			return resultQueue;
 	}
 	return 0;
 }
 
-gpk::err_t	gpk::transferProcess	(STransferState & state, const STransferConsumer & consumer, const EventTransfer & input, TTransferQueue & output) {
+gpk::err_t	gpk::transferProcess	(STransferState & state, cnst STransferConsumer & consumer, cnst EventTransfer & input, TTransferQueue & output) {
 	switch(input.Type) {
 	case LIFECYCLE_COMMAND_CREATE: {
 		vcu0_t inputData	= input.Data;
@@ -306,7 +306,7 @@ gpk::err_t	gpk::transferProcess	(STransferState & state, const STransferConsumer
 		STransferTransaction * transaction	= ::transactionEnsure(state, manifest, false);
 		if(nullptr == transaction)
 			return -1;
-		if(false == (bool)consumer.ResolveCommitted || false == (bool)consumer.ResolveProvisional || false == (bool)consumer.QueryDurableRanges)
+		if(false == (b8_t)consumer.ResolveCommitted || false == (b8_t)consumer.ResolveProvisional || false == (b8_t)consumer.QueryDurableRanges)
 			return ::transferFail(state, consumer, manifest, output, -1);
 		gpk::err_t result	= consumer.ResolveCommitted(manifest);
 		if(failed(result))
@@ -326,10 +326,10 @@ gpk::err_t	gpk::transferProcess	(STransferState & state, const STransferConsumer
 		vcu0_t inputData	= input.Data;
 		STransferRanges durable;
 		if_fail_fe(durable.Load(inputData));
-		const s2_t indexTransaction	= ::transactionFind(state, durable.Id);
+		cnst s2_t indexTransaction	= ::transactionFind(state, durable.Id);
 		if(0 > indexTransaction || false == state.Transactions[indexTransaction].Source)
 			return -1;
-		const STransferManifest & manifest	= state.Transactions[indexTransaction].Manifest;
+		cnst STransferManifest & manifest	= state.Transactions[indexTransaction].Manifest;
 		apod<STransferRange> missing;
 		if_fail_fe(::missingBuild(manifest.Size, durable.Ranges, state.BlockSize, missing));
 		return ::transferSendRanges(state, consumer, durable.Id, missing, output);
@@ -348,13 +348,13 @@ gpk::err_t	gpk::transferProcess	(STransferState & state, const STransferConsumer
 			vcu0_t operationData	= operation.Data;
 			STransferWrite write;
 			if_fail_fe(write.Load(operationData));
-			const s2_t indexTransaction	= ::transactionFind(state, write.Id);
+			cnst s2_t indexTransaction	= ::transactionFind(state, write.Id);
 			if(0 > indexTransaction || state.Transactions[indexTransaction].Source)
 				return -1;
 			STransferTransaction & transaction	= state.Transactions[indexTransaction];
 			if(0 == write.Range.Count || write.Range.Offset >= transaction.Manifest.Size || write.Range.Count > transaction.Manifest.Size - write.Range.Offset || write.Data.size() != write.Range.Count)
 				return ::transferFail(state, consumer, transaction.Manifest, output, -1);
-			if(false == (bool)consumer.WriteProvisionalRange || false == (bool)consumer.QueryDurableRanges)
+			if(false == (b8_t)consumer.WriteProvisionalRange || false == (b8_t)consumer.QueryDurableRanges)
 				return ::transferFail(state, consumer, transaction.Manifest, output, -1);
 			gpk::err_t result	= consumer.WriteProvisionalRange(transaction.Manifest, write.Range, write.Data);
 			if(failed(result))
@@ -373,7 +373,7 @@ gpk::err_t	gpk::transferProcess	(STransferState & state, const STransferConsumer
 		vcu0_t inputData	= input.Data;
 		u3_t id	= 0;
 		if_fail_fe(loadPOD(inputData, id));
-		const s2_t indexTransaction	= ::transactionFind(state, id);
+		cnst s2_t indexTransaction	= ::transactionFind(state, id);
 		if(0 <= indexTransaction && false == state.Transactions[indexTransaction].Source && consumer.RollbackProvisional)
 			consumer.RollbackProvisional(state.Transactions[indexTransaction].Manifest);
 		::transactionRelease(state, id);

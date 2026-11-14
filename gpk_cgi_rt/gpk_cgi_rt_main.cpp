@@ -5,14 +5,14 @@
 #include "gpk_parse.h"
 
 using nmsp gpk;
-//static gpk::err_t 							metrics_split			(const view_const_string& input_string, n2<s2_t>& output_metrics)												{
+//sttc gpk::err_t 							metrics_split			(cnst view_const_string& input_string, n2<s2_t>& output_metrics)												{
 //	u2_t 												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 //		if('x' == input_string[iChar]) {
 //			asc_t									sx						= {};
 //			asc_t									sy						= {};
-//			sy.append((char*)input_string.begin(), iChar);
-//			sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
+//			sy.append((sc_t*)input_string.begin(), iChar);
+//			sx.append((sc_t*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
 //			try {
 //				output_metrics.x									= ::std::stoi(::std::string{sy.begin(), sy.size()});
 //				output_metrics.y									= ::std::stoi(::std::string{sy.begin(), sy.size()});
@@ -28,7 +28,7 @@ using nmsp gpk;
 //}
 
 gpk::err_t 							genHTMLModuleOutput				(SCGIFramework & framework, string & output){
-	//char									buffer[4096]					= {};
+	//sc_t									buffer[4096]					= {};
 	SCGIModule						module;
 	vcst_t							moduleName						= framework.ModuleName;
 	if_fail_fe(loadCGIModule(module, moduleName));
@@ -69,13 +69,13 @@ gpk::err_t 									processKeyVal					(SCGIFramework& framework, gpk::kv<gpk::vc
 }
 
 int													cgiBootstrap			(SCGIFramework & framework, string & output)										{
-	const SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
-	const ::gpk::view<const ::gpk::kv<::gpk::vcst_t>>	queryStringKeyVals		= runtimeValues.QueryStringKeyVals;
+	cnst SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
+	cnst ::gpk::view<cnst ::gpk::kv<::gpk::vcst_t>>	queryStringKeyVals		= runtimeValues.QueryStringKeyVals;
 	if(framework.Bootstrapped) {
 		if_fail_fe(::genHTMLModuleOutput(framework, output));
 	}
 	else {
-		char													buffer[4096]		= {};
+		sc_t													buffer[4096]		= {};
 		output.append(buffer, ::gpk::sprintf_s(buffer, "%s",
 			"<html>"
 			"\n<head>"
@@ -92,11 +92,11 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 		if(querystring.size()) {
 			output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>QueryString (%u): %.*s</h4>", querystring.size(), GPK_VIEW_ARGS(querystring)));
 		}
-		const view<vcst_t>		keyvalviews			= runtimeValues.QueryStringElements;
+		cnst view<vcst_t>		keyvalviews			= runtimeValues.QueryStringElements;
 		for(u2_t  iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
-			const kv<vcst_t>						& keyval			= runtimeValues.QueryStringKeyVals[iChar];
+			cnst kv<vcst_t>						& keyval			= runtimeValues.QueryStringKeyVals[iChar];
 			output.append(buffer, formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
 			output.append(buffer, formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
 		}
@@ -119,14 +119,14 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 
 		//int														argc					= __argc;
-		//char													** argv					= __argv;
+		//sc_t													** argv					= __argv;
 		//for(s2_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
 			string	content_body			= {};
 			content_body.resize(runtimeValues.Content.Length);
 			u2_t 			iChar					= 0;
-			char				iArg					= 0;
+			sc_t				iArg					= 0;
 			while(iChar < runtimeValues.Content.Length) {
 				int					count					= 0;
 				//memset(content_body.begin(), 0, content_body.size());
@@ -156,10 +156,10 @@ int													cgiBootstrap			(SCGIFramework & framework, string & output)					
 	return 0;
 }
 
-static ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
+sttc ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
 	SCGIFramework									framework			= {runtimeValues};
 	if_fail_fe(cgiRuntimeValuesLoad(framework.RuntimeValues));
-	const array_obj<vcst_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
+	cnst array_obj<vcst_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
 	for(u2_t  iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 

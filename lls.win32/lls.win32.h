@@ -41,7 +41,7 @@ struct SApplication {
 	::SServerSystem			Server			= {};
 	::llswin32::SProcessBroker	ProcessBroker		= {};
 
-							SApplication	(::gpk::SRuntimeValues & runtimeValues) noexcept
+							SApplication	(::gpk::SRuntimeValues & runtimeValues) nxpt
 	: Framework(runtimeValues) {
 		if(!Framework.GUI)
 			Framework.GUI.create();

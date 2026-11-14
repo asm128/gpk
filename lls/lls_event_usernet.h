@@ -9,8 +9,8 @@ namespace lls
 	GDEFINE_ENUM_TYPE (CLIENT_ASKS, uint8_t); 
 	GDEFINE_ENUM_VALUE(CLIENT_ASKS, Join, 0); // The args for this command is the player name or email or hash or token or whatever is needed to uniquely identify a player.
 	GDEFINE_ENUM_VALUE(CLIENT_ASKS, Quit, 1); // The args for this command is the player name or email or hash or token or whatever is needed to uniquely identify a player.
-	typedef	::gpk::SEvent		<CLIENT_ASKS>	EventClient;
-	typedef	::gpk::SEventView	<CLIENT_ASKS>	EViewClient;
+	tydf	::gpk::SEvent		<CLIENT_ASKS>	EventClient;
+	tydf	::gpk::SEventView	<CLIENT_ASKS>	EViewClient;
 
 	GDEFINE_ENUM_TYPE (ACTION_CHAR, uint8_t);
 	GDEFINE_ENUM_VALUE(ACTION_CHAR, Walk	, 0); // Used with an SArgsEvent structure.
@@ -40,8 +40,8 @@ namespace lls
 	GDEFINE_ENUM_VALUE(ACTION_CHAR, Leave	,24); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ACTION_CHAR, Study	,25); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ACTION_CHAR, Spawn	,26); // Used with an SArgsEvent structure.
-	typedef	::gpk::SEvent		<ACTION_CHAR>	EventMe;
-	typedef	::gpk::SEventView	<ACTION_CHAR>	EViewMe;
+	tydf	::gpk::SEvent		<ACTION_CHAR>	EventMe;
+	tydf	::gpk::SEventView	<ACTION_CHAR>	EViewMe;
 #pragma pack(pop)
 } // namespace
 

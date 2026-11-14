@@ -65,12 +65,12 @@ stct SEventTestPOD {
 };
 #pragma pack(pop)
 
-sttc bool eventTestBytesEqual(::gpk::vcu0_t left, ::gpk::vcu0_t right) {
+sttc b8_t eventTestBytesEqual(::gpk::vcu0_t left, ::gpk::vcu0_t right) {
 	rtrn left.size() == right.size() && (0 == left.size() || 0 == ::memcmp(left.begin(), right.begin(), left.size()));
 }
 
 tplt<tpnm T>
-sttc bool eventTestPODRead(::gpk::vcu0_t bytes, T & value) {
+sttc b8_t eventTestPODRead(::gpk::vcu0_t bytes, T & value) {
 	if(bytes.size() != szof(T))
 		rtrn false;
 	::memcpy(&value, bytes.begin(), szof(T));
@@ -133,7 +133,7 @@ sttc ::gpk::err_t testEventNesting(::gpk::ATestError & errors) {
 	if_fail_fe(queue[4]->ExtractChild(child));
 	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_EMPTY_PAYLOAD, child.Type != EVENT_TEST_CHILD_Empty || child.Data.size());
 
-	bool handled = false;
+	b8_t handled = false;
 	cnst ::gpk::function<::gpk::err_t(cnst ::gpk::SEView<EVENT_TEST_CHILD> &)> successHandler = [&handled, &raw](cnst ::gpk::SEView<EVENT_TEST_CHILD> & eventView) {
 		handled = eventView.Type == EVENT_TEST_CHILD_Bytes && eventTestBytesEqual(eventView.Data, {raw});
 		rtrn 0;
@@ -144,7 +144,7 @@ sttc ::gpk::err_t testEventNesting(::gpk::ATestError & errors) {
 	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_HANDLER_RESULT, ::gpk::eventExtractAndHandle(*queue[0], failureHandler) != -7);
 
 	::gpk::SEvent<EVENT_TEST_PARENT> truncated = {EVENT_TEST_PARENT_Application, ::gpk::vcu0_t{raw, 1}};
-	bool malformedDispatched = false;
+	b8_t malformedDispatched = false;
 	cnst ::gpk::function<::gpk::err_t(cnst ::gpk::SEView<EVENT_TEST_CHILD> &)> malformedHandler = [&malformedDispatched](cnst ::gpk::SEView<EVENT_TEST_CHILD> &) { malformedDispatched = true; rtrn 0; };
 	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_TRUNCATED_REJECTED, ::gpk::succeeded(::gpk::eventExtractAndHandle(truncated, malformedHandler)) || malformedDispatched);
 

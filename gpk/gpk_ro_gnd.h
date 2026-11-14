@@ -135,16 +135,16 @@ nmsp gpk
 		};
 	);
 	gpk::err_t 						gndGenerateFaceGeometry
-		( const apod<STileSkinGND		>	lstTileTextureData
-		, const apod<STileGeometryGND	>	lstTileGeometryData
-		, const STiledTerrainMetricsGND		tileMapMetrics
+		( cnst apod<STileSkinGND		>	lstTileTextureData
+		, cnst apod<STileGeometryGND	>	lstTileGeometryData
+		, cnst STiledTerrainMetricsGND		tileMapMetrics
 		, TILE_FACE_FACING							facing_direction
 		, s2_t									textureIndex
 		, SModelNodeGND						& generated
 		, grid<STileMapping>			& out_mapping
 		);
 
-	gpk::err_t 						blendGNDNormals		(const grid<STileGeometryGND> &tileGeometryView, const view<STileSkinGND>& lstTileSkinData, const grid<STileMapping>& tileMappingView, view<SModelNodeGND> & gndModelNodes);
+	gpk::err_t 						blendGNDNormals		(cnst grid<STileGeometryGND> &tileGeometryView, cnst view<STileSkinGND>& lstTileSkinData, cnst grid<STileMapping>& tileMappingView, view<SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // nmsp

@@ -35,33 +35,33 @@ nmsp gpk
 	int				drawLine			(g8bgra pixels, line2s1_t  line		, bgra color);
 	int				drawLine			(n2u1_c offscreenMetrics, line2s1_t line, apod<n2s1_t> & pixelCoords);
 	int				drawLine
-		( const n2<u1_t>	offscreenMetrics
-		, const line3f2_t		& lineFloat
+		( cnst n2<u1_t>	offscreenMetrics
+		, cnst line3f2_t		& lineFloat
 		, apod<n3f2_t>	& pixelCoords
 		, grid<u2_t>	depthBuffer
 		);
-	int				drawTriangle		(g8bgra pixels, const tri2s1_t & triangle, bgra color);
-	int				drawTriangle		(n2u2_t targetSize, const tri3f2_t & triangle, apod<n2s1_t> & pixelCoords, apod<trif2_t> & proportions, grid<u2_t> depthBuffer);
-	int				drawTriangle		(n2u2_t targetSize, const tri2f2_t & triangle, apod<n2s1_t> & pixelCoords, apod<trif2_t> & proportions);
+	int				drawTriangle		(g8bgra pixels, cnst tri2s1_t & triangle, bgra color);
+	int				drawTriangle		(n2u2_t targetSize, cnst tri3f2_t & triangle, apod<n2s1_t> & pixelCoords, apod<trif2_t> & proportions, grid<u2_t> depthBuffer);
+	int				drawTriangle		(n2u2_t targetSize, cnst tri2f2_t & triangle, apod<n2s1_t> & pixelCoords, apod<trif2_t> & proportions);
 	int				drawQuadTriangle
 		( g8bgra					targetPixels
-		, const SGeometryQuads	& geometry
-		, const int						iTriangle
-		, const m4f2_t			& matrixTransform
-		, const m4f2_t			& matrixTransformView
-		, const n3f2_t			& lightVector
-		, const bgra				color
+		, cnst SGeometryQuads	& geometry
+		, cnst int						iTriangle
+		, cnst m4f2_t			& matrixTransform
+		, cnst m4f2_t			& matrixTransformView
+		, cnst n3f2_t			& lightVector
+		, cnst bgra				color
 		, apod<n2s1_t>	& pixelCoords
 		, apod<trif2_t>	& pixelVertexWeights
 		, grid<u2_t>			depthBuffer
 		);
 	int				drawQuadTriangle
 		( g8bgra						targetPixels
-		, const SGeometryQuads		& geometry
-		, const int							iTriangle
-		, const m4f2_t				& matrixTransform
-		, const m4f2_t				& matrixTransformView
-		, const n3f2_t				& lightVector
+		, cnst SGeometryQuads		& geometry
+		, cnst int							iTriangle
+		, cnst m4f2_t				& matrixTransform
+		, cnst m4f2_t				& matrixTransformView
+		, cnst n3f2_t				& lightVector
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, gc8bgra					textureImage
@@ -72,42 +72,42 @@ nmsp gpk
 
 	int				drawQuadTriangle
 		( g8bgra						targetPixels
-		, const SGeometryQuads		& geometry
-		, const int							iTriangle
-		, const m4f2_t				& matrixTransform
-		, const m4f2_t				& matrixTransformView
-		, const n3f2_t				& lightVector
+		, cnst SGeometryQuads		& geometry
+		, cnst int							iTriangle
+		, cnst m4f2_t				& matrixTransform
+		, cnst m4f2_t				& matrixTransformView
+		, cnst n3f2_t				& lightVector
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, gc8bgra					textureImage
 		, apod<n3f2_t>		& lightPoints
 		, a8bgra						& lightColors
 		, grid<u2_t>				depthBuffer
-		, const function<err_t(g8bgra targetPixels, const n2s1_t & pixelCoord, const bgra & color)> & funcSetPixel
+		, cnst function<err_t(g8bgra targetPixels, n2s1_c & pixelCoord, cnst bgra & color)> & funcSetPixel
 		);
 
 	int				drawQuadTriangle
 		( n2u2_c						& targetSize
 		, tri3f2_t					triangle
-		, const m4f2_t				& matrixTransformView
+		, cnst m4f2_t				& matrixTransformView
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, grid<u2_t>				depthBuffer
 		);
 	int				drawQuadTriangle
 		( n2u2_c						& targetSize
-		, const tri3f2_t				& triangleScreen
+		, cnst tri3f2_t				& triangleScreen
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, grid<u2_t>				depthBuffer
 		);
 	int				drawTriangle
 		( g8bgra						targetPixels
-		, const SGeometryTriangles	& geometry
-		, const int							iTriangle
-		, const m4f2_t				& matrixTransform
-		, const m4f2_t				& matrixTransformView
-		, const n3f2_t				& lightVector
+		, cnst SGeometryTriangles	& geometry
+		, cnst int							iTriangle
+		, cnst m4f2_t				& matrixTransform
+		, cnst m4f2_t				& matrixTransformView
+		, cnst n3f2_t				& lightVector
 		, bgra						color
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
@@ -115,11 +115,11 @@ nmsp gpk
 		);
 	int				drawTriangle
 		( g8bgra						targetPixels
-		, const SGeometryTriangles	& geometry
-		, const int							iTriangle
-		, const m4f2_t				& matrixTransform
-		, const m4f2_t				& matrixTransformView
-		, const n3f2_t				& lightVector
+		, cnst SGeometryTriangles	& geometry
+		, cnst int							iTriangle
+		, cnst m4f2_t				& matrixTransform
+		, cnst m4f2_t				& matrixTransformView
+		, cnst n3f2_t				& lightVector
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, gc8bgra					textureImage
@@ -127,12 +127,12 @@ nmsp gpk
 		);
 	int				drawTriangle
 		( g8bgra						targetPixels
-		, const SGeometryTriangles	& geometry
-		, const int							iTriangle
-		, const m4f2_t				& matrixTransform
-		, const m4f2_t				& matrixTransformView
-		, const n3f2_t				& lightVector
-		, const rgbaf				& lightColor
+		, cnst SGeometryTriangles	& geometry
+		, cnst int							iTriangle
+		, cnst m4f2_t				& matrixTransform
+		, cnst m4f2_t				& matrixTransformView
+		, cnst n3f2_t				& lightVector
+		, cnst rgbaf				& lightColor
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, gc8bgra					textureImage
@@ -143,24 +143,24 @@ nmsp gpk
 
 	int				drawPixels
 		( g8bgra						targetPixels
-		, const tri3f2_t				& triangleWorld
-		, const n3f2_t				& normal
-		, const tri2f2_t				& triangleTexCoords
-		, const n3f2_t				& lightVector
+		, cnst tri3f2_t				& triangleWorld
+		, cnst n3f2_t				& normal
+		, cnst tri2f2_t				& triangleTexCoords
+		, cnst n3f2_t				& lightVector
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, gc8bgra					textureImage
 		, apod<n3f2_t>		& lightPoints
 		, a8bgra						& lightColors
-		, const function<err_t(g8bgra targetPixels, n2s1_c & pixelCoord, const bgra & color)> & funcSetPixel
+		, cnst function<err_t(g8bgra targetPixels, n2s1_c & pixelCoord, cnst bgra & color)> & funcSetPixel
 		);
 
 	int				drawPixels
 		( g8bgra						targetPixels
-		, const tri3f2_t				& triangleWorld
-		, const n3f2_t				& normal
-		, const tri2f2_t				& triangleTexCoords
-		, const n3f2_t				& lightVector
+		, cnst tri3f2_t				& triangleWorld
+		, cnst n3f2_t				& normal
+		, cnst tri2f2_t				& triangleTexCoords
+		, cnst n3f2_t				& lightVector
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, gc8bgra					textureImage

@@ -28,7 +28,7 @@ struct SApplication {
 
 	::lls::LLSClient	LLSApp			= {};
 
-							SApplication	(::gpk::SRuntimeValues & runtimeValues)	noexcept
+							SApplication	(::gpk::SRuntimeValues & runtimeValues)	nxpt
 	: Framework(runtimeValues) { 
 		if(!Framework.GUI) 
 			Framework.GUI.create(); 

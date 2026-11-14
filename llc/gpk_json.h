@@ -100,7 +100,7 @@ nmsp gpk
 	// Reader functions: Populate a SJSONReader structure from an input JSON string.
 	err_t			jsonParse			(SJSONReader & reader, vcst_t jsonAsString, SJSONParseOptions options = JSON_PARSE_GPK);
 	err_t			jsonParseStep		(SJSONReader & reader, vcst_t jsonAsString, SJSONParseOptions options = JSON_PARSE_GPK);
-	stin err_t		jsonParse			(SJSONReader & reader, vcst_t jsonAsString, bool buildTree, bool buildViews = true) {
+	stin err_t		jsonParse			(SJSONReader & reader, vcst_t jsonAsString, b8_t buildTree, b8_t buildViews = true) {
 		SJSONParseOptions options = JSON_PARSE_GPK;
 		options.Set(JSON_PARSE_OPTION_BUILD_TREE , buildTree );
 		options.Set(JSON_PARSE_OPTION_BUILD_VIEWS, buildViews);

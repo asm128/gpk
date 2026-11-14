@@ -62,9 +62,9 @@ nmsp  gpk
 	}
 #pragma pack(push, 1)
 	stct SDeviceResult {
-		const SYSTEM_EVENT	SystemEvent 	= {};
-		const u0_t			TailWidth		: 2;
-		const u0_t			Multiplier		: 6;
+		cnst SYSTEM_EVENT	SystemEvent 	= {};
+		cnst u0_t			TailWidth		: 2;
+		cnst u0_t			Multiplier		: 6;
 		RESULT				DeviceEvent		= {};
 
 		cxpr						SDeviceResult	(RESULT deviceEvent = RESULT_Error)
@@ -75,7 +75,7 @@ nmsp  gpk
 			{}
 	};
 	stct SDeviceCommand {
-		const SYSTEM_EVENT	SystemEvent 	= {};
+		cnst SYSTEM_EVENT	SystemEvent 	= {};
 		u0_c				TailWidth		: 2;
 		u0_c				Multiplier		: 6;
 		COMMAND				DeviceEvent		= {};

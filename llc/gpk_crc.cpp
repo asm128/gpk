@@ -19,7 +19,7 @@ gpk::err_t			gpk::crcGenerate			(vcu0_t bytes, u3_t & crc)	{
 gpk::err_t			gpk::crcGenerateAndAppend	(au0_t & bytes)	{
 	u3_t					crcToStore					= 0;
 	crcGenerate(bytes, crcToStore);
-	if_fail_fe(bytes.append((const u0_t*)&crcToStore, szof(u3_t)));;
+	if_fail_fe(bytes.append((cnst u0_t*)&crcToStore, szof(u3_t)));;
 	return 0;
 }
 gpk::err_t			gpk::crcVerifyAndRemove		(au0_t & bytes)	{
@@ -27,7 +27,7 @@ gpk::err_t			gpk::crcVerifyAndRemove		(au0_t & bytes)	{
 	u3_t					check						= 0;
 	u2_c				startOfCRC					= bytes.size() - 8;
 	crcGenerate({bytes.begin(), startOfCRC}, check);
-	const u3_t				found						= *(u3_t*)&bytes[startOfCRC];
+	cnst u3_t				found						= *(u3_t*)&bytes[startOfCRC];
 	if_true_fef(check != found, "CRC Check failed: Stored: %llu. Calculated: %llu.", found, check);
 	if_fail_fe(bytes.resize(bytes.size() - 8));
 	return 0;

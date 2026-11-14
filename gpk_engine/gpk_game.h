@@ -35,7 +35,7 @@ nmsp gpk
 	struct SGameState {
 		u2_t			Stage				= 0;
 		SStageTime			UserTime			= {};
-		bool				Paused				= false;
+		b8_t				Paused				= false;
 		f3_t				CameraSwitchDelay	= 0;
 	};
 #pragma pack(pop)
@@ -47,7 +47,7 @@ nmsp gpk
 		SGameState			State				= {};
 		astagestate			Stages				= {};
 
-		gpk::err_t 	Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t 	Save				(::gpk::au0_t & output)	cnst	{ 
 			if_fail_fe(gpk::savePOD(output, Setup)); 
 			if_fail_fe(gpk::savePOD(output, State)); 
 			if_fail_fe(gpk::saveView(output, Stages));

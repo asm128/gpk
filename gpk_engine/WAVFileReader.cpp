@@ -129,15 +129,15 @@ nmsp
 	static_assert(36 == sizeof(RIFFMIDISample)	, "structure size mismatch");
 
 	//---------------------------------------------------------------------------------
-	const RIFFChunk* FindChunk(::gpk::vcu0_t data, _In_ u2_t tag) nxpt {
-		const u0_t* ptr = data.begin();
-		const u0_t* end = data.end();
+	cnst RIFFChunk* FindChunk(::gpk::vcu0_t data, _In_ u2_t tag) nxpt {
+		cnst u0_t* ptr = data.begin();
+		cnst u0_t* end = data.end();
 		while (end > (ptr + sizeof(RIFFChunk))) {
-			auto header = reinterpret_cast<const RIFFChunk*>(ptr);
+			auto header = reinterpret_cast<cnst RIFFChunk*>(ptr);
 			if (header->Tag == tag)
 				return header;
 
-			auto const offset = header->Size + sizeof(RIFFChunk);
+			auto cnst offset = header->Size + sizeof(RIFFChunk);
 			ptr += offset;
 		}
 
@@ -146,30 +146,30 @@ nmsp
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT WaveFindFormatAndData(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * pwfx, ::gpk::vcu0_t & data, _Out_ bool & dpds, _Out_ bool & seek) nxpt {
+	HRESULT WaveFindFormatAndData(::gpk::vcu0_t wavData, _Outptr_ cnst WAVEFORMATEX* * pwfx, ::gpk::vcu0_t & data, _Out_ b8_t & dpds, _Out_ b8_t & seek) nxpt {
 		dpds = seek = false;
 		if_true_ve(E_FAIL, wavData.size() < (sizeof(RIFFChunk) * 2 + sizeof(u2_t) + sizeof(WAVEFORMAT)));
 
-		const u0_t* wavEnd = wavData.begin() + wavData.size();
+		cnst u0_t* wavEnd = wavData.begin() + wavData.size();
 
 		// Locate RIFF 'WAVE'
 		auto riffChunk = FindChunk(wavData, FOURCC_RIFF_TAG);
 		if_true_ve(E_FAIL, (!riffChunk || riffChunk->Size < 4));
 
-		auto riffHeader = reinterpret_cast<const RIFFChunkHeader*>(riffChunk);
+		auto riffHeader = reinterpret_cast<cnst RIFFChunkHeader*>(riffChunk);
 		if_true_ve(E_FAIL, (riffHeader->Riff != FOURCC_WAVE_FILE_TAG && riffHeader->Riff != FOURCC_XWMA_FILE_TAG));
 
 		// Locate 'fmt '
-		auto ptr = reinterpret_cast<const u0_t*>(riffHeader) + sizeof(RIFFChunkHeader);
+		auto ptr = reinterpret_cast<cnst u0_t*>(riffHeader) + sizeof(RIFFChunkHeader);
 		if_true_ve(HRESULT_FROM_WIN32(ERROR_HANDLE_EOF), ((ptr + sizeof(RIFFChunk)) > wavEnd));
 
 		auto fmtChunk = FindChunk({ptr, riffHeader->Size}, FOURCC_FORMAT_TAG);
 		if_true_ve(E_FAIL, (!fmtChunk || fmtChunk->Size < sizeof(PCMWAVEFORMAT)));
 
-		ptr = reinterpret_cast<const u0_t*>(fmtChunk) + sizeof(RIFFChunk);
+		ptr = reinterpret_cast<cnst u0_t*>(fmtChunk) + sizeof(RIFFChunk);
 		if_true_ve(HRESULT_FROM_WIN32(ERROR_HANDLE_EOF), (ptr + fmtChunk->Size > wavEnd));
 
-		auto wf = reinterpret_cast<const WAVEFORMAT*>(ptr);
+		auto wf = reinterpret_cast<cnst WAVEFORMAT*>(ptr);
 
 		// Validate WAVEFORMAT (focused on chunk size and format tag, not other data that XAUDIO2 will validate)
 		switch (wf->wFormatTag)
@@ -185,7 +185,7 @@ nmsp
 				if (fmtChunk->Size < sizeof(WAVEFORMATEX))
 					return E_FAIL;
 
-				auto wfx = reinterpret_cast<const WAVEFORMATEX*>(ptr);
+				auto wfx = reinterpret_cast<cnst WAVEFORMATEX*>(ptr);
 
 				if (fmtChunk->Size < (sizeof(WAVEFORMATEX) + wfx->cbSize))
 					return E_FAIL;
@@ -208,12 +208,12 @@ nmsp
 					case WAVE_FORMAT_EXTENSIBLE:
 						if_true_ve(E_FAIL, ((fmtChunk->Size < sizeof(WAVEFORMATEXTENSIBLE)) || (wfx->cbSize < (sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX)))))
 						else {
-							static const GUID s_wfexBase = { 0x00000000, 0x0000, 0x0010, { 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 } };
+							sttc cnst GUID s_wfexBase = { 0x00000000, 0x0000, 0x0010, { 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 } };
 
-							auto wfex = reinterpret_cast<const WAVEFORMATEXTENSIBLE*>(ptr);
+							auto wfex = reinterpret_cast<cnst WAVEFORMATEXTENSIBLE*>(ptr);
 
-							if_true_ve(HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED), (memcmp(reinterpret_cast<const BYTE*>(&wfex->SubFormat) + sizeof(DWORD),
-								reinterpret_cast<const BYTE*>(&s_wfexBase) + sizeof(DWORD), sizeof(GUID) - sizeof(DWORD)) != 0));
+							if_true_ve(HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED), (memcmp(reinterpret_cast<cnst BYTE*>(&wfex->SubFormat) + sizeof(DWORD),
+								reinterpret_cast<cnst BYTE*>(&s_wfexBase) + sizeof(DWORD), sizeof(GUID) - sizeof(DWORD)) != 0));
 
 							switch (wfex->SubFormat.Data1) {
 								case WAVE_FORMAT_PCM:
@@ -241,13 +241,13 @@ nmsp
 		}
 
 		// Locate 'data'
-		ptr = reinterpret_cast<const u0_t*>(riffHeader) + sizeof(RIFFChunkHeader);
+		ptr = reinterpret_cast<cnst u0_t*>(riffHeader) + sizeof(RIFFChunkHeader);
 		if_true_ve(HRESULT_FROM_WIN32(ERROR_HANDLE_EOF), ((ptr + sizeof(RIFFChunk)) > wavEnd));
 		auto dataChunk = FindChunk({ptr, riffChunk->Size}, FOURCC_DATA_TAG);
 		if_true_ve(HRESULT_FROM_WIN32(ERROR_INVALID_DATA), (!dataChunk || !dataChunk->Size));
-		ptr = reinterpret_cast<const u0_t*>(dataChunk) + sizeof(RIFFChunk);
+		ptr = reinterpret_cast<cnst u0_t*>(dataChunk) + sizeof(RIFFChunk);
 		if_true_ve(HRESULT_FROM_WIN32(ERROR_HANDLE_EOF), (ptr + dataChunk->Size > wavEnd));
-		*pwfx = reinterpret_cast<const WAVEFORMATEX*>(wf);
+		*pwfx = reinterpret_cast<cnst WAVEFORMATEX*>(wf);
 		data = {ptr, dataChunk->Size};
 		return S_OK;
 	}
@@ -261,35 +261,35 @@ nmsp
 		*pLoopStart = 0;
 		*pLoopLength = 0;
 
-		const u0_t			* wavEnd		= wavData.end();
+		cnst u0_t			* wavEnd		= wavData.end();
 
 		// Locate RIFF 'WAVE'
-		const RIFFChunk			* riffChunk		= FindChunk(wavData, FOURCC_RIFF_TAG);
+		cnst RIFFChunk			* riffChunk		= FindChunk(wavData, FOURCC_RIFF_TAG);
 		if (!riffChunk || riffChunk->Size < 4)
 			return E_FAIL;
 
-		const RIFFChunkHeader	* riffHeader	= (const RIFFChunkHeader*)riffChunk;
+		cnst RIFFChunkHeader	* riffHeader	= (cnst RIFFChunkHeader*)riffChunk;
 		if (riffHeader->Riff == FOURCC_XWMA_FILE_TAG)
 			return S_OK; // xWMA files do not contain loop information
 
 		if_true_ve(-1, riffHeader->Riff != FOURCC_WAVE_FILE_TAG);
 
 		// Locate 'wsmp' (DLS Chunk)
-		const u0_t			* ptr			= ((const u0_t*)riffHeader) + sizeof(RIFFChunkHeader);
+		cnst u0_t			* ptr			= ((cnst u0_t*)riffHeader) + sizeof(RIFFChunkHeader);
 		if ((ptr + sizeof(RIFFChunk)) > wavEnd)
 			return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 		auto dlsChunk = FindChunk({ptr, riffChunk->Size}, FOURCC_DLS_SAMPLE);
 		if (dlsChunk) {
-			ptr = ((const u0_t*)dlsChunk) + sizeof(RIFFChunk);
+			ptr = ((cnst u0_t*)dlsChunk) + sizeof(RIFFChunk);
 			if (ptr + dlsChunk->Size > wavEnd)
 				return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 			if (dlsChunk->Size >= sizeof(RIFFDLSSample)) {
-				const RIFFDLSSample		* dlsSample		= (const RIFFDLSSample*)ptr;
+				cnst RIFFDLSSample		* dlsSample		= (cnst RIFFDLSSample*)ptr;
 
 				if (dlsChunk->Size >= (dlsSample->Size + dlsSample->LoopCount * sizeof(DLSLoop))) {
-					const DLSLoop			* loops			= (const DLSLoop*)(ptr + dlsSample->Size);
+					cnst DLSLoop			* loops			= (cnst DLSLoop*)(ptr + dlsSample->Size);
 					for (u2_t j = 0; j < dlsSample->LoopCount; ++j) {
 						if ((loops[j].LoopType == DLSLoop::LOOP_TYPE_FORWARD || loops[j].LoopType == DLSLoop::LOOP_TYPE_RELEASE)) {
 							// Return 'forward' loop
@@ -303,17 +303,17 @@ nmsp
 		}
 
 		// Locate 'smpl' (Sample Chunk)
-		const RIFFChunk			* midiChunk		= FindChunk({ptr, riffChunk->Size}, FOURCC_MIDI_SAMPLE);
+		cnst RIFFChunk			* midiChunk		= FindChunk({ptr, riffChunk->Size}, FOURCC_MIDI_SAMPLE);
 		if (midiChunk) {
-			ptr					= ((const u0_t*)midiChunk) + sizeof(RIFFChunk);
+			ptr					= ((cnst u0_t*)midiChunk) + sizeof(RIFFChunk);
 			if (ptr + midiChunk->Size > wavEnd)
 				return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 			if (midiChunk->Size >= sizeof(RIFFMIDISample)) {
-				const RIFFMIDISample	* midiSample		= (const RIFFMIDISample*)ptr;
+				cnst RIFFMIDISample	* midiSample		= (cnst RIFFMIDISample*)ptr;
 
 				if (midiChunk->Size >= (sizeof(RIFFMIDISample) + midiSample->LoopCount * sizeof(MIDILoop))) {
-					auto loops = (const MIDILoop*)(ptr + sizeof(RIFFMIDISample));
+					auto loops = (cnst MIDILoop*)(ptr + sizeof(RIFFMIDISample));
 					for (u2_t j = 0; j < midiSample->LoopCount; ++j) {
 						if (loops[j].Type == MIDILoop::LOOP_TYPE_FORWARD) {
 							// Return 'forward' loop
@@ -331,38 +331,38 @@ nmsp
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT WaveFindTable(::gpk::vcu0_t wavData, _In_ u2_t tag, _Outptr_result_maybenull_ const u2_t* * pData, _Out_ u2_t * dataCount) nxpt {
+	HRESULT WaveFindTable(::gpk::vcu0_t wavData, _In_ u2_t tag, _Outptr_result_maybenull_ u2_c* * pData, _Out_ u2_t * dataCount) nxpt {
 		if_true_ve(E_FAIL, wavData.size() < (sizeof(RIFFChunk) + sizeof(u2_t)));
 
 		*pData				= nullptr;
 		*dataCount			= 0;
 							
-		const u0_t			* wavEnd		= wavData.end();
+		cnst u0_t			* wavEnd		= wavData.end();
 
 		// Locate RIFF 'WAVE'
 		auto					riffChunk		= FindChunk(wavData, FOURCC_RIFF_TAG);
 		if (!riffChunk || riffChunk->Size < 4)
 			return E_FAIL;
 
-		auto					riffHeader		= reinterpret_cast<const RIFFChunkHeader*>(riffChunk);
+		auto					riffHeader		= reinterpret_cast<cnst RIFFChunkHeader*>(riffChunk);
 		if (riffHeader->Riff != FOURCC_WAVE_FILE_TAG && riffHeader->Riff != FOURCC_XWMA_FILE_TAG)
 			return E_FAIL;
 
 		// Locate tag
-		auto					ptr				= (const u0_t*)(riffHeader) + sizeof(RIFFChunkHeader);
+		auto					ptr				= (cnst u0_t*)(riffHeader) + sizeof(RIFFChunkHeader);
 		if ((ptr + sizeof(RIFFChunk)) > wavEnd)
 			return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 		auto					tableChunk		= FindChunk({ptr, riffChunk->Size}, tag);
 		if (tableChunk) {
-			ptr					= reinterpret_cast<const u0_t*>(tableChunk) + sizeof(RIFFChunk);
+			ptr					= reinterpret_cast<cnst u0_t*>(tableChunk) + sizeof(RIFFChunk);
 			if (ptr + tableChunk->Size > wavEnd)
 				return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 			if ((tableChunk->Size % sizeof(u2_t)) != 0)
 				return E_FAIL;
 
-			*pData				= reinterpret_cast<const u2_t*>(ptr);
+			*pData				= reinterpret_cast<u2_c*>(ptr);
 			*dataCount			= tableChunk->Size / 4;
 		}
 
@@ -400,10 +400,10 @@ nmsp
 
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
-HRESULT DirectX::LoadWAVAudioInMemory(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) nxpt {
+HRESULT DirectX::LoadWAVAudioInMemory(::gpk::vcu0_t wavData, _Outptr_ cnst WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) nxpt {
 	if_true_vef(E_FAIL, (wavData.size() < (sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT))), "Need at least enough data to have a valid minimal WAV file. Size: %i", wavData.size());
 
-	bool dpds = true, seek = true;
+	b8_t dpds = true, seek = true;
 	gpk_hrcall(WaveFindFormatAndData(wavData, wfx, audioBytes, dpds, seek));
 
 	return (dpds || seek) ? E_FAIL : S_OK;
@@ -411,10 +411,10 @@ HRESULT DirectX::LoadWAVAudioInMemory(::gpk::vcu0_t wavData, _Outptr_ const WAVE
 
 
 //-------------------------------------------------------------------------------------
-HRESULT DirectX::LoadWAVAudioFromFile(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) nxpt {
+HRESULT DirectX::LoadWAVAudioFromFile(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, cnst WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) nxpt {
 	gpk_hrcall(LoadAudioFromFile(szFileName, wavData));
 
-	bool dpds = true, seek = true;
+	b8_t dpds = true, seek = true;
 	gpk_hrcall(WaveFindFormatAndData(wavData, wfx, audioBytes, dpds, seek));
 
 	return (dpds || seek) ? E_FAIL : S_OK;
@@ -427,7 +427,7 @@ HRESULT DirectX::LoadWAVAudioInMemoryEx(::gpk::vcu0_t wavData, DirectX::WAVData 
 		return E_FAIL;
 	}
 
-	bool dpds = false, seek = false;
+	b8_t dpds = false, seek = false;
 	gpk_hrcall(WaveFindFormatAndData(wavData, &result.WaveFormat, result.AudioView, dpds, seek));
 	gpk_hrcall(WaveFindLoopInfo(wavData, &result.LoopStart, &result.LoopLength));
 
@@ -446,7 +446,7 @@ HRESULT DirectX::LoadWAVAudioFromFileEx(::gpk::vcst_t szFileName, ::gpk::au0_t &
 	if (FAILED(bytesRead))
 		return bytesRead;
 
-	bool dpds = false, seek = false;
+	b8_t dpds = false, seek = false;
 	gpk_hrcall(WaveFindFormatAndData(wavData, &result.WaveFormat, result.AudioView, dpds, seek));
 	gpk_hrcall(WaveFindLoopInfo(wavData, &result.LoopStart, &result.LoopLength));
 

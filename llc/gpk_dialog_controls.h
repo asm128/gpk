@@ -21,8 +21,8 @@ nmsp gpk
 	struct SDialogViewport;
 	cid_t			viewportCreate		(SDialog			& dialog);
 	err_t			viewportUpdate		(SDialogViewport	& control);
-	err_t			viewportFold		(SDialogViewport	& control, bool fold);
-	err_t			viewportAdjustSize	(n2<s1_t>			& sizeViewport, const n2<s1_t> & sizeClient);
+	err_t			viewportFold		(SDialogViewport	& control, b8_t fold);
+	err_t			viewportAdjustSize	(n2<s1_t>			& sizeViewport, cnst n2<s1_t> & sizeClient);
 
 	stin	cid_t	sliderCreate		(SDialog			& dialog, pnco<SDialogSlider	>	& createdControl)	 { cid_t index = -1; if_fail_fe(index = sliderCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
 	stin	cid_t	checkBoxCreate		(SDialog			& dialog, pnco<SDialogCheckBox	>	& createdControl)	 { cid_t index = -1; if_fail_fe(index = checkBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
@@ -31,12 +31,12 @@ nmsp gpk
 
 #pragma pack(push, 1)
 	struct SDialogViewportSettings {
-		bool					Dragging			: 1;
-		bool					Unfolded			: 1;
-		bool					DisplacementLockX	: 1;
-		bool					DisplacementLockY	: 1;
-		bool					ScrollBarX			: 1;
-		bool					ScrollBarY			: 1;
+		b8_t					Dragging			: 1;
+		b8_t					Unfolded			: 1;
+		b8_t					DisplacementLockX	: 1;
+		b8_t					DisplacementLockY	: 1;
+		b8_t					ScrollBarX			: 1;
+		b8_t					ScrollBarY			: 1;
 	};
 
 	struct SDialogViewport : public IDialogControl {
@@ -51,7 +51,7 @@ nmsp gpk
 		SDialogViewportSettings	Settings			= {};
 		SDialogViewportSettings	SettingsOld			= {};
 
-		virtual	err_t	Update				(view<const pobj<SEventSystem>> )	{ return viewportUpdate(*this); }
+		virtual	err_t	Update				(view<cnst pobj<SEventSystem>> )	{ return viewportUpdate(*this); }
 	};
 #pragma pack(pop)
 
@@ -59,37 +59,37 @@ nmsp gpk
 		minmax<u2_t>	Selection			= {};
 		string			String				= {};
 
-		virtual	err_t	Update				(view<const pobj<SEventSystem>> )	{ return editBoxUpdate(*this); }
+		virtual	err_t	Update				(view<cnst pobj<SEventSystem>> )	{ return editBoxUpdate(*this); }
 	};
 
 	struct SDialogCheckBox : public IDialogControl {
-		bool					Checked				= false;
+		b8_t					Checked				= false;
 
-		virtual	err_t	Update				(view<const pobj<SEventSystem>> )	{ return checkBoxUpdate(*this); }
+		virtual	err_t	Update				(view<cnst pobj<SEventSystem>> )	{ return checkBoxUpdate(*this); }
 	};
 
 	struct SDialogSlider : public IDialogControl {
-		tydf	function<err_t(vcst_t & format, s3_t value, const minmax<s3_t> & limits)>	
+		tydf	function<err_t(vcst_t & format, s3_t value, cnst minmax<s3_t> & limits)>	
 						TCallback;
 
 		cid_t			IdButton			= (cid_t)-1;
-		bool			Vertical			= false;
+		b8_t			Vertical			= false;
 		minmax<s3_t>	ValueLimits			= {0, 100};// 0x7fFFffFF};
 		s3_t			ValueCurrent		= -1;
 		astsc_t<64>		ValueString			= {};
 
-		TCallback		FuncValueFormat		= []	(vcst_t & format, s3_t, const minmax<s3_t> &)		mutable	{ format = "%lli"; return 0; };
-		TCallback		FuncGetString		= [this](vcst_t & inouts, s3_t value, const minmax<s3_t> &)			{ 
+		TCallback		FuncValueFormat		= []	(vcst_t & format, s3_t, cnst minmax<s3_t> &)		mutable	{ format = "%lli"; return 0; };
+		TCallback		FuncGetString		= [this](vcst_t & inouts, s3_t value, cnst minmax<s3_t> &)			{ 
 			inouts	= {ValueString.Storage, (u2_t)sprintf_s(ValueString.Storage, inouts, value)}; 
 			return 0; 
 		};
 
-		virtual	err_t	Update				(view<const pobj<SEventSystem>> )	{ return sliderUpdate(*this); }
+		virtual	err_t	Update				(view<cnst pobj<SEventSystem>> )	{ return sliderUpdate(*this); }
 	};
 
 	tplt<tpnm _tValue>
 	struct SDialogTuner : public IDialogControl {
-		tydf	function<err_t(vcst_t & format, _tValue value, const minmax<_tValue> & limits)>	
+		tydf	function<err_t(vcst_t & format, _tValue value, cnst minmax<_tValue> & limits)>	
 								TCallback;
 
 		cid_t					IdDecrease			= -1;
@@ -99,22 +99,22 @@ nmsp gpk
 		_tValue					ValueCurrent		= 0;
 		astsc_t<64>				ValueString			= {};
 
-		TCallback				FuncValueFormat	= [this](vcst_t & format, _tValue/*value*/, const minmax<_tValue> &)	mutable	{ format = "%lli"; return 0; };
-		TCallback				FuncGetString	= [this](vcst_t & inouts, _tValue value, const minmax<_tValue> &)				{ 
+		TCallback				FuncValueFormat	= [this](vcst_t & format, _tValue/*value*/, cnst minmax<_tValue> &)	mutable	{ format = "%lli"; return 0; };
+		TCallback				FuncGetString	= [this](vcst_t & inouts, _tValue value, cnst minmax<_tValue> &)				{ 
 			inouts	= {ValueString.Storage, (u2_t)sprintf_s(ValueString.Storage, inouts, value)}; 
 			return 0; 
 		};
 
-		virtual	err_t	Update				(view<const pobj<SEventSystem>> eventsIn) { 
+		virtual	err_t	Update				(view<cnst pobj<SEventSystem>> eventsIn) { 
 			SDialog				& dialog			= *Dialog;
 			SControlTable		& controlTable		= dialog.GUI->Controls;
 			for(u2_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {
 				if(eventsIn[iEvent]->Type == SYSTEM_EVENT_GUI) {
-					if_fail_e(eventExtractAndHandle<EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](const SEventView<EVENT_GUI_CONTROL> & eventGui) {
+					if_fail_e(eventExtractAndHandle<EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](cnst SEventView<EVENT_GUI_CONTROL> & eventGui) {
 						switch(eventGui.Type) {
 						default: break;
 						case EVENT_GUI_CONTROL_StateChange: {
-							const SChangeControlState	stateChange		= *(const SChangeControlState*)eventGui.Data.begin();
+							cnst SChangeControlState	stateChange		= *(cnst SChangeControlState*)eventGui.Data.begin();
 							if((stateChange.Set & GUI_CONTROL_FLAG_Action) && stateChange.Id == IdDecrease) 
 								 return SetValue(ValueCurrent - 1);
 							else if((stateChange.Set & GUI_CONTROL_FLAG_Action) && stateChange.Id == IdIncrease) 

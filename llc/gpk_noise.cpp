@@ -2,7 +2,7 @@
 																	// 4611686018427387904
 // Based on noiseNormal1D() returns a value between 0 and 1.
 //f3_t						::gpk::randNoise			(u3_t seed)				nxpt	{
-//		static	::gpk::SRandomGenerator		generator;
+//		sttc	::gpk::SRandomGenerator		generator;
 //		if( generator.Seed != seed )
 //			generator.Reset(seed);
 //		return generator.Next();

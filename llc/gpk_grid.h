@@ -25,15 +25,15 @@ nmsp gpk
 		tplt<size_t _tWidth, size_t _tHeight>
 		inxp						grid			(T (&data)[_tHeight][_tWidth])		nxpt	: Data{&data[0][0]}, Size{_tWidth, _tHeight} {}
 
-		inxp	oper				grid<const T>	()							csnx	{ return {Data, Size}; }
+		inxp	oper				grid<cnst T>	()							csnx	{ return {Data, Size}; }
 		// Operators
 		view<T>				oper[]		(u2_t row)									{ if_true_te(0 == Data); if_true_tef(row >= Size.y, "Invalid row: %i.", (s2_t)row); return {&Data[row * Size.x], Size.x}; }
-		view<const T>		oper[]		(u2_t row)				const				{ if_true_te(0 == Data); if_true_tef(row >= Size.y, "Invalid row: %i.", (s2_t)row); return {&Data[row * Size.x], Size.x}; }
+		view<cnst T>		oper[]		(u2_t row)				cnst				{ if_true_te(0 == Data); if_true_tef(row >= Size.y, "Invalid row: %i.", (s2_t)row); return {&Data[row * Size.x], Size.x}; }
 		T&					oper[]		(n2u2_c & cell)						{ if_true_te(0 == Data); if_true_tef(cell.y >= Size.y, "Invalid row: %i.", (s2_t)cell.y); if_true_tef(cell.x >= Size.x, "Invalid column: %i.", (s2_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
-		const T&			oper[]		(n2u2_c & cell)	const				{ if_true_te(0 == Data); if_true_tef(cell.y >= Size.y, "Invalid row: %i.", (s2_t)cell.y); if_true_tef(cell.x >= Size.x, "Invalid column: %i.", (s2_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
+		cnst T&			oper[]		(n2u2_c & cell)	cnst				{ if_true_te(0 == Data); if_true_tef(cell.y >= Size.y, "Invalid row: %i.", (s2_t)cell.y); if_true_tef(cell.x >= Size.x, "Invalid column: %i.", (s2_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
 
-		ndix	const T*	begin			()		csnx	{ return Data; }
-		ndix	const T*	end				()		csnx	{ return Data + size(); }
+		ndix	cnst T*	begin			()		csnx	{ return Data; }
+		ndix	cnst T*	end				()		csnx	{ return Data + size(); }
 		
 		ndin	T*			begin			()		nxpt	{ return Data; }
 		ndin	T*			end				()		nxpt	{ return Data + size(); }
@@ -47,7 +47,7 @@ nmsp gpk
 		ndix	u2_t 		byte_count		()		csnx	{ return area() * sizeof(T); }
 		ndix	u2_t		area			()		csnx	{ return Size.x * Size.y; }
 
-		inln	err_t 	fill			(const T & value, u2_t offset = 0, u2_t count = 0xFFFFFFFFU) {
+		inln	err_t 	fill			(cnst T & value, u2_t offset = 0, u2_t count = 0xFFFFFFFFU) {
 			if_true_vef(-1, (count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);
 			for(u2_t i = offset, actualCount = min(size(), count); i < actualCount; ++i)
 				Data[i]						= value;
@@ -58,7 +58,7 @@ nmsp gpk
 #pragma pack(pop)
 
 	tplt<tpnm TDim, tpnm TColor>
-	static	err_t 	drawRectangle			(grid<TColor> & target, const TColor & value, const rect2<TDim> & rectangle)		{
+	sttc	err_t 	drawRectangle			(grid<TColor> & target, cnst TColor & value, cnst rect2<TDim> & rectangle)		{
 		s2_c						xCount					= min((s2_t)target.metrics().x - max((s2_t)rectangle.Offset.x, (s2_t)0), (s2_t)rectangle.Size.x + min((s2_t)rectangle.Offset.x, (s2_t)0));
 		s2_c						yCount					= min((s2_t)target.metrics().y - max((s2_t)rectangle.Offset.y, (s2_t)0), (s2_t)rectangle.Size.y + min((s2_t)rectangle.Offset.y, (s2_t)0));
 		s2_c						yStart					= (s2_t)max((s2_t)0, (s2_t)rectangle.Offset.y);

@@ -65,16 +65,16 @@ nmsp gpk
 	};
 
 	tydf FError<au0_t &>		FConnectionReceive;
-	tydf FError<const vcu0_t &>	FConnectionSend;
+	tydf FError<cnst vcu0_t &>	FConnectionSend;
 
-	stxp	const u2_t				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
+	stxp	u2_c				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
 	err_t						connectionPayloadCollect	(SConnection & client, apobj<SMessage> & receivedMessages);
-	err_t						connectionSendQueue			(SConnection & client, apobj<SMessage>& messageCacheSent, apobj<SMessage>& messageCacheSend, const FConnectionSend & send);
-	err_t						connectionHandleCommand		(SConnection & client, SCommand & command, const FConnectionReceive & receive, au0_t & receiveBuffer);
-	err_t						connectionPushData			(SConnection & client, SClientQueue & queue, vcu0_t data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0);
-	stin	err_t				connectionPushData			(SConnection & client, SClientQueue & queue, vcst_t data, bool bEncrypted = true, bool bCompress = true, u0_t retryCount = 0) {
-		return connectionPushData(client, queue, *(const vcu0_t*)&data, bEncrypted, bCompress, retryCount);
+	err_t						connectionSendQueue			(SConnection & client, apobj<SMessage>& messageCacheSent, apobj<SMessage>& messageCacheSend, cnst FConnectionSend & send);
+	err_t						connectionHandleCommand		(SConnection & client, SCommand & command, cnst FConnectionReceive & receive, au0_t & receiveBuffer);
+	err_t						connectionPushData			(SConnection & client, SClientQueue & queue, vcu0_t data, b8_t bEncrypted = true, b8_t bCompress = true, u0_t retryCount = 0);
+	stin	err_t				connectionPushData			(SConnection & client, SClientQueue & queue, vcst_t data, b8_t bEncrypted = true, b8_t bCompress = true, u0_t retryCount = 0) {
+		return connectionPushData(client, queue, *(cnst vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 
@@ -83,10 +83,10 @@ nmsp gpk
 		, u2_t				iClient
 		, vpobj<SMessage>	clientQueue
 		, _tState			& state
-		, const FError<u2_t, _tState &, const _tWithLoad &>	& funcProcessRequest
+		, cnst FError<u2_t, _tState &, cnst _tWithLoad &>	& funcProcessRequest
 		) {
 		for(u2_t iMessage = 0; iMessage < clientQueue.size(); ++iMessage) {
-			const SMessage				& message					= *clientQueue[iMessage];
+			cnst SMessage				& message					= *clientQueue[iMessage];
 			switch(message.Command.Command) {
 			case ENDPOINT_COMMAND_PAYLOAD: {
 				vcu0_t							payloadInput			= message.Payload;
@@ -108,7 +108,7 @@ nmsp gpk
 		( u2_t							iClient
 		, vcpobj<SMessage>	clientQueue
 		, _tState							& state
-		, const ::std::function<err_t (u2_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
+		, cnst ::std::function<err_t (u2_t iClient, _tState &, cnst _tWithLoad &)>	& funcProcessRequest
 		) {
 		_tWithLoad								eventCache					= {};
 		return processUDPClientQueueEvents(eventCache, iClient, clientQueue, state, funcProcessRequest);
@@ -118,11 +118,11 @@ nmsp gpk
 	err_t						processEvents
 		( view<apobj<SMessage>>	queueReceived
 		, _tState										& state
-		, const ::std::function<err_t (u2_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest
+		, cnst ::std::function<err_t (u2_t iClient, _tState &, cnst _tEvent &)>	& funcProcessRequest
 		) {
 		_tEvent									eventReceived				= {};
 		for(u2_t iClient = 0; iClient < queueReceived.size(); ++iClient) {
-			 const apobj<SMessage>	& clientQueue				= queueReceived[iClient];
+			 cnst apobj<SMessage>	& clientQueue				= queueReceived[iClient];
 			 if_fail_fe(gpk::processUDPClientQueueEvents(eventReceived, iClient, clientQueue, state, funcProcessRequest));
 		}
 		return 0;

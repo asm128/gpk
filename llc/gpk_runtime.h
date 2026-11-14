@@ -50,22 +50,28 @@ nmsp gpk
 #	define GPK_RO_INIT_MULTITHREADED() do {} while(0)
 #endif
 
-#define GPK_OS_ENTRY_POINT_COMMON_INIT(gpk_app_entry_point, main_argc, main_argv, main_envp)	\
-	::gpk::setupDefaultLogCallbacks();															\
-	GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();															\
-	if_true_fef(65535 < main_argc, "Invalid parameter count: %" GPK_FMT_U2 ".", main_argc);		\
-	GPK_RO_INIT_MULTITHREADED();																\
+nmsp gpk
+{
+	stin	err_t	entryPointCommon	(SCommandLineArgs & output, int main_argc, char* * main_argv, char* * main_envp) {
+		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();															
+		setupDefaultLogCallbacks();															
+		if_true_fef(65535 < main_argc, "Invalid parameter count: %" GPK_FMT_U2 ".", main_argc);		
+		GPK_RO_INIT_MULTITHREADED();																
+		if_fail_fe(argsParse(output, main_argc, main_argv, main_envp));
+		return 0;
+	}
+} // nmsp
+#define GPK_OS_ENTRY_POINT_COMMON_INIT(main_argc, main_argv, main_envp)	\
 	::gpk::SRuntimeValues		runtimeValues		= {};										\
-	if_fail_fe(::gpk::argsParse(runtimeValues.EntryPointArgs, main_argc, main_argv, main_envp))	//
-
+	if_fail_fe(::gpk::entryPointCommon(runtimeValues.EntryPointArgs, main_argc, main_argv, main_envp))	//
 #define GPK_OS_ENTRY_POINT_NOENVP(gpk_app_entry_point)												\
-	int						main				(int argc, char *argv[]) {						\
-		GPK_OS_ENTRY_POINT_COMMON_INIT(gpk_app_entry_point, argc, argv, 0);						\
+	int						main				(int argc, ::gpk::sc_t *argv[]) {						\
+		GPK_OS_ENTRY_POINT_COMMON_INIT(argc, argv, 0);						\
 		return ::gpk::failed(gpk_app_entry_point(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	\
 	} // main
 #define GPK_OS_ENTRY_POINT_ENVP(gpk_app_entry_point)											\
-	int						main				(int argc, char *argv[], char *envp[]) {		\
-		GPK_OS_ENTRY_POINT_COMMON_INIT(gpk_app_entry_point, argc, argv, envp);					\
+	int						main				(int argc, ::gpk::sc_t *argv[], ::gpk::sc_t *envp[]) {		\
+		GPK_OS_ENTRY_POINT_COMMON_INIT(argc, argv, envp);					\
 		return ::gpk::failed(gpk_app_entry_point(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	\
 	} // main 
 
@@ -86,7 +92,7 @@ nmsp gpk
 		,	_In_		::LPSTR			lpCmdLine											\
 		,	_In_		::INT			nShowCmd											\
 		) {																					\
-		GPK_OS_ENTRY_POINT_COMMON_INIT(gpk_app_entry_point, (__argc), (__argv), (environ));	\
+		GPK_OS_ENTRY_POINT_COMMON_INIT((__argc), (__argv), (environ));	\
 		runtimeValues.PlatformDetail	= {hInstance, hPrevInstance, lpCmdLine, nShowCmd};	\
 		if_fail_ve(EXIT_FAILURE, gpk_app_entry_point(runtimeValues));						\
 		rtrn EXIT_SUCCESS;																	\

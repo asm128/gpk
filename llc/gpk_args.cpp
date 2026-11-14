@@ -40,11 +40,11 @@ gpk::err_t		gpk::environmentBlockViews	(vcs0_t environmentBlock, aobj<kv<vcst_t>
 	if_fail_fe(out_Views.append(views));
 	return 0;
 }
-gpk::err_t		gpk::viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, char * envp[]) {
+gpk::err_t		gpk::viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, sc_t * envp[]) {
 	if_null_fe(envp);
 	u2_t				iVar					= 0;
 	for(; envp[iVar]; ++iVar) {
-		const vcst_t		environmentEntry		= {envp[iVar], (u2_t)-1};
+		cnst vcst_t		environmentEntry		= {envp[iVar], (u2_t)-1};
 		kv<vcst_t>			keyVal					= {};
 		if(-1 == keyval_split(environmentEntry, keyVal))
 			keyVal.Key								= environmentEntry;
@@ -52,7 +52,7 @@ gpk::err_t		gpk::viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, char * envp[]) 
 	}
 	rtrn iVar;
 }
-gpk::err_t		gpk::viewsFromArgv		(aobj<vcst_t> & outputViews, u2_t argc, char * argv[]) {
+gpk::err_t		gpk::viewsFromArgv		(aobj<vcst_t> & outputViews, u2_t argc, sc_t * argv[]) {
 	if_zero_vi(0, argc);
 	if_null_fe(argv);
 	u2_t				iArg					= 0;
@@ -61,7 +61,7 @@ gpk::err_t		gpk::viewsFromArgv		(aobj<vcst_t> & outputViews, u2_t argc, char * a
 	}
 	rtrn iArg;
 }
-gpk::err_t		gpk::argsOptionValue	(const SCommandLineArgs & input, vcst_t key, vcst_t & output)	{
+gpk::err_t		gpk::argsOptionValue	(cnst SCommandLineArgs & input, vcst_t key, vcst_t & output)	{
 	//output			= {};
 	err_c				optionIndex				= argsOptionIndex(input, key);
 	if_fail_fwf(optionIndex, "Option not found:'%.*s'.", (int)key.size(), key.begin());
@@ -70,9 +70,9 @@ gpk::err_t		gpk::argsOptionValue	(const SCommandLineArgs & input, vcst_t key, vc
 	rtrn optionIndex;
 }
 
-gpk::err_t		gpk::argsOptionValues	(const SCommandLineArgs & input, vcst_t key, aobj<vcst_t> & output)	{
+gpk::err_t		gpk::argsOptionValues	(cnst SCommandLineArgs & input, vcst_t key, aobj<vcst_t> & output)	{
 	u2_c				outputStart				= output.size();
-	for(const kvvcst_t<vcst_t> & option : input.Options)
+	for(cnst kvvcst_t<vcst_t> & option : input.Options)
 		if(option.Key == key)
 			if_fail_fe(output.push_back(option.Val));
 	rtrn output.size() - outputStart;
@@ -97,7 +97,7 @@ sttc gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::gp
 }
 
 
-gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp) {
+gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, sc_t ** argv, sc_t ** envp) {
 	aobj<vcst_t>		arguments;
 	aobj<kv<vcst_t>>	envvars;											
 	if_fail_fe(viewsFromArgv(arguments, argc, argv));
@@ -115,8 +115,8 @@ gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, view<cnst vcst_t> argv,
 	output.ProgramName				= argv[0];
 
 	kvvcst_t<vcst_t>		option				= {};
-	bool					hasOptionValues		= false;
-	bool					positionalOnly		= false;
+	b8_t					hasOptionValues		= false;
+	b8_t					positionalOnly		= false;
 	for(u2_t iArg = 1; iArg < argv.size(); ++iArg) {
 		vcst_t					argument			= argv[iArg];
 		if(positionalOnly) {

@@ -28,27 +28,27 @@ nmsp DirectX
 	public:
 								WaveBankReader		()						nxpt(false);
 								WaveBankReader		(WaveBankReader&&)		= default;
-								WaveBankReader		(WaveBankReader const&) = delete;
+								WaveBankReader		(WaveBankReader cnst&) = delete;
 
 		WaveBankReader&			oper=			(WaveBankReader&&)		= default;
-		WaveBankReader&			oper=			(WaveBankReader const&)	= delete;
+		WaveBankReader&			oper=			(WaveBankReader cnst&)	= delete;
 
-		HRESULT					Open				(_In_z_ const wchar_t * szFileName)	nxpt;
-		u2_t				Find				(_In_z_ const sc_t * name)			const;
+		HRESULT					Open				(_In_z_ cnst wchar_t * szFileName)	nxpt;
+		u2_t				Find				(_In_z_ sc_c * name)			cnst;
 
-		bool					IsPrepared			()	nxpt;
+		b8_t					IsPrepared			()	nxpt;
 		void					WaitOnPrepare		()	nxpt;
 
-		bool					HasNames			()	csnx;
-		bool					IsStreamingBank		()	csnx;
-		const sc_t*				BankName			()	csnx;
+		b8_t					HasNames			()	csnx;
+		b8_t					IsStreamingBank		()	csnx;
+		sc_c*				BankName			()	csnx;
 		u2_t				Count				()	csnx;
 		u2_t				BankAudioSize		()	csnx;
 		HANDLE					GetAsyncHandle		()	csnx;
 		u2_t				GetWaveAlignment	()	csnx;
 		HRESULT					GetFormat			(_In_ u2_t index, _Out_writes_bytes_(maxsize) WAVEFORMATEX * pFormat, _In_ size_t maxsize)			csnx;
-		HRESULT					GetWaveData			(_In_ u2_t index, _Outptr_ const u0_t* * pData, _Out_ u2_t & dataSize)						csnx;
-		HRESULT					GetSeekTable		(_In_ u2_t index, _Out_ const u2_t* * pData, _Out_ u2_t & dataCount, _Out_ u2_t & tag)	csnx;
+		HRESULT					GetWaveData			(_In_ u2_t index, _Outptr_ cnst u0_t* * pData, _Out_ u2_t & dataSize)						csnx;
+		HRESULT					GetSeekTable		(_In_ u2_t index, _Out_ u2_c* * pData, _Out_ u2_t & dataCount, _Out_ u2_t & tag)	csnx;
 
 		struct Metadata {
 			u2_t				Duration;

@@ -20,8 +20,8 @@ nmsp gpk
 		cxpr T      &	MathElement	(u0_t row, u0_t column)			nxpt	{ rtrn MATRIX_MATH_ROW_VECTOR == _math ? (*this)(row, column) : (*this)(column, row); }
 		cxpr cnst T &	MathElement	(u0_t row, u0_t column)	csnx	{ rtrn MATRIX_MATH_ROW_VECTOR == _math ? (*this)(row, column) : (*this)(column, row); }
 
-		cxpr bool	oper==	(cnst TMatrix & other)	csnx	{ rtrn matrixEqual<2>(*this, other); }
-		cxpr bool	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == oper==(other); }
+		cxpr b8_t	oper==	(cnst TMatrix & other)	csnx	{ rtrn matrixEqual<2>(*this, other); }
+		cxpr b8_t	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == oper==(other); }
 		cxpr TMatrix	oper+	(cnst TMatrix & other)	csnx	{ rtrn matrixAdd<2>(*this, other); }
 		cxpr TMatrix	oper-	(cnst TMatrix & other)	csnx	{ rtrn matrixSubtract<2>(*this, other); }
 		cxpr TMatrix	oper*	(f3_t scalar)			csnx	{ rtrn matrixScale<2>(*this, scalar); }
@@ -56,7 +56,7 @@ nmsp gpk
 			MathElement(0, 0) = (T)angleSinCos.Cos;	MathElement(0, 1) = (T)angleSinCos.Sin;
 			MathElement(1, 0) = (T)-angleSinCos.Sin;	MathElement(1, 1) = (T)angleSinCos.Cos;
 		}
-		void	Scale		(cnst TCoord & scale, bool eraseContent) nxpt {
+		void	Scale		(cnst TCoord & scale, b8_t eraseContent) nxpt {
 			if(eraseContent)
 				Identity();
 			MathElement(0, 0) = (T)(MathElement(0, 0) * scale.x);
@@ -77,8 +77,8 @@ nmsp gpk
 		cxpr T      &	MathElement	(u0_t row, u0_t column)			nxpt	{ rtrn MATRIX_MATH_ROW_VECTOR == _math ? (*this)(row, column) : (*this)(column, row); }
 		cxpr cnst T &	MathElement	(u0_t row, u0_t column)	csnx	{ rtrn MATRIX_MATH_ROW_VECTOR == _math ? (*this)(row, column) : (*this)(column, row); }
 
-		cxpr bool	oper==	(cnst TMatrix & other)	csnx	{ rtrn matrixEqual<3>(*this, other); }
-		cxpr bool	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == oper==(other); }
+		cxpr b8_t	oper==	(cnst TMatrix & other)	csnx	{ rtrn matrixEqual<3>(*this, other); }
+		cxpr b8_t	oper!=	(cnst TMatrix & other)	csnx	{ rtrn false == oper==(other); }
 		cxpr TMatrix	oper+	(cnst TMatrix & other)	csnx	{ rtrn matrixAdd<3>(*this, other); }
 		cxpr TMatrix	oper-	(cnst TMatrix & other)	csnx	{ rtrn matrixSubtract<3>(*this, other); }
 		cxpr TMatrix	oper*	(f3_t scalar)			csnx	{ rtrn matrixScale<3>(*this, scalar); }
@@ -128,13 +128,13 @@ nmsp gpk
 			MathElement(0, 0) = (T)angleSinCos.Cos;	MathElement(0, 1) = (T)angleSinCos.Sin;
 			MathElement(1, 0) = (T)-angleSinCos.Sin;	MathElement(1, 1) = (T)angleSinCos.Cos;
 		}
-		void	Scale		(cnst TCoord & scale, bool eraseContent) nxpt {
+		void	Scale		(cnst TCoord & scale, b8_t eraseContent) nxpt {
 			if(eraseContent)
 				Identity();
 			MathElement(0, 0) = (T)(MathElement(0, 0) * scale.x);
 			MathElement(1, 1) = (T)(MathElement(1, 1) * scale.y);
 		}
-		void	SetTranslation(cnst TCoord & translation, bool eraseContent) nxpt {
+		void	SetTranslation(cnst TCoord & translation, b8_t eraseContent) nxpt {
 			if(eraseContent)
 				Identity();
 			MathElement(2, 0) = translation.x;

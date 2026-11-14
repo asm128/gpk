@@ -1,4 +1,4 @@
-#include "gpk_error.h"
+#include "gpk_typeint.h"
 
 #ifndef GPK_PLATFORM_ERROR_H_9237849823
 #define GPK_PLATFORM_ERROR_H_9237849823

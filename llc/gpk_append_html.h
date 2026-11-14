@@ -15,9 +15,9 @@ nmsp gpk
 	err_t			appendHtmlStyles	(string & output, vcvcst_t filenames);
 	err_t			appendHtmlScripts	(string & output, vcvcst_t filenames);
 	err_t			appendHtmlHead		(string & output, vcst_t title, vcvcst_t filesCSS, vcvcst_t filesJS);
-	err_t			appendHtmlPage		(string & output, const FAppend & funcAppendHead, const FAppend & funcAppendBody);
-	err_t			appendHtmlPage		(string & output, const FAppend & funcAppendCSS, const FAppend & funcAppendJS, const FAppend & funcAppendBody);
-	err_t			appendHtmlPage		(string & output, vcst_t title, vcvcst_t filesCSS, vcvcst_t filesJS, const FAppend & funcAppendBody, vcst_t postScript = {});
+	err_t			appendHtmlPage		(string & output, cnst FAppend & funcAppendHead, cnst FAppend & funcAppendBody);
+	err_t			appendHtmlPage		(string & output, cnst FAppend & funcAppendCSS, cnst FAppend & funcAppendJS, cnst FAppend & funcAppendBody);
+	err_t			appendHtmlPage		(string & output, vcst_t title, vcvcst_t filesCSS, vcvcst_t filesJS, cnst FAppend & funcAppendBody, vcst_t postScript = {});
 } // nmsp 
 
 #endif // GPK_APPEND_HTML_H

@@ -16,7 +16,7 @@ nmsp gpk
 						SIPv4				(vcst_t strIP)							{ 	tcpipAddress(strIP, IP); }
 						
 		inxp			SIPv4				()								nxpt	= default;
-		inxp			SIPv4				(const SIPv4 &)					nxpt	= default;
+		inxp			SIPv4				(cnst SIPv4 &)					nxpt	= default;
 		inxp			SIPv4				(u2_t little_endian)		nxpt	: IP(little_endian) {}
 		cxpr			SIPv4				(u0_t _0, u0_t _1, u0_t _2, u0_t _3 = 0)
 			: IP
@@ -50,7 +50,7 @@ nmsp gpk
 
 		tplt<size_t bufferSize>
 			err_t 		print				(sc_t (&target)[bufferSize], sc_t separator = '.')	csnx	{
-			const sc_t format[] = {'%', 'u', separator, '%', 'u', separator, '%', 'u', separator, '%', 'u', 0};
+			sc_c format[] = {'%', 'u', separator, '%', 'u', separator, '%', 'u', separator, '%', 'u', 0};
 			return sprintf_s(target, format
 				, 	byte_at(IP, 0)
 				, 	byte_at(IP, 1)
@@ -60,7 +60,7 @@ nmsp gpk
 		}
 	};
 
-	stin		astsc_t<16>	str			(const SIPv4 ip)	{ return ip.toString<16>(); }
+	stin		astsc_t<16>	str			(cnst SIPv4 ip)	{ return ip.toString<16>(); }
 
 	tydf struct SIPv4End : SIPv4 {
 		u1_t			Port				= {};
@@ -70,7 +70,7 @@ nmsp gpk
 		tplt<size_t buflen>
 		oper			astsc_t<min((size_t)22, buflen)>	()		csnx	{
 			if(0 == Port)
-				return *(const SIPv4*)this;
+				return *(cnst SIPv4*)this;
 
 			astsc_t<buflen>	result;
 			sprintf_s(result.Storage, "%u.%u.%u.%u:%u"

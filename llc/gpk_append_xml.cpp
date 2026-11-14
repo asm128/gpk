@@ -26,7 +26,7 @@ gpk::err_t	gpk::appendXmlAttr			(string & output, vcst_t attrName, vcst_t attrVa
 		: append_strings(output, " ", attrName)
 		;
 }
-gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, vcst_t tagAttributes, const FAppend & funcAppend) {
+gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, vcst_t tagAttributes, cnst FAppend & funcAppend) {
 	s2_t			result						= 0;
 
 					{ s2_t _result; if_fail_fe(_result = appendXmlTagOpening(output, tagName, tagAttributes)); 	result += _result; }
@@ -34,7 +34,7 @@ gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, vcst_t tagAttri
 					{ s2_t _result; if_fail_fe(_result = appendXmlTagClosing(output, tagName)); 					result += _result; }
 	return result;
 }
-gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, vcst_t tagAttributes, const function<gpk::err_t()> & funcAppend) {
+gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, vcst_t tagAttributes, cnst function<gpk::err_t()> & funcAppend) {
 	s2_t			result						= 0;
 
 					{ s2_t _result; if_fail_fe(_result = appendXmlTagOpening(output, tagName, tagAttributes)); 	result += _result; }
@@ -42,7 +42,7 @@ gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, vcst_t tagAttri
 					{ s2_t _result; if_fail_fe(_result = appendXmlTagClosing(output, tagName)); 				result += _result; }
 	return result;
 }
-gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, const function<gpk::err_t()> & funcAppendAttrs, const function<gpk::err_t()> & funcAppend) {
+gpk::err_t	gpk::appendXmlTag			(string & output, vcst_t tagName, cnst function<gpk::err_t()> & funcAppendAttrs, cnst function<gpk::err_t()> & funcAppend) {
 	s2_t			result						= 0;
 	if(!funcAppendAttrs)
 		return appendXmlTag(output, tagName, vcst_t{}, funcAppend);

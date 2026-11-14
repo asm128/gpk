@@ -93,8 +93,8 @@ sttc	void				dialogViewportImageUpdate	(::gpk::img8bgra & image, ::gpk::u0_t the
 	cnst ::gpk::bgra pulse = ::dialogThemeShade(tone, 2);
 	for(::gpk::u2_t y = 0; y < image.metrics().y; ++y)
 	for(::gpk::u2_t x = 0; x < image.metrics().x; ++x) {
-		cnst bool onGrid = 0 == x % 32 || 0 == y % 24;
-		cnst bool onPulse = ((x + y + frameIndex) % 160) < 3;
+		b8_c onGrid = 0 == x % 32 || 0 == y % 24;
+		b8_c onPulse = ((x + y + frameIndex) % 160) < 3;
 		image[y][x] = onPulse ? pulse : onGrid ? grid : background;
 	}
 }
@@ -202,7 +202,7 @@ err_t			setup		(::gme::SApplication & app)						{
 	return 0;
 }
 
-err_t			update		(::gme::SApplication & app, bool exitSignal)	{
+err_t			update		(::gme::SApplication & app, b8_t exitSignal)	{
 	//STimer															timer;
 	if_true_vi(APPLICATION_STATE_EXIT, exitSignal);
 	{

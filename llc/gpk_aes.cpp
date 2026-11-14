@@ -2,11 +2,11 @@
 // The API is very simple and looks like this (I am using C99 <stdint.h>-style annotated types):
 //
 // /* Initialize context calling one of: */
-// void AES_init_ctx(struct AES_ctx* ctx, const u0_t * key);
-// void AES_init_ctx_iv(struct AES_ctx* ctx, const u0_t * key, const u0_t * iv);
+// void AES_init_ctx(struct AES_ctx* ctx, cnst u0_t * key);
+// void AES_init_ctx_iv(struct AES_ctx* ctx, cnst u0_t * key, cnst u0_t * iv);
 //
 // /* ... or reset IV at random point: */
-// void AES_ctx_set_iv(struct AES_ctx* ctx, const u0_t * iv);
+// void AES_ctx_set_iv(struct AES_ctx* ctx, cnst u0_t * iv);
 //
 // /* Then start encrypting and decrypting with the functions below: */
 // void AES_ECB_encrypt(struct AES_ctx* ctx, u0_t * buf);
@@ -96,10 +96,10 @@ stxp	u2_c				AES_Nb									= 4;
 // Private variables:
 tydf	u0_t						state_t[4][4];	// array holding the intermediate results during decryption.
 
-// The lookup-tables are marked const so they can be placed in read-only storage instead of RAM
+// The lookup-tables are marked cnst so they can be placed in read-only storage instead of RAM
 // The numbers below can be computed dynamically trading ROM for RAM -
 // This can be useful in (embedded) bootloader applications, where ROM is often limited.
-stxp	const u0_t				sbox	[256]							= {
+stxp	cnst u0_t				sbox	[256]							= {
   //0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F
   0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
   0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -118,7 +118,7 @@ stxp	const u0_t				sbox	[256]							= {
   0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
   0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 };
 
-stxp	const u0_t				rsbox	[256]							= {
+stxp	cnst u0_t				rsbox	[256]							= {
   0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
   0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
   0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
@@ -147,7 +147,7 @@ stin	u0_t						getSBoxValue							(u0_t num)														{ return  sbox[num]; }
 stin	u0_t						getSBoxInvert							(u0_t num)														{ return rsbox[num]; }
 
 // This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states.
-static	void						KeyExpansion							(u0_t* RoundKey, const u0_t * Key, ::gpk::AES_LEVEL level)		{
+sttc	void						KeyExpansion							(u0_t* RoundKey, cnst u0_t * Key, ::gpk::AES_LEVEL level)		{
 	u2_t											Nk = 0, Nr = 0;
 	switch(level) {
 	case ::gpk::AES_LEVEL_128: Nk = 4; Nr = 10; break;
@@ -195,26 +195,26 @@ static	void						KeyExpansion							(u0_t* RoundKey, const u0_t * Key, ::gpk::AE
 	}
 }
 
-void											gpk::aesInitCtx							(::gpk::SAESContext* ctx, const u0_t * key, ::gpk::AES_LEVEL level)						{ ctx->Level = level; ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); }
-void											gpk::aesInitCtxIV						(::gpk::SAESContext* ctx, const u0_t * key, ::gpk::AES_LEVEL level, const u0_t * iv)	{ ctx->Level = level; ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
-void											gpk::aesCtxSetIV						(::gpk::SAESContext* ctx, const u0_t * iv)												{ memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
+void											gpk::aesInitCtx							(::gpk::SAESContext* ctx, cnst u0_t * key, ::gpk::AES_LEVEL level)						{ ctx->Level = level; ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); }
+void											gpk::aesInitCtxIV						(::gpk::SAESContext* ctx, cnst u0_t * key, ::gpk::AES_LEVEL level, cnst u0_t * iv)	{ ctx->Level = level; ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
+void											gpk::aesCtxSetIV						(::gpk::SAESContext* ctx, cnst u0_t * iv)												{ memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
 
 // This function adds the round key to state. The round key is added to	 the state by an XOR function.
-static	void										AddRoundKey								(u0_t round,state_t* state,u0_t* RoundKey)											{
+sttc	void										AddRoundKey								(u0_t round,state_t* state,u0_t* RoundKey)											{
 	for(u0_t i = 0; i < 4; ++i)
 	for(u0_t j = 0; j < 4; ++j)
 		(*state)[i][j]									^= RoundKey[(round * AES_Nb * 4) + (i * AES_Nb) + j];
 }
 
 // The SubBytes Function Substitutes the values in the state matrix with values in an S-box.
-static	void										SubBytes								(state_t* state)																			{
+sttc	void										SubBytes								(state_t* state)																			{
 	for(u0_t i = 0; i < 4; ++i)
 	for(u0_t j = 0; j < 4; ++j)
 		(*state)[j][i]									= getSBoxValue((*state)[j][i]);
 }
 
 // The ShiftRows() function shifts the rows in the state to the left. Each row is shifted with different offset. Offset = Row number. So the first row is not shifted.
-static	void										ShiftRows								(state_t* state)																			{
+sttc	void										ShiftRows								(state_t* state)																			{
 	u0_t												temp;
 	// Rotate first row 1 columns to left
 	temp											= (*state)[0][1];
@@ -242,14 +242,14 @@ static	void										ShiftRows								(state_t* state)																			{
 
 nmsp gpk
 {
-	static u0_t									xtime									(u0_t x)														{ return ((x<<1) ^ (((x>>7) & 1) * 0x1b)); }
+	sttc u0_t									xtime									(u0_t x)														{ return ((x<<1) ^ (((x>>7) & 1) * 0x1b)); }
 } // nmsp
 
 // MixColumns function mixes the columns of the state matrix
-static	void										MixColumns								(state_t* state)												{
+sttc	void										MixColumns								(state_t* state)												{
 	for (u0_t i = 0; i < 4; ++i) {
-		const u0_t										t										= (*state)[i][0];
-		const u0_t										Tmp										= (*state)[i][0] ^ (*state)[i][1] ^ (*state)[i][2] ^ (*state)[i][3] ;
+		cnst u0_t										t										= (*state)[i][0];
+		cnst u0_t										Tmp										= (*state)[i][0] ^ (*state)[i][1] ^ (*state)[i][2] ^ (*state)[i][3] ;
 		u0_t												Tm;
 		Tm												= (*state)[i][0] ^ (*state)[i][1] ; Tm = ::gpk::xtime(Tm);  (*state)[i][0] ^= Tm ^ Tmp ;
 		Tm												= (*state)[i][1] ^ (*state)[i][2] ; Tm = ::gpk::xtime(Tm);  (*state)[i][1] ^= Tm ^ Tmp ;
@@ -261,7 +261,7 @@ static	void										MixColumns								(state_t* state)												{
 // Multiply is used to multiply numbers in the field GF(2^8)
 // jcallan@github points out that declaring Multiply as a function reduces code size considerably with the Keil ARM compiler.
 // See this link for more information: https://github.com/kokke/tiny-AES-C/pull/3
-static u0_t									Multiply								(u0_t x, u0_t y)											{
+sttc u0_t									Multiply								(u0_t x, u0_t y)											{
 	return
 		( ((y		& 1) * x)
 		^ ((y >> 1	& 1) * ::gpk::xtime(x))
@@ -271,7 +271,7 @@ static u0_t									Multiply								(u0_t x, u0_t y)											{
 }
 
 // MixColumns function mixes the columns of the state matrix. The method used to multiply may be difficult to understand for the inexperienced. Please use the references to gain more information.
-static	void										InvMixColumns							(state_t* state)												{
+sttc	void										InvMixColumns							(state_t* state)												{
 	for (int i = 0; i < 4; ++i) {
 		u0_t											a										= (*state)[i][0];
 		u0_t											b										= (*state)[i][1];
@@ -285,13 +285,13 @@ static	void										InvMixColumns							(state_t* state)												{
 }
 
 // The SubBytes Function Substitutes the values in the state matrix with values in an S-box.
-static	void										InvSubBytes								(state_t* state)												{
+sttc	void										InvSubBytes								(state_t* state)												{
 	for (u0_t i = 0; i < 4; ++i)
 	for (u0_t j = 0; j < 4; ++j)
 		(*state)[j][i]									= getSBoxInvert((*state)[j][i]);
 }
 
-static	void										InvShiftRows							(state_t* state)												{
+sttc	void										InvShiftRows							(state_t* state)												{
 	u0_t												temp;
 
 	// Rotate first row 1 columns to right
@@ -319,7 +319,7 @@ static	void										InvShiftRows							(state_t* state)												{
 }
 
 // Cipher is the main function that encrypts the PlainText. Encrypts the PlainText with the Key using AES algorithm.
-static	void									Cipher									(state_t* state, u0_t * RoundKey, ::gpk::AES_LEVEL level)		{
+sttc	void									Cipher									(state_t* state, u0_t * RoundKey, ::gpk::AES_LEVEL level)		{
 	AddRoundKey(0, state, RoundKey);	// Add the First round key to the state before starting the rounds.
 	u0_t												Nr										= 0;
 	switch(level) {
@@ -340,7 +340,7 @@ static	void									Cipher									(state_t* state, u0_t * RoundKey, ::gpk::AES_
 }
 
 // Decrypts the PlainText with the Key using AES algorithm.
-static	void									InvCipher							(state_t* state, u0_t * RoundKey, ::gpk::AES_LEVEL level)			{
+sttc	void									InvCipher							(state_t* state, u0_t * RoundKey, ::gpk::AES_LEVEL level)			{
 	u0_t												Nr									= 0;
 	switch(level) {
 	case ::gpk::AES_LEVEL_128: Nr = 10; break;
@@ -360,7 +360,7 @@ static	void									InvCipher							(state_t* state, u0_t * RoundKey, ::gpk::AES
 	AddRoundKey(0, state, RoundKey);
 }
 
-static	void									XorWithIv							(u0_t* buf, u0_t * Iv)											{
+sttc	void									XorWithIv							(u0_t* buf, u0_t * Iv)											{
 	for (u0_t i = 0; i < ::gpk::AES_SIZEBLOCK; ++i) // The block in AES is always 128bit no matter the key size
 		buf[i]											^= Iv[i];
 }
@@ -415,7 +415,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, u0_t * buf, 
 
 gpk::err_t 		gpk::aesEncode			(vcu0_c & messageToEncrypt, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputEncrypted)	{
 	u0_t													iv		[::gpk::AES_SIZEIV]				= {};
-	const f3_t											fraction								= (1.0 / (65535>>1)) * 255.0;
+	cnst f3_t											fraction								= (1.0 / (65535>>1)) * 255.0;
 	for(u2_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
 		iv[iVal]											= (u0_t)(::gpk::noise1DBase(::gpk::timeCurrentInUs()) * fraction);
 
@@ -441,7 +441,7 @@ gpk::err_t 		gpk::aesEncode		(vcu0_c & messageToEncrypt, vcu0_c & iv, vcu0_c & e
 	memcpy(outputEncrypted.begin(), messageToEncrypt.begin(), messageToEncrypt.size());
 
 	::gpk::SAESContext										aes;
-	::gpk::aesInitCtxIV(&aes, (const u0_t*)encryptionKey.begin(), level, iv.begin());
+	::gpk::aesInitCtxIV(&aes, (cnst u0_t*)encryptionKey.begin(), level, iv.begin());
 	::gpk::aesCBCEncryptBuffer(&aes, (u0_t*)outputEncrypted.begin(), outputEncrypted.size());
 	return 0;
 }
@@ -453,14 +453,14 @@ gpk::err_t 		gpk::aesDecode		(vcu0_c & messageEncrypted, vcu0_c & iv, vcu0_c & e
 	if_fail_fe(outputDecrypted.resize(messageEncrypted.size()));
 	memcpy(outputDecrypted.begin(), messageEncrypted.begin(), outputDecrypted.size());
 	::gpk::SAESContext										aes;
-	::gpk::aesInitCtxIV(&aes, (const u0_t*)encryptionKey.begin(), level, iv.begin());
+	::gpk::aesInitCtxIV(&aes, (cnst u0_t*)encryptionKey.begin(), level, iv.begin());
 	::gpk::aesCBCDecryptBuffer(&aes, (u0_t*)outputDecrypted.begin(), outputDecrypted.size());
 	if(outputDecrypted[outputDecrypted.size() - 1] == 0) {
 		if_fail_fe(outputDecrypted.resize(outputDecrypted.size() - ::gpk::AES_SIZEBLOCK));
 	}
 	else {
-		const s2_t											padCunt									= outputDecrypted[outputDecrypted.size() - 1];
-		const s2_t											sizeOriginal							= outputDecrypted.size() - padCunt;
+		cnst s2_t											padCunt									= outputDecrypted[outputDecrypted.size() - 1];
+		cnst s2_t											sizeOriginal							= outputDecrypted.size() - padCunt;
 		if_fail_fe(outputDecrypted.resize(sizeOriginal));
 	}
 	return 0;

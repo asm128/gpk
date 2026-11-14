@@ -36,7 +36,7 @@ GPK_USING_TYPEINT();
 
 usng gpk::one_if;
 
-gpk::err_t		gpk::with			(vcst_t filepath, vcst_t mode, const function<err_t(FILE*&)> & funcFile)	{
+gpk::err_t		gpk::with			(vcst_t filepath, vcst_t mode, cnst function<err_t(FILE*&)> & funcFile)	{
 	FILE				* fp				= {};
 	if_fail_fe(gpk::fopen_s(fp, filepath, mode));
 	if_null_ve(-1, fp);
@@ -89,7 +89,7 @@ s3_t	gpk::	fileSize			(gpk::vcst_t fileName)			{
 		fclose(fp);
 		return -1;
 	}
-	const s3_t			fileSize				= gpk::ftell(fp);
+	cnst s3_t			fileSize				= gpk::ftell(fp);
 	if(0 > fileSize)
 		error_printf("Unknown error reading '%.*s'.", (int)fileName.size(), fileName.begin());
 	fclose(fp);
@@ -120,14 +120,14 @@ gpk::err_t	gpk::fileLastWriteTime	(vcst_t fileName, s3_t & modified) {
 sttc gpk::err_t fileSplitSmall(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 	gpk::as0_t			fileInMemory;
 	if_fail_fe(gpk::fileToMemory(fileNameSrc, fileInMemory));
-	cnst u2_t			countParts = fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
+	u2_c			countParts = fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
 	if_true_fe(countParts > 0x7FFFFFFFU);
-	char				fileNameDst[1024] = {};
+	sc_t				fileNameDst[1024] = {};
 	for(u2_t iPart = 0; iPart < countParts; ++iPart) {
-		cnst u2_t		offsetPart = sizePartMax * iPart;
+		u2_c		offsetPart = sizePartMax * iPart;
 		if_fail_fe(gpk::sprintf_s(fileNameDst, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameSrc), iPart));
 		info_printf("Creating part %u: '%s'.", iPart, fileNameDst);
-		cnst u2_t		countBytes = gpk::min(sizePartMax, fileInMemory.size() - offsetPart);
+		u2_c		countBytes = gpk::min(sizePartMax, fileInMemory.size() - offsetPart);
 		if_fail_fe(gpk::fileFromMemory(fileNameDst, gpk::vcs0_t{fileInMemory.begin() + offsetPart, countBytes}));
 	}
 	return (gpk::err_t)countParts;
@@ -137,14 +137,14 @@ sttc gpk::err_t fileSplitSmall(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 sttc gpk::err_t fileSplitLarge(gpk::vcst_t fileNameSrc, u2_c sizePartMax, u3_c sizeFile) {
 	gpk::au0_t			buffer;
 	cnst u3_t			countParts = sizeFile / sizePartMax + one_if(sizeFile % sizePartMax);
-	char				fileNameDst[1024] = {};
+	sc_t				fileNameDst[1024] = {};
 	u3_t				offset = 0;
 	for(u2_t iPart = 0; iPart < countParts; ++iPart) {
 		if_fail_fe(gpk::sprintf_s(fileNameDst, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameSrc), iPart));
 		cnst u3_t		partSize = gpk::min(sizeFile - offset, (u3_t)sizePartMax);
 		u3_t			partOffset = 0;
 		while(partOffset < partSize) {
-			cnst u2_t	count = (u2_t)gpk::min(partSize - partOffset, (u3_t)(1024U * 1024U));
+			u2_c	count = (u2_t)gpk::min(partSize - partOffset, (u3_t)(1024U * 1024U));
 			if_fail_fe(gpk::fileToMemory(fileNameSrc, buffer, count, offset));
 			if_true_fef(buffer.size() != count, "Short read at offset %" GPK_FMT_U3 ": '%.*s'.", offset, GPK_VIEW_ARGS(fileNameSrc));
 			if_fail_fe(gpk::fileFromMemory(fileNameDst, buffer, partOffset != 0));
@@ -169,7 +169,7 @@ gpk::err_t gpk::fileSplit(vcst_t fileNameSrc, u2_c sizePartMax) {
 }
 // Joins a file split into file.## parts.
 gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
-	char					fileNameSrc[1024]			= {};
+	sc_t					fileNameSrc[1024]			= {};
 	::gpk::u2_t				iPart					= 0;
 	if_fail_fe(gpk::sprintf_s(fileNameSrc, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameDst), iPart));
 	::FILE					* fpDest					= 0;
@@ -189,8 +189,8 @@ gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
 
 #define GPK_DEBUG_FILE_CONTENTS
 
-gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, ::gpk::u2_t maxSize, u3_t offset)		{
-	gpk::string			fileName					= usfileName;
+gpk::err_t	gpk::fileToMemory			(vcst_t usfileName, au0_t & fileInMemory, ::gpk::u2_t maxSize, u3_t offset)		{
+	string			fileName					= usfileName;
 	gpk_file_info_printf("Loading '%.*s'.", GPK_VIEW_ARGS(fileName));
 
 #ifdef GPK_ARDUINO
@@ -205,19 +205,19 @@ gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, :
 #		else
 	if_fail_fef(fileInMemory.resize(fileSize), "Too large to load in memory? File size: %" GPK_FMT_S2 ". Available memory: %" GPK_FMT_S2 ".", fp.size(), umm_free_heap_size_lw());
 #		endif // GPK_ESP32
-	if_true_fe(fileSize != (::gpk::u2_t)fp.readBytes((char*)fileInMemory.begin(), fileSize));
+	if_true_fe(fileSize != (u2_t)fp.readBytes((sc_t*)fileInMemory.begin(), fileSize));
 	fp.close();
 #	endif // GPK_ESP32 || GPK_ESP8266
 	gpk::err_t	result				= 0;
 #else // !GPK_ARDUINO
 	::FILE				* fp				= 0;
-	const s2_t				fileErr				= gpk::fopen_s(fp, fileName, ::GPK_OPEN_MODE_READ);
+	cnst s2_t				fileErr				= gpk::fopen_s(fp, fileName, ::GPK_OPEN_MODE_READ);
 	if_true_vef((fileErr > 0) ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %.*s.", GPK_VIEW_ARGS(fileName));
 	fseek(fp, 0, SEEK_END);
-	const s3_t				fileSize					= gpk::ftell(fp);
+	cnst s3_t				fileSize					= gpk::ftell(fp);
 	gpk_fail_if_lt(GPK_FMT_LT_S3, fileSize, 0);
 	gpk_fail_if_gt(GPK_FMT_GT_U3, offset, (u3_t)fileSize);
-	u2_c				maxRead				= (::gpk::u2_t)min((s3_t)maxSize, fileSize - (s3_t)offset);
+	u2_c				maxRead				= (u2_t)min((s3_t)maxSize, fileSize - (s3_t)offset);
 	gpk_fail_if_ne(GPK_FMT_NE_S3, 0, gpk::fseek(fp, offset, FSEEK_SET));
 	gpk::err_t	result				= 0;
 	if_failed(fileInMemory.resize(maxRead)) {
@@ -234,17 +234,17 @@ gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, :
 #endif // GPK_ARDUINO
 
 #ifdef GPK_DEBUG_FILE_CONTENTS
-	gpk_file_info_printf("'%s' loaded successfully. Size: %" GPK_FMT_U2 ":\n%.*s\n", fileName.begin(), fileInMemory.size(), (int)fileInMemory.size(), (cnst char*)fileInMemory.begin());
+	gpk_file_info_printf("'%s' loaded successfully. Size: %" GPK_FMT_U2 ":\n%.*s\n", fileName.begin(), fileInMemory.size(), (int)fileInMemory.size(), (cnst sc_t*)fileInMemory.begin());
 #else
 	gpk_file_info_printf("'%s' loaded successfully. Size: %" GPK_FMT_U2 ".", fileName.begin(), fileInMemory.size());
 #endif // GPK_DEBUG_FILE_CONTENTS
 	return result;
 }
 
-gpk::err_t	gpk::	fileFromMemory			(vcst_t usfileName, vcu0_t fileInMemory, bool append)	{
+gpk::err_t	gpk::	fileFromMemory			(vcst_t usfileName, vcu0_t fileInMemory, b8_t append)	{
 	gpk::string			fileName					= usfileName;
 #ifdef GPK_DEBUG_FILE_CONTENTS
-	gpk_file_info_printf("%.*s '%.*s':\n%.*s\n", append ? "Appending to" : "Writing", GPK_VIEW_ARGS(fileName), (int)fileInMemory.size(), (cnst char*)GPK_VIEW_ARGS(fileInMemory));
+	gpk_file_info_printf("%.*s '%.*s':\n%.*s\n", append ? "Appending to" : "Writing", GPK_VIEW_ARGS(fileName), (int)fileInMemory.size(), (cnst sc_t*)GPK_VIEW_ARGS(fileInMemory));
 #else
 	gpk_file_info_printf("%.*s '%s'.", append ? "Appending to" : "Writing", GPK_VIEW_ARGS(fileName));
 #endif // GPK_DEBUG_FILE_CONTENTS
@@ -259,7 +259,7 @@ gpk::err_t	gpk::	fileFromMemory			(vcst_t usfileName, vcu0_t fileInMemory, bool 
 #	endif // GPK_ESP32 || GPK_ESP8266
 #else // !GPK_ARDUINO
 	::FILE				* fp				= 0;
-	const s2_t				fileErr				= gpk::fopen_s(fp, fileName, append ? GPK_OPEN_MODE_APPEND : GPK_OPEN_MODE_WRITE);
+	cnst s2_t				fileErr				= gpk::fopen_s(fp, fileName, append ? GPK_OPEN_MODE_APPEND : GPK_OPEN_MODE_WRITE);
 	if_true_vwf((fileErr > 0) ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Failed to create '%.*s' for %s.", GPK_VIEW_ARGS(fileName), append ? "appending" : "writing");
 	if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fp)) {
 		error_printf("Failed to write '%s'. Disk full? File size: %" GPK_FMT_U2 ".", fileName.begin(), fileInMemory.size());
@@ -295,7 +295,7 @@ gpk::err_t	gpk::fileToMemory		(vcst_t folderPath, vcst_t fileName, gpk::au0_t & 
 	if_fail_fef(gpk::fileToMemory(filePath, fileBytes, maxSize, offset), "folderPath: '%.*s', fileName: '%.*s'.", (int)folderPath.size(), folderPath.begin(), (int)fileName.size(), fileName.begin());
 	return 0;
 }
-gpk::err_t	gpk::fileFromMemory		(vcst_t folderPath, vcst_t fileName, vcu0_c fileInMemory, bool append) {
+gpk::err_t	gpk::fileFromMemory		(vcst_t folderPath, vcst_t fileName, vcu0_c fileInMemory, b8_t append) {
 	gpk::string			filePath			= {};
 	if_fail_fef(gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%.*s', fileName: '%.*s'.", (int)folderPath.size(), folderPath.begin(), (int)fileName.size(), fileName.begin());
 	if_fail_fef(gpk::fileFromMemory(filePath, fileInMemory, append), "folderPath: '%.*s', fileName: '%.*s', append: %.*s.", (int)folderPath.size(), GPK_VIEW_ARGS(folderPath), (int)fileName.size(), fileName.begin(), gpk::b82sc(append));

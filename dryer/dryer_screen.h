@@ -11,10 +11,10 @@ namespace dry
 		::gpk::GUI_COLOR_MODE	ColorMode		;
 		::gpk::cid_t			Id				;
 		::gpk::cid_t			IdParent		;
-		bool					Design			;
-		bool					NoBackground	;
-		bool					NoHoverEffect	;
-		bool					FrameOut		;
+		b8_t					Design			;
+		b8_t					NoBackground	;
+		b8_t					NoHoverEffect	;
+		b8_t					FrameOut		;
 		::gpk::ALIGN			Align			;
 		::gpk::rect2s1_t		Area			;
 		::gpk::rectu1_t			Border			;
@@ -24,7 +24,7 @@ namespace dry
 		::gpk::ALIGN			IconAlign		;
 		::gpk::vcst_t			IconPathOff		;
 		::gpk::vcst_t			IconPathOn		;
-		::gpk::n2<bool>			AdjustToText	;
+		::gpk::n2<b8_t>			AdjustToText	;
 	};
 #pragma pack(pop)
 
@@ -38,15 +38,15 @@ namespace dry
 		::gpk::astatic<::gpk::cid_t, _countControls>				ControlIds;
 		::gpk::astatic<::dry::SControlImages, _countControls>		ControlIcons;
 
-		inline														SScreen			()	{ ::gpk::view<::gpk::cid_t>{ControlIds}.fill(-1); }
+		inln														SScreen			()	{ ::gpk::view<::gpk::cid_t>{ControlIds}.fill(-1); }
 	};
 
 	template<typename _tScreen, size_t _countControls>
-	sttc gpk::err_t						setupScreenFromControlParams	(::gpk::SGUI & gui, ::gpk::cid_t rootControlIndex, _tScreen & screen, const ::dry::SControlParams (&controlSetupList)[_countControls])	{
+	sttc gpk::err_t						setupScreenFromControlParams	(::gpk::SGUI & gui, ::gpk::cid_t rootControlIndex, _tScreen & screen, cnst ::dry::SControlParams (&controlSetupList)[_countControls])	{
 		::gpk::SPNGData									pngCache				= {};
 		for(u2_t  iControl = 0; iControl < _countControls; ++iControl) {
-			const SControlParams							& controlSetup			= controlSetupList[iControl];
-			const ::gpk::cid_t									controlIndex
+			cnst SControlParams							& controlSetup			= controlSetupList[iControl];
+			cnst ::gpk::cid_t									controlIndex
 				= screen.ControlIds[controlSetup.Id]	= ::gpk::controlCreate(gui);
 
 			::gpk::SControlPlacement						& control				= gui.Controls.Placement	[controlIndex];

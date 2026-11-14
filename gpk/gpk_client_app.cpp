@@ -3,7 +3,7 @@
 #include "gpk_json_expression.h"
 #include "gpk_chrono.h"
 
-::gpk::err_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, s2_t parentNode, ::gpk::vcst_t & remote_ip, ::gpk::vcst_t & remote_port) {
+::gpk::err_t	gpk::loadClientConfig	(cnst ::gpk::SJSONReader & jsonConfig, s2_t parentNode, ::gpk::vcst_t & remote_ip, ::gpk::vcst_t & remote_port) {
 	if_fail_w(::gpk::jsonExpressionResolve("remote_ip"  , jsonConfig, parentNode, remote_ip));
 	if_fail_w(::gpk::jsonExpressionResolve("remote_port", jsonConfig, parentNode, remote_port));
 	info_printf("Remote server address '%.*s:%.*s'", GPK_VIEW_ARGS(remote_ip), GPK_VIEW_ARGS(remote_port));
@@ -39,11 +39,11 @@
 	return ::gpk::controlTextSet(gui, client.UI.Info[::gpk::UI_CLIENT_INFO_ConnectedSince], client.UI.TextConnectedSince);
 }
 
-gpk::err_t		gpk::processGUIEvent	(SClient & client, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent) { 
+gpk::err_t		gpk::processGUIEvent	(SClient & client, SGUI & gui, cnst SEventView<EVENT_GUI_CONTROL> & screenEvent) { 
 	switch(screenEvent.Type) {
 	default: break;
 	case EVENT_GUI_CONTROL_StateChange: {
-		const SChangeControlState	stateChange	= *(const SChangeControlState*)screenEvent.Data.begin();
+		cnst SChangeControlState	stateChange	= *(cnst SChangeControlState*)screenEvent.Data.begin();
 		if(0 == (stateChange.Set & GUI_CONTROL_FLAG_Action))
 			return 0;
 
@@ -81,10 +81,10 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 		: vcst_t{"Connect"}
 		)); 
 	if(client.SocketClient.Connection.State == CONNECTION_STATE_IDLE) {
-		const f3_t				seconds				= timeCurrentInMs() / 1000.0 - client.ConnectedSince;
-		const s2_t				minutes				= int(seconds / 60);
-		const s2_t				hours				= int(minutes / 60);
-		const s2_t				days				= hours / 24;
+		cnst f3_t				seconds				= timeCurrentInMs() / 1000.0 - client.ConnectedSince;
+		cnst s2_t				minutes				= int(seconds / 60);
+		cnst s2_t				hours				= int(minutes / 60);
+		cnst s2_t				days				= hours / 24;
 		if(days > 0)
 			::gpk::sprintf_s(buf, "%u day%s %.2i:%.2i:%05.2f", days, days == 1 ? "s" : "", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
 		else
@@ -114,7 +114,7 @@ gpk::err_t			gpk::clientUpdate		(SClient & client, SGUI & gui) {
 		client.QueueReceived.clear();
 		if_fail_fe(connectionPayloadCollect(client.SocketClient.Connection, client.QueueReceived));
 
-		client.QueueToSend.for_each([&client](const pau0_t & ev) {
+		client.QueueToSend.for_each([&client](cnst pau0_t & ev) {
 			if_fail_fe(connectionPushData(client.SocketClient.Connection, client.SocketClient.Connection.Queue, *ev));
  			return 0;
 		});

@@ -86,7 +86,7 @@ nmsp gpk
 			}
 			inxp u1_t		CheckValue			() csnx { rtrn ::gpk::byte_to<u1_t>(Method.Encode(), 1) + Flags.Encode(); }
 			inxp u0_t		WindowBits			() csnx { rtrn Method.CompressionInfo + 8; }
-			inxp bool		Valid				() csnx { rtrn 8 == Method.CompressionMethod && Method.CompressionInfo <= 7 && 0 == CheckValue() % 31U && 0 == Flags.PresetDictionary; }
+			inxp b8_t		Valid				() csnx { rtrn 8 == Method.CompressionMethod && Method.CompressionInfo <= 7 && 0 == CheckValue() % 31U && 0 == Flags.PresetDictionary; }
 		};
 
 		struct SBitWindow {
@@ -232,18 +232,18 @@ nmsp gpk
 			SDeflateMatch result			= {};
 			if(offset + 2 >= input.size())
 				rtrn result;
-			cnst u2_t windowMask		= history.Window.size() - 1;
-			cnst u2_t hash				= matchHash(input, offset, history.Heads.size() - 1);
+			u2_c windowMask		= history.Window.size() - 1;
+			u2_c hash				= matchHash(input, offset, history.Heads.size() - 1);
 			u2_t candidate				= history.Heads[hash];
 			for(u2_t iChain = 0; candidate && iChain < searchDepth; ++iChain) {
-				cnst u2_t position		= candidate - 1;
+				u2_c position		= candidate - 1;
 				if(position >= offset || offset - position > history.Window.size())
 					break;
 				cnst SDeflateLink & link	= history.Links[position & windowMask];
 				if(link.Position != candidate)
 					break;
 				u2_t length				= 0;
-				cnst u2_t available		= ::gpk::min((u2_t)(input.size() - offset), (u2_t)(DEFLATE_MATCH_LENGTHS.Offset + DEFLATE_MATCH_LENGTHS.Count - 1));
+				u2_c available		= ::gpk::min((u2_t)(input.size() - offset), (u2_t)(DEFLATE_MATCH_LENGTHS.Offset + DEFLATE_MATCH_LENGTHS.Count - 1));
 				while(length < available && input[position + length] == input[offset + length])
 					++length;
 				if(length > result.Match.Count) {
@@ -258,11 +258,11 @@ nmsp gpk
 		}
 
 		sttc void		matchInsert				(SDeflateHistory & history, vcu0_t input, u2_t offset) {
-			cnst u2_t windowMask		= history.Window.size() - 1;
+			u2_c windowMask		= history.Window.size() - 1;
 			history.Window[offset & windowMask] = input[offset];
 			if(offset + 2 >= input.size())
 				rtrn;
-			cnst u2_t hash				= matchHash(input, offset, history.Heads.size() - 1);
+			u2_c hash				= matchHash(input, offset, history.Heads.size() - 1);
 			SDeflateLink & link			= history.Links[offset & windowMask];
 			link						= {offset + 1, history.Heads[hash]};
 			history.Heads[hash]			= offset + 1;
@@ -313,7 +313,7 @@ nmsp gpk
 				u2_t bit				= 0;
 				if_fail_fe(bitsRead(input, 1, bit));
 				code					|= bit;
-				cnst u2_t count			= table.Counts[width];
+				u2_c count			= table.Counts[width];
 				if(code < first + count) {
 					symbol				= table.Symbols[index + code - first];
 					rtrn 0;
@@ -341,9 +341,9 @@ nmsp gpk
 		sttc err_t		dynamicTables				(SBitReader & input, SHuffmanTable & literals, SHuffmanTable & distances) {
 			stxp u0_t order[]			= {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 			u2_t value					= 0;
-			if_fail_fe(bitsRead(input, 5, value)); cnst u2_t literalCount	= value + 257;
-			if_fail_fe(bitsRead(input, 5, value)); cnst u2_t distanceCount	= value + 1;
-			if_fail_fe(bitsRead(input, 4, value)); cnst u2_t lengthCount		= value + 4;
+			if_fail_fe(bitsRead(input, 5, value)); u2_c literalCount	= value + 257;
+			if_fail_fe(bitsRead(input, 5, value)); u2_c distanceCount	= value + 1;
+			if_fail_fe(bitsRead(input, 4, value)); u2_c lengthCount		= value + 4;
 			if_true_fe(literalCount > 286 || distanceCount > 32);
 
 			u0_t codeWidths[19]		= {};
@@ -355,7 +355,7 @@ nmsp gpk
 			if_fail_fe(huffmanBuild(codeLengths, codeWidths, 7));
 
 			u0_t widths[288 + 32]		= {};
-			cnst u2_t total				= literalCount + distanceCount;
+			u2_c total				= literalCount + distanceCount;
 			for(u2_t i = 0; i < total;) {
 				u1_t symbol				= 0;
 				if_fail_fe(huffmanRead(input, codeLengths, symbol));
@@ -406,11 +406,11 @@ nmsp gpk
 				if(symbol == 256)
 					rtrn 0;
 				if_true_fe(symbol > 285);
-				cnst u2_t lengthCode	= symbol - 257;
+				u2_c lengthCode	= symbol - 257;
 				u2_t extra				= 0;
 				if(LENGTH_EXTRA[lengthCode])
 					if_fail_fe(bitsRead(input, LENGTH_EXTRA[lengthCode], extra));
-				cnst u2_t length		= LENGTH_BASE[lengthCode] + extra;
+				u2_c length		= LENGTH_BASE[lengthCode] + extra;
 
 				u1_t distanceCode		= 0;
 				if_fail_fe(huffmanRead(input, distances, distanceCode));
@@ -418,7 +418,7 @@ nmsp gpk
 				extra					= 0;
 				if(DISTANCE_EXTRA[distanceCode])
 					if_fail_fe(bitsRead(input, DISTANCE_EXTRA[distanceCode], extra));
-				cnst u2_t distance		= DISTANCE_BASE[distanceCode] + extra;
+				u2_c distance		= DISTANCE_BASE[distanceCode] + extra;
 				if_true_fe(0 == distance || distance > produced || distance > stream.Window.size());
 				for(u2_t i = 0; i < length; ++i) {
 					cnst u0_t value		= stream.Window[(u2_t)(produced - distance) & (stream.Window.size() - 1)];
@@ -442,7 +442,7 @@ nmsp gpk
 			for(u2_t offset = 0; offset < stream.Stream.size();) {
 				cnst SDeflateMatch match	= matchFind(history, stream.Stream, offset, stream.Settings.SearchDepth);
 				if(match.Match.Count >= 3) {
-					cnst u2_t length		= (u2_t)match.Match.Count;
+					u2_c length		= (u2_t)match.Match.Count;
 					if_fail_fe(matchWrite(pending, output, length, offset - (u2_t)match.Match.Offset));
 					for(u2_t i = 0; i < length; ++i) {
 						adlerAdd(adler, stream.Stream[offset + i]);
@@ -458,7 +458,7 @@ nmsp gpk
 			}
 			if_fail_fe(fixedSymbolWrite(pending, output, 256));
 			if_fail_fe(bitsFlush(pending, output));
-			cnst u2_t checksum			= adlerValue(adler);
+			u2_c checksum			= adlerValue(adler);
 			cnst u0_t trailer[]			= {::gpk::byte_at(checksum, 3), ::gpk::byte_at(checksum, 2), ::gpk::byte_at(checksum, 1), ::gpk::byte_at(checksum, 0)};
 			if_fail_fe(output.append(trailer));
 			rtrn 0;
@@ -468,11 +468,11 @@ nmsp gpk
 			if_true_fe(stream.Stream.size() < 6);
 			SZlibHeader header			= {};
 			if_fail_fe(zlibHeaderRead(header, stream.Stream));
-			cnst u2_t payloadSize		= stream.Stream.size() - 6;
+			u2_c payloadSize		= stream.Stream.size() - 6;
 			SBitReader input				= {{&stream.Stream[2], payloadSize}, {}};
 			SAdler32 adler				= {};
 			u3_t produced				= 0;
-			bool finalBlock				= false;
+			b8_t finalBlock				= false;
 			while(!finalBlock) {
 				u2_t value				= 0;
 				if_fail_fe(bitsRead(input, SDeflateBlockHeader::BIT_COUNT, value));
@@ -501,7 +501,7 @@ nmsp gpk
 			}
 			if_true_fe(input.Remaining.size());
 			cnst u0_t * trailer			= &stream.Stream[stream.Stream.size() - 4];
-			cnst u2_t expected			= ::gpk::byte_to<u2_t>(trailer[0], 3) + ::gpk::byte_to<u2_t>(trailer[1], 2) + ::gpk::byte_to<u2_t>(trailer[2], 1) + trailer[3];
+			u2_c expected			= ::gpk::byte_to<u2_t>(trailer[0], 3) + ::gpk::byte_to<u2_t>(trailer[1], 2) + ::gpk::byte_to<u2_t>(trailer[2], 1) + trailer[3];
 			if_true_fe(expected != adlerValue(adler));
 			rtrn 0;
 	}
@@ -515,8 +515,8 @@ gpk::err_t			gpk::deflateInit			(SZipStream & output, vcu0_t input, SDeflateSett
 	output.Previous.clear();
 	output.Head.clear();
 	if_fail_fe(::gpk::deflateSettingsValidate(settings));
-	cnst u2_t windowSize			= ::gpk::bit_make<u2_t>(settings.WindowBits);
-	cnst u2_t hashSize				= ::gpk::bit_make<u2_t>(settings.HashBits);
+	u2_c windowSize			= ::gpk::bit_make<u2_t>(settings.WindowBits);
+	u2_c hashSize				= ::gpk::bit_make<u2_t>(settings.HashBits);
 	if_fail_fe(output.Window.resize(windowSize, {}));
 	if_fail_fe(output.Previous.resize(windowSize * szof(::gpk::SDeflateLink), {}));
 	if_fail_fe(output.Head.resize(hashSize * szof(u2_t), {}));

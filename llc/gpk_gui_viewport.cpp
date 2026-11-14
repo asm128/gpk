@@ -2,10 +2,10 @@
 #include "gpk_label.h"
 
 gpk::err_t 		gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & viewport)			{
-	const ::gpk::n2u0_t			fontCharSize			= gui.Fonts[gui.SelectedFont]->CharSize;
+	cnst ::gpk::n2u0_t			fontCharSize			= gui.Fonts[gui.SelectedFont]->CharSize;
 	s1_t						heightTitleBar			= fontCharSize.y + 4;
 	u2_t					widthTarget				= 800;
-	const ::gpk::n2f3_t			targetSize				= {(f3_t)widthTarget, widthTarget * (9 / 16.0)};
+	cnst ::gpk::n2f3_t			targetSize				= {(f3_t)widthTarget, widthTarget * (9 / 16.0)};
 
 	//if(-1 == viewport.IdControl)
 	{
@@ -16,8 +16,8 @@ gpk::err_t 		gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & view
 		control.Align			= ::gpk::ALIGN_TOP_LEFT;
 		control.Border = control.Margin	= {1, 1, 1, 1};
 
-		const u2_t				widthViewport			= (u2_t)(targetSize.x + ::gpk::controlNCSpacing(control).x);
-		const u2_t				heightViewport			= (u2_t)(targetSize.y + ((s3_t)heightTitleBar + ::gpk::controlNCSpacing(control).y));
+		u2_c				widthViewport			= (u2_t)(targetSize.x + ::gpk::controlNCSpacing(control).x);
+		u2_c				heightViewport			= (u2_t)(targetSize.y + ((s3_t)heightTitleBar + ::gpk::controlNCSpacing(control).y));
 		control.Area.Size		= {(s1_t)widthViewport, (s1_t)heightViewport};
 		for(u2_t iElement = 0; iElement < viewport.IdControls.size(); ++iElement) {
 			if_fail_fe(viewport.IdControls[iElement] = ::gpk::controlCreate(gui));
@@ -56,10 +56,10 @@ gpk::err_t 		gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & view
 		::gpk::SControlPlacement	& control				= gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
 		::gpk::SControlText			& controlText			= gui.Controls.Text		[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
 		control.Area.Size.y		= heightTitleBar;
-		static	s2_t				counterVPs				= 0;
+		sttc	s2_t				counterVPs				= 0;
 		++counterVPs;
 		sc_t						buffer [256];
-		const s2_t				titleLen				= snprintf(buffer, ::gpk::size(buffer) - 2, "Viewport #%i", counterVPs);
+		cnst s2_t				titleLen				= snprintf(buffer, ::gpk::size(buffer) - 2, "Viewport #%i", counterVPs);
 		controlText.Text		= {::gpk::label(buffer).begin(), (u2_t)titleLen};
 		controlText.Align		= ::gpk::ALIGN_CENTER;
 		control.Area.Offset.x	= heightTitleBar;

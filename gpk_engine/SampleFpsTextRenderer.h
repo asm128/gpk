@@ -26,7 +26,7 @@ nmsp gpk
 		void									ReleaseDeviceResources	() { WhiteBrush = {}; }
 
 		// Initializes D2D resources used for text 
-		gpk::err_t 						Initialize		(const ::gpk::pobj<DX::D3DDeviceResources> & deviceResources)  {
+		gpk::err_t 						Initialize		(cnst ::gpk::pobj<DX::D3DDeviceResources> & deviceResources)  {
 			DeviceResources									= deviceResources;
 			// Create device independent resources
 			::gpk::pcom<IDWriteTextFormat>						textFormat						= {};
@@ -55,7 +55,7 @@ nmsp gpk
 		// Renders a frame to the screen.
 		gpk::err_t 								Render							() {
 			ID2D1DeviceContext									* context						= DeviceResources->GetD2DDeviceContext();
-			const ::gpk::n2f2_t								logicalSize						= DeviceResources->GetLogicalSize();
+			cnst ::gpk::n2f2_t								logicalSize						= DeviceResources->GetLogicalSize();
 
 			context->SaveDrawingState(StateBlock);
 			context->BeginDraw();

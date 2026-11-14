@@ -10,7 +10,7 @@ sttc	gpk::err_t		processHandleClose		(TWindowsHandle & handle) {
 	}
 	TWindowsHandle				closing					= handle;
 	handle					= INVALID_WINDOWS_HANDLE;
-	rtrn CloseHandle((HANDLE)closing) ? 0 : ::gpk::OS_ERROR;
+	rtrn CloseHandle((HANDLE)closing) ? 0 : -1;
 }
 
 stct auto_process_handle : auto_handler<TWindowsHandle*, nullptr> {
@@ -25,7 +25,7 @@ stct auto_process_handle : auto_handler<TWindowsHandle*, nullptr> {
 };
 
 gpk::err_t			processClose			(SProcessWin32 & process) {
-	bool					failedToClose				= false;
+	b8_t					failedToClose				= false;
 	TWindowsHandle					stdoutWrite				= process.Startup.HandleStdOutput;
 	if(failed(processHandleClose(process.Startup.HandleStdInput)))
 		failedToClose			= true;
@@ -45,25 +45,25 @@ gpk::err_t			processClose			(SProcessWin32 & process) {
 		failedToClose			= true;
 	process.Info				= {};
 	process.Startup			= {sizeof(STARTUPINFOA)};
-	rtrn failedToClose ? OS_ERROR : 0;
+	rtrn failedToClose ? ((err_t)-1) : 0;
 }
 
 gpk::err_t processRedirect(SProcessWin32 & process) {
-	if(process.Info.hProcess || process.Info.hThread)
-		rtrn OS_BUSY;
+	if_true_fe(process.Info.hProcess);
+	if_true_fe(process.Info.hThread);
 	if_fail_fe(processClose(process));
 	SProcessNativeScope<SProcessWin32> rollback{process};
 	SECURITY_ATTRIBUTES security = {sizeof(SECURITY_ATTRIBUTES), 0, TRUE};
 	HANDLE readEnd = 0, writeEnd = 0;
 	if(!CreatePipe(&readEnd, &writeEnd, &security, 0))
-		rtrn OS_ERROR;
+		rtrn ((err_t)-1);
 	process.StdoutRead = (TWindowsHandle)readEnd;
 	process.Startup.HandleStdOutput = process.Startup.HandleStdError = (TWindowsHandle)writeEnd;
-	if_true_ve(OS_ERROR, !SetHandleInformation(readEnd, HANDLE_FLAG_INHERIT, 0));
-	if_true_ve(OS_ERROR, !CreatePipe(&readEnd, &writeEnd, &security, 0));
+	if_true_ve(((err_t)-1), !SetHandleInformation(readEnd, HANDLE_FLAG_INHERIT, 0));
+	if_true_ve(((err_t)-1), !CreatePipe(&readEnd, &writeEnd, &security, 0));
 	process.Startup.HandleStdInput = (TWindowsHandle)readEnd;
 	process.StdinWrite = (TWindowsHandle)writeEnd;
-	if_true_ve(OS_ERROR, !SetHandleInformation(writeEnd, HANDLE_FLAG_INHERIT, 0));
+	if_true_ve(((err_t)-1), !SetHandleInformation(writeEnd, HANDLE_FLAG_INHERIT, 0));
 	process.Startup.Flags |= STARTF_USESTDHANDLES;
 	rollback.Inactive = true;
 	rtrn 0;
@@ -78,8 +78,8 @@ gpk::err_t		processCreate
 	, vcs0_t		environment
 	, u2_t			creationFlags
 	) {
-	if(process.Info.hProcess || process.Info.hThread)
-		rtrn OS_BUSY;
+	if_true_fe(process.Info.hProcess);
+	if_true_fe(process.Info.hThread);
 	string					applicationStorage			= application;
 	string					commandLineStorage			= commandLine;
 	as0_t					environmentStorage			= environment;
@@ -87,12 +87,12 @@ gpk::err_t		processCreate
 	STARTUPINFOA			startup						= {};
 	::gpk::cpycst(startup, process.Startup);
 	PROCESS_INFORMATION		info						= {};
-	if_zero_vef(OS_ERROR, CreateProcessA(data_or_null(applicationStorage), data_or_null(commandLineStorage), 0, 0, inheritHandles, creationFlags, data_or_null(environmentStorage), 0, &startup, &info)
+	if_zero_vef(((err_t)-1), CreateProcessA(data_or_null(applicationStorage), data_or_null(commandLineStorage), 0, 0, inheritHandles, creationFlags, data_or_null(environmentStorage), 0, &startup, &info)
 		, "\"%.*s\", \"%.*s\"", GPK_VIEW_ARGS(applicationStorage), GPK_VIEW_ARGS(commandLineStorage)
 	);
 	gpk::cpycst(process.Info, info);
 	TWindowsHandle			stdoutWrite					= process.Startup.HandleStdOutput;
-	bool					failedToClose				= false;
+	b8_t					failedToClose				= false;
 	if(failed(processHandleClose(process.Startup.HandleStdInput)))
 		failedToClose			= true;
 	if(failed(processHandleClose(process.Startup.HandleStdOutput)))
@@ -101,17 +101,17 @@ gpk::err_t		processCreate
 		process.Startup.HandleStdError = INVALID_WINDOWS_HANDLE;
 	else if(failed(processHandleClose(process.Startup.HandleStdError)))
 		failedToClose			= true;
-	rtrn failedToClose ? OS_ERROR : 0;
+	rtrn failedToClose ? ((err_t)-1) : 0;
 }
 
 gpk::err_t			processWrite			(SProcessWin32 & process, vcu0_t input) {
 	if(0 == process.StdinWrite || INVALID_WINDOWS_HANDLE == process.StdinWrite)
-		rtrn input.size() ? OS_ERROR : 0;
+		rtrn input.size() ? ((err_t)-1) : 0;
 	auto_process_handle scope{process.StdinWrite};
 	u2_t			offset						= 0;
 	while(offset < input.size()) {
 		DWORD				written						= 0;
-		if_true_ve(OS_ERROR, FALSE == WriteFile((HANDLE)process.StdinWrite, input.begin() + offset, input.size() - offset, &written, 0) || 0 == written);
+		if_true_ve(((err_t)-1), FALSE == WriteFile((HANDLE)process.StdinWrite, input.begin() + offset, input.size() - offset, &written, 0) || 0 == written);
 		offset					+= written;
 	}
 	rtrn scope.Close();
@@ -119,30 +119,30 @@ gpk::err_t			processWrite			(SProcessWin32 & process, vcu0_t input) {
 
 gpk::err_t			processRead			(SProcessWin32 & process, au0_t & output) {
 	if(0 == process.StdoutRead || INVALID_WINDOWS_HANDLE == process.StdoutRead)
-		rtrn OS_ERROR;
+		rtrn ((err_t)-1);
 	auto_process_handle scope{process.StdoutRead};
 	u0_t					buffer[4096]					= {};
 	while(true) {
 		DWORD					readCount						= 0;
 		if(FALSE == ReadFile((HANDLE)process.StdoutRead, buffer, sizeof(buffer), &readCount, 0)) {
 			cnst DWORD				lastError						= GetLastError();
-			rtrn ERROR_BROKEN_PIPE == lastError ? 0 : OS_ERROR;
+			rtrn ERROR_BROKEN_PIPE == lastError ? 0 : ((err_t)-1);
 		}
 		if(0 == readCount)
 			break;
-		if_fail_ve(OS_ERROR, output.append(buffer, readCount));
+		if_fail_ve(((err_t)-1), output.append(buffer, readCount));
 	}
 	rtrn scope.Close();
 }
 
 gpk::err_t			processWait			(SProcessWin32 & process, u2_t & exitCode) {
 	if(0 == process.Info.hProcess || INVALID_WINDOWS_HANDLE == process.Info.hProcess)
-		rtrn OS_ERROR;
+		rtrn ((err_t)-1);
 	if(WAIT_OBJECT_0 != WaitForSingleObject((HANDLE)process.Info.hProcess, INFINITE))
-		rtrn OS_ERROR;
+		rtrn ((err_t)-1);
 	DWORD					processExitCode		= 0;
 	if(FALSE == GetExitCodeProcess((HANDLE)process.Info.hProcess, &processExitCode))
-		rtrn OS_ERROR;
+		rtrn ((err_t)-1);
 	exitCode			= processExitCode;
 	rtrn 0;
 }
@@ -150,7 +150,7 @@ gpk::err_t			processWait			(SProcessWin32 & process, u2_t & exitCode) {
 stct SProcessInput {
 	SProcessWin32	& Process;
 	vcu0_t			Input;
-	gpk::err_t		Result		= OS_ERROR;
+	gpk::err_t		Result		= ((err_t)-1);
 };
 
 // Native thread entry point; the operation's err_t stays in the shared context.
@@ -161,7 +161,7 @@ sttc DWORD WINAPI threadInputWrite(void * parameter) {
 }
 
 stct auto_process_writer : auto_handler<HANDLE, nullptr> {
-	err_t Result = OS_ERROR;
+	err_t Result = ((err_t)-1);
 	~auto_process_writer() { if_fail_e(Close()); }
 	err_t Close() {
 		if(!Handle) rtrn 0;
@@ -171,13 +171,13 @@ stct auto_process_writer : auto_handler<HANDLE, nullptr> {
 			if(WAIT_OBJECT_0 == waited)
 				break;
 			if(WAIT_TIMEOUT != waited)
-				Result = OS_ERROR;
+				Result = ((err_t)-1);
 			if(FALSE == CancelSynchronousIo(Handle) && ERROR_NOT_FOUND != GetLastError())
-				Result = OS_ERROR;
+				Result = ((err_t)-1);
 		}
 		cnst HANDLE closing = Handle;
 		Handle = 0;
-		rtrn CloseHandle(closing) ? 0 : OS_ERROR;
+		rtrn CloseHandle(closing) ? 0 : ((err_t)-1);
 	}
 };
 

@@ -37,27 +37,27 @@ nmsp gpk
 				, C.tplt Cast<_t2>()
 				};
 		}
-		cxpr	bool			CulledX			(cnst minmax<T> & limits)	csnx	{
+		cxpr	b8_t			CulledX			(cnst minmax<T> & limits)	csnx	{
 			return ((A.x  < limits.Min) && (B.x  < limits.Min) && (C.x  < limits.Min))
 				|| ((A.x >= limits.Max) && (B.x >= limits.Max) && (C.x >= limits.Max))
 				;
 		}
-		cxpr	bool			CulledY			(cnst minmax<T> & limits)	csnx	{
+		cxpr	b8_t			CulledY			(cnst minmax<T> & limits)	csnx	{
 			return ((A.y  < limits.Min) && (B.y  < limits.Min) && (C.y  < limits.Min))
 				|| ((A.y >= limits.Max) && (B.y >= limits.Max) && (C.y >= limits.Max))
 				;
 		}
-		cxpr	bool			CulledZ			(cnst minmax<T> & limits)	csnx	{
+		cxpr	b8_t			CulledZ			(cnst minmax<T> & limits)	csnx	{
 			return ((A.z  < limits.Min) && (B.z  < limits.Min) && (C.z  < limits.Min))
 				|| ((A.z >= limits.Max) && (B.z >= limits.Max) && (C.z >= limits.Max))
 				;
 		}
-		cxpr	bool			CulledZSpecial	(cnst minmax<T> & limits)	csnx	{
+		cxpr	b8_t			CulledZSpecial	(cnst minmax<T> & limits)	csnx	{
 			return ((A.z <= limits.Min) || (B.z <= limits.Min) || (C.z <= limits.Min))
 				|| ((A.z >= limits.Max) && (B.z >= limits.Max) && (C.z >= limits.Max))
 				;
 		}
-		cxpr	bool			ClipZ			()								csnx	{
+		cxpr	b8_t			ClipZ			()								csnx	{
 			return A.z < 0 || A.z >= 1 || B.z < 0 || B.z >= 1 || C.z < 0 || C.z >= 1;
 		}
 		tri3<T> &			Scale			(cnst TVertex & scale)			nxpt	{

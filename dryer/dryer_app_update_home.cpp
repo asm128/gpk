@@ -3,13 +3,13 @@
 
 gpk::err_t dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	::gpk::SControlTable						& controls						= app.Framework.GUI->Controls;
-	const ::dry::SScreenHome				& screen						= app.Screens.Home;
+	cnst ::dry::SScreenHome				& screen						= app.Screens.Home;
 	::gpk::guiUpdateMetrics(*app.Framework.GUI, newSize.u1(), false);
-	const s1_t							heightMenu						= (-1 == app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG])
+	cnst s1_t							heightMenu						= (-1 == app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG])
 		? 0
 		: controls.Placement[app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]].Area.Size.y;
-	const s1_t							heightHUD						= controls.Placement[app.Screens.HUD	.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG]].Area.Size.y;
-	const s1_t							finalHeight						= s1_t(newSize.y - (heightMenu + heightHUD));
+	cnst s1_t							heightHUD						= controls.Placement[app.Screens.HUD	.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG]].Area.Size.y;
+	cnst s1_t							finalHeight						= s1_t(newSize.y - (heightMenu + heightHUD));
 
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG		]].Area.Offset.y	= (s1_t)heightHUD;
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG		]].Area.Size		= {newSize.x, finalHeight};
@@ -18,7 +18,7 @@ gpk::err_t dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	]].Area.Size.x		=  s1_t(newSize.x / 7.0 * 4);
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SPOOL	]].Area.Size		= {s1_t(newSize.x / 7.0 * 4), s1_t(finalHeight - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE]].Area.Size.y)};
 
-	const s1_t							sessionGroupWidth					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SESSION]].Area.Size.x;
+	cnst s1_t							sessionGroupWidth					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SESSION]].Area.Size.x;
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_LABEL		]].Area.Size.x	= s1_t(sessionGroupWidth - 2);
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_ELAPSED_TIME_LABEL		]].Area.Size.x	= s1_t(sessionGroupWidth - 2);
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL]].Area.Size.x	= s1_t(sessionGroupWidth - 2);
@@ -27,7 +27,7 @@ gpk::err_t dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_REMAINING_TIME_LABEL		]].Area.Size.x	= s1_t(sessionGroupWidth - 2);
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_LABEL		]].Area.Size.x	= s1_t(sessionGroupWidth - 2);
 
-	const s1_t							programGroupWidth					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM]].Area.Size.x;
+	cnst s1_t							programGroupWidth					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM]].Area.Size.x;
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START					]].Area.Size.x	= s1_t(programGroupWidth - 8);
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP						]].Area.Size.x	= s1_t(programGroupWidth - 8);
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_NAME				]].Area.Size.x	= s1_t(programGroupWidth - 2);
@@ -37,13 +37,13 @@ gpk::err_t dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_SUBCYCLE_DURATION	]].Area.Size.x	= s1_t(programGroupWidth - 2);
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_SUBCYCLES			]].Area.Size.x	= s1_t(programGroupWidth - 2);
 
-	const ::gpk::n2s1_t					spoolGroupSize						= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SPOOL]].Area.Size;
+	cnst ::gpk::n2s1_t					spoolGroupSize						= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_GROUP_SPOOL]].Area.Size;
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE	]].Area.Size.x		= spoolGroupSize.x - 4;
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST		]].Area.Size		= {s1_t(spoolGroupSize.x -  4), s1_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 4)};
 	::gpk::n2s1_t						& scrollableSize					= controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]].Area.Size;
 	scrollableSize						= {s1_t(spoolGroupSize.x - 36), s1_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 6)};
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLBAR	]].Area.Size.y		= s1_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 8);
-	const ::gpk::vcid						listChildren						= controls.Children[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]];
+	cnst ::gpk::vcid						listChildren						= controls.Children[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]];
 	for(u2_t  iSpool = 0, countSpools = listChildren.size(); iSpool < countSpools; ++iSpool) {
 		controls.Placement[listChildren[iSpool]].Area.Size.x		= s1_t(spoolGroupSize.x - 40);
 		controls.SetUpdated(listChildren[iSpool], false);
@@ -51,7 +51,7 @@ gpk::err_t dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_
 	return 0;
 }
 
-::gpk::err_t						updateGaugesFromState			(::dry::SApplication & app, bool forceUpdate) {
+::gpk::err_t						updateGaugesFromState			(::dry::SApplication & app, b8_t forceUpdate) {
 	::dry::SDryerState						& dryerState					= app.Dryer.State;
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	screenHome.GaugeDryerSmall.Gauges[::dry::GAUGE_TEMPERATURE	].SetValue(dryerState.Temperature	, 100);	//::dry::DRYER_MAX_TEMPERATURE);
@@ -100,7 +100,7 @@ sttc gpk::err_t				updateControlIfNeeded			(::dry::SApplication & app, ::gpk::sc
 gpk::err_t dry::updateProgramDisplay		(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
-	const ::dry::SDryerProgram				& dryerProgram					= app.Dryer.ProgramList[app.Dryer.ProgramSelected];
+	cnst ::dry::SDryerProgram				& dryerProgram					= app.Dryer.ProgramList[app.Dryer.ProgramSelected];
 	::gpk::sc_t								bufferTemp	[32]				= {};
 	if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_NAME], dryerProgram.Name)));
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%u\xf8\x43"	, dryerProgram.Temperature		); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramTemperature		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_TEMPERATURE		);
@@ -150,7 +150,7 @@ gpk::err_t dry::updateCatalogDisplay		(::dry::SApplication & app) {
 		controlText.Text					= ::gpk::label(bufferFormat);
 	}
 	for(u2_t  iSpool = app.Catalog.FilamentLoaded.size(), countSpools = menuItemControls.size(); iSpool < countSpools; ++iSpool) {
-		const ::gpk::err_t					indexControl					= menuItemControls[iSpool];
+		cnst ::gpk::err_t					indexControl					= menuItemControls[iSpool];
 		::gpk::SControlPlacement				& controlFilament				= gui.Controls.Placement[indexControl];
 		::gpk::SControlText						& controlText					= gui.Controls.Text[indexControl];
 		controlFilament.Border				= {};
@@ -162,11 +162,11 @@ gpk::err_t dry::updateCatalogDisplay		(::dry::SApplication & app) {
 }
 
 sttc gpk::err_t				formatTimerString				(s3_t timeInMilliseconds, ::gpk::vstr_t target) {
-	const s3_t							timeInSeconds					= timeInMilliseconds / 1000;
-	const s3_t							timeInMinutes					= timeInSeconds / 60;
-	const u2_t 							hours							= (u2_t )(timeInMinutes / 60);
-	const u2_t 							mins							= (u2_t )(timeInMinutes) % 60;
-	const u2_t 							secs							= (u2_t )(timeInSeconds) % 60;
+	cnst s3_t							timeInSeconds					= timeInMilliseconds / 1000;
+	cnst s3_t							timeInMinutes					= timeInSeconds / 60;
+	u2_c 							hours							= (u2_t )(timeInMinutes / 60);
+	u2_c 							mins							= (u2_t )(timeInMinutes) % 60;
+	u2_c 							secs							= (u2_t )(timeInSeconds) % 60;
 	if(1 == hours)
 		snprintf(target.begin(), target.size() - 2, "%u:%2.2uHr", hours, mins);
 	else if (hours)

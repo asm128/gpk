@@ -55,7 +55,7 @@ namespace dry
 
 		::gpk::SJSONFile					JSONData				;
 
-		bool								Exists					(s3_t uniqueId) {
+		b8_t								Exists					(s3_t uniqueId) {
 			for(u2_t  iId = 0; iId < FilamentLoaded.size(); ++iId) {
 				if(FilamentLoaded[iId].UniqueId == uniqueId)
 					return true;
@@ -69,11 +69,11 @@ namespace dry
 	::gpk::err_t						catalogRemove	(::dry::SSpoolCatalog & catalog, ::gpk::s2_t index);
 	::gpk::err_t						catalogAdd
 		( ::dry::SSpoolCatalog	& catalog
-		, const SSpoolData		& spoolToAdd
+		, cnst SSpoolData		& spoolToAdd
 		, s3_t				timeLoaded
 		, s3_t				timeUnloaded
 		, s3_t				timeDryed
-		, bool					history
+		, b8_t					history
 		);
 }
 

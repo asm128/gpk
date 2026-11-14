@@ -50,7 +50,7 @@ sttc ::gpk::err_t testInvalidValue(::gpk::ATestError & errors) {
 }
 
 tplt<tpnm T>
-sttc ::gpk::err_t testValue(::gpk::ATestError & errors, ::gpk::u3_c source, ::gpk::u0_c expectedTailWidth, bool trace = true) {
+sttc ::gpk::err_t testValue(::gpk::ATestError & errors, ::gpk::u3_c source, ::gpk::u0_c expectedTailWidth, b8_t trace = true) {
 	cnst T value = (T)source;
 	cnst ::gpk::packed_uint<T> packed{value};
 	::gpk::u3_c expectedMultiplier = source >> (expectedTailWidth * 8);

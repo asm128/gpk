@@ -16,12 +16,12 @@ nmsp gpk
 		apod<T>		Values			= {};
 		apod<K>		Keys			= {};
 
-		const T&			oper[]		(const K & key)	const	{ return Values[Keys.find(key)]; }
-		T&					oper[]		(const K & key)			{ return Values[Keys.find(key)]; }
+		cnst T&			oper[]		(cnst K & key)	cnst	{ return Values[Keys.find(key)]; }
+		T&					oper[]		(cnst K & key)			{ return Values[Keys.find(key)]; }
 
-		u2_t			size			()				const	{ return Keys.size(); }
+		u2_t			size			()				cnst	{ return Keys.size(); }
 
-		err_t 			push_back		(const K & key, const T & instance)	{
+		err_t 			push_back		(cnst K & key, cnst T & instance)	{
 			if_true_fef(0 <= Keys.find(key), "%s", "Duplicate key.");
 			err_t 			index			= 0;
 			if_fail_fe(index = Keys.push_back(key));
@@ -33,23 +33,23 @@ nmsp gpk
 			return index;
 		}
 
-		err_t 	Create			(const K & key)							{
+		err_t 	Create			(cnst K & key)							{
 			return push_back(key, T{});
 		}
 
-		err_t 	Delete			(const K & key)					{
+		err_t 	Delete			(cnst K & key)					{
 			cnst err_t 	index			= Keys.find(key);
 			if_fail_fe(index);
 			if_fail_fe(Keys.remove_unordered(index));
 			return Values.remove_unordered(index);
 		}
 
-		err_t 	Clone			(const K & key, u2_t index)	{
+		err_t 	Clone			(cnst K & key, u2_t index)	{
 			if_true_fef(index >= Values.size(), "Invalid source index:%u. Value count:%u.", index, Values.size());
 			return push_back(key, Values[index]);
 		}
 
-		err_t 	Save			(au0_t & output) const {
+		err_t 	Save			(au0_t & output) cnst {
 			if_true_fef(Keys.size() != Values.size(), "Key count:%u. Value count:%u.", Keys.size(), Values.size());
 			if_fail_fe(saveView(output, Keys));
 			if_fail_fe(saveView(output, Values));

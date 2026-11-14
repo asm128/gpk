@@ -10,7 +10,7 @@
 //
 //GDEFINE_ENUM_TYPE(STR_TEST_RESULT, ::gpk::u0_t);
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ASTATIC_MUTABLE	,  0, "str(astsc_t<N>&) produced an unexpected mutable string view.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ASTATIC_CONST		,  1, "str(const astsc_t<N>&) produced an unexpected const string view.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ASTATIC_CONST		,  1, "str(cnst astsc_t<N>&) produced an unexpected cnst string view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, U0					,  2, "str(u0_t) produced unexpected fixed storage.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, U1					,  3, "str(u1_t) produced unexpected fixed storage.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, U2					,  4, "str(u2_t) produced unexpected fixed storage.");
@@ -22,18 +22,18 @@
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, F2					, 10, "str(f2_t) produced unexpected fixed storage.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, F3					, 11, "str(f3_t) produced unexpected fixed storage.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VSTR_MUTABLE		, 12, "str(vstr_t&) did not preserve the counted mutable string view.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VSTR_CONST		, 13, "str(const vstr_t&) did not preserve the counted string view.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VCST_CONST		, 14, "str(const vcst_t&) did not preserve the counted const string view.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VSTR_CONST		, 13, "str(cnst vstr_t&) did not preserve the counted string view.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VCST_CONST		, 14, "str(cnst vcst_t&) did not preserve the counted cnst string view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VS0					, 15, "str(vs0_t) did not preserve the counted mutable character view.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VCS0				, 16, "str(vcs0_t) did not preserve the counted const character view.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VCS0				, 16, "str(vcs0_t) did not preserve the counted cnst character view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ARRAY_MUTABLE	, 17, "str(sc_t (&)[N]) produced an unexpected mutable string view.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ARRAY_CONST		, 18, "str(const sc_t (&)[N]) produced an unexpected const string view.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, BOOLEAN			, 19, "str(bool) produced an unexpected const string view.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ARRAY_CONST		, 18, "str(sc_c (&)[N]) produced an unexpected cnst string view.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, BOOLEAN			, 19, "str(b8_t) produced an unexpected cnst string view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, IPV4				, 20, "str(SIPv4) produced unexpected fixed storage.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, STRING_MUTABLE	, 21, "str(string&) did not preserve the counted mutable string through conversion.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, STRING_CONST		, 22, "str(const string&) did not preserve the counted string through conversion.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, STRING_CONST		, 22, "str(cnst string&) did not preserve the counted string through conversion.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ASC_MUTABLE		, 23, "str(asc_t&) did not preserve the counted mutable array through conversion.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ASC_CONST			, 24, "str(const asc_t&) did not preserve the counted array through conversion.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ASC_CONST			, 24, "str(cnst asc_t&) did not preserve the counted array through conversion.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, U0_APPEND			, 25, "append_strings() copied the fixed capacity returned by str(u0_t) instead of its logical text length.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, PRESTRING_APPEND	, 26, "append_strings() changed text that was passed through str() before composition.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, CHAR_APPEND			, 27, "append_strings() did not preserve character arguments as characters.");
@@ -77,8 +77,8 @@
 //	{
 //		::gpk::astsc_t<6> input = {'a', 0, 'b', 'c'};
 //		auto result = ::gpk::str(input);
-//		cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
-//		cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
+//		cxpr b8_t resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
+//		cxpr b8_t resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
 //		GPK_TEST_CHECKF(errors, STR_TEST_RESULT_ASTATIC_MUTABLE, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
 //		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASTATIC_MUTABLE, result.begin() != input.Storage);
 //		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASTATIC_MUTABLE, result.size() != 1);
@@ -311,8 +311,8 @@
 //		GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_MUTABLE, converted.size() != input.size());
 //		GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_MUTABLE, 0 != ::memcmp(converted.begin(), input.begin(), input.byte_count()));
 //		//auto result = ::gpk::str(input);
-//		//cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
-//		//cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
+//		//cxpr b8_t resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
+//		//cxpr b8_t resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
 //		//GPK_TEST_CHECKF(errors, STR_TEST_RESULT_STRING_MUTABLE, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
 //		//GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_MUTABLE, result.begin() != input.begin());
 //		//GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_MUTABLE, result.size() != input.size());
@@ -326,8 +326,8 @@
 //		GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_CONST, converted.size() != input.size());
 //		GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_CONST, 0 != ::memcmp(converted.begin(), input.begin(), input.byte_count()));
 //		//auto result = ::gpk::str(input);
-//		//cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
-//		//cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
+//		//cxpr b8_t resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
+//		//cxpr b8_t resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
 //		//GPK_TEST_CHECKF(errors, STR_TEST_RESULT_STRING_CONST, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
 //		//GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_CONST, result.begin() != input.begin());
 //		//GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_CONST, result.size() != input.size());
@@ -340,8 +340,8 @@
 //	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, converted.size() != input.size());
 //	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, 0 != ::memcmp(converted.begin(), input.begin(), input.byte_count()));
 //	//	auto result = ::gpk::str(input);
-//	//	cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
-//	//	cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
+//	//	cxpr b8_t resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
+//	//	cxpr b8_t resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
 //	//	GPK_TEST_CHECKF(errors, STR_TEST_RESULT_ASC_MUTABLE, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
 //	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, result.begin() != input.begin());
 //	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, result.size() != input.size());
@@ -350,8 +350,8 @@
 //	//{
 //	//	cnst ::gpk::asc_t input = {'a', 0, 'b', 'c'};
 //	//	auto result = ::gpk::str(input);
-//	//	cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
-//	//	cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
+//	//	cxpr b8_t resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
+//	//	cxpr b8_t resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
 //	//	GPK_TEST_CHECKF(errors, STR_TEST_RESULT_ASC_CONST, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
 //	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, result.begin() != input.begin());
 //	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, result.size() != input.size());

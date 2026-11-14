@@ -56,7 +56,7 @@ stxp ::gpk::vcst_c INDEX_CATALOG_FILE = "D:/enterprise/programming_sciences/code
 	::gpk::au2_t resolved = {};
 	cnst ::gpk::err_t resolveResult = catalog.Resolve("7518", resolved);
 	GPK_TEST_REQUIREF(errors, INDEX_CATALOG_TEST_RESULT_RESOLVE_RESULT, 0 >= resolveResult || 0 == resolved.size(), "Result:%i, count:%u.", resolveResult, resolved.size());
-	bool foundOnSushi = false;
+	b8_t foundOnSushi = false;
 	for(::gpk::u2_t iResult = 0; iResult < resolved.size(); ++iResult) {
 		cnst ::gpk::u2_t itemIndex = resolved[iResult];
 		::gpk::vcst_t sourceName = {};
@@ -65,7 +65,7 @@ stxp ::gpk::vcst_c INDEX_CATALOG_FILE = "D:/enterprise/programming_sciences/code
 		if(sourceName != "onsushi")
 			continue;
 		foundOnSushi = true;
-		bool foundPhone = false;
+		b8_t foundPhone = false;
 		for(::gpk::u2_t iPhone = 0; iPhone < catalog.Item[itemIndex].Phones.size(); ++iPhone)
 			foundPhone |= catalog.Item[itemIndex].Phones[iPhone] == "7518-4019";
 		GPK_TEST_CHECKF(errors, INDEX_CATALOG_TEST_RESULT_INDEXED_VALUE, false == foundPhone, "Item:%u, phones:%u.", itemIndex, catalog.Item[itemIndex].Phones.size());

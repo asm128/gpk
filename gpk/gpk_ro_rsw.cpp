@@ -26,14 +26,14 @@ GPK_USING_TYPEINT();
 #pragma pack(pop)
 
 gpk::err_t 		gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, ::gpk::vcu0_c & input) {
-	::gpk::view_stream<const u0_t>	rsw_stream			= {input.begin(), input.size()};
+	::gpk::view_stream<cnst u0_t>	rsw_stream			= {input.begin(), input.size()};
 	SRSWHeader							header				= {};//*(SRSWHeader*)input.begin();
 	if_fail_fe(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
 	info_printf("RSW magic number: %.4s.", header.Filecode);
 	info_printf("RSW version: %u.%u.", (u2_t)header.VersionMajor, (u2_t)header.VersionMinor);
 	info_printf("RSW version major: 0x%x.", (u2_t)header.VersionMajor);
 	info_printf("RSW version minor: 0x%x.", (u2_t)header.VersionMinor);
-	const u2_t						promoted			= *(u1_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
+	u2_c						promoted			= *(u1_t*)&input[4];	// I had to put this in a variable because the sttc analyzer believed I may have been confused with this statement.
 	info_printf("RSW version number: 0x%x.", promoted);
 	(void)promoted;
 	//info_printf("RSW version: 0x%x.", header.Version);

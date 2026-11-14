@@ -16,7 +16,7 @@ gpk::err_t			gpk::folderUnpack			(SFolderInMemory & out_loaded, vcst_t nameFileS
 	if_fail_fef(folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %.*s.", GPK_VIEW_ARGS(nameFileSrc));
 	return 0;
 }
-gpk::err_t			gpk::folderToDisk			(const SFolderPackage & folderPackage, const vcst_t nameFileDst)			{
+gpk::err_t			gpk::folderToDisk			(cnst SFolderPackage & folderPackage, cnst vcst_t nameFileDst)			{
 	cnst SPackHeader 	& fileHeader				= folderPackage.PackageInfo;
 	vcu0_c				compressedTableFiles		= folderPackage.CompressedTableFiles		;
 	vcu0_c				compressedContentsPacked	= folderPackage.CompressedContentsPacked	;
@@ -35,7 +35,7 @@ gpk::err_t			gpk::folderToDisk			(const SFolderPackage & folderPackage, const vc
 
 stxp u2_t			DEFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
 stxp u2_t			INFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
-gpk::err_t			gpk::folderPack				(SFolderPackage & output, const vcst_t nameFolderSrc) {
+gpk::err_t			gpk::folderPack				(SFolderPackage & output, cnst vcst_t nameFolderSrc) {
 	SPackHeader 			& fileHeader			= output.PackageInfo = {};
 	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
 	au0_t					tableFiles				;
@@ -58,7 +58,7 @@ gpk::err_t			gpk::folderPack				(SFolderPackage & output, const vcst_t nameFolde
 	return 0;
 }
 gpk::err_t			gpk::folderUnpack			(SFolderInMemory & output, vcu0_t rawFileInMemory)		{
-	const SPackHeader	& header					= *(SPackHeader*)&rawFileInMemory[0];
+	cnst SPackHeader	& header					= *(SPackHeader*)&rawFileInMemory[0];
 	output.Names	.resize(header.TotalFileCount);
 	output.Contents	.resize(header.TotalFileCount);
 	output.DataInfo		.clear();
@@ -107,12 +107,12 @@ gpk::err_t			gpk::folderLoad				(vcst_t nameFolderSrc, au0_t & tableFiles, au0_t
 	}
 	return totalFileCount;
 }
-gpk::err_t			gpk::folderToDisk			(const SFolderInMemory & virtualFolder, vcst_t destinationPath)				{
+gpk::err_t			gpk::folderToDisk			(cnst SFolderInMemory & virtualFolder, vcst_t destinationPath)				{
 	string				finalPathName				= {};
 	FILE						* fp						= 0;
 	for(u2_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
 		gpk::safe_fclose(fp);
-		const vcst_t			& fileName					= virtualFolder.Names		[iFile];
+		cnst vcst_t			& fileName					= virtualFolder.Names		[iFile];
 		vcu0_c			& fileContent				= virtualFolder.Contents	[iFile];
 		finalPathName.clear();
 		if_fail_fe(pathNameCompose(destinationPath, fileName, finalPathName));
@@ -176,7 +176,7 @@ gpk::err_t			gpk::fileFromMemorySecure	(SLoadCache & recycle, vcst_t fileName, v
 	if_fail_fef(fileFromMemory(fileName, recycle.Encrypted), "Failed to save file: %.*s.", (int)fileName.size(), fileName.begin());
 	return 0;
 }
-gpk::err_t			gpk::fileToMemorySecure		(SLoadCache & recycle, vcst_t fileName, vcu0_t key, const b8_t deflate, au0_t & loadedBytes)								{
+gpk::err_t			gpk::fileToMemorySecure		(SLoadCache & recycle, vcst_t fileName, vcu0_t key, b8_c deflate, au0_t & loadedBytes)								{
 	if(false == deflate && 0 == key.size()) {
 		if_fail_fef(fileToMemory(fileName, loadedBytes), "Failed to read file: %.*s.", (int)fileName.size(), fileName.begin());
 		if_fail_fe(crcVerifyAndRemove(loadedBytes));

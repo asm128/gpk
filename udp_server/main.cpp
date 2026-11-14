@@ -4,7 +4,7 @@
 
 using namespace gpk;
 
-static ::gpk::err_t udpServerMain(::gpk::SRuntimeValues &) {
+sttc ::gpk::err_t udpServerMain(::gpk::SRuntimeValues &) {
 	tcpipInitialize();
 	sockaddr_in				sa_server				= {};
 	SIPv4Endpoint			addrLocal				= {{}, 9898};
@@ -26,20 +26,20 @@ static ::gpk::err_t udpServerMain(::gpk::SRuntimeValues &) {
 
 		sockaddr_in				sa_client				= {AF_INET};
 		int						client_length			= sizeof(sa_client);
-		char					connectReceived			= 0;
-		if_fail_fef(::recvfrom(handle, (char*)&connectReceived, (int)sizeof(char), 0, (sockaddr*)&sa_client, &client_length), "Failed to receive connect request from address %u", (u2_t)addrLocalClient);
+		sc_t					connectReceived			= 0;
+		if_fail_fef(::recvfrom(handle, (sc_t*)&connectReceived, (int)sizeof(sc_t), 0, (sockaddr*)&sa_client, &client_length), "Failed to receive connect request from address %u", (u2_t)addrLocalClient);
 		SIPv4Endpoint			addrRemote;
 		tcpipAddressFromSockaddr(sa_client, addrRemote);
 		info_printf("Received connect request: %c from %u.%u.%u.%u:%u.", connectReceived, GPK_IPV4_EXPAND(addrRemote));
 
-		char					commandToSend			= '2';
+		sc_t					commandToSend			= '2';
 		//tcpipAddressFromSockaddr(sa_server, addrLocal);
 		tcpipAddress(clientHandle, addrLocal);
 		info_printf("Sending connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 		sleep(10);
 		if_true_fef(INVALID_SOCKET == clientHandle, "Failed to create socket for address %u", (u2_t)addrLocal);
 		while(true) {
-			if_fail_fef(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond address %u", (u2_t)addrRemote);
+			if_fail_fef(::sendto(clientHandle, (cnst sc_t*)&commandToSend, (int)sizeof(sc_t), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond address %u", (u2_t)addrRemote);
 			sleep(10);
 		}
 		info_printf("Sent connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));

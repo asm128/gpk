@@ -10,7 +10,7 @@
 gpk::string	gpk::getWindowsErrorAsString(s2_t lastError) {	// Get the error message, if any.
 	if(0 == lastError)
 		return {};
-	char			* messageBuffer				= {};
+	sc_t			* messageBuffer				= {};
 	u2_c			size						= FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)lastError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
 	string			message;
 	if_null_ve(message, messageBuffer);
@@ -19,7 +19,7 @@ gpk::string	gpk::getWindowsErrorAsString(s2_t lastError) {	// Get the error mess
 	return message;
 }
 
-gpk::err_t	gpk::wcstombs				(string & output, view<const wchar_t> input)	{
+gpk::err_t	gpk::wcstombs				(string & output, view<cnst wchar_t> input)	{
 	if(0 == input.size())
 		return 0;
 

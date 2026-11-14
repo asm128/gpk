@@ -33,16 +33,16 @@ nmsp gpk
 	tydf line2<s2_t> line2s2_t; tdcs line2s2_t line2s2_c;
 	tydf line2<s3_t> line2s3_t; tdcs line2s3_t line2s3_c;
 
-	tplt<tpnm T> sinx	T		rise		(const line2<T> & line)									nxpt	{ return line.B.y - line.A.y;		}
-	tplt<tpnm T> sinx	T		run			(const line2<T> & line)									nxpt	{ return line.B.x - line.A.x;		}
-	tplt<tpnm T> sinx	T		slope		(const line2<T> & line)												{ return rise(line) / run(line);	}
-	tplt<tpnm T> stxp	T		orient2d	(const line2<T> & segment, const n2<T> & point)	nxpt	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	tplt<tpnm T> stin	f3_t	determinant	(const line2<T>& line)									nxpt	{ return determinant((f3_t)line.A.x, (f3_t)line.A.y, (f3_t)line.B.x, (f3_t)line.B.y); }
+	tplt<tpnm T> sinx	T		rise		(cnst line2<T> & line)									nxpt	{ return line.B.y - line.A.y;		}
+	tplt<tpnm T> sinx	T		run			(cnst line2<T> & line)									nxpt	{ return line.B.x - line.A.x;		}
+	tplt<tpnm T> sinx	T		slope		(cnst line2<T> & line)												{ return rise(line) / run(line);	}
+	tplt<tpnm T> stxp	T		orient2d	(cnst line2<T> & segment, cnst n2<T> & point)	nxpt	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	tplt<tpnm T> stin	f3_t	determinant	(cnst line2<T>& line)									nxpt	{ return determinant((f3_t)line.A.x, (f3_t)line.A.y, (f3_t)line.B.x, (f3_t)line.B.y); }
 #pragma pack(pop)
 	// ---- Collision
-	//tplt<tpnm T> static	bool	raySegmentIntersect	(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{
-	//	const f3_t	t2		= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
-	//	const f3_t	t1		= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
+	//tplt<tpnm T> sttc	b8_t	raySegmentIntersect	(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{
+	//	cnst f3_t	t2		= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
+	//	cnst f3_t	t1		= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
 	//	return (t2 > 0 && 0 < t2 && t2 < 1);
 	//}
 } // nmsp

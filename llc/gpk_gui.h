@@ -14,12 +14,12 @@ nmsp gpk
 		minmaxf3_t			ZoomLimits			= {0.1, 10.0};
 		f3_t				ZoomLevel			= 1.0;
 
-		bool				oper==				(cnst SGUIZoom & other)		csnx	{
+		b8_t				oper==				(cnst SGUIZoom & other)		csnx	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inln	bool		oper!=				(cnst SGUIZoom & other)		csnx	{ return !oper==(other); }
+		inln	b8_t		oper!=				(cnst SGUIZoom & other)		csnx	{ return !oper==(other); }
 	};
 
 	struct SGUIColors {
@@ -45,17 +45,17 @@ nmsp gpk
 		u1_t				SelectedFont		= 7;
 		u1_t				ThemeDefault		= ASCII_COLOR_CYAN * 16 + 8;
 		GUI_COLOR_MODE		ColorModeDefault	= GUI_COLOR_MODE_3D;//GUI_COLOR_MODE_DEFAULT;
-		bool				InputModeTouch		= true;
+		b8_t				InputModeTouch		= true;
 	};
 
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
-	err_t				guiUpdateMetrics				(SGUI & gui, cnst n2u1_t & targetSize, bool forceUpdate);
+	err_t				guiUpdateMetrics				(SGUI & gui, cnst n2u1_t & targetSize, b8_t forceUpdate);
 	err_t				guiDraw							(SGUI & gui, g8bgra target);
 	err_t				guiGetProcessableControls		(cnst SGUI & gui, acid & controlIndices);
 	err_t				guiDeselect						(SGUI & gui);
 	err_t				guiSelect						(SGUI & gui, cid_t controlToSelect);
 
-	err_t				controlDelete					(SGUI & gui, cid_t iControl, bool recursive = true);
+	err_t				controlDelete					(SGUI & gui, cid_t iControl, b8_t recursive = true);
 	cid_t 				controlCreate					(SGUI & gui);
 	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
 	err_t				controlSetParent				(SGUI & gui, cid_t iControl, cid_t iParent);
@@ -63,7 +63,7 @@ nmsp gpk
 	err_t				controlTextSet					(SGUI & gui, cid_t iControl, vcst_t text);
 	err_t				controlFontSet					(SGUI & gui, cid_t iControl, s1_t iFont);
 	//err_t				controlUpdateMetrics			(SGUI & gui, s2_t iControl, cnst n2<u2_t> & targetSize);
-	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, bool forceUpdate);
+	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, b8_t forceUpdate);
 	err_t				controlMetricsInvalidate		(SGUI & gui, cid_t iControl);
 	err_t				controlHidden					(cnst SGUI & gui, cid_t iControl);
 	err_t				controlDisabled					(cnst SGUI & gui, cid_t iControl);

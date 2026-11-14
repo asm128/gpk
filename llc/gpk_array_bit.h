@@ -15,28 +15,28 @@ nmsp gpk
 		::gpk::view_bit<T>		View			;
 
 		cxpr					array_bit		()					nxpt	= default;
-								array_bit		(const ::gpk::view_bit<T> & other)
+								array_bit		(cnst ::gpk::view_bit<T> & other)
 			:	Data(other.begin(), round_up(other.size(), TView::ELEMENT_BITS))
 			,	View(Data.begin(), other.size())
 			{}
-								array_bit		(const ::gpk::array_bit<T> & other)
+								array_bit		(cnst ::gpk::array_bit<T> & other)
 			: Data(other.Data)
 			, View(Data.begin(), other.View.size())
 			{}
 
-		::gpk::array_bit<T>&	oper=			(const ::gpk::view_bit<T> & other) {
+		::gpk::array_bit<T>&	oper=			(cnst ::gpk::view_bit<T> & other) {
 			Data					= {other.begin(), round_up(other.size(), TView::ELEMENT_BITS)};
 			View					= {Data.begin(), other.size()};
 			return *this;
 		}
 
-		::gpk::array_bit<T>&	oper=			(const ::gpk::array_bit<T> & other) {
+		::gpk::array_bit<T>&	oper=			(cnst ::gpk::array_bit<T> & other) {
 			Data					= other.Data;
 			View					= {Data.begin(), other.View.size()};
 			return *this;
 		}
 
-		inxp	const u2_t&	size			()				csnx	{ return View.size(); }
+		inxp	u2_c&	size			()				csnx	{ return View.size(); }
 
 		gpk::err_t 		resize			(u2_t newSize)		nxpt	{
 			if_fail_fe(Data.resize(round_up(newSize, View.ELEMENT_BITS)));

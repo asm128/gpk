@@ -5,7 +5,7 @@ GPK_USING_VIEW();
 GPK_USING_APOD();
 
 // Vertex coordinates for cube faces
-stxp	const ::gpk::tri3<f2_t>					geometryCubePositions			[12]						=
+stxp	cnst ::gpk::tri3<f2_t>					geometryCubePositions			[12]						=
 	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first
 	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second
 	, {{0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}	// Back		- first
@@ -20,7 +20,7 @@ stxp	const ::gpk::tri3<f2_t>					geometryCubePositions			[12]						=
 	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}	// Top		- second
 	};
 
-stxp	const ::gpk::n3f2_t						geometryCubeNormalsTriangle		[12]						=
+stxp	cnst ::gpk::n3f2_t						geometryCubeNormalsTriangle		[12]						=
 	{ {0.0f, 0.0f, -1.0f}	// Right	- first
 	, {0.0f, 0.0f, -1.0f}	// Right	- second
 
@@ -41,7 +41,7 @@ stxp	const ::gpk::n3f2_t						geometryCubeNormalsTriangle		[12]						=
 	};
 
 // -----------------------------------------------------
-stxp	const ::gpk::tri3<f2_t>					geometryCubeNormalsVertex		[12]						=
+stxp	cnst ::gpk::tri3<f2_t>					geometryCubeNormalsVertex		[12]						=
 	{ { {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	} // Right	- first
 	, { {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	} // Right	- second
 
@@ -62,7 +62,7 @@ stxp	const ::gpk::tri3<f2_t>					geometryCubeNormalsVertex		[12]						=
 	};
 
 // Vertex coordinates for cube faces
-stxp	const ::gpk::tri2<f2_t>					geometryCubeUV					[12]						=
+stxp	cnst ::gpk::tri2<f2_t>					geometryCubeUV					[12]						=
 	{ {{1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f}}	// Right	- first			?? I have no idea if this is correct lol
 	, {{1.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}}	// Right	- second
 
@@ -101,7 +101,7 @@ gpk::err_t 		gpk::generateCubeGeometry
 }
 
 
-gpk::err_t 		gpk::generateGridPositions		(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3	<f2_t>>& out_Positions	) {
+gpk::err_t 		gpk::generateGridPositions		(cnst ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3	<f2_t>>& out_Positions	) {
 	for(u2_t z = 0; z < gridMetrics.y; ++z)
 		for(u2_t x = 0; x < gridMetrics.x; ++x) {
 			out_Positions.push_back({{(f2_t)x, 0, (f2_t)z}, {(f2_t)x		, 0, (f2_t)z + 1}, {(f2_t)x + 1, 0, (f2_t)z + 1}});
@@ -109,7 +109,7 @@ gpk::err_t 		gpk::generateGridPositions		(const ::gpk::n2u1_t & gridMetrics, ::g
 		}
 	return 0;
 }
-gpk::err_t 		gpk::generateGridNormalsTriangle				(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::n3		<f2_t>>& out_Normals	) {
+gpk::err_t 		gpk::generateGridNormalsTriangle				(cnst ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::n3		<f2_t>>& out_Normals	) {
 	for(u2_t z = 0; z < gridMetrics.y; ++z)
 		for(u2_t x = 0; x < gridMetrics.x; ++x) {
 			out_Normals.push_back({0, 1, 0});
@@ -117,7 +117,7 @@ gpk::err_t 		gpk::generateGridNormalsTriangle				(const ::gpk::n2u1_t & gridMetr
 		}
 	return 0;
 }
-gpk::err_t 		gpk::generateGridNormalsVertex					(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3	<f2_t>>& out_Normals	) {
+gpk::err_t 		gpk::generateGridNormalsVertex					(cnst ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3	<f2_t>>& out_Normals	) {
 	for(u2_t z = 0; z < gridMetrics.y; ++z)
 		for(u2_t x = 0; x < gridMetrics.x; ++x) {
 			out_Normals.push_back({{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
@@ -125,20 +125,20 @@ gpk::err_t 		gpk::generateGridNormalsVertex					(const ::gpk::n2u1_t & gridMetri
 		}
 	return 0;
 }
-gpk::err_t 		gpk::generateGridUV					(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri2	<f2_t>>& out_UV		) {
-	const ::gpk::n2f3_t				gridUnit							= {1.0 / gridMetrics.x, 1.0 / gridMetrics.y};
-	const ::gpk::n2f3_t				gridMetricsF						= gridMetrics.f3();
+gpk::err_t 		gpk::generateGridUV					(cnst ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri2	<f2_t>>& out_UV		) {
+	cnst ::gpk::n2f3_t				gridUnit							= {1.0 / gridMetrics.x, 1.0 / gridMetrics.y};
+	cnst ::gpk::n2f3_t				gridMetricsF						= gridMetrics.f3();
 	for(u2_t z = 0; z < gridMetrics.y; ++z)
 	for(u2_t x = 0; x < gridMetrics.x; ++x) {
-		const ::gpk::n2f3_t				gridCell							= {x / gridMetricsF.x, z / gridMetricsF.y};
-		const ::gpk::n2f3_t				gridCellFar							= gridCell + gridUnit;
+		cnst ::gpk::n2f3_t				gridCell							= {x / gridMetricsF.x, z / gridMetricsF.y};
+		cnst ::gpk::n2f3_t				gridCellFar							= gridCell + gridUnit;
 		out_UV.push_back({{(f2_t)gridCell.x, (f2_t)gridCell.y}, {(f2_t)gridCell.x, (f2_t)gridCellFar.y}, gridCellFar.f2()});
 		out_UV.push_back({{(f2_t)gridCell.x, (f2_t)gridCell.y}, gridCellFar.f2()	, {(f2_t)gridCellFar.x, (f2_t)gridCell.y}});
 	}
 	return 0;
 }
 gpk::err_t 		gpk::generateGridGeometry
-	( const ::gpk::n2u1_t			& gridMetrics
+	( cnst ::gpk::n2u1_t			& gridMetrics
 	, ::gpk::apod<::gpk::tri3f2_t>	& out_Positions
 	, ::gpk::apod<::gpk::n3f2_t  >	& out_Normals
 	, ::gpk::apod<::gpk::tri3f2_t>	& out_NormalsVertex

@@ -20,11 +20,11 @@ namespace lls
 	GDEFINE_ENUM_VALUE(LLS_EVENT, CLIENT_ASKS, 7);
 	GDEFINE_ENUM_VALUE(LLS_EVENT, WORLD_SETUP, 8);
 	GDEFINE_ENUM_VALUE(LLS_EVENT, WORLD_VALUE, 9);
-	typedef	::gpk::SEvent		<LLS_EVENT>	EventLLS;
-	typedef	::gpk::SEventView	<LLS_EVENT>	EViewLLS;
+	tydf	::gpk::SEvent		<LLS_EVENT>	EventLLS;
+	tydf	::gpk::SEventView	<LLS_EVENT>	EViewLLS;
 
 	tplt<tpnm _tChildEvent>
-	stin	::gpk::err_t	eventExtractAndHandle		(const EventLLS & parentEvent, const ::std::function<::gpk::err_t(const ::gpk::SEventView<_tChildEvent>&)> & funcHandleChild) {
+	stin	::gpk::err_t	eventExtractAndHandle		(cnst EventLLS & parentEvent, cnst ::std::function<::gpk::err_t(cnst ::gpk::SEventView<_tChildEvent>&)> & funcHandleChild) {
 		return ::gpk::eventExtractAndHandle<_tChildEvent, LLS_EVENT>(parentEvent, funcHandleChild);
 	}
 

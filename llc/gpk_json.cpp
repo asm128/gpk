@@ -298,7 +298,7 @@ sttc	gpk::err_t	lengthJsonNumber			(u2_t indexCurrentChar, gpk::vcst_t jsonAsStr
 	rtrn indexCurrentChar - offset;
 }
 
-//sttc	gpk::err_t	parseJsonAbsolutePart		(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, vcst_t  absolutePart, gpk::SJSONToken & output, u2_c sizeNum, const b8_t isFloat, u2_c index, const s2_t indexCurrentElement, const s2_t indexCurrentChar)	{
+//sttc	gpk::err_t	parseJsonAbsolutePart		(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, vcst_t  absolutePart, gpk::SJSONToken & output, u2_c sizeNum, b8_c isFloat, u2_c index, cnst s2_t indexCurrentElement, cnst s2_t indexCurrentChar)	{
 //	output					= {indexCurrentElement, isFloat ? gpk::JSON_TYPE_DECIMAL : gpk::JSON_TYPE_INTEGER, {(u2_t)indexCurrentChar, indexCurrentChar + sizeNum + (index - indexCurrentChar)}};
 //	gpk::err_t				intCount					= gpk::parseIntegerDecimal(absolutePart, output.Value);
 //	if(intCount < (s2_t)sizeNum) {
@@ -517,7 +517,7 @@ gpk::err_t			gpk::jsonParseStep			(gpk::SJSONReader & reader, gpk::vcst_t jsonAs
 		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, jsonAsString)
 		: ::jsonParseDocumentCharacter	(reader.StateRead, reader.Token, jsonAsString)
 		), {
-			const b8_t					validElement				= (u2_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
+			b8_c					validElement				= (u2_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
 			cnst gpk::SJSONToken		* currentElement			= validElement ? &reader.Token[reader.StateRead.IndexCurrentElement] : 0;
 			json_error_printf("Error during read step. Malformed JSON?"
 				"\nPosition  : %" GPK_FMT_S2 "."

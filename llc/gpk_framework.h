@@ -42,7 +42,7 @@ nmsp gpk
 	};
 
 	struct SFrameworkSettings {
-		bool						GUIZoom					: 1;
+		b8_t						GUIZoom					: 1;
 	};
 
 	struct SFramework : gpk::SFrameTimer {
@@ -60,8 +60,8 @@ nmsp gpk
 
 		inln						SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcst_t fileNameJSONConfig = "gpk_config.json")
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig) {
-			RootWindow.Input.create();
-			GUI.create();
+			if_null_e(RootWindow.Input.create());
+			if_null_e(GUI.create());
 			if(fileNameJSONConfig.size())	// Attempt to load config file.
 				if_fail_w(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig));
 		}

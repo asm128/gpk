@@ -15,7 +15,7 @@ nmsp gpk
 		apod<CELESTIAL_BODY>	Type;
 		as2_t							Parent;
 
-		err_t				Save			(au0_t & output)	const	{ 
+		err_t				Save			(au0_t & output)	cnst	{ 
 			if_fail_fe(Body.Save(output));
 			if_fail_fe(gpk::saveView(output, Type));
 			if_fail_fe(gpk::saveView(output, Parent));
@@ -30,7 +30,7 @@ nmsp gpk
 		}
 	};
 
-	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, const SJSONReader & jsonData);
+	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, cnst SJSONReader & jsonData);
 	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, vcst_t jsonFilePath);
 } // nmsp
 

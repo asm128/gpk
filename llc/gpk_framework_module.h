@@ -18,7 +18,7 @@ GPK_DECLARE_MODULE_FUNCTION(gpk_moduleDelete	, void*	* customApplication								
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleSetup		, void	* customApplication											);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCleanup	, void	* customApplication											);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void	* customApplication											);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void	* customApplication, bool requestedExit						);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void	* customApplication, ::gpk::b8_t requestedExit				);
 
 nmsp gpk
 {
@@ -72,15 +72,15 @@ nmsp gpk
 #define GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle)																	\
 	::gpk::err_t	setup		(_mainClass& app);																					\
 	::gpk::err_t	cleanup		(_mainClass& app);																					\
-	::gpk::err_t	update		(_mainClass& app, bool systemRequestedExit);														\
+	::gpk::err_t	update		(_mainClass& app, ::gpk::b8_t systemRequestedExit);													\
 	::gpk::err_t	draw		(_mainClass& app);																					\
 	::gpk::err_t	GPK_STDCALL	gpk_moduleVersion	()																{ return 1; }	\
 	::gpk::err_t	GPK_STDCALL	gpk_moduleCreate	(void*	* instanceApp, ::gpk::SRuntimeValues* runtimeValues)	{ try { *instanceApp = new _mainClass{*runtimeValues};											return 0;		} catch(...) {} return -1; }	\
 	::gpk::err_t	GPK_STDCALL	gpk_moduleDelete	(void*	* instanceApp)											{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;									return 0;		} catch(...) {} return -1; }	\
-	::gpk::err_t	GPK_STDCALL	gpk_moduleSetup		(void	* instanceApp)											{ try { cnst ::gpk::err_t result = setup		(*(_mainClass*)instanceApp);					return result;	} catch(...) {} return -1; }	\
+	::gpk::err_t	GPK_STDCALL	gpk_moduleSetup		(void	* instanceApp)											{ try { cnst ::gpk::err_t result = setup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
 	::gpk::err_t	GPK_STDCALL	gpk_moduleCleanup	(void	* instanceApp)											{ try { cnst ::gpk::err_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-	::gpk::err_t	GPK_STDCALL	gpk_moduleUpdate	(void	* instanceApp, bool systemRequestedExit)				{ try { cnst ::gpk::err_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
-	::gpk::err_t	GPK_STDCALL	gpk_moduleRender	(void	* instanceApp)											{ try { cnst ::gpk::err_t result = draw	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+	::gpk::err_t	GPK_STDCALL	gpk_moduleUpdate	(void	* instanceApp, ::gpk::b8_t systemRequestedExit)			{ try { cnst ::gpk::err_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
+	::gpk::err_t	GPK_STDCALL	gpk_moduleRender	(void	* instanceApp)											{ try { cnst ::gpk::err_t result = draw		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
 	::gpk::err_t	GPK_STDCALL	gpk_moduleTitle		(::gpk::sc_t * out_title, ::gpk::u2_t *maxCount)				{	\
 		stxp	::gpk::sc_c			mylmoduleTitle[] = _moduleTitle;													\
 		if(0 == out_title) 																								\

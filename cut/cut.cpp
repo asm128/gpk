@@ -4,16 +4,16 @@
 
 using namespace gpk;
 
-static ::gpk::err_t					cutMain						(::gpk::SRuntimeValues & runtimeValues)	{
-	const ::gpk::SCommandLineArgs	& args							= runtimeValues.EntryPointArgs;
+sttc ::gpk::err_t					cutMain						(::gpk::SRuntimeValues & runtimeValues)	{
+	cnst ::gpk::SCommandLineArgs	& args							= runtimeValues.EntryPointArgs;
 	if_true_vef(-1, 1 > args.Positionals.size(), "Usage:"
 		"\n- `%.*s <file to split>`"
 		"\n- `%.*s -j -- <file to join>`"
 		, GPK_VIEW_ARGS(args.ProgramName)
 		, GPK_VIEW_ARGS(args.ProgramName)
 		);
-	const ::gpk::vcst_t				fileName							= args.Positionals[0];
-	const ::gpk::b8_c					join								= 0 <= ::gpk::argsOptionIndex(args, "j");
+	cnst ::gpk::vcst_t				fileName							= args.Positionals[0];
+	cnst ::gpk::b8_c					join								= 0 <= ::gpk::argsOptionIndex(args, "j");
 	if(join) {
 		gpk::err_t							countJoined						;
 		if_fail_fef(countJoined = ::gpk::fileJoin(fileName), "Failed to join file. Disk full? File name: %.*s.", GPK_VIEW_ARGS(fileName));

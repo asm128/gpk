@@ -45,7 +45,7 @@ nmsp gpk
 		::gpk::au2_t						ConstantBuffers;
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
-		gpk::err_t 					Save			(::gpk::au0_t & output) const { 
+		gpk::err_t 					Save			(::gpk::au0_t & output) cnst { 
 			if_fail_fe(gpk::savePOD(output, Desc));
 			if_fail_fe(gpk::saveView(output, GeometryBuffers));
 			if_fail_fe(gpk::saveView(output, ConstantBuffers));

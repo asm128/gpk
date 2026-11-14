@@ -5,7 +5,7 @@
 
 nmsp gpk 
 {
-	tplT	err_t	safe_assign			(T* & handle, const T & value)	{ if(0			== handle) return -1; *handle = value; return 0; }
+	tplT	err_t	safe_assign			(T* & handle, cnst T & value)	{ if(0			== handle) return -1; *handle = value; return 0; }
 	tplT	err_t	safe_free			(T* & handle)					{ if(0			== handle) return -1; ::free		(handle); handle = {}; return 0; }
 	tplT	err_t	safe_fclose			(T  & handle)					{ if(0			== handle) return -1; ::fclose		(handle); handle = {}; return 0; }
 #ifdef GPK_WINDOWS

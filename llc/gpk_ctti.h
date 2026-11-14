@@ -6,9 +6,9 @@
 namespace gpk
 {
 
-	inxp bool cttiSpace		(cnst sc_t character) nxpt { rtrn ' ' == character || '\t' == character || '\r' == character || '\n' == character; }
-	inxp bool cttiNameStart	(cnst sc_t character) nxpt { rtrn '_' == character || (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z'); }
-	inxp bool cttiNamePart	(cnst sc_t character) nxpt { rtrn cttiNameStart(character) || (character >= '0' && character <= '9'); }
+	inxp b8_t cttiSpace		(sc_c character) nxpt { rtrn ' ' == character || '\t' == character || '\r' == character || '\n' == character; }
+	inxp b8_t cttiNameStart	(sc_c character) nxpt { rtrn '_' == character || (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z'); }
+	inxp b8_t cttiNamePart	(sc_c character) nxpt { rtrn cttiNameStart(character) || (character >= '0' && character <= '9'); }
 	tplt<tpnm T>
 	inxp auto cttiFirstMember(cnst T & source) nxpt {
 		cnst auto & [result] = source;
@@ -54,11 +54,11 @@ namespace gpk
 	stct SCTTISpan {
 		u2_t		Offset	= {};
 		u2_t		Count	= {};
-		inxp bool	empty	() cnst nxpt { rtrn 0 == Count; }
+		inxp b8_t	empty	() cnst nxpt { rtrn 0 == Count; }
 	};
 
 	tplt<size_t N>
-	inxp SCTTISpan cttiTrim(cnst sc_t (&text)[N], u2_t offset, u2_t count) nxpt {
+	inxp SCTTISpan cttiTrim(sc_c (&text)[N], u2_t offset, u2_t count) nxpt {
 		while(count && cttiSpace(text[offset]))
 			++offset, --count;
 		while(count && cttiSpace(text[offset + count - 1]))
@@ -66,7 +66,7 @@ namespace gpk
 		rtrn {offset, count};
 	}
 	tplt<size_t N>
-	inxp u2_t cttiFind(cnst sc_t (&text)[N], cnst SCTTISpan span, cnst sc_t delimiter) nxpt {
+	inxp u2_t cttiFind(sc_c (&text)[N], cnst SCTTISpan span, sc_c delimiter) nxpt {
 		for(u2_t iChar = 0; iChar < span.Count; ++iChar)
 			if(delimiter == text[span.Offset + iChar])
 				rtrn span.Offset + iChar;
@@ -74,7 +74,7 @@ namespace gpk
 	}
 
 	tplt<size_t N>
-	inxp bool cttiIdentifier(cnst sc_t (&text)[N], cnst SCTTISpan span) nxpt {
+	inxp b8_t cttiIdentifier(sc_c (&text)[N], cnst SCTTISpan span) nxpt {
 		if(span.empty() || false == cttiNameStart(text[span.Offset]))
 			rtrn false;
 		for(u2_t iChar = 1; iChar < span.Count; ++iChar)
@@ -83,7 +83,7 @@ namespace gpk
 		rtrn true;
 	}
 	tplt<size_t N>
-	inxp u2_t cttiIdentifierError(cnst sc_t (&text)[N], cnst SCTTISpan span) nxpt {
+	inxp u2_t cttiIdentifierError(sc_c (&text)[N], cnst SCTTISpan span) nxpt {
 		if(span.empty() || false == cttiNameStart(text[span.Offset]))
 			rtrn span.Offset;
 		for(u2_t iChar = 1; iChar < span.Count; ++iChar)
@@ -92,7 +92,7 @@ namespace gpk
 		rtrn span.Offset + span.Count;
 	}
 	tplt<size_t NText, size_t NValue>
-	inxp bool cttiSpanEquals(cnst sc_t (&text)[NText], cnst SCTTISpan span, cnst sc_t (&value)[NValue]) nxpt {
+	inxp b8_t cttiSpanEquals(sc_c (&text)[NText], cnst SCTTISpan span, sc_c (&value)[NValue]) nxpt {
 		if(span.Count != NValue - 1)
 			rtrn false;
 		for(u2_t iChar = 0; iChar < span.Count; ++iChar)
@@ -119,7 +119,7 @@ namespace gpk
 		SCTTISpan	Name		= {};
 		SCTTISpan	Initializer	= {};
 		TEnum		Value		= {};
-		bool		ValueResolved	= false;
+		b8_t		ValueResolved	= false;
 	};
 
 	tplt<size_t NDeclaration>
@@ -132,7 +132,7 @@ namespace gpk
 		CTTI_PARSE_STATE	State					= CTTI_PARSE_STATE_STRUCT_NAME;
 		CTTI_PARSE_ERROR	Error					= CTTI_PARSE_ERROR_NONE;
 
-		inxp bool		Success		() cnst nxpt { rtrn CTTI_PARSE_ERROR_NONE == Error && CTTI_PARSE_STATE_COMPLETE == State; }
+		inxp b8_t		Success		() cnst nxpt { rtrn CTTI_PARSE_ERROR_NONE == Error && CTTI_PARSE_STATE_COMPLETE == State; }
 		inxp vcst_t	View		(cnst SCTTISpan span) cnst nxpt { rtrn {&SourceText[span.Offset], span.Count}; }
 		inxp err_t	Find		(cnst vcst_t name) cnst nxpt {
 			for(u2_t iMember = 0; iMember < Count; ++iMember)
@@ -143,7 +143,7 @@ namespace gpk
 	};
 
 	tplt<size_t NDeclaration>
-	inxp SCTTIParseResult<NDeclaration> cttiParseStruct(cnst sc_t (&declaration)[NDeclaration]) nxpt {
+	inxp SCTTIParseResult<NDeclaration> cttiParseStruct(sc_c (&declaration)[NDeclaration]) nxpt {
 		static_assert(NDeclaration <= 0xFFFFFFFFULL, "CTTI source text exceeds the supported size.");
 		SCTTIParseResult<NDeclaration> result = {};
 		for(u2_t iChar = 0; iChar < NDeclaration; ++iChar)
@@ -152,7 +152,7 @@ namespace gpk
 		SCTTISpan sourceSpan = cttiTrim(result.SourceText, 0, (u2_t)NDeclaration - 1);
 		if(sourceSpan.Count && ';' == result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1])
 			sourceSpan = cttiTrim(result.SourceText, sourceSpan.Offset, sourceSpan.Count - 1);
-		cnst u2_t openBrace = cttiFind(result.SourceText, sourceSpan, '{');
+		u2_c openBrace = cttiFind(result.SourceText, sourceSpan, '{');
 		if(openBrace == sourceSpan.Offset + sourceSpan.Count) {
 			result.Error		= CTTI_PARSE_ERROR_EXPECTED_OPEN_BRACE;
 			result.State		= CTTI_PARSE_STATE_STRUCT_NAME;
@@ -176,7 +176,7 @@ namespace gpk
 
 		result.State = CTTI_PARSE_STATE_MODIFIERS;
 		u2_t		cursor			= openBrace + 1;
-		cnst u2_t	textLength		= sourceSpan.Offset + sourceSpan.Count - 1;
+		u2_c	textLength		= sourceSpan.Offset + sourceSpan.Count - 1;
 		while(true) {
 			while(cursor < textLength && cttiSpace(result.SourceText[cursor]))
 				++cursor;
@@ -185,7 +185,7 @@ namespace gpk
 				rtrn result;
 			}
 
-			cnst u2_t declarationOffset = cursor;
+			u2_c declarationOffset = cursor;
 			cursor = cttiFind(result.SourceText, {cursor, textLength - cursor}, ';');
 			if(cursor == textLength) {
 				result.Error		= CTTI_PARSE_ERROR_EXPECTED_SEMICOLON;
@@ -195,7 +195,7 @@ namespace gpk
 			}
 
 			cnst SCTTISpan segment = cttiTrim(result.SourceText, declarationOffset, cursor - declarationOffset);
-			cnst u2_t equalOffset = cttiFind(result.SourceText, segment, '=');
+			u2_c equalOffset = cttiFind(result.SourceText, segment, '=');
 			cnst SCTTISpan declarationSpan = cttiTrim(result.SourceText, segment.Offset, equalOffset - segment.Offset);
 			cnst SCTTISpan memberValue = (equalOffset < segment.Offset + segment.Count)
 				? cttiTrim(result.SourceText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
@@ -225,7 +225,7 @@ namespace gpk
 			cnst SCTTISpan typeName = {typeOffset, beforeName.Offset + beforeName.Count - typeOffset};
 			cnst SCTTISpan modifiers = cttiTrim(result.SourceText, beforeName.Offset, typeOffset - beforeName.Offset);
 			for(u2_t iChar = 0; iChar < modifiers.Count; ++iChar) {
-				cnst sc_t character = result.SourceText[modifiers.Offset + iChar];
+				sc_c character = result.SourceText[modifiers.Offset + iChar];
 				if(false == cttiSpace(character) && false == cttiNameStart(character)) {
 					result.Error		= CTTI_PARSE_ERROR_INVALID_MODIFIER;
 					result.State		= CTTI_PARSE_STATE_MODIFIERS;
@@ -251,7 +251,7 @@ namespace gpk
 	tplt<tpnm T>
 	stct SCTTIMemberAccess<T, 1> {
 		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
 			auto & [member0] = instance;
 			rtrn 0 == index ? visitor(member0) : -1;
 		}
@@ -260,7 +260,7 @@ namespace gpk
 	tplt<tpnm T>
 	stct SCTTIMemberAccess<T, 2> {
 		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
 			auto & [member0, member1] = instance;
 			switch(index) {
 			case 0: rtrn visitor(member0);
@@ -273,7 +273,7 @@ namespace gpk
 	tplt<tpnm T>
 	stct SCTTIMemberAccess<T, 3> {
 		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
 			auto & [member0, member1, member2] = instance;
 			switch(index) {
 			case 0: rtrn visitor(member0);
@@ -287,7 +287,7 @@ namespace gpk
 	tplt<tpnm T>
 	stct SCTTIMemberAccess<T, 4> {
 		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
 			auto & [member0, member1, member2, member3] = instance;
 			switch(index) {
 			case 0: rtrn visitor(member0);
@@ -345,13 +345,13 @@ namespace gpk
 		SCTTIEnumValue<TEnum>	Values			[NDeclaration]	= {};
 		u2_t					Count							= {};
 		u2_t					ErrorOffset						= {};
-		bool					ValuesCompiled					= false;
+		b8_t					ValuesCompiled					= false;
 		CTTI_ENUM_PARSE_STATE	State							= CTTI_ENUM_PARSE_STATE_ENUM_NAME;
 		CTTI_ENUM_PARSE_ERROR	Error							= CTTI_ENUM_PARSE_ERROR_NONE;
 
-		inxp bool	Success() cnst nxpt { rtrn CTTI_ENUM_PARSE_ERROR_NONE == Error && CTTI_ENUM_PARSE_STATE_COMPLETE == State; }
+		inxp b8_t	Success() cnst nxpt { rtrn CTTI_ENUM_PARSE_ERROR_NONE == Error && CTTI_ENUM_PARSE_STATE_COMPLETE == State; }
 		tplt<size_t N>
-		inxp s2_t	Find(cnst sc_t (&name)[N]) cnst nxpt {
+		inxp s2_t	Find(sc_c (&name)[N]) cnst nxpt {
 			for(u2_t iValue = 0; iValue < Count; ++iValue)
 				if(cttiSpanEquals(SourceText, Values[iValue].Name, name))
 					rtrn (s2_t)iValue;
@@ -360,7 +360,7 @@ namespace gpk
 	};
 
 	tplt<tpnm TEnum, size_t NDeclaration>
-	inxp SCTTIEnumParseResult<TEnum, NDeclaration> cttiParseEnum(cnst sc_t (&declaration)[NDeclaration]) nxpt {
+	inxp SCTTIEnumParseResult<TEnum, NDeclaration> cttiParseEnum(sc_c (&declaration)[NDeclaration]) nxpt {
 		SCTTIEnumParseResult<TEnum, NDeclaration> result = {};
 		for(u2_t iChar = 0; iChar < NDeclaration; ++iChar)
 			result.SourceText[iChar] = declaration[iChar];
@@ -368,7 +368,7 @@ namespace gpk
 		SCTTISpan sourceSpan = cttiTrim(result.SourceText, 0, (u2_t)NDeclaration - 1);
 		if(sourceSpan.Count && ';' == result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1])
 			sourceSpan = cttiTrim(result.SourceText, sourceSpan.Offset, sourceSpan.Count - 1);
-		cnst u2_t openBrace = cttiFind(result.SourceText, sourceSpan, '{');
+		u2_c openBrace = cttiFind(result.SourceText, sourceSpan, '{');
 		if(openBrace == sourceSpan.Offset + sourceSpan.Count) {
 			result.Error		= CTTI_ENUM_PARSE_ERROR_EXPECTED_OPEN_BRACE;
 			result.ErrorOffset	= openBrace;
@@ -389,7 +389,7 @@ namespace gpk
 		&& 'm' == result.SourceText[header.Offset + 3]
 		&& cttiSpace(result.SourceText[header.Offset + 4]))
 			header = cttiTrim(result.SourceText, header.Offset + 4, header.Count - 4);
-		cnst u2_t typeOffset = cttiFind(result.SourceText, header, ':');
+		u2_c typeOffset = cttiFind(result.SourceText, header, ':');
 		result.EnumName = cttiTrim(result.SourceText, header.Offset, typeOffset - header.Offset);
 		if(false == cttiIdentifier(result.SourceText, result.EnumName)) {
 			result.Error		= CTTI_ENUM_PARSE_ERROR_INVALID_ENUM_NAME;
@@ -409,7 +409,7 @@ namespace gpk
 
 		result.State = CTTI_ENUM_PARSE_STATE_VALUE_NAME;
 		u2_t cursor = openBrace + 1;
-		cnst u2_t textLength = sourceSpan.Offset + sourceSpan.Count - 1;
+		u2_c textLength = sourceSpan.Offset + sourceSpan.Count - 1;
 		while(true) {
 			while(cursor < textLength && cttiSpace(result.SourceText[cursor]))
 				++cursor;
@@ -417,9 +417,9 @@ namespace gpk
 				result.State = CTTI_ENUM_PARSE_STATE_COMPLETE;
 				rtrn result;
 			}
-			cnst u2_t commaOffset = cttiFind(result.SourceText, {cursor, textLength - cursor}, ',');
+			u2_c commaOffset = cttiFind(result.SourceText, {cursor, textLength - cursor}, ',');
 			cnst SCTTISpan segment = cttiTrim(result.SourceText, cursor, commaOffset - cursor);
-			cnst u2_t equalOffset = cttiFind(result.SourceText, segment, '=');
+			u2_c equalOffset = cttiFind(result.SourceText, segment, '=');
 			cnst SCTTISpan valueName = cttiTrim(result.SourceText, segment.Offset, equalOffset - segment.Offset);
 			if(false == cttiIdentifier(result.SourceText, valueName)) {
 				result.Error		= CTTI_ENUM_PARSE_ERROR_INVALID_VALUE_NAME;
@@ -427,7 +427,7 @@ namespace gpk
 				rtrn result;
 			}
 
-			cnst bool hasInitializer = equalOffset < segment.Offset + segment.Count;
+			b8_c hasInitializer = equalOffset < segment.Offset + segment.Count;
 			cnst SCTTISpan initializer = hasInitializer
 				? cttiTrim(result.SourceText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
 				: SCTTISpan{};
@@ -438,7 +438,7 @@ namespace gpk
 				rtrn result;
 			}
 
-			cnst bool valueResolved = initializer.empty() && (0 == result.Count || result.Values[result.Count - 1].ValueResolved);
+			b8_c valueResolved = initializer.empty() && (0 == result.Count || result.Values[result.Count - 1].ValueResolved);
 			cnst TEnum value = valueResolved
 				? result.Count ? (TEnum)(result.Values[result.Count - 1].Value + 1) : (TEnum)0
 				: TEnum{};
@@ -449,7 +449,7 @@ namespace gpk
 
 	tplt<tpnm TEnum, tpnm TUnderlying, size_t NDeclaration, size_t NValues>
 	inxp SCTTIEnumParseResult<TEnum, NDeclaration> cttiParseEnum
-		( cnst sc_t (&declaration)[NDeclaration]
+		( sc_c (&declaration)[NDeclaration]
 		, cnst TUnderlying (&explicitValues)[NValues]
 		) nxpt {
 		SCTTIEnumParseResult<TEnum, NDeclaration> result = cttiParseEnum<TEnum>(declaration);
@@ -519,7 +519,7 @@ namespace gpk
 		tplt<size_t NDeclaration>
 		SCTTIEnumDeclaration
 			( cnst vcst_t file
-			, cnst u2_t line
+			, u2_c line
 			, cnst SCTTIEnumParseResult<s3_t, NDeclaration> & metadata
 			, cnst SCTTIEnumViews<NDeclaration> & views
 			) nxpt
@@ -536,7 +536,7 @@ namespace gpk
 	};
 
 	inln SCTTIEnumDeclaration * & cttiEnumDeclarationRoot() nxpt {
-		static SCTTIEnumDeclaration * root = {};
+		sttc SCTTIEnumDeclaration * root = {};
 		rtrn root;
 	}
 
@@ -570,7 +570,7 @@ namespace gpk
 #define GPK_CTTI_JOIN_2(left, right)	left##right
 #define GPK_CTTI_JOIN(left, right)	GPK_CTTI_JOIN_2(left, right)
 #define GDEFINE_ENUM_CTTI(cttiObject)																\
-	static cnst ::gpk::err_t GPK_CTTI_JOIN(gpk_ctti_enum_definition_, __LINE__) =						\
+	sttc cnst ::gpk::err_t GPK_CTTI_JOIN(gpk_ctti_enum_definition_, __LINE__) =						\
 		::gpk::enumDefinitionFromCTTI(cttiObject)
 #define CTTI_STCT(...)																				\
 	extern stct __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__);							\
@@ -579,7 +579,7 @@ namespace gpk
 		sinx ::gpk::vcst_t File = __FILE__;										\
 		sinx ::gpk::u2_t Line = __LINE__;										\
 		sinx ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
-		sinx bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
+		sinx b8_t IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
 	}
 
 #define CTTI_ENUM(...)																		\
@@ -588,7 +588,7 @@ namespace gpk
 		sinx auto Value = ::gpk::cttiParseEnum<::gpk::s3_t>(#__VA_ARGS__);					\
 		sinx auto Views = ::gpk::cttiEnumViewsMake(Value);								\
 	};																				\
-	static ::gpk::SCTTIEnumDeclaration GPK_CTTI_JOIN(gpk_ctti_enum_declaration_, __LINE__) =	\
+	sttc ::gpk::SCTTIEnumDeclaration GPK_CTTI_JOIN(gpk_ctti_enum_declaration_, __LINE__) =	\
 		{__FILE__, __LINE__, GPK_CTTI_JOIN(gpk_ctti_enum_storage_, __LINE__)::Value, GPK_CTTI_JOIN(gpk_ctti_enum_storage_, __LINE__)::Views}
 
 #define GPK_CTTI_PARENS ()
@@ -611,6 +611,6 @@ namespace gpk
 	stxp ::gpk::vcst_t EnumName##_gpk_ctti_file = __FILE__;									\
 	stxp ::gpk::u2_t EnumName##_gpk_ctti_line = __LINE__;									\
 	stxp ::gpk::uP_t EnumName##_gpk_ctti_size = sizeof(EnumName);							\
-	stxp bool EnumName##_gpk_ctti_is_pod = __is_pod(EnumName)
+	stxp b8_t EnumName##_gpk_ctti_is_pod = __is_pod(EnumName)
 
 #endif // GPK_CTTI_H

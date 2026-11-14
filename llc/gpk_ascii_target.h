@@ -29,7 +29,7 @@ nmsp gpk
 	};
 #pragma pack(pop)
 
-	stin	gpk::err_t drawRectangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::rect2<s2_t>& rectangle)	{
+	stin	gpk::err_t drawRectangle		(::gpk::SASCIITarget & asciiTarget, cnst ::gpk::SASCIICell & value, cnst ::gpk::rect2<s2_t>& rectangle)	{
 		for(s2_t y = ::gpk::max((s2_t)0, (s2_t)rectangle.Offset.y), yStop = ::gpk::min((s2_t)(rectangle.Offset.y + rectangle.Size.y), (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(s2_t x = ::gpk::max((s2_t)0, (s2_t)rectangle.Offset.x), xStop = ::gpk::min((s2_t)(rectangle.Offset.x + rectangle.Size.x), (s2_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			asciiTarget.Characters	[y][x]											= value.Character;
@@ -38,7 +38,7 @@ nmsp gpk
 		return 0;
 	}
 
-	stin	gpk::err_t drawCircle			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::circle<s2_t> & circle)			{
+	stin	gpk::err_t drawCircle			(::gpk::SASCIITarget & asciiTarget, cnst ::gpk::SASCIICell & value, cnst ::gpk::circle<s2_t> & circle)			{
 		for(s2_t y = ::gpk::max((s2_t)0, (s2_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((s2_t)(circle.Center.y + circle.Radius), (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(s2_t x = ::gpk::max((s2_t)0, (s2_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((s2_t)(circle.Center.x + circle.Radius), (s2_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			::gpk::n2s2_c				cellCurrent			= {x, y};
@@ -53,7 +53,7 @@ nmsp gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	tplt<tpnm _tCoord>
-	stin	gpk::err_t drawTriangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::tri2<_tCoord>& triangle)		{
+	stin	gpk::err_t drawTriangle		(::gpk::SASCIITarget & asciiTarget, cnst ::gpk::SASCIICell & value, cnst ::gpk::tri2<_tCoord>& triangle)		{
 		::gpk::n2s2_c			areaMin				= {(s2_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (s2_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::n2s2_c			areaMax				= {(s2_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (s2_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		for(s2_t y = ::gpk::max((s2_t)areaMin.y, (s2_t)0), yStop = ::gpk::min(areaMax.y, (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
@@ -74,13 +74,13 @@ nmsp gpk
 
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord>
-	static	gpk::err_t drawLine			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::line2<_tCoord>& line)				{
+	sttc	gpk::err_t drawLine			(::gpk::SASCIITarget & asciiTarget, cnst ::gpk::SASCIICell & value, cnst ::gpk::line2<_tCoord>& line)				{
 		f2_t						x1					= (f2_t)line.A.x
 			,						y1					= (f2_t)line.A.y
 			,						x2					= (f2_t)line.B.x
 			,						y2					= (f2_t)line.B.y
 			;
-		const bool					steep				= (fabs(y2 - y1) > fabs(x2 - x1));
+		b8_c					steep				= (fabs(y2 - y1) > fabs(x2 - x1));
 		if(steep){
 			::gpk::swap(x1, y1);
 			::gpk::swap(x2, y2);
@@ -89,8 +89,8 @@ nmsp gpk
 			::gpk::swap(x1, x2);
 			::gpk::swap(y1, y2);
 		}
-		const f2_t			dx					= x2 - x1;
-		const f2_t			dy					= fabs(y2 - y1);
+		cnst f2_t			dx					= x2 - x1;
+		cnst f2_t			dy					= fabs(y2 - y1);
 		f2_t				error				= dx / 2.0f;
 		s2_c				ystep				= (y1 < y2) ? 1 : -1;
 		s2_t				y					= (s2_t)y1;

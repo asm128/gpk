@@ -58,19 +58,19 @@ nmsp gpk
 	tplN2uusng	astvcst_t	= astatic<vcst_t	, N>;	
 	tplN2uusng	astvstr_t	= astatic<vstr_t	, N>;	
 
-	tplN2uusng	astb8_t		= astatic<b8_t, N>; tplN2uusng	astb8_c	= const astb8_t<N>; 
-	tplN2uusng	astuc_t		= astatic<uc_t, N>; tplN2uusng	astuc_c	= const astuc_t<N>; 
-	tplN2uusng	astsc_t		= astatic<sc_t, N>; tplN2uusng	astsc_c	= const astsc_t<N>; 
-	tplN2uusng	astu0_t		= astatic<u0_t, N>; tplN2uusng	astu0_c	= const astu0_t<N>; 
-	tplN2uusng	astu1_t		= astatic<u1_t, N>; tplN2uusng	astu1_c	= const astu1_t<N>; 
-	tplN2uusng	astu2_t		= astatic<u2_t, N>; tplN2uusng	astu2_c	= const astu2_t<N>; 
-	tplN2uusng	astu3_t		= astatic<u3_t, N>; tplN2uusng	astu3_c	= const astu3_t<N>; 
-	tplN2uusng	asts0_t		= astatic<s0_t, N>; tplN2uusng	asts0_c	= const asts0_t<N>; 
-	tplN2uusng	asts1_t		= astatic<s1_t, N>; tplN2uusng	asts1_c	= const asts1_t<N>; 
-	tplN2uusng	asts2_t		= astatic<s2_t, N>; tplN2uusng	asts2_c	= const asts2_t<N>; 
-	tplN2uusng	asts3_t		= astatic<s3_t, N>; tplN2uusng	asts3_c	= const asts3_t<N>; 
-	tplN2uusng	astf2_t		= astatic<f2_t, N>; tplN2uusng	astf2_c	= const astf2_t<N>; 
-	tplN2uusng	astf3_t		= astatic<f3_t, N>; tplN2uusng	astf3_c	= const astf3_t<N>; 
+	tplN2uusng	astb8_t		= astatic<b8_t, N>; tplN2uusng	astb8_c	= cnst astb8_t<N>; 
+	tplN2uusng	astuc_t		= astatic<uc_t, N>; tplN2uusng	astuc_c	= cnst astuc_t<N>; 
+	tplN2uusng	astsc_t		= astatic<sc_t, N>; tplN2uusng	astsc_c	= cnst astsc_t<N>; 
+	tplN2uusng	astu0_t		= astatic<u0_t, N>; tplN2uusng	astu0_c	= cnst astu0_t<N>; 
+	tplN2uusng	astu1_t		= astatic<u1_t, N>; tplN2uusng	astu1_c	= cnst astu1_t<N>; 
+	tplN2uusng	astu2_t		= astatic<u2_t, N>; tplN2uusng	astu2_c	= cnst astu2_t<N>; 
+	tplN2uusng	astu3_t		= astatic<u3_t, N>; tplN2uusng	astu3_c	= cnst astu3_t<N>; 
+	tplN2uusng	asts0_t		= astatic<s0_t, N>; tplN2uusng	asts0_c	= cnst asts0_t<N>; 
+	tplN2uusng	asts1_t		= astatic<s1_t, N>; tplN2uusng	asts1_c	= cnst asts1_t<N>; 
+	tplN2uusng	asts2_t		= astatic<s2_t, N>; tplN2uusng	asts2_c	= cnst asts2_t<N>; 
+	tplN2uusng	asts3_t		= astatic<s3_t, N>; tplN2uusng	asts3_c	= cnst asts3_t<N>; 
+	tplN2uusng	astf2_t		= astatic<f2_t, N>; tplN2uusng	astf2_c	= cnst astf2_t<N>; 
+	tplN2uusng	astf3_t		= astatic<f3_t, N>; tplN2uusng	astf3_c	= cnst astf3_t<N>; 
 
 	tplN2uusng	astvcu0_t 	= astatic<vcu0_t 	, N>; 
 	tplN2uusng	astvcu1_t	= astatic<vcu1_t	, N>; 
@@ -112,8 +112,8 @@ nmsp gpk
 		inxp	sc_c*			end				()				csnx	{ rtrn vcst_t{Storage}.end  (); }
 	};
 	tplN2uusng			sstring		= static_string<N>;
-	tplTN2sinx	u2_t	size		(const sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
-	tplTN2sinx	u2_t	byte_count	(const sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
+	tplTN2sinx	u2_t	size		(cnst sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
+	tplTN2sinx	u2_t	byte_count	(cnst sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
 
 	stin sstring<64>	str			(f2_t arg)	{ astsc_t< 64> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
 	stin sstring<384>	str			(f3_t arg)	{ astsc_t<384> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }

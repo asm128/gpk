@@ -47,7 +47,7 @@ gpk::err_t	gpk::d3dGUIDraw		(::DX::D3DDeviceResources & d3dResources, SD3DGUIRes
 	return 0;
 }
 
-sttc	gpk::err_t	getNodeTransform		(const gpk::SRenderNodeManager & nodeManager, u2_t iNode, const gpk::SEngineSceneConstants & constants, gpk::SRenderNodeConstants & nodeConstants) {
+sttc	gpk::err_t	getNodeTransform		(cnst gpk::SRenderNodeManager & nodeManager, u2_t iNode, cnst gpk::SEngineSceneConstants & constants, gpk::SRenderNodeConstants & nodeConstants) {
 	nodeConstants			= nodeManager.Transforms[iNode];
 
 	nodeConstants.Model					= nodeManager.BaseTransforms[iNode].Model * nodeConstants.Model;
@@ -63,7 +63,7 @@ sttc	gpk::err_t	getNodeTransform		(const gpk::SRenderNodeManager & nodeManager, 
 	return 0;
 }
 
-gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEngineScene & engineScene, const n2u1_t & targetMetrics, const n3f2_t & lightPos, const n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar)	{
+gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, cnst SEngineScene & engineScene, cnst n2u1_t & targetMetrics, cnst n3f2_t & lightPos, cnst n3f2_t & cameraPosition, cnst gpk::n3f2_t & cameraTarget, cnst gpk::minmaxf2_t & nearFar)	{
 	n3f2_t				cameraFront				= (cameraTarget - cameraPosition).Normalize();
 
 	SEngineSceneConstants& constants				= d3dScene.ConstantBufferScene;
@@ -81,15 +81,15 @@ gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEng
 	au2_t								solid;
 	au2_t								alpha;
 	for(u2_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
-		const SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
+		cnst SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
 		if(flags.NoDraw)
 			continue;
 
-		const SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
+		cnst SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
 		if(node.Mesh >= engineScene.Graphics->Meshes.size())
 			continue;
 
-		const SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		cnst SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
 		if(skin.Material.Color.Diffuse.a < 1)
 			alpha.push_back(iNode);
 		else
@@ -100,8 +100,8 @@ gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEng
 		SRenderNodeConstants				nodeConstants;
 		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
 		
-		const SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
-		const SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
+		cnst SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
+		cnst SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
 
 		u2_t				indexCount			= 0;
 		if(mesh.GeometryBuffers.size() > 0) {
@@ -109,8 +109,8 @@ gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEng
 			indexCount			= pindices->Data.size() / pindices->Desc.Format.TotalBytes();
 		}
 
-		const SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
-		const SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
+		cnst SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		cnst SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material				= skin.Material;
 
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %.*s", iNode, node.Mesh, node.Slice, GPK_VIEW_ARGS(engineScene.Graphics->Meshes.Names[node.Mesh]));
@@ -121,16 +121,16 @@ gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEng
 		SRenderNodeConstants				nodeConstants;
 		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
 		
-		const SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
-		const SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
+		cnst SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
+		cnst SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
 		u2_t				indexCount			= 0;
 		if(mesh.GeometryBuffers.size() > 0) {
 			auto					pindices			= engineScene.Graphics->Buffers[mesh.GeometryBuffers[0]];
 			indexCount			= pindices->Data.size() / pindices->Desc.Format.TotalBytes();
 		}
 
-		const SSkin			& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
-		const SGeometrySlice	slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
+		cnst SSkin			& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		cnst SGeometrySlice	slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material	= skin.Material;
 
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %.*s", iNode, node.Mesh, node.Slice, GPK_VIEW_ARGS(engineScene.Graphics->Meshes.Names[node.Mesh]));
@@ -138,10 +138,10 @@ gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, const SEng
 	}
 	return 0;
 }
-gpk::err_t					gpk::d3dAppDraw				(SD3DApplication & d3dApp, const SEngineScene & engineScene, const rgbaf & clearColor, const n3f2_t & lightPos, const n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar) {
+gpk::err_t					gpk::d3dAppDraw				(SD3DApplication & d3dApp, cnst SEngineScene & engineScene, cnst rgbaf & clearColor, cnst n3f2_t & lightPos, cnst n3f2_t & cameraPosition, cnst gpk::n3f2_t & cameraTarget, cnst gpk::minmaxf2_t & nearFar) {
 	{ // Set up render target for this frame
 		ID3D11DeviceContext3						* context							= d3dApp.DeviceResources->GetD3DDeviceContext();
-		const D3D11_VIEWPORT						viewport							= d3dApp.DeviceResources->GetScreenViewport();	// Reset the viewport to target the whole screen.
+		cnst D3D11_VIEWPORT						viewport							= d3dApp.DeviceResources->GetScreenViewport();	// Reset the viewport to target the whole screen.
 		context->RSSetViewports(1, &viewport);
 
 		ID3D11RenderTargetView *					targets	[]							= { d3dApp.DeviceResources->GetBackBufferRenderTargetView(), };	// Reset render targets to the screen.

@@ -53,7 +53,7 @@ gpk::err_t 			draw			(::gme::SApplication & app)						{
 	return 0;
 }
 
-gpk::err_t 			update						(::gme::SApplication & app, bool exitSignal)	{
+gpk::err_t 			update						(::gme::SApplication & app, b8_t exitSignal)	{
 	//::gpk::STimer					timer;
 	if_true_vi(::gpk::APPLICATION_STATE_EXIT, exitSignal);
 	{

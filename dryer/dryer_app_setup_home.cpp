@@ -1,6 +1,6 @@
 #include "dryer_app.h"
 
-static const ::dry::SControlParams	control_list_home[]				=
+sttc cnst ::dry::SControlParams	control_list_home[]				=
 	{	{::gpk::GUI_COLOR_MODE_Flat, ::dry::SCREEN_CONTROL_HOME_DIALOG	, -1								,  true, true}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_GROUP_PROGRAM	, ::dry::SCREEN_CONTROL_HOME_DIALOG,  true, false, true, true	, ::gpk::ALIGN_TOP_LEFT			, {{}, {168, 222}}			, {1, 1, 1, 1}, {0, 0, 0, 2}}
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_GROUP_GAUGE	, ::dry::SCREEN_CONTROL_HOME_DIALOG,  true, false, true, true	, ::gpk::ALIGN_TOP_RIGHT		, {{}, {272, 166}}			, {1, 1, 1, 1}, {2, 2, 2, 2}}
@@ -63,12 +63,12 @@ static const ::dry::SControlParams	control_list_home[]				=
 gpk::err_t dry::setupScreenHome			(::dry::SApplication & app)	{
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Home, ::control_list_home);
-	const ::dry::SCREEN_CONTROL_HOME				controlsToHide	[]		=
+	cnst ::dry::SCREEN_CONTROL_HOME				controlsToHide	[]		=
 		{ ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP
 		//, ::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_TIME_LABEL
 		};
 	for(u2_t  iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
-		const ::gpk::cid_t								indexControl			= app.Screens.Home.ControlIds[controlsToHide[iControl]];
+		cnst ::gpk::cid_t								indexControl			= app.Screens.Home.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		gui.Controls.SetHidden(indexControl, true);

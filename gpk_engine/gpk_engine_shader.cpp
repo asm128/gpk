@@ -8,13 +8,13 @@ GPK_USING_N2		();
 GPK_USING_N3		();
 
 ::gpk::rgbaf			gpk::lightCalcSpecular	(::gpk::n3f2_t gEyePosW, f2_t specularPower, ::gpk::rgbaf specularLight, ::gpk::rgbaf specularMaterial, ::gpk::n3f2_t posW, ::gpk::n3f2_t normalW, ::gpk::n3f2_t lightVecW) {
-	const ::gpk::n3f2_t			pointToEye				= (gEyePosW - posW).Normalize();
-	const ::gpk::n3f2_t			reflected				= normalW.Reflect(-lightVecW);
-	const f3_t				reflectedFactor			= ::gpk::max(reflected.Dot(pointToEye), 0.0);
+	cnst ::gpk::n3f2_t			pointToEye				= (gEyePosW - posW).Normalize();
+	cnst ::gpk::n3f2_t			reflected				= normalW.Reflect(-lightVecW);
+	cnst f3_t				reflectedFactor			= ::gpk::max(reflected.Dot(pointToEye), 0.0);
 	if(0 == reflectedFactor) 
 		return ::gpk::BLACK;
 
-	const f3_t				factor					= pow(reflectedFactor, specularPower);
+	cnst f3_t				factor					= pow(reflectedFactor, specularPower);
 	::gpk::rgbaf				result					= specularMaterial * specularLight * factor;
 	result.a					= specularMaterial.a;
 	return result;
@@ -26,38 +26,38 @@ GPK_USING_N3		();
 }
 
 gpk::err_t 		gpk::psSolid
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) {
-	const ::gpk::n3f2_t			lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
-	const ::gpk::rgbaf			diffuse					= ::gpk::lightCalcDiffuse(::gpk::DARKGREEN, inPS.WeightedNormal, lightVecW);
+	cnst ::gpk::n3f2_t			lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+	cnst ::gpk::rgbaf			diffuse					= ::gpk::lightCalcDiffuse(::gpk::DARKGREEN, inPS.WeightedNormal, lightVecW);
 	outputPixel				= ::gpk::rgbaf(diffuse).Clamp();
 	return 0;
 }
 
 gpk::err_t 		gpk::psHidden
-	( const ::gpk::SEngineSceneConstants	& /*constants*/
-	, const ::gpk::SPSIn					& /*inPS*/
+	( cnst ::gpk::SEngineSceneConstants	& /*constants*/
+	, cnst ::gpk::SPSIn					& /*inPS*/
 	, ::gpk::bgra							& /*outputPixel*/
 	) {
 	return 0;
 }
 
 gpk::err_t 		gpk::psGrid
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
-	const ::gpk::n3f2_t			lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
-	const ::gpk::rgbaf			diffuse					= ::gpk::lightCalcDiffuse(::gpk::DARKGREEN, inPS.WeightedNormal, lightVecW);
+	cnst ::gpk::n3f2_t			lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+	cnst ::gpk::rgbaf			diffuse					= ::gpk::lightCalcDiffuse(::gpk::DARKGREEN, inPS.WeightedNormal, lightVecW);
 	outputPixel				= ::gpk::rgbaf(diffuse).Clamp();
 	return 0; 
 }
 
 gpk::err_t 		gpk::psGridRuler
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
 	::gpk::n2f2_t				scaledUV				= {inPS.WeightedUV.x * inPS.NodeConstants.NodeSize.x, inPS.WeightedUV.y * inPS.NodeConstants.NodeSize.z};
@@ -87,12 +87,12 @@ gpk::err_t 		gpk::psGridRuler
 }
 
 gpk::err_t 		gpk::psCylinderIn
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
-	const ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
-	const ::gpk::rgbaf			diffuse						= ::gpk::lightCalcDiffuse(::gpk::DARKGRAY, inPS.WeightedNormal, lightVecW);
+	cnst ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+	cnst ::gpk::rgbaf			diffuse						= ::gpk::lightCalcDiffuse(::gpk::DARKGRAY, inPS.WeightedNormal, lightVecW);
 	outputPixel				= ::gpk::rgbaf(diffuse).Clamp();
 	return 0; 
 }
@@ -102,28 +102,28 @@ stxp	f2_t			LIGHT_FACTOR_SPECULAR_POWER	= 30.0f;
 stxp	::gpk::bgra8	PIXEL_BLACK_NUMBER			= ::gpk::bgra{0, 0, 0, 255};
 
 gpk::err_t 		gpk::psCylinder
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
 	::gpk::rgbaf				materialcolor				= ::gpk::BROWN + (::gpk::ORANGE * .5f);
-	const ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
-	const ::gpk::rgbaf			diffuse						= ::gpk::lightCalcDiffuse(materialcolor, inPS.WeightedNormal, lightVecW);
-	const ::gpk::rgbaf			ambient						= materialcolor * ::LIGHT_FACTOR_AMBIENT;
+	cnst ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+	cnst ::gpk::rgbaf			diffuse						= ::gpk::lightCalcDiffuse(materialcolor, inPS.WeightedNormal, lightVecW);
+	cnst ::gpk::rgbaf			ambient						= materialcolor * ::LIGHT_FACTOR_AMBIENT;
 
 	outputPixel				= ::gpk::rgbaf(ambient + diffuse).Clamp();
 	return 0; 
 }
 
 gpk::err_t 		gpk::psSphereAxis				
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
 	::gpk::n2f2_t				relativeToCenter			= ::gpk::n2f2_t{inPS.WeightedUV.x, inPS.WeightedUV.y} - ::gpk::n2f2_t{.5f, .5f};
 	relativeToCenter.x		*= 2;
 
-	const ::gpk::bgra			surfacecolor				
+	cnst ::gpk::bgra			surfacecolor				
 		= ((::gpk::n2f2_t{ 0.0f, 0.0f} - relativeToCenter).LengthSquared() < .0025f) ? ::gpk::RED 
 		: ((::gpk::n2f2_t{ 1.0f, 0.0f} - relativeToCenter).LengthSquared() < .0025f) ? ::gpk::RED 
 		: ((::gpk::n2f2_t{-1.0f, 0.0f} - relativeToCenter).LengthSquared() < .0025f) ? ::gpk::RED 
@@ -133,37 +133,37 @@ gpk::err_t 		gpk::psSphereAxis
 		: ((-0.5f - relativeToCenter.y) > -.05f) ? ::gpk::RED 
 		: ::gpk::WHITE;
 	::gpk::rgbaf				materialcolor				= surfacecolor;		
-	const ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
-	const ::gpk::rgbaf			specular					= ::gpk::lightCalcSpecular(constants.CameraPosition, ::LIGHT_FACTOR_SPECULAR_POWER, gpk::WHITE, ::gpk::WHITE, inPS.WeightedPosition, inPS.WeightedNormal, lightVecW);
-	const ::gpk::rgbaf			diffuse						= ::gpk::lightCalcDiffuse(materialcolor, inPS.WeightedNormal, lightVecW);
-	const ::gpk::rgbaf			ambient						= materialcolor * ::LIGHT_FACTOR_AMBIENT;
+	cnst ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+	cnst ::gpk::rgbaf			specular					= ::gpk::lightCalcSpecular(constants.CameraPosition, ::LIGHT_FACTOR_SPECULAR_POWER, gpk::WHITE, ::gpk::WHITE, inPS.WeightedPosition, inPS.WeightedNormal, lightVecW);
+	cnst ::gpk::rgbaf			diffuse						= ::gpk::lightCalcDiffuse(materialcolor, inPS.WeightedNormal, lightVecW);
+	cnst ::gpk::rgbaf			ambient						= materialcolor * ::LIGHT_FACTOR_AMBIENT;
 
 	outputPixel				= (0 == surfacecolor.g) ? ::gpk::RED : ::gpk::rgbaf(ambient + diffuse + specular).Clamp();
 	return 0; 
 }
 
 gpk::err_t 		gpk::psSphereSolid				
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
-	const ::gpk::n2u2_t			& surfaceSize				= inPS.Surface.metrics();
+	cnst ::gpk::n2u2_t			& surfaceSize				= inPS.Surface.metrics();
 	::gpk::n2f2_t				relativeToCenter			= ::gpk::n2f2_t{inPS.WeightedUV.x, inPS.WeightedUV.y} - ::gpk::n2f2_t{.5f, .5f};
 	relativeToCenter.x		*= 2;
 
 	::gpk::rgbaf				materialColor;
-	bool						shade						= false;
+	b8_t						shade						= false;
 	f2_t						ambientFactor				= ::LIGHT_FACTOR_AMBIENT;
 	if((::gpk::n2f2_t{0.0f, 0.0f} - relativeToCenter).LengthSquared() >= .0225f) {
 		materialColor			= inPS.Material.Color.Diffuse;
 		shade					= true;
 	}
 	else {
-		const ::gpk::n2u2_t			fetchCoord					= 
+		cnst ::gpk::n2u2_t			fetchCoord					= 
 			{ (u2_t)(relativeToCenter.x * 2.f * surfaceSize.x + surfaceSize.x / 2)
 			, (u2_t)(relativeToCenter.y * 4.f * surfaceSize.y + surfaceSize.y / 2)
 			};
-		const ::gpk::bgra			surfacecolor				= inPS.Surface
+		cnst ::gpk::bgra			surfacecolor				= inPS.Surface
 			[fetchCoord.y % surfaceSize.y]
 			[fetchCoord.x % surfaceSize.x]
 			;
@@ -179,16 +179,16 @@ gpk::err_t 		gpk::psSphereSolid
 	}
 
 	if(shade) {
-		const ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+		cnst ::gpk::n3f2_t			lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
 		f3_t						diffuseFactor				= inPS.WeightedNormal.Dot(lightVecW);
 		if(diffuseFactor < 0) {
 			ambientFactor			+= (rand() % 256) / 255.0f * f2_t(diffuseFactor) * -.25f;
 			materialColor			= (materialColor * ambientFactor).Clamp();
 		}
 		else {
-			const ::gpk::rgbaf			specular					= ::gpk::lightCalcSpecular(constants.CameraPosition, ::LIGHT_FACTOR_SPECULAR_POWER, gpk::WHITE, ::gpk::WHITE, inPS.WeightedPosition, inPS.WeightedNormal, lightVecW);
-			const ::gpk::rgbaf			diffuse						= materialColor * ::gpk::max(0.0, diffuseFactor);
-			const ::gpk::rgbaf			ambient						= materialColor * ambientFactor;
+			cnst ::gpk::rgbaf			specular					= ::gpk::lightCalcSpecular(constants.CameraPosition, ::LIGHT_FACTOR_SPECULAR_POWER, gpk::WHITE, ::gpk::WHITE, inPS.WeightedPosition, inPS.WeightedNormal, lightVecW);
+			cnst ::gpk::rgbaf			diffuse						= materialColor * ::gpk::max(0.0, diffuseFactor);
+			cnst ::gpk::rgbaf			ambient						= materialColor * ambientFactor;
 			materialColor			= ::gpk::rgbaf(ambient + diffuse + specular).Clamp();
 		}
 	}
@@ -197,16 +197,16 @@ gpk::err_t 		gpk::psSphereSolid
 }
 
 gpk::err_t 		gpk::psSphereMeridian			
-	( const ::gpk::SEngineSceneConstants	& constants
-	, const ::gpk::SPSIn					& inPS
+	( cnst ::gpk::SEngineSceneConstants	& constants
+	, cnst ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
-	const ::gpk::n2u2_t			& surfaceSize			= inPS.Surface.metrics();
+	cnst ::gpk::n2u2_t			& surfaceSize			= inPS.Surface.metrics();
 	::gpk::n2f2_t				relativeToCenter		= ::gpk::n2f2_t{inPS.WeightedUV.x, inPS.WeightedUV.y} - ::gpk::n2f2_t{.5f, .5f};
 	relativeToCenter.x		*= 2;
 
 	::gpk::rgbaf				materialColor;
-	bool						shade					= false;
+	b8_t						shade					= false;
 	f2_t						ambientFactor			= ::LIGHT_FACTOR_AMBIENT;
 	if((::gpk::n2f2_t{0.0f, 0.0f} - relativeToCenter).LengthSquared() >= .0225f) {
 		materialColor							
@@ -217,11 +217,11 @@ gpk::err_t 		gpk::psSphereMeridian
 		shade				= true;
 	}
 	else {
-		const ::gpk::n2u2_t			fetchCoord				= 
+		cnst ::gpk::n2u2_t			fetchCoord				= 
 			{ (u2_t)(relativeToCenter.x * 2.f * surfaceSize.x + surfaceSize.x / 2)
 			, (u2_t)(relativeToCenter.y * 4.f * surfaceSize.y + surfaceSize.y / 2)
 			};
-		const ::gpk::bgra			surfacecolor			= inPS.Surface
+		cnst ::gpk::bgra			surfacecolor			= inPS.Surface
 			[fetchCoord.y % surfaceSize.y]
 			[fetchCoord.x % surfaceSize.x]
 			;
@@ -237,16 +237,16 @@ gpk::err_t 		gpk::psSphereMeridian
 		} 
 	}
 	if(shade) {
-		const ::gpk::n3f2_t			lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+		cnst ::gpk::n3f2_t			lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
 		f3_t						diffuseFactor			= inPS.WeightedNormal.Dot(lightVecW);
 		if(diffuseFactor < 0) {
 			ambientFactor			+= (rand() % 256) * (1.0f / 255) * f2_t(diffuseFactor) * -.25f;
 			materialColor			= (materialColor * ambientFactor).Clamp();
 		}
 		else {
-			const ::gpk::rgbaf			specular				= ::gpk::lightCalcSpecular(constants.CameraPosition, ::LIGHT_FACTOR_SPECULAR_POWER, gpk::WHITE, ::gpk::WHITE, inPS.WeightedPosition, inPS.WeightedNormal, lightVecW);
-			const ::gpk::rgbaf			diffuse					= materialColor * ::gpk::max(0.0, diffuseFactor);
-			const ::gpk::rgbaf			ambient					= materialColor * ambientFactor;
+			cnst ::gpk::rgbaf			specular				= ::gpk::lightCalcSpecular(constants.CameraPosition, ::LIGHT_FACTOR_SPECULAR_POWER, gpk::WHITE, ::gpk::WHITE, inPS.WeightedPosition, inPS.WeightedNormal, lightVecW);
+			cnst ::gpk::rgbaf			diffuse					= materialColor * ::gpk::max(0.0, diffuseFactor);
+			cnst ::gpk::rgbaf			ambient					= materialColor * ambientFactor;
 			materialColor			= ::gpk::rgbaf(ambient + diffuse + specular).Clamp();
 		}
 	}

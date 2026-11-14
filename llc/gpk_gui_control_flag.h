@@ -12,7 +12,7 @@ nmsp gpk
 	tydf	s1_t			cid_t;
 	stxp	cid_t			CID_INVALID		= cid_t(-1);
 
-	tydf	const cid_t		ccid_t;
+	tydf	cnst cid_t		ccid_t;
 	tydf	apod<cid_t>		acid;
 	tydf	view<cid_t>		vcid;
 	tydf	view<ccid_t>	vccid;
@@ -29,34 +29,34 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Action		, 0x100U);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Unused		, 0xFFFFU);
 	stxp	GUI_CONTROL_FLAG	GUI_CONTROL_FLAG_All	= GUI_CONTROL_FLAG_Unused;
-	inxp	GUI_CONTROL_FLAG	setFlag			(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
+	inxp	GUI_CONTROL_FLAG	setFlag			(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
 
-	inxp	GUI_CONTROL_FLAG	isUnused		(const GUI_CONTROL_FLAG state)										nxpt	{ return bit_test(state, GUI_CONTROL_FLAG_Unused); }
-	inxp	GUI_CONTROL_FLAG	isHidden		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hidden	); }
-	inxp	GUI_CONTROL_FLAG	isDisabled		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Disabled	); }
-	inxp	GUI_CONTROL_FLAG	isHovered		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered	); }
-	inxp	GUI_CONTROL_FLAG	isFocused		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Focused	); }
-	inxp	GUI_CONTROL_FLAG	isPressed		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed	); }
-	inxp	GUI_CONTROL_FLAG	isDragging		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Dragging	); }
-	inxp	GUI_CONTROL_FLAG	isSelected		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Selected	); }
-	inxp	GUI_CONTROL_FLAG	isUpdated		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Updated	); }
-	inxp	GUI_CONTROL_FLAG	isAction		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Action	); }
+	inxp	GUI_CONTROL_FLAG	isUnused		(cnst GUI_CONTROL_FLAG state)										nxpt	{ return bit_test(state, GUI_CONTROL_FLAG_Unused); }
+	inxp	GUI_CONTROL_FLAG	isHidden		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hidden	); }
+	inxp	GUI_CONTROL_FLAG	isDisabled		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Disabled	); }
+	inxp	GUI_CONTROL_FLAG	isHovered		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered	); }
+	inxp	GUI_CONTROL_FLAG	isFocused		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Focused	); }
+	inxp	GUI_CONTROL_FLAG	isPressed		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed	); }
+	inxp	GUI_CONTROL_FLAG	isDragging		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Dragging	); }
+	inxp	GUI_CONTROL_FLAG	isSelected		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Selected	); }
+	inxp	GUI_CONTROL_FLAG	isUpdated		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Updated	); }
+	inxp	GUI_CONTROL_FLAG	isAction		(cnst GUI_CONTROL_FLAG state, cnst GUI_CONTROL_FLAG mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Action	); }
 
-	inxp	GUI_CONTROL_FLAG	setUnused		(GUI_CONTROL_FLAG & state, bool value)								nxpt	{ return state = bit_set(state, GUI_CONTROL_FLAG_Unused, value); }
-	inxp	GUI_CONTROL_FLAG	setHidden		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
-	inxp	GUI_CONTROL_FLAG	setDisabled		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Disabled	, value); }
-	inxp	GUI_CONTROL_FLAG	setHovered		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hovered	, value); }
-	inxp	GUI_CONTROL_FLAG	setFocused		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Focused	, value); }
-	inxp	GUI_CONTROL_FLAG	setPressed		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ 
+	inxp	GUI_CONTROL_FLAG	setUnused		(GUI_CONTROL_FLAG & state, b8_t value)								nxpt	{ return state = bit_set(state, GUI_CONTROL_FLAG_Unused, value); }
+	inxp	GUI_CONTROL_FLAG	setHidden		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
+	inxp	GUI_CONTROL_FLAG	setDisabled		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Disabled	, value); }
+	inxp	GUI_CONTROL_FLAG	setHovered		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hovered	, value); }
+	inxp	GUI_CONTROL_FLAG	setFocused		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Focused	, value); }
+	inxp	GUI_CONTROL_FLAG	setPressed		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ 
 		return (value == false && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed) && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered)) 
 			? state = bit_set_masked(bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value), mask, GUI_CONTROL_FLAG_Action, true)
 			: state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value)
 			; 
 	}
-	inxp	GUI_CONTROL_FLAG	setDragging		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Dragging	, value); }
-	inxp	GUI_CONTROL_FLAG	setSelected		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Selected	, value); }
-	inxp	GUI_CONTROL_FLAG	setUpdated		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Updated	, value); }
-	inxp	GUI_CONTROL_FLAG	setAction		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Action	, value); }
+	inxp	GUI_CONTROL_FLAG	setDragging		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Dragging	, value); }
+	inxp	GUI_CONTROL_FLAG	setSelected		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Selected	, value); }
+	inxp	GUI_CONTROL_FLAG	setUpdated		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Updated	, value); }
+	inxp	GUI_CONTROL_FLAG	setAction		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Action	, value); }
 
 	GDEFINE_ENUM_TYPE (EVENT_GUI_CONTROL, u0_t)
 	GDEFINE_ENUM_VALUE(EVENT_GUI_CONTROL, StateChange, 2);
@@ -73,7 +73,7 @@ nmsp gpk
 		stateChange.Set			= bit_clear(newState, oldState);
 		gpk_gui_printf("Control state change: %i", iControl);
 		for(u2_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
-			const GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((u0_t)i);
+			cnst GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((u0_t)i);
 			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (u2_t)bit, get_value_namep(bit));
 			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (u2_t)bit, get_value_namep(bit));
 		}
@@ -90,7 +90,7 @@ nmsp gpk
 
 	tplt<tpnm _tState>
 	_tState				setValue		(cid_t iControl, apobj<SEventSystem> & eventQueue, _tState & state, TFuncSetMaskedValue<_tState> funcSetValue) {
-		const _tState			oldState		= state;
+		cnst _tState			oldState		= state;
 		state				= funcSetValue();
 		if(oldState != state)
 			if_fail_e(eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state));
@@ -102,26 +102,26 @@ nmsp gpk
 		GUI_CONTROL_FLAG	Flag			= {};
 		GUI_CONTROL_FLAG	Mask			= (GUI_CONTROL_FLAG)-1;
 
-		bool				SetHovered		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHovered (Flag, Mask, value); })); }
-		bool				SetPressed		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setPressed (Flag, Mask, value); })); }
-		bool				SetHidden		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHidden  (Flag, Mask, value); })); }
-		bool				SetFocused		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setFocused (Flag, Mask, value); })); }
-		bool				SetSelected		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setSelected(Flag, Mask, value); })); }
-		bool				SetDisabled		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDisabled(Flag, Mask, value); })); }
-		bool				SetUpdated		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUpdated (Flag, Mask, value); })); }
-		bool				SetDragging		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDragging(Flag, Mask, value); })); }
-		bool				SetAction		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setAction  (Flag, Mask, value); })); }
-		bool				SetUnused		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUnused  (Flag, value);       })); }
-		inxp	bool		IsHovered		()	csnx	{ return isHovered  (Flag, Mask); }
-		inxp	bool		IsPressed		()	csnx	{ return isPressed  (Flag, Mask); }
-		inxp	bool		IsHidden		()	csnx	{ return isHidden   (Flag, Mask); }
-		inxp	bool		IsFocused		()	csnx	{ return isFocused  (Flag, Mask); }
-		inxp	bool		IsSelected		()	csnx	{ return isSelected (Flag, Mask); }
-		inxp	bool		IsDisabled		()	csnx	{ return isDisabled (Flag, Mask); }
-		inxp	bool		IsUpdated		()	csnx	{ return isUpdated  (Flag, Mask); }
-		inxp	bool		IsDragging		()	csnx	{ return isDragging (Flag, Mask); }
-		inxp	bool		IsAction		()	csnx	{ return isAction   (Flag, Mask); }
-		inxp	bool		IsUnused		()	csnx	{ return isUnused   (Flag); }
+		b8_t				SetHovered		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHovered (Flag, Mask, value); })); }
+		b8_t				SetPressed		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setPressed (Flag, Mask, value); })); }
+		b8_t				SetHidden		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHidden  (Flag, Mask, value); })); }
+		b8_t				SetFocused		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setFocused (Flag, Mask, value); })); }
+		b8_t				SetSelected		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setSelected(Flag, Mask, value); })); }
+		b8_t				SetDisabled		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDisabled(Flag, Mask, value); })); }
+		b8_t				SetUpdated		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUpdated (Flag, Mask, value); })); }
+		b8_t				SetDragging		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDragging(Flag, Mask, value); })); }
+		b8_t				SetAction		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setAction  (Flag, Mask, value); })); }
+		b8_t				SetUnused		(cid_t iControl, apobj<SEventSystem> & eventQueue, b8_t value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUnused  (Flag, value);       })); }
+		inxp	b8_t		IsHovered		()	csnx	{ return isHovered  (Flag, Mask); }
+		inxp	b8_t		IsPressed		()	csnx	{ return isPressed  (Flag, Mask); }
+		inxp	b8_t		IsHidden		()	csnx	{ return isHidden   (Flag, Mask); }
+		inxp	b8_t		IsFocused		()	csnx	{ return isFocused  (Flag, Mask); }
+		inxp	b8_t		IsSelected		()	csnx	{ return isSelected (Flag, Mask); }
+		inxp	b8_t		IsDisabled		()	csnx	{ return isDisabled (Flag, Mask); }
+		inxp	b8_t		IsUpdated		()	csnx	{ return isUpdated  (Flag, Mask); }
+		inxp	b8_t		IsDragging		()	csnx	{ return isDragging (Flag, Mask); }
+		inxp	b8_t		IsAction		()	csnx	{ return isAction   (Flag, Mask); }
+		inxp	b8_t		IsUnused		()	csnx	{ return isUnused   (Flag); }
 	};
 	stxp	size_t SIZEOF_SCONTROL	= sizeof(SControlState);
 #pragma pack(pop)
@@ -139,18 +139,18 @@ nmsp gpk
 	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Maximized	, 0x10U);
 	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, FullScreen	, 0x20U);
 	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Active		, 0x40U);
-	//inxp	bool	isOpen				(const GUI_CONTROL_FLAG_EX state, const GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Open			); }
-	//inxp	bool	isLocked			(const GUI_CONTROL_FLAG_EX state, const GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Locked		); }
-	//inxp	bool	isExpanded			(const GUI_CONTROL_FLAG_EX state, const GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Expanded		); }
-	//inxp	bool	isMinimized			(const GUI_CONTROL_FLAG_EX state, const GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Minimized	); }
-	//inxp	bool	isMaximized			(const GUI_CONTROL_FLAG_EX state, const GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Maximized	); }
-	//inxp	bool	isFullScreen		(const GUI_CONTROL_FLAG_EX state, const GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_FullScreen	); }
-	//inxp	bool	isActive			(const GUI_CONTROL_FLAG_EX state, const GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Active		); }
+	//inxp	b8_t	isOpen				(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Open			); }
+	//inxp	b8_t	isLocked			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Locked		); }
+	//inxp	b8_t	isExpanded			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Expanded		); }
+	//inxp	b8_t	isMinimized			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Minimized	); }
+	//inxp	b8_t	isMaximized			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Maximized	); }
+	//inxp	b8_t	isFullScreen		(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_FullScreen	); }
+	//inxp	b8_t	isActive			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Active		); }
 
-	//inxp	GUI_CONTROL_FLAG_EX	setOpen				(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Open			, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setLocked			(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Locked		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setExpanded			(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Expanded		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setMinimized		(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Minimized		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setMaximized		(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Maximized		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setFullScreen		(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_FullScreen	, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setActive			(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Active		, value); }
+	//inxp	GUI_CONTROL_FLAG_EX	setOpen				(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Open			, value); }
+	//inxp	GUI_CONTROL_FLAG_EX	setLocked			(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Locked		, value); }
+	//inxp	GUI_CONTROL_FLAG_EX	setExpanded			(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Expanded		, value); }
+	//inxp	GUI_CONTROL_FLAG_EX	setMinimized		(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Minimized		, value); }
+	//inxp	GUI_CONTROL_FLAG_EX	setMaximized		(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Maximized		, value); }
+	//inxp	GUI_CONTROL_FLAG_EX	setFullScreen		(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_FullScreen	, value); }
+	//inxp	GUI_CONTROL_FLAG_EX	setActive			(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Active		, value); }

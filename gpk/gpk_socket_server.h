@@ -13,7 +13,7 @@ nmsp gpk
 		SIPv4End					Address			= {};
 		s1_t						AdapterIndex	= {};
 		TRANSPORT_PROTOCOL			Protocol		= TRANSPORT_PROTOCOL_UDP;
-		bool						Listen			= {};
+		b8_t						Listen			= {};
 		s2_t						Timeout			= 3000000;	// Kill clients timeout
 	};
 

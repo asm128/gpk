@@ -23,7 +23,7 @@ gpk::err_t 		gpk::SParticles3::Create				(n3f2_c & position, n3f2_c & direction,
 	return Speed.push_back(speed);
 }
 
-gpk::err_t 		gpk::SParticles3::Save(::gpk::au0_t & output) const { 
+gpk::err_t 		gpk::SParticles3::Save(::gpk::au0_t & output) cnst { 
 	if_fail_fe(gpk::saveView(output, Position	)); 
 	if_fail_fe(gpk::saveView(output, Direction	)); 
 	if_fail_fe(gpk::saveView(output, Speed		)); 

@@ -1,7 +1,7 @@
 #include "lls_event_args.h"
 #include "gpk_string_compose.h"
 
-::gpk::err_t			lls::printArgsEvent		(const ::lls::SArgsEvent & eventArgs, bool debugOutput) {
+::gpk::err_t			lls::printArgsEvent		(cnst ::lls::SArgsEvent & eventArgs, b8_t debugOutput) {
 	if(debugOutput)
 		info_printf(
 			"\nCoordSource  : " N3_F2
@@ -39,7 +39,7 @@
 	return 0;
 }
 
-::gpk::err_t			lls::printArgsEvent		(const ::lls::SArgsEvent & eventArgs, ::gpk::asc_t & output) {
+::gpk::err_t			lls::printArgsEvent		(cnst ::lls::SArgsEvent & eventArgs, ::gpk::asc_t & output) {
 	sc_t						temp	[1024]				= {};
 	sprintf_s(temp, 
 		"\nCoordSource  : " N3_F2

@@ -12,8 +12,8 @@ namespace lls
 	GDEFINE_ENUM_VALUE(ADMIN_GAME, Hide			, 1);
 	GDEFINE_ENUM_VALUE(ADMIN_GAME, Initialize	, 2); 
 	GDEFINE_ENUM_VALUE(ADMIN_GAME, Reset		, 3); 
-	typedef	::gpk::SEvent		<ADMIN_GAME>	EventAdminGame;
-	typedef	::gpk::SEventView	<ADMIN_GAME>	EViewAdminGame;
+	tydf	::gpk::SEvent		<ADMIN_GAME>	EventAdminGame;
+	tydf	::gpk::SEventView	<ADMIN_GAME>	EViewAdminGame;
 
 	// These events are sent for world contents manipulation
 	GDEFINE_ENUM_TYPE (WORLD_ADMIN, uint8_t);
@@ -29,24 +29,24 @@ namespace lls
 	GDEFINE_ENUM_VALUE(WORLD_ADMIN, Generate	, 9);
 	GDEFINE_ENUM_VALUE(WORLD_ADMIN, Initialize	, 10); 
 	GDEFINE_ENUM_VALUE(WORLD_ADMIN, Reset		, 11); 
-	typedef	::gpk::SEvent		<WORLD_ADMIN>	EventAdminWorld;
-	typedef	::gpk::SEventView	<WORLD_ADMIN>	EViewAdminWorld;
+	tydf	::gpk::SEvent		<WORLD_ADMIN>	EventAdminWorld;
+	tydf	::gpk::SEventView	<WORLD_ADMIN>	EViewAdminWorld;
 
 	GDEFINE_ENUM_TYPE (ADMIN_CHARS, uint8_t);
 	GDEFINE_ENUM_VALUE(ADMIN_CHARS, Spawn	, 12); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ADMIN_CHARS, Kill	, 13); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ADMIN_CHARS, Revive	, 14); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ADMIN_CHARS, Heal	, 15); // Used with an SArgsEvent structure.
-	typedef	::gpk::SEvent		<ADMIN_CHARS>	EventAdminChar;
-	typedef	::gpk::SEventView	<ADMIN_CHARS>	EViewAdminChar;
+	tydf	::gpk::SEvent		<ADMIN_CHARS>	EventAdminChar;
+	tydf	::gpk::SEventView	<ADMIN_CHARS>	EViewAdminChar;
 
 	GDEFINE_ENUM_TYPE (ADMIN_USERS, uint8_t);
 	GDEFINE_ENUM_VALUE(ADMIN_USERS, Spawn	, 12); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ADMIN_USERS, Kill	, 13); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ADMIN_USERS, Revive	, 14); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ADMIN_USERS, Heal	, 15); // Used with an SArgsEvent structure.
-	typedef	::gpk::SEvent		<ADMIN_USERS>	EventAdminUser;
-	typedef	::gpk::SEventView	<ADMIN_USERS>	EViewAdminUser;
+	tydf	::gpk::SEvent		<ADMIN_USERS>	EventAdminUser;
+	tydf	::gpk::SEventView	<ADMIN_USERS>	EViewAdminUser;
 
 	// These events trigger or report effects that are spawned by the world 
 	GDEFINE_ENUM_TYPE (WORLD_EVENT, uint8_t);
@@ -59,16 +59,16 @@ namespace lls
 	GDEFINE_ENUM_VALUE(WORLD_EVENT, Lightning	, 6);	// Takes an SArgsEvent structure. 0 + effect id: Stop, 1: Small , 2: Medium , 3: Large.
 	GDEFINE_ENUM_VALUE(WORLD_EVENT, Wildfire	, 7);	// Takes an SArgsEvent structure. 0 + effect id: Stop, 1: Small , 2: Medium , 3: Large.
 	GDEFINE_ENUM_VALUE(WORLD_EVENT, Flood		, 9);	// Takes an SArgsEvent structure. 0 + effect id: Stop, 1: Small , 2: Medium , 3: Large.
-	typedef	::gpk::SEvent		<WORLD_EVENT>	EventWorld;
-	typedef	::gpk::SEventView	<WORLD_EVENT>	EViewWorld;
+	tydf	::gpk::SEvent		<WORLD_EVENT>	EventWorld;
+	tydf	::gpk::SEventView	<WORLD_EVENT>	EViewWorld;
 
 	// These events change or report the world configuration settings
 	GDEFINE_ENUM_TYPE (WORLD_SETUP, uint8_t); 
 	GDEFINE_ENUM_VALUE(WORLD_SETUP, Seed		, 0); 
 	GDEFINE_ENUM_VALUE(WORLD_SETUP, MaxPlayers	, 1); 
 	GDEFINE_ENUM_VALUE(WORLD_SETUP, BlockSize	, 2); 
-	typedef	::gpk::SEvent		<WORLD_SETUP>	EventWorldSetup;
-	typedef	::gpk::SEventView	<WORLD_SETUP>	EViewWorldSetup;
+	tydf	::gpk::SEvent		<WORLD_SETUP>	EventWorldSetup;
+	tydf	::gpk::SEventView	<WORLD_SETUP>	EViewWorldSetup;
 	
 	// These events change or report the world current state values
 	GDEFINE_ENUM_TYPE (WORLD_VALUE, uint8_t); 
@@ -79,8 +79,8 @@ namespace lls
 	GDEFINE_ENUM_VALUE(WORLD_VALUE, TimeLastSaved			, 4); 
 	GDEFINE_ENUM_VALUE(WORLD_VALUE, WorldSize				, 5); 
 	GDEFINE_ENUM_VALUE(WORLD_VALUE, TimeScale				, 6); 
-	typedef	::gpk::SEvent		<WORLD_VALUE>	EventWorldValue;
-	typedef	::gpk::SEventView	<WORLD_VALUE>	EViewWorldValue;
+	tydf	::gpk::SEvent		<WORLD_VALUE>	EventWorldValue;
+	tydf	::gpk::SEventView	<WORLD_VALUE>	EViewWorldValue;
 #pragma pack(pop)
 } // namespace
 

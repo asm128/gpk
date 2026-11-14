@@ -12,7 +12,7 @@ nmsp gpk
 	stct SProcessScope {
 		TManager		& Manager;
 		u2_t			Id;
-		bool			Inactive				= {};
+		b8_t			Inactive				= {};
 		//
 						~SProcessScope			()							{ if_fail_e(Close()); }
 						SProcessScope			(TManager & manager, u2_t id) nxpt : Manager(manager), Id(id) {}
@@ -144,7 +144,7 @@ nmsp gpk
 		stct SCreateScope {
 			SProcessManager & Manager;
 			u2_t			Id;
-			bool			Inactive = {};
+			b8_t			Inactive = {};
 			SCreateScope(SProcessManager & manager, u2_t id) nxpt : Manager(manager), Id(id) {}
 			SCreateScope(cnst SCreateScope &) = delete;
 			SCreateScope & oper=(cnst SCreateScope &) = delete;
@@ -180,7 +180,7 @@ nmsp gpk
 			if_true_fef(application.size() && memchr(application.begin(), 0, application.size()), "%s", "Application contains an embedded zero.");
 			if_true_fef(commandLine.size() && memchr(commandLine.begin(), 0, commandLine.size()), "%s", "Command line contains an embedded zero.");
 			if_true_fef(environment.size() && environment[environment.size() - 1], "%s", "Unterminated process environment block.");
-			cnst u2_t id = KnownProcesses.size();
+			u2_c id = KnownProcesses.size();
 			err_t result;
 			if_fail_vef(-1, result = PlatformState.push_back({}), "(%" GPK_FMT_S2 ")", result);
 			SCreateScope rollback{*this, id};

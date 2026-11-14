@@ -11,8 +11,8 @@ nmsp gpk
 		_tVertex				A, B; 
 
 		inxp					line		()											= default;
-		inxp					line		(const line<_tVertex> & other)				= default;
-		inxp					line		(const _tVertex & a, const _tVertex & b)	: A(a), B(b)	{}
+		inxp					line		(cnst line<_tVertex> & other)				= default;
+		inxp					line		(cnst _tVertex & a, cnst _tVertex & b)	: A(a), B(b)	{}
 
 		GPK_DEFAULT_OPERATOR(line<_tVertex>, A == other.A && B == other.B);
 	};

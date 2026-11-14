@@ -47,12 +47,12 @@ nmsp gpk
 		}
 	};
 
-	err_t		loadClientConfig	(const SJSONReader & jsonConfig, s2_t parentNode, vcst_t & remote_ip, vcst_t & remote_port);
+	err_t		loadClientConfig	(cnst SJSONReader & jsonConfig, s2_t parentNode, vcst_t & remote_ip, vcst_t & remote_port);
 	err_t		clientConnect		(SClient & client, SGUI & gui);
 	err_t		clientUpdate		(SClient & client, SGUI & gui);
 	err_t		setupGUI			(SClientUI & client, SGUI & gui);
 	err_t		updateGUI			(SClient & client, SGUI & gui);
-	err_t		processGUIEvent		(SClient & client, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent);
+	err_t		processGUIEvent		(SClient & client, SGUI & gui, cnst SEventView<EVENT_GUI_CONTROL> & screenEvent);
 } // nmsp
 
 #endif // GPKCLIENT_APP_H_23701

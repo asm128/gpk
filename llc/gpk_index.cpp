@@ -65,9 +65,9 @@ gpk::err_t	gpk::wordListNormalize			(aobj<string> & itemWords, view<cnst vcst_t>
 		}
 		info_printf("finalWord: %.*s.", GPK_VIEW_ARGS(finalWord));
 		fixedWord			= finalWord;
-		bool					replaced		= false;
+		b8_t					replaced		= false;
 		for(u2_t iChar = 0; iChar < fixedWord.size(); ++iChar) {
-			char					& wordChar		= fixedWord[iChar];
+			sc_t					& wordChar		= fixedWord[iChar];
 			for(u2_t iTable = 0; iTable < size(replaceDict); ++iTable) {
 				cnst kv<vcst_t> &	table = replaceDict[iTable];
 				for(u2_t iItem = 0; iItem < table.Key.size(); ++iItem)
@@ -95,7 +95,7 @@ gpk::err_t	gpk::wordDictAppend				(aobj<SWordIndices> & wordSet, u2_t iItem, vie
 		info_printf("itemWord: %.*s.", GPK_VIEW_ARGS(itemWord));
 		if(1 >= itemWord.size())
 			continue;
-		bool			bFound				= false;
+		b8_t			bFound				= false;
 		if(',' == itemWord[itemWord.size() - 1] || '.' == itemWord[itemWord.size() - 1]) {
 			if_fail_fe(itemWord.slice(itemWord, 0, itemWord.size()-1));
 			if(0 >= itemWord.size())
@@ -134,7 +134,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 			if(0 > indexedWord.Text.find(inputWord))
 				continue;
 			for(u2_t iPosting = 0; iPosting < indexedWord.Indices.size(); ++iPosting) {
-				cnst u2_t		itemIndex						= indexedWord.Indices[iPosting];
+				u2_c		itemIndex						= indexedWord.Indices[iPosting];
 				if_true_fef(itemIndex >= itemCount, "Invalid item index: %u. Item count: %u.", itemIndex, itemCount);
 				matchedItems[itemIndex] = 1;
 			}
@@ -147,7 +147,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 }
 
 //
-//tatic err_t								htmlBoardGenerate					(view<const SItemViews> indicesToDisplay, vcst_t fontSize, vcst_t /*title*/, vcst_t lang, string & output)	{
+//tatic err_t								htmlBoardGenerate					(view<cnst SItemViews> indicesToDisplay, vcst_t fontSize, vcst_t /*title*/, vcst_t lang, string & output)	{
 //	append_strings(output, "\n<table style=\"width:100%;height:100%;text-align:center;font-size:");
 //	output.append(fontSize);
 //	append_strings(output, "px;\" >");
@@ -163,9 +163,9 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 //		output.append(fontSize);
 //		append_strings(output, "px;\" >");
 //		string								base64Id;
-//		char													tempIntStr[256]				= {};
+//		sc_t													tempIntStr[256]				= {};
 //		for(s2_t iItem = 0, countItems = indicesToDisplay.size(); iItem < countItems; ++iItem) {
-//			const SItemViews										& views						= indicesToDisplay[iItem];
+//			cnst SItemViews										& views						= indicesToDisplay[iItem];
 //			base64Id.clear();
 //			sprintf_s(tempIntStr, "%u", iItem);
 //			append_strings(output, "\n<tr id=\"");
@@ -290,7 +290,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 //	return 0;
 //
 
-//static	err_t								pageCatalog					(vcst_t contentFileName, vcst_t /*pathScript*/, n2s2_t screenSize, const vcst_t & /*pathStyles*/, const AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output) {
+//sttc	err_t								pageCatalog					(vcst_t contentFileName, vcst_t /*pathScript*/, n2s2_t screenSize, cnst vcst_t & /*pathStyles*/, cnst AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output) {
 //
 //	append_strings(output, "\n<html>");
 //	// --- Head
@@ -317,7 +317,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 //	array_obj<::SItemViews>							indicesToDisplay					= {};
 //	::getItemViews(config.Reader, category, lang, indicesToDisplay);
 //
-//	char										fontSize	[32]					= {};
+//	sc_t										fontSize	[32]					= {};
 //	if(screenSize.x > screenSize.y)
 //		sprintf_s(fontSize, "%u", screenSize.x ? screenSize.x / 55 : 24);
 //	else
@@ -332,7 +332,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 //	append_strings(output, fontSize);
 //	append_strings(output, "px;\" >");
 //
-//	const vcst_t							textSearch							= (lang == "es") ? "Buscar" : "Search";
+//	cnst vcst_t							textSearch							= (lang == "es") ? "Buscar" : "Search";
 //	//::ntl::htmlTag("h5", textSearch, {}, output);
 //
 //	append_strings(output, 
@@ -361,8 +361,8 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 //
 //	SJSONFile										jsonBarrios;
 //	jsonFileRead(jsonBarrios, "barrios.json");
-//	const err_t									countBarrios					= jsonArraySize(*jsonBarrios.Reader[0]);
-//	char													tempBarrioOption[256]			= {};
+//	cnst err_t									countBarrios					= jsonArraySize(*jsonBarrios.Reader[0]);
+//	sc_t													tempBarrioOption[256]			= {};
 //	vcst_t								barrioName;
 //	if(lang == "es")
 //		append_strings(output, "\n<option value=\"-1\" style=\"\">Todos</option>");

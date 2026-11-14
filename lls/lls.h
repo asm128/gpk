@@ -46,7 +46,7 @@ namespace lls
 		::gpk::vcst_t				ExtensionSaveStage			= ".stage.llsz";
 		::gpk::vcst_t				ExtensionSaveQuick			= ".quick.llsz";
 
-		::gpk::err_t			GetSaveGameExtension		(SAVE_MODE saveMode, ::gpk::vcst_t & extension)	const	{
+		::gpk::err_t			GetSaveGameExtension		(SAVE_MODE saveMode, ::gpk::vcst_t & extension)	cnst	{
 			switch(saveMode) {
 			case SAVE_MODE_USER		: extension = ExtensionSaveUser	; break;
 			case SAVE_MODE_STAGE	: extension = ExtensionSaveStage; break;
@@ -56,7 +56,7 @@ namespace lls
 			return 0;
 		}
 
-		::gpk::err_t			GetPlayerFilePath			(const u3_t time, const ::gpk::vcst_t & playerName, ::gpk::string & playerFilePath)	const	{
+		::gpk::err_t			GetPlayerFilePath			(cnst u3_t time, cnst ::gpk::vcst_t & playerName, ::gpk::string & playerFilePath)	cnst	{
 			::gpk::string					b64PlayerName				= {};
 			if_fail_fe(::gpk::base64Encode(playerName, b64PlayerName));
 			return ::gpk::append_strings
@@ -123,7 +123,7 @@ namespace lls
 
 		::gpk::err_t			StateSwitch			(APP_STATE newState);
 
-		::gpk::err_t			Save				()	const	{
+		::gpk::err_t			Save				()	cnst	{
 			if_true_vif(0, Game.Controlled >= Game.Engine.Entities.size(), "No active player character! %i >= %i", Game.Controlled, Game.Engine.Entities.size());
 				
 			::gpk::string				playerPath;
@@ -131,7 +131,7 @@ namespace lls
 			return Save(playerPath);
 		}
 
-		::gpk::err_t			Save				(::gpk::vcst_t fileName)	const	{
+		::gpk::err_t			Save				(::gpk::vcst_t fileName)	cnst	{
 			::gpk::au0_t					serialized;
 			do { if_fail_fe(Game.World.Save(serialized)); } while(0);
 			return ::gpk::deflateFromMemory(fileName, serialized);
@@ -145,10 +145,10 @@ namespace lls
 		}
 	};
 
-	::gpk::err_t			llsUpdate		(::lls::LLSApp & lls, double lastTimeSeconds, const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> systemEvents
+	::gpk::err_t			llsUpdate		(::lls::LLSApp & lls, double lastTimeSeconds, cnst ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> systemEvents
 		, ::gpk::FBool<::gpk::pobj<::lls::EventLLS> &, ::gpk::apobj<::lls::EventLLS> &> funcHandleEvent
 		);
-	::gpk::err_t			llsDraw			(::lls::LLSApp & lls, ::gpk::rtbgra8d32 & backBuffer, bool onlyGUI);
+	::gpk::err_t			llsDraw			(::lls::LLSApp & lls, ::gpk::rtbgra8d32 & backBuffer, b8_t onlyGUI);
 } // namespace lls
 
 #endif // SSIEGE_H_23701

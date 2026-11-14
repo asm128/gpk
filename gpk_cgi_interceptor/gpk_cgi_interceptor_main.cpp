@@ -27,14 +27,14 @@ namespace brt
 	};
 } // namespace
 
-static	::gpk::err_t								createChildProcess
+sttc	::gpk::err_t								createChildProcess
 	(	::brt::SProcess						& process
 	,	::gpk::vstr_t						environmentBlock
 	,	::gpk::vcst_t						appPath
 	,	::gpk::vstr_t						commandLine
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-	bool													bSuccess				= false;
-	stxp	bool								isUnicodeEnv			= false;
+	b8_t													bSuccess				= false;
+	stxp	b8_t								isUnicodeEnv			= false;
 	stxp	u2_t 							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
 	::gpk::safe_closehandle(process.ProcessInfo.hProcess);
@@ -54,8 +54,8 @@ static	::gpk::err_t								createChildProcess
 
 	::gpk::au0_t						popupTitle						= {};
 	{
-		stxp	const ::gpk::vcst_t		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
-		char							ensure[encodedSignature.size()]	= {};
+		stxp	cnst ::gpk::vcst_t		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
+		sc_t							ensure[encodedSignature.size()]	= {};
 		(void)ensure;
 		if_true_vef(-1, encodedSignature.size() != 73, "%s", "");
 		::gpk::base64Decode(encodedSignature, popupTitle);
@@ -68,7 +68,7 @@ static	::gpk::err_t								createChildProcess
 		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%.*s' and press OK to initiate the process' main thread.", GPK_VIEW_ARGS(appPath));
 	}
 
-	MessageBoxA(0, userMessage.begin(), (const char*)popupTitle.begin(), MB_OK | MB_TOPMOST);	// Tell the user to attach the debugger to the child process.
+	MessageBoxA(0, userMessage.begin(), (cnst sc_t*)popupTitle.begin(), MB_OK | MB_TOPMOST);	// Tell the user to attach the debugger to the child process.
 
 	{	// Resume the child CGI process' main thread after the user acknowledged the message box.
 		info_printf("Creating process '%.*s' with command line '%.*s'", GPK_VIEW_ARGS(appPath), GPK_VIEW_ARGS(commandLine));
@@ -77,23 +77,23 @@ static	::gpk::err_t								createChildProcess
 	return 0;
 }
 
-static	::gpk::err_t								writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcst_t chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
+sttc	::gpk::err_t								writeToPipe				(cnst ::brt::SProcessHandles & handles, ::gpk::vcst_t chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD													dwWritten				= 0;
-	bool													bSuccess				= false;
+	b8_t													bSuccess				= false;
 	if_true_ef(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
 	if_true_vef(-1, false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
 	return bSuccess ? 0 : -1;
 }
 
-static	::gpk::err_t				loadConfig
-	(	::gpk::apod<char>	& szCmdlineApp
-	,	::gpk::apod<char>	& szCmdlineFinal
+sttc	::gpk::err_t				loadConfig
+	(	::gpk::apod<sc_t>	& szCmdlineApp
+	,	::gpk::apod<sc_t>	& szCmdlineFinal
 	) {	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	::gpk::vcst_t								processFileName			= "";
 	::gpk::vcst_t								processMockPath			= "";
 	::gpk::vcst_t								processParams			= "";
 	::gpk::vcst_t								fileNameJSONConfig		= "gpk_cgi_interceptor.json";
-	::gpk::apod<char>						jsonData				= {};
+	::gpk::apod<sc_t>						jsonData				= {};
 	::gpk::SJSONReader						jsonReader				= {};
 	if(fileNameJSONConfig.size()) {	// Attempt to load config file.
 		if_true_vef(-1, ::gpk::failed(::gpk::fileToMemory(fileNameJSONConfig, jsonData)), "Failed to load config JSON file! File not found? File name: %.*s.", GPK_VIEW_ARGS(fileNameJSONConfig));
@@ -121,7 +121,7 @@ static	::gpk::err_t				loadConfig
 //#include <unistd.h>
 #include "gpk_stdsocket.h"
 
-static	::gpk::err_t								handleReadable(HANDLE handle){
+sttc	::gpk::err_t								handleReadable(HANDLE handle){
 	fd_set															sockets								= {};
 	memset(&sockets, -1, sizeof(fd_set));
 	sockets.fd_count											= 0;
@@ -142,16 +142,16 @@ struct SThreadStateRead {
 	::gpk::refcount_t									DoneReading			= 0;
 };
 
-static	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
-	const ::brt::SProcess					& process				= appState.Process;
-	const ::brt::SProcessHandles			& handles				= appState.IOHandles;
+sttc	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
+	cnst ::brt::SProcess					& process				= appState.Process;
+	cnst ::brt::SProcessHandles			& handles				= appState.IOHandles;
 	::gpk::au0_t								& readBytes				= appState.ReadBytes;
 
-	//char									chBuf	[BUFSIZE]		= {};
-	static	::gpk::au0_t						chBuf;
-	stxp	const u2_t 					BUFSIZE					= 1024 * 1024;
+	//sc_t									chBuf	[BUFSIZE]		= {};
+	sttc	::gpk::au0_t						chBuf;
+	stxp	u2_c 					BUFSIZE					= 1024 * 1024;
 	chBuf.resize(BUFSIZE);
-	bool									bSuccess				= FALSE;
+	b8_t									bSuccess				= FALSE;
 	while(true) {
 		u2_t 								dwRead					= 0;
 		if(handleReadable(handles.ChildStd_OUT_Read)) {
@@ -174,20 +174,20 @@ static	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read 
 	return 0;
 }
 
-static	void										threadReadFromPipe		(void* appStaet)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
+sttc	void										threadReadFromPipe		(void* appStaet)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	::readFromPipe(*(::SThreadStateRead*)appStaet);
 }
 
-static ::gpk::err_t						initHandles				(::brt::SProcessHandles & handles) {
+sttc ::gpk::err_t						initHandles				(::brt::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES								saAttr					= {};
 	saAttr.bInheritHandle						= TRUE;		// Set the bInheritHandle flag so pipe handles are inherited.
 	saAttr.lpSecurityDescriptor					= NULL;
-	if_true_vef(-1, false == (bool)CreatePipe			(&handles.ChildStd_OUT_Read, &handles.ChildStd_OUT_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
-	if_true_vef(-1, false == (bool)SetHandleInformation	(handles.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
-	if_true_vef(-1, false == (bool)CreatePipe			(&handles.ChildStd_ERR_Read, &handles.ChildStd_ERR_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
-	if_true_vef(-1, false == (bool)SetHandleInformation	(handles.ChildStd_ERR_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
-	if_true_vef(-1, false == (bool)CreatePipe			(&handles.ChildStd_IN_Read, &handles.ChildStd_IN_Write, &saAttr, 0)		, "Stdin CreatePipe: '%s'."				, "Failed to create a pipe for the child process's STDIN.");
-	if_true_vef(-1, false == (bool)SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0)						, "Stdin SetHandleInformation: '%s'."	, "Failed to ensure the write handle to the pipe for STDIN is not inherited.");
+	if_true_vef(-1, false == (b8_t)CreatePipe			(&handles.ChildStd_OUT_Read, &handles.ChildStd_OUT_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
+	if_true_vef(-1, false == (b8_t)SetHandleInformation	(handles.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
+	if_true_vef(-1, false == (b8_t)CreatePipe			(&handles.ChildStd_ERR_Read, &handles.ChildStd_ERR_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT.");
+	if_true_vef(-1, false == (b8_t)SetHandleInformation	(handles.ChildStd_ERR_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited.");
+	if_true_vef(-1, false == (b8_t)CreatePipe			(&handles.ChildStd_IN_Read, &handles.ChildStd_IN_Write, &saAttr, 0)		, "Stdin CreatePipe: '%s'."				, "Failed to create a pipe for the child process's STDIN.");
+	if_true_vef(-1, false == (b8_t)SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0)						, "Stdin SetHandleInformation: '%s'."	, "Failed to ensure the write handle to the pipe for STDIN is not inherited.");
 	return 0;	// The remaining open handles are cleaned up when this process terminates. To avoid resource leaks in a larger application, close handles explicitly.
 }
 
@@ -231,7 +231,7 @@ sttc gpk::err_t	cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::S
 	return 0;
 }
 
-static int											cgiMain					(::gpk::SRuntimeValues & coreRuntimeValues)	{
+sttc int											cgiMain					(::gpk::SRuntimeValues & coreRuntimeValues)	{
 	::gpk::SCGIRuntimeValues								runtimeValues			= {coreRuntimeValues};
 	if_fail_fef(gpk::cgiRuntimeValuesLoad(runtimeValues), "%s", "Failed to load cgi runtime values.");
 	::SThreadStateRead										appState;
@@ -249,7 +249,7 @@ static int											cgiMain					(::gpk::SRuntimeValues & coreRuntimeValues)	{
 		//	"\r\nCache-Control: no-store"
 		//);
 		appState.ReadBytes.push_back('\0');
-		OutputDebugStringA((const char*)appState.ReadBytes.begin());
+		OutputDebugStringA((cnst sc_t*)appState.ReadBytes.begin());
 		printf("%.*s", GPK_VIEW_ARGS(appState.ReadBytes));
 	}
 	return 0;

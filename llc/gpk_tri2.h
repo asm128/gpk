@@ -37,12 +37,12 @@ nmsp gpk
 				, C.tplt Cast<_t2>()
 				};
 		}
-		cxpr	bool			CulledX		(cnst minmax<T>& minMax)	csnx	{
+		cxpr	b8_t			CulledX		(cnst minmax<T>& minMax)	csnx	{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				;
 		}
-		cxpr	bool			CulledY		(cnst minmax<T>& minMax)	csnx	{
+		cxpr	b8_t			CulledY		(cnst minmax<T>& minMax)	csnx	{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				;

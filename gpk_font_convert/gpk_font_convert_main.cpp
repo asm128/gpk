@@ -17,29 +17,29 @@ using namespace gpk;
 	, ::gpk::img8bgra			& verticalAtlas
 	, ::gpk::imgmonou3_t			& fontTexture
 	, ::gpk::vcst_t				filenameOutput
-	, const ::gpk::n2u2_t		fontCharSize
-	, bool						negateBit
+	, cnst ::gpk::n2u2_t		fontCharSize
+	, b8_t						negateBit
 	) {
-	const u2_t 					ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
+	u2_c 					ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
 	verticalAtlas.resize(::gpk::n2u2_t{fontCharSize.x, fontCharSize.y * 256});
 	for(u2_t  iChar = 0; iChar < 256; ++iChar) {
-		const u2_t 												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
-		const u2_t 												dstOffsetY				= iChar * fontCharSize.y;
+		u2_c 												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
+		u2_c 												dstOffsetY				= iChar * fontCharSize.y;
 		for(u2_t  y = 0; y < fontCharSize.y; ++y) {
 			for(u2_t  x = 0; x < fontCharSize.x; ++x) {
-				const u2_t 											srcOffsetX				= iChar % ROW_WIDTH * fontCharSize.x;
-				const u2_t 											dstOffsetX				= 0;
-				const ::gpk::SColorBGRA									& srcColor				= imageCache.View[srcOffsetY + y][srcOffsetX + x];
+				u2_c 											srcOffsetX				= iChar % ROW_WIDTH * fontCharSize.x;
+				u2_c 											dstOffsetX				= 0;
+				cnst ::gpk::SColorBGRA									& srcColor				= imageCache.View[srcOffsetY + y][srcOffsetX + x];
 				verticalAtlas.View[dstOffsetY + y][dstOffsetX + x]	= srcColor;
 			}
 		}
 	}
-	const ::gpk::n2<u2_t >								& textureFontMetrics	= verticalAtlas.View.metrics();
+	cnst ::gpk::n2<u2_t >								& textureFontMetrics	= verticalAtlas.View.metrics();
 	if_fail_fef(fontTexture.resize(textureFontMetrics), "%s", "");
 	for(u2_t  y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(u2_t  x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
-		const ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];
-		const u2_t 												linearIndex				= y * textureFontMetrics.x + x;
+		cnst ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];
+		u2_c 												linearIndex				= y * textureFontMetrics.x + x;
 		fontTexture.View[linearIndex]
 			=	0 != srcColor.r
 			||	0 != srcColor.g
@@ -50,9 +50,9 @@ using namespace gpk;
 	}
 
 	::gpk::au0_t	encoded;
-	::gpk::base64Encode({(const u0_t *)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
+	::gpk::base64Encode({(cnst u0_t *)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
 	FILE						* fp = 0;
-	const int nul = 0;
+	cnst int nul = 0;
 	if_fail_fe(gpk::fopen_s(fp, filenameOutput, "wb"));
 	fwrite(encoded.begin(), 1, encoded.size(), fp);
 	fwrite(&nul, 1, 1, fp);
@@ -60,7 +60,7 @@ using namespace gpk;
 	return 0;
 }
 
-static ::gpk::err_t		fontConvertMain			(::gpk::SRuntimeValues &) {
+sttc ::gpk::err_t		fontConvertMain			(::gpk::SRuntimeValues &) {
 	::gpk::aobj<::gpk::string>	fontFiles				= {};
 	::gpk::vcst_t					pathToSearch			= {"../gpk_data/fonts/cp437"};
 	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
@@ -91,8 +91,8 @@ static ::gpk::err_t		fontConvertMain			(::gpk::SRuntimeValues &) {
 		imageFixed.resize(imageCache.metrics());
 		for(u2_t  y = 0; y < imageFixed.metrics().y; ++y)
 		for(u2_t  x = 0; x < imageFixed.metrics().x; ++x) {
-			const u2_t 				offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
-			const u2_t 				dstX					= offsetX + (x % fontCharSize.x);
+			u2_c 				offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
+			u2_c 				dstX					= offsetX + (x % fontCharSize.x);
 			::gpk::bgra					& dstPixel				= imageFixed[y][x];
 			dstPixel				= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
 		}

@@ -19,7 +19,7 @@
 		sinx	::gpk::vcst_t				get_member_display_name		()	nxpt	{ rtrn _displayName;					}	\
 		sinx	::gpk::vcst_t				get_member_description		()	nxpt	{ rtrn _memberDescription;				}	\
 		sinx	::gpk::DATA_TYPE			get_member_data_type_id		()	nxpt	{ rtrn _dataTypeId;						}	\
-		sinx	u2_t						get_member_size				()	nxpt	{ rtrn szof(_nameSpace::_memberType);	}	\
+		sinx	::gpk::u2_t					get_member_size				()	nxpt	{ rtrn szof(_nameSpace::_memberType);	}	\
 	};												\
 	_nameSpace::_memberType		_memberName
 
@@ -46,9 +46,9 @@ nmsp gpk {
 		sinx	view<vcst_c>				get_display_names	()	nxpt { stxp cnst vcst_t				results[] = {_tArgs ::get_member_display_name	()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
 		sinx	view<vcst_c>				get_descriptions	()	nxpt { stxp cnst vcst_t				results[] = {_tArgs ::get_member_description	()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
 		sinx	view<cnst DATA_TYPE>		get_data_type_ids	()	nxpt { stxp cnst DATA_TYPE			results[] = {_tArgs ::get_member_data_type_id	()..., ::gpk::DATA_TYPE_UNKNOWN }; return results; }
-		sinx	view<u2_c>					get_member_sizes	()	nxpt { stxp cnst u2_t				results[] = {_tArgs ::get_member_size			()..., 0}; stxp vcu2_c results_view = {results}; return results_view;	}
+		sinx	view<u2_c>					get_member_sizes	()	nxpt { stxp u2_c					results[] = {_tArgs ::get_member_size			()..., 0}; stxp vcu2_c results_view = {results}; return results_view;	}
 	}; // struct
-#	define GPKM_NAMED_REGISTRY(registryName, ...)	tydf ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
+#	define GPKM_NAMED_REGISTRY(registryName, ...)	tydf ::gpk::member_registry<__VA_ARGS__> TRegistry;		sttc	cnst TRegistry&	get_member_registry	()	{ sttc cnst TRegistry registryName; return registryName;	}
 
 	tplt<tpnm _tStruct>
 	inln	gpk::err_t 				get_member_registry()	{ return _tStruct::get_member_registry(); }

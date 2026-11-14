@@ -30,7 +30,7 @@ nmsp gpk
 	struct SParamsSphere { 
 		n3f2_t		Origin			= {};
 		n2u1_t		CellCount		= {32, 32};
-		bool				Reverse			= false;
+		b8_t				Reverse			= false;
 		f2_t				Circumference	= 1.0f;
 		f2_t				Radius			= .5f;
 		quatf2_t		Orientation		= {0, 0, 0, 1};
@@ -49,11 +49,11 @@ nmsp gpk
 	};
 
 	struct SParamsCircle : SParamsDisc {
-		bool				Reverse			= false;
+		b8_t				Reverse			= false;
 
 		cxpr			SParamsCircle	()							nxpt	= default;
-		cxpr			SParamsCircle	(const SParamsCircle &)		nxpt	= default;
-		cxpr			SParamsCircle	(const SParamsDisc & other)	nxpt	: SParamsDisc(other) {}
+		cxpr			SParamsCircle	(cnst SParamsCircle &)		nxpt	= default;
+		cxpr			SParamsCircle	(cnst SParamsDisc & other)	nxpt	: SParamsDisc(other) {}
 
 		GPK_DEFAULT_OPERATOR_C(SParamsCircle, SParamsDisc::oper==(other) && Reverse == other.Reverse);
 	};
@@ -61,7 +61,7 @@ nmsp gpk
 	struct SParamsRingSide { 
 		n3f2_t		Origin			= {};
 		u1_t			Slices			= 16;
-		bool				Reverse			= false;
+		b8_t				Reverse			= false;
 		f2_t				Circumference	= 1.0f;
 		minmaxf2_t	Radius			= {.45f, .5f};
 		quatf2_t		Orientation		= {0, 0, 0, 1};
@@ -72,7 +72,7 @@ nmsp gpk
 	struct SParamsTube { 
 		n3f2_t		Origin			= {};
 		n2u1_t		CellCount		= {16, 1};
-		bool				Reverse			= false;
+		b8_t				Reverse			= false;
 		f2_t				Circumference	= 1.0f;
 		minmaxf2_t	RadiusYMin		= {.45f, .5f};
 		minmaxf2_t	RadiusYMax		= {.45f, .5f};
@@ -85,7 +85,7 @@ nmsp gpk
 	struct SParamsCylinderWall { 
 		n3f2_t		Origin			= {};
 		n2u1_t		CellCount		= {16, 2};
-		bool				Reverse			= false;
+		b8_t				Reverse			= false;
 		f2_t				Circumference	= 1.0f;
 		minmaxf2_t	Radius			= {.5f, .5f};
 		f2_t				Height			= 1;
@@ -97,8 +97,8 @@ nmsp gpk
 	struct SParamsGrid { 
 		n3f2_t		Origin			= {.5f, 0, .5f};
 		n2u1_t		CellCount		= {9, 9};
-		bool				Reverse			= false;
-		bool				Outward			= false;
+		b8_t				Reverse			= false;
+		b8_t				Outward			= false;
 		n2f2_t		Size			= {1, 1};
 		quatf2_t		Orientation		= {0, 0, 0, 1};
 
@@ -118,19 +118,19 @@ nmsp gpk
 #pragma pack(pop)
 
 #ifndef GPK_ATMEL
-	gpk::err_t 	geometryBuildCircleSide		(SGeometryBuffers & geometry, const SParamsCircle			& params);
-	gpk::err_t 	geometryBuildDisc			(SGeometryBuffers & geometry, const SParamsDisc			& params);
-	gpk::err_t 	geometryBuildBox			(SGeometryBuffers & geometry, const SParamsBox			& params);
-	gpk::err_t 	geometryBuildSphere			(SGeometryBuffers & geometry, const SParamsSphere			& params);
-	gpk::err_t 	geometryBuildCylinderWall	(SGeometryBuffers & geometry, const SParamsCylinderWall	& params);
-	gpk::err_t 	geometryBuildCylinder		(SGeometryBuffers & geometry, const SParamsCylinderWall	& params);
-	gpk::err_t 	geometryBuildGrid			(SGeometryBuffers & geometry, const SParamsGrid			& params);
-	gpk::err_t 	geometryBuildHelixHalf		(SGeometryBuffers & geometry, const SParamsHelix			& params);	// TODO: Rewrite
-	gpk::err_t 	geometryBuildHelix			(SGeometryBuffers & geometry, const SParamsHelix			& params);
-	gpk::err_t 	geometryBuildFigure0		(SGeometryBuffers & geometry, const SParamsHelix			& params);
-	gpk::err_t 	geometryBuildRingSide		(SGeometryBuffers & geometry, const SParamsRingSide		& params);
-	gpk::err_t 	geometryBuildRingFlat		(SGeometryBuffers & geometry, const SParamsRingSide		& params);
-	gpk::err_t 	geometryBuildRing			(SGeometryBuffers & geometry, const SParamsTube			& params);
+	gpk::err_t 	geometryBuildCircleSide		(SGeometryBuffers & geometry, cnst SParamsCircle			& params);
+	gpk::err_t 	geometryBuildDisc			(SGeometryBuffers & geometry, cnst SParamsDisc			& params);
+	gpk::err_t 	geometryBuildBox			(SGeometryBuffers & geometry, cnst SParamsBox			& params);
+	gpk::err_t 	geometryBuildSphere			(SGeometryBuffers & geometry, cnst SParamsSphere			& params);
+	gpk::err_t 	geometryBuildCylinderWall	(SGeometryBuffers & geometry, cnst SParamsCylinderWall	& params);
+	gpk::err_t 	geometryBuildCylinder		(SGeometryBuffers & geometry, cnst SParamsCylinderWall	& params);
+	gpk::err_t 	geometryBuildGrid			(SGeometryBuffers & geometry, cnst SParamsGrid			& params);
+	gpk::err_t 	geometryBuildHelixHalf		(SGeometryBuffers & geometry, cnst SParamsHelix			& params);	// TODO: Rewrite
+	gpk::err_t 	geometryBuildHelix			(SGeometryBuffers & geometry, cnst SParamsHelix			& params);
+	gpk::err_t 	geometryBuildFigure0		(SGeometryBuffers & geometry, cnst SParamsHelix			& params);
+	gpk::err_t 	geometryBuildRingSide		(SGeometryBuffers & geometry, cnst SParamsRingSide		& params);
+	gpk::err_t 	geometryBuildRingFlat		(SGeometryBuffers & geometry, cnst SParamsRingSide		& params);
+	gpk::err_t 	geometryBuildRing			(SGeometryBuffers & geometry, cnst SParamsTube			& params);
 #endif
 } // nmsp
 

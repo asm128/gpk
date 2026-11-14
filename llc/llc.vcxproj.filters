@@ -270,9 +270,6 @@
     <ClInclude Include="gpk_enum.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_error.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_eval.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -1022,9 +1019,6 @@
     <ClCompile Include="gpk_broker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_typeint.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_append_css.cpp">
       <Filter>string</Filter>
     </ClCompile>
@@ -1082,9 +1076,6 @@
     <ClCompile Include="gpk_circuit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_header_checkingg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_framework_module.cpp">
       <Filter>framework</Filter>
     </ClCompile>
@@ -1104,9 +1095,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_event_device.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_isa.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -29,7 +29,7 @@ nmsp gpk
 		::gpk::asts3_t<256>			KeyStrength			= {};
 	};
 #pragma pack(pop)
-	stin	void	inputKeyboardStateSet	(SInputKeyboard & state, u0_t keyCode, bool pressed) {
+	stin	void	inputKeyboardStateSet	(SInputKeyboard & state, u0_t keyCode, b8_t pressed) {
 		if(keyCode)
 			state.KeyState[keyCode] = pressed;
 		switch(keyCode) {
@@ -57,16 +57,16 @@ nmsp gpk
 		SInputMouse					MousePrevious		= {};
 		SInputMouse					MouseCurrent		= {};
 
-		bool						ButtonUp			(u0_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
-		bool						ButtonDown			(u0_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
-		bool						KeyUp				(u0_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
-		bool						KeyDown				(u0_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
+		b8_t						ButtonUp			(u0_t buttonIndex)	cnst	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
+		b8_t						ButtonDown			(u0_t buttonIndex)	cnst	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
+		b8_t						KeyUp				(u0_t keyIndex	)	cnst	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
+		b8_t						KeyDown				(u0_t keyIndex	)	cnst	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
 	};
-	stin	err_t	inputKeyboardStateSet	(SInput & input, u0_t keyCode, bool pressed, s2_t deviceId, f2_t timeStamp = {}) {
+	stin	err_t	inputKeyboardStateSet	(SInput & input, u0_t keyCode, b8_t pressed, s2_t deviceId, f2_t timeStamp = {}) {
 		::gpk::inputKeyboardStateSet(input.KeyboardCurrent, keyCode, pressed);
 		if(0 > deviceId)
 			return 0;
-		const u2_t	deviceIndex	= (u2_t)deviceId;
+		u2_c	deviceIndex	= (u2_t)deviceId;
 		if(input.StateKeyboard.size() <= deviceIndex) {
 			if_fail_fe(input.StateKeyboard.resize(deviceIndex + 1));
 			if_fail_fe(input.TimeStampKeyboard.resize(deviceIndex + 1));

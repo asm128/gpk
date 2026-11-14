@@ -15,14 +15,14 @@ nmsp gpk
 		aau3_t				Bits;		// One data array per client.
 		aobj<vcst_t>		FieldNames;	// One for all.
 
-		inln	err_t		GetFieldIndex	(const vcst_t & fieldName)			const	{ return FieldNames.find(fieldName); }
+		inln	err_t		GetFieldIndex	(cnst vcst_t & fieldName)			cnst	{ return FieldNames.find(fieldName); }
 
-		TViewConst			GetView			(u2_t client)						const	{ 
-			const au3_t				& data			= Bits[client]; 
+		TViewConst			GetView			(u2_t client)						cnst	{ 
+			cnst au3_t				& data			= Bits[client]; 
 			return {data.begin(), ::gpk::min(FieldNames.size(), (u2_t)data.bit_count())}; 
 		}
 
-		TView				GetView			(u2_t client, bool resize = false)			{ 
+		TView				GetView			(u2_t client, b8_t resize = false)			{ 
 			au3_t					& data			= Bits[client]; 
 			if(resize && FieldNames.size() > data.bit_count()) 
 				if_true_te(data.resize_bits(FieldNames.size())); 
@@ -30,14 +30,14 @@ nmsp gpk
 			return {data.begin(), ::gpk::min(FieldNames.size(), (u2_t)data.bit_count())}; 
 		}
 
-		err_t 				CreateField		(const vcst_t & fieldName)					{ 
+		err_t 				CreateField		(cnst vcst_t & fieldName)					{ 
 			s2_t					fieldIndex;
 			if_true_fef(succeeded(fieldIndex = FieldNames.find(fieldName)), "Duplicated field name at index %i: %.*s", fieldIndex, GPK_VIEW_ARGS(fieldName));
 			return FieldNames.push_back(fieldName);
 		}
 
 		// This function only appends or clears `true` bits. It doesn't clear `false` bits, avoiding to resize the array.
-		err_t 				SetField		(u2_t client, u2_t index, bool value)		{ 
+		err_t 				SetField		(u2_t client, u2_t index, b8_t value)		{ 
 			if_true_fef(index >= FieldNames.size(), "invalid index: %i", index);
 			au3_t					& data			= Bits[client]; 
 			return (value || data.bit_count() > index) 
@@ -46,9 +46,9 @@ nmsp gpk
 				; 
 		}
 
-		err_t 				GetField		(u2_t client, u2_t index)		const		{ 
+		err_t 				GetField		(u2_t client, u2_t index)		cnst		{ 
 			if_true_fef(index >= FieldNames.size(), "invalid index: %i", index);
-			const au3_t			& data			= Bits[client]; 
+			cnst au3_t			& data			= Bits[client]; 
 			return (index < data.bit_count())
 				? TViewConst{data.begin(), data.bit_count()}[index]
 				: 0

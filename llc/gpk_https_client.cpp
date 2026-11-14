@@ -24,7 +24,7 @@
 //gpk::err_t 		httpstest					()					{
 //	init_openssl_library();
 //
-//	const SSL_METHOD			* method					= SSLv23_method();
+//	cnst SSL_METHOD			* method					= SSLv23_method();
 //	if_true_vef(-1, 0 == method, "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(ctx != NULL) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //
 //	SSL_CTX						* ctx						= SSL_CTX_new(method);
@@ -33,7 +33,7 @@
 //	SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, verify_callback);	// Cannot fail ???
 //	SSL_CTX_set_verify_depth(ctx, 4);	// Cannot fail ???
 //
-//	const long					flags						= SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_COMPRESSION;
+//	cnst long					flags						= SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_COMPRESSION;
 //	SSL_CTX_set_options(ctx, flags);	// Cannot fail ???
 //
 //	s3_t						res							= SSL_CTX_load_verify_locations(ctx, "random-org-chain.pem", NULL);
@@ -47,7 +47,7 @@
 //	BIO_get_ssl(web, &ssl);
 //	if_true_vef(-1, 0 == ssl, "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //
-//	const sc_t * const			PREFERRED_CIPHERS			= "HIGH:!aNULL:!kRSA:!PSK:!SRP:!MD5:!RC4";
+//	sc_c * cnst			PREFERRED_CIPHERS			= "HIGH:!aNULL:!kRSA:!PSK:!SRP:!MD5:!RC4";
 //	if_true_vef(-1, 1 != (res = SSL_set_cipher_list(ssl, PREFERRED_CIPHERS)), "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //	if_true_vef(-1, 1 != (res = SSL_set_tlsext_host_name(ssl, HOST_NAME)), "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //

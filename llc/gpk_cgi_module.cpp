@@ -11,8 +11,8 @@ gpk::err_t		gpk::loadCGIModule				(SCGIModule & loadedModule, vcst_t moduleName)
 	if_fail_fe(append_strings(moduleNameNullTerminated, moduleName));
 	if_null_fef(loadedModule.Handle = GPK_LOAD_MODULE(moduleNameNullTerminated.begin()), "Cannot load module: %.*s.", GPK_VIEW_ARGS(moduleNameNullTerminated));
 	tydf	SCGIModule::TRegistry				TRegistry;
-	const view<const STypeIdentifier>		funcnames			= TRegistry::get_types();
-	const view<const DATA_TYPE>			members			= TRegistry::get_data_type_ids();
+	cnst view<cnst STypeIdentifier>		funcnames			= TRegistry::get_types();
+	cnst view<cnst DATA_TYPE>			members			= TRegistry::get_data_type_ids();
 	for(u2_t iMember = 0, countMembers = members.size(); iMember < countMembers; ++iMember) {
 		if(members[iMember] != DATA_TYPE_FUN)
 			break;

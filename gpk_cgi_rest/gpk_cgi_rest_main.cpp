@@ -23,7 +23,7 @@ sttc	gpk::err_t	initClient			(gpk::SSocketClient & bestClient)										{
 	{ // attempt to load address from config file.
 		{ //
 			::gpk::vcst_t					jsonIP							= {};
-			if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP))
+			if_fail_w(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_ip", jsonConfig, 0, jsonIP))
 			else {
 				info_printf("Remote IP: %.*s.", GPK_VIEW_ARGS(jsonIP));
 				if_fail_e(::gpk::tcpipAddress(jsonIP, {}, bestClient.AddressConnect));	// turn the string into a SIPv4Endpoint struct.
@@ -44,7 +44,7 @@ sttc	gpk::err_t	initClient			(gpk::SSocketClient & bestClient)										{
 	return 0;
 }
 
-static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
+sttc	int					cgiBootstrap			(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::asc_t & output)										{
 	::gpk::string				environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
 		if_fail_fe(gpk::environmentBlock(environmentBlock, runtimeValues.RuntimeValues.EntryPointArgs.Environment));
@@ -61,7 +61,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 		::gpk::au0_t						responseRemote;
 		{	// Send the request data to the connected service.
 			if_true_vef(-1, bestClient.Connection.State != ::gpk::CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			if_fail_fe(gpk::connectionPushData(bestClient.Connection, bestClient.Connection.Queue, {(const u0_t *)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
+			if_fail_fe(gpk::connectionPushData(bestClient.Connection, bestClient.Connection.Queue, {(cnst u0_t *)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
 			while(bestClient.Connection.State != ::gpk::CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
 				if_fail_fe(gpk::clientUpdate(bestClient));
 				::gpk::apobj<::gpk::SMessage>	received;
@@ -78,12 +78,12 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 		}
 		//info_printf("Remote CGI answer: %.*s.", GPK_VIEW_ARGS(responseRemote));
 		if_fail_fe(gpk::clientDisconnect(bestClient));
-		output					= {(char*)responseRemote.begin(), responseRemote.size()};
+		output					= {(sc_t*)responseRemote.begin(), responseRemote.size()};
 	}
 	return 0;
 }
 
-static	gpk::err_t		cgiMain				(gpk::SRuntimeValues & runtimeValues)	{
+sttc	gpk::err_t		cgiMain				(gpk::SRuntimeValues & runtimeValues)	{
 	if_fail_fef(gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
 	gpk::SCGIRuntimeValues		cgiRuntimeValues(runtimeValues);
 	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));

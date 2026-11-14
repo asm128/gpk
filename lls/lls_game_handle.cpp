@@ -4,9 +4,9 @@
 using ::gpk::get_value_namep, ::gpk::get_enum_namep, ::gpk::failed;
 GPK_USING_TYPEINT();
 
-::gpk::err_t	lls::handleACTION_CHAR		(::lls::LLSGame & world, const ::lls::EViewMe & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleACTION_CHAR		(::lls::LLSGame & world, cnst ::lls::EViewMe & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world; 
-	const ::lls::SArgsEvent	& eventArgs		= *(const ::lls::SArgsEvent*)gameEvent.Data.begin();
+	cnst ::lls::SArgsEvent	& eventArgs		= *(cnst ::lls::SArgsEvent*)gameEvent.Data.begin();
 	::lls::printArgsEvent(eventArgs);
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 
@@ -29,9 +29,9 @@ GPK_USING_TYPEINT();
 	}
 	return 0; 
 }
-::gpk::err_t	lls::handleWORLD_ADMIN		(::lls::LLSGame & world, const ::lls::EViewAdminWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_ADMIN		(::lls::LLSGame & world, cnst ::lls::EViewAdminWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world; 
-	const ::lls::SArgsEvent	& eventArgs			= *(const ::lls::SArgsEvent*)gameEvent.Data.begin();
+	cnst ::lls::SArgsEvent	& eventArgs			= *(cnst ::lls::SArgsEvent*)gameEvent.Data.begin();
 	::lls::printArgsEvent(eventArgs);
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 
@@ -51,9 +51,9 @@ GPK_USING_TYPEINT();
 	} 
 	return 0; 
 }
-::gpk::err_t	lls::handleWORLD_EVENT		(::lls::LLSGame & world, const ::lls::EViewWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_EVENT		(::lls::LLSGame & world, cnst ::lls::EViewWorld & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world; 
-	const ::lls::SArgsEvent	& eventArgs			= *(const ::lls::SArgsEvent*)gameEvent.Data.begin();
+	cnst ::lls::SArgsEvent	& eventArgs			= *(cnst ::lls::SArgsEvent*)gameEvent.Data.begin();
 	::lls::printArgsEvent(eventArgs);
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 
@@ -71,7 +71,7 @@ GPK_USING_TYPEINT();
 	} 
 	return 0; 
 }
-::gpk::err_t	lls::handleCLIENT_ASKS		(::lls::LLSGame & world, const ::lls::EViewClient & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleCLIENT_ASKS		(::lls::LLSGame & world, cnst ::lls::EViewClient & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world;
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 
@@ -81,7 +81,7 @@ GPK_USING_TYPEINT();
 	return 0; 
 }
 
-::gpk::err_t	lls::handleWORLD_SETUP		(::lls::LLSGame & world, const ::lls::EViewWorldSetup & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_SETUP		(::lls::LLSGame & world, cnst ::lls::EViewWorldSetup & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world; 
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 
@@ -92,7 +92,7 @@ GPK_USING_TYPEINT();
 	return 0;
 }
 
-::gpk::err_t	lls::handleWORLD_VALUE		(::lls::LLSGame & world, const ::lls::EViewWorldValue & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
+::gpk::err_t	lls::handleWORLD_VALUE		(::lls::LLSGame & world, cnst ::lls::EViewWorldValue & gameEvent, ::gpk::apobj<::lls::EventLLS> & outputEvents) { 
 	(void)outputEvents; (void)world; 
 	switch(gameEvent.Type) { 
 	default: gpk_warning_unhandled_event(gameEvent); break; 

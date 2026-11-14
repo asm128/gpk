@@ -117,7 +117,7 @@ nmsp gpk
 			if(0 == sequence.size())
 				rtrn offset;
 			for(u2_t iOffset = offset, offsetStop = Count - sequence.size() + 1; iOffset < offsetStop; ++iOffset) {
-				bool					equal			= true;
+				b8_t					equal			= true;
 				for(u2_t iSequence = 0; iSequence < sequence.size(); ++iSequence)
 					if(sequence[iSequence] != Data[iOffset + iSequence]) {
 						equal					= false;
@@ -142,7 +142,7 @@ nmsp gpk
 			if(0 == sequence.size())
 				rtrn Count - offset;
 			for(u2_t iOffset = Count - sequence.size() - offset; iOffset < Count; --iOffset) {
-				bool					equal			= true;
+				b8_t					equal			= true;
 				for(u2_t iSequence = 0; iSequence < sequence.size(); ++iSequence)
 					if(sequence[iSequence] != Data[iOffset + iSequence]) {
 						equal					= false;
@@ -277,7 +277,7 @@ nmsp gpk
 		ndix		sc_c*	end						()							csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
 		ndix		oper	sc_c* 					()							csnx	{ rtrn begin(); }
 	};
-	//tplN2u	bool	view_string	::oper==	(sc_c (&other)[N])	cnst	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
+	//tplN2u	b8_t	view_string	::oper==	(sc_c (&other)[N])	cnst	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
 	tydf	view_const_string	vcst_t;
 	tdcs	vcst_t				vcst_c;
 
@@ -315,15 +315,15 @@ nmsp gpk
 	stxp		vcst_t	VCC_TRUE		= "true";
 	stxp		vcst_t	VCC_FALSE		= "false";
 
-	nsix		vcst_t	b82st			(bool b)					nxpt	{ rtrn b ? VCC_TRUE : VCC_FALSE; }
-	nsix		u0_t	b82u0			(bool b)					nxpt	{ rtrn b ? 1 : 0; }
-	nsix		u0_t	b82s0			(bool b)					nxpt	{ rtrn b ? 1 : 0; }
-	ndsi		sc_c*	b82sc			(bool b)					nxpt	{ rtrn b ? VCC_TRUE : VCC_FALSE; }
-	stin		sc_c*	b82sc			(bool b, vcst_t & output)	nxpt	{ rtrn output = b ? VCC_TRUE : VCC_FALSE; }
-	stin		bool	cst2b8			(vcst_t b)					nxpt	{ rtrn b.size() && b != VCC_FALSE; }
+	nsix		vcst_t	b82st			(b8_t b)					nxpt	{ rtrn b ? VCC_TRUE : VCC_FALSE; }
+	nsix		u0_t	b82u0			(b8_t b)					nxpt	{ rtrn b ? 1 : 0; }
+	nsix		u0_t	b82s0			(b8_t b)					nxpt	{ rtrn b ? 1 : 0; }
+	ndsi		sc_c*	b82sc			(b8_t b)					nxpt	{ rtrn b ? VCC_TRUE : VCC_FALSE; }
+	stin		sc_c*	b82sc			(b8_t b, vcst_t & output)	nxpt	{ rtrn output = b ? VCC_TRUE : VCC_FALSE; }
+	stin		b8_t	cst2b8			(vcst_t b)					nxpt	{ rtrn b.size() && b != VCC_FALSE; }
 	stin		vcst_t	str				(vcst_t arg)				nxpt	{ rtrn arg; }
 	tplN2usinx	vcst_t	str				(sc_c (&arg)[N])			nxpt	{ rtrn arg; }
-	sinx		vcst_t	str				(cnst bool arg)				nxpt	{ rtrn arg ? VCC_TRUE : VCC_FALSE; }
+	sinx		vcst_t	str				(b8_c arg)				nxpt	{ rtrn arg ? VCC_TRUE : VCC_FALSE; }
 	//
 	tplTnsix	vcst_t	get_type_namev	()							nxpt	{ rtrn "unknown"; }
 	tplTnsix	sc_c*	get_type_namep	()							nxpt	{ rtrn get_type_namev<T>().begin(); }

@@ -18,7 +18,7 @@ nmsp gpk																								\
 	};																										\
 }																											\
 		GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle);											\
-		static	gpk::err_t rtMain		(::gpk::SRuntimeValues & runtimeValues);						\
+		sttc	gpk::err_t rtMain		(::gpk::SRuntimeValues & runtimeValues);						\
 		GPK_OS_ENTRY_POINT(rtMain);																			\
 		gpk::err_t 		rtMain		(::gpk::SRuntimeValues & runtimeValues)	{						\
 		{																									\
@@ -52,10 +52,10 @@ nmsp gpk																								\
 		};																										\
 	}																											\
  	GPK_DEFINE_APP_MODULE_INTERFACE(_mainClass, _moduleTitle);													\
-	static	gpk::err_t rtMain		(::gpk::SRuntimeValues & runtimeValues);								\
+	sttc	gpk::err_t rtMain		(::gpk::SRuntimeValues & runtimeValues);								\
 	GPK_OS_ENTRY_POINT(rtMain);																				\
 																												\
-	static	void				threadRender		(void * pRuntimeState)	{									\
+	sttc	void				threadRender		(void * pRuntimeState)	{									\
 		::gpk::SRuntimeState			& runtimeState		= *(::gpk::SRuntimeState*)pRuntimeState;			\
 		if_true_ref(!runtimeState.Application, "Main module is null:(%s)\"%s\"", #_mainClass, _moduleTitle);	\
 		gpk_sync_increment(runtimeState.RenderThreadUsers);														\
@@ -67,12 +67,12 @@ nmsp gpk																								\
 		info_printf("%s", "Render thread done.");																\
 	}																											\
 																												\
-	static	gpk::err_t threadRenderStart	(::gpk::SRuntimeState& runtimeState)	{						\
+	sttc	gpk::err_t threadRenderStart	(::gpk::SRuntimeState& runtimeState)	{						\
 		_beginthread(threadRender, 0, &runtimeState);															\
 		return 0;																								\
 	}																											\
 																												\
-	static	gpk::err_t lrt_Loop			(::gpk::SRuntimeState & runtimeState)	{						\
+	sttc	gpk::err_t lrt_Loop			(::gpk::SRuntimeState & runtimeState)	{						\
 		gpk::err_t 			updateResult	= ::update(*runtimeState.Application, false);				\
 		if(1 == updateResult || ::gpk::failed(updateResult)) {													\
 			if_true_i(::gpk::APPLICATION_STATE_EXIT == updateResult);											\

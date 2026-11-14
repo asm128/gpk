@@ -13,13 +13,13 @@ nmsp gpk
 #pragma pack(push, 1)
 	// ------------------ Render Node
 	struct SRenderNodeFlags {
-		bool					NoAmbient			: 1;
-		bool					NoDiffuse			: 1;
-		bool					NoSpecular			: 1;
-		bool					NoAlphaTest			: 1;
-		bool					NoAlphaBlend		: 1;
-		bool					NoDraw				: 1;
-		//bool					NoTransformInherit	: 1;
+		b8_t					NoAmbient			: 1;
+		b8_t					NoDiffuse			: 1;
+		b8_t					NoSpecular			: 1;
+		b8_t					NoAlphaTest			: 1;
+		b8_t					NoAlphaBlend		: 1;
+		b8_t					NoDraw				: 1;
+		//b8_t					NoTransformInherit	: 1;
 	};
 	struct SRenderNode {
 		u2_t				Mesh			= (u2_t)-1;
@@ -85,31 +85,31 @@ nmsp gpk
 		::gpk::apobj<::gpk::apod<::gpk::SLightPoint>>		LightsPoint			= {};
 		::gpk::apobj<::gpk::apod<::gpk::SLightSpot>>		LightsSpot			= {};
 
-		const ::gpk::SRenderNode&			oper[]		(u2_t index)							const	{ return RenderNodes[index]; }
+		cnst ::gpk::SRenderNode&			oper[]		(u2_t index)							cnst	{ return RenderNodes[index]; }
 		SRenderNode&						oper[]		(u2_t index)									{ return RenderNodes[index]; }
 
-		u2_t							size			()											const	{ return RenderNodes.size(); }
+		u2_t							size			()											cnst	{ return RenderNodes.size(); }
 
-		gpk::err_t 					Save			(::gpk::apod<u0_t> & output) const { 
+		gpk::err_t 					Save			(::gpk::apod<u0_t> & output) cnst { 
 			if_fail_fe(gpk::saveView(output, RenderNodes	));
 			if_fail_fe(gpk::saveView(output, Flags			));
 			if_fail_fe(gpk::saveView(output, Transforms		));
 			if_fail_fe(gpk::saveView(output, BaseTransforms	));
 			for(u2_t iEntity = 0; iEntity < RenderNodes.size(); ++iEntity) {
-				if_fail_fef(gpk::saveView(output, Lights	[iEntity] ? ::gpk::v1<const ::gpk::SLight >{*Lights	[iEntity]} : ::gpk::v1<const ::gpk::SLight >{}), "iEntity: %i", iEntity);
-				if_fail_fef(gpk::saveView(output, Cameras	[iEntity] ? ::gpk::v1<const ::gpk::SCamera>{*Cameras[iEntity]} : ::gpk::v1<const ::gpk::SCamera>{}), "iEntity: %i", iEntity);
+				if_fail_fef(gpk::saveView(output, Lights	[iEntity] ? ::gpk::v1<cnst ::gpk::SLight >{*Lights	[iEntity]} : ::gpk::v1<cnst ::gpk::SLight >{}), "iEntity: %i", iEntity);
+				if_fail_fef(gpk::saveView(output, Cameras	[iEntity] ? ::gpk::v1<cnst ::gpk::SCamera>{*Cameras[iEntity]} : ::gpk::v1<cnst ::gpk::SCamera>{}), "iEntity: %i", iEntity);
 			}
-			if_fail_fe(output.append({(const u0_t*)&LightsDirectional.size(), 4}));
+			if_fail_fe(output.append({(cnst u0_t*)&LightsDirectional.size(), 4}));
 			for(u2_t iEntity = 0; iEntity < LightsDirectional.size(); ++iEntity)
-				if_fail_fef(gpk::saveView(output, LightsDirectional[iEntity] ? ::gpk::v1<const ::gpk::SLightDirectional>{*LightsDirectional[iEntity]} : ::gpk::v1<const ::gpk::SLightDirectional>{}), "iEntity: %i", iEntity);
+				if_fail_fef(gpk::saveView(output, LightsDirectional[iEntity] ? ::gpk::v1<cnst ::gpk::SLightDirectional>{*LightsDirectional[iEntity]} : ::gpk::v1<cnst ::gpk::SLightDirectional>{}), "iEntity: %i", iEntity);
 
-			if_fail_fe(output.append({(const u0_t*)&LightsPoint.size(), 4}));
+			if_fail_fe(output.append({(cnst u0_t*)&LightsPoint.size(), 4}));
 			for(u2_t iEntity = 0; iEntity < LightsPoint.size(); ++iEntity)
-				if_fail_fef(gpk::saveView(output, LightsPoint[iEntity] ? ::gpk::v1<const ::gpk::SLightPoint>{*LightsPoint[iEntity]} : ::gpk::v1<const ::gpk::SLightPoint>{}), "iEntity: %i", iEntity);
+				if_fail_fef(gpk::saveView(output, LightsPoint[iEntity] ? ::gpk::v1<cnst ::gpk::SLightPoint>{*LightsPoint[iEntity]} : ::gpk::v1<cnst ::gpk::SLightPoint>{}), "iEntity: %i", iEntity);
 
-			if_fail_fe(output.append({(const u0_t*)&LightsSpot.size(), 4}));
+			if_fail_fe(output.append({(cnst u0_t*)&LightsSpot.size(), 4}));
 			for(u2_t iEntity = 0; iEntity < LightsSpot.size(); ++iEntity)
-				if_fail_fef(gpk::saveView(output, LightsSpot[iEntity] ? ::gpk::v1<const ::gpk::SLightSpot>{*LightsSpot[iEntity]} : ::gpk::v1<const ::gpk::SLightSpot>{}), "iEntity: %i", iEntity);
+				if_fail_fef(gpk::saveView(output, LightsSpot[iEntity] ? ::gpk::v1<cnst ::gpk::SLightSpot>{*LightsSpot[iEntity]} : ::gpk::v1<cnst ::gpk::SLightSpot>{}), "iEntity: %i", iEntity);
 
 			info_printf("Saved %s, %i", "RenderNodes", RenderNodes.size());
 			return 0;

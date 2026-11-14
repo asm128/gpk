@@ -2,7 +2,7 @@
 #include "gpk_gui_text.h"
 #include "gpk_gui_control_list.h"
 
-static	gpk::cid_t	menuInit		(gpk::SGUI & gui, gpk::acid & idButtons) {
+sttc	gpk::cid_t	menuInit		(gpk::SGUI & gui, gpk::acid & idButtons) {
 	gpk::cid_t				idMenu			= controlCreate(gui);
 	gpk::SControlPlacement	& controlMenu	= gui.Controls.Placement[idMenu];
 	controlMenu.Area		= {0, 0, 0, 20};

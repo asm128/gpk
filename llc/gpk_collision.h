@@ -13,8 +13,8 @@ nmsp gpk
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
 	gpk::err_t 	line_line_intersect
-		( const ::gpk::line2<TAxis>	& line1
-		, const ::gpk::line2<TAxis>	& line2
+		( cnst ::gpk::line2<TAxis>	& line1
+		, cnst ::gpk::line2<TAxis>	& line2
 		, ::gpk::n2<TAxis>		& out_intersect_point
 		)
 	{
@@ -47,13 +47,13 @@ nmsp gpk
 	// returns t value of intersection and intersection point q
 	tplt<tpnm TAxis>
 	s2_t				intersectRaySphere
-		( const ::gpk::n3<TAxis>		& position
-		, const ::gpk::n3<TAxis>		& direction
-		, const ::gpk::sphere<TAxis>	& sphere
+		( cnst ::gpk::n3<TAxis>		& position
+		, cnst ::gpk::n3<TAxis>		& direction
+		, cnst ::gpk::sphere<TAxis>	& sphere
 		, f2_t							& t
 		, ::gpk::n3<TAxis>				& q
 		) {
-		const ::gpk::n3<TAxis>	m			= position - sphere.Center;
+		cnst ::gpk::n3<TAxis>	m			= position - sphere.Center;
 		f3_t					b			= m.Dot(direction);
 		f3_t					c			= m.Dot(m) - sphere.Radius * sphere.Radius;
 
@@ -74,8 +74,8 @@ nmsp gpk
 
 	tplt<tpnm TAxis>
 	gpk::err_t 	point_in_segment
-		( const ::gpk::line2<TAxis>	& segment
-		, const ::gpk::n2<TAxis>	& point
+		( cnst ::gpk::line2<TAxis>	& segment
+		, cnst ::gpk::n2<TAxis>	& point
 		)
 	{
 		return (	point.x >=	::gpk::min(segment.A.x, segment.B.x)
@@ -87,8 +87,8 @@ nmsp gpk
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
 	gpk::err_t 	line_segment_intersect
-		( const ::gpk::line2<TAxis>	& line
-		, const ::gpk::line2<TAxis>	& segment
+		( cnst ::gpk::line2<TAxis>	& line
+		, cnst ::gpk::line2<TAxis>	& segment
 		, ::gpk::n2<TAxis>			& out_intersect_point
 		)
 	{
@@ -99,8 +99,8 @@ nmsp gpk
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	tplt<tpnm TAxis>
 	gpk::err_t 	segment_segment_intersect
-		( const ::gpk::line2<TAxis>	& segment1
-		, const ::gpk::line2<TAxis>	& segment2
+		( cnst ::gpk::line2<TAxis>	& segment1
+		, cnst ::gpk::line2<TAxis>	& segment2
 		, ::gpk::n2<TAxis>		& out_intersect_point
 		)
 	{
@@ -111,8 +111,8 @@ nmsp gpk
 
 	tplt<tpnm TAxis>
 	gpk::err_t 	buildAABBSegments
-		( const ::gpk::n2<TAxis>	& center
-		, const TAxis				halfSizeBox
+		( cnst ::gpk::n2<TAxis>	& center
+		, cnst TAxis				halfSizeBox
 		, ::gpk::line2<TAxis>		& left
 		, ::gpk::line2<TAxis>		& top
 		, ::gpk::line2<TAxis>		& right
@@ -129,7 +129,7 @@ nmsp gpk
 
 	tplt<tpnm TAxis>
 	gpk::err_t 	buildAABBSegments
-		( const ::gpk::rect2<TAxis>	& rect
+		( cnst ::gpk::rect2<TAxis>	& rect
 		, ::gpk::line2<TAxis>		& left
 		, ::gpk::line2<TAxis>		& top
 		, ::gpk::line2<TAxis>		& right

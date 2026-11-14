@@ -13,7 +13,7 @@ nmsp gpk
 	tydf	u2_t		eid_t;
 	stxp	eid_t			EID_INVALID		= eid_t(-1);
 
-	tydf	const eid_t		ceid_t;
+	tydf	cnst eid_t		ceid_t;
 	tydf	apod<eid_t>		aeid;
 	tydf	view<eid_t>		veid;
 	tydf	view<ceid_t>	vceid;
@@ -31,10 +31,10 @@ nmsp gpk
 
 		aobj<paeid>				Children		= {};
 
-		const SEntity&			oper[]		(eid_t id)	const	{ return Entities[id]; }
+		cnst SEntity&			oper[]		(eid_t id)	cnst	{ return Entities[id]; }
 		SEntity&				oper[]		(eid_t id)			{ return Entities[id]; }
 
-		u2_t					size			()			const	{ return Names.size(); }
+		u2_t					size			()			cnst	{ return Names.size(); }
 		u2_t					clear			()					{ ::gpk::clear(Entities, Names, Children); return 0; }
 
 		err_t 					Create			() {
@@ -49,14 +49,14 @@ nmsp gpk
 			return Entities.remove_unordered(id);
 		}
 
-		inln	err_t 			GetIndexParent	(eid_t id)					const	{ return Entities[id].Parent; }
-		inln	err_t 			GetIndexChild	(eid_t id, s2_t iChild)		const	{ return (*Children[id])[iChild]; }
-		inln	const SEntity&	GetParent		(eid_t id)					const	{ return Entities[GetIndexParent(id)]; }
-		inln	const SEntity&	GetChild		(eid_t id, s2_t iChild)		const	{ return Entities[GetIndexChild	(id, iChild)]; }
+		inln	err_t 			GetIndexParent	(eid_t id)					cnst	{ return Entities[id].Parent; }
+		inln	err_t 			GetIndexChild	(eid_t id, s2_t iChild)		cnst	{ return (*Children[id])[iChild]; }
+		inln	cnst SEntity&	GetParent		(eid_t id)					cnst	{ return Entities[GetIndexParent(id)]; }
+		inln	cnst SEntity&	GetChild		(eid_t id, s2_t iChild)		cnst	{ return Entities[GetIndexChild	(id, iChild)]; }
 		inln	SEntity&		GetParent		(eid_t id)							{ return Entities[GetIndexParent(id)]; }
 		inln	SEntity&		GetChild		(eid_t id, s2_t iChild)				{ return Entities[GetIndexChild	(id, iChild)]; }
-		inln	err_t 			GetChildCount	(u2_t iEntity)				const	{ const papod<eid_t> & children = Children[iEntity]; return children ? children->size() : 0; }
-		inln	vceid			GetChildren		(u2_t iEntity)				const	{ const papod<eid_t> & children = Children[iEntity]; return children ? vceid{*children} : vceid{}; }
+		inln	err_t 			GetChildCount	(u2_t iEntity)				cnst	{ cnst papod<eid_t> & children = Children[iEntity]; return children ? children->size() : 0; }
+		inln	vceid			GetChildren		(u2_t iEntity)				cnst	{ cnst papod<eid_t> & children = Children[iEntity]; return children ? vceid{*children} : vceid{}; }
 		inln	veid			GetChildren		(u2_t iEntity)						{ papod<eid_t> & children = Children[iEntity]; return children ? *children : veid{}; }
 
 
@@ -64,7 +64,7 @@ nmsp gpk
 			if_true_vef(-1, idParent != EID_INVALID && idParent >= Entities.size(), "Invalid parent for entity %i, %i", id, idParent);
 			eid_t						& oldParent		= Entities[id].Parent;
 			if(oldParent < Entities.size() && Children[oldParent]) {
-				const s2_t						oldIndex		= Children[oldParent]->find(id);
+				cnst s2_t						oldIndex		= Children[oldParent]->find(id);
 				if(oldIndex >= 0)
 					if_fail_fef(Children[oldParent]->remove(oldIndex), "oldParent: %i, oldIndex: %i.", oldParent, oldIndex);
 			}
@@ -72,7 +72,7 @@ nmsp gpk
 			return (0 > (s2_t)idParent) ? 0 : Children[idParent]->push_back(id);
 		}
 
-		err_t 					Save			(au0_t & output) const { 
+		err_t 					Save			(au0_t & output) cnst { 
 			if_fail_fe(saveView(output, Entities));
 			for(u2_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				if_fail_fef(saveView(output, Children[iEntity] ? vcu2_t{*Children[iEntity]} : vcu2_t{}), "iEntity: %i", iEntity);

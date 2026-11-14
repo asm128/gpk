@@ -18,12 +18,12 @@ using nmsp gpk;
 struct SRuntimeState {
 	::gpk::refcount_t		RenderThreadUsers	= 0; 
 	::gpk::SRuntimeModule	* MainModule		= 0; 
-	bool					Running				= false;
-	bool					RequestedExit		= false; 
-	bool					Exit				= false; 
+	b8_t					Running				= false;
+	b8_t					RequestedExit		= false; 
+	b8_t					Exit				= false; 
 };
 
-static	void			threadRender		(void* pRuntimeState)												{
+sttc	void			threadRender		(void* pRuntimeState)												{
 	::SRuntimeState				& runtimeState		= *(::SRuntimeState*)pRuntimeState;
 	::gpk::SRuntimeModule		* runtimeModule		= runtimeState.MainModule;
 	if_null_re(runtimeModule);
@@ -35,12 +35,12 @@ static	void			threadRender		(void* pRuntimeState)												{
 	info_printf("Render thread done.");
 }
 
-static	int				threadRenderStart	(::SRuntimeState& runtimeState)										{
+sttc	int				threadRenderStart	(::SRuntimeState& runtimeState)										{
 	_beginthread(threadRender, 0, &runtimeState);
 	return 0;
 }
 
-static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
+sttc	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
 #if defined(GPK_WINDOWS)
 	gpk::err_t 			updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 #else
@@ -75,7 +75,7 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 	return updateResult;
 }
 
-static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
+sttc	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 	SRuntimeState					runtimeState					= {};
 	{
 		::gpk::vcst_t					fileName						= "gme";

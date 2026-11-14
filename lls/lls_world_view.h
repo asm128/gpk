@@ -160,7 +160,7 @@ namespace lls
 		::gpk::vcst_t				Name;
 		uint32_t				Country;
 
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		::gpk::err_t			Save				(::gpk::au0_t & output)	cnst	{ 
 			do { if_fail_fe(::gpk::saveView(output, Name)); } while(0); 
 			do { if_fail_fe(::gpk::savePOD (output, Country)); } while(0); 
 			return 0;
@@ -177,7 +177,7 @@ namespace lls
 		::gpk::vcst_t				Name;
 		uint32_t				Hangar;
 
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		::gpk::err_t			Save				(::gpk::au0_t & output)	cnst	{ 
 			do { if_fail_fe(::gpk::saveView(output, Name)); } while(0); 
 			do { if_fail_fe(::gpk::savePOD (output, Hangar)); } while(0); 
 			return 0;
@@ -194,7 +194,7 @@ namespace lls
 		::gpk::n2u1_t			Size;
 		allsid				Furniture;
 
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		::gpk::err_t			Save				(::gpk::au0_t & output)	cnst	{ 
 			do { if_fail_fe(::gpk::savePOD (output, Size)); } while(0); 
 			do { if_fail_fe(::gpk::saveView(output, Furniture)); } while(0); 
 			return 0;
@@ -212,7 +212,7 @@ namespace lls
 		::gpk::au2_t			Hangars;
 		::gpk::au2_t			Characters;
 
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		::gpk::err_t			Save				(::gpk::au0_t & output)	cnst	{ 
 			do { if_fail_fe(::gpk::savePOD (output, Offset)); } while(0); 
 			do { if_fail_fe(::gpk::saveView(output, Hangars)); } while(0); 
 			do { if_fail_fe(::gpk::saveView(output, Characters)); } while(0); 
@@ -231,7 +231,7 @@ namespace lls
 		gpk::apimg8bgra			Values;
 		gpk::apobj<SWorldArea>	Blocks;
 
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		::gpk::err_t			Save				(::gpk::au0_t & output)	cnst	{ 
 			do { if_fail_fe(::gpk::savePOD(output, Values.size())); } while(0); 
 			for(uint32_t iValueMap = 0; iValueMap < Values.size(); ++iValueMap)
 				do { if_fail_fef(::gpk::saveImage<::gpk::bgra>(output, Values[iValueMap]->View), "Failed to load tile map %i", iValueMap); } while(0);
@@ -288,7 +288,7 @@ namespace lls
 		::gpk::aobj<SMiniMe>	Characters;
 		SWorldTiles				Tiles;
 
-		::gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
+		::gpk::err_t			Save				(::gpk::au0_t & output)	cnst	{ 
 			do { if_fail_fe(::gpk::savePOD(output, WorldConfig)); } while(0); 
 			do { if_fail_fe(::gpk::savePOD(output, WorldState)); } while(0); 
 			do { if_fail_fe(::gpk::saveView(output, Hangars)); } while(0);

@@ -2,16 +2,19 @@
 
 #include "gpk_json_expression.h"
 #include "gpk_parse.h"
+#include "gpk_string_compose.h"
 
 #include <process.h>
 
-static	void	closeHandle				(HANDLE & handle) {
+usns gpk;
+
+sttc	void	closeHandle				(HANDLE & handle) {
 	if(handle && INVALID_HANDLE_VALUE != handle)
 		::CloseHandle(handle);
 	handle								= INVALID_HANDLE_VALUE;
 }
 
-static	void	closeProcessHandles		(::llswin32::SProcessBrokerJob & job) {
+sttc	void	closeProcessHandles		(::llswin32::SProcessBrokerJob & job) {
 	::closeHandle(job.IOHandles.ChildStd_IN_Read);
 	::closeHandle(job.IOHandles.ChildStd_IN_Write);
 	::closeHandle(job.IOHandles.ChildStd_OUT_Read);
@@ -22,20 +25,20 @@ static	void	closeProcessHandles		(::llswin32::SProcessBrokerJob & job) {
 	::closeHandle(job.Process.ProcessInfo.hThread);
 }
 
-static	::gpk::err_t	initHandles		(::llswin32::SProcessHandles & handles) {
+sttc	::gpk::err_t	initHandles		(::llswin32::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES			saAttr					= {sizeof(SECURITY_ATTRIBUTES)};
 	saAttr.bInheritHandle							= TRUE;
 	saAttr.lpSecurityDescriptor					= nullptr;
-	if_true_fef(false == (bool)::CreatePipe			(&handles.ChildStd_OUT_Read, &handles.ChildStd_OUT_Write, &saAttr, 0), "Stdout CreatePipe: '%s'.", "Failed to create a pipe for the child process's STDOUT.");
-	if_true_fef(false == (bool)::SetHandleInformation	(handles.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0), "Stdout SetHandleInformation: '%s'.", "Failed to keep the child process from inheriting the STDOUT read handle.");
-	if_true_fef(false == (bool)::CreatePipe			(&handles.ChildStd_ERR_Read, &handles.ChildStd_ERR_Write, &saAttr, 0), "Stderr CreatePipe: '%s'.", "Failed to create a pipe for the child process's STDERR.");
-	if_true_fef(false == (bool)::SetHandleInformation	(handles.ChildStd_ERR_Read, HANDLE_FLAG_INHERIT, 0), "Stderr SetHandleInformation: '%s'.", "Failed to keep the child process from inheriting the STDERR read handle.");
-	if_true_fef(false == (bool)::CreatePipe			(&handles.ChildStd_IN_Read, &handles.ChildStd_IN_Write, &saAttr, 0), "Stdin CreatePipe: '%s'.", "Failed to create a pipe for the child process's STDIN.");
-	if_true_fef(false == (bool)::SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0), "Stdin SetHandleInformation: '%s'.", "Failed to keep the child process from inheriting the STDIN write handle.");
+	if_true_fef(false == (b8_t)::CreatePipe				(&handles.ChildStd_OUT_Read, &handles.ChildStd_OUT_Write, &saAttr, 0), "Stdout CreatePipe: '%s'.", "Failed to create a pipe for the child process's STDOUT.");
+	if_true_fef(false == (b8_t)::SetHandleInformation	(handles.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0), "Stdout SetHandleInformation: '%s'.", "Failed to keep the child process from inheriting the STDOUT read handle.");
+	if_true_fef(false == (b8_t)::CreatePipe				(&handles.ChildStd_ERR_Read, &handles.ChildStd_ERR_Write, &saAttr, 0), "Stderr CreatePipe: '%s'.", "Failed to create a pipe for the child process's STDERR.");
+	if_true_fef(false == (b8_t)::SetHandleInformation	(handles.ChildStd_ERR_Read, HANDLE_FLAG_INHERIT, 0), "Stderr SetHandleInformation: '%s'.", "Failed to keep the child process from inheriting the STDERR read handle.");
+	if_true_fef(false == (b8_t)::CreatePipe				(&handles.ChildStd_IN_Read, &handles.ChildStd_IN_Write, &saAttr, 0), "Stdin CreatePipe: '%s'.", "Failed to create a pipe for the child process's STDIN.");
+	if_true_fef(false == (b8_t)::SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0), "Stdin SetHandleInformation: '%s'.", "Failed to keep the child process from inheriting the STDIN write handle.");
 	return 0;
 }
 
-static	::gpk::err_t	createChildProcess
+sttc	::gpk::err_t	createChildProcess
 	( ::llswin32::SProcess	& process
 	, ::gpk::vu0_t			environmentBlock
 	, ::gpk::vcst_t		appPath
@@ -44,7 +47,7 @@ static	::gpk::err_t	createChildProcess
 	stxp	uint32_t		creationFlags				= CREATE_SUSPENDED;
 	::closeHandle(process.ProcessInfo.hProcess);
 	::closeHandle(process.ProcessInfo.hThread);
-	if_true_fef(false == (bool)::CreateProcessA
+	if_true_fef(false == (b8_t)::CreateProcessA
 		( appPath.begin()
 		, commandLine.begin()
 		, nullptr
@@ -61,11 +64,11 @@ static	::gpk::err_t	createChildProcess
 	return 0;
 }
 
-static	::gpk::err_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gpk::vcu0_t bytesToSend) {
+sttc	::gpk::err_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gpk::vcu0_t bytesToSend) {
 	uint32_t					offsetWritten				= 0;
 	while(offsetWritten < bytesToSend.size()) {
 		DWORD						dwWritten					= 0;
-		if_true_fef(false == (bool)::WriteFile(handles.ChildStd_IN_Write, &bytesToSend[offsetWritten], bytesToSend.size() - offsetWritten, &dwWritten, nullptr), "%s", "Failed to write to child process' standard input.");
+		if_true_fef(false == (b8_t)::WriteFile(handles.ChildStd_IN_Write, &bytesToSend[offsetWritten], bytesToSend.size() - offsetWritten, &dwWritten, nullptr), "%s", "Failed to write to child process' standard input.");
 		if_true_fef(0 == dwWritten, "%s", "No bytes were written to child process' standard input.");
 		offsetWritten							+= dwWritten;
 	}
@@ -73,14 +76,14 @@ static	::gpk::err_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gpk:
 	return 0;
 }
 
-static	::gpk::err_t	readFromPipe			(const ::llswin32::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
+sttc	::gpk::err_t	readFromPipe			(cnst ::llswin32::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
 	stxp	uint32_t		bufferSize					= 1024 * 1024;
 	::gpk::au0_t				buffer;
 	do { if_fail_fe(buffer.resize(bufferSize)); } while(0);
 	for(;;) {
 		DWORD						dwRead						= 0;
-		if(false == (bool)::ReadFile(handles.ChildStd_OUT_Read, buffer.begin(), buffer.size(), &dwRead, nullptr)) {
-			const DWORD				lastError					= ::GetLastError();
+		if(false == (b8_t)::ReadFile(handles.ChildStd_OUT_Read, buffer.begin(), buffer.size(), &dwRead, nullptr)) {
+			cnst DWORD				lastError					= ::GetLastError();
 			if(ERROR_BROKEN_PIPE == lastError)
 				break;
 			if_true_fef(true, "Failed to read child process' standard output. Windows error: %lu.", lastError);
@@ -92,8 +95,8 @@ static	::gpk::err_t	readFromPipe			(const ::llswin32::SProcessHandles & handles,
 	return 0;
 }
 
-static	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
-	const ::gpk::err_t		result						= [&job]() -> ::gpk::err_t {
+sttc	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
+	cnst ::gpk::err_t		result						= [&job]() -> ::gpk::err_t {
 		do { if_fail_fe(::initHandles(job.IOHandles)); } while(0);
 		job.Process.StartInfo.hStdError				= job.IOHandles.ChildStd_ERR_Write;
 		job.Process.StartInfo.hStdOutput				= job.IOHandles.ChildStd_OUT_Write;
@@ -101,8 +104,8 @@ static	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
 		job.Process.StartInfo.dwFlags				|= STARTF_USESTDHANDLES;
 
 		::gpk::vu0_t				environmentBlock				= job.Request;
-		const ::gpk::vcu0_t		packet						= job.Request;
-		const ::gpk::err_t	contentOffset				= packet.find(::gpk::vcu0_t{(const uint8_t*)"\0", 2});
+		cnst ::gpk::vcu0_t		packet						= job.Request;
+		cnst ::gpk::err_t	contentOffset				= packet.find(::gpk::vcu0_t{(cnst uint8_t*)"\0", 2});
 		if_true_fef(0 > contentOffset, "%s", "Failed to find the CGI environment block terminator.");
 
 		do { if_fail_fe(::createChildProcess(job.Process, environmentBlock, job.CommandLineApp, job.CommandLine)); } while(0);
@@ -110,7 +113,7 @@ static	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
 		::closeHandle(job.IOHandles.ChildStd_ERR_Write);
 		::closeHandle(job.IOHandles.ChildStd_IN_Read);
 
-		const uint32_t			contentBegin					= (uint32_t)contentOffset + 2;
+		cnst uint32_t			contentBegin					= (uint32_t)contentOffset + 2;
 		if(packet.size() > contentBegin)
 			do { if_fail_fe(::writeToPipe(job.IOHandles, {&packet[contentBegin], packet.size() - contentBegin})); } while(0);
 		else
@@ -123,31 +126,32 @@ static	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
 	return result;
 }
 
-static	void	threadProcessRequest		(void * jobAddress) {
-	::llswin32::SProcessBrokerJob	& job						= *(::llswin32::SProcessBrokerJob*)jobAddress;
-	job.Result									= ::processRequest(job);
-	if(::gpk::failed(job.Result) && 0 == job.Response.size()) {
-		stxp	const char		failureResponse[]				= "LLS process broker failed to execute the configured process.";
-		job.Response.append((const uint8_t*)failureResponse, ::gpk::size(failureResponse) - 1);
+sttc	void	threadProcessRequest		(void * jobAddress) {
+	::llswin32::SProcessBrokerJob	& job			= *(::llswin32::SProcessBrokerJob*)jobAddress;
+	if_true_block_log(error_printf, ::gpk::failed(job.Result = ::processRequest(job)) && 0 == job.Response.size(), ) {
+		stxp	::gpk::vcst_c	failureResponse		= "LLS process broker failed to execute the configured process.";
+		if_fail_re(job.Response.append(failureResponse.bytes()));
 	}
 	gpk_sync_increment(job.Done);
 }
 
-::gpk::err_t	llswin32::processBrokerSetup		(::llswin32::SProcessBroker & broker, const ::gpk::SJSONReader & jsonReader) {
-	uint64_t					port						= broker.Port;
-	uint64_t					adapter					= broker.Adapter;
-	::gpk::vcst_t				jsonNumber					= {};
-	const ::gpk::err_t		appNodeIndex				= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.brt"}, jsonReader, 0, broker.ProcessFileName);
+gpk::err_t	llswin32::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::SJSONReader & jsonReader) {
+	u3_t				port						= broker.Port;
+	u3_t				adapter					= broker.Adapter;
+	::gpk::vcst_t		jsonNumber					= {};
+	cnst gpk::err_t		appNodeIndex				= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, broker.ProcessFileName);
 	if_true_wf(::gpk::failed(appNodeIndex), "Failed to find application node '%s'.", "application.brt")
 	else {
-		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.executable_path"}, jsonReader, appNodeIndex, broker.ProcessFileName)), "Failed to load process executable path. Last contents found: '%s'.", broker.ProcessFileName.begin());
-		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_app_name"}, jsonReader, appNodeIndex, broker.ProcessMockPath)), "Failed to load process command-line application name. Last contents found: '%s'.", broker.ProcessMockPath.begin());
-		if_true_wf(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"process.command_line_params"}, jsonReader, appNodeIndex, broker.ProcessParams)), "Failed to load process command-line parameters. Last contents found: '%s'.", broker.ProcessParams.begin());
-		if(::gpk::succeeded(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"}, jsonReader, appNodeIndex, jsonNumber)))
-			::gpk::parseIntegerDecimal(jsonNumber, port);
+		if_fail_wf(::gpk::jsonExpressionResolve("process.executable_path", jsonReader, appNodeIndex, broker.ProcessFileName), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(broker.ProcessFileName));
+		if_fail_wf(::gpk::jsonExpressionResolve("process.command_line_app_name", jsonReader, appNodeIndex, broker.ProcessMockPath), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(broker.ProcessMockPath));
+		if_fail_wf(::gpk::jsonExpressionResolve("process.command_line_params", jsonReader, appNodeIndex, broker.ProcessParams), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(broker.ProcessParams));
+		if_fail_wf(::gpk::jsonExpressionResolve("listen_port", jsonReader, appNodeIndex, jsonNumber), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(jsonNumber))
+		else
+			if_fail_e(::gpk::parseIntegerDecimal(jsonNumber, port));
 		jsonNumber								= {};
-		if(::gpk::succeeded(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonReader, appNodeIndex, jsonNumber)))
-			::gpk::parseIntegerDecimal(jsonNumber, adapter);
+		if_fail_wf(::gpk::jsonExpressionResolve("adapter", jsonReader, appNodeIndex, jsonNumber), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(jsonNumber))
+		else
+			if_fail_e(::gpk::parseIntegerDecimal(jsonNumber, adapter));
 	}
 
 	broker.Port								= (uint16_t)port;
@@ -178,7 +182,7 @@ static	void	threadProcessRequest		(void * jobAddress) {
 		if(!connection)
 			continue;
 		for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
-			const ::gpk::pobj<::gpk::SMessage>	& message			= receivedPerClient[iClient][iMessage];
+			cnst ::gpk::pobj<::gpk::SMessage>	& message			= receivedPerClient[iClient][iMessage];
 			if(!message)
 				continue;
 			::gpk::pobj<::llswin32::SProcessBrokerJob>	job;
@@ -190,8 +194,8 @@ static	void	threadProcessRequest		(void * jobAddress) {
 			do { if_fail_fe(broker.Jobs.push_back(job)); } while(0);
 			if((uintptr_t)-1L == ::_beginthread(::threadProcessRequest, 0, job.operator->())) {
 				job->Result								= -1;
-				stxp const char	failureResponse[]				= "LLS process broker failed to start its request worker.";
-				job->Response.append((const uint8_t*)failureResponse, ::gpk::size(failureResponse) - 1);
+				stxp cnst sc_t	failureResponse[]				= "LLS process broker failed to start its request worker.";
+				job->Response.append((cnst uint8_t*)failureResponse, ::gpk::size(failureResponse) - 1);
 				gpk_sync_increment(job->Done);
 			}
 		}

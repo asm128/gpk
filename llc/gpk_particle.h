@@ -15,15 +15,15 @@ nmsp gpk
 	struct SParticle2Forces {
 		tydf	::gpk::n2<_tElement>	TCoord;
 
-		stxp	const _tElement		VelocityEpsilon				= 0.0001f;
+		stxp	cnst _tElement		VelocityEpsilon				= 0.0001f;
 
 		TCoord						AccumulatedForce			= {};
 		TCoord						Acceleration				= {};	// A vector representing the speed in a given direction
 		TCoord						Velocity					= {};	// A vector representing the speed in a given direction
 
-		inxp	bool				VelocityDepleted			()				csnx	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
+		inxp	b8_t				VelocityDepleted			()				csnx	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
 		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
-		void						IntegrateAccumulatedForce	(const _tElement inverseMass, const _tElement damping, const f3_t timeElapsed)			nxpt	{
+		void						IntegrateAccumulatedForce	(cnst _tElement inverseMass, cnst _tElement damping, cnst f3_t timeElapsed)			nxpt	{
 			Acceleration				+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
 			AccumulatedForce			= {};											// Clear this out now that we've used it already.
 
@@ -40,25 +40,25 @@ nmsp gpk
 		_tElement					InverseMass					= 0;
 		_tElement					Damping						= .99f;	// A vector representing the speed in a given direction
 
-		inln	void				SetMass						(const f3_t mass)																			nxpt	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
+		inln	void				SetMass						(cnst f3_t mass)																			nxpt	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
 		inxp	f3_t				GetMass						()				csnx	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
-		inxp	bool				HasFiniteMass				()				csnx	{ return InverseMass >= 0.0f;								}
+		inxp	b8_t				HasFiniteMass				()				csnx	{ return InverseMass >= 0.0f;								}
 	};
 
 	// This compact structure allows to define all the boolean states of the particle packed in a single byte.
 	struct SParticle2State {
-		bool					Unused						: 1;
-		bool					Active						: 1;
+		b8_t					Unused						: 1;
+		b8_t					Active						: 1;
 
-		inxp	bool			RequiresProcessing			()				csnx	{ return (false == Unused) && Active; }
+		inxp	b8_t			RequiresProcessing			()				csnx	{ return (false == Unused) && Active; }
 	};
 #pragma pack(pop)
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
 	tplt<tpnm _tElement>
 	stin	void			particleIntegratePosition
-		(	const ::gpk::n2<_tElement>	& velocity
-		,	const f3_t				timeElapsed
-		,	const f3_t				timeElapsedHalfSquared
+		(	cnst ::gpk::n2<_tElement>	& velocity
+		,	cnst f3_t				timeElapsed
+		,	cnst f3_t				timeElapsedHalfSquared
 		,	::gpk::n2<_tElement>		& position
 		) {
 		position				+= velocity * timeElapsed;
@@ -66,7 +66,7 @@ nmsp gpk
 	}
 
 	tplt<tpnm _tElement>
-	gpk::err_t 		integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, f3_t timeElapsed, f3_t timeElapsedHalfSquared)			{
+	gpk::err_t 		integrate					(cnst ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, f3_t timeElapsed, f3_t timeElapsedHalfSquared)			{
 		for(u2_t iParticle = 0, particleCount = (u2_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next
@@ -90,9 +90,9 @@ nmsp gpk
 		inln	gpk::err_t 				Integrate									(f3_t timeElapsed, f3_t timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
 		gpk::err_t 						Integrate									(::gpk::view<TParticle>& particleNext, f3_t timeElapsed, f3_t timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
 		// --------------------------------------------------------
-		gpk::err_t 						AddParticle					(const TParticle& particleData)																			{
-			const u2_t								particleCount								= (u2_t)ParticleState.size();
-			stxp	const ::gpk::SParticle2State		initialParticleState						= {false, true};
+		gpk::err_t 						AddParticle					(cnst TParticle& particleData)																			{
+			u2_c								particleCount								= (u2_t)ParticleState.size();
+			stxp	cnst ::gpk::SParticle2State		initialParticleState						= {false, true};
 
 			for(u2_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {
@@ -132,10 +132,10 @@ nmsp gpk
 
 	tplt<tpnm _tParticleType, tpnm _tCoord>
 	gpk::err_t 		addParticle
-		(	const _tParticleType										& particleType
+		(	cnst _tParticleType										& particleType
 		,	::gpk::apod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
 		,	::gpk::SParticle2Integrator<_tCoord>						& particleIntegrator
-		,	const ::gpk::SParticle2<_tCoord>							& particleDefinition
+		,	cnst ::gpk::SParticle2<_tCoord>							& particleDefinition
 		)
 	{
 		::gpk::SParticleBinding<_tParticleType>	newInstance									= {};
@@ -154,7 +154,7 @@ nmsp gpk
 	};
 
 	tplt<tpnm _tParticleType, tpnm _tCoord>
-	stin	gpk::err_t 		addParticle					(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
+	stin	gpk::err_t 		addParticle					(cnst _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	cnst ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}
 
@@ -171,7 +171,7 @@ nmsp gpk
 		gpk::err_t 				Remove				(s2_t iParticle);
 
 		gpk::err_t 				Load				(::gpk::vcu0_t & input);
-		gpk::err_t 				Save				(::gpk::au0_t & output)	const;
+		gpk::err_t 				Save				(::gpk::au0_t & output)	cnst;
 	};
 } // nmsp
 

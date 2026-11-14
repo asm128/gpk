@@ -2,36 +2,39 @@
 #include "gpk_app_impl.h"
 
 stct SApplication {
-	::gpk::SFramework	Framework;
+	SFramework	Framework;
 	SFileViewer			Viewer;
 
-	SApplication(::gpk::SRuntimeValues & runtimeValues) : Framework(runtimeValues, {}), Viewer(Framework.RootWindow, Framework.GUI) {}
+	SApplication(SRuntimeValues & runtimeValues) : Framework(runtimeValues, {}) {}
 };
 
-::gpk::err_t setup(SApplication & app) {
+err_t setup(SApplication & app) {
 	app.Framework.RootWindow.Size = {1280, 720};
-	if_null_ve(::gpk::OS_NO_MEMORY, app.Framework.RootWindow.BackBuffer.create());
+	if_null_fe(app.Framework.RootWindow.BackBuffer.create());
 	if_fail_fe(app.Framework.RootWindow.BackBuffer->resize(app.Framework.RootWindow.Size.u2()));
-	if_fail_fe(::gpk::mainWindowCreate(app.Framework.RootWindow, app.Framework.RuntimeValues.PlatformDetail, app.Framework.RootWindow.Input));
+	if_fail_fe(mainWindowCreate(app.Framework.RootWindow, app.Framework.RuntimeValues.PlatformDetail, app.Framework.RootWindow.Input));
+	if_null_fe(app.Viewer.Dialog.create(app.Framework.GUI));
+	app.Viewer.Dialog->Input = app.Framework.RootWindow.Input;
+	if_fail_fe(guiUpdateMetrics(*app.Viewer.Dialog->GUI, app.Framework.RootWindow.Size, false));
 	rtrn ::fileViewerSetup(app.Viewer, FILE_VIEWER_LAYOUT_SPLIT);
 }
 
-::gpk::err_t cleanup(SApplication & app) {
-	rtrn ::gpk::mainWindowDestroy(app.Framework.RootWindow);
+err_t cleanup(SApplication & app) {
+	rtrn mainWindowDestroy(app.Framework.RootWindow);
 }
 
-::gpk::err_t update(SApplication & app, bool systemRequestedExit) {
+err_t update(SApplication & app, gpk::b8_t systemRequestedExit) {
 	if(systemRequestedExit)
-		rtrn ::gpk::APPLICATION_STATE_EXIT;
-	cnst ::gpk::err_t result = ::gpk::updateFramework(app.Framework);
+		rtrn APPLICATION_STATE_EXIT;
+	cnst err_t result = updateFramework(app.Framework);
 	if(result)
 		rtrn result;
-	if(app.Framework.RootWindow.Closed || app.Framework.RootWindow.Input->KeyDown(::gpk::SYSTEM_KEY_Escape))
-		rtrn ::gpk::APPLICATION_STATE_EXIT;
-	rtrn ::fileViewerUpdate(app.Viewer, FILE_VIEWER_LAYOUT_SPLIT);
+	if(app.Framework.RootWindow.Closed)
+		rtrn APPLICATION_STATE_EXIT;
+	rtrn ::fileViewerUpdate(app.Viewer, FILE_VIEWER_LAYOUT_SPLIT, app.Framework.RootWindow.EventQueue);
 }
 
-::gpk::err_t draw(SApplication & app) {
+err_t draw(SApplication & app) {
 	if(app.Framework.RootWindow.NoDraw)
 		rtrn 0;
 	if_fail_fe(app.Framework.RootWindow.BackBuffer->resize(app.Framework.RootWindow.Size.u2()));

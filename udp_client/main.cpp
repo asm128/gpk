@@ -4,7 +4,7 @@
 
 using namespace gpk;
 
-static ::gpk::err_t udpClientMain(::gpk::SRuntimeValues &) {
+sttc ::gpk::err_t udpClientMain(::gpk::SRuntimeValues &) {
 	::gpk::tcpipInitialize();
 	sockaddr_in			sa_server			= {AF_INET};
 	while(true) {
@@ -28,17 +28,17 @@ static ::gpk::err_t udpClientMain(::gpk::SRuntimeValues &) {
 		if_true_fe(INVALID_SOCKET == handle);
 		sockaddr_in			sa_client			= {AF_INET};
 		if_fail_fe(::bind(handle, (sockaddr *)&sa_client, sizeof(sockaddr_in)));
-		char				commandToSend		= '1';
+		sc_t				commandToSend		= '1';
 		int					sa_length			= sizeof(sa_server);
-		if_fail_fe(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_server, sa_length));
+		if_fail_fe(::sendto(handle, (cnst sc_t*)&commandToSend, (int)sizeof(sc_t), 0, (sockaddr *)&sa_server, sa_length));
 		::gpk::tcpipAddressFromSockaddr(sa_server, addrRemote);
 		info_printf("Sent connect request to server: %c to %u.%u.%u.%u:%u", commandToSend, GPK_IPV4_EXPAND(addrRemote));
 
-		char				connectAcknowledge	= 0;
+		sc_t				connectAcknowledge	= 0;
 		sa_server.sin_port	= 0;
 		while(true) {
 			connectAcknowledge	= 0;
-			if_true_fef(failed(::recvfrom(handle, (char*)&connectAcknowledge, 1, MSG_PEEK, (sockaddr *)&sa_server, &sa_length))
+			if_true_fef(failed(::recvfrom(handle, (sc_t*)&connectAcknowledge, 1, MSG_PEEK, (sockaddr *)&sa_server, &sa_length))
 				&& WSAGetLastError() != WSAEMSGSIZE
 				&& WSAGetLastError() != WSAEWOULDBLOCK
 				, "WSAGetLastError(): 0x%X(%i)"

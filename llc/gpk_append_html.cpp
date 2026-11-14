@@ -27,14 +27,14 @@ gpk::err_t	gpk::appendHtmlHead	(::gpk::string & output, ::gpk::vcst_t title, ::g
 			; 
 	});
 }
-gpk::err_t	gpk::appendHtmlPage	(::gpk::string & output, const ::gpk::FAppend & funcAppendHead, const ::gpk::FAppend & funcAppendBody) {
+gpk::err_t	gpk::appendHtmlPage	(::gpk::string & output, cnst ::gpk::FAppend & funcAppendHead, cnst ::gpk::FAppend & funcAppendBody) {
 	return ::gpk::appendXmlTag(output, "html", vcst_t{}, [&output, funcAppendHead, funcAppendBody]() {
 		return ::gpk::appendXmlTag(output, "head", vcst_t{}, [&output, funcAppendHead]() { return funcAppendHead(output); })
 			+  ::gpk::appendXmlTag(output, "body", vcst_t{}, [&output, funcAppendBody]() { return funcAppendBody(output); })
 			;
 	});
 }
-gpk::err_t	gpk::appendHtmlPage	(::gpk::string & output, ::gpk::vcst_t title, ::gpk::vcvcst_t filesCSS, ::gpk::vcvcst_t filesJS, const ::gpk::FAppend & funcAppendBody, ::gpk::vcst_t postScript) {
+gpk::err_t	gpk::appendHtmlPage	(::gpk::string & output, ::gpk::vcst_t title, ::gpk::vcvcst_t filesCSS, ::gpk::vcvcst_t filesJS, cnst ::gpk::FAppend & funcAppendBody, ::gpk::vcst_t postScript) {
 	return ::gpk::appendXmlTag(output, "html", vcst_t{}, [&output, &title, &filesCSS, &filesJS, &funcAppendBody, &postScript]() {
 		return ::gpk::appendHtmlHead(output, title, filesCSS, filesJS)
 			+  ::gpk::appendXmlTag(output, "body", vcst_t{}, [&output, funcAppendBody]() { return funcAppendBody(output); })
@@ -42,7 +42,7 @@ gpk::err_t	gpk::appendHtmlPage	(::gpk::string & output, ::gpk::vcst_t title, ::g
 			;
 	});
 }
-gpk::err_t	gpk::appendHtmlPage	(::gpk::string & output, const ::gpk::FAppend & funcAppendCSS, const ::gpk::FAppend & funcAppendJS, const ::gpk::FAppend & funcAppendBody) {
+gpk::err_t	gpk::appendHtmlPage	(::gpk::string & output, cnst ::gpk::FAppend & funcAppendCSS, cnst ::gpk::FAppend & funcAppendJS, cnst ::gpk::FAppend & funcAppendBody) {
 	return ::gpk::appendXmlTag(output, "html", vcst_t{}, [&output, funcAppendBody, funcAppendCSS, funcAppendJS]() {
 		return ::gpk::appendXmlTag(output, "head", vcst_t{}, [&output, funcAppendCSS, funcAppendJS]() {
 			return ::gpk::appendXmlTag(output, "style" , vcst_t{}, [&output, funcAppendCSS]() { return funcAppendCSS ? funcAppendCSS(output) : 0; })

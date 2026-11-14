@@ -7,11 +7,11 @@ GPK_USING_VIEW();
 
 #define xml_info_printf(...) // info_printf
 
-sttc bool xmlTextEquals(::gpk::vcst_t left, ::gpk::vcst_t right) {
+sttc b8_t xmlTextEquals(::gpk::vcst_t left, ::gpk::vcst_t right) {
 	rtrn left.size() == right.size() && (0 == left.size() || 0 == memcmp(left.begin(), right.begin(), left.size()));
 }
 
-sttc bool xmlStartsWith(::gpk::vcst_t xmlDoc, ::gpk::u2_t offset, ::gpk::vcst_t text) {
+sttc b8_t xmlStartsWith(::gpk::vcst_t xmlDoc, ::gpk::u2_t offset, ::gpk::vcst_t text) {
 	rtrn offset <= xmlDoc.size() && text.size() <= xmlDoc.size() - offset && 0 == memcmp(&xmlDoc[offset], text.begin(), text.size());
 }
 
@@ -38,7 +38,7 @@ sttc ::gpk::err_t xmlSkipSpaces(::gpk::vcst_t xmlDoc, ::gpk::u2_t & offset) {
 }
 
 sttc ::gpk::err_t xmlAttributesParse
-	(::gpk::SXMLReader & reader, ::gpk::vcst_t xmlDoc, ::gpk::u2_t iOwner, ::gpk::u2_t & offset, bool processingInstruction, bool & selfClosing) {
+	(::gpk::SXMLReader & reader, ::gpk::vcst_t xmlDoc, ::gpk::u2_t iOwner, ::gpk::u2_t & offset, b8_t processingInstruction, b8_t & selfClosing) {
 	selfClosing					= false;
 	while(offset < xmlDoc.size()) {
 		if_fail_fe(::xmlSkipSpaces(xmlDoc, offset));
@@ -214,7 +214,7 @@ gpk::err_t gpk::xmlParse(::gpk::SXMLReader & reader, ::gpk::vcst_t xmlDoc) {
 			if_fail_fe(iPI);
 			if_fail_fe(::xmlTokenAdd(reader, ::gpk::XML_TOKEN_PI_NAME, offset, iNameEnd - offset, iPI));
 			offset					= iNameEnd;
-			bool ignored				= false;
+			b8_t ignored				= false;
 			if_fail_fe(::xmlAttributesParse(reader, xmlDoc, iPI, offset, true, ignored));
 			reader.Token[iPI].Range.Count = offset - iBegin;
 			continue;
@@ -251,7 +251,7 @@ gpk::err_t gpk::xmlParse(::gpk::SXMLReader & reader, ::gpk::vcst_t xmlDoc) {
 		if_fail_fe(iOpen);
 		if_fail_fe(::xmlTokenAdd(reader, ::gpk::XML_TOKEN_TAG_NAME, offset, iNameEnd - offset, iOpen));
 		offset						= iNameEnd;
-		bool selfClosing				= false;
+		b8_t selfClosing				= false;
 		if_fail_fe(::xmlAttributesParse(reader, xmlDoc, iOpen, offset, false, selfClosing));
 		reader.Token[iOpen].Range.Count = offset - iBegin;
 		if(selfClosing) {

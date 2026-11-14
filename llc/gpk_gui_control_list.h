@@ -7,24 +7,24 @@
 
 nmsp gpk
 {
-	cid_t			guiCreateControlList		(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, const SControlPlacement & args, ALIGN textAlign, vcid out_ids);
-	stin	cid_t	guiCreateControlList		(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, const SControlPlacement & args, ALIGN textAlign, acid & out_ids)									{ 
-		const u2_t offset = out_ids.size();
+	cid_t			guiCreateControlList		(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, vcid out_ids);
+	stin	cid_t	guiCreateControlList		(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, acid & out_ids)									{ 
+		u2_c offset = out_ids.size();
 		if_fail_fe(out_ids.resize(offset + buttonText.size()));
 		return guiCreateControlList(gui, direction, buttonText, iParent, args, textAlign, vcid{out_ids.begin() + offset, buttonText.size()}); 
 	}
 	tplt<tpnm _tUIEnum>
-	stin	cid_t	guiCreateControlList		(SGUI & gui, DIRECTION direction, cid_t iParent, const SControlPlacement & args, ALIGN textAlign, acid & out_ids) {
+	stin	cid_t	guiCreateControlList		(SGUI & gui, DIRECTION direction, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, acid & out_ids) {
 		return guiCreateControlList(gui, direction, get_value_labels<_tUIEnum>(), iParent, args, textAlign, out_ids);
 	}
 
-	cid_t			guiCreateControlList		(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, const n2u1_t & buttonSize, const n2s1_t & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids);
+	cid_t			guiCreateControlList		(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids);
 	tplt<tpnm _tUIEnum>
-	stin	cid_t	guiCreateControlList		(SGUI & gui, cid_t iParent, const n2u1_t & buttonSize, const n2s1_t & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids) {
+	stin	cid_t	guiCreateControlList		(SGUI & gui, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids) {
 		return guiCreateControlList(gui, get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	}
-	stin	cid_t	guiCreateControlList		(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, const n2u1_t & buttonSize, const n2s1_t & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids)	{ 
-		const u2_t offsetId = out_ids.size();
+	stin	cid_t	guiCreateControlList		(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids)	{ 
+		u2_c offsetId = out_ids.size();
 		out_ids.resize(offsetId + buttonText.size()); 
 		return guiCreateControlList(gui, buttonText, iParent, buttonSize, offset, controlAlign, textAlign, vcid{out_ids.begin() + offsetId, buttonText.size()}); 
 	}
@@ -34,18 +34,18 @@ nmsp gpk
 		return guiCreateControlList(gui, get_value_labels<_tUIEnum>(), iParent, {buttonWidth, 20}, {0, yOffset}, controlAlign, textAlign, out_ids);
 	}
 	tplt<tpnm _tUIEnum>
-	stin	cid_t	guiCreateControlList		(SGUI & gui, cid_t iParent, u1_t buttonWidth, const n2s1_t & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids) {
+	stin	cid_t	guiCreateControlList		(SGUI & gui, cid_t iParent, u1_t buttonWidth, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids) {
 		return guiCreateControlList(gui, get_value_labels<_tUIEnum>(), iParent, {buttonWidth, 20}, offset, controlAlign, textAlign, out_ids);
 	}
 	tplt<tpnm _tUIEnum>
-	stin	cid_t	guiCreateControlList		(SGUI & gui, cid_t iParent, const n2u1_t & buttonSize, const n2s1_t & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids) {
+	stin	cid_t	guiCreateControlList		(SGUI & gui, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids) {
 		return guiCreateControlList(gui, get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	} 
 
 	cid_t			createScreenLayout			(SGUI & gui, cid_t parent = -1);
 
 	tplt<tpnm _tEnum>
-	err_t			setupControlListWithRoot	(SGUI & gui, acid & outIds, cid_t parent, const n2u1_t & buttonSize, ALIGN controlAlign, ALIGN textAlign = ALIGN_CENTER)		{
+	err_t			setupControlListWithRoot	(SGUI & gui, acid & outIds, cid_t parent, cnst n2u1_t & buttonSize, ALIGN controlAlign, ALIGN textAlign = ALIGN_CENTER)		{
 		cid_t				root						= outIds[outIds.push_back(createScreenLayout(gui, parent))];
 		view<vcst_c>		labels						= {get_value_labels<_tEnum>()};
 		if_fail_fe(labels.slice(labels, 1));
@@ -70,12 +70,12 @@ nmsp gpk
 		if(parent != CID_INVALID)
 			if_fail_fe(controlSetParent(gui, menu.IdControl, parent));
 		for(u2_t iControl = 0; iControl < stringifiable.size(); ++iControl) {
-			const auto itemView = ::gpk::str(stringifiable[iControl]);
+			cnst auto itemView = ::gpk::str(stringifiable[iControl]);
 			if_fail_fe(controlListPush(gui, menu, label(itemView.Storage)));
 		}
 		return 0;
 	}
-	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<const view<T>> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
+	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<cnst view<T>> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
 		if_fail_fe(controlListInitialize(gui, menu));
 		menu.Orientation	= orientation;
 		if(parent != CID_INVALID)
@@ -84,7 +84,7 @@ nmsp gpk
 			if_fail_fe(controlListPush(gui, menu, ::gpk::str(view<sc_c>((sc_c*)(strings[iControl].begin()), strings[iControl].size()))));
 		return 0;
 	}
-	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<const apod<T>> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
+	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<cnst apod<T>> strings, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
 		if_fail_fe(controlListInitialize(gui, menu));
 		menu.Orientation	= orientation;
 		if(parent != CID_INVALID)
@@ -111,7 +111,7 @@ nmsp gpk
 
 
 	err_t			paletteGridInitialize	(SGUI & gui, SPaletteGrid & palette);
-	err_t			paletteGridColorsSet	(SGUI & gui, SPaletteGrid & palette, const g8bgra & colors);
+	err_t			paletteGridColorsSet	(SGUI & gui, SPaletteGrid & palette, cnst g8bgra & colors);
 }
 
 #endif // GPK_GUI_CONTROL_LIST_H_23627

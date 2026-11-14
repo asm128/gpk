@@ -26,7 +26,7 @@ sttc cnst ::gpk::SWordIndices * indexWord(cnst ::gpk::aobj<::gpk::SWordIndices> 
 	rtrn {};
 }
 
-sttc bool indexWordHas(cnst ::gpk::aobj<::gpk::SWordIndices> & wordSet, ::gpk::vcst_t word, ::gpk::u2_t item) {
+sttc b8_t indexWordHas(cnst ::gpk::aobj<::gpk::SWordIndices> & wordSet, ::gpk::vcst_t word, ::gpk::u2_t item) {
 	cnst ::gpk::SWordIndices * indexed = ::indexWord(wordSet, word);
 	rtrn indexed && 0 <= ::gpk::find(item, {indexed->Indices.begin(), indexed->Indices.size()});
 }
@@ -60,8 +60,8 @@ sttc ::gpk::err_t testIndexBuildAndResolve(::gpk::ATestError & errors) {
 	if_fail_fe(::gpk::split(items[0], ' ', itemViews));
 	cnst ::gpk::err_t listResult = ::gpk::getWordList(itemWords, itemViews);
 	GPK_TEST_REQUIREF(errors, INDEX_CORE_TEST_RESULT_LIST_RESULT, ::gpk::failed(listResult), "Result:%i.", listResult);
-	bool foundAlpha = false;
-	bool foundOrchard = false;
+	b8_t foundAlpha = false;
+	b8_t foundOrchard = false;
 	for(::gpk::u2_t iWord = 0; iWord < itemWords.size(); ++iWord) {
 		foundAlpha |= itemWords[iWord] == "alpha";
 		foundOrchard |= itemWords[iWord] == "orchard";
@@ -72,7 +72,7 @@ sttc ::gpk::err_t testIndexBuildAndResolve(::gpk::ATestError & errors) {
 	::gpk::aobj<::gpk::SWordIndices> wordSet = {};
 	::gpk::SWordDictData wordData = {};
 	::gpk::u2_t projectedCount = 0;
-	bool rawCacheWasDirty = false;
+	b8_t rawCacheWasDirty = false;
 	auto project = [&projectedCount, &rawCacheWasDirty](::gpk::u2_t iItem, ::gpk::u2_t & itemIndex, ::gpk::aobj<::gpk::vcst_t> & rawWords) -> ::gpk::err_t {
 			rawCacheWasDirty |= 0 != rawWords.size();
 			++projectedCount;

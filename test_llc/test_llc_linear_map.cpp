@@ -230,7 +230,7 @@ sttc ::gpk::err_t testObjectLinearMap(::gpk::ATestError & errors) {
 	GPK_TEST_REQUIREF(errors, LINEAR_MAP_TEST_RESULT_POBJ_CREATE_INDEX, firstIndex != 0, "First index:%i, expected:0.", firstIndex);
 	GPK_TEST_CHECKF(errors, LINEAR_MAP_TEST_RESULT_POBJ_CREATE_SIZE, source.Names.size() != source.Elements.size(), "Name count:%u, element count:%u.", source.Names.size(), source.Elements.size());
 	source[firstIndex]->Value = 100;
-	GPK_TEST_CHECKF(errors, LINEAR_MAP_TEST_RESULT_POBJ_CREATE_VALUE, 0 == source[firstIndex], "%s", "Created object remained null after non-const access.");
+	GPK_TEST_CHECKF(errors, LINEAR_MAP_TEST_RESULT_POBJ_CREATE_VALUE, 0 == source[firstIndex], "%s", "Created object remained null after non-cnst access.");
 	GPK_TEST_CHECKF(errors, LINEAR_MAP_TEST_RESULT_POBJ_CREATE_VALUE, source[firstIndex]->Value != 100, "Created value:%u, expected:100.", source[firstIndex]->Value);
 
 	cnst ::gpk::err_t cloneIndex = source.Clone(firstIndex);

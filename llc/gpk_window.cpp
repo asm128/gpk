@@ -23,7 +23,7 @@ gpk::err_t 		gpk::fullScreenExit			(::gpk::SWindow & window) {
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 #elif defined(GPK_XCB)
-	const u2_t				values[]					= {window.WindowedWindowRect.Left, window.WindowedWindowRect.Top, window.Size.x, window.Size.y};
+	u2_c				values[]					= {window.WindowedWindowRect.Left, window.WindowedWindowRect.Top, window.Size.x, window.Size.y};
 	xcb_configure_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
 	xcb_flush(window.PlatformDetail.Connection);
 #endif // GPK_WINDOWS
@@ -47,7 +47,7 @@ gpk::err_t 		gpk::fullScreenEnter		(::gpk::SWindow & window) {
 	window.WindowedWindowRect.Bottom	= (u1_t)windowsRect.bottom	;
 	if_true_vef(-1, FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
 
-	const DWORD					style						= GetWindowLong(windowHandle, GWL_STYLE);
+	cnst DWORD					style						= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
 	SetWindowPos(windowHandle, HWND_TOP, monitor_info.rcMonitor.left, monitor_info.rcMonitor.top
 		, monitor_info.rcMonitor.right - monitor_info.rcMonitor.left
@@ -69,7 +69,7 @@ gpk::err_t 		gpk::fullScreenEnter		(::gpk::SWindow & window) {
 	free(geometry);
 	xcb_screen_t				* screen					= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
 	window.Size				= {screen->width_in_pixels, screen->height_in_pixels};
-	const u2_t				values[]					= {0, 0, window.Size.x, window.Size.y};
+	u2_c				values[]					= {0, 0, window.Size.x, window.Size.y};
 	xcb_configure_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
 	xcb_flush(window.PlatformDetail.Connection);
 #endif // GPK_WINDOWS
@@ -79,7 +79,7 @@ gpk::err_t 		gpk::fullScreenEnter		(::gpk::SWindow & window) {
 }
 
 #if defined(GPK_XCB)
-static	u0_t		xcbSystemKey			(xkb_keysym_t keySym) {
+sttc	u0_t		xcbSystemKey			(xkb_keysym_t keySym) {
 	if(keySym >= XKB_KEY_a && keySym <= XKB_KEY_z)
 		return (u0_t)('A' + keySym - XKB_KEY_a);
 	if(keySym >= XKB_KEY_A && keySym <= XKB_KEY_Z)
@@ -178,16 +178,16 @@ static	u0_t		xcbSystemKey			(xkb_keysym_t keySym) {
 	}
 }
 
-static	xkb_keysym_t	xcbBaseKeySym			(const ::gpk::SWindowPlatformDetail & detail, xkb_keycode_t keyCode, xkb_keysym_t currentKeySym) {
+sttc	xkb_keysym_t	xcbBaseKeySym			(cnst ::gpk::SWindowPlatformDetail & detail, xkb_keycode_t keyCode, xkb_keysym_t currentKeySym) {
 	xkb_layout_index_t	layout					= xkb_state_key_get_layout(detail.XKBState, keyCode);
 	if(XKB_LAYOUT_INVALID == layout)
 		layout = 0;
-	const xkb_keysym_t	* keySyms				= {};
+	cnst xkb_keysym_t	* keySyms				= {};
 	return 0 < xkb_keymap_key_get_syms_by_level(detail.XKBKeymap, keyCode, layout, 0, &keySyms) ? keySyms[0] : currentKeySym;
 }
 
-static	u2_t		xcbTextCodePoint		(const ::gpk::SWindowPlatformDetail & detail, xkb_keycode_t keyCode, xkb_keysym_t keySym) {
-	const u2_t		codePoint					= xkb_state_key_get_utf32(detail.XKBState, keyCode);
+sttc	u2_t		xcbTextCodePoint		(cnst ::gpk::SWindowPlatformDetail & detail, xkb_keycode_t keyCode, xkb_keysym_t keySym) {
+	u2_c		codePoint					= xkb_state_key_get_utf32(detail.XKBState, keyCode);
 	if(0 == detail.XKBComposeState)
 		return codePoint;
 
@@ -202,13 +202,13 @@ static	u2_t		xcbTextCodePoint		(const ::gpk::SWindowPlatformDetail & detail, xkb
 		xkb_compose_state_reset(detail.XKBComposeState);
 		return 0;
 	case XKB_COMPOSE_COMPOSED	: {
-		const u2_t	composed					= xkb_keysym_to_utf32(xkb_compose_state_get_one_sym(detail.XKBComposeState));
+		u2_c	composed					= xkb_keysym_to_utf32(xkb_compose_state_get_one_sym(detail.XKBComposeState));
 		xkb_compose_state_reset(detail.XKBComposeState);
 		return composed;
 	}	}
 }
 
-static	u2_t		xcbInputModifiers		(const ::gpk::SWindowPlatformDetail & detail, const ::gpk::SInputKeyboard & keyboard) {
+sttc	u2_t		xcbInputModifiers		(cnst ::gpk::SWindowPlatformDetail & detail, cnst ::gpk::SInputKeyboard & keyboard) {
 	u2_t				modifiers					= {};
 	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_SHIFT, XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Shift;
 	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_CAPS , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_CapsLock;
@@ -222,7 +222,7 @@ static	u2_t		xcbInputModifiers		(const ::gpk::SWindowPlatformDetail & detail, co
 #endif
 
 gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
-	bool						quit						= false;
+	b8_t						quit						= false;
 #if defined(GPK_WINDOWS)
 	::MSG						msg							= {};
 	int							counter						= 0;
@@ -241,19 +241,19 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 		case XCB_EXPOSE			: displayInstance.Repaint = true; if_fail_e(::gpk::eventEnqueueScreenRedraw(displayInstance.EventQueue, 0)); break;
 		case XCB_KEY_PRESS		:
 		case XCB_KEY_RELEASE	: {
-			const bool				pressed					= XCB_KEY_PRESS == (event->response_type & ~0x80);
-			const xcb_key_press_event_t & key					= *(xcb_key_press_event_t*)event;
+			b8_c				pressed					= XCB_KEY_PRESS == (event->response_type & ~0x80);
+			cnst xcb_key_press_event_t & key					= *(xcb_key_press_event_t*)event;
 			::gpk::SWindowPlatformDetail & detail				= displayInstance.PlatformDetail;
-			const xkb_keysym_t	keySym						= xkb_state_key_get_one_sym(detail.XKBState, key.detail);
-			const xkb_keysym_t	baseKeySym					= ::xcbBaseKeySym(detail, key.detail, keySym);
-			const u0_t			keyCode						= ::xcbSystemKey(baseKeySym);
-			const u2_t			codePoint					= pressed ? ::xcbTextCodePoint(detail, key.detail, keySym) : 0;
+			cnst xkb_keysym_t	keySym						= xkb_state_key_get_one_sym(detail.XKBState, key.detail);
+			cnst xkb_keysym_t	baseKeySym					= ::xcbBaseKeySym(detail, key.detail, keySym);
+			cnst u0_t			keyCode						= ::xcbSystemKey(baseKeySym);
+			u2_c			codePoint					= pressed ? ::xcbTextCodePoint(detail, key.detail, keySym) : 0;
 
 			xkb_state_update_key(detail.XKBState, key.detail, pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 			if_fail_e(::gpk::inputKeyboardStateSet(input, keyCode, pressed, detail.XKBDeviceId, key.time * .001f));
 
-			const ::gpk::SInputKeyEvent keyEvent = {keyCode, key.detail, detail.XKBDeviceId, keySym, ::xcbInputModifiers(detail, input.KeyboardCurrent), key.time};
-			const bool			systemKey					= ::gpk::SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[::gpk::SYSTEM_KEY_Menu];
+			cnst ::gpk::SInputKeyEvent keyEvent = {keyCode, key.detail, detail.XKBDeviceId, keySym, ::xcbInputModifiers(detail, input.KeyboardCurrent), key.time};
+			b8_c			systemKey					= ::gpk::SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[::gpk::SYSTEM_KEY_Menu];
 			if_fail_e(pressed
 				? systemKey ? ::gpk::eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyEvent) : ::gpk::eventEnqueueKeyboardDown(displayInstance.EventQueue, keyEvent)
 				: systemKey ? ::gpk::eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyEvent) : ::gpk::eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyEvent)
@@ -264,7 +264,7 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			break;
 		}
 		case XCB_BUTTON_PRESS	: {
-			const xcb_button_press_event_t & button = *(xcb_button_press_event_t*)event;
+			cnst xcb_button_press_event_t & button = *(xcb_button_press_event_t*)event;
 			displayInstance.Repaint = true;
 			if(button.detail == 4 || button.detail == 5) {
 				input.MouseCurrent.Deltas.z = button.detail == 4 ? 1 : -1;
@@ -277,7 +277,7 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			break;
 		}
 		case XCB_BUTTON_RELEASE	: {
-			const xcb_button_release_event_t & button = *(xcb_button_release_event_t*)event;
+			cnst xcb_button_release_event_t & button = *(xcb_button_release_event_t*)event;
 			displayInstance.Repaint = true;
 			if(button.detail && button.detail <= input.MouseCurrent.ButtonState.size() && button.detail != 4 && button.detail != 5) {
 				input.MouseCurrent.ButtonState[button.detail - 1] = 0;
@@ -286,9 +286,9 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			break;
 		}
 		case XCB_MOTION_NOTIFY	: {
-			const xcb_motion_notify_event_t & motion = *(xcb_motion_notify_event_t*)event;
-			const s2_t x = motion.same_screen ? motion.event_x : motion.root_x;
-			const s2_t y = motion.same_screen ? motion.event_y : motion.root_y;
+			cnst xcb_motion_notify_event_t & motion = *(xcb_motion_notify_event_t*)event;
+			cnst s2_t x = motion.same_screen ? motion.event_x : motion.root_x;
+			cnst s2_t y = motion.same_screen ? motion.event_y : motion.root_y;
 			input.MouseCurrent.Position.x = ::gpk::clamped(x, 0, (s2_t)displayInstance.Size.x);
 			input.MouseCurrent.Position.y = ::gpk::clamped(y, 0, (s2_t)displayInstance.Size.y);
 			input.MouseCurrent.Deltas.x = input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
@@ -298,8 +298,8 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			break;
 		}
 		case XCB_CONFIGURE_NOTIFY: {
-			const xcb_configure_notify_event_t & configure = *(xcb_configure_notify_event_t*)event;
-			const ::gpk::n2u1_t size = {configure.width, configure.height};
+			cnst xcb_configure_notify_event_t & configure = *(xcb_configure_notify_event_t*)event;
+			cnst ::gpk::n2u1_t size = {configure.width, configure.height};
 			if(size != displayInstance.Size) {
 				displayInstance.PreviousSize = displayInstance.Size;
 				displayInstance.Size = size;
@@ -309,7 +309,7 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			break;
 		}
 		case XCB_CLIENT_MESSAGE	: {
-			const xcb_client_message_event_t & message = *(xcb_client_message_event_t*)event;
+			cnst xcb_client_message_event_t & message = *(xcb_client_message_event_t*)event;
 			if(message.data.data32[0] == displayInstance.PlatformDetail.WMDelete) {
 				displayInstance.Closed = quit = true;
 				if_fail_e(::gpk::eventEnqueueScreenClose(displayInstance.EventQueue));
@@ -332,14 +332,14 @@ gpk::err_t 		gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
 	displayInstance.EventQueue.clear();
 	displayInstance.Resized	= false;
 	displayInstance.Repaint	= false;
-	bool						quit					= false;
+	b8_t						quit					= false;
 #if defined(GPK_WINDOWS)
 	::MSG						msg						= {};
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE))
 		if(1 == windowUpdateTick(displayInstance))
 			quit					= true;
 #elif defined(GPK_XCB)
-	const ::gpk::err_t updateResult = ::gpk::windowUpdateTick(displayInstance);
+	cnst ::gpk::err_t updateResult = ::gpk::windowUpdateTick(displayInstance);
 	if_true_ve(updateResult, ::gpk::failed(updateResult));
 	quit = 1 == updateResult;
 #endif // GPK_WINDOWS
@@ -347,8 +347,8 @@ gpk::err_t 		gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
 }
 
 #if defined(GPK_WINDOWS)
-gpk::err_t 		drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
-	const u2_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
+gpk::err_t 		drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, cnst ::gpk::g8bgra& colorArray)				{
+	u2_c				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
 	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1();
 	::gpk::n2u1_c				prevSize				= {(u1_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (u1_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
@@ -380,9 +380,9 @@ gpk::err_t 		drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenD
 		if_true_vef(-1, 0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
 		offscreenDetail.PixelBits							= {pixelBits, colorArray.area()};
 	}
-	const u2_t lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
-	const u2_t lastLine		= metricsSource.y - 1;
-	const ::gpk::bgra									* dest										= colorArray.begin();
+	u2_c lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
+	u2_c lastLine		= metricsSource.y - 1;
+	cnst ::gpk::bgra									* dest										= colorArray.begin();
 	for(u2_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
 		memcpy(&offscreenDetail.PixelBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
 
@@ -400,7 +400,7 @@ gpk::err_t 		drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenD
 }
 #endif // GPK_WINDOWS
 
-gpk::err_t 		gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::g8bgra& targetToPresent)		{
+gpk::err_t 		gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, cnst ::gpk::g8bgra& targetToPresent)		{
 	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
 	::HWND					windowHandle								= displayInstance.PlatformDetail.WindowHandle;
@@ -413,7 +413,7 @@ gpk::err_t 		gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, cons
 	if(false == displayInstance.Repaint)
 		return 0;
 	xcb_screen_t				* screen							= xcb_setup_roots_iterator(xcb_get_setup(displayInstance.PlatformDetail.Connection)).data;
-	const ::gpk::n2<u2_t>	& metrics						= targetToPresent.metrics();
+	cnst ::gpk::n2<u2_t>	& metrics						= targetToPresent.metrics();
 	xcb_image_t				* image							= xcb_image_create_native
 		( displayInstance.PlatformDetail.Connection
 		, metrics.x

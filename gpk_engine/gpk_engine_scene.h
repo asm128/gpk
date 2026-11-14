@@ -38,7 +38,7 @@ nmsp gpk
 
 
 	struct SPSIn {
-		const SRenderNodeConstants & NodeConstants;
+		cnst SRenderNodeConstants & NodeConstants;
 		n3f2_t			WeightedPosition	;
 		n3f2_t			WeightedNormal		;
 		n2f2_t			WeightedUV			;
@@ -50,8 +50,8 @@ nmsp gpk
 #pragma pack(pop)
 
 	tydf err_t (TFuncPixelShader)
-		( const SEngineSceneConstants	& constants
-		, const SPSIn					& inPS
+		( cnst SEngineSceneConstants	& constants
+		, cnst SPSIn					& inPS
 		, bgra							& outputPixel
 		);
 
@@ -78,7 +78,7 @@ nmsp gpk
 		SRenderMaterial		Material;
 		au2_t				Textures;
 
-		err_t 				Save			(au0_t & output) const { 
+		err_t 				Save			(au0_t & output) cnst { 
 			if_fail_fe(savePOD(output, Material));
 			if_fail_fe(saveView(output, Textures));
 			return 0;
@@ -102,7 +102,7 @@ nmsp gpk
 		SShaderManager			Shaders		= {};
 		SRasterFontManager		Fonts		= {};
 
-		err_t 					Save		(au0_t & output)		const	{
+		err_t 					Save		(au0_t & output)		cnst	{
 			if_fail_fe(Buffers	.Save(output));
 			if_fail_fe(Surfaces	.Save(output));
 			if_fail_fe(Meshes		.Save(output));
@@ -127,7 +127,7 @@ nmsp gpk
 		SRenderNodeManager		RenderNodes				= {};
 		SEngineRenderCache		RenderCache				= {};
 
-		err_t 				CreateRenderNode		(const SGeometryBuffers & geometry, vcst_t name, bool createSkin);
+		err_t 				CreateRenderNode		(cnst SGeometryBuffers & geometry, vcst_t name, b8_t createSkin);
 
 		err_t 				Load					(vcu0_t & input) {
 			if_fail_fe(Graphics		->Load(input));
@@ -136,7 +136,7 @@ nmsp gpk
 			return 0;
 		}
 
-		err_t 				Save					(au0_t & output)	const	{
+		err_t 				Save					(au0_t & output)	cnst	{
 			if(Graphics) {
 				if_fail_fe(Graphics->Save(output));
 			}
@@ -148,13 +148,13 @@ nmsp gpk
 			return 0;
 		}
 
-		err_t 				Clone					(u2_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
-			const u2_t						iNewNode				= RenderNodes.Clone(iRenderNode);
-			const u2_t						idShaderSource			= RenderNodes[iRenderNode].Shader;
+		err_t 				Clone					(u2_t iRenderNode, b8_t cloneSkin, b8_t cloneSurfaces, b8_t cloneShaders) {
+			u2_c						iNewNode				= RenderNodes.Clone(iRenderNode);
+			u2_c						idShaderSource			= RenderNodes[iRenderNode].Shader;
 			if(cloneShaders && idShaderSource < Graphics->Shaders.size())
 				if_fail_fe(RenderNodes[iNewNode].Shader = Graphics->Shaders.Clone(idShaderSource));
 
-			const u2_t						idSkinSource			= RenderNodes[iNewNode].Skin;
+			u2_c						idSkinSource			= RenderNodes[iNewNode].Skin;
 			if(cloneSkin && idSkinSource < Graphics->Skins.size()) {
 				u2_t							idSkin;
 				if_fail_fe(idSkin = Graphics->Skins.Clone(idSkinSource));
@@ -177,11 +177,11 @@ nmsp gpk
 		( g8bgra				backBufferColors
 		, gu2_t				backBufferDepth
 		, SEngineRenderCache	& renderCache
-		, const SEngineScene	& scene
-		, const n3f2_t		& cameraPosition
-		, const n3f2_t		& cameraTarget
-		, const n3f2_t		& cameraUp
-		, const minmaxf2_t	& nearFar
+		, cnst SEngineScene	& scene
+		, cnst n3f2_t		& cameraPosition
+		, cnst n3f2_t		& cameraTarget
+		, cnst n3f2_t		& cameraUp
+		, cnst minmaxf2_t	& nearFar
 		);
 
 } // nmsp

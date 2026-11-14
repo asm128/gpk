@@ -164,15 +164,15 @@ nmsp gpk
 } // nmsp
 
 #if !defined(GPK_ANDROID) && !defined(GPK_ESP32) && !defined(GPK_ARDUINO)
-#	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }
-#	define GPK_DEFAULT_OPERATOR_C(rightOperand, statement)	cxpr	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }
-#	define GPK_DEFAULT_OPERATOR_IC(rightOperand, statement)	inxp	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }
-#	define GPK_DEFAULT_OPERATOR_D(rightOperand, statement)	bool			oper==(cnst rightOperand & other) csnx { rtrn statement; }
+#	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	b8_t	oper==(cnst rightOperand & other) csnx { rtrn statement; }
+#	define GPK_DEFAULT_OPERATOR_C(rightOperand, statement)	cxpr	b8_t	oper==(cnst rightOperand & other) csnx { rtrn statement; }
+#	define GPK_DEFAULT_OPERATOR_IC(rightOperand, statement)	inxp	b8_t	oper==(cnst rightOperand & other) csnx { rtrn statement; }
+#	define GPK_DEFAULT_OPERATOR_D(rightOperand, statement)	b8_t			oper==(cnst rightOperand & other) csnx { rtrn statement; }
 #else
-#	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inln	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
-#	define GPK_DEFAULT_OPERATOR_C(rightOperand, statement)	cxpr	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	cxpr	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
-#	define GPK_DEFAULT_OPERATOR_IC(rightOperand, statement)	inxp	bool	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inxp	bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
-#	define GPK_DEFAULT_OPERATOR_D(rightOperand, statement)	bool			oper==(cnst rightOperand & other) csnx { rtrn statement; }			bool	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	b8_t	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inln	b8_t	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_C(rightOperand, statement)	cxpr	b8_t	oper==(cnst rightOperand & other) csnx { rtrn statement; }	cxpr	b8_t	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_IC(rightOperand, statement)	inxp	b8_t	oper==(cnst rightOperand & other) csnx { rtrn statement; }	inxp	b8_t	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_D(rightOperand, statement)	b8_t			oper==(cnst rightOperand & other) csnx { rtrn statement; }			b8_t	oper!=(cnst rightOperand & other) csnx { rtrn !oper==(other); }	// I had to add this because Clang coming with vstr_t doesn't support C++20
 #endif // GPK_ANDROID
 
 #define GPK_DEFAULT_OPERATOR GPK_DEFAULT_OPERATOR_IC
@@ -264,7 +264,7 @@ nmsp gpk
 	tdcs		err_t	err_c;
 
 	tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
-	tplTnsix	bool	succeeded	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
+	tplTnsix	b8_t	succeeded	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
 } // namespace
 
 #ifndef if_fail

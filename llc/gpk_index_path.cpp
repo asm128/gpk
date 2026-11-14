@@ -51,7 +51,7 @@ sttc gpk::err_t	pathWordViews				(gpk::aobj<gpk::vcst_t> & upper, cnst gpk::SPat
 	rtrn 0;
 }
 
-sttc bool	pathContentsText				(gpk::vcst_t contents) {
+sttc b8_t	pathContentsText				(gpk::vcst_t contents) {
 	for(u2_t iByte = 0; iByte < contents.size(); ++iByte) {
 		cnst u0_t		value							= (u0_t)contents[iByte];
 		if(0 == value || (value < ' ' && '\t' != value && '\n' != value && '\r' != value))

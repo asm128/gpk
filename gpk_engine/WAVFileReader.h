@@ -16,15 +16,15 @@
 nmsp DirectX
 {
 	usng nmsp gpk;
-	HRESULT					LoadWAVAudioInMemory	(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) nxpt;
-	HRESULT					LoadWAVAudioFromFile	(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) nxpt;
+	HRESULT					LoadWAVAudioInMemory	(::gpk::vcu0_t wavData, _Outptr_ cnst WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) nxpt;
+	HRESULT					LoadWAVAudioFromFile	(::gpk::vcst_t szFileName, ::gpk::au0_t & wavData, cnst WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioView) nxpt;
 							
 	struct WAVData {		
-		const WAVEFORMATEX		* WaveFormat			= 0;
+		cnst WAVEFORMATEX		* WaveFormat			= 0;
 		::gpk::vcu0_t				AudioView				= {};
 		u2_t				LoopStart				= 0;
 		u2_t				LoopLength				= 0;
-		const u2_t			* Seek					= 0;	// Note: XMA Seek data is Big-Endian
+		u2_c			* Seek					= 0;	// Note: XMA Seek data is Big-Endian
 		u2_t				SeekCount				= 0;
 	};						
 							

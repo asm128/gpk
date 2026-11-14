@@ -226,7 +226,7 @@ nmsp gpk
 			DeviceResources	= {};
 			return 0;
 		}
-		gpk::err_t 		Initialize				(HWND hWnd, const ::gpk::pobj<::gpk::SEngineGraphics> & engineGraphics)	{
+		gpk::err_t 		Initialize				(HWND hWnd, cnst ::gpk::pobj<::gpk::SEngineGraphics> & engineGraphics)	{
 			EngineGraphics			= engineGraphics;
 
 			if_fail_fe(DeviceResources->Initialize());
@@ -236,7 +236,7 @@ nmsp gpk
 			if_fail_fe(Text .Initialize(DeviceResources));
 			return 0;
 		}
-		gpk::err_t 		Initialize				(::gpk::SWindow & window, const ::gpk::pobj<::gpk::SEngineGraphics> & engineGraphics)	{ return Initialize(window.PlatformDetail.WindowHandle, engineGraphics); }
+		gpk::err_t 		Initialize				(::gpk::SWindow & window, cnst ::gpk::pobj<::gpk::SEngineGraphics> & engineGraphics)	{ return Initialize(window.PlatformDetail.WindowHandle, engineGraphics); }
 
 		// Notifies renderers that device resources need to be released.
 		void					ReleaseDeviceResources	()	{
@@ -246,13 +246,13 @@ nmsp gpk
 		}
 		// Notifies renderers that device resources may now be recreated.
 
-		gpk::err_t 		CreateDeviceDependentEngineResources(ID3D11Device3 * d3dDevice,  const ::gpk::SEngineGraphics & engineGraphics)	{
+		gpk::err_t 		CreateDeviceDependentEngineResources(ID3D11Device3 * d3dDevice,  cnst ::gpk::SEngineGraphics & engineGraphics)	{
 			if_fail_fe(gpk::d3dCreateBuffersFromEngineMeshes		(d3dDevice, engineGraphics.Meshes	, engineGraphics.Buffers, Scene.IndexBuffer, Scene.VertexBuffer));
 			if_fail_fe(gpk::d3dCreateTexturesFromEngineSurfaces		(d3dDevice, engineGraphics.Surfaces	, Scene.ShaderResourceView));
 			if_fail_fe(gpk::d3dCreatePixelShadersFromEngineShaders	(d3dDevice, engineGraphics.Shaders	, Scene.PixelShader));
 			return 0;
 		}
-		gpk::err_t 		CreateDeviceResources	(const ::gpk::SEngineGraphics & engineGraphics)	{
+		gpk::err_t 		CreateDeviceResources	(cnst ::gpk::SEngineGraphics & engineGraphics)	{
 			ID3D11Device3				* pd3dDevice			= DeviceResources->GetD3DDevice();
 			if_fail_fe(Scene		.CreateDeviceResources(pd3dDevice));
 			if_fail_fe(Text		.CreateDeviceResources(DeviceResources->GetD2DDeviceContext()));
@@ -274,8 +274,8 @@ nmsp gpk
 		}
 	};
 
-	gpk::err_t 		d3dDrawEngineScene		(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u1_t & targetMetrics, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar);
-	gpk::err_t 		d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar);
+	gpk::err_t 		d3dDrawEngineScene		(::gpk::Sample3DSceneRenderer & d3dScene, cnst ::gpk::SEngineScene & engineScene, cnst ::gpk::n2u1_t & targetMetrics, cnst ::gpk::n3f2_t & lightPos, cnst ::gpk::n3f2_t & cameraPosition, cnst gpk::n3f2_t & cameraTarget, cnst gpk::minmaxf2_t & nearFar);
+	gpk::err_t 		d3dAppDraw				(::gpk::SD3DApplication & d3dApp, cnst ::gpk::SEngineScene & engineScene, cnst ::gpk::rgbaf & clearColor, cnst ::gpk::n3f2_t & lightPos, cnst ::gpk::n3f2_t & cameraPosition, cnst gpk::n3f2_t & cameraTarget, cnst gpk::minmaxf2_t & nearFar);
 };
 
 #endif // GPK_ENGINE_D3D_APP_H_28903749823

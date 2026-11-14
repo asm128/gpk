@@ -2,9 +2,9 @@
 #include "gpk_stdstring.h"
 
 gpk::err_t	gpk::camelCase		(vcst_t input, asc_t & camelCased) {
-	bool						capsNext			= true;
+	b8_t						capsNext			= true;
 	for(::gpk::u2_t i = 0; i < input.size(); ++i) {
-		char						current				= input[i];
+		sc_t						current				= input[i];
 		if(current == '_' || current == '-')
 			capsNext	= true;
 		else {

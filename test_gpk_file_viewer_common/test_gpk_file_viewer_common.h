@@ -8,32 +8,35 @@
 #ifndef TEST_GPK_FILE_VIEWER_COMMON_H_23627
 #define TEST_GPK_FILE_VIEWER_COMMON_H_23627
 
-GDEFINE_ENUM_TYPE (FILE_VIEWER_LAYOUT, ::gpk::u0_t);
+usns gpk;
+
+GDEFINE_ENUM_TYPE (FILE_VIEWER_LAYOUT, u0_t);
 GDEFINE_ENUM_VALUE(FILE_VIEWER_LAYOUT, FLOATING, 0);
 GDEFINE_ENUM_VALUE(FILE_VIEWER_LAYOUT, SPLIT   , 1);
 
+stct SPathList {
+	SControlList		Files				= {};
+	SPathTree			PathContents		= {};
+};
+stct SFileEditor {
+	SControlList		Lines				= {};
+	string				FileText			= {};
+	apod<vcst_t>		FileLines			= {};
+	n2u2_t				Cursor				= {};
+	cid_t				IdCursor			= -1;
+	cid_t				IdSave				= -1;
+	u2_t				FileLineWidthMax	= 0;
+};
 stct SFileViewer {
-	::gpk::pobj<::gpk::SDialog>	Dialog		= {};
-	::gpk::astcid<2>			Viewports	= {};
-	::gpk::SControlList			Files		= {};
-	::gpk::SControlList			Lines		= {};
-	::gpk::SPathTree			PathContents= {};
-	::gpk::SVirtualKeyboard		VirtualKeyboard = {};
-	::gpk::cid_t				IdSave		= -1;
-	::gpk::cid_t				IdKeyboard	= -1;
-	::gpk::cid_t				IdCursor	= -1;
-	::gpk::u2_t					CursorLine	= (::gpk::u2_t)-1;
-	::gpk::u2_t					CursorColumn= 0;
-	::gpk::vcst_t				FilePath	= {};
-	::gpk::string				FileText	= {};
-	::gpk::apod<::gpk::vcst_t>	FileLines	= {};
-	::gpk::u2_t					FileLineWidthMax = 0;
-
-	SFileViewer(::gpk::SWindow & window, ::gpk::pobj<::gpk::SGUI> & gui) : Window(window), GUIHandle(gui), GUI(*gui) {}
+	pobj<SDialog>		Dialog				= {};
+	astcid<2>			Viewports			= {};
+	SVirtualKeyboard	VirtualKeyboard		= {};
+	SFileEditor			Editor				=  {};
+	SPathList 			Directory			=  {};
 };
 
-::gpk::err_t	fileViewerSetup		(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, ::gpk::vcst_t rootPath = {});
-::gpk::err_t	fileViewerUpdate	(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout);
-::gpk::err_t	fileViewerDraw		(SFileViewer & viewer, ::gpk::g8bgra target);
+err_t	fileViewerSetup		(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vcst_t rootPath = {});
+err_t	fileViewerUpdate	(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vpobj<SEventSystem> frameEvents);
+err_t	fileViewerDraw		(SFileViewer & viewer, g8bgra target);
 
 #endif // TEST_GPK_FILE_VIEWER_COMMON_H_23627

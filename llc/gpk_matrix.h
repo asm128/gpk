@@ -25,7 +25,7 @@ nmsp gpk
 	};
 
 	tplt<u0_t _width, tpnm TMatrix>
-	cxpr bool	matrixEqual		(cnst TMatrix & left, cnst TMatrix & right) nxpt {
+	cxpr b8_t	matrixEqual		(cnst TMatrix & left, cnst TMatrix & right) nxpt {
 		for(u0_t row = 0; row < _width; ++row) {
 			for(u0_t column = 0; column < _width; ++column) {
 				if(left(row, column) != right(row, column)) {

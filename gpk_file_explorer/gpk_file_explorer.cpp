@@ -22,7 +22,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gfe::SApplication, "GPK File Explorer");
 	return 0;
 }
 
-::gpk::err_t update(::gfe::SApplication & app, bool exitSignal) {
+::gpk::err_t update(::gfe::SApplication & app, gpk::b8_t exitSignal) {
 	if_true_vi(::gpk::APPLICATION_STATE_EXIT, exitSignal);
 	{
 		::gpk::lock_guard			lock					(app.LockRender);

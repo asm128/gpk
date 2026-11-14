@@ -21,7 +21,7 @@ nmsp gpk
 	tydf		aobj<STestError>	ATestError;
 
 	tplt<tpnm TEnum>
-	err_t		testResultRecord	(ATestError & errors, TEnum value, bool returnedError) {
+	err_t		testResultRecord	(ATestError & errors, TEnum value, b8_t returnedError) {
 		vcst_c			enumName			= get_enum_namev(value);
 		for(u2_t iError = 0; iError < errors.size(); ++iError)
 			if(errors[iError].Value == (s3_t)value && errors[iError].EnumName == enumName) {
@@ -61,8 +61,8 @@ nmsp gpk
 
 
 	tplt<tpnm TCall>
-	bool		testThrows			(TCall call) {
-		bool			didThrow			= false;
+	b8_t		testThrows			(TCall call) {
+		b8_t			didThrow			= false;
 		try {
 			call();
 		}
@@ -91,9 +91,9 @@ nmsp gpk
 
 	// Bounded previews keep generated binary cases readable; always disclose omitted bytes.
 	stin void testTraceBytes(vcst_t label, vcu0_t bytes) {
-		stxp char digits[] = "0123456789ABCDEF";
-		char text[64 * 3 + 1] = {};
-		cnst u2_t count = bytes.size() < 64 ? bytes.size() : 64;
+		stxp sc_t digits[] = "0123456789ABCDEF";
+		sc_t text[64 * 3 + 1] = {};
+		u2_c count = bytes.size() < 64 ? bytes.size() : 64;
 		for(u2_t iByte = 0; iByte < count; ++iByte) {
 			text[iByte * 3 + 0] = digits[bytes[iByte] >> 4];
 			text[iByte * 3 + 1] = digits[bytes[iByte] & 15];
@@ -104,13 +104,13 @@ nmsp gpk
 	struct STestLogBuffer {
 		mutex				Mutex				= {};
 		string				Text				= {};
-		bool				Failed				= {};
+		b8_t				Failed				= {};
 	};
 	struct STestRunnerState {
 		u3_t				SeedOverride		= {};
 		b8_t				SeedOverrideEnabled = {};
 
-		bool				Console				= {};
+		b8_t				Console				= {};
 
 		u3_t				testSeed			(u3_t fallback)		{ rtrn SeedOverrideEnabled ? SeedOverride : fallback; }
 	};
@@ -126,7 +126,7 @@ nmsp gpk
 
 							~STestLogCapture	()							{
 		}
-							STestLogCapture		(STestRunnerState & runner, STestLogBuffer & buffer, bool console)
+							STestLogCapture		(STestRunnerState & runner, STestLogBuffer & buffer, b8_t console)
 			: Runner			(runner)
 			, PreviousBuffer	(&buffer)									{
 			if(0 == PreviousBuffer) {
@@ -148,7 +148,7 @@ nmsp gpk
 	struct STestRunReport {
 		string					Folder			= {};
 		aobj<STestSuiteReport>	Suites			= {};
-		bool					SuccessDetails	= {};
+		b8_t					SuccessDetails	= {};
 	};
 	tplt<tpnm TFunction>
 	stct STestSuite {
@@ -237,7 +237,7 @@ nmsp gpk
 				aobj<vcst_t>		selectedSuites;
 				if_fail_fe(testRunPrepare(runner, runtimeValues, run, selectedSuites));
 				for(cnst vcst_t & selectedSuite : selectedSuites) {
-					cnst b8_t			found				= ((suites.Name == selectedSuite) || ...);
+					b8_c			found				= ((suites.Name == selectedSuite) || ...);
 					if_zero_fef(found, "Unknown test suite:'%.*s'.", GPK_VIEW_ARGS(selectedSuite));
 				}
 				ATestError			results;

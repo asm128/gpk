@@ -11,7 +11,7 @@ nmsp gpk
 		apobj<SSocketConnection>	Clients;
 		mutex						Mutex;
 		SIPv4End				Address						= {};
-		bool								Listen						= false;
+		b8_t								Listen						= false;
 		s2_t								Timeout						= 3000000;	// Kill clients timeout
 	};
 

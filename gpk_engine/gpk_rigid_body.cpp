@@ -19,7 +19,7 @@ gpk::err_t 		gpk::SRigidBodyIntegrator::Load	(vcu0_t & input) {
 	return 0;											
 }
 
-gpk::err_t 		gpk::SRigidBodyIntegrator::Save	(au0_t & output) const { 
+gpk::err_t 		gpk::SRigidBodyIntegrator::Save	(au0_t & output) cnst { 
 	if_fail_fe(gpk::saveView(output, Frames			));
 	if_fail_fe(gpk::saveView(output, Flags			));
 	if_fail_fe(gpk::saveView(output, Forces			));
@@ -36,7 +36,7 @@ gpk::err_t 		gpk::SRigidBodyIntegrator::Save	(au0_t & output) const {
 	return 0; 
 }
 
-void			gpk::transformInertiaTensor	(m3a3f2_t & iitWorld, const m3a3f2_t & iitBody, const m4f2_t & rotmat)		{
+void			gpk::transformInertiaTensor	(m3a3f2_t & iitWorld, cnst m3a3f2_t & iitBody, cnst m4f2_t & rotmat)		{
 	m3a3f2_t					rotation						= {};
 	for(u0_t row = 0; row < 3; ++row)
 		for(u0_t column = 0; column < 3; ++column)
@@ -51,7 +51,7 @@ void					gpk::updateTransform	(SBodyCenter & bodyTransform, m4f2_t & transformLo
 	transformLocal.SetTranslation(bodyTransform.Position, false);
 }
 
-gpk::err_t 		gpk::integrateForces	(f3_t duration, SBodyFrame & bodyFrame, SBodyForces & bodyForce, const SBodyMass & bodyMass) {
+gpk::err_t 		gpk::integrateForces	(f3_t duration, SBodyFrame & bodyFrame, SBodyForces & bodyForce, cnst SBodyMass & bodyMass) {
 	// -- Calculate linear acceleration from force inputs.
 	bodyFrame.LastFrameAcceleration	= bodyForce.Acceleration;
 	bodyFrame.LastFrameAcceleration.AddScaled(bodyFrame.AccumulatedForce, bodyMass.InverseMass);
@@ -69,7 +69,7 @@ gpk::err_t 		gpk::integrateForces	(f3_t duration, SBodyFrame & bodyFrame, SBodyF
 	return 0;
 }
 
-gpk::err_t 		gpk::integratePosition	(f3_t duration, f3_t durationHalfSquared, SBodyFlags & bodyFlags, SBodyCenter & bodyTransform, const SBodyForces & bodyForces) {
+gpk::err_t 		gpk::integratePosition	(f3_t duration, f3_t durationHalfSquared, SBodyFlags & bodyFlags, SBodyCenter & bodyTransform, cnst SBodyForces & bodyForces) {
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, duration);
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, durationHalfSquared);
 	bodyTransform.Orientation	.AddScaled(bodyForces.Rotation, duration);	// Update angular position.

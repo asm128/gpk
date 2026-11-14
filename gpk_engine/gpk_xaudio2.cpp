@@ -31,12 +31,12 @@ stxp	X3DAUDIO_CONE					Listener_DirectionalCone = { X3DAUDIO_PI*5.0f/6.0f, X3DAU
 
 // Specify LFE level distance curve such that it rolls off much sooner than all non-LFE channels, making use of the subwoofer more dramatic.
 stxp	X3DAUDIO_DISTANCE_CURVE_POINT	Emitter_LFE_CurvePoints[3]		= { 0.0f, 1.0f, 0.25f, 0.0f, 1.0f, 0.0f };
-static	const X3DAUDIO_DISTANCE_CURVE	Emitter_LFE_Curve				= { (X3DAUDIO_DISTANCE_CURVE_POINT*)&Emitter_LFE_CurvePoints[0], 3 };
+sttc	cnst X3DAUDIO_DISTANCE_CURVE	Emitter_LFE_Curve				= { (X3DAUDIO_DISTANCE_CURVE_POINT*)&Emitter_LFE_CurvePoints[0], 3 };
 
 // Specify reverb send level distance curve such that reverb send increases slightly with distance before rolling off to silence.
 // With the direct channels being increasingly attenuated with distance, this has the effect of increasing the reverb-to-direct sound ratio, reinforcing the perception of distance.
 stxp	X3DAUDIO_DISTANCE_CURVE_POINT	Emitter_Reverb_CurvePoints[3]	= { 0.0f, 0.5f, 0.75f, 1.0f, 1.0f, 0.0f };
-static	const X3DAUDIO_DISTANCE_CURVE	Emitter_Reverb_Curve			= { (X3DAUDIO_DISTANCE_CURVE_POINT*)&Emitter_Reverb_CurvePoints[0], 3 };
+sttc	cnst X3DAUDIO_DISTANCE_CURVE	Emitter_Reverb_Curve			= { (X3DAUDIO_DISTANCE_CURVE_POINT*)&Emitter_Reverb_CurvePoints[0], 3 };
 
 // Must match order of g_PRESET_NAMES
 stxp	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
@@ -250,7 +250,7 @@ gpk::err_t 		gpk::AUDIO_STATE::PrepareAudio(vcst_t wavname) {
 	safe_destroySourceVoice(SourceVoice);
 
 	// Read in the wave file
-	const WAVEFORMATEX		* pwfx				= 0;
+	cnst WAVEFORMATEX		* pwfx				= 0;
 	vcu0_t					audioView			= {};
 	if_fail_fe(DirectX::LoadWAVAudioFromFile(wavname, WaveData, &pwfx, audioView));
 
@@ -260,7 +260,7 @@ gpk::err_t 		gpk::AUDIO_STATE::PrepareAudio(vcst_t wavname) {
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};
 	sendDescriptors[0]		= {XAUDIO2_SEND_USEFILTER, pMasterVoice}; // LPF direct-path
 	sendDescriptors[1]		= {XAUDIO2_SEND_USEFILTER, pSubmixVoice};// LPF reverb-path -- omit for better performance at the cost of less realistic occlusion
-	const XAUDIO2_VOICE_SENDS	sendList			= {2, sendDescriptors};
+	cnst XAUDIO2_VOICE_SENDS	sendList			= {2, sendDescriptors};
 
 	// create the source voice
 	gpk_hrcall(XAudio2->CreateSourceVoice(&SourceVoice, pwfx, 0, 2.0f, nullptr, &sendList));
@@ -366,7 +366,7 @@ gpk::err_t 		gpk::AUDIO_STATE::SetReverb(int nReverb) {
 	return S_OK;
 }
 
-gpk::err_t 		gpk::AUDIO_STATE::PauseAudio(bool resume) { 
+gpk::err_t 		gpk::AUDIO_STATE::PauseAudio(b8_t resume) { 
 	if(resume && false == Playing) 
 		XAudio2->StartEngine();
 	else if(Playing && false == resume) 
@@ -388,7 +388,7 @@ gpk::err_t 		gpk::AUDIO_STATE::CleanupAudio	()					{
 	return 0;
 }
 
-static	gpk::err_t enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<::gpk::AudioDevice> & list) {
+sttc	gpk::err_t enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<::gpk::AudioDevice> & list) {
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
 	UNREFERENCED_PARAMETER( pXaudio2 );
 
@@ -556,7 +556,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::vcst_t & wavname, IXAudio2*	X
 	mbstowcs_s(&count, wstrFilePath, strFilePath, 4095);
 
 	// Read in the wave file
-	const WAVEFORMATEX			* pwfx				= 0;
+	cnst WAVEFORMATEX			* pwfx				= 0;
 	::gpk::vcu0_t				audioView			= {};
 	WaveData.create();
 	gpk_hrcall(DirectX::LoadWAVAudioFromFile(strFilePath, *WaveData, &pwfx, audioView));
@@ -565,7 +565,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::vcst_t & wavname, IXAudio2*	X
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};
 	sendDescriptors[0]		= {XAUDIO2_SEND_USEFILTER, pMasterVoice}; // LPF direct-path
 	sendDescriptors[1]		= {XAUDIO2_SEND_USEFILTER, pSubmixVoice};// LPF reverb-path -- omit for better performance at the cost of less realistic occlusion
-	const XAUDIO2_VOICE_SENDS	sendList			= { 2, sendDescriptors };
+	cnst XAUDIO2_VOICE_SENDS	sendList			= { 2, sendDescriptors };
 
 	// create the source voice
 	gpk_hrcall(XAudio2->CreateSourceVoice(&SourceVoice, pwfx, 0, 2.0f, nullptr, &sendList));

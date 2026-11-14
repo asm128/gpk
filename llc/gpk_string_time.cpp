@@ -25,7 +25,7 @@ gpk::err_t	gpk::timeStringFormat	(vcst_t format, view<cnst SStripLiteralToken> t
 #else
 	if_null_fe(::localtime_r(&time, &local));
 #endif
-	cnst u2_t values[] = {
+	u2_c values[] = {
 		(u2_t)((local.tm_year + 1900) % 100), (u2_t)(local.tm_mon + 1), (u2_t)local.tm_mday,
 		(u2_t)local.tm_hour, (u2_t)local.tm_min, (u2_t)local.tm_sec, (u2_t)(milliseconds / 10)
 	};

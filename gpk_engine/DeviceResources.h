@@ -18,14 +18,14 @@ nmsp DX
 	usng nmsp gpk;
 #if defined(_DEBUG)
 	// Check for SDK Layer support.
-	stin bool	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice({}, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, {}, 0, D3D11_SDK_VERSION, {}, {}, {})); }
+	stin b8_t	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice({}, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, {}, 0, D3D11_SDK_VERSION, {}, {}, {})); }
 #endif
 	// Converts a length in device-independent pixels (DIPs) to a length in physical pixels. Round to nearest integer.
 	stin f2_t	ConvertDipsToPixels			(f2_t dips, f2_t dpi)		{ stxp	f2_t dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
 
 	nmsp DisplayMetrics
 	{
-		stxp	bool	SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
+		stxp	b8_t	SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
 		stxp	f2_t	DpiThreshold				= 192.0f;	// 200% of standard desktop display.
 		stxp	f2_t	WidthThreshold				= 1920.f;	// 1080p width.
 		stxp	f2_t	HeightThreshold				= 1080.f;	// 1080p height.
@@ -103,7 +103,7 @@ nmsp DX
 
 			// The width and height of the swap chain must be based on the window's natively-oriented width and height. If the window is not in the native orientation, the dimensions must be reversed.
 			DXGI_MODE_ROTATION							displayRotation				= ComputeDisplayRotation();
-			bool										swapDimensions				= displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270;
+			b8_t										swapDimensions				= displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270;
 			m_d3dRenderTargetSize.x					= swapDimensions ? m_outputSize.y : m_outputSize.x;
 			m_d3dRenderTargetSize.y					= swapDimensions ? m_outputSize.x : m_outputSize.y;
 
@@ -259,31 +259,31 @@ nmsp DX
 			m_outputSize.y									= std::max(1.0f, DX::ConvertDipsToPixels(m_logicalSize.y, m_effectiveDpi));
 		}
 
-		n2f2_t							GetOutputSize				()	const									{ return m_outputSize; }	// The size of the render target, in pixels.
-		n2f2_t							GetLogicalSize				()	const									{ return m_logicalSize; }	// The size of the render target, in dips.
-		f2_t									GetDpi						()	const									{ return m_effectiveDpi; }
+		n2f2_t							GetOutputSize				()	cnst									{ return m_outputSize; }	// The size of the render target, in pixels.
+		n2f2_t							GetLogicalSize				()	cnst									{ return m_logicalSize; }	// The size of the render target, in dips.
+		f2_t									GetDpi						()	cnst									{ return m_effectiveDpi; }
 
 		// D3D Accessors.
-		ID3D11Device3*							GetD3DDevice				()	const									{ return m_d3dDevice.get(); }
-		ID3D11DeviceContext3*					GetD3DDeviceContext			()	const									{ return m_d3dContext.get(); }
-		IDXGISwapChain3*						GetSwapChain				()	const									{ return m_swapChain.get(); }
-		D3D_FEATURE_LEVEL						GetDeviceFeatureLevel		()	const									{ return m_d3dFeatureLevel; }
-		ID3D11RenderTargetView1*				GetBackBufferRenderTargetView()	const									{ return m_d3dRenderTargetView.get(); }
-		ID3D11DepthStencilView*					GetDepthStencilView			()	const									{ return m_d3dDepthStencilView.get(); }
-		D3D11_VIEWPORT							GetScreenViewport			()	const									{ return m_screenViewport; }
-		DirectX::XMFLOAT4X4						GetOrientationTransform3D	()	const									{ return m_orientationTransform3D; }
+		ID3D11Device3*							GetD3DDevice				()	cnst									{ return m_d3dDevice.get(); }
+		ID3D11DeviceContext3*					GetD3DDeviceContext			()	cnst									{ return m_d3dContext.get(); }
+		IDXGISwapChain3*						GetSwapChain				()	cnst									{ return m_swapChain.get(); }
+		D3D_FEATURE_LEVEL						GetDeviceFeatureLevel		()	cnst									{ return m_d3dFeatureLevel; }
+		ID3D11RenderTargetView1*				GetBackBufferRenderTargetView()	cnst									{ return m_d3dRenderTargetView.get(); }
+		ID3D11DepthStencilView*					GetDepthStencilView			()	cnst									{ return m_d3dDepthStencilView.get(); }
+		D3D11_VIEWPORT							GetScreenViewport			()	cnst									{ return m_screenViewport; }
+		DirectX::XMFLOAT4X4						GetOrientationTransform3D	()	cnst									{ return m_orientationTransform3D; }
 
 		// D2D Accessors.
-		ID2D1Factory3*							GetD2DFactory				()	const									{ return m_d2dFactory.get(); }
-		ID2D1Device2*							GetD2DDevice				()	const									{ return m_d2dDevice.get(); }
-		ID2D1DeviceContext2*					GetD2DDeviceContext			()	const									{ return m_d2dContext.get(); }
-		ID2D1Bitmap1*							GetD2DTargetBitmap			()	const									{ return m_d2dTargetBitmap.get(); }
-		IDWriteFactory3*						GetDWriteFactory			()	const									{ return m_dwriteFactory.get(); }
-		IWICImagingFactory2*					GetWicImagingFactory		()	const									{ return m_wicFactory.get(); }
-		D2D1::Matrix3x2F						GetOrientationTransform2D	()	const									{ return m_orientationTransform2D; }
+		ID2D1Factory3*							GetD2DFactory				()	cnst									{ return m_d2dFactory.get(); }
+		ID2D1Device2*							GetD2DDevice				()	cnst									{ return m_d2dDevice.get(); }
+		ID2D1DeviceContext2*					GetD2DDeviceContext			()	cnst									{ return m_d2dContext.get(); }
+		ID2D1Bitmap1*							GetD2DTargetBitmap			()	cnst									{ return m_d2dTargetBitmap.get(); }
+		IDWriteFactory3*						GetDWriteFactory			()	cnst									{ return m_dwriteFactory.get(); }
+		IWICImagingFactory2*					GetWicImagingFactory		()	cnst									{ return m_wicFactory.get(); }
+		D2D1::Matrix3x2F						GetOrientationTransform2D	()	cnst									{ return m_orientationTransform2D; }
 
 		void									RegisterDeviceNotify		(DX::IDeviceNotify * deviceNotify)			{ m_deviceNotify = deviceNotify; }
-		err_t							SetLogicalSize				(const n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			if_fail_fe(CreateSizeDependentResources()); } return 0; } 
+		err_t							SetLogicalSize				(cnst n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			if_fail_fe(CreateSizeDependentResources()); } return 0; } 
 		err_t							SetCurrentOrientation		(GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	if_fail_fe(CreateSizeDependentResources()); } return 0; } 
 		err_t							SetDpi						(f2_t dpi)									{
 			if (dpi != m_dpi) {

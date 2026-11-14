@@ -12,7 +12,7 @@ usns gpk;
 		{
 			::gpk::STimer						timer;
 			double								elapsedTime					= 0;
-			const double						timeOut						= 10.0;
+			cnst double						timeOut						= 10.0;
 			while(-1 != gpk_sync_compare_exchange(app.ThreadClients, -1, 0)) {		// Wait until the serial thread is closed.
 				if(elapsedTime > timeOut) {
 					error_printf("%s", "Thread taking too long to finish. Terminating...");
@@ -53,7 +53,7 @@ usns gpk;
 	return 0;
 }
 
-::gpk::err_t					update						(::dry::SApplication & app, bool requestedExit) {
+::gpk::err_t					update						(::dry::SApplication & app, b8_t requestedExit) {
 	if_true_vif(::gpk::APPLICATION_STATE_EXIT, requestedExit, "%s", "Exit requested by system.");
 	if_true_vif(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
 #if defined(GPK_LINUX)
@@ -68,7 +68,7 @@ usns gpk;
 	}
 #endif
 
-	const bool							running						= ::dry::updateApp(app) ? false : true;
+	b8_c							running						= ::dry::updateApp(app) ? false : true;
 	::gpk::sleep(10);
 	return running ? 0 : 1;
 }

@@ -137,10 +137,10 @@ nmsp gpk
 	gpk::err_t geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter);
 
 	gpk::err_t geometryBuildSphere		(::gpk::SGeometryTriangles & geometry, u2_t stacks, u2_t slices, f2_t radius, ::gpk::n3f2_c & gridCenter);
-	gpk::err_t geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f2_t & scale, const ::gpk::n3f2_t & translation);
+	gpk::err_t geometryBuildCube		(::gpk::SGeometryQuads & geometry, cnst ::gpk::n3f2_t & scale, cnst ::gpk::n3f2_t & translation);
 
 	gpk::err_t geometryBuildTileListFromImage	(::gpk::gc8bgra image, ::gpk::apod<STile> & out_tiles, u2_t imagePitch = 0);
-	gpk::err_t geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> image, ::gpk::n2f2_t gridCenter, const ::gpk::n3f2_t & scale);
+	gpk::err_t geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<cnst ::gpk::STile> image, ::gpk::n2f2_t gridCenter, cnst ::gpk::n3f2_t & scale);
 
 #endif
 

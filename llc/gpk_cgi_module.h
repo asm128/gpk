@@ -13,8 +13,8 @@ GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCreate	, void*	* customApplication, ::gpk:
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleDelete	, void*	* customApplication										);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleSetup		, void	* customApplication										);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCleanup	, void	* customApplication										);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void	* customApplication, ::gpk::string & output	);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void	* customApplication, bool requestedExit					);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void	* customApplication, ::gpk::string & output				);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void	* customApplication, ::gpk::b8_t requestedExit			);
 
 nmsp gpk
 {

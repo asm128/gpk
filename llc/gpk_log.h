@@ -26,16 +26,16 @@
 
 nmsp gpk
 {
-	tydf	err_t	(*log_print_t)		(const char * text);
-	err_t			log_print			(const char * text);
-	tydf	err_t	(*log_write_t)		(const char * text, u2_t textLen);
-	err_t			log_write			(const char * text, u2_t textLen);
+	tydf	err_t	(*log_print_t)		(cnst sc_t * text);
+	err_t			log_print			(cnst sc_t * text);
+	tydf	err_t	(*log_write_t)		(cnst sc_t * text, u2_t textLen);
+	err_t			log_write			(cnst sc_t * text, u2_t textLen);
 
 #ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-	stin	err_t	log_print_P			(const char * text)	{ rtrn log_print(text); }
-	stin	err_t	log_print_F			(const char * text)	{ rtrn log_print(text); }
+	stin	err_t	log_print_P			(cnst sc_t * text)	{ rtrn log_print(text); }
+	stin	err_t	log_print_F			(cnst sc_t * text)	{ rtrn log_print(text); }
 #else
-	err_t			log_print_P			(const __FlashStringHelper * text);
+	err_t			log_print_P			(cnst __FlashStringHelper * text);
 #	define log_print_F(text) ::gpk::log_print_P(F(text))
 #endif
 	err_t			setupDefaultLogCallbacks();
@@ -52,7 +52,7 @@ nmsp gpk
 #elif defined(GPK_LINUX) || defined(GPK_ANDROID)
 	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ __builtin_trap(); }
 #else
-	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ ::gpk::sleep(500); char * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (char)i; } 
+	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ ::gpk::sleep(500); sc_t * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (sc_t)i; } 
 #endif
 	err_t			debug_print_prefix				(s0_t severity, sc_c * path, u2_t line, sc_c * function);
 #ifndef GPK_ARDUINO

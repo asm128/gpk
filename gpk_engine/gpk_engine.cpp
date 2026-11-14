@@ -6,13 +6,13 @@
 
 gpk::err_t			gpk::updateEntityTransforms			
 	( u2_t								iEntity
-	, const SEntity			& entity
-	, const SVirtualEntityManager	& managedEntities	
+	, cnst SEntity			& entity
+	, cnst SVirtualEntityManager	& managedEntities	
 	, SRigidBodyIntegrator			& integrator		
 	, SRenderNodeManager				& renderNodes
 	)
 {
-	const pau2_t			& children				= managedEntities.Children[iEntity];
+	cnst pau2_t			& children				= managedEntities.Children[iEntity];
 	if(-1 != entity.RenderNode) {
 		SRenderNodeConstants	& transforms			= renderNodes.Transforms[entity.RenderNode];
 		m4f2_t				& worldTransform		= transforms.Model;
@@ -23,7 +23,7 @@ gpk::err_t			gpk::updateEntityTransforms
 		}
 
 		if(-1 != entity.Parent) {
-			const SEntity	& entityParent			= managedEntities.Entities[entity.Parent];
+			cnst SEntity	& entityParent			= managedEntities.Entities[entity.Parent];
 			if(-1 != entityParent.RenderNode)
 				worldTransform			= worldTransform * renderNodes.Transforms[entityParent.RenderNode].Model;
 			else if(-1 != entityParent.RigidBody) {
@@ -38,7 +38,7 @@ gpk::err_t			gpk::updateEntityTransforms
 		m4f2_t							& worldTransform				= integrator.TransformsLocal[entity.RigidBody];
 		integrator.GetTransform(entity.RigidBody, worldTransform);
 		if(-1 != entity.Parent) {
-			const SEntity				& entityParent					= managedEntities.Entities[entity.Parent];
+			cnst SEntity				& entityParent					= managedEntities.Entities[entity.Parent];
 			if(-1 != entityParent.RenderNode)
 				worldTransform						= worldTransform * renderNodes.Transforms[entityParent.RenderNode].Model;
 			else if(-1 != entityParent.RigidBody) {
@@ -48,7 +48,7 @@ gpk::err_t			gpk::updateEntityTransforms
 	}
 	if(children) {
 		for(u2_t iChild = 0; iChild < children->size(); ++iChild) {
-			const u2_t								iChildEntity					= (*children)[iChild];
+			u2_c								iChildEntity					= (*children)[iChild];
 			updateEntityTransforms(iChildEntity, managedEntities.Entities[iChildEntity], managedEntities, integrator, renderNodes);
 		}
 	}
@@ -96,15 +96,15 @@ gpk::err_t			gpk::SEngine::CreateCamera() {
 	return iEntity;
 }
 
-gpk::err_t			gpk::SEngine::CreateBox			(const SParamsBox & params, vcst_t entityName)	{
+gpk::err_t			gpk::SEngine::CreateBox			(cnst SParamsBox & params, vcst_t entityName)	{
 	return CreateEntityFromGeometry(entityName, params.HalfSizes, true, params, ParamsBox
 		, [params](SGeometryBuffers & geometry) { 
 			return geometryBuildBox(geometry, params); 
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateCylinder		(const SParamsCylinderWall & params, vcst_t entityName)	{
-	const f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
+gpk::err_t			gpk::SEngine::CreateCylinder		(cnst SParamsCylinderWall & params, vcst_t entityName)	{
+	cnst f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, params.Height * .5f, radius}, true, params, ParamsCylinder
 		, [params](SGeometryBuffers & geometry) { 
 			if_fail_fe(gpk::geometryBuildCylinder(geometry, params));
@@ -112,14 +112,14 @@ gpk::err_t			gpk::SEngine::CreateCylinder		(const SParamsCylinderWall & params, 
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateSphere		(const SParamsSphere & params, vcst_t entityName)	{ 
+gpk::err_t			gpk::SEngine::CreateSphere		(cnst SParamsSphere & params, vcst_t entityName)	{ 
 	return CreateEntityFromGeometry(entityName, n3f2_t{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
 		, [params](SGeometryBuffers & geometry) { 
 			return geometryBuildSphere(geometry, params); 
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateGrid		(const SParamsGrid & params, vcst_t entityName)	{ 
+gpk::err_t			gpk::SEngine::CreateGrid		(cnst SParamsGrid & params, vcst_t entityName)	{ 
 	return CreateEntityFromGeometry(entityName, n3f2_t{params.Size.x * .5f, 0, params.Size.y * .5f}, true, params, ParamsGrid
 		, [params](SGeometryBuffers & geometry) {
 			if_fail_fe(gpk::geometryBuildGrid(geometry, params));
@@ -127,8 +127,8 @@ gpk::err_t			gpk::SEngine::CreateGrid		(const SParamsGrid & params, vcst_t entit
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateHelixHalf	(const SParamsHelix & params, vcst_t entityName)	{ 
-	const f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
+gpk::err_t			gpk::SEngine::CreateHelixHalf	(cnst SParamsHelix & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](SGeometryBuffers & geometry) {
 			if_fail_fe(gpk::geometryBuildHelixHalf(geometry, params));
@@ -136,8 +136,8 @@ gpk::err_t			gpk::SEngine::CreateHelixHalf	(const SParamsHelix & params, vcst_t 
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateHelix		(const SParamsHelix & params, vcst_t entityName)	{ 
-	const f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
+gpk::err_t			gpk::SEngine::CreateHelix		(cnst SParamsHelix & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](SGeometryBuffers & geometry) {
 			if_fail_fe(gpk::geometryBuildHelix(geometry, params));
@@ -145,8 +145,8 @@ gpk::err_t			gpk::SEngine::CreateHelix		(const SParamsHelix & params, vcst_t ent
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateFigure0		(const SParamsHelix & params, vcst_t entityName)	{ 
-	const f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
+gpk::err_t			gpk::SEngine::CreateFigure0		(cnst SParamsHelix & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](SGeometryBuffers & geometry) {
 			if_fail_fe(gpk::geometryBuildHelix(geometry, params));
@@ -154,8 +154,8 @@ gpk::err_t			gpk::SEngine::CreateFigure0		(const SParamsHelix & params, vcst_t e
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateCylinderWall(const SParamsCylinderWall & params, vcst_t entityName)	{ 
-	const f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
+gpk::err_t			gpk::SEngine::CreateCylinderWall(cnst SParamsCylinderWall & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, params.Height * .5f, radius}, true, params, ParamsCylinderWall
 		, [params](SGeometryBuffers & geometry) { 
 			if_fail_fe(gpk::geometryBuildCylinderWall(geometry, params));
@@ -163,8 +163,8 @@ gpk::err_t			gpk::SEngine::CreateCylinderWall(const SParamsCylinderWall & params
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateCircleSide		(const SParamsCircle & params, vcst_t entityName)	{ 
-	const f2_t					radius							= params.Radius;
+gpk::err_t			gpk::SEngine::CreateCircleSide		(cnst SParamsCircle & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= params.Radius;
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, 0, radius}, true, params, ParamsCircleSide
 		, [params](SGeometryBuffers & geometry) { 
 			if_fail_fe(gpk::geometryBuildCircleSide(geometry, params));
@@ -172,8 +172,8 @@ gpk::err_t			gpk::SEngine::CreateCircleSide		(const SParamsCircle & params, vcst
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateDisc		(const SParamsDisc & params, vcst_t entityName)	{ 
-	const f2_t					radius							= params.Radius;
+gpk::err_t			gpk::SEngine::CreateDisc		(cnst SParamsDisc & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= params.Radius;
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, 0, radius}, true, params, ParamsDisc
 		, [params](SGeometryBuffers & geometry) { 
 			if_fail_fe(gpk::geometryBuildDisc(geometry, params));
@@ -181,16 +181,16 @@ gpk::err_t			gpk::SEngine::CreateDisc		(const SParamsDisc & params, vcst_t entit
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateRingSide	(const SParamsRingSide & params, vcst_t entityName)	{ 
-	const f2_t					radius							= params.Radius.Max;
+gpk::err_t			gpk::SEngine::CreateRingSide	(cnst SParamsRingSide & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= params.Radius.Max;
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, radius, radius}, true, params, ParamsRingSide
 		, [params](SGeometryBuffers & geometry) { 
 			if_fail_fe(gpk::geometryBuildRingSide(geometry, params));
 			return 0;
 		});
 }
-gpk::err_t			gpk::SEngine::CreateRingFlat	(const SParamsRingSide & params, vcst_t entityName)	{ 
-	const f2_t					radius							= params.Radius.Max;
+gpk::err_t			gpk::SEngine::CreateRingFlat	(cnst SParamsRingSide & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= params.Radius.Max;
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, radius, radius}, true, params, ParamsRingFlat
 		, [params](SGeometryBuffers & geometry) { 
 			if_fail_fe(gpk::geometryBuildRingFlat(geometry, params));
@@ -198,8 +198,8 @@ gpk::err_t			gpk::SEngine::CreateRingFlat	(const SParamsRingSide & params, vcst_
 		});
 }
 
-gpk::err_t			gpk::SEngine::CreateTube		(const SParamsTube & params, vcst_t entityName)	{ 
-	const f2_t					radius							= max(params.RadiusYMax.Max, params.RadiusYMin.Max);
+gpk::err_t			gpk::SEngine::CreateTube		(cnst SParamsTube & params, vcst_t entityName)	{ 
+	cnst f2_t					radius							= max(params.RadiusYMax.Max, params.RadiusYMin.Max);
 	return CreateEntityFromGeometry(entityName, n3f2_t{radius, radius, radius}, true, params, ParamsTube
 		, [params](SGeometryBuffers & geometry) { 
 			if_fail_fe(gpk::geometryBuildRing(geometry, params));

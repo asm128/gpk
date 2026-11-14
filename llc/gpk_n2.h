@@ -168,7 +168,7 @@ nmsp gpk
 	tydf	n2<f2_t>	n2f2_t;	tdcs	n2f2_t	n2f2_c;
 	tydf	n2<f3_t>	n2f3_t;	tdcs	n2f3_t	n2f3_c;
 
-	tplT	stxp	bool	in_range	(cnst ::gpk::n2<T> & valueToTest, cnst ::gpk::n2<T> & rangeStart, cnst ::gpk::n2<T> & rangeStop)	nxpt	{
+	tplT	stxp	b8_t	in_range	(cnst ::gpk::n2<T> & valueToTest, cnst ::gpk::n2<T> & rangeStart, cnst ::gpk::n2<T> & rangeStop)	nxpt	{
 		return	::gpk::in_range(valueToTest.x, rangeStart.x, rangeStop.x)
 			&&	::gpk::in_range(valueToTest.y, rangeStart.y, rangeStop.y)
 			;

@@ -10,7 +10,7 @@
 
 nmsp gpk
 {
-	gpk::err_t 		virtualKeyboardSetup	(SGUI & gui, SVirtualKeyboard & vk, u0_t rowWidth, const vcu1_t & keys);
+	gpk::err_t 		virtualKeyboardSetup	(SGUI & gui, SVirtualKeyboard & vk, u0_t rowWidth, cnst vcu1_t & keys);
 	gpk::err_t 		virtualKeyboardSetup437	(SGUI & gui, SVirtualKeyboard & vk);
 
 	struct SInputBox {
@@ -19,18 +19,18 @@ nmsp gpk
 		SVirtualKeyboard		VirtualKeyboard		= {};
 		string					Text				= {};
 		u2_t					MaxLength			= 16;
-		bool					Editing				= false;
+		b8_t					Editing				= false;
 
 
 		inln	gpk::err_t SetText				(SGUI & gui, vcst_t text) { return controlTextSet(gui, IdText, vcst_t{Text = text}); }
-		gpk::err_t 		Edit				(SGUI & gui, bool editing) {
+		gpk::err_t 		Edit				(SGUI & gui, b8_t editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
 			return one_if(Editing);
 		}
 #ifndef GPK_ATMEL		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		gpk::err_t 		Update				(SGUI & gui, const SVirtualKeyboard & virtualKeyboard, view<const pobj<SEventSystem>> frameEvents, vcid processableControls) { 
+		gpk::err_t 		Update				(SGUI & gui, cnst SVirtualKeyboard & virtualKeyboard, view<cnst pobj<SEventSystem>> frameEvents, vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
@@ -60,7 +60,7 @@ nmsp gpk
 				}
 			}
 			;
-			bool						enterKeyPressed		= false;
+			b8_t						enterKeyPressed		= false;
 			sysEvents.for_each([this, &gui, &enterKeyPressed](auto ev) mutable { 
 				switch(ev->Type) { 
 				case SYSTEM_EVENT_Text: 

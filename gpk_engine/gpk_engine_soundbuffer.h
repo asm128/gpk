@@ -23,7 +23,7 @@ nmsp gpk
 		SSoundBufferDescription						Desc			= {};
 		::gpk::au0_t									Data			= {};
 
-		gpk::err_t 							Save			(::gpk::apod<u0_t> & output)	const	{ 
+		gpk::err_t 							Save			(::gpk::apod<u0_t> & output)	cnst	{ 
 			if_fail_fe(gpk::savePOD	(output, Desc));
 			if_fail_fe(gpk::saveView(output, Data));
 			return 0; 

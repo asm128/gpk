@@ -120,12 +120,12 @@ nmsp gpk
 			return 0;
 		}
 
-		err_t								Update				(const pobj<SInput> & inputState, vpobj<SEventSystem> frameEvents) { 
+		err_t								Update				(cnst pobj<SInput> & inputState, vpobj<SEventSystem> frameEvents) { 
 			if(!Dialog.Input) {
 				Dialog.Input								= inputState;
 			}
 			SGUI										 & gui				= *Dialog.GUI;
-			static const vcst_t							connectingString	= {"Connecting..."};
+			sttc cnst vcst_t							connectingString	= {"Connecting..."};
 			switch(Client.Connection.State) {
 			case CONNECTION_STATE_IDLE			: break;
 			case CONNECTION_STATE_DISCONNECTED	: 
@@ -141,7 +141,7 @@ nmsp gpk
 
 			acid				controlsToProcess			= {};
 			if_fail_fe(gpk::guiGetProcessableControls(gui, controlsToProcess));
-			if(const s2_t result = InputBox.Update(gui, InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
+			if(cnst s2_t result = InputBox.Update(gui, InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
 				if(result == INT_MAX) { 
 		vcst_t								trimmed			= vcst_t{InputBox.Text};
 					trim(trimmed);
@@ -152,9 +152,9 @@ nmsp gpk
 			}
 			else {
 				if_fail_fe(gpk::guiProcessControls(gui, controlsToProcess, [&](s2_t iControl) {
-					const SControlPlacement			& control		= gui.Controls.Placement[iControl];
+					cnst SControlPlacement			& control		= gui.Controls.Placement[iControl];
 					SControlPlacement				& inputBox		= gui.Controls.Placement[InputBox.IdRoot];
-					bool							edit			= false;
+					b8_t							edit			= false;
 					switch(iControl - (Dialog.Root + 1)) {
 					default								: 
 					case UI_LOBBY_USER_GUID		: 

@@ -24,13 +24,13 @@ sttc gpk::err_t				dryerProgramListLoad				(::dry::SDryer & dryer, ::gpk::vcst_t
 			if_fail_ef(programCount = ::gpk::jsonArraySize(*rootArray), "Invalid root json type: '%s'", ::gpk::get_value_namep(rootArray->Token->Type))
 			for(gpk::s2_t iProgram = 0; iProgram < programCount; ++iProgram) {
 				::dry::SDryerProgram					loadedProgram						= {};
-				const s2_t							jsonIndexProgram					= ::gpk::jsonArrayValueGet(*rootArray, iProgram);
-				const s2_t							jsonIndexProgramName				= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "name"				);
-				const s2_t							jsonIndexProgramPressure			= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "pressure"			);
-				const s2_t							jsonIndexProgramTemperature			= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "temperature"		);
-				const s2_t							jsonIndexProgramPreHeatingTime		= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "pre_heating_time"	);
-				const s2_t							jsonIndexProgramSubcycleDuration	= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "subcycle_duration"	);
-				const s2_t							jsonIndexProgramSubcycles			= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "subcycles"			);
+				cnst s2_t							jsonIndexProgram					= ::gpk::jsonArrayValueGet(*rootArray, iProgram);
+				cnst s2_t							jsonIndexProgramName				= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "name"				);
+				cnst s2_t							jsonIndexProgramPressure			= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "pressure"			);
+				cnst s2_t							jsonIndexProgramTemperature			= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "temperature"		);
+				cnst s2_t							jsonIndexProgramPreHeatingTime		= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "pre_heating_time"	);
+				cnst s2_t							jsonIndexProgramSubcycleDuration	= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "subcycle_duration"	);
+				cnst s2_t							jsonIndexProgramSubcycles			= ::gpk::jsonObjectValueGet(dryer.ProgramFile.Reader, jsonIndexProgram, "subcycles"			);
 				if_fail_cef(jsonIndexProgramName				, "Failed to retrieve program key: '%s'. Skipping program load.", "name"				);
 				if_fail_cef(jsonIndexProgramPressure			, "Failed to retrieve program key: '%s'. Skipping program load.", "pressure"			);
 				if_fail_cef(jsonIndexProgramTemperature		, "Failed to retrieve program key: '%s'. Skipping program load.", "temperature"			);
@@ -77,10 +77,10 @@ gpk::err_t dry::dryerSetup				(::dry::SDryer & dryer) {
 	return 0;
 }
 
-static	constexpr	s3_t			minutesToMillisec			(s3_t minutes)							{ return 60 * 1000 * minutes; }
-static	constexpr	s3_t			totalCycleTimeInMillisec	(const ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.PreHeatingTime + dryerProgram.SubcycleDuration); }
-static	constexpr	s3_t			preheatingTimeInMillisec	(const ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.PreHeatingTime); }
-static	constexpr	s3_t			cycleTimeInMillisec			(const ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.SubcycleDuration); }
+sttc	constexpr	s3_t			minutesToMillisec			(s3_t minutes)							{ return 60 * 1000 * minutes; }
+sttc	constexpr	s3_t			totalCycleTimeInMillisec	(cnst ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.PreHeatingTime + dryerProgram.SubcycleDuration); }
+sttc	constexpr	s3_t			preheatingTimeInMillisec	(cnst ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.PreHeatingTime); }
+sttc	constexpr	s3_t			cycleTimeInMillisec			(cnst ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.SubcycleDuration); }
 
 gpk::err_t dry::dryerUpdate			(::dry::SDryer & dryer, u3_t  lastTimeMilliseconds) {
 	dryer.EventList.clear();
@@ -176,7 +176,7 @@ gpk::err_t dry::dryerUpdate			(::dry::SDryer & dryer, u3_t  lastTimeMilliseconds
 	}
 
 	if(false == dryerState.Dryer) {
-		static bool								invert0					= false;
+		sttc b8_t								invert0					= false;
 		invert0
 			= (dryerState.Temperature > ((s0_t )::dry::DRYER_MIN_TEMPERATURE - 5)) ? true
 			: (dryerState.Temperature <= 0) ? false

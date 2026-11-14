@@ -28,8 +28,8 @@ nmsp gpk
 		cxpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();
 
-		virtual	gpk::err_t Resize				(const ::gpk::n2<u1_t> & newSize)				{ (void)newSize; return 0; }
-		virtual	gpk::err_t Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn)	= 0;
+		virtual	gpk::err_t Resize				(cnst ::gpk::n2<u1_t> & newSize)				{ (void)newSize; return 0; }
+		virtual	gpk::err_t Update				(::gpk::view<cnst ::gpk::pobj<::gpk::SEventSystem>> eventsIn)	= 0;
 	};
 	//tplt<tpnm _TDialogControl>
 	//gpk::err_t 			dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
@@ -71,7 +71,7 @@ nmsp gpk
 		::gpk::img<::gpk::bgra>						ImageCrossBGRA	= {};
 		::gpk::imgmonou3_t							ImageCross		= {};
 
-								SDialog			(const ::gpk::pobj<::gpk::SGUI> & gui);
+								SDialog			(cnst ::gpk::pobj<::gpk::SGUI> & gui);
 								SDialog			(::gpk::pobj<::gpk::SGUI> & gui);
 								SDialog			();
 
@@ -105,7 +105,7 @@ nmsp gpk
 			if_true_ve(-1, 0 == ::gpk::ref_create(newRef));
 			Controls[index].set_ref((::gpk::gref<::gpk::IDialogControl>*)newRef);
 			Controls[index]->Dialog	= this;
-			const u2_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
+			u2_c			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
 			gui.Controls.Draw[idGUIControl].UseNewPalettes	= true;
 			::gpk::memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
 			//if_fail_fef(gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");

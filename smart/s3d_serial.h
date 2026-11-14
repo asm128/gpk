@@ -22,7 +22,7 @@ namespace s3d
 #else
 		int				Handle			= -1;
 #endif
-		bool			Connected		= false;
+		b8_t			Connected		= false;
 
 						~SSerial		() {
 #if defined(GPK_WINDOWS)
@@ -32,8 +32,8 @@ namespace s3d
 #endif
 		}
 						SSerial			() = default;
-						SSerial			(const SSerial&) = delete;
-		SSerial&		operator =		(const SSerial&) = delete;
+						SSerial			(cnst SSerial&) = delete;
+		SSerial&		operator =		(cnst SSerial&) = delete;
 
 	};
 

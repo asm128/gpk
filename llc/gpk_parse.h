@@ -44,9 +44,9 @@ nmsp gpk
 		s2_t				IndexCurrentElement				= -1;
 		SStripLiteralToken	* CurrentElement				= 0;
 		s2_t				NestLevel						= 0;
-		char				CharCurrent						= 0;
-		bool				Escaping						= false;
-		bool				InsideToken						= false;
+		sc_t				CharCurrent						= 0;
+		b8_t				Escaping						= false;
+		b8_t				InsideToken						= false;
 		s2_t				BracketsToSkip					= 0;
 	};
 #pragma pack(pop)
@@ -54,7 +54,7 @@ nmsp gpk
 	err_t				stripLiteralParseStep			(SStripLiteralState	& work_state	, apod<SStripLiteralToken> & out_types, vcst_t in_format);
 	err_t				stripLiteralGetViews			(aobj<vcst_t>	& out_views, cnst view<cnst SStripLiteralToken> & in_resultOfParser, vcst_t in_format);
 
-	bool				isSpaceCharacter				(cnst char characterToTest);
+	b8_t				isSpaceCharacter				(cnst sc_t characterToTest);
 	err_t				skipToNextCharacter				(u2_t & indexCurrentChar, vcst_t expression);
 
 } // nmsp

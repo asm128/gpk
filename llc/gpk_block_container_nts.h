@@ -11,7 +11,7 @@ nmsp gpk
 
 	public:
 		err_t	clear			() { rtrn Characters.clear(); }
-		err_t	Save			(au0_t & output) const { rtrn Characters.Save(output); }
+		err_t	Save			(au0_t & output) cnst { rtrn Characters.Save(output); }
 		err_t	Load			(vcu0_t & input) { rtrn Characters.Load(input); }
 
 		err_t	push_sequence	(sc_c * sequence, u2_t length, vcst_t & out_view) {

@@ -7,7 +7,7 @@
 nmsp gpk 
 {
 	gpk::err_t 		createBuffers
-		( const ::gpk::SGeometryBuffers	& geometry
+		( cnst ::gpk::SGeometryBuffers	& geometry
 		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
 		, ::gpk::pobj<SRenderBuffer>	& pVertices
 		, ::gpk::pobj<SRenderBuffer>	& pNormals
@@ -16,7 +16,7 @@ nmsp gpk
 
 	gpk::err_t 		createBuffers
 		( SRenderBufferManager			& bufferManager 
-		, const ::gpk::SGeometryBuffers	& geometry
+		, cnst ::gpk::SGeometryBuffers	& geometry
 		, u2_t						& iIndicesVertex
 		, u2_t						& iVertices
 		, u2_t						& iNormals

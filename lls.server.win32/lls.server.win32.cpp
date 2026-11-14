@@ -15,9 +15,11 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "LLS Server v0.1");
 
-static	::gpk::err_t	loadNetworkConfig		(const ::gpk::SJSONReader & jsonConfig, ::gpk::vcst_t & port, ::gpk::vcst_t & adapter) {
+usns gpk;
+
+sttc	::gpk::err_t	loadNetworkConfig		(cnst ::gpk::SJSONReader & jsonConfig, ::gpk::vcst_t & port, ::gpk::vcst_t & adapter) {
 	::gpk::err_t				appNodeIndex;
-	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.test_udp_server"}, jsonConfig, 0)); } while(0);
+	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve("application.test_udp_server", jsonConfig, 0)); } while(0);
 	return ::gpk::loadServerConfig(jsonConfig, appNodeIndex, port, adapter);
 }
 
@@ -38,9 +40,9 @@ static	::gpk::err_t	loadNetworkConfig		(const ::gpk::SJSONReader & jsonConfig, :
 	return 0;
 }
 
-static	::gpk::err_t	updateSizeDependentResources(::SApplication & app)											{
+sttc	::gpk::err_t	updateSizeDependentResources(::SApplication & app)											{
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
-	const ::gpk::n2u1_t			newSize					= mainWindow.Size;
+	cnst ::gpk::n2u1_t			newSize					= mainWindow.Size;
 #if !defined(DISABLE_D3D11)
 	mainWindow.BackBuffer	= {};
 	do { if_fail_fe(app.D3DApp.SetWindowSize(newSize)); } while(0);
@@ -52,7 +54,7 @@ static	::gpk::err_t	updateSizeDependentResources(::SApplication & app)										
 	return 0;
 }
 
-static	::gpk::err_t	processScreenEvent		(::SApplication & app, const ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) { 
+sttc	::gpk::err_t	processScreenEvent		(::SApplication & app, cnst ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) { 
 	switch(screenEvent.Type) {
 	default: break;
 	case ::gpk::EVENT_SCREEN_Create:
@@ -66,11 +68,11 @@ static	::gpk::err_t	processScreenEvent		(::SApplication & app, const ::gpk::SEve
 	return 0;
 }
 
-static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEventSystem & sysEvent) { 
+sttc	::gpk::err_t	processSystemEvent		(::SApplication & app, cnst ::gpk::SEventSystem & sysEvent) { 
 	switch(sysEvent.Type) {
 	default: break;
-	case ::gpk::SYSTEM_EVENT_Screen	: return ::gpk::eventExtractAndHandle<::gpk::EVENT_SCREEN		>(sysEvent, [&app](const ::gpk::SEventView<::gpk::EVENT_SCREEN		> & screenEvent) { return processScreenEvent(app, screenEvent); }); 
-	case ::gpk::SYSTEM_EVENT_GUI	: return ::gpk::eventExtractAndHandle<::gpk::EVENT_GUI_CONTROL	>(sysEvent, [&app](const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL	> & screenEvent) { return ::gpk::processGUIEvent(*app.Server, *app.Framework.GUI, screenEvent); }); 
+	case ::gpk::SYSTEM_EVENT_Screen	: return ::gpk::eventExtractAndHandle<::gpk::EVENT_SCREEN		>(sysEvent, [&app](cnst ::gpk::SEventView<::gpk::EVENT_SCREEN		> & screenEvent) { return processScreenEvent(app, screenEvent); }); 
+	case ::gpk::SYSTEM_EVENT_GUI	: return ::gpk::eventExtractAndHandle<::gpk::EVENT_GUI_CONTROL	>(sysEvent, [&app](cnst ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL	> & screenEvent) { return ::gpk::processGUIEvent(*app.Server, *app.Framework.GUI, screenEvent); }); 
 	}
 	return 0;
 }
@@ -94,16 +96,16 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEve
 	return 0;
 }
 
-::gpk::err_t			update					(::SApplication & app, bool systemRequestedExit) {
+::gpk::err_t			update					(::SApplication & app, ::gpk::b8_t systemRequestedExit) {
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
 	::gpk::SGUI					& gui					= *framework.GUI;
 
-	bool						systemExit				= false;
+	::gpk::b8_t						systemExit				= false;
 
 	::gpk::TQueueSystemEvent	eventsToProcess			= mainWindow.EventQueue;
 	do { if_fail_fe(eventsToProcess.append(gui.Controls.EventQueue)); } while(0);
-	do { if_fail_fe(eventsToProcess.for_each([&app, &systemExit](const ::gpk::pobj<::gpk::SEventSystem> & sysEvent) { 
+	do { if_fail_fe(eventsToProcess.for_each([&app, &systemExit](cnst ::gpk::pobj<::gpk::SEventSystem> & sysEvent) { 
 		::gpk::err_t				result; 
 		do { if_fail_fe(result = ::processSystemEvent(app, *sysEvent)); } while(0); 
 		if(result == 1) 
@@ -151,7 +153,7 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEve
 	//-----------------------------
 	::gpk::STimer				& timer					= app.Framework.Timer;
 	::gpk::sc_t						buffer	[256]			= {};
-	sprintf_s(buffer, "[%u x %u]. FPS: %g. Last frame seconds: %g.", mainWindow.Size.x, mainWindow.Size.y, 1 / timer.LastTimeSeconds, timer.LastTimeSeconds);
+	gpk::sprintf_s(buffer, "[%u x %u]. FPS: %g. Last frame seconds: %g.", mainWindow.Size.x, mainWindow.Size.y, 1 / timer.LastTimeSeconds, timer.LastTimeSeconds);
 	::HWND						windowHandle			= mainWindow.PlatformDetail.WindowHandle;
 	SetWindowTextA(windowHandle, buffer);
 	
@@ -159,9 +161,9 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEve
 }
 
 ::gpk::err_t			draw					(::SApplication& app)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-	const ::gpk::n3f2_t			sunlightPos				= {}; //::gpk::calcSunPosition();
-	//const double				sunlightFactor			= .1;//:::gpk::calcSunlightFactor(app.LLSApp.World.WorldState.DaylightRatioExtra, app.LLSApp.World.WorldState.DaylightOffsetMinutes);
-	const ::gpk::rgbaf			clearColor				= ::gpk::DARKBLUE * .0625;//::gpk::interpolate_linear(::gpk::DARKBLUE * .25, ::gpk::LIGHTBLUE * 1.1, sunlightFactor);
+	cnst ::gpk::n3f2_t			sunlightPos				= {}; //::gpk::calcSunPosition();
+	//cnst double				sunlightFactor			= .1;//:::gpk::calcSunlightFactor(app.LLSApp.World.WorldState.DaylightRatioExtra, app.LLSApp.World.WorldState.DaylightOffsetMinutes);
+	cnst ::gpk::rgbaf			clearColor				= ::gpk::DARKBLUE * .0625;//::gpk::interpolate_linear(::gpk::DARKBLUE * .25, ::gpk::LIGHTBLUE * 1.1, sunlightFactor);
 
 #if !defined(DISABLE_D3D11) 
 	memset(app.D3DApp.GUIStuff.RenderTarget.begin(), 0, app.D3DApp.GUIStuff.RenderTarget.byte_count());
@@ -170,8 +172,8 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, const ::gpk::SEve
 
 	app.D3DApp.Scene.ConstantBufferScene.Time	= (float)app.Framework.FrameInfo.Seconds.Total;
 
-	const ::gpk::SCamera		& cameraSelected		= app.LLSApp.Game.Camera;
-	const ::gpk::SEngineScene	& engineScene			= *app.LLSApp.Game.Engine.Scene;
+	cnst ::gpk::SCamera		& cameraSelected		= app.LLSApp.Game.Camera;
+	cnst ::gpk::SEngineScene	& engineScene			= *app.LLSApp.Game.Engine.Scene;
 	do { if_fail_fe(::gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, cameraSelected.NearFar)); } while(0);
 #else 
 	::gpk::SFramework			& framework				= app.Framework;

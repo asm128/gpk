@@ -50,11 +50,11 @@ nmsp std
     {
     public:
       tydf _E 		value_type;
-      tydf const _E& 	reference;
-      tydf const _E& 	const_reference;
+      tydf cnst _E& 	reference;
+      tydf cnst _E& 	const_reference;
       tydf size_t 		size_type;
-      tydf const _E* 	iterator;
-      tydf const _E* 	const_iterator;
+      tydf cnst _E* 	iterator;
+      tydf cnst _E* 	const_iterator;
 
     private:
       iterator			_M_array;
@@ -88,7 +88,7 @@ nmsp std
    *  @relates initializer_list
    */
   tplt<class _Tp>
-    cxpr const _Tp*
+    cxpr cnst _Tp*
     begin(initializer_list<_Tp> __ils) nxpt
     { return __ils.begin(); }
 
@@ -99,7 +99,7 @@ nmsp std
    *  @relates initializer_list
    */
   tplt<class _Tp>
-    cxpr const _Tp*
+    cxpr cnst _Tp*
     end(initializer_list<_Tp> __ils) nxpt
     { return __ils.end(); }
 }

@@ -13,7 +13,7 @@ namespace gpk
 		string			RelativePath		= {};
 		string			FilePath			= {};
 		string			FileContents		= {};
-		bool			IndexPath			= true;
+		b8_t			IndexPath			= true;
 	};
 
 	// reverseMap copies tree.Name views; tree.Char owns their storage and must outlive the map.

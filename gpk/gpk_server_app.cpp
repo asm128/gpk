@@ -6,7 +6,7 @@
 
 GPK_USING_TYPEINT();
 
-gpk::err_t			gpk::loadServerConfig	(const SJSONReader & jsonConfig, s2_t parentNode, vcst_t & port, vcst_t & adapter) {
+gpk::err_t			gpk::loadServerConfig	(cnst SJSONReader & jsonConfig, s2_t parentNode, vcst_t & port, vcst_t & adapter) {
 	if_fail_w(jsonExpressionResolve("listen_port", jsonConfig, parentNode, port));
 	if_fail_w(jsonExpressionResolve("adapter", jsonConfig, parentNode, adapter));
 	info_printf("\nListen port: %.*s.\nAdapter: %.*s.'", GPK_VIEW_ARGS(port), GPK_VIEW_ARGS(adapter));
@@ -41,7 +41,7 @@ gpk::err_t			gpk::serverStart	(SServer & server, SGUI & gui) {
 }
 
 
-static	::gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
+sttc	::gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	::gpk::SSocketServer		& udpServer		= server.SocketServer;
 	if_fail_fe(gpk::controlTextSet(gui, server.UI.Input[::gpk::UI_SERVER_INPUT_Stop		], udpServer.Listen ? ::gpk::vcst_t{"Stop"} : ::gpk::vcst_t{"Start"})); 
 	if_fail_fe(gpk::controlTextSet(gui, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcst_t{"Listening"} : ::gpk::vcst_t{"Stopped"})); 
@@ -94,12 +94,12 @@ gpk::err_t			gpk::serverUpdate		(SServer & server, SGUI & gui) {
 	return ::updateGUI(server, gui);
 }
 
-gpk::err_t			gpk::processGUIEvent	(SServer & server, SGUI & gui, const SEventView<EVENT_GUI_CONTROL> & screenEvent) { 
+gpk::err_t			gpk::processGUIEvent	(SServer & server, SGUI & gui, cnst SEventView<EVENT_GUI_CONTROL> & screenEvent) { 
 	SSocketServer			& socketServer				= server.SocketServer;
 	switch(screenEvent.Type) {
 	default: break;
 	case EVENT_GUI_CONTROL_StateChange: {
-		const SChangeControlState	stateChange		= *(const SChangeControlState*)screenEvent.Data.begin();
+		cnst SChangeControlState	stateChange		= *(cnst SChangeControlState*)screenEvent.Data.begin();
 		if(0 == (stateChange.Set & GUI_CONTROL_FLAG_Action))
 			return 0;
 

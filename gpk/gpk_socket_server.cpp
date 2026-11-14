@@ -17,7 +17,7 @@
 #	define WSAENETRESET		ENETRESET
 #	define WSAENOTSOCK		ENOTSOCK
 #	define _beginthread(callback, stackSize, argument)	::std::thread((callback), (argument)).detach()
-	static inline int WSAGetLastError() { return errno; }
+	sttc inln int WSAGetLastError() { return errno; }
 #endif
 
 GPK_USING_TYPEINT();
@@ -39,7 +39,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 		u2_t							stageCount							= ::gpk::round_up(totalClientCount, 64U);
 		fd_set								sockets								= {};
 		for(u2_t iStage = 0; iStage < stageCount; ++iStage) {
-			const u2_t						offsetClient						= iStage * 64;
+			u2_c						offsetClient						= iStage * 64;
 #if defined(GPK_WINDOWS)
 			memset(&sockets, -1, szof(fd_set));
 			sockets.fd_count				= 0;
@@ -170,7 +170,7 @@ sttc	::gpk::err_t	updateClients			(gpk::SSocketServer & serverInstance)		{
 	return 0;
 }
 
-static	::gpk::err_t	recycleClient					(::gpk::SSocketServer& serverInstance, ::gpk::pobj<::gpk::SConnection> & pClient, ::gpk::pobj<::gpk::SSocketConnection> & pSocket)		{
+sttc	::gpk::err_t	recycleClient					(::gpk::SSocketServer& serverInstance, ::gpk::pobj<::gpk::SConnection> & pClient, ::gpk::pobj<::gpk::SSocketConnection> & pSocket)		{
 	for(u2_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
 		pClient										= serverInstance.Clients[iClient];
 		pSocket										= serverInstance.Sockets[iClient];
@@ -203,13 +203,13 @@ static	::gpk::err_t	recycleClient					(::gpk::SSocketServer& serverInstance, ::g
 	return -1;
 }
 
-static	::gpk::err_t	serverAcceptClient		(::gpk::SSocketServer& serverInstance, ::gpk::SCommand command, const sockaddr_in & sa_client, SOCKET acceptedSocket = INVALID_SOCKET)		{
+sttc	::gpk::err_t	serverAcceptClient		(::gpk::SSocketServer& serverInstance, ::gpk::SCommand command, cnst sockaddr_in & sa_client, SOCKET acceptedSocket = INVALID_SOCKET)		{
 	gpk::pobj<gpk::SConnection>		pClient				= {};
 	gpk::pobj<gpk::SSocketConnection>	pSocket				= {};
 	{ // accept
 		::gpk::lock_guard			lock					(serverInstance.Mutex);
 		s2_t						found					= ::recycleClient(serverInstance, pClient, pSocket);
-		const u2_t				idConnection			= (-1 == found) ? serverInstance.Clients.size() : (u2_t)found;
+		u2_c				idConnection			= (-1 == found) ? serverInstance.Clients.size() : (u2_t)found;
 		::gpk::tcpipAddressFromSockaddr(sa_client, pSocket->Address);
 		pSocket->IdConnection	= idConnection;
 		command.Type			= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
@@ -233,7 +233,7 @@ static	::gpk::err_t	serverAcceptClient		(::gpk::SSocketServer& serverInstance, :
 	return 0;
 }
 
-static	::gpk::err_t	serverListenTick		(::gpk::SSocketServer& serverInstance, const sockaddr_in & server)		{
+sttc	::gpk::err_t	serverListenTick		(::gpk::SSocketServer& serverInstance, cnst sockaddr_in & server)		{
 	socklen_t				client_length			= sizeof(sockaddr_in);		// Length of client struct
 	::gpk::SCommand			command					= {};	// Where to store received data
 	int							bytes_received			= 0;
@@ -264,7 +264,7 @@ static	::gpk::err_t	serverListenTick		(::gpk::SSocketServer& serverInstance, con
 	switch(command.Command) {
 	case ::gpk::ENDPOINT_COMMAND_CONNECT	: 
 		if(::gpk::TRANSPORT_PROTOCOL_TCP == serverInstance.Protocol) {
-			const SOCKET			clientSocket			= acceptedSocket.Handle;
+			cnst SOCKET			clientSocket			= acceptedSocket.Handle;
 			acceptedSocket.Handle	= INVALID_SOCKET;
 			if_fail_e(::serverAcceptClient(serverInstance, command, sa_client, clientSocket));
 		}
@@ -292,8 +292,8 @@ static	::gpk::err_t	serverListenTick		(::gpk::SSocketServer& serverInstance, con
 	return 0;
 }
 
-static	void			threadUpdateClients		(void* serverInstance)					{ ::updateClients(*(::gpk::SSocketServer*)serverInstance); }
-static	::gpk::err_t	server					(::gpk::SSocketServer& serverInstance)		{
+sttc	void			threadUpdateClients		(void* serverInstance)					{ ::updateClients(*(::gpk::SSocketServer*)serverInstance); }
+sttc	::gpk::err_t	server					(::gpk::SSocketServer& serverInstance)		{
 	serverInstance.Listen	= true;
 	if_fail_fe(gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, serverInstance.Protocol, serverInstance.Address));
 	sockaddr_in					server					= {};
@@ -311,7 +311,7 @@ static	::gpk::err_t	server					(::gpk::SSocketServer& serverInstance)		{
 	return 0;
 }
 
-static	void			threadServer			(void* pServerInstance)				{
+sttc	void			threadServer			(void* pServerInstance)				{
 	::gpk::SSocketServer			& serverInstance		= *(::gpk::SSocketServer*)pServerInstance;
 	if_fail_e(server(serverInstance))
 	else
@@ -347,7 +347,7 @@ static	void			threadServer			(void* pServerInstance)				{
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
 	u2_t					attempt					= 0;
 	do{
-		::sendto(serverInstance.Socket, (const sc_t*)&command, (int)sizeof(::gpk::SCommand), 0, (sockaddr*)&sa_srv, sa_length);
+		::sendto(serverInstance.Socket, (sc_c*)&command, (int)sizeof(::gpk::SCommand), 0, (sockaddr*)&sa_srv, sa_length);
 		::gpk::sleep(100);
 	} while(10 > ++attempt && serverInstance.Clients.size());
 

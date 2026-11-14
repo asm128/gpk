@@ -111,16 +111,16 @@ namespace dry
 		::dry::SScreenLoadFilament			LoadFilament;
 		::dry::SScreenConfig				Config;
 
-		bool								ModalEnabled			= false;
+		b8_t								ModalEnabled			= false;
 		::dry::MODAL						ModalSelected			= ::dry::MODAL_CLOSE_DOOR;
 		SCREEN								ScreenSelected			= ::dry::SCREEN_HOME;
 		::gpk::cid_t						RootControlIndex		= -1;
 	};
 #pragma pack(push, 1)
 	struct SCommState {
-		bool								Ethernet				: 1;
-		bool								WiFi					: 1;
-		bool								RFID					: 1;
+		b8_t								Ethernet				: 1;
+		b8_t								WiFi					: 1;
+		b8_t								RFID					: 1;
 	};
 #pragma pack(pop)
 
@@ -146,9 +146,9 @@ namespace dry
 		//
 		::gpk::refcount_t					ThreadClients			= 0;
 		u3_t 							TimeLastSerial			= {}; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
-		static constexpr	u3_t 		SERIAL_TIMEOUT			= 10; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
+		sttc constexpr	u3_t 		SERIAL_TIMEOUT			= 10; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
 
-		static constexpr	u2_t 		MAX_HUMIDITY			= 100;
+		sttc constexpr	u2_t 		MAX_HUMIDITY			= 100;
 
 											SApplication			(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues) {}
 	};
@@ -168,16 +168,16 @@ namespace dry
 	::gpk::err_t						updateScreenHUD				(::dry::SApplication & app);
 	::gpk::err_t						updateScreenHome			(::dry::SApplication & app);
 	// TODO:
-	static inline ::gpk::err_t		updateScreenInfo			(::dry::SApplication & /*app*/) { return 0; }
-	static inline ::gpk::err_t		updateScreenLoadFilament	(::dry::SApplication & /*app*/) { return 0; }
-	static inline ::gpk::err_t		updateScreenConfig			(::dry::SApplication & /*app*/) { return 0; }
+	sttc inln ::gpk::err_t		updateScreenInfo			(::dry::SApplication & /*app*/) { return 0; }
+	sttc inln ::gpk::err_t		updateScreenLoadFilament	(::dry::SApplication & /*app*/) { return 0; }
+	sttc inln ::gpk::err_t		updateScreenConfig			(::dry::SApplication & /*app*/) { return 0; }
 
 	// ----
 	::gpk::err_t						handleControlHome			(::dry::SApplication & app, s2_t idControl);
 	// TODO: Nothing to do here yet
-	static inline ::gpk::err_t		handleControlInfo			(::dry::SApplication & /*app*/, s2_t /*idControl*/) { return 0; }
-	static inline ::gpk::err_t		handleControlLoadFilament	(::dry::SApplication & /*app*/, s2_t /*idControl*/) { return 0; }
-	static inline ::gpk::err_t		handleControlConfig			(::dry::SApplication & /*app*/, s2_t /*idControl*/) { return 0; }
+	sttc inln ::gpk::err_t		handleControlInfo			(::dry::SApplication & /*app*/, s2_t /*idControl*/) { return 0; }
+	sttc inln ::gpk::err_t		handleControlLoadFilament	(::dry::SApplication & /*app*/, s2_t /*idControl*/) { return 0; }
+	sttc inln ::gpk::err_t		handleControlConfig			(::dry::SApplication & /*app*/, s2_t /*idControl*/) { return 0; }
 
 	// ---- Resize handlers
 	::gpk::err_t						handleResizeScreenHUD		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);

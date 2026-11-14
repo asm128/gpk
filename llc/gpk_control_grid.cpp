@@ -1,15 +1,17 @@
 #include "gpk_control_grid.h"
 
-static ::gpk::n2u2_t controlGridMetrics(cnst ::gpk::SControlGrid & grid) {
+usns gpk;
+
+sttc gpk::n2u2_t controlGridMetrics(cnst gpk::SControlGrid & grid) {
 	if(0 == grid.Lists.size())
 		rtrn {};
-	::gpk::u2_t listCapacity = 0;
-	for(::gpk::u2_t iList = 0; iList < grid.Lists.size(); ++iList)
+	u2_t listCapacity = 0;
+	for(u2_t iList = 0; iList < grid.Lists.size(); ++iList)
 		listCapacity = ::gpk::max(listCapacity, grid.Lists[iList].IdControls.size());
-	cnst bool horizontal = grid.Lists[0].Orientation == ::gpk::DIRECTION_RIGHT || grid.Lists[0].Orientation == ::gpk::DIRECTION_LEFT;
+	b8_c horizontal = grid.Lists[0].Orientation == DIRECTION_RIGHT || grid.Lists[0].Orientation == DIRECTION_LEFT;
 	rtrn horizontal
-		? ::gpk::n2u2_t{listCapacity, grid.Lists.size()}
-		: ::gpk::n2u2_t{grid.Lists.size(), listCapacity}
+		? n2u2_t{listCapacity, grid.Lists.size()}
+		: n2u2_t{grid.Lists.size(), listCapacity}
 		;
 }
 
@@ -31,8 +33,8 @@ gpk::cid_t gpk::controlGridControl(cnst SControlGrid & grid, cnst n2u2_t & cell)
 	if(cell.x >= metrics.x || cell.y >= metrics.y)
 		rtrn CID_INVALID;
 	cnst DIRECTION direction = grid.Lists[0].Orientation;
-	cnst bool horizontal = direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT;
-	cnst u2_t iList = horizontal ? cell.y : cell.x;
+	b8_c horizontal = direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT;
+	u2_c iList = horizontal ? cell.y : cell.x;
 	u2_t iControl = horizontal ? cell.x : cell.y;
 	if(direction == DIRECTION_LEFT)
 		iControl = metrics.x - 1 - cell.x;
@@ -55,13 +57,13 @@ gpk::cid_t gpk::controlGridControl(cnst SControlGrid & grid, u2_t index) {
 gpk::err_t gpk::controlGridArrange
 	( SGUI & gui
 	, SControlGrid & grid
-	, cnst n2s1_t & cellSize
-	, cnst n2s1_t & spacing
-	, cnst n2s1_t & offset
+	, n2s1_c & cellSize
+	, n2s1_c & spacing
+	, n2s1_c & offset
 	, ALIGN align
 	) {
 	cnst n2u2_t metrics = ::controlGridMetrics(grid);
-	cnst n2s1_t gridSize =
+	n2s1_c gridSize =
 		{ (s1_t)(metrics.x * cellSize.x + (metrics.x ? metrics.x - 1 : 0) * spacing.x)
 		, (s1_t)(metrics.y * cellSize.y + (metrics.y ? metrics.y - 1 : 0) * spacing.y)
 		};
@@ -71,7 +73,7 @@ gpk::err_t gpk::controlGridArrange
 	if(0 == grid.Lists.size())
 		rtrn controlMetricsInvalidate(gui, grid.IdControl);
 	cnst DIRECTION direction = grid.Lists[0].Orientation;
-	cnst bool horizontal = direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT;
+	b8_c horizontal = direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT;
 	for(u2_t iList = 0; iList < grid.Lists.size(); ++iList) {
 		SControlList & list = grid.Lists[iList];
 		SControlPlacement & listPlacement = gui.Controls.Placement[list.IdControl];

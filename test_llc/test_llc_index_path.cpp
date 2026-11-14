@@ -27,7 +27,7 @@ sttc ::gpk::err_t indexFixtureWrite(::gpk::vcst_t folder, ::gpk::vcst_t name, ::
 	rtrn ::gpk::fileFromMemory(fullPath, contents);
 }
 
-sttc bool indexExtensionAccepted(::gpk::vcst_t path) {
+sttc b8_t indexExtensionAccepted(::gpk::vcst_t path) {
 	::gpk::vcst_t fileName = {};
 	if(::gpk::failed(::gpk::pathFilename(path, fileName)))
 		rtrn false;
@@ -53,12 +53,12 @@ sttc bool indexExtensionAccepted(::gpk::vcst_t path) {
 	}
 
 	::gpk::SPathTree tree = {};
-	cnst ::gpk::err_t scanResult = ::gpk::pathList(tree, outputFolder, [](bool folder, ::gpk::vcst_c & entry) -> ::gpk::err_t {
+	cnst ::gpk::err_t scanResult = ::gpk::pathList(tree, outputFolder, [](b8_t folder, ::gpk::vcst_c & entry) -> ::gpk::err_t {
 		rtrn folder || false == ::indexExtensionAccepted(entry) ? 1 : 0;
 	});
 	GPK_TEST_REQUIREF(errors, INDEX_TEST_RESULT_SCAN_RESULT, ::gpk::failed(scanResult), "Result:%i.", scanResult);
 	GPK_TEST_REQUIREF(errors, INDEX_TEST_RESULT_SCAN_COUNT, 2 != tree.Tree.size() || 2 != tree.Name.size(), "Nodes:%u, names:%u.", tree.Tree.size(), tree.Name.size());
-	bool foundCPP = false, foundH = false, foundTXT = false;
+	b8_t foundCPP = false, foundH = false, foundTXT = false;
 	for(::gpk::u2_t iName = 0; iName < tree.Name.size(); ++iName) {
 		foundCPP |= tree.Name[iName] == INDEX_FILE_NAMES[0];
 		foundH   |= tree.Name[iName] == INDEX_FILE_NAMES[1];

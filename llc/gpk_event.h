@@ -15,7 +15,7 @@ nmsp gpk
 		T		Type		= {};
 		vcu0_t	Data		= {};
 
-		err_t	Save		(au0_t & output)	const	{
+		err_t	Save		(au0_t & output)	cnst	{
 			if_fail_fe(savePOD (output, Type));
 			if_fail_fe(saveView(output, Data));
 			rtrn 0;
@@ -30,9 +30,9 @@ nmsp gpk
 	tplt<tpnm T> usng TEViewQueue 				= aobj<SEView<T>>;
 
 	tplt<tpnm T> usng FEViewHandler				= function<err_t(      SEView<T>&)>;
-	tplt<tpnm T> usng FEViewHandlerConst		= function<err_t(const SEView<T>&)>;
+	tplt<tpnm T> usng FEViewHandlerConst		= function<err_t(cnst SEView<T>&)>;
 	tplt<tpnm T> usng FEventViewHandler			= function<err_t(      SEView<T>&)>;
-	tplt<tpnm T> usng FEventViewHandlerConst	= function<err_t(const SEView<T>&)>;
+	tplt<tpnm T> usng FEventViewHandlerConst	= function<err_t(cnst SEView<T>&)>;
 
 	tplt<tpnm _tEventType>
 	stct SEvent {
@@ -43,17 +43,17 @@ nmsp gpk
 		T				Type		= {};
 		au0_t			Data		= {};
 
-						SEvent		(const TEvent &)					= default;
+						SEvent		(cnst TEvent &)					= default;
 		cxpr			SEvent		(T type = {})						: Type(type) {}
-						SEvent		(T type, const vcu0_t data)			: Type(type), Data(data) {}
-						SEvent		(const TEView & eventView)			: Type(eventView.Type), Data(eventView.Data) {}
+						SEvent		(T type, cnst vcu0_t data)			: Type(type), Data(data) {}
+						SEvent		(cnst TEView & eventView)			: Type(eventView.Type), Data(eventView.Data) {}
 
-		TEvent&			oper= 		(const TEvent &)					= default;
-		TEvent&			oper= 		(const TEView & eventView)			{ Type = eventView.Type; Data = eventView.Data; rtrn *this; }
+		TEvent&			oper= 		(cnst TEvent &)					= default;
+		TEvent&			oper= 		(cnst TEView & eventView)			{ Type = eventView.Type; Data = eventView.Data; rtrn *this; }
 
-		oper			TEView		()							const	{ rtrn {Type, Data}; }
+		oper			TEView		()							cnst	{ rtrn {Type, Data}; }
 
-		err_t			Save		(au0_t & output)			const	{
+		err_t			Save		(au0_t & output)			cnst	{
 			if_fail_fe(savePOD(output, Type));
 			if_fail_fe(saveView(output, Data));
 			rtrn 0;
@@ -66,7 +66,7 @@ nmsp gpk
 		}
 
 		tplt<tpnm _tETypeOther>
-		err_t			ExtractChild(SEvent<_tETypeOther> & outputEvent)	const	{
+		err_t			ExtractChild(SEvent<_tETypeOther> & outputEvent)	cnst	{
 			vcu0_t			input				= Data;
 			if_fail_fe(outputEvent.Load(input));
 			gpk_event_printf("%s", get_value_namep(outputEvent.Type)); 
@@ -74,7 +74,7 @@ nmsp gpk
 		}
 
 		tplt<tpnm _tETypeOther>
-		err_t	ExtractChild(SEView<_tETypeOther> & outputEvent)	const	{
+		err_t	ExtractChild(SEView<_tETypeOther> & outputEvent)	cnst	{
 			vcu0_t			input				= Data;
 			if_fail_fe(outputEvent.Load(input));
 			gpk_event_printf("%s", get_value_namep(outputEvent.Type)); 
@@ -83,7 +83,7 @@ nmsp gpk
 	};
 
 	tplt<tpnm T> usng FEventHandler			= function<err_t(      SEvent<T>&)>;
-	tplt<tpnm T> usng FEventHandlerConst	= function<err_t(const SEvent<T>&)>;
+	tplt<tpnm T> usng FEventHandlerConst	= function<err_t(cnst SEvent<T>&)>;
 
 	tplt<tpnm T> usng PEvent 				= pobj <SEvent<T>>;
 	tplt<tpnm T> usng TEventQueue 			= apobj<SEvent<T>>;
@@ -101,22 +101,22 @@ nmsp gpk
 		rtrn eventQueue.push_back(parentEvent);
 	}
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
-	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, view<const _tPOD> eventData) {
-		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(const u0_t*)eventData.begin(), eventData.byte_count()});
+	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, view<cnst _tPOD> eventData) {
+		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(cnst u0_t*)eventData.begin(), eventData.byte_count()});
 	}
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
-	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, const _tPOD & childEventDataType) {
-		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(const u0_t*)&childEventDataType, szof(_tPOD)});
+	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, cnst _tPOD & childEventDataType) {
+		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(cnst u0_t*)&childEventDataType, szof(_tPOD)});
 	}
 	tplt<tpnm _tChildEvent, tpnm _tParentEvent>
-	sttc	err_t	eventExtractAndHandle	(const SEvent<_tParentEvent> & parentEvent, const FError<const SEventView<_tChildEvent> &> & funcHandleChild) {
+	sttc	err_t	eventExtractAndHandle	(cnst SEvent<_tParentEvent> & parentEvent, cnst FError<cnst SEventView<_tChildEvent> &> & funcHandleChild) {
 		SEView<_tChildEvent>	childEvent; 
 		if_fail_fe(parentEvent.ExtractChild(childEvent)); 
 		rtrn funcHandleChild(childEvent);
 	}
 }
 
-#define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s'	(0x%" GPK_FMT_X3  ")(%" GPK_FMT_S3 ")(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
-#define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for '%s'! '%s'	(0x%" GPK_FMT_X3  ")(%" GPK_FMT_S3 ")(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
+#define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s'	(0x%" GPK_FMT_X3  ")(%" GPK_FMT_S3 ")(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, sc_t((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
+#define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for '%s'! '%s'	(0x%" GPK_FMT_X3  ")(%" GPK_FMT_S3 ")(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, sc_t((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
 
 #endif // GPK_EVENT_H_23627

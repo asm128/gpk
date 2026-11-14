@@ -21,7 +21,7 @@ sttc	s2_t	make_crc_table			() {
 u2_t	gpk::pngCRCUpdate	(vcu0_t buf, u2_t crc)										{
     u2_t					c						= crc;
     if(0 == g_crc_table_computed) {
-		static const s2_t		initedTable				= make_crc_table();
+		sttc cnst s2_t		initedTable				= make_crc_table();
 		(void)initedTable;
 		info_printf("Initialized PNG CRC table: %i.", initedTable);
 	}
@@ -37,7 +37,7 @@ gpk::err_t 		gpk::pngFileWrite		(gc8bgra in_imageView, au0_t & out_Bytes)		{
 	safe_Bytes.append(signature);
 
 	u2_t					chunkSize				= sizeof(SPNGIHDR);
-	stxp	const u0_t		typeIHDR	[4]			= {'I', 'H', 'D', 'R'};
+	stxp	cnst u0_t		typeIHDR	[4]			= {'I', 'H', 'D', 'R'};
 	s2_t						crc						= 0;
 	SPNGIHDR				imageHeader				= {};
 	imageHeader.Size				= in_imageView.metrics();
@@ -50,13 +50,13 @@ gpk::err_t 		gpk::pngFileWrite		(gc8bgra in_imageView, au0_t & out_Bytes)		{
 	be2le(imageHeader.Size.x);
 	be2le(imageHeader.Size.y);
 	be2le(chunkSize);
-	safe_Bytes.append((const u0_t*)&chunkSize, 4);
+	safe_Bytes.append((cnst u0_t*)&chunkSize, 4);
 	u2_t					crcDataStart			= safe_Bytes.size();
 	safe_Bytes.append(typeIHDR);
-	safe_Bytes.append((const u0_t*)&imageHeader, sizeof(SPNGIHDR));
+	safe_Bytes.append((cnst u0_t*)&imageHeader, sizeof(SPNGIHDR));
 	crc						= pngCRCGet({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le(crc);
-	safe_Bytes.append((const u0_t*)&crc, 4);
+	safe_Bytes.append((cnst u0_t*)&crc, 4);
 
 	// Reverse RGB byte order
 	img8rgba				convertedScanlines		= {};
@@ -72,7 +72,7 @@ gpk::err_t 		gpk::pngFileWrite		(gc8bgra in_imageView, au0_t & out_Bytes)		{
 	}
 	imgu0_t					filtered				= {};
 	filtered.resize(n2u2_t{convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
-	const u2_t					scanlineWidthUnfiltered	= convertedScanlines.View.metrics().x * 4;
+	u2_c					scanlineWidthUnfiltered	= convertedScanlines.View.metrics().x * 4;
 	for(u2_t y = 0; y < in_imageView.metrics().y; ++y) {
 		filtered[y][0]				= 0;
 		memcpy(&filtered[y][1], &convertedScanlines[y][0], scanlineWidthUnfiltered);
@@ -83,26 +83,26 @@ gpk::err_t 		gpk::pngFileWrite		(gc8bgra in_imageView, au0_t & out_Bytes)		{
 
 	chunkSize					= deflated.size();
 	be2le(chunkSize);
-	safe_Bytes.append((const u0_t*)&chunkSize, 4);
+	safe_Bytes.append((cnst u0_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();
 
-	stxp	const u0_t			typeIDAT	[4]			= {'I', 'D', 'A', 'T'};
+	stxp	cnst u0_t			typeIDAT	[4]			= {'I', 'D', 'A', 'T'};
 	safe_Bytes.append(typeIDAT);
 	safe_Bytes.append(deflated);
 	crc							= pngCRCGet({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le(crc);
-	safe_Bytes.append((const u0_t*)&crc, 4);
+	safe_Bytes.append((cnst u0_t*)&crc, 4);
 
 	chunkSize					= 0;
 	crc							= 0;
-	stxp	const u0_t			typeIEND	[4]			= {'I', 'E', 'N', 'D'};
+	stxp	cnst u0_t			typeIEND	[4]			= {'I', 'E', 'N', 'D'};
 	be2le(chunkSize);
-	safe_Bytes.append((const u0_t*)&chunkSize, 4);
+	safe_Bytes.append((cnst u0_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();
 	safe_Bytes.append(typeIEND);
 	crc							= pngCRCGet({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le(crc);
-	safe_Bytes.append((const u0_t*)&crc, 4);
+	safe_Bytes.append((cnst u0_t*)&crc, 4);
 
 	s2_t							oldSize					= out_Bytes.size();
 	if_fail_fe(out_Bytes.resize(oldSize + safe_Bytes.size()));

@@ -75,15 +75,15 @@ nmsp gpk
 		::gpk::n2u1_t						Size					= {320, 200};
 		::gpk::rectu1_t						WindowedWindowRect		= {0, 0, 320, 200};
 
-		bool								Resized					: 1;
-		bool								Repaint					: 1;
-		bool								NoDraw					: 1;
-		bool								MinOrMaxed				: 1;
-		bool								Closed					: 1;
-		bool								FullScreen				: 1;
+		b8_t								Resized					: 1;
+		b8_t								Repaint					: 1;
+		b8_t								NoDraw					: 1;
+		b8_t								MinOrMaxed				: 1;
+		b8_t								Closed					: 1;
+		b8_t								FullScreen				: 1;
 	};
 
-	gpk::err_t 					windowPresentTarget		(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
+	gpk::err_t 					windowPresentTarget		(::gpk::SWindow & windowInstance, cnst ::gpk::g8bgra & targetToPresent);
 	gpk::err_t 					windowUpdate			(::gpk::SWindow & windowInstance);
 	gpk::err_t 					windowUpdateTick		(::gpk::SWindow & windowInstance);
 	gpk::err_t 					fullScreenExit			(::gpk::SWindow & windowInstance);

@@ -160,7 +160,7 @@ nmsp gpk
 		vcst_t				QueryString					= {};
 		vcst_t				ContentBody					= {};
 		HTTP_METHOD			Method						= {};
-		bool				IsCGIEnviron				= {};
+		b8_t				IsCGIEnviron				= {};
 	};
 #pragma pack(pop)
 } // nmsp

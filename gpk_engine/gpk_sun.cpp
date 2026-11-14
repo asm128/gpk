@@ -7,12 +7,12 @@ GPK_USING_N3		();
 
 
 f3_t					gpk::calcSunlightFactor(f3_t daylightRatioExtra, u2_t daylightOffsetMinutes)	{ 
-	const f3_t				sunAngleFactor			= ::gpk::calcSunPosition().Dot(::gpk::n3f2_t{0, 1}.RotateZ(::gpk::SCALE_DAY_MINUTES_TO_RADIANS * daylightOffsetMinutes));
+	cnst f3_t				sunAngleFactor			= ::gpk::calcSunPosition().Dot(::gpk::n3f2_t{0, 1}.RotateZ(::gpk::SCALE_DAY_MINUTES_TO_RADIANS * daylightOffsetMinutes));
 	return ::gpk::clamped(sunAngleFactor + daylightRatioExtra, 0.0, 1.0);
 }
 
 ::gpk::n3f2_t			gpk::calcSunPosition	()	{ 
-	const u2_t				daySeconds				= (u2_t)(::gpk::timeCurrent() % 86400);
+	u2_c				daySeconds				= (u2_t)(::gpk::timeCurrent() % 86400);
 
 	return ::gpk::n3f2_t{0, -1}.RotateZ(::gpk::SCALE_DAY_SECONDS_TO_RADIANS * daySeconds);
 }

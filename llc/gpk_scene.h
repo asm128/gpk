@@ -5,6 +5,7 @@
 #include "gpk_tri2.h"
 #include "gpk_apod_color.h"
 #include "gpk_camera.h"
+#include "gpk_ctti.h"
 
 // TODO: Throw away
 #ifndef GPK_SCENE_H_23627
@@ -14,48 +15,48 @@ nmsp gpk
 {
 	tplt <tpnm _tUnit>
 	struct SModelGeometry {
-		::gpk::apod<::gpk::tri3<_tUnit>>	Positions									;
-		::gpk::apod<::gpk::n3  <_tUnit>>	NormalsTriangle								;
-		::gpk::apod<::gpk::tri3<_tUnit>>	NormalsVertex								;
-		::gpk::apod<::gpk::tri2<_tUnit>>	UVs											;
+		apod<tri3<_tUnit>>	Positions									;
+		apod<n3  <_tUnit>>	NormalsTriangle								;
+		apod<tri3<_tUnit>>	NormalsVertex								;
+		apod<tri2<_tUnit>>	UVs											;
 	};
 
 	tplt <tpnm _tElement, tpnm _tIndex>
 	struct SModelBufferIndexed {
-		::gpk::apod<_tIndex>	Indices										;
-		::gpk::apod<_tElement>	Values										;
+		apod<_tIndex>	Indices										;
+		apod<_tElement>	Values										;
 	};
 
 	tplt <tpnm _tAxis, tpnm _tIndex>
 	struct SModelGeometryIndexed {
-		::gpk::SModelBufferIndexed<::gpk::n3	<_tAxis>, _tIndex>	Positions					;
-		::gpk::SModelBufferIndexed<::gpk::n3	<_tAxis>, _tIndex>	NormalsTriangle				;
-		::gpk::SModelBufferIndexed<::gpk::tri3	<_tAxis>, _tIndex>	NormalsVertex				;
-		::gpk::SModelBufferIndexed<::gpk::tri2	<_tAxis>, _tIndex>	UVs							;
-		::gpk::apod<_tIndex>										PositionRemap				;
+		SModelBufferIndexed<n3	<_tAxis>, _tIndex>	Positions					;
+		SModelBufferIndexed<n3	<_tAxis>, _tIndex>	NormalsTriangle				;
+		SModelBufferIndexed<tri3	<_tAxis>, _tIndex>	NormalsVertex				;
+		SModelBufferIndexed<tri2	<_tAxis>, _tIndex>	UVs							;
+		apod<_tIndex>										PositionRemap				;
 
 	};
 
 	tplt <tpnm _tUnit>
 	struct SModelPivot {
-		::gpk::n3	<_tUnit>	Scale		;
-		::gpk::quat	<_tUnit>	Orientation	;
-		::gpk::n3	<_tUnit>	Position	;
+		n3	<_tUnit>	Scale		;
+		quat	<_tUnit>	Orientation	;
+		n3	<_tUnit>	Position	;
 	};
 
 	// --- Geometry generation: Cube.
-	gpk::err_t 		generateCubePositions			(::gpk::apod<::gpk::tri3f2_t> & out_Positions);
-	gpk::err_t 		generateCubeNormalsTriangle		(::gpk::apod<::gpk::n3f2_t  > & out_Normals	);
-	gpk::err_t 		generateCubeNormalsVertex		(::gpk::apod<::gpk::tri3f2_t> & out_Normals	);
-	gpk::err_t 		generateCubeUV					(::gpk::apod<::gpk::tri2f2_t> & out_UV		);
-	gpk::err_t 		generateCubeGeometry
-		( ::gpk::apod<::gpk::tri3f2_t> & out_Positions
-		, ::gpk::apod<::gpk::n3f2_t  > & out_Normals
-		, ::gpk::apod<::gpk::tri3f2_t> & out_NormalsVertex
-		, ::gpk::apod<::gpk::tri2f2_t> & out_UV
+	err_t 		generateCubePositions			(apod<tri3f2_t> & out_Positions);
+	err_t 		generateCubeNormalsTriangle		(apod<n3f2_t  > & out_Normals	);
+	err_t 		generateCubeNormalsVertex		(apod<tri3f2_t> & out_Normals	);
+	err_t 		generateCubeUV					(apod<tri2f2_t> & out_UV		);
+	err_t 		generateCubeGeometry
+		( apod<tri3f2_t> & out_Positions
+		, apod<n3f2_t  > & out_Normals
+		, apod<tri3f2_t> & out_NormalsVertex
+		, apod<tri2f2_t> & out_UV
 		);
-	stin	gpk::err_t generateCubeGeometry			(::gpk::SModelGeometry<f2_t>& out_Geometry)	{
-		return ::gpk::generateCubeGeometry
+	stin	err_t generateCubeGeometry			(SModelGeometry<f2_t>& out_Geometry)	{
+		return generateCubeGeometry
 			( out_Geometry.Positions
 			, out_Geometry.NormalsTriangle
 			, out_Geometry.NormalsVertex
@@ -63,19 +64,19 @@ nmsp gpk
 			);
 	}
 
-	gpk::err_t 		generateGridPositions			(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3f2_t> & out_Positions	);
-	gpk::err_t 		generateGridNormalsTriangle		(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::n3f2_t  > & out_Normals	);
-	gpk::err_t 		generateGridNormalsVertex		(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3f2_t> & out_Normals	);
-	gpk::err_t 		generateGridUV					(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri2f2_t> & out_UV		);
-	gpk::err_t 		generateGridGeometry
-		( const ::gpk::n2u1_t			& gridMetrics
-		, ::gpk::apod<::gpk::tri3f2_t>	& out_Positions
-		, ::gpk::apod<::gpk::n3f2_t  >	& out_Normals
-		, ::gpk::apod<::gpk::tri3f2_t>	& out_NormalsVertex
-		, ::gpk::apod<::gpk::tri2f2_t>	& out_UV
+	err_t 		generateGridPositions			(cnst n2u1_t & gridMetrics, apod<tri3f2_t> & out_Positions	);
+	err_t 		generateGridNormalsTriangle		(cnst n2u1_t & gridMetrics, apod<n3f2_t  > & out_Normals	);
+	err_t 		generateGridNormalsVertex		(cnst n2u1_t & gridMetrics, apod<tri3f2_t> & out_Normals	);
+	err_t 		generateGridUV					(cnst n2u1_t & gridMetrics, apod<tri2f2_t> & out_UV		);
+	err_t 		generateGridGeometry
+		( cnst n2u1_t			& gridMetrics
+		, apod<tri3f2_t>	& out_Positions
+		, apod<n3f2_t  >	& out_Normals
+		, apod<tri3f2_t>	& out_NormalsVertex
+		, apod<tri2f2_t>	& out_UV
 		);
-	stin	gpk::err_t generateGridGeometry			(const ::gpk::n2u1_t & gridMetrics, ::gpk::SModelGeometry<f2_t>& out_Geometry)	{
-		return ::gpk::generateGridGeometry
+	stin	err_t generateGridGeometry			(cnst n2u1_t & gridMetrics, SModelGeometry<f2_t>& out_Geometry)	{
+		return generateGridGeometry
 			( gridMetrics
 			, out_Geometry.Positions
 			, out_Geometry.NormalsTriangle
@@ -86,15 +87,15 @@ nmsp gpk
 
 
 	struct SRenderCache {
-		::gpk::apod<::gpk::n2s1_t>	TrianglePixelCoords			= {};
-		::gpk::apod<::gpk::trif2_t>	TrianglePixelWeights		= {};
-		::gpk::apod<::gpk::n2s1_t>	WireframePixelCoords		= {};
+		apod<n2s1_t>	TrianglePixelCoords			= {};
+		apod<trif2_t>	TrianglePixelWeights		= {};
+		apod<n2s1_t>	WireframePixelCoords		= {};
 
-		::gpk::apod<::gpk::tri3f2_t>	TransformedNormalsVertex	= {};
+		apod<tri3f2_t>	TransformedNormalsVertex	= {};
 
-		::gpk::as2_t					Triangle3dIndices			= {};
-		::gpk::apod<::gpk::tri3f2_t>	Triangle3dToDraw			= {};
-		::gpk::apod<::gpk::tri3f2_t>	Triangle3dWorld				= {};
+		as2_t					Triangle3dIndices			= {};
+		apod<tri3f2_t>	Triangle3dToDraw			= {};
+		apod<tri3f2_t>	Triangle3dWorld				= {};
 
 		u2_t					TrianglesDrawn				= 0;
 		u2_t					PixelsDrawn					= 0;
@@ -102,48 +103,48 @@ nmsp gpk
 	};
 
 	struct SColorsMaterial {
-		::gpk::a8bgra				Ambient				= {};
-		::gpk::a8bgra				Diffuse				= {};
-		::gpk::a8bgra				Specular			= {};
+		a8bgra				Ambient				= {};
+		a8bgra				Diffuse				= {};
+		a8bgra				Specular			= {};
 	};
 
 	struct SLightsDirectional {
-		::gpk::apod<::gpk::n3f2_t>	Directions			= {};
-		::gpk::SColorsMaterial		Colors				= {};
+		apod<n3f2_t>	Directions			= {};
+		SColorsMaterial		Colors				= {};
 	};
 
 	struct SLightsPoint {
-		::gpk::apod<::gpk::n3f2_t>	Directions			= {};
-		::gpk::apod<::gpk::n3f2_t>	Positions			= {};
-		::gpk::apod<::gpk::n3f2_t>	Attenuation			= {};
-		::gpk::SColorsMaterial		Colors				= {};
+		apod<n3f2_t>	Directions			= {};
+		apod<n3f2_t>	Positions			= {};
+		apod<n3f2_t>	Attenuation			= {};
+		SColorsMaterial		Colors				= {};
 	};
 
 	struct SLightsSpot {
-		::gpk::apod<::gpk::n3f2_t>	Directions			= {};
-		::gpk::apod<::gpk::n3f2_t>	Positions			= {};
-		::gpk::apod<::gpk::n3f2_t>	Attenuation			= {};
-		::gpk::af2_t				SpotPower			= {};
-		::gpk::SColorsMaterial		Colors				= {};
+		apod<n3f2_t>	Directions			= {};
+		apod<n3f2_t>	Positions			= {};
+		apod<n3f2_t>	Attenuation			= {};
+		af2_t				SpotPower			= {};
+		SColorsMaterial		Colors				= {};
 	};
 
 	struct SSceneGeometries {
-		::gpk::apod<::gpk::SModelGeometry<f2_t>>	Polyhedron	= {};
-		::gpk::SModelGeometry<f2_t>				Box			= {};
-		::gpk::apod<::gpk::SModelGeometry<f2_t>>	Grid		= {};
-		::gpk::apod<::gpk::SModelGeometry<f2_t>>	Models		= {};
+		apod<SModelGeometry<f2_t>>	Polyhedron	= {};
+		SModelGeometry<f2_t>				Box			= {};
+		apod<SModelGeometry<f2_t>>	Grid		= {};
+		apod<SModelGeometry<f2_t>>	Models		= {};
 	};
 
 	struct SSceneLights	{
-		::gpk::SLightsDirectional	LightsDirectional	= {};
-		::gpk::SLightsPoint			LightsPoint			= {};
-		::gpk::SLightsSpot			LightsSpot			= {};
+		SLightsDirectional	LightsDirectional	= {};
+		SLightsPoint			LightsPoint			= {};
+		SLightsSpot			LightsSpot			= {};
 	};
 
 	struct SSceneCamera {
-		::gpk::SCameraPoints		Points								;
-		::gpk::SCameraVectors		Vectors								;
-		::gpk::minmax<f2_t>		NearFar								;
+		SCameraPoints		Points								;
+		SCameraVectors		Vectors								;
+		minmax<f2_t>		NearFar								;
 		f3_t						Angle;
 	};
 
@@ -156,40 +157,40 @@ nmsp gpk
 		};
 	);
 	struct SSceneObject {
-		::gpk::SCENE_OBJECT_TYPE	Type;
+		SCENE_OBJECT_TYPE	Type;
 		s2_t						IndexTransform;
 		s2_t						Geometry;
 	};
 
 	struct SSceneTransforms {
-		::gpk::m4f2_t				Viewport								= {};
-		::gpk::m4f2_t				ViewportInverse							= {};
-		::gpk::m4f2_t				ViewportInverseCentered					= {};
-		::gpk::m4f2_t				FieldOfView								= {};
-		::gpk::m4f2_t				FinalProjection							= {};
-		::gpk::m4f2_t				FinalProjectionInverse					= {};
-		::gpk::m4f2_t				View									= {};
+		m4f2_t				Viewport								= {};
+		m4f2_t				ViewportInverse							= {};
+		m4f2_t				ViewportInverseCentered					= {};
+		m4f2_t				FieldOfView								= {};
+		m4f2_t				FinalProjection							= {};
+		m4f2_t				FinalProjectionInverse					= {};
+		m4f2_t				View									= {};
 	};
 
 	struct SScene {
-		::gpk::apod<::gpk::SSceneObject>		Objects						= {};
-		::gpk::SSceneGeometries					Geometries					= {};
-		::gpk::SSceneLights						Lights						= {};
-		::gpk::SSceneTransforms					Transforms					= {};
+		apod<SSceneObject>		Objects						= {};
+		SSceneGeometries					Geometries					= {};
+		SSceneLights						Lights						= {};
+		SSceneTransforms					Transforms					= {};
 
-		::gpk::apod<::gpk::SModelPivot<f2_t>>	ObjectPivots				= {};
-		::gpk::apod<::gpk::m4f2_t>				ObjectTransform				= {};
-		::gpk::apod<::gpk::m4f2_t>				ObjectOrientations			= {};
-		::gpk::apod<::gpk::m4f2_t>				ObjectOrientationsInverse	= {};
+		apod<SModelPivot<f2_t>>	ObjectPivots				= {};
+		apod<m4f2_t>				ObjectTransform				= {};
+		apod<m4f2_t>				ObjectOrientations			= {};
+		apod<m4f2_t>				ObjectOrientationsInverse	= {};
 
-		::gpk::SSceneCamera						Camera						=
-			{ ::gpk::SCameraPoints{{20, 1, 0}, {}}
-			, ::gpk::SCameraVectors
+		SSceneCamera						Camera						=
+			{ SCameraPoints{{20, 1, 0}, {}}
+			, SCameraVectors
 				{ {1, 0, 0}
 				, {0, 1, 0}
 				, {0, 0, 1}
 				}
-			, ::gpk::minmax<f2_t>
+			, minmax<f2_t>
 				{ 0.001f
 				, 100.0f
 				}
@@ -197,9 +198,9 @@ nmsp gpk
 			};
 	};
 
-	stin	gpk::err_t 	sceneBoxAdd			(SScene& scene)	{
-		const u2_t					newIndex			= scene.ObjectPivots.size();
-		if(failed(::gpk::resize
+	stin	err_t 	sceneBoxAdd			(SScene& scene)	{
+		u2_c					newIndex			= scene.ObjectPivots.size();
+		if(failed(resize
 			( newIndex + 1
 			, scene.ObjectPivots
 			, scene.ObjectTransform
@@ -207,7 +208,7 @@ nmsp gpk
 			, scene.ObjectOrientationsInverse
 			)))
 		{
-			::gpk::resize
+			resize
 				( newIndex + 1
 				, scene.ObjectPivots
 				, scene.ObjectTransform

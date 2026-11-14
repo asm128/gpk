@@ -23,7 +23,7 @@ nmsp gpk
 		apod<TILE_FLAG>	Flags;
 		tilegrid		Tiles;
 
-		err_t 			Save				(au0_t & output)	const	{ 
+		err_t 			Save				(au0_t & output)	cnst	{ 
 			if_fail_fe(saveView (output, Flags)); 
 			if_fail_fe(saveImage(output, Tiles.View)); 
 			return 0;
@@ -50,7 +50,7 @@ nmsp gpk
 		apod<STimestamps>	Stamps;	// 
 		apobj<STileBlock>	Blocks;	// 
 	
-		err_t 		Save				(au0_t & output)	const	{ 
+		err_t 		Save				(au0_t & output)	cnst	{ 
 			if_fail_fe(savePOD (output, Config)); 
 			if_fail_fe(saveView(output, Coords)); 
 			if_fail_fe(saveView(output, Stamps)); 

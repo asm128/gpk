@@ -33,7 +33,7 @@ nmsp gpk
 
 	stin	err_t eventEnqueueScreenDestroy		(apobj<SEventSystem> & queue)										{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Destroy, {}); }
 	stin	err_t eventEnqueueScreenClose		(apobj<SEventSystem> & queue)										{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Close  , {}); }
-	stin	err_t eventEnqueueScreenCreate		(apobj<SEventSystem> & queue, const SEventArgsScreenCreate & key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Create, key); }
+	stin	err_t eventEnqueueScreenCreate		(apobj<SEventSystem> & queue, cnst SEventArgsScreenCreate & key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Create, key); }
 	stin	err_t eventEnqueueScreenActivate	(apobj<SEventSystem> & queue, u0_t key)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Activate	, key); }
 	stin	err_t eventEnqueueScreenDeactivate	(apobj<SEventSystem> & queue, u0_t key)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Deactivate	, key); }
 	stin	err_t eventEnqueueScreenRedraw		(apobj<SEventSystem> & queue, u0_t key)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Screen, EVENT_SCREEN_Redraw		, key); }

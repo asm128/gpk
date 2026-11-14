@@ -36,8 +36,8 @@ namespace lls
 	GDEFINE_ENUM_VALUE(ACTION_CHAR, Leave	,24); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ACTION_CHAR, Study	,25); // Used with an SArgsEvent structure.
 	GDEFINE_ENUM_VALUE(ACTION_CHAR, Spawn	,26); // Used with an SArgsEvent structure.
-	typedef	::gpk::SEvent		<ACTION_CHAR>	EventMe;
-	typedef	::gpk::SEventView	<ACTION_CHAR>	EViewMe;
+	tydf	::gpk::SEvent		<ACTION_CHAR>	EventMe;
+	tydf	::gpk::SEventView	<ACTION_CHAR>	EViewMe;
 #pragma pack(pop)
 } // namespace
 

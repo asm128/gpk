@@ -28,18 +28,18 @@ nmsp gpk
 	};
 #pragma pack(pop)
 
-	tydf	range<uc_t>	rangeuc_t;	tydf	const rangeuc_t	rangeuc_c;
-	tydf	range<sc_t>	rangesc_t;	tydf	const rangesc_t	rangesc_c;
-	tydf	range<u0_t>	rangeu0_t;	tydf	const rangeu0_t	rangeu0_c;
-	tydf	range<u1_t>	rangeu1_t;	tydf	const rangeu1_t	rangeu1_c;
-	tydf	range<u2_t>	rangeu2_t;	tydf	const rangeu2_t	rangeu2_c;
-	tydf	range<u3_t>	rangeu3_t;	tydf	const rangeu3_t	rangeu3_c;
-	tydf	range<s0_t>	ranges0_t;	tydf	const ranges0_t	ranges0_c;
-	tydf	range<s1_t>	ranges1_t;	tydf	const ranges1_t	ranges1_c;
-	tydf	range<s2_t>	ranges2_t;	tydf	const ranges2_t	ranges2_c;
-	tydf	range<s3_t>	ranges3_t;	tydf	const ranges3_t	ranges3_c;
-	tydf	range<f2_t>	rangef2_t;	tydf	const rangef2_t	rangef2_c;
-	tydf	range<f3_t>	rangef3_t;	tydf	const rangef3_t	rangef3_c;
+	tydf	range<uc_t>	rangeuc_t;	tydf	cnst rangeuc_t	rangeuc_c;
+	tydf	range<sc_t>	rangesc_t;	tydf	cnst rangesc_t	rangesc_c;
+	tydf	range<u0_t>	rangeu0_t;	tydf	cnst rangeu0_t	rangeu0_c;
+	tydf	range<u1_t>	rangeu1_t;	tydf	cnst rangeu1_t	rangeu1_c;
+	tydf	range<u2_t>	rangeu2_t;	tydf	cnst rangeu2_t	rangeu2_c;
+	tydf	range<u3_t>	rangeu3_t;	tydf	cnst rangeu3_t	rangeu3_c;
+	tydf	range<s0_t>	ranges0_t;	tydf	cnst ranges0_t	ranges0_c;
+	tydf	range<s1_t>	ranges1_t;	tydf	cnst ranges1_t	ranges1_c;
+	tydf	range<s2_t>	ranges2_t;	tydf	cnst ranges2_t	ranges2_c;
+	tydf	range<s3_t>	ranges3_t;	tydf	cnst ranges3_t	ranges3_c;
+	tydf	range<f2_t>	rangef2_t;	tydf	cnst rangef2_t	rangef2_c;
+	tydf	range<f3_t>	rangef3_t;	tydf	cnst rangef3_t	rangef3_c;
 }
 
 #endif // GPK_RANGE_H

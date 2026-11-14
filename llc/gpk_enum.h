@@ -29,7 +29,7 @@ nmsp gpk
 		aobj<vcst_t>	Descriptions				= {};
 
 		stin	enum_definition<T>&	get				()											{
-			static	enum_definition<T>		valueRegistry;
+			sttc	enum_definition<T>		valueRegistry;
 			return valueRegistry;
 		}
 		stin	T					init			(vcst_t enumName)					{
@@ -43,7 +43,7 @@ nmsp gpk
 
 			return INVALID_VALUE;
 		}
-		err_t				get_value				(vcst_t name, T & value)		const	{
+		err_t				get_value				(vcst_t name, T & value)		cnst	{
 			for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i)
 				if(name == Names[i]) {
 					value				= Values[i];
@@ -53,7 +53,7 @@ nmsp gpk
 			value				= INVALID_VALUE;
 			return -1;
 		}
-		//err_t				get_value				(const char* name, T & value)				const			{
+		//err_t				get_value				(cnst sc_t* name, T & value)				cnst			{
 		//	for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i)
 		//		if(0 == ::strcmp(name, Names[i].begin())) {
 		//			value				= Values[i];
@@ -63,7 +63,7 @@ nmsp gpk
 		//	value				= INVALID_VALUE;
 		//	return -1;
 		//}
-		T					get_value				(vcst_t name)					const			{
+		T					get_value				(vcst_t name)					cnst			{
 			for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i) {
 				if(name == Names[i])
 					return Values[i];
@@ -71,7 +71,7 @@ nmsp gpk
 			enum_printf("Enumeration value not found! Name: %.*s.", (int)name.size(), name.begin());
 			return INVALID_VALUE;
 		}
-		err_t				get_value_by_index		(::gpk::u2_t index, T & value)					const			{
+		err_t				get_value_by_index		(::gpk::u2_t index, T & value)					cnst			{
 			if(index < Values.size()) {
 				value				= Values[index];
 				return 0;
@@ -80,11 +80,11 @@ nmsp gpk
 			value				= INVALID_VALUE;
 			return -1;
 		}
-		T					get_value_by_index		(::gpk::u2_t index)					const			{
+		T					get_value_by_index		(::gpk::u2_t index)					cnst			{
 			if_true_vwf(INVALID_VALUE, index >= Values.size(), "Enumeration index out of range! Index: 0x%" GPK_FMT_U2 ".", index);
 			return Values[index];
 		}
-		err_t				get_label_by_index		(::gpk::u2_t index, vcst_t & value)		const			{
+		err_t				get_label_by_index		(::gpk::u2_t index, vcst_t & value)		cnst			{
 			if(index < Names.size()) {
 				value				= Names[index];
 				return 0;
@@ -93,13 +93,13 @@ nmsp gpk
 			enum_printf("Enumeration index out of range! Index: 0x%" GPK_FMT_U2 ".", index);
 			return -1;
 		}
-		vcst_t			get_label_by_index		(::gpk::u2_t index)					const			{
+		vcst_t			get_label_by_index		(::gpk::u2_t index)					cnst			{
 			if(index < Names.size())
 				return Names[index];
 			enum_printf("Enumeration index out of range! Index: 0x%" GPK_FMT_U2 ".", index);
 			return UNDEFINED_ENUM_VALUE_STR;
 		}
-		err_t				get_value_index			(vcst_t name, s2_t & index)	const			{
+		err_t				get_value_index			(vcst_t name, s2_t & index)	cnst			{
 			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
 				if(name == Names[i]) {
 					index				= (s2_t)i;
@@ -108,7 +108,7 @@ nmsp gpk
 			enum_printf("Enumeration value not found! Name: %.*s.", (int)name.size(), name.begin());
 			return index				= -1;
 		}
-		s2_t				get_value_index			(vcst_t name)					const			{
+		s2_t				get_value_index			(vcst_t name)					cnst			{
 			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
 				if(name == Names[i])
 					return (s2_t)i;
@@ -116,7 +116,7 @@ nmsp gpk
 			enum_printf("Enumeration value not found! Name: %.*s.", (int)name.size(), name.begin());
 			return -1;
 		}
-		err_t				get_value_index			(const T & value, s2_t & index)		const			{
+		err_t				get_value_index			(cnst T & value, s2_t & index)		cnst			{
 			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
 				if(value == Values[i]) {
 					index					= (s2_t)i;
@@ -125,7 +125,7 @@ nmsp gpk
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return index					= -1;
 		}
-		s2_t				get_value_index			(const T & value)				const			{
+		s2_t				get_value_index			(cnst T & value)				cnst			{
 			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
 				if(value == Values[i])
 					return (s2_t)i;
@@ -133,7 +133,7 @@ nmsp gpk
 			enum_printf("Enumeration value not found! Value: %llX.", (u3_t)value);
 			return -1;
 		}
-		err_t				get_value_label			(const T & value, vcst_t & name)	const			{
+		err_t				get_value_label			(cnst T & value, vcst_t & name)	cnst			{
 			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i)
 				if(value == Values[i]) {
 					name				= Names[i];
@@ -143,7 +143,7 @@ nmsp gpk
 			name				= UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
-		err_t				get_value_desc			(const T & value, vcst_t & name)	const			{
+		err_t				get_value_desc			(cnst T & value, vcst_t & name)	cnst			{
 			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i)
 				if(value == Values[i]) {
 					name				= Descriptions[i];
@@ -153,7 +153,7 @@ nmsp gpk
 			name				= UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
-		vcst_t	get_value_label			(const T & value)				const			{
+		vcst_t	get_value_label			(cnst T & value)				cnst			{
 			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i) {
 				if(value == Values[i])
 					return Names[i];
@@ -161,7 +161,7 @@ nmsp gpk
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return UNRESOLVED_ENUM_LABEL_STR;
 		}
-		vcst_t	get_value_desc			(const T & value)				const			{
+		vcst_t	get_value_desc			(cnst T & value)				cnst			{
 			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i) {
 				if(value == Values[i])
 					return Descriptions[i];
@@ -169,7 +169,7 @@ nmsp gpk
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return UNRESOLVED_ENUM_LABEL_STR;
 		}
-		err_t				add_value				(const T & value, vcst_t name, vcst_t title, vcst_t description)	{
+		err_t				add_value				(cnst T & value, vcst_t name, vcst_t title, vcst_t description)	{
 			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
 				if(Names[i] == name) {
 					if_true_fef(Values[i] != value, "Enumeration name already has another value! Type:'%.*s'. Name:'%.*s'. Previous:0x%llX. New:0x%llX."
@@ -202,7 +202,7 @@ nmsp gpk
 			::gpk::u2_t				valueCount				= {};
 			for(::gpk::u2_t i=0; i < Values.size(); ++i)
 				valueCount += get_value_index(Values[i]) == (s2_t)i;
-			const T					value					= (T)valueCount;
+			cnst T					value					= (T)valueCount;
 			::gpk::u2_t				newIndex				= Values.push_back(value);
 			if_fail_fe(newIndex);
 			if_fail_fe(Names.push_back(name));
@@ -214,7 +214,7 @@ nmsp gpk
 	};
 
 	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	()					nxpt	{ return enum_definition<TEnum>::get();	}
-	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	(const TEnum & )	nxpt	{ return enum_definition<TEnum>::get();	}
+	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	(cnst TEnum & )	nxpt	{ return enum_definition<TEnum>::get();	}
 
 	// This type is used to initialize an enumeration value.
 	tpl_t struct genum_value {
@@ -226,22 +226,22 @@ nmsp gpk
 		vcst_t				Description				= INVALID_ENUM_VALUE_STR;
 		//
 		inxp				genum_value				()										= default;
-		inxp				genum_value				(const genum_value & other)				= default;
-							genum_value				(const T & value)													: Value((T)value), Name(get_enum<T>().get_value_namev(value))		{}
+		inxp				genum_value				(cnst genum_value & other)				= default;
+							genum_value				(cnst T & value)													: Value((T)value), Name(get_enum<T>().get_value_namev(value))		{}
 #ifndef GPK_ESP8266
-							genum_value				(const T & value, vcst_t name)										: Value((T)value), Name(name), Title(name), Description(name)			{ get_enum<T>().add_value(value, name, name, name);			}
-							genum_value				(const T & value, vcst_t name, vcst_t description)					: Value((T)value), Name(name), Title(name), Description(description)	{ get_enum<T>().add_value(value, name, name, description);	}
-							genum_value				(const T & value, vcst_t name, vcst_t title, vcst_t description)	: Value((T)value), Name(name), Title(title), Description(description)	{ get_enum<T>().add_value(value, name, title, description);	}
+							genum_value				(cnst T & value, vcst_t name)										: Value((T)value), Name(name), Title(name), Description(name)			{ get_enum<T>().add_value(value, name, name, name);			}
+							genum_value				(cnst T & value, vcst_t name, vcst_t description)					: Value((T)value), Name(name), Title(name), Description(description)	{ get_enum<T>().add_value(value, name, name, description);	}
+							genum_value				(cnst T & value, vcst_t name, vcst_t title, vcst_t description)	: Value((T)value), Name(name), Title(title), Description(description)	{ get_enum<T>().add_value(value, name, title, description);	}
 #else
-							genum_value				(const T & value, vcst_t name)										: Value((T)value), Name(name), Title(name), Description(name)			{ }
-							genum_value				(const T & value, vcst_t name, vcst_t description)					: Value((T)value), Name(name), Title(name), Description(description)	{ }
-							genum_value				(const T & value, vcst_t name, vcst_t title, vcst_t description)	: Value((T)value), Name(name), Title(title), Description(description)	{ }
+							genum_value				(cnst T & value, vcst_t name)										: Value((T)value), Name(name), Title(name), Description(name)			{ }
+							genum_value				(cnst T & value, vcst_t name, vcst_t description)					: Value((T)value), Name(name), Title(name), Description(description)	{ }
+							genum_value				(cnst T & value, vcst_t name, vcst_t title, vcst_t description)	: Value((T)value), Name(name), Title(title), Description(description)	{ }
 #endif
-		inxp	oper	const	T&				()			const	{ return Value; }
+		inxp	oper	cnst	T&				()			cnst	{ return Value; }
 	};
 
 	tplt <tpnm TEnum, size_t nameLen>
-	TEnum										get_value			(const char (&valueLabel)[nameLen])	{ return get_enum<TEnum>().get_value(vcst_t{valueLabel}); }
+	TEnum										get_value			(cnst sc_t (&valueLabel)[nameLen])	{ return get_enum<TEnum>().get_value(vcst_t{valueLabel}); }
 	tplt <tpnm TEnum>			TEnum			get_value			(vcst_t valueLabel)					{ return get_enum<TEnum>().get_value(valueLabel); }
 
 	tplt <tpnm TEnum>			TEnum			get_value_camelcased(vcst_t uncased)					{
@@ -250,19 +250,19 @@ nmsp gpk
 		return get_enum<TEnum>().get_value(camelCased);
 	}
 	tplt<tpnm TEnum>	ndsi	u2_t			get_value_count		()							nxpt	{ return get_enum<TEnum>().Values.size(); }
-	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_label		(const TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
-	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_namev		(const TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
-	tplt<tpnm TEnum>	ndsi	sc_c*			get_value_namep		(const TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit).begin(); }
-	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_descv		(const TEnum & statusBit)			{ return get_enum<TEnum>().get_value_desc (statusBit); }
-	tplt<tpnm TEnum>	ndsi	sc_c*			get_value_descp		(const TEnum & statusBit)			{ return get_enum<TEnum>().get_value_desc (statusBit).begin(); }
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_label		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_namev		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
+	tplt<tpnm TEnum>	ndsi	sc_c*			get_value_namep		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit).begin(); }
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_descv		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_desc (statusBit); }
+	tplt<tpnm TEnum>	ndsi	sc_c*			get_value_descp		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_desc (statusBit).begin(); }
 	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_labels	()							nxpt	{ return get_enum<TEnum>().Names; }
 	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_names		()							nxpt	{ return get_enum<TEnum>().Names; }
 	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_descs		()							nxpt	{ return get_enum<TEnum>().Names; }
-	tplt<tpnm TEnum>	ndsi	s2_t			get_value_index		(const TEnum & statusBit)			{ return get_enum<TEnum>().get_value_index(statusBit); }
+	tplt<tpnm TEnum>	ndsi	s2_t			get_value_index		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_index(statusBit); }
 	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_namev		()							nxpt	{ return get_enum<TEnum>().Name;			}
-	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_namev		(const TEnum & )			nxpt	{ return get_enum<TEnum>().Name;			}
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_namev		(cnst TEnum & )			nxpt	{ return get_enum<TEnum>().Name;			}
 	tplt<tpnm TEnum>	ndsi	sc_c*			get_enum_namep		()							nxpt	{ return get_enum<TEnum>().Name.begin();	}
-	tplt<tpnm TEnum>	ndsi	sc_c*			get_enum_namep		(const TEnum & )			nxpt	{ return get_enum<TEnum>().Name.begin();	}
+	tplt<tpnm TEnum>	ndsi	sc_c*			get_enum_namep		(cnst TEnum & )			nxpt	{ return get_enum<TEnum>().Name.begin();	}
 
 	tplTstct genum_value_auto {
 		T		Value				= enum_definition<T>::INVALID_VALUE;
@@ -271,19 +271,19 @@ nmsp gpk
 		vcst_t	Description			= INVALID_ENUM_VALUE_STR;
 		//
 		inxp	genum_value_auto	()									= default;
-		inxp	genum_value_auto	(const genum_value_auto & other)	= default;
+		inxp	genum_value_auto	(cnst genum_value_auto & other)	= default;
 				genum_value_auto	(vcst_t name)													: Value((T)0), Name(name), Title(name), Description(name)			{ get_enum<T>().add_value_auto(name, name, name);			Value = get_value<T>(name); }
 				genum_value_auto	(vcst_t name, vcst_t description)							: Value((T)0), Name(name), Title(name), Description(description)	{ get_enum<T>().add_value_auto(name, name, description);		Value = get_value<T>(name); }
 				genum_value_auto	(vcst_t name, vcst_t title, vcst_t description)	: Value((T)0), Name(name), Title(title), Description(description)	{ get_enum<T>().add_value_auto(name, title, description);	Value = get_value<T>(name); }
 
-		inxp	oper	cnst T&		()			const	{ return Value; }
+		inxp	oper	cnst T&		()			cnst	{ return Value; }
 	};
 } // nmsp
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																							\
 	enum EnumName : IntType {};																											\
-	static	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);					\
+	sttc	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);					\
 	sinx	EnumName		oper &	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a & (IntType)b);				}	\
 	sinx	EnumName		oper ~	(EnumName  a)				nxpt	{ return (EnumName)		(~(IntType)a);					}	\
 	sinx	EnumName		oper ^	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a ^ (IntType)b);				}	\
@@ -296,9 +296,9 @@ nmsp gpk
 	struct EnumName {																														\
 		IntType				Value			;																								\
 		inln	oper		IntType&		()			nxpt	{ return Value; }															\
-		inxp	oper		const IntType&	()	csnx	{ return Value; }															\
+		inxp	oper		cnst IntType&	()	csnx	{ return Value; }															\
 	};																																		\
-	static	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);								\
+	sttc	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);								\
 	sinx	EnumName		oper &	(EnumName  a, EnumName b)	nxpt	{ return {a & (IntType)b};				}	\
 	sinx	EnumName		oper ~	(EnumName  a)				nxpt	{ return {~(IntType)a};					}	\
 	sinx	EnumName		oper ^	(EnumName  a, EnumName b)	nxpt	{ return {a ^ (IntType)b};				}	\
@@ -309,31 +309,31 @@ nmsp gpk
 //
 #ifdef GPK_ATMEL
 #	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)					\
-	stxp	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);	\
-	//static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {szof(#ValueName) - 1, F(#ValueName)})
+	stxp	cnst EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);	\
+	//sttc	cnst EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {szof(#ValueName) - 1, F(#ValueName)})
 
 #	define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription)		\
-	stxp	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);		\
-	//static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {szof(#ValueName) - 1, F(#ValueName)})
+	stxp	cnst EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);		\
+	//sttc	cnst EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {szof(#ValueName) - 1, F(#ValueName)})
 
 #	define GDEFINE_ENUM_VALTD(EnumName, ValueName, EnumValue, EnumTitle, EnumDescription)	\
-	stxp	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);				\
-	//static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {szof(#ValueName) - 1, F(#ValueName)})
+	stxp	cnst EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);				\
+	//sttc	cnst EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {szof(#ValueName) - 1, F(#ValueName)})
 	
 #else
 #	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)							\
-	stxp	const EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
-	static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
+	stxp	cnst EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
+	sttc	cnst EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
 
-#	define GDEFINE_ENUM_AVALUE(EnumName, ValueName) static	const EnumName	EnumName##_##ValueName	= (EnumName)::gpk::genum_value_auto<EnumName>(#ValueName)
+#	define GDEFINE_ENUM_AVALUE(EnumName, ValueName) sttc	cnst EnumName	EnumName##_##ValueName	= (EnumName)::gpk::genum_value_auto<EnumName>(#ValueName)
 
 #	define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription)				\
-	stxp	const EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
-	static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName, EnumDescription)
+	stxp	cnst EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
+	sttc	cnst EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName, EnumDescription)
 
 #	define GDEFINE_ENUM_VALTD(EnumName, ValueName, EnumValue, EnumTitle, EnumDescription)				\
-	stxp	const EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
-	static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName, EnumTitle, EnumDescription)
+	stxp	cnst EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
+	sttc	cnst EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName, EnumTitle, EnumDescription)
 #endif
 
 #define GDEFINE_FLAG_TYPE		GDEFINE_ENUM_TYPE
@@ -343,8 +343,8 @@ nmsp gpk
 #	pragma warning(disable : 4063)	// On Windows, usng enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
-#define gpk_warning_unhandled_value(_enumValue)			warning_printf("Unhandled'%s' value:(0x%X)(%" GPK_FMT_S2 ")(%c) %s"	, ::gpk::get_enum_namep GPKREP3(_enumValue) ? char(_enumValue) : '?', ::gpk::get_value_namep(_enumValue))
-#define gpk_enum_valued_log(_funcPrintf, _enumValue)	_funcPrintf("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'-'%s'"				, ::gpk::get_enum_namep GPKREP3(_enumValue) ? char(_enumValue) : '?', ::gpk::get_value_namep(_enumValue), ::gpk::get_value_descp(_enumValue))
+#define gpk_warning_unhandled_value(_enumValue)			warning_printf("Unhandled'%s' value:(0x%X)(%" GPK_FMT_S2 ")(%c) %s"	, ::gpk::get_enum_namep GPKREP3(_enumValue) ? sc_t(_enumValue) : '?', ::gpk::get_value_namep(_enumValue))
+#define gpk_enum_valued_log(_funcPrintf, _enumValue)	_funcPrintf("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'-'%s'"				, ::gpk::get_enum_namep GPKREP3(_enumValue) ? sc_t(_enumValue) : '?', ::gpk::get_value_namep(_enumValue), ::gpk::get_value_descp(_enumValue))
 #define gpk_enum_value_info(_enumValue)					gpk_enum_value_log	(info_printf	, _enumValue)
 #define gpk_enum_value_warning(_enumValue)				gpk_enum_value_log	(warning_printf	, _enumValue)
 #define gpk_enum_value_error(_enumValue)				gpk_enum_value_log	(error_printf	, _enumValue)
@@ -352,7 +352,7 @@ nmsp gpk
 #define gpk_enum_valued_warning(_enumValue)				gpk_enum_valued_log	(warning_printf	, _enumValue)
 #define gpk_enum_valued_error(_enumValue)				gpk_enum_valued_log	(error_printf	, _enumValue)
 
-#define gpk_enum_value_log(printf_fn, enumVal)	printf_fn("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'", get_enum_namep GPKREP3(enumVal) ? char(enumVal) : '?', get_value_namep(enumVal))
+#define gpk_enum_value_log(printf_fn, enumVal)	printf_fn("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'", get_enum_namep GPKREP3(enumVal) ? sc_t(enumVal) : '?', get_value_namep(enumVal))
 #define GDEFINE_ENUM_CASE_DEFAULT(TEnum, TValue)    default                 : rtrn #TValue
 #define GDEFINE_ENUM_CASE(TEnum, TValue)            case TEnum##_##TValue   : rtrn #TValue
 

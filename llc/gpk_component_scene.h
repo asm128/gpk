@@ -233,10 +233,10 @@ nmsp gpk {
 		_tContainer			Values	;
 
 		_tValue &			oper[]					(u2_t index)				{ return Values[index]; }
-		const _tValue &		oper[]					(u2_t index)	const		{ return Values[index]; }
+		cnst _tValue &		oper[]					(u2_t index)	cnst		{ return Values[index]; }
 
-		const u2_t &		size						()				csnx	{ return Names.size(); }
-		err_t				push_back					(vcst_t name, const _tValue & value) {
+		u2_c &		size						()				csnx	{ return Names.size(); }
+		err_t				push_back					(vcst_t name, cnst _tValue & value) {
 			if_fail_fe(Names.push_back(name));
 			return Values.push_back(value);
 		}
@@ -276,9 +276,9 @@ nmsp gpk {
 	err_t					nodeRendererDrawNode
 		( SNodeRenderer			& renderer
 		, u2_t						iNode
-		, const m4f2_t			& view
-		, const m4f2_t			& projection
-		, const m4f2_t			& viewProjection
+		, cnst m4f2_t			& view
+		, cnst m4f2_t			& projection
+		, cnst m4f2_t			& viewProjection
 		, g8bgra					target_image
 		, grid<u2_t>			target_depth
 		);
@@ -288,7 +288,7 @@ nmsp gpk {
 		, s2_t						iCamera
 		, g8bgra					target_image
 		, grid<u2_t>			target_depth
-		, bool							drawHidden			= false
+		, b8_t							drawHidden			= false
 		);
 
 	struct SComponentData {

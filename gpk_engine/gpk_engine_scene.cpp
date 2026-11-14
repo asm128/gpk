@@ -15,21 +15,21 @@ GPK_USING_N2		();
 GPK_USING_N3		();
 
 tplt <tpnm _tIndex>
-static	gpk::err_t transformTriangles					
+sttc	gpk::err_t transformTriangles					
 	( ::gpk::SVSOutput		& output
 	, ::gpk::view<cnst _tIndex>	indices			
 	, ::gpk::vc3f2_t			positions	
 	, ::gpk::vc3f2_t			normals		
 	, ::gpk::vc2f2_t			uv			
-	, const ::gpk::m4f2_t	& projection		
-	, const ::gpk::m4f2_t	& worldTransform	
-	, const ::gpk::n3f2_t	& cameraFront
+	, cnst ::gpk::m4f2_t	& projection		
+	, cnst ::gpk::m4f2_t	& worldTransform	
+	, cnst ::gpk::n3f2_t	& cameraFront
 )	{ 
-	::gpk::vctri<_tIndex>				view_indices			= {(const ::gpk::tri<_tIndex>*)indices.begin(), indices.size() / 3};
-	const ::gpk::m4f2_t			mWVPS					= worldTransform * projection;
+	::gpk::vctri<_tIndex>				view_indices			= {(cnst ::gpk::tri<_tIndex>*)indices.begin(), indices.size() / 3};
+	cnst ::gpk::m4f2_t			mWVPS					= worldTransform * projection;
 
 	for(u2_t iTriangle = 0; iTriangle < view_indices.size(); ++iTriangle) {
-		const ::gpk::tri<_tIndex>	vertexIndices			= view_indices[iTriangle];
+		cnst ::gpk::tri<_tIndex>	vertexIndices			= view_indices[iTriangle];
 		::gpk::tri3f2_t				transformedNormals		= {normals[vertexIndices.A], normals[vertexIndices.B], normals[vertexIndices.C]};
 		::gpk::transformDirection(transformedNormals, worldTransform);
 		transformedNormals.A.Normalize();
@@ -64,14 +64,14 @@ static	gpk::err_t transformTriangles
 	return 0; 
 }
 
-static	gpk::err_t transformTriangles
+sttc	gpk::err_t transformTriangles
 	( ::gpk::SEngineRenderCache				& renderCache
-	, const gpk::SEngineScene				& scene
-	, const gpk::SEngineSceneConstants	& constants
+	, cnst gpk::SEngineScene				& scene
+	, cnst gpk::SEngineSceneConstants	& constants
 	, s2_t								iRenderNode
 	) {
-	const gpk::SRenderNode	& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
-	const gpk::SGeometryMesh	& mesh					= *scene.Graphics->Meshes[renderNode.Mesh];
+	cnst gpk::SRenderNode	& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
+	cnst gpk::SGeometryMesh	& mesh					= *scene.Graphics->Meshes[renderNode.Mesh];
 	verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %.*s", iRenderNode, renderNode.Mesh, renderNode.Slice, GPK_VIEW_ARGS(scene.Graphics->Meshes.Names[renderNode.Mesh]));
 
 
@@ -79,7 +79,7 @@ static	gpk::err_t transformTriangles
 
 	if(mesh.GeometryBuffers.size()) {
 		gpk::SRenderNodeConstants	transforms				= scene.RenderNodes.Transforms[iRenderNode];
-		const gpk::m4f2_t			& worldTransform		= transforms.Model;
+		cnst gpk::m4f2_t			& worldTransform		= transforms.Model;
 
 		gpk::vc3f2_c			positions				= (mesh.GeometryBuffers.size() > 1) ? gpk::vc3f2_t{(gpk::n3f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / (u0_t)sizeof(gpk::n3f2_t)}	: gpk::vc3f2_t{};
 		gpk::vc3f2_c			normals					= (mesh.GeometryBuffers.size() > 2) ? gpk::vc3f2_t{(gpk::n3f2_c*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / (u0_t)sizeof(gpk::n3f2_t)}	: gpk::vc3f2_t{};
@@ -88,18 +88,18 @@ static	gpk::err_t transformTriangles
 		transforms.Model					= scene.RenderNodes.BaseTransforms[iRenderNode].Model * transforms.Model;
 		::gpk::pobj<::gpk::SRenderBuffer>	indexBuffer		= scene.Graphics->Buffers[mesh.GeometryBuffers[0]];
 		if(indexBuffer->Desc.Format.TotalBytes() == 1) {
-			const ::gpk::vcu0_t			indices					= ::gpk::vcu0_t{(const u0_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / (u0_t)sizeof(const u0_t)};
-			const ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
+			cnst ::gpk::vcu0_t			indices					= ::gpk::vcu0_t{(cnst u0_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / (u0_t)sizeof(cnst u0_t)};
+			cnst ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
 			::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
 		}
 		else if(indexBuffer->Desc.Format.TotalBytes() == 2) {
-			const ::gpk::vcu1_t			indices					= ::gpk::vcu1_t{(const u1_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / (u0_t)sizeof(const u1_t)};
-			const ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
+			cnst ::gpk::vcu1_t			indices					= ::gpk::vcu1_t{(u1_c*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / (u0_t)sizeof(u1_c)};
+			cnst ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
 			::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
 		}
 		else if(indexBuffer->Desc.Format.TotalBytes() == 4) {
-			const ::gpk::vcu2_t			indices					= ::gpk::vcu2_t{(const u2_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / (u0_t)sizeof(const u1_t)};
-			const ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
+			cnst ::gpk::vcu2_t			indices					= ::gpk::vcu2_t{(u2_c*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / (u0_t)sizeof(u1_c)};
+			cnst ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
 			::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
 		}
 	}
@@ -107,47 +107,47 @@ static	gpk::err_t transformTriangles
 }
 
 
-static	gpk::err_t drawBuffers
+sttc	gpk::err_t drawBuffers
 	( ::gpk::g8bgra										& backBufferColors
 	, ::gpk::gu2_t										backBufferDepth
 	, ::gpk::SVSOutput									& outVS
 	, ::gpk::SVSCache									& cacheVS
-	, const ::gpk::SRenderMaterial						& material
+	, cnst ::gpk::SRenderMaterial						& material
 	, ::gpk::gc8bgra									surface
-	, const ::gpk::SEngineSceneConstants				& constants
-	, const ::gpk::SRenderNodeConstants					& nodeConstants
-	, const ::std::function<::gpk::TFuncPixelShader>	& ps
+	, cnst ::gpk::SEngineSceneConstants				& constants
+	, cnst ::gpk::SRenderNodeConstants					& nodeConstants
+	, cnst ::std::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
 	::gpk::atrif2_t				& triangleWeights			= cacheVS.TriangleWeights		;
 	::gpk::a2s1_t				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
-	const ::gpk::n2u1_t			offscreenMetrics			= backBufferColors.metrics().u1();
-	const ::gpk::n3f2_t			lightDirectionNormalized	= ::gpk::n3f2_t{constants.LightDirection}.Normalize();
+	cnst ::gpk::n2u1_t			offscreenMetrics			= backBufferColors.metrics().u1();
+	cnst ::gpk::n3f2_t			lightDirectionNormalized	= ::gpk::n3f2_t{constants.LightDirection}.Normalize();
 	::gpk::SPSIn				inPS						= {nodeConstants};
 	inPS.Surface			= surface;
 	inPS.Material			= material;
 
 	for(u2_t iTriangle = 0; iTriangle < outVS.PositionsScreen.size(); ++iTriangle) {
-		const ::gpk::tri3f2_t		& triPositions				= outVS.PositionsScreen	[iTriangle];
+		cnst ::gpk::tri3f2_t		& triPositions				= outVS.PositionsScreen	[iTriangle];
 		if( triPositions.CulledZ({0, 0xFFFFFF})
 		 || triPositions.CulledX({0, (f2_t)offscreenMetrics.x})
 		 || triPositions.CulledY({0, (f2_t)offscreenMetrics.y})
 		)
 			continue;
 
-		const ::gpk::tri3f2_t		& triPositionsWorld			= outVS.PositionsWorld	[iTriangle];
-		const ::gpk::tri3f2_t		& triNormals				= outVS.Normals			[iTriangle];
-		const ::gpk::tri2f2_t		& triUVs					= outVS.UVs				[iTriangle];
+		cnst ::gpk::tri3f2_t		& triPositionsWorld			= outVS.PositionsWorld	[iTriangle];
+		cnst ::gpk::tri3f2_t		& triNormals				= outVS.Normals			[iTriangle];
+		cnst ::gpk::tri2f2_t		& triUVs					= outVS.UVs				[iTriangle];
 
 		trianglePixelCoords.clear();
 		triangleWeights.clear();
 		if_fail_e(::gpk::drawTriangle(offscreenMetrics.u2(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth));
-		//const bool													stripped					= surface[0][0] == ::gpk::bgra{gpk::WHITE};
+		//b8_c													stripped					= surface[0][0] == ::gpk::bgra{gpk::WHITE};
 		for(u2_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord) {
-			const ::gpk::trif2_t							& vertexWeights				= triangleWeights[iCoord];
+			cnst ::gpk::trif2_t							& vertexWeights				= triangleWeights[iCoord];
 			inPS.WeightedPosition								= triPositionsWorld.A * vertexWeights.A + triPositionsWorld.B * vertexWeights.B + triPositionsWorld.C * vertexWeights.C;
 			inPS.WeightedNormal									= (triNormals.A * vertexWeights.A + triNormals.B * vertexWeights.B + triNormals.C * vertexWeights.C).Normalize();
 			inPS.WeightedUV										= triUVs.A * vertexWeights.A + triUVs.B * vertexWeights.B + triUVs.C * vertexWeights.C;
-			const ::gpk::n2u1_t										coord						= trianglePixelCoords[iCoord].u1();
+			cnst ::gpk::n2u1_t										coord						= trianglePixelCoords[iCoord].u1();
 			ps(constants, inPS, backBufferColors[coord.y][coord.x]);
 		}
 	}
@@ -158,14 +158,14 @@ gpk::err_t 		gpk::drawScene
 	( ::gpk::g8bgra				backBufferColors
 	, ::gpk::gu2_t				backBufferDepth
 	, ::gpk::SEngineRenderCache	& renderCache
-	, const ::gpk::SEngineScene	& scene
-	, const ::gpk::n3f2_t		& cameraPosition
-	, const ::gpk::n3f2_t		& cameraTarget
-	, const ::gpk::n3f2_t		& cameraUp
-	, const ::gpk::minmaxf2_t	& nearFar
+	, cnst ::gpk::SEngineScene	& scene
+	, cnst ::gpk::n3f2_t		& cameraPosition
+	, cnst ::gpk::n3f2_t		& cameraTarget
+	, cnst ::gpk::n3f2_t		& cameraUp
+	, cnst ::gpk::minmaxf2_t	& nearFar
 ) {	//
-	const ::gpk::n3f2_t			cameraFront			= (cameraTarget - cameraPosition).Normalize();
-	const ::gpk::n2u1_t			offscreenMetrics	= backBufferColors.metrics16();
+	cnst ::gpk::n3f2_t			cameraFront			= (cameraTarget - cameraPosition).Normalize();
+	cnst ::gpk::n2u1_t			offscreenMetrics	= backBufferColors.metrics16();
 
 	::gpk::SEngineSceneConstants	constants		= {};
 	constants.CameraPosition	= cameraPosition;
@@ -177,13 +177,13 @@ gpk::err_t 		gpk::drawScene
 	constants.VP			= constants.View * constants.Perspective;
 	constants.VPS			= constants.VP * constants.Screen;
 
-	static ::std::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
+	sttc ::std::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
 	for(u2_t iRenderNode = 0, countNodes = scene.RenderNodes.RenderNodes.size(); iRenderNode < countNodes; ++iRenderNode) {
-		const ::gpk::SRenderNodeFlags	& renderNodeFlags		= scene.RenderNodes.Flags[iRenderNode];
+		cnst ::gpk::SRenderNodeFlags	& renderNodeFlags		= scene.RenderNodes.Flags[iRenderNode];
 		if(renderNodeFlags.NoDraw)
 			continue;
 
-		const ::gpk::SRenderNode		& renderNode		= scene.RenderNodes.RenderNodes[iRenderNode];
+		cnst ::gpk::SRenderNode		& renderNode		= scene.RenderNodes.RenderNodes[iRenderNode];
 		if(renderNode.Mesh >= scene.Graphics->Meshes.size())
 			continue;
 
@@ -191,20 +191,20 @@ gpk::err_t 		gpk::drawScene
 		
 		::gpk::SRenderNodeConstants		transforms			= scene.RenderNodes.Transforms[iRenderNode];
 		transforms.NodeSize	= scene.RenderNodes.BaseTransforms[iRenderNode].NodeSize;
-		const ::gpk::m4f2_t				& worldTransform	= transforms.Model;
+		cnst ::gpk::m4f2_t				& worldTransform	= transforms.Model;
 		if((worldTransform.GetTranslation() - constants.CameraPosition).Normalize().Dot(constants.CameraFront) <= 0)
 			return 0;
 
 		if_true_cef(failed(::transformTriangles(renderCache, scene, constants, iRenderNode)), "iRenderNode %i", iRenderNode);
 
-		const ::gpk::SSkin				& skin				= *scene.Graphics->Skins.Elements[renderNode.Skin];
-		const ::gpk::SRenderMaterial	& material			= skin.Material;
-		const u2_t					tex					= skin.Textures[0];
-		const ::gpk::SSurface			& surface			= *scene.Graphics->Surfaces[tex];
-		const ::std::function<::gpk::TFuncPixelShader>	& fx
+		cnst ::gpk::SSkin				& skin				= *scene.Graphics->Skins.Elements[renderNode.Skin];
+		cnst ::gpk::SRenderMaterial	& material			= skin.Material;
+		u2_c					tex					= skin.Textures[0];
+		cnst ::gpk::SSurface			& surface			= *scene.Graphics->Surfaces[tex];
+		cnst ::std::function<::gpk::TFuncPixelShader>	& fx
 			= (renderNode.Shader >= scene.Graphics->Shaders.size()) ? defaultShader : *scene.Graphics->Shaders[renderNode.Shader];
 
-		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u2()}, constants, transforms, fx);
+		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(cnst ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u2()}, constants, transforms, fx);
 	}
 
 	::gpk::apod<::gpk::n3f2_t>					& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
@@ -233,7 +233,7 @@ gpk::err_t 		gpk::drawScene
 }
 
 gpk::err_t 		gpk::createBuffers	
-	( const ::gpk::SGeometryBuffers		& geometry
+	( cnst ::gpk::SGeometryBuffers		& geometry
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
@@ -267,7 +267,7 @@ gpk::err_t 		gpk::createBuffers
 
 gpk::err_t 		gpk::createBuffers
 	( ::gpk::SRenderBufferManager	& bufferManager 
-	, const ::gpk::SGeometryBuffers	& geometry
+	, cnst ::gpk::SGeometryBuffers	& geometry
 	, u2_t						& iIndicesVertex
 	, u2_t						& iVertices
 	, u2_t						& iNormals
@@ -283,9 +283,9 @@ gpk::err_t 		gpk::createBuffers
 }
 
 gpk::err_t 		gpk::SEngineScene::CreateRenderNode
-	( const ::gpk::SGeometryBuffers		& geometry
+	( cnst ::gpk::SGeometryBuffers		& geometry
 	, vcst_t	name 
-	, bool								createSkin
+	, b8_t								createSkin
 	) {
 	u2_t					iIndicesVertex			= 0;
 	u2_t					iVertices				= 0;

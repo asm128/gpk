@@ -44,12 +44,12 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(VOXEL_FACE, Right	, 5);
 
 	struct SVoxelFaceBits {
-		bool		 Bottom			: 1;
-		bool		 Back			: 1;
-		bool		 Left			: 1;
-		bool		 Top			: 1;
-		bool		 Front			: 1;
-		bool		 Right			: 1;
+		b8_t		 Bottom			: 1;
+		b8_t		 Back			: 1;
+		b8_t		 Left			: 1;
+		b8_t		 Top			: 1;
+		b8_t		 Front			: 1;
+		b8_t		 Right			: 1;
 	};
 
 	stxp	::gpk::astatic<::gpk::quad3f2_t, 6>	VOXEL_FACE_VERTICES			= {
@@ -133,7 +133,7 @@ nmsp gpk
 		::gpk::n3<_uIndex>							Position;
 		_uIndex											ColorIndex;
 
-		bool											Limits						(::gpk::VOXEL_FACE face)	const	{
+		b8_t											Limits						(::gpk::VOXEL_FACE face)	cnst	{
 			switch(face) {
 			case ::gpk::VOXEL_FACE_Top		: return Position.y == 255;
 			case ::gpk::VOXEL_FACE_Front	: return Position.x == 255;
@@ -161,17 +161,17 @@ nmsp gpk
 		::gpk::aobj<::gpk::SVoxelChunk<T>>	Chunks;
 		::gpk::apod<::gpk::n2u0_t>			ChunkPositions;
 
-		s2_t										GetChunk					(const ::gpk::n2u0_t & chunkCoords) const	{ 
-			return ::gpk::find(chunkCoords, ::gpk::view<const ::gpk::n2u0_t>{ChunkPositions}); 
+		s2_t										GetChunk					(cnst ::gpk::n2u0_t & chunkCoords) cnst	{ 
+			return ::gpk::find(chunkCoords, ::gpk::view<cnst ::gpk::n2u0_t>{ChunkPositions}); 
 		}
 
-		s2_t											GetChunkForVoxel			(const ::gpk::n3u0_t & voxelPosition) const	{ 
-			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
+		s2_t											GetChunkForVoxel			(cnst ::gpk::n3u0_t & voxelPosition) cnst	{ 
+			cnst ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			return GetChunk({floor.x, floor.z}); 
 		}
 
-		s2_t											SetValue					(const ::gpk::n3u0_t & voxelPosition, const T & cellValue) 	{ 
-			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
+		s2_t											SetValue					(cnst ::gpk::n3u0_t & voxelPosition, cnst T & cellValue) 	{ 
+			cnst ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			s2_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) {
 				indexChunk										= Chunks.push_back({});
@@ -212,17 +212,17 @@ nmsp gpk
 			return indexChunk;
 		}
 
-		s2_t											GetValue					(const ::gpk::n3u0_t & voxelPosition, T & cellValue) const	{ 
-			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
+		s2_t											GetValue					(cnst ::gpk::n3u0_t & voxelPosition, T & cellValue) cnst	{ 
+			cnst ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			s2_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) 
 				return -1;
 
-			const ::gpk::SVoxelChunk<T>				 	& chunk						= Chunks[indexChunk];
+			cnst ::gpk::SVoxelChunk<T>				 	& chunk						= Chunks[indexChunk];
 			if(voxelPosition.y >= chunk.Layers.size()) 
 				return -1;
 
-			const ::gpk::pobj<::gpk::SVoxelLayer<T>>	& layer						= chunk.Layers[voxelPosition.y];
+			cnst ::gpk::pobj<::gpk::SVoxelLayer<T>>	& layer						= chunk.Layers[voxelPosition.y];
 			if(0 == layer.get_ref())
 				return -1;
 

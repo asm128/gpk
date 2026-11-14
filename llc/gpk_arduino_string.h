@@ -21,7 +21,7 @@ nmsp gpk
 	ndsi	string	toachar (cnst String & srcstr)	{ rtrn tovcc(srcstr); }
 	ndsi	vcst_t	str		(cnst String & srcstr)	{ rtrn tovcc(srcstr); }
 	ndsi	u2_t 	size	(cnst String & srcstr)	{ rtrn srcstr.length(); }
-			err_t	rtrim	(String & trimmed, const String & input);
+			err_t	rtrim	(String & trimmed, cnst String & input);
 } // nmsp
 #endif // GPK_ARDUINO
 

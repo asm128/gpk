@@ -24,7 +24,7 @@ nmsp gpk::process_detail {
 	stct SProcessNativeScope {
 		TProcess		& Process;
 		SProcessState	* State;
-		bool			Inactive = {};
+		b8_t			Inactive = {};
 		SProcessNativeScope(TProcess & process, SProcessState * state = 0) nxpt : Process(process), State(state) {}
 		SProcessNativeScope(cnst SProcessNativeScope &) = delete;
 		SProcessNativeScope & oper=(cnst SProcessNativeScope &) = delete;

@@ -17,9 +17,9 @@ nmsp gpk
 		u3_t					LastValue				;
 		vcst_t					Output					;
 		vcst_t					Expression				;
-		bool					LastValueCarry			;
+		b8_t					LastValueCarry			;
 
-		err_t					SetBoolCarry			(bool evalResult, vcst_t & output)	{
+		err_t					SetBoolCarry			(b8_t evalResult, vcst_t & output)	{
 			IndexJSONResult			= -5;
 			LastValueCarry			= true	;
 			LastValue				= evalResult ? 1 : 0;
@@ -32,14 +32,14 @@ nmsp gpk
 		aobj<SEvaluationStepResult>	Results;
 	};
 
-			err_t		jsonExpressionResolve		(const SExpressionReader & reader, const SJSONReader & inputJSON, u2_t indexNodeJSON, SJSONExpressionSolver & results, vcst_t & output);
-			err_t		jsonExpressionResolve		(const SExpressionReader & reader, const SJSONReader & inputJSON, u2_t indexNodeJSON, vcst_t & output);
-	stin	err_t		jsonExpressionResolve		(const SExpressionReader & reader, const SJSONReader & inputJSON, u2_t indexNodeJSON)	{ vcst_t dead; return jsonExpressionResolve(reader, inputJSON, indexNodeJSON, dead); }
+			err_t		jsonExpressionResolve		(cnst SExpressionReader & reader, cnst SJSONReader & inputJSON, u2_t indexNodeJSON, SJSONExpressionSolver & results, vcst_t & output);
+			err_t		jsonExpressionResolve		(cnst SExpressionReader & reader, cnst SJSONReader & inputJSON, u2_t indexNodeJSON, vcst_t & output);
+	stin	err_t		jsonExpressionResolve		(cnst SExpressionReader & reader, cnst SJSONReader & inputJSON, u2_t indexNodeJSON)	{ vcst_t dead; return jsonExpressionResolve(reader, inputJSON, indexNodeJSON, dead); }
 
-			err_t		jsonExpressionResolve		(vcst_t expression, const SJSONReader & inputJSON, u2_t indexNodeJSON, vcst_t & output);
-	stin	err_t		jsonExpressionResolve		(vcst_t expression, const SJSONReader & inputJSON, u2_t indexNodeJSON) { vcst_t dead; return jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
+			err_t		jsonExpressionResolve		(vcst_t expression, cnst SJSONReader & inputJSON, u2_t indexNodeJSON, vcst_t & output);
+	stin	err_t		jsonExpressionResolve		(vcst_t expression, cnst SJSONReader & inputJSON, u2_t indexNodeJSON) { vcst_t dead; return jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
 
-			err_t		jsonStringFormat			(vcst_t format, const SJSONReader & inputJSON, u2_t indexNodeJSON, asc_t & output);
+			err_t		jsonStringFormat			(vcst_t format, cnst SJSONReader & inputJSON, u2_t indexNodeJSON, asc_t & output);
 } // nmsp
 
 #endif // GPK_JSON_EXPRESSION_9238749283744

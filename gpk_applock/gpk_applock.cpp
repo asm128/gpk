@@ -21,14 +21,14 @@ struct SAppLockTable {
 	vcst_c				FILTER_PATH		= "\\Gatewatch";
 };
 
-static  SAppLockTable appLock;
-static const auto configureStatus = [](LSTATUS result, b8_t error) -> LSTATUS {
+sttc  SAppLockTable appLock;
+sttc cnst auto configureStatus = [](LSTATUS result, b8_t error) -> LSTATUS {
 	if_true_vef(result, error, "%u", result);
 	if_true_vif(0, result, "%u", result);
 	return 0;
 };
 
-sttc LSTATUS	configureValue			(b8_t install, HKEY key, vcst_t name, DWORD type, const void * data, DWORD bytes) {
+sttc LSTATUS	configureValue			(b8_t install, HKEY key, vcst_t name, DWORD type, cnst void * data, DWORD bytes) {
 	LSTATUS result = install
 		? RegSetValueEx(key, name.begin(), 0, type, (u0_c*)data, bytes)
 		: RegDeleteValue(key, name.begin());
@@ -76,7 +76,7 @@ sttc gpk::err_t		configureLock	(b8_t install, vcst_t keyPath, vcst_t filterPath,
 		if_fail_fe(configureFilter(install, keyPath, filterKeyPath));
 	return 0;
 }
-sttc gpk::err_t configure(bool installLocker) {
+sttc gpk::err_t configure(b8_t installLocker) {
 	always_printf("%s Gatewatch's App Locker", installLocker ? "installing" : "uninstalling");
 
 	gpk::astsc_t<4096>	executable = {};
@@ -84,7 +84,7 @@ sttc gpk::err_t configure(bool installLocker) {
 
     gpk::string	keyPath, debugger;
 	if_fail_fe(gpk::append_strings(debugger, '"', executable.Storage, "\" --blocked"));
-    for (const SAppLockEntry & entry : appLock.BLOCKED) {
+    for (cnst SAppLockEntry & entry : appLock.BLOCKED) {
 		if_fail_fe(gpk::append_strings(keyPath = {}, appLock.ROOT, entry.Name));
 		if_fail_fe(configureLock(installLocker, keyPath, entry.Path, debugger));
     }

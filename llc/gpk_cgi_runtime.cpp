@@ -8,16 +8,16 @@ GPK_USING_APOD();
 GPK_USING_VIEW();
 GPK_USING_ASTATIC();
 
-gpk::err_t			gpk::httpRequestInit			(SHTTPAPIRequest & requestReceived, cnst SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
+gpk::err_t			gpk::httpRequestInit			(SHTTPAPIRequest & requestReceived, cnst SCGIRuntimeValues & runtimeValues, b8_c bLogCGIEnviron)	{
 	view<cnst kv<vcst_t>>			environViews			= runtimeValues.RuntimeValues.EntryPointArgs.Environment;
 	vcst_t							remoteAddr;
-	const bool						isCGIEnviron					= -1 != ::gpk::find("REMOTE_ADDR", environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
+	b8_c						isCGIEnviron					= -1 != ::gpk::find("REMOTE_ADDR", environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
 	requestReceived.IsCGIEnviron	= isCGIEnviron;
 	if(bLogCGIEnviron && isCGIEnviron)
 		writeCGIEnvironToFile(environViews);
 
 	{	// Try to load query from querystring and request body
-		const s2_t						offset				= ::gpk::find("REQUEST_METHOD", ::gpk::view<const ::gpk::kv<vcst_t>>{environViews.begin(), environViews.size()});
+		cnst s2_t						offset				= ::gpk::find("REQUEST_METHOD", ::gpk::view<cnst ::gpk::kv<vcst_t>>{environViews.begin(), environViews.size()});
 		::gpk::string					enumValue			= (-1 == offset) ? vcst_t("GET") : environViews[offset].Val;
 		requestReceived.Method		= get_value<HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (s0_t)requestReceived.Method)
@@ -38,7 +38,7 @@ gpk::err_t			gpk::httpRequestInit			(SHTTPAPIRequest & requestReceived, cnst SCG
 			if('"' == requestReceived.Path[0])
 				requestReceived.Path							= {&requestReceived.Path[1], requestReceived.Path.size() - 2};
 
-			const s2_t										queryStringStart					= ::gpk::find('?', requestReceived.Path);
+			cnst s2_t										queryStringStart					= ::gpk::find('?', requestReceived.Path);
 			if(0 <= queryStringStart) {
 				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (u2_t)queryStringStart - 1};
 				requestReceived.Path							= {&requestReceived.Path[0], (u2_t)queryStringStart};
@@ -58,9 +58,9 @@ gpk::err_t			gpk::httpRequestInit			(SHTTPAPIRequest & requestReceived, cnst SCG
 	return isCGIEnviron ? 1 : 0;
 }
 
-static	gpk::err_t cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::vcst_t & strContentType)	{
+sttc	gpk::err_t cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, cnst ::gpk::vcst_t & strContentType)	{
 	if_true_vef(-1, 0 == strContentType.size(), "%s", "No input string");
-	static	::gpk::vcst_t						content_types []			=
+	sttc	::gpk::vcst_t						content_types []			=
 		{ "application/javascript"
 		, "application/json"
 		, "application/x-www-form-urlencoded"
@@ -121,7 +121,7 @@ static	gpk::err_t cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, con
 	return 0;
 }
 
-static	gpk::err_t cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcst_t & strRemoteIP, const ::gpk::vcst_t& strRemotePort) {
+sttc	gpk::err_t cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcst_t & strRemoteIP, cnst ::gpk::vcst_t& strRemotePort) {
 	remoteIP.Port			= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
@@ -155,12 +155,12 @@ static	gpk::err_t cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcst_t & strR
 	return 0;
 }
 
-static	gpk::err_t cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::vcst_t & strContent)	{
+sttc	gpk::err_t cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, cnst ::gpk::vcst_t & strContent)	{
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
-static	gpk::err_t cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::vcst_t & strContent)	{
+sttc	gpk::err_t cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, cnst ::gpk::CGI_MEDIA_TYPE contentType, cnst ::gpk::vcst_t & strContent)	{
 	switch(contentType) {
 	default: break;
 	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA:

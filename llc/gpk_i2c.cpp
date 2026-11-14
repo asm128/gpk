@@ -76,9 +76,9 @@
 // // 	stin	err_t		i2c_ll_enable_intr_mask     	(i2c_dev_t *hw, u2_t mask)                                                  { return hw->int_ena.val |= mask; }
 // // 	stin	err_t		i2c_ll_disable_intr_mask    	(i2c_dev_t *hw, u2_t mask)                                                  { return hw->int_ena.val &= (~mask); }
 // // 	stin	err_t		i2c_ll_get_intsts_mask      	(i2c_dev_t *hw)                                                             { return hw->int_status.val; }
-// // 	stin	err_t		i2c_ll_set_fifo_mode        	(i2c_dev_t *hw, bool fifo_mode_en)                                          { return hw->fifo_conf.nonfifo_en = fifo_mode_en ? 0 : 1; }
+// // 	stin	err_t		i2c_ll_set_fifo_mode        	(i2c_dev_t *hw, b8_t fifo_mode_en)                                          { return hw->fifo_conf.nonfifo_en = fifo_mode_en ? 0 : 1; }
 // // 	stin	err_t		i2c_ll_set_tout             	(i2c_dev_t *hw, int tout)                                                   { return hw->timeout.tout = tout; }
-// // 	stin	err_t		i2c_ll_set_slave_addr       	(i2c_dev_t *hw, u1_t slave_addr, bool addr_10bit_en)                        { hw->slave_addr.addr = slave_addr; return hw->slave_addr.en_10bit = addr_10bit_en; }
+// // 	stin	err_t		i2c_ll_set_slave_addr       	(i2c_dev_t *hw, u1_t slave_addr, b8_t addr_10bit_en)                        { hw->slave_addr.addr = slave_addr; return hw->slave_addr.en_10bit = addr_10bit_en; }
 // // 	stin	err_t		i2c_ll_write_cmd_reg        	(i2c_dev_t *hw, SI2CCommandRegister cmd, int cmd_idx)                              { return hw->command[cmd_idx].val = cmd.val; }
 // // 	stin	err_t		i2c_ll_set_start_timing     	(i2c_dev_t *hw, int start_setup, int start_hold)                            { hw->scl_rstart_setup.time = start_setup; return hw->scl_start_hold.time = start_hold; }
 // // 	stin	err_t		i2c_ll_set_stop_timing      	(i2c_dev_t *hw, int stop_setup, int stop_hold)                              { hw->scl_stop_setup.time = stop_setup; return hw->scl_stop_hold.time = stop_hold; }
@@ -184,16 +184,16 @@
 // // 	//sttc	gpk::err_t	i2c_driver_install              (i2c_port_t i2c_num, i2c_mode_t mode, size_t slv_rx_buf_len, size_t slv_tx_buf_len, int intr_alloc_flags);
 // // 	//sttc	gpk::err_t	i2c_set_pin                     (i2c_port_t i2c_num, int sda_io_num, int scl_io_num,
 // // 	//sttc	gpk::err_t	i2c_driver_delete               (i2c_port_t i2c_num);
-// // 	//sttc	gpk::err_t	i2c_param_config                (i2c_port_t i2c_num, const i2c_config_t *i2c_conf);
+// // 	//sttc	gpk::err_t	i2c_param_config                (i2c_port_t i2c_num, cnst i2c_config_t *i2c_conf);
 // // 	//sttc	gpk::err_t	i2c_reset_rx_fifo               (i2c_port_t i2c_num);
 // // 	//sttc	gpk::err_t	i2c_isr_register                (i2c_port_t i2c_num, void (*fn)(void *), void *arg, int intr_alloc_flags, intr_handle_t *handle);
 // // 	//sttc	gpk::err_t	i2c_isr_free                    (intr_handle_t handle);
-// // 	//sttc	gpk::err_t	i2c_master_write_to_device      (i2c_port_t i2c_num, u0_t device_address, const u0_t* write_buffer, size_t write_size, TickType_t ticks_to_wait);
+// // 	//sttc	gpk::err_t	i2c_master_write_to_device      (i2c_port_t i2c_num, u0_t device_address, cnst u0_t* write_buffer, size_t write_size, TickType_t ticks_to_wait);
 // // 	//sttc	gpk::err_t	i2c_master_read_from_device     (i2c_port_t i2c_num, u0_t device_address, u0_t* read_buffer, size_t read_size, TickType_t ticks_to_wait);
-// // 	//sttc	gpk::err_t	i2c_master_write_read_device    (i2c_port_t i2c_num, u0_t device_address, const u0_t* write_buffer, size_t write_size, u0_t* read_buffer, size_t read_size, TickType_t ticks_to_wait);
+// // 	//sttc	gpk::err_t	i2c_master_write_read_device    (i2c_port_t i2c_num, u0_t device_address, cnst u0_t* write_buffer, size_t write_size, u0_t* read_buffer, size_t read_size, TickType_t ticks_to_wait);
 // // 	//sttc	gpk::err_t	i2c_master_start                (i2c_cmd_handle_t cmd_handle);
-// // 	//sttc	gpk::err_t	i2c_master_write_byte           (i2c_cmd_handle_t cmd_handle, u0_t data, bool ack_en);
-// // 	//sttc	gpk::err_t	i2c_master_write                (i2c_cmd_handle_t cmd_handle, const u0_t *data, size_t data_len, bool ack_en);
+// // 	//sttc	gpk::err_t	i2c_master_write_byte           (i2c_cmd_handle_t cmd_handle, u0_t data, b8_t ack_en);
+// // 	//sttc	gpk::err_t	i2c_master_write                (i2c_cmd_handle_t cmd_handle, cnst u0_t *data, size_t data_len, b8_t ack_en);
 // // 	//sttc	gpk::err_t	i2c_master_read_byte            (i2c_cmd_handle_t cmd_handle, u0_t *data, i2c_ack_type_t ack);
 // // 	//sttc	gpk::err_t	i2c_master_read                 (i2c_cmd_handle_t cmd_handle, u0_t *data, size_t data_len, i2c_ack_type_t ack);
 // // 	//sttc	gpk::err_t	i2c_master_stop                 (i2c_cmd_handle_t cmd_handle);
@@ -215,7 +215,7 @@
 // // 	//sttc	gpk::err_t	i2c_reset_tx_fifo               (i2c_port_t i2c_num);
 
 // // 	struct SI2CBus {
-// // 		bool				Initialized			;
+// // 		b8_t				Initialized			;
 // // 		u2_t				Frequency			;
 // // 		gpk::mutex			Lock				;
 // // 	};
@@ -259,7 +259,7 @@
 // // 		if_true_fef(i2c_driver_delete((i2c_port_t)i2c_num), "%u", i2c_num);
 // // 		return bus[i2c_num].Initialized = false;
 // // 	}
-// // 	sttc	gpk::err_t	i2cWrite			(u0_t i2c_num, u1_t address, const u0_t * buff, size_t size, u2_t timeOutMillis) {
+// // 	sttc	gpk::err_t	i2cWrite			(u0_t i2c_num, u1_t address, cnst u0_t * buff, size_t size, u2_t timeOutMillis) {
 // // 		if_true_fef(i2c_num >= SOC_I2C_NUM, "%u", i2c_num);
 // // 		std::lock_guard			mutexLock			(bus[i2c_num].Lock);
 // // 		if_zero_fe(bus[i2c_num].Initialized);
@@ -286,7 +286,7 @@
 // // 		if_true_fe(i2c_master_read_from_device((i2c_port_t)i2c_num, address, buff, size, timeOutMillis / portTICK_RATE_MS));
 // // 		return *readCount = size;
 // // 	}
-// // 	sttc	gpk::err_t	i2cWriteReadNonStop	(u0_t i2c_num, u1_t address, const u0_t* wbuff, size_t wsize, u0_t* rbuff, size_t rsize, u2_t timeOutMillis, size_t *readCount) {
+// // 	sttc	gpk::err_t	i2cWriteReadNonStop	(u0_t i2c_num, u1_t address, cnst u0_t* wbuff, size_t wsize, u0_t* rbuff, size_t rsize, u2_t timeOutMillis, size_t *readCount) {
 // // 		*readCount = 0;
 // // 		if_true_fef(i2c_num >= SOC_I2C_NUM, "%u", i2c_num);
 // // 		std::lock_guard			mutexLock			(bus[i2c_num].Lock);
@@ -341,7 +341,7 @@
 // // 			}
 // // 		}
 // // 		if_true_fef(src_clk >= I2C_SCLK_MAX, "%s", "clock source could not be selected");
-// // 		volatile i2c_hal_context_t		hal 		= {gpk::i2cGetHW(i2c_num), };
+// // 		vltl i2c_hal_context_t		hal 		= {gpk::i2cGetHW(i2c_num), };
 // // 		i2c_hal_set_bus_timing(&(hal), frequency, src_clk);
 // // 		bus[i2c_num].Frequency = frequency;
 // // 		i2c_set_timeout((i2c_port_t)i2c_num, I2C_MAX_TIMEOUT);	//Clock Stretching Timeout: 20b:esp32, 5b:esp32-c3, 24b:esp32-s2
@@ -418,9 +418,9 @@
 // // //     cxpr               view        (T * elements, std::size_t len) nxpt : data(ptr), size(len) {}
 
 // // //     cxpr   T&          oper[]  (std::size_t index)             nxpt { return data[index]; }
-// // //     cxpr   const T&    oper[]  (std::size_t index) const       nxpt { return data[index]; }
-// // //     cxpr   std::size_t length      ()                  const       nxpt { return size; }
-// // //     cxpr   bool        empty       ()                  const       nxpt { return size == 0; }
+// // //     cxpr   cnst T&    oper[]  (std::size_t index) cnst       nxpt { return data[index]; }
+// // //     cxpr   std::size_t length      ()                  cnst       nxpt { return size; }
+// // //     cxpr   b8_t        empty       ()                  cnst       nxpt { return size == 0; }
 // // // };
 
 // // // #endif // FORGE_VIEW_HPP
@@ -442,9 +442,9 @@
 // // //     cxpr view(T* ptr, std::size_t len) nxpt : data(ptr), size(len) {}
 
 // // //     cxpr T& oper[](std::size_t index) nxpt { return data[index]; }
-// // //     cxpr const T& oper[](std::size_t index) csnx { return data[index]; }
+// // //     cxpr cnst T& oper[](std::size_t index) csnx { return data[index]; }
 // // //     cxpr std::size_t length() csnx { return size; }
-// // //     cxpr bool empty() csnx { return size == 0; }
+// // //     cxpr b8_t empty() csnx { return size == 0; }
 // // // };
 
 // // // #endif // SIGHT_VIEW_HPP
@@ -477,9 +477,9 @@
 // // //     cxpr               view        (T * elements, std::size_t len) nxpt : data(ptr), size(len) {}
 
 // // //     cxpr   T&          oper[]  (std::size_t index)             nxpt { return data[index]; }
-// // //     cxpr   const T&    oper[]  (std::size_t index) const       nxpt { return data[index]; }
-// // //     cxpr   std::size_t length      ()                  const       nxpt { return size; }
-// // //     cxpr   bool        empty       ()                  const       nxpt { return size == 0; }
+// // //     cxpr   cnst T&    oper[]  (std::size_t index) cnst       nxpt { return data[index]; }
+// // //     cxpr   std::size_t length      ()                  cnst       nxpt { return size; }
+// // //     cxpr   b8_t        empty       ()                  cnst       nxpt { return size == 0; }
 // // // };
 
 // // // #endif // FORGE_VIEW_HPP
@@ -501,9 +501,9 @@
 // // //     cxpr view(T* ptr, std::size_t len) nxpt : data(ptr), size(len) {}
 
 // // //     cxpr T& oper[](std::size_t index) nxpt { return data[index]; }
-// // //     cxpr const T& oper[](std::size_t index) csnx { return data[index]; }
+// // //     cxpr cnst T& oper[](std::size_t index) csnx { return data[index]; }
 // // //     cxpr std::size_t length() csnx { return size; }
-// // //     cxpr bool empty() csnx { return size == 0; }
+// // //     cxpr b8_t empty() csnx { return size == 0; }
 // // // };
 
 // // // #endif // SIGHT_VIEW_HPP

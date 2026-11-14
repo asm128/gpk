@@ -66,7 +66,7 @@ gpk::err_t 		gpk::tcpipAddress		(::gpk::vcst_t strIP, ::gpk::vcst_t strPort, ::g
 	if(0 == strPort.size()) 
 		return ::gpk::tcpipAddress(strIP, ipv4.IP, ipv4.Port);
 
-	const u2_t				iOffset					= ::gpk::tcpipAddress(strIP, ipv4.IP);
+	u2_c				iOffset					= ::gpk::tcpipAddress(strIP, ipv4.IP);
 	return iOffset + ::gpk::parseIntegerDecimal(strPort, ipv4.Port);
 }
 
@@ -96,7 +96,7 @@ gpk::err_t 		gpk::tcpipShutdown							()							{
 	return 0;
 }
 
-gpk::err_t 		gpk::tcpipAddressFromSockaddr		(const sockaddr_in & sockaddr_ipv4, u2_t & address, u1_t & port) {
+gpk::err_t 		gpk::tcpipAddressFromSockaddr		(cnst sockaddr_in & sockaddr_ipv4, u2_t & address, u1_t & port) {
 	port 	= (u1_t)ntohs(sockaddr_ipv4.sin_port);
 #ifndef GPK_WINDOWS
 	address	= sockaddr_ipv4.sin_addr.s_addr;
@@ -111,7 +111,7 @@ gpk::err_t 		gpk::tcpipAddressFromSockaddr		(const sockaddr_in & sockaddr_ipv4, 
 	return 0;
 }
 
-gpk::err_t 		gpk::tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr_ipv4, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t * port)	{
+gpk::err_t 		gpk::tcpipAddressFromSockaddr	(cnst sockaddr_in & sockaddr_ipv4, u0_t * a1, u0_t * a2, u0_t * a3, u0_t * a4, u1_t * port)	{
 #if defined(GPK_WINDOWS)
 	safe_assign(a1, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
 	safe_assign(a2, (u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
@@ -196,13 +196,13 @@ gpk::err_t 		gpk::tcpipAddress	(vcst_t szHostName, u1_t portRequested, u2_t adap
 	hints.ai_socktype		= (TRANSPORT_PROTOCOL_TCP == mode) ? SOCK_STREAM	: SOCK_DGRAM	;
 	hints.ai_protocol		= (TRANSPORT_PROTOCOL_TCP == mode) ? IPPROTO_TCP	: IPPROTO_UDP	;
 
-	const ::addrinfo			* createdAddrInfo								= 0;
+	cnst ::addrinfo			* createdAddrInfo								= 0;
 	if_true_vef(-1, failed(::getaddrinfo(szHostName, portString, &hints, (::addrinfo**)&createdAddrInfo)), "gettaddrinfo failed for host_name: %s, port: %s", szHostName, portString);
 	//sockaddr_in6									* sockaddr_ipv6									= 0;
 
 	u2_t					iAddress										= 0;
-	bool						addressFound									= false;
-	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {	// Retrieve each address and print out the hex bytes
+	b8_t						addressFound									= false;
+	for(cnst addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {	// Retrieve each address and print out the hex bytes
 		verbose_printf("getaddrinfo response at index %u.", iAddress);
 		verbose_printf("Flags: 0x%x.", ptr->ai_flags);
 		verbose_printf("%s", "Family: ");

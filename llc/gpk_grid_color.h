@@ -12,11 +12,11 @@ nmsp gpk
 	tydf	::gpk::grid<::gpk::rgba	>	g8rgba	;
 	tydf	::gpk::grid<::gpk::rgb	>	g8rgb	;
 
-	tydf	::gpk::grid<const ::gpk::rgbaf	>	gcfrgba	;
-	tydf	::gpk::grid<const ::gpk::bgra	>	gc8bgra	;
-	tydf	::gpk::grid<const ::gpk::bgr	>	gc8bgr	;
-	tydf	::gpk::grid<const ::gpk::rgba	>	gc8rgba	;
-	tydf	::gpk::grid<const ::gpk::rgb	>	gc8rgb	;
+	tydf	::gpk::grid<cnst ::gpk::rgbaf	>	gcfrgba	;
+	tydf	::gpk::grid<cnst ::gpk::bgra	>	gc8bgra	;
+	tydf	::gpk::grid<cnst ::gpk::bgr	>	gc8bgr	;
+	tydf	::gpk::grid<cnst ::gpk::rgba	>	gc8rgba	;
+	tydf	::gpk::grid<cnst ::gpk::rgb	>	gc8rgb	;
 } // nmsp
 
 #endif // GPK_GRID_COLOR_H_23627

@@ -20,9 +20,9 @@ nmsp gpk
 
 		inln	err_t 	Size	()						{ ::gpk::lock_guard locked(Lock); return Queue.size(); }
 		inln	err_t	Clear	()						{ ::gpk::lock_guard	locked(Lock); return Queue.clear(); }
-		inln	err_t	Post	(const T & item) 		{ ::gpk::lock_guard locked(Lock); return Queue.push_back(item); }
+		inln	err_t	Post	(cnst T & item) 		{ ::gpk::lock_guard locked(Lock); return Queue.push_back(item); }
 		// Appends to the `output` container all the messages from the queue
-		inln	err_t	Read	(TContainer & output, bool clearQueue = true) {
+		inln	err_t	Read	(TContainer & output, b8_t clearQueue = true) {
 			::gpk::lock_guard		locked(Lock);
 			if_fail_fe(output.append(Queue));
 			if(clearQueue) {

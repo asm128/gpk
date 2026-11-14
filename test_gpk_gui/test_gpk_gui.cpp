@@ -158,7 +158,7 @@ sttc ::gpk::err_t sampleGUIStateFlagAppend(::gpk::string & text, ::gpk::vcst_t f
 	rtrn ::gpk::append_string(text, flag);
 }
 
-sttc ::gpk::err_t sampleGUIStateDescribe(cnst ::gpk::SControlState & state, bool disabled, ::gpk::string & text) {
+sttc ::gpk::err_t sampleGUIStateDescribe(cnst ::gpk::SControlState & state, b8_t disabled, ::gpk::string & text) {
 	text.clear();
 	cnst ::gpk::enum_definition<::gpk::GUI_CONTROL_FLAG> & stateDefinition = ::gpk::get_enum<::gpk::GUI_CONTROL_FLAG>();
 	for(::gpk::u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState)
@@ -226,7 +226,7 @@ sttc ::gpk::err_t sampleGUIInspectorUpdate(SSampleGUI & app, SSampleGUIInspector
 		rtrn 0;
 	}
 	cnst ::gpk::SControlState & state = app.GUIHandle->Controls.States[idControl];
-	cnst bool disabled = 0 != ::gpk::controlDisabled(*app.GUIHandle, idControl);
+	b8_c disabled = 0 != ::gpk::controlDisabled(*app.GUIHandle, idControl);
 	::gpk::string stateText = {};
 	if_fail_fe(::sampleGUIStateDescribe(state, disabled, stateText));
 	cnst ::gpk::GUI_CONTROL_PALETTE palette = ::gpk::paletteIndexFromState(disabled, state);
@@ -264,9 +264,6 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 }
 
 ::gpk::err_t sampleGUISetup(SSampleGUI & app, ::gpk::pobj<::gpk::SInput> & input) {
-	if(!app.Dialog)
-		if(0 == app.Dialog.create(app.GUIHandle))
-			rtrn ::gpk::OS_NO_MEMORY;
 	app.Dialog->Input = input;
 	app.GUIHandle->SelectedFont = FONT_BODY;
 	app.GUIHandle->ColorModeDefault = ::gpk::GUI_COLOR_MODE_3D;
@@ -380,7 +377,7 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 	rtrn 0;
 }
 
-::gpk::err_t sampleGUIUpdate(SSampleGUI & app, bool systemRequestedExit) {
+::gpk::err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 	if(systemRequestedExit)
 		rtrn ::gpk::APPLICATION_STATE_EXIT;
 	if(app.GUIHandle->Controls.IsAction(app.ControlScreenshot))
@@ -449,7 +446,7 @@ stct SApplication {
 ::gpk::err_t setup(SApplication & app) {
 	::gpk::SWindow & window = app.Framework.RootWindow;
 	window.Size = {1280, 540};
-	if_null_ve(::gpk::OS_NO_MEMORY, window.BackBuffer.create());
+	if_null_fe(window.BackBuffer.create());
 	if_fail_fe(window.BackBuffer->resize(window.Size.u2()));
 	if_fail_fe(::gpk::mainWindowCreate(window, app.Framework.RuntimeValues.PlatformDetail, window.Input));
 	rtrn ::sampleGUISetup(app.Sample, window.Input);
@@ -459,7 +456,7 @@ stct SApplication {
 	rtrn ::gpk::mainWindowDestroy(app.Framework.RootWindow);
 }
 
-::gpk::err_t update(SApplication & app, bool systemRequestedExit) {
+::gpk::err_t update(SApplication & app, gpk::b8_t systemRequestedExit) {
 	if(systemRequestedExit)
 		rtrn ::gpk::APPLICATION_STATE_EXIT;
 	cnst ::gpk::err_t result = ::gpk::updateFramework(app.Framework);

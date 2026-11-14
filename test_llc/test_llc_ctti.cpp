@@ -40,10 +40,10 @@ GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_DEFINITION, 30, "The CTTI enum d
 
 CTTI_STCT(
 	SCTTIJSONTest0 {
-	inline static const float		Weight		= 234.25f;
+	inln sttc cnst float		Weight		= 234.25f;
 	stxp					f3_t	Height		= 234.25;
-	volatile gpk::view<gpk::sc_c>	Capacity	= "Factory::Build<Value>(7)";
-	static const bool				Enabled		= true;
+	vltl gpk::view<gpk::sc_c>	Capacity	= "Factory::Build<Value>(7)";
+	sttc b8_c				Enabled		= true;
 	gpk::u2_t						Count;
 	}
 	);
@@ -79,7 +79,7 @@ CTTI_STCT(
 	}
 	);
 
-#define const2 const
+#define const2 cnst
 
 CTTI_STCT(
 	SCTTIJSONTestNumericModifier {
@@ -100,7 +100,7 @@ CTTI_STCT(
 	SCTTIInstanceTest {
 		gpk::u2_t Count;
 		gpk::f3_t Weight;
-		bool Enabled;
+		b8_t Enabled;
 	}
 	);
 
@@ -168,11 +168,11 @@ sttc ::gpk::err_t cttiMemberJSON
 		}
 		else {
 			cnst ::gpk::vcst_t value = ::cttiSpanView(metadata, member.Value);
-			cnst bool floatSuffix = value.size() && ('f' == value[value.size() - 1] || 'F' == value[value.size() - 1]);
+			b8_c floatSuffix = value.size() && ('f' == value[value.size() - 1] || 'F' == value[value.size() - 1]);
 			if_fail_fe(output.append({value.begin(), value.size() - floatSuffix}));
 		}
 		if_fail_fe(output.append(::gpk::vcst_t{",\"modifiers\":["}));
-		bool firstModifier = true;
+		b8_t firstModifier = true;
 		for(::gpk::u2_t iModifier = member.Modifiers.Offset, modifierStop = member.Modifiers.Offset + member.Modifiers.Count; iModifier < modifierStop;) {
 			while(iModifier < modifierStop && ::gpk::cttiSpace(metadata.SourceText[iModifier]))
 				++iModifier;
@@ -199,7 +199,7 @@ sttc ::gpk::err_t cttiMemberJSON
 	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_PARSE_RESULT          , false == cttiJSONMetadata.Success());
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_STRUCT_NAME           , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.StructName) != "SCTTIJSONTest0", "Unexpected struct name:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.StructName)));
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_COUNT          , cttiJSONMetadata.Count != 5, "Member count:%u, expected:5.", cttiJSONMetadata.Count);
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MODIFIERS             , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[0].Modifiers) != "inline static const", "Unexpected modifiers:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[0].Modifiers)));
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MODIFIERS             , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[0].Modifiers) != "inln sttc cnst", "Unexpected modifiers:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[0].Modifiers)));
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_TYPE_NAME             , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].TypeName) != "f3_t", "Unexpected type:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].TypeName)));
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_NAME           , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Name) != "Height", "Unexpected name:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[1].Name)));
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_MEMBER_VALUE          , ::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[2].Value) != "\"Factory::Build<Value>(7)\"", "Unexpected value:'%.*s'.", GPK_VIEW_ARGS(::cttiSpanView(cttiJSONMetadata, cttiJSONMetadata.Members[2].Value)));
@@ -254,7 +254,7 @@ sttc ::gpk::err_t cttiMemberJSON
 	::gpk::string output;
 	cnst ::gpk::err_t buildResult = ::cttiMemberJSON(cttiJSONMetadata, output);
 	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_JSON_BUILD, ::gpk::failed(buildResult));
-	stxp ::gpk::vcst_t expected = "{\"Weight\":{\"type\":\"float\",\"value\":234.25,\"modifiers\":[\"inline\",\"static\",\"const\"]},\"Height\":{\"type\":\"f3_t\",\"value\":234.25,\"modifiers\":[\"stxp\"]},\"Capacity\":{\"type\":\"gpk::view<gpk::sc_c>\",\"value\":\"Factory::Build<Value>(7)\",\"modifiers\":[\"volatile\"]},\"Enabled\":{\"type\":\"bool\",\"value\":true,\"modifiers\":[\"static\",\"const\"]},\"Count\":{\"type\":\"gpk::u2_t\",\"value\":null,\"modifiers\":[]}}";
+	stxp ::gpk::vcst_t expected = "{\"Weight\":{\"type\":\"float\",\"value\":234.25,\"modifiers\":[\"inln\",\"sttc\",\"cnst\"]},\"Height\":{\"type\":\"f3_t\",\"value\":234.25,\"modifiers\":[\"stxp\"]},\"Capacity\":{\"type\":\"gpk::view<gpk::sc_c>\",\"value\":\"Factory::Build<Value>(7)\",\"modifiers\":[\"vltl\"]},\"Enabled\":{\"type\":\"b8_t\",\"value\":true,\"modifiers\":[\"sttc\",\"cnst\"]},\"Count\":{\"type\":\"gpk::u2_t\",\"value\":null,\"modifiers\":[]}}";
 	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_JSON_TEXT, output != expected, "Actual:'%.*s'; expected:'%.*s'.", GPK_VIEW_ARGS(output), GPK_VIEW_ARGS(expected));
 
 	::gpk::SJSONReader reader;

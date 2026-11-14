@@ -39,7 +39,7 @@ nmsp gpk
 			return PositionDraw	.remove_unordered(iShot);
 		}
 
-		int					SpawnForced			(const n3f2_t & position, const n3f2_t & direction, f2_t speed, f2_t brightness, f2_t lifetime)	{
+		int					SpawnForced			(cnst n3f2_t & position, cnst n3f2_t & direction, f2_t speed, f2_t brightness, f2_t lifetime)	{
 			PositionDraw.push_back(position);
 			PositionPrev.push_back(position);
 			Brightness	.push_back(brightness);
@@ -48,7 +48,7 @@ nmsp gpk
 			return Particles.Create(position, direction, speed);
 		}
 
-		int					SpawnForcedDirected	(f3_t stabilityFactor, const n3f2_t & position, const n3f2_t & direction, f2_t speed, f2_t brightness, f2_t lifetime)	{
+		int					SpawnForcedDirected	(f3_t stabilityFactor, cnst n3f2_t & position, cnst n3f2_t & direction, f2_t speed, f2_t brightness, f2_t lifetime)	{
 			stxp	f3_t			randUnit			= math_2pi / RAND_MAX;
 			n3f2_t					finalDirection		= {0, 1, 0};
 			finalDirection.RotateX(rand() * randUnit);
@@ -72,7 +72,7 @@ nmsp gpk
 			return 0;
 		}
 
-		gpk::err_t 			Save				(au0_t & output)	const	{ 
+		gpk::err_t 			Save				(au0_t & output)	cnst	{ 
 			if_fail_fe(Particles.Save(output));
 			if_fail_fe(gpk::saveView(output, PositionDraw	));
 			if_fail_fe(gpk::saveView(output, PositionPrev	));
@@ -104,16 +104,16 @@ nmsp gpk
 		gaugemaxf2_t	Delay				= {};	// Trigger delay
 		gaugemaxf2_t	Overheat			= {};	// Cooldown/Reload time in seconds
 		f2_t			OverheatPerShot		= {};	// 
-		bool			CoolingDown			= {};	// Reloading
+		b8_t			CoolingDown			= {};	// Reloading
 
-		inxp	f2_t	Busy				()	const			nxpt	{ 
+		inxp	f2_t	Busy				()	cnst			nxpt	{ 
 			return CoolingDown					? max(Delay.Limit - Delay.Value, Overheat.Value)
 				: (Delay.Value < Delay.Limit)	? Delay.Limit - Delay.Value
 				: 0
 				; 
 		}
 		f2_t			Pull				()					nxpt	{ 
-			const f2_t			busy				= Busy();
+			cnst f2_t			busy				= Busy();
 			if(busy)
 				return busy;
 
@@ -215,15 +215,15 @@ nmsp gpk
 		SWeaponTrigger	Trigger				= {};
 		SWeaponShot		Shot				= {};
 
-		int				Shoot				(SShots & shots, const n3f2_t & position, const n3f2_t & direction, f2_t brightness)	{
+		int				Shoot				(SShots & shots, cnst n3f2_t & position, cnst n3f2_t & direction, f2_t brightness)	{
 			if(Trigger.Pull())
 				return 0;
 
 			if(0 == Shot.ParticleCount) 
 				return shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
 
-			const s2_t		indexFirst			= shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
-			const u2_t		stop				= u2_t(Shot.ParticleCount - 1);
+			cnst s2_t		indexFirst			= shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
+			u2_c		stop				= u2_t(Shot.ParticleCount - 1);
 			for(u2_t iDebris = 0; iDebris < stop; ++iDebris)
 				shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
 
@@ -251,7 +251,7 @@ nmsp gpk
 		apobj<a3f2_t>	WeaponTargets	= {};	// One per weapon
 
 		s2_t						Clear					()		{ clear(Weapons, Shots, WeaponTargets); return 0; }
-		gpk::err_t 			Save					(au0_t & output)	const	{ 
+		gpk::err_t 			Save					(au0_t & output)	cnst	{ 
 			if_fail_fe(gpk::saveView(output, Weapons));
 			info_printf("Saved %s, %i", "Weapons", Weapons.size());
 			for(u2_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {

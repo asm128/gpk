@@ -12,14 +12,14 @@ nmsp gpk
 	sinx	err_t	textLineCalcWidth				(n2u0_c & sizeCharCell, vcst_c & text0)		{ return (err_t)(sizeCharCell.x * text0.size()); }
 
 	tplt<tpnm _tColor>
-	static	err_t	textLineDrawFixedSize			(grid<_tColor> & target, const grid<_tColor> & viewTextureFont, u1_t characterCellsX, s1_t dstOffsetY, const n2u0_t & sizeCharCell, vcst_c & text0, const n2s1_t dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	sttc	err_t	textLineDrawFixedSize			(grid<_tColor> & target, cnst grid<_tColor> & viewTextureFont, u1_t characterCellsX, s1_t dstOffsetY, cnst n2u0_t & sizeCharCell, vcst_c & text0, n2s1_c dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		for(s2_t iChar = 0, charCount = (s2_t)text0.size(); iChar < charCount; ++iChar) {
-			const uc_t					charToDraw						= (uc_t)text0[iChar];
+			cnst uc_t					charToDraw						= (uc_t)text0[iChar];
 			s1_t						coordTableX						= charToDraw % characterCellsX;
 			s1_t						coordTableY						= charToDraw / characterCellsX;
-			const n2s1_t			coordCharTable					= {s1_t(coordTableX * sizeCharCell.x), s1_t(coordTableY * sizeCharCell.y)};
-			const rect2s1_t		dstRect0						= {{s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
-			const rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
+			n2s1_c			coordCharTable					= {s1_t(coordTableX * sizeCharCell.x), s1_t(coordTableY * sizeCharCell.y)};
+			cnst rect2s1_t		dstRect0						= {{s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
+			cnst rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
 			if_true_e(failed(grid_copy_alpha(target, viewTextureFont, rect2s1_t{dstTextOffset + dstRect0.Offset, dstRect0.Size}, srcRect0.Offset, {0xFF, 0x00, 0xFF, 0xFF})));
 			//if_true_e(failed(grid_copy(target, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)));
 		}
@@ -28,15 +28,15 @@ nmsp gpk
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	tplt<tpnm _tColor>
-	static	err_t	textLineDrawFixedSizeLit		(grid<_tColor> & target, const view_bit<u3_t> & viewTextureFont, const n2u2_t & viewMetrics, u1_t characterCellsX, s1_t dstOffsetY, const n2u0_t & sizeCharCell, const vcst_t & text0, const n2s1_t dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	sttc	err_t	textLineDrawFixedSizeLit		(grid<_tColor> & target, cnst view_bit<u3_t> & viewTextureFont, cnst n2u2_t & viewMetrics, u1_t characterCellsX, s1_t dstOffsetY, cnst n2u0_t & sizeCharCell, cnst vcst_t & text0, n2s1_c dstTextOffset, cnst _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		apod<n2u1_t>	dstCoords;
 		for(s2_t iChar = 0, charCount = (s2_t)text0.size(); iChar < charCount; ++iChar) {
-			const uc_t					charToDraw						= (uc_t)text0[iChar];
-			const s1_t				coordTableX						= charToDraw % characterCellsX;
-			const s1_t				coordTableY						= charToDraw / characterCellsX;
-			const n2s1_t			coordCharTable					= {s1_t(coordTableX * sizeCharCell.x), s1_t(coordTableY * sizeCharCell.y)};
-			const rect2s1_t		dstRect0						= {{s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
-			const rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
+			cnst uc_t					charToDraw						= (uc_t)text0[iChar];
+			cnst s1_t				coordTableX						= charToDraw % characterCellsX;
+			cnst s1_t				coordTableY						= charToDraw / characterCellsX;
+			n2s1_c			coordCharTable					= {s1_t(coordTableX * sizeCharCell.x), s1_t(coordTableY * sizeCharCell.y)};
+			cnst rect2s1_t		dstRect0						= {{s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
+			cnst rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
 			//if_true_e(failed(grid_copy_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)));
 			if_true_e(failed(grid_raster_alpha_bit(target.metrics(), viewTextureFont, viewMetrics, rect2s1_t{dstTextOffset + dstRect0.Offset, sizeCharCell.s1()}, srcRect0.Offset, dstCoords)));
 			//if_true_e(failed(grid_raster_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)));
@@ -47,28 +47,28 @@ nmsp gpk
 	}
 
 	tplt<tpnm _tColor>
-	static	err_t	textLineDrawAlignedFixedSize	(grid<_tColor> & targetView, const grid<_tColor> & fontAtlas, u1_t lineOffset, const n2u1_t & targetSize, const n2u0_t & sizeCharCell, const vcst_t & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		const n2s1_t			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
+	sttc	err_t	textLineDrawAlignedFixedSize	(grid<_tColor> & targetView, cnst grid<_tColor> & fontAtlas, u1_t lineOffset, cnst n2u1_t & targetSize, cnst n2u0_t & sizeCharCell, cnst vcst_t & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		n2s1_c			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
 		u1_t					dstOffsetY						= s1_t(lineOffset * sizeCharCell.y);
 		return textLineDrawFixedSize(targetView, fontAtlas, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset);
 	}
 
 	tplt<tpnm _tColor>
-	static	err_t	textLineDrawAlignedFixedSizeLit	(grid<_tColor> & targetView, const view_bit<u3_t> & fontAtlas, const n2u2_t & viewMetrics, u1_t lineOffset, const n2u1_t & targetSize, const n2u0_t & sizeCharCell, const vcst_t & text0, const _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		const n2s1_t			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
+	sttc	err_t	textLineDrawAlignedFixedSizeLit	(grid<_tColor> & targetView, cnst view_bit<u3_t> & fontAtlas, cnst n2u2_t & viewMetrics, u1_t lineOffset, cnst n2u1_t & targetSize, cnst n2u0_t & sizeCharCell, cnst vcst_t & text0, cnst _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		n2s1_c			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
 		u1_t					dstOffsetY						= s1_t(lineOffset * sizeCharCell.y);
 		return textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);
 	}
 
 	tplt<tpnm _tColor>
-	static	err_t	textLineRaster					(const n2u2_t & targetMetrics, const n2u0_t & fontCharSize, const rect2<s1_t> & targetRect, const imgmono<_tColor> & fontTexture, vcst_c & textToRaster, apod<n2u1_t> & dstCoords)		{
-		const s2_t				charsPerRow						= fontTexture.Pitch / fontCharSize.x;
+	sttc	err_t	textLineRaster					(cnst n2u2_t & targetMetrics, cnst n2u0_t & fontCharSize, cnst rect2<s1_t> & targetRect, cnst imgmono<_tColor> & fontTexture, vcst_c & textToRaster, apod<n2u1_t> & dstCoords)		{
+		cnst s2_t				charsPerRow						= fontTexture.Pitch / fontCharSize.x;
 		for(u2_t iChar = 0, countChars = textToRaster.size(); iChar < countChars; ++iChar) {
-			const uc_t					charToDraw						= (uc_t)textToRaster[iChar];
-			const s2_t				coordTableX						= charToDraw % charsPerRow;
-			const s2_t				coordTableY						= charToDraw / charsPerRow;
-			const n2s2_t			coordCharTable					= {coordTableX * fontCharSize.x, coordTableY * fontCharSize.y};
-			const rect2s2_t		srcRect0						= {coordCharTable, fontCharSize.s2()};
+			cnst uc_t					charToDraw						= (uc_t)textToRaster[iChar];
+			cnst s2_t				coordTableX						= charToDraw % charsPerRow;
+			cnst s2_t				coordTableY						= charToDraw / charsPerRow;
+			cnst n2s2_t			coordCharTable					= {coordTableX * fontCharSize.x, coordTableY * fontCharSize.y};
+			cnst rect2s2_t		srcRect0						= {coordCharTable, fontCharSize.s2()};
 			rect2s2_t				dstRect1						= {{s2_t(targetRect.Offset.x + fontCharSize.x * iChar), targetRect.Offset.y}, fontCharSize.s2()};
 			//dstRect1.Size.x		+= min(0, (s2_t)targetRect.Offset.x);
 			dstRect1.Size.y			+= min<s1_t>(0, targetRect.Offset.y);

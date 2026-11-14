@@ -20,12 +20,12 @@ nmsp gpk
     GDEFINE_ENUM_VALUE(PACK_FILTER, 3, 3);
     GDEFINE_ENUM_VALUE(PACK_FILTER, 4, 4);
 
-    tplTInTOut    err_t   packFilter0 (apod<TOut> & filtered, view<const TIn> unfiltered)                         { return unfiltered.for_each([&filtered](const TIn & element) { return filtered.push_back(element); } ); }
-    tplTInTOut    err_t   packFilter1 (apod<TOut> & filtered, view<const TIn> unfiltered)                         { return unfiltered.for_each([&filtered](const TIn & element) { return filtered.push_back(element); } ); }
-    tplTInTOut    err_t   packFilter2 (apod<TOut> & filtered, view<const TIn> unfiltered)                         { return unfiltered.for_each([&filtered](const TIn & element) { return filtered.push_back(element); } ); }
-    tplTInTOut    err_t   packFilter3 (apod<TOut> & filtered, view<const TIn> unfiltered)                         { return unfiltered.for_each([&filtered](const TIn & element) { return filtered.push_back(element); } ); }
-    tplTInTOut    err_t   packFilter4 (apod<TOut> & filtered, view<const TIn> unfiltered)                         { return unfiltered.for_each([&filtered](const TIn & element) { return filtered.push_back(element); } ); }
-    tplTInTOut    err_t   packFilter  (apod<TOut> & filtered, view<const TIn> unfiltered, PACK_FILTER filterType) {
+    tplTInTOut    err_t   packFilter0 (apod<TOut> & filtered, view<cnst TIn> unfiltered)                         { return unfiltered.for_each([&filtered](cnst TIn & element) { return filtered.push_back(element); } ); }
+    tplTInTOut    err_t   packFilter1 (apod<TOut> & filtered, view<cnst TIn> unfiltered)                         { return unfiltered.for_each([&filtered](cnst TIn & element) { return filtered.push_back(element); } ); }
+    tplTInTOut    err_t   packFilter2 (apod<TOut> & filtered, view<cnst TIn> unfiltered)                         { return unfiltered.for_each([&filtered](cnst TIn & element) { return filtered.push_back(element); } ); }
+    tplTInTOut    err_t   packFilter3 (apod<TOut> & filtered, view<cnst TIn> unfiltered)                         { return unfiltered.for_each([&filtered](cnst TIn & element) { return filtered.push_back(element); } ); }
+    tplTInTOut    err_t   packFilter4 (apod<TOut> & filtered, view<cnst TIn> unfiltered)                         { return unfiltered.for_each([&filtered](cnst TIn & element) { return filtered.push_back(element); } ); }
+    tplTInTOut    err_t   packFilter  (apod<TOut> & filtered, view<cnst TIn> unfiltered, PACK_FILTER filterType) {
         switch(filterType) {
         default: gpk_enum_value_error(filterType); return -1;
         case PACK_FILTER_0: return filter0(filtered, unfiltered);
@@ -36,10 +36,10 @@ nmsp gpk
         }
     }
 
-    tplTInTOut    err_t   viewPack    (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/, PACK_TYPE /*packType*/) { return -1; }
-    tplTInTOut    err_t   viewPack    (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/)                         { return -1; }
-    tplTInTOut    err_t   viewUnpack  (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/, PACK_TYPE /*packType*/) { return -1; }
-    tplTInTOut    err_t   viewUnpack  (apod<TOut> & /*packed*/, view<const TIn> /*unpacked*/)                         { return -1; }
+    tplTInTOut    err_t   viewPack    (apod<TOut> & /*packed*/, view<cnst TIn> /*unpacked*/, PACK_TYPE /*packType*/) { return -1; }
+    tplTInTOut    err_t   viewPack    (apod<TOut> & /*packed*/, view<cnst TIn> /*unpacked*/)                         { return -1; }
+    tplTInTOut    err_t   viewUnpack  (apod<TOut> & /*packed*/, view<cnst TIn> /*unpacked*/, PACK_TYPE /*packType*/) { return -1; }
+    tplTInTOut    err_t   viewUnpack  (apod<TOut> & /*packed*/, view<cnst TIn> /*unpacked*/)                         { return -1; }
 } // nmsp
 
 #endif // GPK_PACK_H

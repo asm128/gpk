@@ -15,7 +15,7 @@
 //GDEFINE_ENUM_VALUED(ARGS_TEST_RESULT, AMBIGUOUS_VALUE	, 8, "argsOptionValue() accepted a key with multiple values.");
 //GDEFINE_ENUM_VALUED(ARGS_TEST_RESULT, MISSING_VALUE		, 9, "The option accessors did not report a missing key consistently.");
 //GDEFINE_ENUM_VALUED(ARGS_TEST_RESULT, REUSE				, 10, "argsParse() retained state from an earlier parse.");
-//GDEFINE_ENUM_VALUED(ARGS_TEST_RESULT, EMPTY_VALUE		, 11, "argsParse() did not preserve empty inline and valueless options.");
+//GDEFINE_ENUM_VALUED(ARGS_TEST_RESULT, EMPTY_VALUE		, 11, "argsParse() did not preserve empty inln and valueless options.");
 //
 //sttc ::gpk::err_t testArgsParsedValues(::gpk::ATestError & errors, cnst ::gpk::SCommandLineArgs & args) {
 //	cnst ::gpk::keyval<::gpk::vcst_t> expectedOptions[] =

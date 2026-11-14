@@ -20,7 +20,7 @@ nmsp gpk
 			if_true_tef(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "{%" GPK_FMT_U32 ", %" GPK_FMT_U32 ", %" GPK_FMT_U32 "}", Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
-		inln				view_layered	(_tElement * dataElements, const ::gpk::n3<u2_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
+		inln				view_layered	(_tElement * dataElements, cnst ::gpk::n3<u2_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
 			if_true_tef(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "{%" GPK_FMT_U32 ", %" GPK_FMT_U32 ", %" GPK_FMT_U32 "}", Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
@@ -30,20 +30,20 @@ nmsp gpk
 			if_true_tef(layer >= Size.z, "%" GPK_FMT_U32 " > %" GPK_FMT_U32 ".", layer, Size.z);
 			return ::gpk::grid<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y);
 		}
-		::gpk::grid<const _tElement>		oper[]		(u2_t layer)														const				{
+		::gpk::grid<cnst _tElement>		oper[]		(u2_t layer)														cnst				{
 			if_true_te(0 == Data);
 			if_true_tef(layer >= Size.z, "%" GPK_FMT_U32 " > %" GPK_FMT_U32 ".", layer, Size.z);
-			return ::gpk::grid<const _tElement>(&Data[layer * LayerSize], Size.x, Size.y);
+			return ::gpk::grid<cnst _tElement>(&Data[layer * LayerSize], Size.x, Size.y);
 		}
 
 		// Methods
-		inxp	const _tElement*						begin			()																		csnx	{ return Data;						}
-		inxp	const _tElement*						end				()																		csnx	{ return Data + size();				}
+		inxp	cnst _tElement*						begin			()																		csnx	{ return Data;						}
+		inxp	cnst _tElement*						end				()																		csnx	{ return Data + size();				}
 
 		inxp	_tElement*								begin			()			nxpt	{ return Data;						}
 		inxp	_tElement*								end				()			nxpt	{ return Data + size();				}
 
-		inxp	const ::gpk::n3<u2_t>&			metrics			()																		csnx	{ return Size;						}
+		inxp	cnst ::gpk::n3<u2_t>&			metrics			()																		csnx	{ return Size;						}
 		inxp	u2_t								size			()																		csnx	{ return Size.x * Size.y * Size.z;	}
 };
 #pragma pack(pop)
@@ -63,20 +63,20 @@ nmsp gpk
 	tydf				::gpk::view_layered<s2_t			>	view3d_int32			;
 	tydf				::gpk::view_layered<s3_t			>	view3d_int64			;
 
-	// grid<const> common typedefs
-	tydf				::gpk::view_layered<const sc_t	>	view3d_const_char		;
-	tydf				::gpk::view_layered<const u0_t	>	view3d_const_ubyte		;
-	tydf				::gpk::view_layered<const s0_t	>	view3d_const_byte		;
-	tydf				::gpk::view_layered<const f2_t		>	view3d_const_float32	;
-	tydf				::gpk::view_layered<const f3_t	>	view3d_const_float64	;
-	tydf				::gpk::view_layered<const u0_t	>	view3d_const_uint8		;
-	tydf				::gpk::view_layered<const u1_t	>	view3d_const_uint16		;
-	tydf				::gpk::view_layered<const u2_t	>	view3d_const_uint32		;
-	tydf				::gpk::view_layered<const u3_t	>	view3d_const_uint64		;
-	tydf				::gpk::view_layered<const s0_t	>	view3d_const_int8		;
-	tydf				::gpk::view_layered<const s1_t	>	view3d_const_int16		;
-	tydf				::gpk::view_layered<const s2_t	>	view3d_const_int32		;
-	tydf				::gpk::view_layered<const s3_t	>	view3d_const_int64		;
+	// grid<cnst> common typedefs
+	tydf				::gpk::view_layered<sc_c	>	view3d_const_char		;
+	tydf				::gpk::view_layered<cnst u0_t	>	view3d_const_ubyte		;
+	tydf				::gpk::view_layered<cnst s0_t	>	view3d_const_byte		;
+	tydf				::gpk::view_layered<cnst f2_t		>	view3d_const_float32	;
+	tydf				::gpk::view_layered<cnst f3_t	>	view3d_const_float64	;
+	tydf				::gpk::view_layered<cnst u0_t	>	view3d_const_uint8		;
+	tydf				::gpk::view_layered<u1_c	>	view3d_const_uint16		;
+	tydf				::gpk::view_layered<u2_c	>	view3d_const_uint32		;
+	tydf				::gpk::view_layered<cnst u3_t	>	view3d_const_uint64		;
+	tydf				::gpk::view_layered<cnst s0_t	>	view3d_const_int8		;
+	tydf				::gpk::view_layered<cnst s1_t	>	view3d_const_int16		;
+	tydf				::gpk::view_layered<cnst s2_t	>	view3d_const_int32		;
+	tydf				::gpk::view_layered<cnst s3_t	>	view3d_const_int64		;
 
 }
 

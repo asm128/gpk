@@ -38,7 +38,7 @@ gpk::err_t			gpk::getWordDict	(SWordDictData & wordData, aobj<SWordIndices> & wo
 		, exceptions);
 }
 
-gpk::err_t			gpk::getItemViews		(SJSONReader & content, const AD_SHOP_CATEGORY category, vcst_t /*lang*/, aobj<SItemViews> & indicesToDisplay) {
+gpk::err_t			gpk::getItemViews		(SJSONReader & content, cnst AD_SHOP_CATEGORY category, vcst_t /*lang*/, aobj<SItemViews> & indicesToDisplay) {
 	for(s2_t iItem = 0, countItems = jsonArraySize(content, 0); iItem < countItems; ++iItem) {
 		SItemViews		views					= {(u2_t)iItem};
 		cnst err_t		jsonIndexCurrentItem	= jsonArrayValueGet(content, 0, iItem);
@@ -98,9 +98,9 @@ gpk::err_t			gpk::outputSearchScript		(string & output, view<cnst SItemViews> in
 	}
 	if_fail_fe(append_strings(output, "];"
 		, "\nvar indices=["));
-	//char		tempIntStr[256]				= {};
+	//sc_t		tempIntStr[256]				= {};
 	for(u2_t iWord = 0; iWord < wordSet.size(); ++iWord) {
-		const SWordIndices		& element = wordSet[iWord];
+		cnst SWordIndices		& element = wordSet[iWord];
 		if_fail_fe(output.push_back('['));
 		for(u2_t iArticle = 0; iArticle < element.Indices.size(); ++iArticle) {
 			if_fail_fe(append_strings(output, str(element.Indices[iArticle])));
@@ -121,7 +121,7 @@ gpk::err_t			gpk::outputSearchScript		(string & output, view<cnst SItemViews> in
 	if_fail_fe(append_strings(output, "];"
 		, "\nvar barrioIdMap=["));
 	for(u2_t iArticle = 0; iArticle < indicesToDisplay.size(); ++iArticle) {
-		const SItemViews		& ad			= indicesToDisplay[iArticle];
+		cnst SItemViews		& ad			= indicesToDisplay[iArticle];
 		if_fail_fe(output.push_back('['));
 		for(u2_t iBarrio = 0; iBarrio < ad.Barrio.size(); ++iBarrio) {
 			if_fail_fe(append_strings(output, str(ad.Barrio[iBarrio])));

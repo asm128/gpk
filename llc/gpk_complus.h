@@ -53,8 +53,8 @@ nmsp gpk
 		inxp	oper		TRef *		()							nxpt	{ return Unknown;	}
 		inxp	oper		cnst TRef *	()							csnx	{ return Unknown;	}
 
-		inxp	bool		oper==		(cnst TCOM & other)			csnx	{ return Unknown == other.Unknown; }
-		inxp	bool		oper!=		(cnst TCOM & other)			csnx	{ return !oper==(other); }
+		inxp	b8_t		oper==		(cnst TCOM & other)			csnx	{ return Unknown == other.Unknown; }
+		inxp	b8_t		oper!=		(cnst TCOM & other)			csnx	{ return !oper==(other); }
 
 		inxp	TCOM		oper =		(TRef * other)				nxpt	{ TRef * oldInstance = Unknown; Unknown = other;			if(Unknown) Unknown->AddRef();	safe_release(&oldInstance); return *this; }
 		inxp	TCOM		oper =		(cnst TCOM & other)			nxpt	{ TRef * oldInstance = Unknown; Unknown = other.Unknown;	if(Unknown) Unknown->AddRef();	safe_release(&oldInstance); return *this; }

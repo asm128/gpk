@@ -29,10 +29,10 @@ gpk::err_t 		gpk::controlListInitialize	(SGUI & gui, SControlList& menu)								
 }
 
 gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)													{
-	const SRasterFont	& selectedFont			= *gui.Fonts[in_range(gui.Controls.Text[menu.IdControl].FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
+	cnst SRasterFont	& selectedFont			= *gui.Fonts[in_range(gui.Controls.Text[menu.IdControl].FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
 	cid_t				iPreviousVisible		= -1;
 	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		const cid_t		idControl				= menu.IdControls[iItem];
+		cnst cid_t		idControl				= menu.IdControls[iItem];
 		SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[idControl];
 		SControlPlacement	& control				= gui.Controls.Placement	[idControl];
 		SControlText			& controlText			= gui.Controls.Text			[idControl];
@@ -40,7 +40,7 @@ gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)										
 		controlConstraints.AttachSizeToControl			= {-1, -1};
 		if(gui.Controls.States[idControl].IsHidden())
 			continue;
-		const n2u0_t			fontCharSize			= selectedFont.CharSize;
+		cnst n2u0_t			fontCharSize			= selectedFont.CharSize;
 		control.Area.Size.y		= fontCharSize.y + controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
@@ -72,9 +72,9 @@ gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)										
 
 	SControlPlacement	& controlMenu			= gui.Controls.Placement[menu.IdControl];
 	controlMenu.Area.Size	= {};
-	const n2u0_t			fontCharSize			= selectedFont.CharSize;
+	cnst n2u0_t			fontCharSize			= selectedFont.CharSize;
 	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		const u2_t				idControl			= menu.IdControls		[iItem];
+		u2_c				idControl			= menu.IdControls		[iItem];
 		if(gui.Controls.States[idControl].IsHidden())
 			continue;
 		SControlPlacement	& control			= gui.Controls.Placement[idControl];
@@ -99,7 +99,7 @@ gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)										
 	return 0;
 }
 
-gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, const vcst_t& text)				{
+gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, cnst vcst_t& text)				{
 	if(menu.IdControl == -1)
 		if_fail_fe(gpk::controlListInitialize(gui, menu));
 
@@ -114,37 +114,37 @@ gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, const vcst_t&
 }
 
 gpk::err_t 		gpk::paletteGridInitialize	(SGUI & gui, SPaletteGrid& palette)				{
-	const n2f3_t			targetSize					= {256.0, 256.0};
+	cnst n2f3_t			targetSize					= {256.0, 256.0};
 	palette.IdControl		= controlCreate(gui);
 
 	SControlPlacement	& control					= gui.Controls.Placement[palette.IdControl];
-	const u2_t				widthViewport				= (u2_t)(targetSize.x + ((s3_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
-	const u2_t				heightViewport				= (u2_t)(targetSize.y + ((s3_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
+	u2_c				widthViewport				= (u2_t)(targetSize.x + ((s3_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
+	u2_c				heightViewport				= (u2_t)(targetSize.y + ((s3_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
 	control.Area.Size		= {(s1_t)widthViewport, (s1_t)heightViewport};
 	control.Align			= ALIGN_CENTER;
 	return 0;
 }
 
-gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, const g8bgra& colors)			{
+gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, cnst g8bgra& colors)			{
 	if(-1 == palette.IdControl)
 		if_fail_e(paletteGridInitialize(gui, palette));
 
 	//gui.Controls.Area[palette.IdControl];
 
-	const n2u2_t			& gridMetrics				= colors.metrics();
+	cnst n2u2_t			& gridMetrics				= colors.metrics();
 	if_fail_fe(palette.IdControls.resize(colors.size()));
 	palette.Colors			= colors;
 
-	const SControlPlacement	& controlPalette			= gui.Controls.Placement[palette.IdControl];
-	const n2f3_t			targetSize					= controlPalette.Area.Size.f3() - controlNCSpacing(controlPalette).f3();
+	cnst SControlPlacement	& controlPalette			= gui.Controls.Placement[palette.IdControl];
+	cnst n2f3_t			targetSize					= controlPalette.Area.Size.f3() - controlNCSpacing(controlPalette).f3();
 	n2f3_t				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(u2_t y = 0; y < gridMetrics.y; ++y)
 	for(u2_t x = 0; x < gridMetrics.x; ++x) {
-		const s2_t				linearIndex					= y * gridMetrics.x + x;
+		cnst s2_t				linearIndex					= y * gridMetrics.x + x;
 		u2_t					iFoundColor					= 0;
 		s2_t						themeIndex					= -1;
-		const bgra			& gridCellColor				= colors[y][x];
+		cnst bgra			& gridCellColor				= colors[y][x];
 		for(; iFoundColor < gui.Colors->Palette->size(); ++iFoundColor)
 			if((*gui.Colors->Palette)[iFoundColor] == gridCellColor) {
 				themeIndex				= iFoundColor;
@@ -173,7 +173,7 @@ gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, const
 			//for(u2_t iArea = 0; iArea < GUI_CONTROL_COLOR_COUNT; ++iArea)
 			//	theme.ColorCombos[iState][iArea]	= min((u2_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);
 		}
-		const u2_t				paletteElemIndex	= linearIndex;
+		u2_c				paletteElemIndex	= linearIndex;
 		palette.IdControls[paletteElemIndex] = controlCreate(gui);
 		SControlPlacement	& control			= gui.Controls.Placement[palette.IdControls[paletteElemIndex]];
 		SControlDraw			& controlDraw		= gui.Controls.Draw[palette.IdControls[paletteElemIndex]];
@@ -185,7 +185,7 @@ gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, const
 	return 0;
 }
 
-gpk::cid_t			gpk::guiCreateControlList	(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, const SControlPlacement & args, ALIGN textAlign, vcid out_ids) {
+gpk::cid_t			gpk::guiCreateControlList	(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, vcid out_ids) {
 	cid_t					result						= -1;
 	for(u1_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		cid_t				idControl					= {};

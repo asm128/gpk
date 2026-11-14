@@ -16,7 +16,7 @@ nmsp gpk
 		eid_t		Camera			= EID_INVALID;
 		eid_t		Background		= EID_INVALID;
 
-		err_t		Save			(au0_t & output)	const	{ 
+		err_t		Save			(au0_t & output)	cnst	{ 
 			if_fail_fe(saveView(output, GravityCenters	));
 			if_fail_fe(saveView(output, Orbits			));
 			if_fail_fe(saveView(output, Bodies			));
@@ -41,7 +41,7 @@ nmsp gpk
 		SPlanetarySystem			PlanetarySystem;
 		SPlanetarySystemEntityMap	EntityMap;
 
-		err_t		Save			(au0_t & output)	const	{ 
+		err_t		Save			(au0_t & output)	cnst	{ 
 			if_fail_fe(PlanetarySystem.Save(output));
 			if_fail_fe(EntityMap.Save(output));
 			return 0;
@@ -54,10 +54,10 @@ nmsp gpk
 		}
 	};
 
-	err_t		planetarySystemReset			(const SPlanetarySystem & solarSystem, const SPlanetarySystemEntityMap & entityMap, SEngine & engine, vc8bgra colors);
-	err_t		planetarySystemCreateEntities	(const SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine);
-	err_t		planetarySystemSetup			(const SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine); 
-	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, const SJSONReader & jsonData);
+	err_t		planetarySystemReset			(cnst SPlanetarySystem & solarSystem, cnst SPlanetarySystemEntityMap & entityMap, SEngine & engine, vc8bgra colors);
+	err_t		planetarySystemCreateEntities	(cnst SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine);
+	err_t		planetarySystemSetup			(cnst SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine); 
+	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, cnst SJSONReader & jsonData);
 	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, vcst_t jsonFilePath);
 } // nmsp
 
