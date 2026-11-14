@@ -97,12 +97,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\test_gpk_file_viewer_common\test_gpk_file_viewer_common.h" />
     <ClInclude Include="gpk_gui_editor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_gui_editor.cpp" />
-    <ClCompile Include="..\test_gpk_file_viewer_common\test_gpk_file_viewer_common.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
