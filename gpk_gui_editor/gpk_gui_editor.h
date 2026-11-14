@@ -26,14 +26,17 @@ stct SPalettePicker {
 	::gpk::SControlGrid	GridShades		= {};
 };
 
-stct SSampleGUI {
-	::gpk::pobj<::gpk::SGUI>	GUIHandle	= {};
+stct SSampleGUIEdited {
+	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
+	::gpk::cid_t			Control			= ::gpk::CID_INVALID;
+};
 
-	SSampleGUI(::gpk::pobj<::gpk::SGUI> & gui) : GUIHandle(gui) {}
+stct SSampleGUI {
+	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
+	SSampleGUIEdited			Edited			= {};
 	bool				UseNewPalettes			= false;
 	::gpk::cid_t		ControlMode				= ::gpk::CID_INVALID;
 	::gpk::cid_t		ControlGeometry			= ::gpk::CID_INVALID;
-	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
 	::gpk::acid			ViewportIds			= {};
 	::gpk::SControlList	ListViewports			= {};
 	::gpk::SControlList	ListExit			= {};
@@ -54,7 +57,7 @@ stct SSampleGUI {
 	::gpk::astcid<4>	ControlsKeyboard		= {};
 };
 
-::gpk::err_t		sampleGUISetup				(SSampleGUI & app, ::gpk::pobj<::gpk::SInput> & input);
+::gpk::err_t		sampleGUISetup				(SSampleGUI & app, ::gpk::pobj<::gpk::SGUI> & gui, ::gpk::pobj<::gpk::SInput> & input);
 ::gpk::err_t		sampleGUIUpdate				(SSampleGUI & app, bool systemRequestedExit);
 ::gpk::err_t		sampleGUIDraw				(SSampleGUI & app, ::gpk::g8bgra target);
 

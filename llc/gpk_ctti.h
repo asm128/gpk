@@ -465,6 +465,24 @@ namespace gpk
 	}
 
 	tplt<tpnm TEnum, size_t NDeclaration>
+	err_t enumDefinitionFromCTTI(cnst SCTTIEnumParseResult<TEnum, NDeclaration> & metadata) {
+		if(false == metadata.Success())
+			rtrn -1;
+		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue)
+			if(false == metadata.Values[iValue].ValueResolved)
+				rtrn -1;
+
+		enum_definition<TEnum> & definition = get_enum<TEnum>();
+		definition.Name = {&metadata.SourceText[metadata.EnumName.Offset], metadata.EnumName.Count};
+		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue) {
+			cnst SCTTIEnumValue<TEnum> & value = metadata.Values[iValue];
+			cnst vcst_t name = {&metadata.SourceText[value.Name.Offset], value.Name.Count};
+			if_fail_fe(definition.add_value(value.Value, name, name, name));
+		}
+		rtrn definition.Values.size();
+	}
+
+	tplt<tpnm TEnum, size_t NDeclaration>
 	inxp SCTTIEnumViews<NDeclaration> cttiEnumViewsMake(cnst SCTTIEnumParseResult<TEnum, NDeclaration> & metadata) nxpt {
 		SCTTIEnumViews<NDeclaration> result = {};
 		result.Count = metadata.Count;
@@ -488,6 +506,9 @@ namespace gpk
 
 #define GPK_CTTI_JOIN_2(left, right)	left##right
 #define GPK_CTTI_JOIN(left, right)	GPK_CTTI_JOIN_2(left, right)
+#define GDEFINE_ENUM_CTTI(cttiObject)																\
+	static cnst ::gpk::err_t GPK_CTTI_JOIN(gpk_ctti_enum_definition_, __LINE__) =						\
+		::gpk::enumDefinitionFromCTTI(cttiObject)
 #define CTTI_STCT(...)																				\
 	extern stct __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__);							\
 	tplt<> stct gpk::SCTTIStructRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__))> {	\

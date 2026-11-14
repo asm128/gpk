@@ -36,6 +36,7 @@ GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, MEMBER_FIND, 26, "The CTTI struct reg
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_VALUE, 27, "The CTTI value view did not expose the live instance member.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_VISIT, 28, "The CTTI typed visitor did not receive the live instance member.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_MISSING, 29, "The CTTI instance lookup unexpectedly accepted an unknown member.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_DEFINITION, 30, "The CTTI enum definition bridge exposed incorrect registry metadata.");
 
 CTTI_STCT(
 	SCTTIJSONTest0 {
@@ -53,6 +54,7 @@ CTTI_ENUM_COMPILED(SCTTIEnumTest, gpk::u1_t,
 	CTTIEnumWrite	= CTTIEnumRead + 4,
 	CTTIEnumAlias	= CTTIEnumWrite
 	);
+GDEFINE_ENUM_CTTI(SCTTIEnumTest_gpk_ctti);
 
 CTTI_ENUM_COMPILED(SCTTIEnumSingle, gpk::u0_t, SCTTIEnumSingleValue = 9);
 CTTI_ENUM_COMPILED(SCTTIEnumBoundary, gpk::u0_t,
@@ -224,6 +226,14 @@ sttc ::gpk::err_t cttiMemberJSON
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_VALUE            , SCTTIEnumTest_gpk_ctti.Values[2].Value != CTTIEnumWrite);
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_VALUE            , SCTTIEnumTest_gpk_ctti.Values[3].Value != CTTIEnumAlias);
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_FIND             , SCTTIEnumTest_gpk_ctti.Find("CTTIEnumAlias") != 3);
+	cnst ::gpk::enum_definition<SCTTIEnumTest> & enumDefinition = ::gpk::get_enum<SCTTIEnumTest>();
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION       , enumDefinition.Name != "SCTTIEnumTest", "Unexpected enum definition name:'%.*s'.", GPK_VIEW_ARGS(enumDefinition.Name));
+	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION       , enumDefinition.Values.size() != SCTTIEnumTest_gpk_ctti.Count || enumDefinition.Names.size() != SCTTIEnumTest_gpk_ctti.Count);
+	for(::gpk::u2_t iValue = 0; iValue < SCTTIEnumTest_gpk_ctti.Count; ++iValue) {
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Values[iValue] != SCTTIEnumTest_gpk_ctti.Values[iValue].Value);
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Names[iValue] != SCTTIEnumTest_gpk_ctti_views.Names[iValue]);
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Titles[iValue] != enumDefinition.Names[iValue] || enumDefinition.Descriptions[iValue] != enumDefinition.Names[iValue]);
+	}
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , ::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.EnumName) != "SCTTIEnumFull", "Unexpected complete enum name:'%.*s'.", GPK_VIEW_ARGS(::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.EnumName)));
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , ::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.UnderlyingType) != "gpk::u1_t", "Unexpected complete enum type:'%.*s'.", GPK_VIEW_ARGS(::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.UnderlyingType)));
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY      , cttiEnumFull.ValuesCompiled);
