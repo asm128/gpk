@@ -1,4 +1,4 @@
-#include "gpk_error.h"
+#include "gpk_typeint.h"
 
 #ifdef GPK_ATMEL
 #	include <ustd_functional.h>

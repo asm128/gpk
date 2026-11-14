@@ -1,4 +1,4 @@
-#include "gpk_error.h"
+#include "gpk_typeint.h"
 
 #ifndef GPK_SYNC_H_23627
 #define GPK_SYNC_H_23627

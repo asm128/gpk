@@ -32,8 +32,9 @@ namespace lls
 		::gpk::aobj<::lls::SUIPlayer>	PlayerUI		= {};
 	};
 
+	CTTI_ENUM(
 	enum SAVE_MODE { SAVE_MODE_AUTO, SAVE_MODE_QUICK, SAVE_MODE_STAGE, SAVE_MODE_USER };
-
+	);
 	struct SFileStrings {
 		::gpk::vcst_t				SavegameFolder				= ".";
 		::gpk::vcst_t				ExtensionImages				= ".png";

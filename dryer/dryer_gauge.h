@@ -1,6 +1,7 @@
 #include "gpk_img_color.h"
 #include "gpk_circle.h"
 #include "gpk_tri.h"
+#include "gpk_ctti.h"
 
 #ifndef DRYER_GAUGE_H_92863423
 #define DRYER_GAUGE_H_92863423

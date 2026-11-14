@@ -107,12 +107,13 @@ static int socketReceiveAll(socket_handle_t socketHandle, void * data, size_t si
 	return 0;
 }
 
+CTTI_ENUM(
 enum class PEER_FRAME : uint8_t {
 	HELLO		= 1,
 	TRANSFER	= 2,
 	RESULT		= 3,
 };
-
+);
 static constexpr uint32_t PEER_FRAME_MAX = 16U * 1024U * 1024U;
 
 static bool frameSend(socket_handle_t socketHandle, PEER_FRAME type, const void * data, size_t size) {

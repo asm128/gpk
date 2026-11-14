@@ -110,7 +110,7 @@ nmsp gpk
 			SControlTable		& controlTable		= dialog.GUI->Controls;
 			for(u2_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {
 				if(eventsIn[iEvent]->Type == SYSTEM_EVENT_GUI) {
-					eventExtractAndHandle<EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](const SEventView<EVENT_GUI_CONTROL> & eventGui) {
+					if_fail_e(eventExtractAndHandle<EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](const SEventView<EVENT_GUI_CONTROL> & eventGui) {
 						switch(eventGui.Type) {
 						default: break;
 						case EVENT_GUI_CONTROL_StateChange: {
@@ -123,7 +123,7 @@ nmsp gpk
 						}
 						}
 						return 0;
-					});
+					}));
 				}
 			}
 

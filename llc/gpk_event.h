@@ -1,7 +1,6 @@
+#include "gpk_apod_serialize.h"
 #include "gpk_array_ptr.h"
 #include "gpk_enum.h"
-
-#include "gpk_apod_serialize.h"
 
 #ifndef GPK_EVENT_H_23627
 #define GPK_EVENT_H_23627
@@ -110,14 +109,14 @@ nmsp gpk
 		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(const u0_t*)&childEventDataType, szof(_tPOD)});
 	}
 	tplt<tpnm _tChildEvent, tpnm _tParentEvent>
-	sttc	err_t	eventExtractAndHandle	(const SEvent<_tParentEvent> & parentEvent, const function<err_t (const SEventView<_tChildEvent> &)> & funcHandleChild) {
+	sttc	err_t	eventExtractAndHandle	(const SEvent<_tParentEvent> & parentEvent, const FError<const SEventView<_tChildEvent> &> & funcHandleChild) {
 		SEView<_tChildEvent>	childEvent; 
 		if_fail_fe(parentEvent.ExtractChild(childEvent)); 
 		rtrn funcHandleChild(childEvent);
 	}
 }
 
-#define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s' (0x%llX)(%lli)(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
-#define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for '%s'! '%s' (0x%llX)(%lli)(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
+#define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s'	(0x%" GPK_FMT_X3  ")(%" GPK_FMT_S3 ")(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
+#define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for '%s'! '%s'	(0x%" GPK_FMT_X3  ")(%" GPK_FMT_S3 ")(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
 
 #endif // GPK_EVENT_H_23627

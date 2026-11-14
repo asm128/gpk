@@ -57,6 +57,11 @@ nmsp gpk
 		}
 		rtrn controlGridArrange(gui, grid, cellSize, spacing, offset, align);
 	}
+	stct SPalettePicker {
+		::gpk::cid_t		IdViewport		= ::gpk::CID_INVALID;
+		::gpk::SControlGrid	GridTones[2]	= {};
+		::gpk::SControlGrid	GridShades		= {};
+	};
 }
 
 #endif // GPK_CONTROL_GRID_H_23627

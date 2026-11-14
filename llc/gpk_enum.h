@@ -278,7 +278,6 @@ nmsp gpk
 
 		inxp	oper	cnst T&		()			const	{ return Value; }
 	};
-
 } // nmsp
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
@@ -340,7 +339,7 @@ nmsp gpk
 #define GDEFINE_FLAG_TYPE		GDEFINE_ENUM_TYPE
 #define GDEFINE_FLAG_VALUE		GDEFINE_ENUM_VALUE
 
-#if defined(GPK_WINDOWS)
+#ifdef GPK_WINDOWS
 #	pragma warning(disable : 4063)	// On Windows, usng enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
@@ -353,149 +352,8 @@ nmsp gpk
 #define gpk_enum_valued_warning(_enumValue)				gpk_enum_valued_log	(warning_printf	, _enumValue)
 #define gpk_enum_valued_error(_enumValue)				gpk_enum_valued_log	(error_printf	, _enumValue)
 
-nmsp gpk
-{
-	tpl_t struct SGPKEnumValue {
-		_t			Value;
-		vcst_c		Name;
-	};
-}
-#define GPK_ENUM_BEGIN(EnumName, IntType)																							\
-	struct EnumName {																												\
-		IntType									Value; 																				\
-		stxp	vcst_c							Name	= #EnumName;														\
-																																	\
-		inxp									EnumName(IntType value = -1)		: Value(value) {}								\
-																																	\
-		inxp	oper							IntType	()				cnst nxpt	{ return Value;	}								\
-		inxp	EnumName						oper ~	()				cnst nxpt	{ return {IntType(~Value)};				}		\
-		inxp	EnumName						oper &	(EnumName b)	cnst nxpt	{ return {IntType(Value & b.Value)};	}		\
-		inxp	EnumName						oper ^	(EnumName b)	cnst nxpt	{ return {IntType(Value ^ b.Value)};	}		\
-		inxp	EnumName						oper |	(EnumName b)	cnst nxpt	{ return {IntType(Value | b.Value)};	}		\
-		inln	EnumName&						oper |=	(EnumName b)	nxpt		{ return *this = {IntType(Value |= b.Value)}; }	\
-		inln	EnumName&						oper &=	(EnumName b)	nxpt		{ return *this = {IntType(Value &= b.Value)}; }	\
-		inln	EnumName&						oper ^=	(EnumName b)	nxpt		{ return *this = {IntType(Value ^= b.Value)}; }	\
-																																	\
-		::gpk::vcst_t 						getEnumName		()		cnst nxpt		{ return Name; }								\
-		::gpk::vcst_t 						getValueName	()				cnst	{ return getValueName(Value); }					\
-		::gpk::vcst_t 						getValueName	(IntType value)	cnst	{												\
-			for(::gpk::u2_t i=0, count = ::gpk::size(Values); i < count; ++i) {														\
-				if(value == Values[i].Value)																						\
-					return Values[i].Name;																							\
-			}																														\
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);											\
-			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;																				\
-		}																															\
-		stxp 	::gpk::SGPKEnumValue<IntType> 	Values	[]	= {
-
-#define GPK_ENUM_VALUE(ValueName, IntegerValue) { IntegerValue, #ValueName },
-
-#define GPK_ENUM_END() \
-			};	\
-	};
-
-nmsp gpk
-{
-//#ifdef GPK_ESP8266
-// 	GPK_ENUM_BEGIN	(RESULT, s0_t)
-//	GPK_ENUM_VALUE	(Ok                , s0_t(::gpk::OS_OK                ))
-//	GPK_ENUM_VALUE	(Error             , s0_t(::gpk::OS_ERROR             ))
-//	GPK_ENUM_VALUE	(Busy              , s0_t(::gpk::OS_BUSY              ))
-//	GPK_ENUM_VALUE	(Timeout           , s0_t(::gpk::OS_TIMEOUT           ))
-//	GPK_ENUM_VALUE	(Full              , s0_t(::gpk::OS_FULL              ))
-//	GPK_ENUM_VALUE	(Empty             , s0_t(::gpk::OS_EMPTY             ))
-//	GPK_ENUM_VALUE	(Overrun           , s0_t(::gpk::OS_OVERRUN           ))
-//	GPK_ENUM_VALUE	(Not_available     , s0_t(::gpk::OS_NOT_AVAILABLE     ))
-//	GPK_ENUM_VALUE	(Not_found         , s0_t(::gpk::OS_NOT_FOUND         ))
-//	GPK_ENUM_VALUE	(Invalid_parameter , s0_t(::gpk::OS_INVALID_PARAMETER ))
-//	GPK_ENUM_VALUE	(Forbidden         , s0_t(::gpk::OS_FORBIDDEN         ))
-//	GPK_ENUM_VALUE	(Restart           , s0_t(::gpk::OS_RESTART           ))
-//	GPK_ENUM_VALUE	(Wake_up           , s0_t(::gpk::OS_WAKE_UP           ))
-//	GPK_ENUM_VALUE	(Sleep             , s0_t(::gpk::OS_SLEEP             ))
-//	GPK_ENUM_VALUE	(Offline           , s0_t(::gpk::OS_OFFLINE           ))
-//	GPK_ENUM_VALUE	(Disconnected      , s0_t(::gpk::OS_DISCONNECTED      ))
-//	GPK_ENUM_VALUE	(Connecting        , s0_t(::gpk::OS_CONNECTING        ))
-//	GPK_ENUM_VALUE	(Connected         , s0_t(::gpk::OS_CONNECTED         ))
-//	GPK_ENUM_VALUE	(Missing_data      , s0_t(::gpk::OS_MISSING_DATA      ))
-//	GPK_ENUM_VALUE	(No_Memory         , s0_t(::gpk::OS_NO_MEMORY         ))
-//	GPK_ENUM_VALUE	(Read              , s0_t(::gpk::OS_READ              ))
-//	GPK_ENUM_VALUE	(Write             , s0_t(::gpk::OS_WRITE             ))
-// 	GPK_ENUM_END	();
-//	
-// 	GPK_ENUM_BEGIN	(COMMAND, s0_t)
-//	GPK_ENUM_VALUE	(Ok                , s0_t(::gpk::OS_OK                ) * -1)
-//	GPK_ENUM_VALUE	(Error             , s0_t(::gpk::OS_ERROR             ) * -1)
-//	GPK_ENUM_VALUE	(Busy              , s0_t(::gpk::OS_BUSY              ) * -1)
-//	GPK_ENUM_VALUE	(Timeout           , s0_t(::gpk::OS_TIMEOUT           ) * -1)
-//	GPK_ENUM_VALUE	(Full              , s0_t(::gpk::OS_FULL              ) * -1)
-//	GPK_ENUM_VALUE	(Empty             , s0_t(::gpk::OS_EMPTY             ) * -1)
-//	GPK_ENUM_VALUE	(Overrun           , s0_t(::gpk::OS_OVERRUN           ) * -1)
-//	GPK_ENUM_VALUE	(Not_available     , s0_t(::gpk::OS_NOT_AVAILABLE     ) * -1)
-//	GPK_ENUM_VALUE	(Not_found         , s0_t(::gpk::OS_NOT_FOUND         ) * -1)
-//	GPK_ENUM_VALUE	(Invalid_parameter , s0_t(::gpk::OS_INVALID_PARAMETER ) * -1)
-//	GPK_ENUM_VALUE	(Forbidden         , s0_t(::gpk::OS_FORBIDDEN         ) * -1)
-//	GPK_ENUM_VALUE	(Restart           , s0_t(::gpk::OS_RESTART           ) * -1)
-//	GPK_ENUM_VALUE	(Wake_up           , s0_t(::gpk::OS_WAKE_UP           ) * -1)
-//	GPK_ENUM_VALUE	(Sleep             , s0_t(::gpk::OS_SLEEP             ) * -1)
-//	GPK_ENUM_VALUE	(Offline           , s0_t(::gpk::OS_OFFLINE           ) * -1)
-//	GPK_ENUM_VALUE	(Disconnected      , s0_t(::gpk::OS_DISCONNECTED      ) * -1)
-//	GPK_ENUM_VALUE	(Connecting        , s0_t(::gpk::OS_CONNECTING        ) * -1)
-//	GPK_ENUM_VALUE	(Connected         , s0_t(::gpk::OS_CONNECTED         ) * -1)
-//	GPK_ENUM_VALUE	(Missing_data      , s0_t(::gpk::OS_MISSING_DATA      ) * -1)
-//	GPK_ENUM_VALUE	(No_Memory         , s0_t(::gpk::OS_NO_MEMORY         ) * -1)
-//	GPK_ENUM_VALUE	(Read              , s0_t(::gpk::OS_READ              ) * -1)
-//	GPK_ENUM_VALUE	(Write             , s0_t(::gpk::OS_WRITE             ) * -1)
-// 	GPK_ENUM_END	();
-//	
-//#else // !GPK_ESP8266
- 	GDEFINE_ENUM_TYPE (RESULT, s0_t);
-	GDEFINE_ENUM_VALUE(RESULT, Ok                , s0_t(::gpk::OS_OK                ));
-	GDEFINE_ENUM_VALUE(RESULT, Error             , s0_t(::gpk::OS_ERROR             ));
-	GDEFINE_ENUM_VALUE(RESULT, Busy              , s0_t(::gpk::OS_BUSY              ));
-	GDEFINE_ENUM_VALUE(RESULT, Timeout           , s0_t(::gpk::OS_TIMEOUT           ));
-	GDEFINE_ENUM_VALUE(RESULT, Full              , s0_t(::gpk::OS_FULL              ));
-	GDEFINE_ENUM_VALUE(RESULT, Empty             , s0_t(::gpk::OS_EMPTY             ));
-	GDEFINE_ENUM_VALUE(RESULT, Overrun           , s0_t(::gpk::OS_OVERRUN           ));
-	GDEFINE_ENUM_VALUE(RESULT, Not_available     , s0_t(::gpk::OS_NOT_AVAILABLE     ));
-	GDEFINE_ENUM_VALUE(RESULT, Not_found         , s0_t(::gpk::OS_NOT_FOUND         ));
-	GDEFINE_ENUM_VALUE(RESULT, Invalid_parameter , s0_t(::gpk::OS_INVALID_PARAMETER ));
-	GDEFINE_ENUM_VALUE(RESULT, Forbidden         , s0_t(::gpk::OS_FORBIDDEN         ));
-	GDEFINE_ENUM_VALUE(RESULT, Restart           , s0_t(::gpk::OS_RESTART           ));
-	GDEFINE_ENUM_VALUE(RESULT, Wake_up           , s0_t(::gpk::OS_WAKE_UP           ));
-	GDEFINE_ENUM_VALUE(RESULT, Sleep             , s0_t(::gpk::OS_SLEEP             ));
-	GDEFINE_ENUM_VALUE(RESULT, Offline           , s0_t(::gpk::OS_OFFLINE           ));
-	GDEFINE_ENUM_VALUE(RESULT, Disconnected      , s0_t(::gpk::OS_DISCONNECTED      ));
-	GDEFINE_ENUM_VALUE(RESULT, Connecting        , s0_t(::gpk::OS_CONNECTING        ));
-	GDEFINE_ENUM_VALUE(RESULT, Connected         , s0_t(::gpk::OS_CONNECTED         ));
-	GDEFINE_ENUM_VALUE(RESULT, Missing_data      , s0_t(::gpk::OS_MISSING_DATA      ));
-	GDEFINE_ENUM_VALUE(RESULT, No_Memory         , s0_t(::gpk::OS_NO_MEMORY         ));
-	GDEFINE_ENUM_VALUE(RESULT, Read              , s0_t(::gpk::OS_READ              ));
-	GDEFINE_ENUM_VALUE(RESULT, Write             , s0_t(::gpk::OS_WRITE             ));
-
- 	GDEFINE_ENUM_TYPE (COMMAND, s0_t);
-	GDEFINE_ENUM_VALUE(COMMAND, Ok                , RESULT_Ok                * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Error             , RESULT_Error             * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Busy              , RESULT_Busy              * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Timeout           , RESULT_Timeout           * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Full              , RESULT_Full              * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Empty             , RESULT_Empty             * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Overrun           , RESULT_Overrun           * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Not_available     , RESULT_Not_available     * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Not_found         , RESULT_Not_found         * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Invalid_parameter , RESULT_Invalid_parameter * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Forbidden         , RESULT_Forbidden         * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Restart           , RESULT_Restart           * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Wake_up           , RESULT_Wake_up           * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Sleep             , RESULT_Sleep             * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Offline           , RESULT_Offline           * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Disconnected      , RESULT_Disconnected      * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Connecting        , RESULT_Connecting        * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Connected         , RESULT_Connected         * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Missing_data      , RESULT_Missing_data      * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, No_Memory         , RESULT_No_Memory         * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Read              , RESULT_Read              * -1);
-	GDEFINE_ENUM_VALUE(COMMAND, Write             , RESULT_Write             * -1);
-//#endif // GPK_ESP8266
-}
+#define gpk_enum_value_log(printf_fn, enumVal)	printf_fn("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'", get_enum_namep GPKREP3(enumVal) ? char(enumVal) : '?', get_value_namep(enumVal))
+#define GDEFINE_ENUM_CASE_DEFAULT(TEnum, TValue)    default                 : rtrn #TValue
+#define GDEFINE_ENUM_CASE(TEnum, TValue)            case TEnum##_##TValue   : rtrn #TValue
 
 #endif // GPK_ENUM_H_23627

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -22,38 +22,41 @@
     <ClInclude Include="gpk_adam7.h" />
     <ClInclude Include="gpk_aes.h" />
     <ClInclude Include="gpk_align.h" />
+    <ClInclude Include="gpk_aobj_pobj.h" />
+    <ClInclude Include="gpk_aobj_ppod.h" />
+    <ClInclude Include="gpk_apod_color.h" />
     <ClInclude Include="gpk_apod_gauge.h" />
     <ClInclude Include="gpk_apod_minmax.h" />
+    <ClInclude Include="gpk_apod_n2.h" />
+    <ClInclude Include="gpk_apod_n3.h" />
     <ClInclude Include="gpk_apod_range.h" />
     <ClInclude Include="gpk_apod_serialize.h" />
     <ClInclude Include="gpk_apod_slice.h" />
-    <ClInclude Include="gpk_append_tcpip.h" />
+    <ClInclude Include="gpk_apod_tri.h" />
+    <ClInclude Include="gpk_apod_tri2.h" />
+    <ClInclude Include="gpk_apod_tri3.h" />
+    <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_append_css.h" />
     <ClInclude Include="gpk_append_frontend.h" />
     <ClInclude Include="gpk_append_html.h" />
     <ClInclude Include="gpk_append_js.h" />
     <ClInclude Include="gpk_append_json.h" />
+    <ClInclude Include="gpk_append_tcpip.h" />
     <ClInclude Include="gpk_append_xml.h" />
-    <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_arduino_string.h" />
     <ClInclude Include="gpk_args.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_base.h" />
     <ClInclude Include="gpk_array_bit.h" />
-    <ClInclude Include="gpk_apod_color.h" />
-    <ClInclude Include="gpk_apod_n2.h" />
-    <ClInclude Include="gpk_apod_n3.h" />
+    <ClInclude Include="gpk_array_circular.h" />
     <ClInclude Include="gpk_array_obj.h" />
-    <ClInclude Include="gpk_aobj_pobj.h" />
     <ClInclude Include="gpk_array_pod.h" />
-    <ClInclude Include="gpk_aobj_ppod.h" />
+    <ClInclude Include="gpk_array_ptr.h" />
     <ClInclude Include="gpk_array_static.h" />
-    <ClInclude Include="gpk_apod_tri.h" />
-    <ClInclude Include="gpk_apod_tri2.h" />
-    <ClInclude Include="gpk_apod_tri3.h" />
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
     <ClInclude Include="gpk_astatic_color.h" />
+    <ClInclude Include="gpk_astatic_serialize.h" />
     <ClInclude Include="gpk_auto_handler.h" />
     <ClInclude Include="gpk_axis.h" />
     <ClInclude Include="gpk_base64.h" />
@@ -73,193 +76,190 @@
     <ClInclude Include="gpk_cgi_runtime.h" />
     <ClInclude Include="gpk_chrono.h" />
     <ClInclude Include="gpk_circle.h" />
+    <ClInclude Include="gpk_circuit.h" />
     <ClInclude Include="gpk_collision.h" />
     <ClInclude Include="gpk_color.h" />
     <ClInclude Include="gpk_color_type.h" />
     <ClInclude Include="gpk_complus.h" />
     <ClInclude Include="gpk_component_scene.h" />
+    <ClInclude Include="gpk_control_grid.h" />
     <ClInclude Include="gpk_coord.h" />
     <ClInclude Include="gpk_cpow.h" />
     <ClInclude Include="gpk_cstdio.h" />
+    <ClInclude Include="gpk_cstring.h" />
+    <ClInclude Include="gpk_ctti.h" />
     <ClInclude Include="gpk_d3d.h" />
     <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_debug.h" />
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
-    <ClInclude Include="gpk_file_pack.h" />
-    <ClInclude Include="gpk_framework_module.h" />
-    <ClInclude Include="gpk_gpio.h" />
-    <ClInclude Include="gpk_gui_theme.h" />
-    <ClInclude Include="gpk_i2c.h" />
-    <ClInclude Include="gpk_index.h" />
-    <ClInclude Include="gpk_index_path.h" />
-    <ClInclude Include="gpk_isa.h" />
-    <ClInclude Include="gpk_keyed_bit_array.h" />
-    <ClInclude Include="gpk_keyval_view.h" />
-    <ClInclude Include="gpk_lifecycle.h" />
-    <ClInclude Include="gpk_linear_map_pobj.h" />
+    <ClInclude Include="gpk_encoding.h" />
+    <ClInclude Include="gpk_enum.h" />
+    <ClInclude Include="gpk_error.h" />
+    <ClInclude Include="gpk_eval.h" />
+    <ClInclude Include="gpk_event.h" />
     <ClInclude Include="gpk_event_input.h" />
     <ClInclude Include="gpk_event_screen.h" />
+    <ClInclude Include="gpk_event_system.h" />
+    <ClInclude Include="gpk_expression.h" />
+    <ClInclude Include="gpk_file.h" />
+    <ClInclude Include="gpk_file_pack.h" />
+    <ClInclude Include="gpk_font.h" />
+    <ClInclude Include="gpk_frameinfo.h" />
+    <ClInclude Include="gpk_framework.h" />
+    <ClInclude Include="gpk_framework_module.h" />
+    <ClInclude Include="gpk_functional.h" />
     <ClInclude Include="gpk_gauge.h" />
     <ClInclude Include="gpk_gauge_n2.h" />
     <ClInclude Include="gpk_gauge_n3.h" />
+    <ClInclude Include="gpk_geometry.h" />
     <ClInclude Include="gpk_geometry_buffers.h" />
     <ClInclude Include="gpk_geometry_draw.h" />
-    <ClInclude Include="gpk_font.h" />
+    <ClInclude Include="gpk_geometry_lh.h" />
     <ClInclude Include="gpk_gltf.h" />
+    <ClInclude Include="gpk_gpio.h" />
+    <ClInclude Include="gpk_grid.h" />
     <ClInclude Include="gpk_grid_color.h" />
+    <ClInclude Include="gpk_grid_copy.h" />
+    <ClInclude Include="gpk_grid_scale.h" />
+    <ClInclude Include="gpk_grid_static.h" />
+    <ClInclude Include="gpk_gtl_command.h" />
+    <ClInclude Include="gpk_gui.h" />
     <ClInclude Include="gpk_gui_control.h" />
-    <ClInclude Include="gpk_control_grid.h" />
     <ClInclude Include="gpk_gui_control_flag.h" />
+    <ClInclude Include="gpk_gui_control_list.h" />
     <ClInclude Include="gpk_gui_inputbox.h" />
+    <ClInclude Include="gpk_gui_text.h" />
+    <ClInclude Include="gpk_gui_theme.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
+    <ClInclude Include="gpk_http.h" />
+    <ClInclude Include="gpk_http_client.h" />
+    <ClInclude Include="gpk_i2c.h" />
+    <ClInclude Include="gpk_image.h" />
     <ClInclude Include="gpk_img_color.h" />
     <ClInclude Include="gpk_img_serialize.h" />
+    <ClInclude Include="gpk_index.h" />
+    <ClInclude Include="gpk_index_catalog.h" />
+    <ClInclude Include="gpk_index_path.h" />
+    <ClInclude Include="gpk_input.h" />
+    <ClInclude Include="gpk_io.h" />
+    <ClInclude Include="gpk_isa.h" />
+    <ClInclude Include="gpk_json.h" />
+    <ClInclude Include="gpk_json_expression.h" />
+    <ClInclude Include="gpk_keyed_bit_array.h" />
+    <ClInclude Include="gpk_keyval.h" />
+    <ClInclude Include="gpk_keyval_view.h" />
+    <ClInclude Include="gpk_label.h" />
+    <ClInclude Include="gpk_label_manager.h" />
+    <ClInclude Include="gpk_lifecycle.h" />
     <ClInclude Include="gpk_line.h" />
     <ClInclude Include="gpk_line2.h" />
     <ClInclude Include="gpk_line3.h" />
+    <ClInclude Include="gpk_linear_map_pobj.h" />
     <ClInclude Include="gpk_linear_map_pod.h" />
+    <ClInclude Include="gpk_log.h" />
     <ClInclude Include="gpk_log_core.h" />
+    <ClInclude Include="gpk_math.h" />
+    <ClInclude Include="gpk_matrix.h" />
     <ClInclude Include="gpk_matrix2.h" />
     <ClInclude Include="gpk_matrix3.h" />
+    <ClInclude Include="gpk_member_registry.h" />
+    <ClInclude Include="gpk_memory.h" />
     <ClInclude Include="gpk_minmax.h" />
     <ClInclude Include="gpk_minmax_n2.h" />
     <ClInclude Include="gpk_minmax_n3.h" />
+    <ClInclude Include="gpk_model.h" />
+    <ClInclude Include="gpk_module.h" />
     <ClInclude Include="gpk_mutex.h" />
+    <ClInclude Include="gpk_n2.h" />
     <ClInclude Include="gpk_n3.h" />
+    <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_pack.h" />
+    <ClInclude Include="gpk_packed_int.h" />
+    <ClInclude Include="gpk_parse.h" />
+    <ClInclude Include="gpk_particle.h" />
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_platform_error.h" />
+    <ClInclude Include="gpk_platform_globals.h" />
+    <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_pod_definition.h" />
+    <ClInclude Include="gpk_process.h" />
     <ClInclude Include="gpk_process_internal.h" />
-    <ClInclude Include="gpk_quad3.h" />
-    <ClInclude Include="gpk_queue_event.h" />
-    <ClInclude Include="gpk_range.h" />
-    <ClInclude Include="gpk_range_n2.h" />
-    <ClInclude Include="gpk_range_n3.h" />
-    <ClInclude Include="gpk_serial.h" />
-    <ClInclude Include="gpk_slice.h" />
-    <ClInclude Include="gpk_slice_n2.h" />
-    <ClInclude Include="gpk_slice_n3.h" />
-    <ClInclude Include="gpk_spi.h" />
-    <ClInclude Include="gpk_std_cstring.h" />
-    <ClInclude Include="gpk_std_initializer_list.h" />
-    <ClInclude Include="gpk_string.h" />
-    <ClInclude Include="gpk_string_compose.h" />
-    <ClInclude Include="gpk_string_time.h" />
-    <ClInclude Include="gpk_swap.h" />
-    <ClInclude Include="gpk_event_system.h" />
-    <ClInclude Include="gpk_system_key.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
     <ClInclude Include="gpk_ptr_obj.h" />
     <ClInclude Include="gpk_ptr_pod.h" />
     <ClInclude Include="gpk_quad.h" />
+    <ClInclude Include="gpk_quad2.h" />
+    <ClInclude Include="gpk_quad3.h" />
     <ClInclude Include="gpk_quat.h" />
+    <ClInclude Include="gpk_queue_async.h" />
+    <ClInclude Include="gpk_queue_event.h" />
+    <ClInclude Include="gpk_range.h" />
+    <ClInclude Include="gpk_range_n2.h" />
+    <ClInclude Include="gpk_range_n3.h" />
+    <ClInclude Include="gpk_raster_lh.h" />
     <ClInclude Include="gpk_rect.h" />
+    <ClInclude Include="gpk_rect_align.h" />
     <ClInclude Include="gpk_rect2.h" />
     <ClInclude Include="gpk_rect3.h" />
-    <ClInclude Include="gpk_rect_align.h" />
     <ClInclude Include="gpk_ref.h" />
+    <ClInclude Include="gpk_rsa.h" />
+    <ClInclude Include="gpk_runtime.h" />
+    <ClInclude Include="gpk_safe.h" />
+    <ClInclude Include="gpk_scene.h" />
+    <ClInclude Include="gpk_serial.h" />
+    <ClInclude Include="gpk_size.h" />
+    <ClInclude Include="gpk_slice.h" />
+    <ClInclude Include="gpk_slice_n2.h" />
+    <ClInclude Include="gpk_slice_n3.h" />
+    <ClInclude Include="gpk_sphere.h" />
+    <ClInclude Include="gpk_spi.h" />
+    <ClInclude Include="gpk_std_cstring.h" />
+    <ClInclude Include="gpk_std_initializer_list.h" />
+    <ClInclude Include="gpk_stdsocket.h" />
+    <ClInclude Include="gpk_stdstring.h" />
+    <ClInclude Include="gpk_stl.h" />
+    <ClInclude Include="gpk_string.h" />
+    <ClInclude Include="gpk_string_compose.h" />
+    <ClInclude Include="gpk_string_helper.h" />
+    <ClInclude Include="gpk_string_time.h" />
+    <ClInclude Include="gpk_swap.h" />
+    <ClInclude Include="gpk_sync.h" />
+    <ClInclude Include="gpk_system_key.h" />
+    <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_test_core.h" />
+    <ClInclude Include="gpk_timer.h" />
     <ClInclude Include="gpk_tri.h" />
     <ClInclude Include="gpk_tri2.h" />
     <ClInclude Include="gpk_tri3.h" />
-    <ClInclude Include="gpk_array_circular.h" />
+    <ClInclude Include="gpk_type_identifier.h" />
+    <ClInclude Include="gpk_type_registry.h" />
+    <ClInclude Include="gpk_typeint.h" />
+    <ClInclude Include="gpk_view.h" />
+    <ClInclude Include="gpk_view_bit.h" />
     <ClInclude Include="gpk_view_color.h" />
+    <ClInclude Include="gpk_view_layered.h" />
+    <ClInclude Include="gpk_view_manager.h" />
+    <ClInclude Include="gpk_view_n2.h" />
     <ClInclude Include="gpk_view_n3.h" />
     <ClInclude Include="gpk_view_pobj.h" />
     <ClInclude Include="gpk_view_ppod.h" />
     <ClInclude Include="gpk_view_serialize.h" />
+    <ClInclude Include="gpk_view_stream.h" />
     <ClInclude Include="gpk_view_tri.h" />
     <ClInclude Include="gpk_view_tri2.h" />
     <ClInclude Include="gpk_view_tri3.h" />
     <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
+    <ClInclude Include="gpk_voxel.h" />
     <ClInclude Include="gpk_voxel_geometry.h" />
     <ClInclude Include="gpk_window.h" />
-    <ClInclude Include="gpk_framework.h" />
-    <ClInclude Include="gpk_circuit.h" />
-    <ClInclude Include="gpk_gui_control_list.h" />
-    <ClInclude Include="gpk_raster_lh.h" />
-    <ClInclude Include="gpk_encoding.h" />
-    <ClInclude Include="gpk_enum.h" />
-    <ClInclude Include="gpk_error.h" />
-    <ClInclude Include="gpk_eval.h" />
-    <ClInclude Include="gpk_expression.h" />
-    <ClInclude Include="gpk_frameinfo.h" />
-    <ClInclude Include="gpk_geometry.h" />
-    <ClInclude Include="gpk_geometry_lh.h" />
-    <ClInclude Include="gpk_grid_copy.h" />
-    <ClInclude Include="gpk_grid_scale.h" />
-    <ClInclude Include="gpk_grid_static.h" />
-    <ClInclude Include="gpk_gui.h" />
-    <ClInclude Include="gpk_gui_text.h" />
-    <ClInclude Include="gpk_http.h" />
-    <ClInclude Include="gpk_http_client.h" />
-    <ClInclude Include="gpk_image.h" />
-    <ClInclude Include="gpk_input.h" />
-    <ClInclude Include="gpk_io.h" />
-    <ClInclude Include="gpk_json.h" />
-    <ClInclude Include="gpk_json_expression.h" />
-    <ClInclude Include="gpk_keyval.h" />
-    <ClInclude Include="gpk_label.h" />
-    <ClInclude Include="gpk_label_manager.h" />
-    <ClInclude Include="gpk_log.h" />
-    <ClInclude Include="gpk_math.h" />
-    <ClInclude Include="gpk_matrix.h" />
-    <ClInclude Include="gpk_member_registry.h" />
-    <ClInclude Include="gpk_memory.h" />
-    <ClInclude Include="gpk_model.h" />
-    <ClInclude Include="gpk_module.h" />
-    <ClInclude Include="gpk_noise.h" />
-    <ClInclude Include="gpk_parse.h" />
-    <ClInclude Include="gpk_particle.h" />
-    <ClInclude Include="gpk_platform_globals.h" />
-    <ClInclude Include="gpk_png.h" />
-    <ClInclude Include="gpk_process.h" />
-    <ClInclude Include="gpk_array_ptr.h" />
-    <ClInclude Include="gpk_rsa.h" />
-    <ClInclude Include="gpk_runtime.h" />
-    <ClInclude Include="gpk_safe.h" />
-    <ClInclude Include="gpk_scene.h" />
-    <ClInclude Include="gpk_size.h" />
-    <ClInclude Include="gpk_stdsocket.h" />
-    <ClInclude Include="gpk_stdstring.h" />
-    <ClInclude Include="gpk_stl.h" />
-    <ClInclude Include="gpk_file.h" />
-    <ClInclude Include="gpk_cstring.h" />
-    <ClInclude Include="gpk_string_helper.h" />
-    <ClInclude Include="gpk_sync.h" />
-    <ClInclude Include="gpk_tcpip.h" />
-    <ClInclude Include="gpk_timer.h" />
-    <ClInclude Include="gpk_ctti.h" />
-    <ClInclude Include="gpk_typeint.h" />
-    <ClInclude Include="gpk_type_identifier.h" />
-    <ClInclude Include="gpk_type_registry.h" />
-    <ClInclude Include="gpk_view.h" />
-    <ClInclude Include="gpk_view_bit.h" />
-    <ClInclude Include="gpk_grid.h" />
-    <ClInclude Include="gpk_view_layered.h" />
-    <ClInclude Include="gpk_view_manager.h" />
-    <ClInclude Include="gpk_view_stream.h" />
     <ClInclude Include="gpk_windows.h" />
     <ClInclude Include="gpk_xml_reader.h" />
-    <ClInclude Include="gpk_voxel.h" />
-    <ClInclude Include="gpk_event.h" />
-    <ClInclude Include="gpk_n2.h" />
-    <ClInclude Include="gpk_functional.h" />
-    <ClInclude Include="gpk_astatic_serialize.h" />
-    <ClInclude Include="gpk_quad2.h" />
-    <ClInclude Include="gpk_sphere.h" />
-    <ClInclude Include="gpk_view_n2.h" />
-    <ClInclude Include="gpk_gtl_command.h" />
-    <ClInclude Include="gpk_packed_int.h" />
     <ClInclude Include="keyed_bit_array.h" />
-    <ClInclude Include="gpk_queue_async.h" />
     <ClInclude Include="llc.h" />
-    <ClInclude Include="gpk_index_catalog.h" />
-  </ItemGroup>
+ </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
@@ -298,16 +298,11 @@
     <ClCompile Include="gpk_gui_inputbox.cpp" />
     <ClCompile Include="gpk_gui_theme.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
-    <ClCompile Include="gpk_header_checkingg.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="gpk_i2c.cpp" />
     <ClCompile Include="gpk_index.cpp" />
     <ClCompile Include="gpk_index_path.cpp" />
     <ClCompile Include="gpk_keyval_view.cpp" />
+    <ClCompile Include="gpk_isa.h" />
     <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_path.cpp" />
     <ClCompile Include="gpk_platform_error.cpp" />
@@ -375,23 +370,12 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
@@ -411,16 +395,10 @@
     <IntDir>$(SolutionDir)../obj/$(Platform).$(Configuration)/$(ProjectName)/</IntDir>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup Condition="'$(Configuration)=='Release'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -455,8 +433,6 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -485,8 +461,6 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -509,18 +483,12 @@
     <Lib>
       <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
     </Lib>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
     <PostBuildEvent>
       <Command>copy_gpk_config.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -543,15 +511,10 @@
     <Lib>
       <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
     </Lib>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
     <PostBuildEvent>
       <Command>copy_gpk_config.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets"> </ImportGroup>
 </Project>

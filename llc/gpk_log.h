@@ -4,7 +4,6 @@
 #include "gpk_cstring.h"
 #include "gpk_memory.h"
 
-
 #ifndef GPK_LOG_H
 #define GPK_LOG_H
 
@@ -13,9 +12,48 @@
 #else
 #	define GPK_PLATFORM_LOG_FORMAT(format)	(format)
 #endif
+#include "gpk_sync.h"
+
+#ifdef GPK_ATMEL
+#	define GPK_LOG_ARDUINO_FLASHSTRINGHELPER
+#endif
+
+#ifdef GPK_ARDUINO
+#	ifdef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
+#		include <WString.h>
+#	endif
+#endif
 
 nmsp gpk
 {
+	tydf	err_t	(*log_print_t)		(const char * text);
+	err_t			log_print			(const char * text);
+	tydf	err_t	(*log_write_t)		(const char * text, u2_t textLen);
+	err_t			log_write			(const char * text, u2_t textLen);
+
+#ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
+	stin	err_t	log_print_P			(const char * text)	{ rtrn log_print(text); }
+	stin	err_t	log_print_F			(const char * text)	{ rtrn log_print(text); }
+#else
+	err_t			log_print_P			(const __FlashStringHelper * text);
+#	define log_print_F(text) ::gpk::log_print_P(F(text))
+#endif
+	err_t			setupDefaultLogCallbacks();
+	err_t			getLogCallbacks(log_print_t & funcLogPrint, log_write_t & funcLogWrite);
+	err_t			setupLogCallbacks
+		( log_print_t	funcLogPrint
+		, log_write_t	funcLogWrite
+		);
+	tpl_vtArgs	sinx	void	dummy		(_tArgs&&...)		{}
+#ifdef GPK_WINDOWS
+	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ throw(""); }
+#elif defined(GPK_ARDUINO) && defined(GPK_ESP32)
+#	define						gpk_throw(...)				do { ::gpk::sleep(500); throw(__VA_ARGS__); } while(0)
+#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
+	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ __builtin_trap(); }
+#else
+	tpl_vtArgs	stin	void	gpk_throw	(_tArgs&&...)		{ ::gpk::sleep(500); char * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (char)i; } 
+#endif
 	err_t			debug_print_prefix				(s0_t severity, sc_c * path, u2_t line, sc_c * function);
 #ifndef GPK_ARDUINO
 	void			_gpk_print_system_errors		(sc_c * prefix, u2_t prefixLen);
@@ -89,31 +127,31 @@ nmsp gpk
 
 #define always_printf(...)						gpk_debug_printf(3, __VA_ARGS__)
 
-#if defined (GPK_ERROR_PRINTF_ENABLED)
+#ifdef GPK_ERROR_PRINTF_ENABLED
 #	define error_printf(...)						do { gpk_debug_printf(1, __VA_ARGS__); ::gpk::debugBreak(); } while(0)
 #else
 #	define error_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); ::gpk::debugBreak(); } while(0)
 #endif
 
-#if defined (GPK_WARNING_PRINTF_ENABLED)
+#ifdef GPK_WARNING_PRINTF_ENABLED
 #	define warning_printf(...)						gpk_debug_printf(2, __VA_ARGS__)
 #else
 #	define warning_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #endif
 
-#if defined (GPK_INFO_PRINTF_ENABLED)
+#ifdef GPK_INFO_PRINTF_ENABLED
 #	define info_printf(...)							gpk_debug_printf(3, __VA_ARGS__)
 #else
 #	define info_printf(format, ...)						do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #endif
 
-#if defined (GPK_SUCCESS_PRINTF_ENABLED)
+#ifdef GPK_SUCCESS_PRINTF_ENABLED
 #	define success_printf(...)						gpk_debug_printf(4, __VA_ARGS__)
 #else
 #	define success_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #endif
 
-#if defined (GPK_VERBOSE_PRINTF_ENABLED)
+#ifdef GPK_VERBOSE_PRINTF_ENABLED
 #	define verbose_printf(...)						gpk_debug_printf(4, __VA_ARGS__)
 #else
 #	define verbose_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)

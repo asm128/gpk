@@ -32,11 +32,6 @@ nmsp gpk
 	tydf FEViewHandlerConst<SYSTEM_EVENT>	FEViewSystemConst;
 	tydf pobj <SEventSystem>				PEventSystem;
 	tydf apobj<SEventSystem>				TQueueSystemEvent;
-	
-	tplt<tpnm _t>
-	stin	gpk::err_t eventEnqueueChild	(apobj<SEventSystem> & queue, RESULT eventType, _t & eventData)	{ 
-		return eventEnqueueChild(queue, SYSTEM_EVENT_Device, eventType, eventData); 
-	}
 
 	//GDEFINE_ENUM_TYPE (EVENT_RUNTIME, u0_t);
 	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Init			, 0);

@@ -1,7 +1,6 @@
 #include "gpk_array_ptr.h"
 #include "gpk_enum.h"
 #include "gpk_mutex.h"
-#include "gpk_functional.h"
 
 #ifndef GPK_CONNECTION_H_23627
 #define GPK_CONNECTION_H_23627

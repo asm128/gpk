@@ -1106,6 +1106,9 @@
     <ClCompile Include="gpk_event_device.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_isa.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />

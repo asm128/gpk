@@ -429,7 +429,7 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 	if(false == controlInvalid(gui, control.IdScrollBarY)) {
 		if(controlTable.States[control.IdScrollBarY].Parent != control.IdClient)
 			if_fail_e(controlSetParent(gui, control.IdScrollBarY, control.IdClient))
-			else {
+			//else {
 				SControlPlacement	& placementScroll		= controlTable.Placement[control.IdScrollBarY];
 				placementScroll.Area.Offset							= {};
 				placementScroll.Area.Size.x							= 12;
@@ -439,12 +439,12 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 				constraintsScroll.AttachSizeToControl				= {-1, control.IdScrollBarY};
 				constraintsScroll.DockToControl						= {-1, -1, -1, -1};
 				controlTable.SetHidden(control.IdScrollBarY, false == control.Settings.ScrollBarY || false == control.Settings.Unfolded);
-			}
+			//}
 	}
 	if(false == controlInvalid(gui, control.IdScrollBarX)) {
 		if(controlTable.States[control.IdScrollBarX].Parent != control.IdClient)
 			if_fail_e(controlSetParent(gui, control.IdScrollBarX, control.IdClient))
-			else {
+			//else {
 				SControlPlacement	& placementScroll			= controlTable.Placement[control.IdScrollBarX];
 				placementScroll.Area.Offset					= {};
 				placementScroll.Area.Size.y					= 12;
@@ -454,7 +454,7 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 				constraintsScroll.AttachSizeToControl.x		= control.IdScrollBarX;
 				constraintsScroll.DockToControl				= {-1, -1, control.Settings.ScrollBarY ? control.IdScrollBarY : (cid_t)-1, -1};
 				controlTable.SetHidden(control.IdScrollBarX, false == control.Settings.ScrollBarX || false == control.Settings.Unfolded);
-			}
+			//}
 	}
 	if(control.Settings.ScrollBarX != control.SettingsOld.ScrollBarX || control.Settings.ScrollBarY != control.SettingsOld.ScrollBarY) {
 		if(false == controlInvalid(gui, control.IdScrollBarX))

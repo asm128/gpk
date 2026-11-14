@@ -1,7 +1,7 @@
 #include "gpk_ctti.h"
 
-#ifndef GPK_ISA_H_IJK
-#define GPK_ISA_H_IJK
+#ifndef GPK_ISA_H_23627
+#define GPK_ISA_H_23627
 
 nmsp gpk
 {
@@ -61,7 +61,6 @@ nmsp gpk
 		, OS_FAMILY_WINDOWS
 		, OS_FAMILY_CUSTOM		  = 0x40U
 		};
-	);
-} // nmsp
+} // namespace
 
-#endif // GPK_ISA_H_IJK
+#endif // GPK_ERROR_H_23627

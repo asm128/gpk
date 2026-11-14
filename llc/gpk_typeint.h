@@ -177,33 +177,39 @@ nmsp gpk
 
 #define GPK_DEFAULT_OPERATOR GPK_DEFAULT_OPERATOR_IC
 
-#ifdef GPK_ATMEL
-#	define GPK_FMT_F2		"f"
-#	define GPK_FMT_F3		"f"
-#	define GPK_FMT_S2		"li"
-#	define GPK_FMT_U2		"lu"
-#	define GPK_FMT_S3		"lli"
-#	define GPK_FMT_U3		"llu"
-#elif defined(GPK_WINDOWS) || (defined(GPK_ARDUINO) && (defined(GPK_ESP8266) || defined(GPK_ESP32)))
-#	define GPK_FMT_F2		"f"
-#	define GPK_FMT_F3		"f"
-#	define GPK_FMT_S2		"i"
-#	define GPK_FMT_U2		"u"
-#	define GPK_FMT_S3		"lli"
-#	define GPK_FMT_U3		"llu"
-#else
-#	define GPK_FMT_F2		"f"
-#	define GPK_FMT_F3		"f"
-#	define GPK_FMT_S2		"li"
-#	define GPK_FMT_U2		"lu"
-#	define GPK_FMT_S3		"lli"
-#	define GPK_FMT_U3		"llu"
-#endif
 #define GPK_FMT_SC		"c"
 #define GPK_FMT_S0		"i"
 #define GPK_FMT_U0		"u"
-#define GPK_FMT_S1		"i"
-#define GPK_FMT_U1		"u"
+#define GPK_FMT_X0		"X"
+#define GPK_FMT_S1		GPK_FMT_S0
+#define GPK_FMT_U1		GPK_FMT_U0
+#define GPK_FMT_X1		GPK_FMT_X0
+#ifdef GPK_ATMEL
+#	define GPK_FMT_F2		"f"
+#	define GPK_FMT_F3		"f"
+#	define GPK_FMT_S2		"l"		GPK_FMT_S0
+#	define GPK_FMT_U2		"l"		GPK_FMT_U0
+#	define GPK_FMT_S3		"ll"	GPK_FMT_S0
+#	define GPK_FMT_U3		"ll"	GPK_FMT_U0
+#	define GPK_FMT_X3		"ll"	GPK_FMT_X0
+#elif defined(GPK_WINDOWS) || (defined(GPK_ARDUINO) && (defined(GPK_ESP8266) || defined(GPK_ESP32)))
+#	define GPK_FMT_F2		"f"
+#	define GPK_FMT_F3		"f"
+#	define GPK_FMT_S2		GPK_FMT_S0
+#	define GPK_FMT_U2		GPK_FMT_U0
+#	define GPK_FMT_S3		"ll" GPK_FMT_S0
+#	define GPK_FMT_U3		"ll" GPK_FMT_U0
+#	define GPK_FMT_X3		"ll" GPK_FMT_X0
+#else
+#	define GPK_FMT_F2		"f"
+#	define GPK_FMT_F3		"f"
+#	define GPK_FMT_S2		"l" GPK_FMT_S0
+#	define GPK_FMT_U2		"l" GPK_FMT_U0
+#	define GPK_FMT_X2		"l" GPK_FMT_X0
+#	define GPK_FMT_S3		"ll" GPK_FMT_S0
+#	define GPK_FMT_U3		"ll" GPK_FMT_U0
+#	define GPK_FMT_X3		"ll" GPK_FMT_X0
+#endif
 //
 #define GPK_FMT_GT_F2	"%" GPK_FMT_F2 " > %" GPK_FMT_F2
 #define GPK_FMT_GT_F3	"%" GPK_FMT_F3 " > %" GPK_FMT_F3
@@ -251,6 +257,38 @@ nmsp gpk
 #define GPK_FMT_NE_S3	"%" GPK_FMT_S3 " != %" GPK_FMT_S3
 #define GPK_FMT_NE_U3	"%" GPK_FMT_U3 " != %" GPK_FMT_U3
 
+nmsp gpk
+{
+
+	tydf		s2_t	err_t;
+	tdcs		err_t	err_c;
+
+	tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
+	tplTnsix	bool	succeeded	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
+} // namespace
+
+#ifndef if_fail
+#	define	if_fail(errVal)		if(::gpk::failed(errVal))
+#endif
+#ifndef if_not_fail
+#	define	if_not_fail(errVal)	if_not(::gpk::failed(errVal))
+#endif
+#ifndef if_zero
+#	define	if_zero(valueToTest)		if(0 == (valueToTest))
+#endif
+#ifndef if_nonzero
+#	define	if_nonzero(valueToTest)		if(0 != (valueToTest))
+#endif
+#ifndef if_failed
+#	define	if_failed			if_fail
+#endif
+#ifndef if_not_failed
+#	define	if_not_failed		if_not_fail
+#endif
+#ifndef if_sccs
+#	define	if_sccs(errVal)	if_not_failed(errVal)
+#endif
+
 #define GPK_USING_TYPEINT()				\
 	usng	::gpk::b8_t, ::gpk::b8_c	\
 		,	::gpk::uc_t, ::gpk::uc_c	\
@@ -266,4 +304,6 @@ nmsp gpk
 		,	::gpk::f2_t, ::gpk::f2_c	\
 		,	::gpk::f3_t, ::gpk::f3_c	\
 		,	::gpk::uP_t, ::gpk::uP_c
+
 #endif // GPK_TYPEINT_H_23627
+
