@@ -23,34 +23,40 @@ nmsp gpk
 	tplt<u2_t _sizeArray>	
 	usng	astcid	= astatic<cid_t, _sizeArray>;
 
-	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, u0_t)
-	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Default	, 0);
-	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, 3D		, 1);
-	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Flat		, 2);
-
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_LIMIT, u0_t);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Left		, ALIGN_LEFT		);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Top		, ALIGN_TOP		);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Right		, ALIGN_RIGHT	);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Bottom	, ALIGN_BOTTOM	);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Outer		, ALIGN_FAR		);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Inner		, ALIGN_NEAR		);
+	CTTI_ENUM(
+	enum GUI_COLOR_MODE : u0_t 
+		{ GUI_COLOR_MODE_Default
+		, GUI_COLOR_MODE_3D	
+		, GUI_COLOR_MODE_Flat	
+		};
+		);
+	CTTI_ENUM(
+	enum GUI_CONTROL_LIMIT : u0_t
+		{ GUI_CONTROL_LIMIT_Left	= ALIGN_LEFT	
+		, GUI_CONTROL_LIMIT_Top		= ALIGN_TOP		
+		, GUI_CONTROL_LIMIT_Right	= ALIGN_RIGHT	
+		, GUI_CONTROL_LIMIT_Bottom	= ALIGN_BOTTOM	
+		, GUI_CONTROL_LIMIT_Outer	= ALIGN_FAR		
+		, GUI_CONTROL_LIMIT_Inner	= ALIGN_NEAR	
+		};
+		);
+	CTTI_ENUM(
+	enum GUI_CONTROL_METRICS_FLAG : u1_t 
+		{ GUI_CONTROL_METRICS_FLAG_XSize		=	(1 << 0	)
+		, GUI_CONTROL_METRICS_FLAG_YSize		=	(1 << 1	)
+		, GUI_CONTROL_METRICS_FLAG_XSizeMin		=	(1 << 2	)
+		, GUI_CONTROL_METRICS_FLAG_YSizeMin		=	(1 << 3	)
+		, GUI_CONTROL_METRICS_FLAG_XSizeMax		=	(1 << 4	)
+		, GUI_CONTROL_METRICS_FLAG_YSizeMax		=	(1 << 5	)
+		, GUI_CONTROL_METRICS_FLAG_XOffset		=	(1 << 6	)
+		, GUI_CONTROL_METRICS_FLAG_YOffset		=	(1 << 7	)
+		, GUI_CONTROL_METRICS_FLAG_XOffsetMin	=	(1 << 8	)
+		, GUI_CONTROL_METRICS_FLAG_YOffsetMin	=	(1 << 9	)
+		, GUI_CONTROL_METRICS_FLAG_XOffsetMax	=	(1 << 10)
+		, GUI_CONTROL_METRICS_FLAG_YOffsetMax	=	(1 << 11)
+		};
+		);
 	
-
-	GDEFINE_ENUM_TYPE (GUI_CONTROL_METRICS_FLAG, u1_t);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XSize		, 1 << 0);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YSize		, 1 << 1);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XSizeMin	, 1 << 2);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YSizeMin	, 1 << 3);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XSizeMax	, 1 << 4);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YSizeMax	, 1 << 5);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XOffset	, 1 << 6);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YOffset	, 1 << 7);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XOffsetMin	, 1 << 8);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YOffsetMin	, 1 << 9);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XOffsetMax	, 1 << 10);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YOffsetMax	, 1 << 11);
-
 	struct SControlPlacement {
 		rect2s1_t					Area				= {{}, {16, 16}};
 		rectu1_t					Margin				= {1, 1, 1, 1};
@@ -66,21 +72,24 @@ nmsp gpk
 	sinx	void		controlNCSpacing	(const SControlPlacement & ctl, rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
 	sinx	void		controlNCSpacing	(const SControlPlacement & ctl, n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, u1_t)
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, NORMAL				, 0);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, HIDDEN				, 1);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DISABLED			, 2);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, HOVER				, 3);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, PRESSED				, 4);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DRAGGING			, 5);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED			, 6);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_HIDDEN		, 7);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_DISABLED	, 8);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_HOVER		, 9);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_PRESSED	,10);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_DRAGGING	,11);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, OUTDATED			,12);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, COUNT				,13);
+	CTTI_ENUM(
+	enum GUI_CONTROL_PALETTE : u1_t
+		{ GUI_CONTROL_PALETTE_NORMAL				
+		, GUI_CONTROL_PALETTE_HIDDEN				
+		, GUI_CONTROL_PALETTE_DISABLED				
+		, GUI_CONTROL_PALETTE_HOVER					
+		, GUI_CONTROL_PALETTE_PRESSED				
+		, GUI_CONTROL_PALETTE_DRAGGING				
+		, GUI_CONTROL_PALETTE_SELECTED				
+		, GUI_CONTROL_PALETTE_SELECTED_HIDDEN		
+		, GUI_CONTROL_PALETTE_SELECTED_DISABLED		
+		, GUI_CONTROL_PALETTE_SELECTED_HOVER		
+		, GUI_CONTROL_PALETTE_SELECTED_PRESSED		
+		, GUI_CONTROL_PALETTE_SELECTED_DRAGGING		
+		, GUI_CONTROL_PALETTE_OUTDATED				
+		, GUI_CONTROL_PALETTE_COUNT					
+		};
+		);
 	sinx	GUI_CONTROL_PALETTE	paletteIndexFromState			(bool disabled, const SControlState & controlState) {
 		return disabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
 			: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
@@ -100,7 +109,7 @@ nmsp gpk
 		asts1_t<GUI_CONTROL_PALETTE_COUNT>	
 						Palettes			= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}};
 	};
-
+	CTTI_ENUM(
 	enum CONTROL_AREA_BASE : u0_t 
 		{ CONTROL_AREA_BASE_BACKGROUND		= 0
 		, CONTROL_AREA_BASE_CONTENT
@@ -114,7 +123,8 @@ nmsp gpk
 		, CONTROL_AREA_BASE_CORNER_LEFT_BOTTOM
 		, CONTROL_AREA_BASE_COUNT
 		};
-
+		);
+	CTTI_ENUM(
 	enum GUI_CONTROL_AREA_OLD : u0_t
 		{ GUI_CONTROL_AREA_OLD_CLIENT		= 0
 		, GUI_CONTROL_AREA_OLD_BORDER_LEFT
@@ -123,7 +133,8 @@ nmsp gpk
 		, GUI_CONTROL_AREA_OLD_BORDER_BOTTOM
 		, GUI_CONTROL_AREA_OLD_COUNT
 		};
-
+	);
+	CTTI_ENUM(
 	enum UI_CONTROL_AREA : u0_t
 		{ UI_CONTROL_AREA_BACKGROUND		= 0
 		, UI_CONTROL_AREA_CLIENT
@@ -147,12 +158,11 @@ nmsp gpk
 		, UI_CONTROL_AREA_CORNER_RIGHT_BOTTOM_BOTTOM
 		, UI_CONTROL_AREA_COUNT
 		};
-
+	);
 	struct SControlRectangle {
 		rect2s1_t				Local				= {};
 		rect2s1_t				Global				= {};
 	};
-
 	struct SControlArea {
 		SControlRectangle	Total				= {};
 		SControlRectangle	Client				= {};
@@ -160,32 +170,27 @@ nmsp gpk
 		rect2s1_t			Rectangles	[GUI_CONTROL_AREA_OLD_COUNT]	= {};
 		tri2s1_t				Triangles	[8]		= {};
 	};
-
 	struct SControlAttachId {
 		cid_t						IdControl			: 15;
 		cid_t						Total				: 1;
 	};
-
 	struct SControlConstraints {
 		n2cid						AttachSizeToControl	= {-1, -1};
 		n2<bool>					AttachSizeToText	= {};
 		rectcid						DockToControl		= {-1, -1, -1, -1};
 		minmax2s1_t					SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
-
 	struct SControlText {
 		vcst_t						Text				= {};
 		ALIGN						Align				= ALIGN_CENTER;
 		minmaxu1_t					Selection			= {0, 1};
 		s1_t						FontSelected		= -1;
 	};
-
 	struct SControlTheme {
 		astatic<astu2_t<UI_CONTROL_AREA_COUNT>, GUI_CONTROL_PALETTE_COUNT>
 									ColorCombos			= {};
 	};
 #pragma pack(pop)
-
 	struct SControlImage {
 		rtbgra8d32					Temp				= {};
 		g8bgra						Image				= {};
@@ -195,7 +200,6 @@ nmsp gpk
 		u0_t						ImageInvertY		: 1;
 		u0_t						Rotation			: 2;
 	};
-
 	struct SControlTable {
 		apod<SControlState		>	States				= {};
 		apod<SControlState		>	Previous			= {};
