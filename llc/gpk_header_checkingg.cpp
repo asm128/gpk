@@ -9,7 +9,7 @@
 #include "gpk_quat.h"
 #include "gpk_rsa.h"
 #include "gpk_ptr_nco.h"
-#include "gpk_system_event.h"
+#include "gpk_event_system.h"
 #include "gpk_event_input.h"
 #include "gpk_event_screen.h"
 #include "gpk_array_static.h"

@@ -1,9 +1,9 @@
 #include "gpk_event_input.h"
 #include "gpk_event_screen.h"
-#include "gpk_gui_control_state.h"
+#include "gpk_gui_control_flag.h"
 #include "gpk_color.h"
 #include "gpk_runtime.h"
-#include "gpk_system_event.h"
+#include "gpk_event_system.h"
 
 #include "test_llc_suites.h"
 

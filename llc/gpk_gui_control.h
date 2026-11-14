@@ -198,7 +198,7 @@ nmsp gpk
 
 	struct SControlTable {
 		apod<SControlState		>	States				= {};
-		apod<SControlState		>	StatesPrevious		= {};
+		apod<SControlState		>	Previous			= {};
 		apod<SControlPlacement	>	Placement			= {};
 		apod<SControlArea		>	Area				= {};
 		apod<SControlConstraints>	Constraints			= {};

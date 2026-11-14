@@ -272,6 +272,7 @@ gpk::err_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
 	::gpk::pobj<::gpk::SDialogViewport>	viewport;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	if_fail_fe(index = dialog.Create(viewport));
+	if_fail_fe(::gpk::controlSetParent(*dialog.GUI, viewport->IdGUIControl, dialog.Root));
 	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= true;
 	controlTable.Draw[viewport->IdGUIControl].FrameOut			= true;
 	controlTable.States[viewport->IdGUIControl].Mask			&= ~::gpk::GUI_CONTROL_FLAG_Hovered;

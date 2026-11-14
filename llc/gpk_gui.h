@@ -69,9 +69,35 @@ nmsp gpk
 	err_t				controlDisabled					(const SGUI & gui, cid_t iControl);
 	err_t				controlInvalid					(const SGUI & gui, cid_t iControl);
 
-
 	err_t				guiProcessControls				(const SGUI & gui, const function<err_t(cid_t iControl)> & funcOnExecute);
 	err_t				guiProcessControls				(const SGUI & gui, vcid controlsToProcess, const function<err_t(cid_t iControl)> & funcOnExecute);
+
+	tydf	 FError
+		< SControlState			&
+		, SControlState			&
+		, SControlPlacement		&
+		, SControlArea			&
+		, SControlConstraints	&
+		, SControlDraw			&
+		, SControlText			&
+		, SControlImage			&
+		>				FControlInitialize;
+	stin	cid_t 		controlCreate					(SGUI & gui, cnst FControlInitialize & funcInitialize) {
+		cid_t				iControl;
+		if_fail_fe(iControl = controlCreate(gui));
+		if_true_block_log(error_printf, failed(funcInitialize
+			( gui.Controls.States			[iControl]  
+			, gui.Controls.Previous			[iControl]  
+			, gui.Controls.Placement		[iControl]  
+			, gui.Controls.Area				[iControl]  
+			, gui.Controls.Constraints		[iControl]  
+			, gui.Controls.Draw				[iControl]  
+			, gui.Controls.Text				[iControl]  
+			, gui.Controls.Images			[iControl]  
+			)), { (controlDelete(gui, iControl)); return -1; }
+		);
+		return iControl;
+	}
 } // nmsp
 
 #endif // GPK_GUI_H_23627

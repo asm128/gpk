@@ -25,7 +25,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger	(u2_t base, vcst_t symbolList, vcst_
 	u2_t					totalCharsProcessed							= 0;
 	string					stringToParse								= {};
 	for(u2_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
-		const char				sourceChar									= (char)tolower(sourceChars[iChar]);
+		const char				sourceChar									= (char)::tolower(sourceChars[iChar]);
 		bool					bSymbolProcessed							= false;
 		for(u2_t iSymbol = 0; iSymbol < base; ++iSymbol) {
 			if(symbolList[iSymbol] == sourceChar) {

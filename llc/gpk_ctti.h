@@ -395,22 +395,22 @@ namespace gpk
 #define CTTI_STCT(...)																				\
 	extern stct __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__);							\
 	tplt<> stct gpk::SCTTIStructRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__))> {	\
-		inline static constexpr auto Value = ::gpk::cttiParseStruct(#__VA_ARGS__);							\
-		inline static constexpr ::gpk::vcst_t File = __FILE__;										\
-		inline static constexpr ::gpk::u2_t Line = __LINE__;										\
-		inline static constexpr ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
-		inline static constexpr bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
+		sinx auto Value = ::gpk::cttiParseStruct(#__VA_ARGS__);							\
+		sinx ::gpk::vcst_t File = __FILE__;										\
+		sinx ::gpk::u2_t Line = __LINE__;										\
+		sinx ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
+		sinx bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
 	}
 
 #define CTTI_ENUM(...)																				\
 	extern enum __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__);								\
 	tplt<> stct gpk::SCTTIEnumRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__))> {	\
-		inline static constexpr auto Value = ::gpk::cttiParseEnum<decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__))>(#__VA_ARGS__);\
-		inline static constexpr auto Views = ::gpk::cttiEnumViewsMake(Value);								\
-		inline static constexpr ::gpk::vcst_t File = __FILE__;										\
-		inline static constexpr ::gpk::u2_t Line = __LINE__;										\
-		inline static constexpr ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
-		inline static constexpr bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
+		sinx auto Value = ::gpk::cttiParseEnum<decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__))>(#__VA_ARGS__);\
+		sinx auto Views = ::gpk::cttiEnumViewsMake(Value);								\
+		sinx ::gpk::vcst_t File = __FILE__;										\
+		sinx ::gpk::u2_t Line = __LINE__;										\
+		sinx ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
+		sinx bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
 	}
 
 #define GPK_CTTI_PARENS ()

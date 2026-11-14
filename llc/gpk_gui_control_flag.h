@@ -1,7 +1,6 @@
-#include "gpk_system_event.h"
+#include "gpk_event_system.h"
 
 #include "gpk_bit.h"
-
 #define gpk_gui_printf verbose_printf
 
 #ifndef GPK_GUI_CONTROL_FLAG_H_23627
@@ -68,17 +67,17 @@ nmsp gpk
 		GUI_CONTROL_FLAG	Set		= {};
 	};
 
-	stin	gpk::err_t eventEnqueueGuiControlStateChange(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::cid_t iControl, GUI_CONTROL_FLAG oldState, GUI_CONTROL_FLAG newState) {
+	stin	gpk::err_t eventEnqueueGuiControlStateChange(apobj<SEventSystem> & queue, cid_t iControl, GUI_CONTROL_FLAG oldState, GUI_CONTROL_FLAG newState) {
 		SChangeControlState			stateChange				= {iControl};
-		stateChange.Clear		= ::gpk::bit_clear(oldState, newState);
-		stateChange.Set			= ::gpk::bit_clear(newState, oldState);
+		stateChange.Clear		= bit_clear(oldState, newState);
+		stateChange.Set			= bit_clear(newState, oldState);
 		gpk_gui_printf("Control state change: %i", iControl);
 		for(u2_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
 			const GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((u0_t)i);
-			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (u2_t)bit, ::gpk::get_value_namep(bit));
-			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (u2_t)bit, ::gpk::get_value_namep(bit));
+			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (u2_t)bit, get_value_namep(bit));
+			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (u2_t)bit, get_value_namep(bit));
 		}
-		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_GUI, ::gpk::EVENT_GUI_CONTROL_StateChange, stateChange); 
+		return eventEnqueueChild(queue, SYSTEM_EVENT_GUI, EVENT_GUI_CONTROL_StateChange, stateChange); 
 	}
 
 	struct SChangeControlParent { 
@@ -87,14 +86,14 @@ nmsp gpk
 	};
 
 	tplt<tpnm _tState>
-	usng TFuncSetMaskedValue = ::gpk::function<_tState(void)>; 
+	usng TFuncSetMaskedValue = function<_tState(void)>; 
 
 	tplt<tpnm _tState>
-	_tState				setValue		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, _tState & state, TFuncSetMaskedValue<_tState> funcSetValue) {
+	_tState				setValue		(cid_t iControl, apobj<SEventSystem> & eventQueue, _tState & state, TFuncSetMaskedValue<_tState> funcSetValue) {
 		const _tState			oldState		= state;
 		state				= funcSetValue();
 		if(oldState != state)
-			if_fail_e(::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state));
+			if_fail_e(eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state));
 		return state;
 	}
 
@@ -103,16 +102,16 @@ nmsp gpk
 		GUI_CONTROL_FLAG	Flag			= {};
 		GUI_CONTROL_FLAG	Mask			= (GUI_CONTROL_FLAG)-1;
 
-		bool				SetHovered		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHovered (Flag, Mask, value); })); }
-		bool				SetPressed		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setPressed (Flag, Mask, value); })); }
-		bool				SetHidden		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHidden  (Flag, Mask, value); })); }
-		bool				SetFocused		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setFocused (Flag, Mask, value); })); }
-		bool				SetSelected		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setSelected(Flag, Mask, value); })); }
-		bool				SetDisabled		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDisabled(Flag, Mask, value); })); }
-		bool				SetUpdated		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUpdated (Flag, Mask, value); })); }
-		bool				SetDragging		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDragging(Flag, Mask, value); })); }
-		bool				SetAction		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setAction  (Flag, Mask, value); })); }
-		bool				SetUnused		(::gpk::cid_t iControl, ::gpk::apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUnused  (Flag, value);       })); }
+		bool				SetHovered		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHovered (Flag, Mask, value); })); }
+		bool				SetPressed		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setPressed (Flag, Mask, value); })); }
+		bool				SetHidden		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHidden  (Flag, Mask, value); })); }
+		bool				SetFocused		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setFocused (Flag, Mask, value); })); }
+		bool				SetSelected		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setSelected(Flag, Mask, value); })); }
+		bool				SetDisabled		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDisabled(Flag, Mask, value); })); }
+		bool				SetUpdated		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUpdated (Flag, Mask, value); })); }
+		bool				SetDragging		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDragging(Flag, Mask, value); })); }
+		bool				SetAction		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setAction  (Flag, Mask, value); })); }
+		bool				SetUnused		(cid_t iControl, apobj<SEventSystem> & eventQueue, bool value)	nxpt	{ return 0 != (Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUnused  (Flag, value);       })); }
 		inxp	bool		IsHovered		()	csnx	{ return isHovered  (Flag, Mask); }
 		inxp	bool		IsPressed		()	csnx	{ return isPressed  (Flag, Mask); }
 		inxp	bool		IsHidden		()	csnx	{ return isHidden   (Flag, Mask); }

@@ -2,7 +2,7 @@
 #include "gpk_args.h"
 #include "gpk_enum.h"
 #include "gpk_queue_event.h"
-#include "gpk_system_event.h"
+#include "gpk_event_system.h"
 
 #if defined(GPK_WINDOWS)
 #	define WIN32_LEAN_AND_MEAN

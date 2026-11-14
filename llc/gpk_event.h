@@ -30,9 +30,9 @@ nmsp gpk
 	tplt<tpnm T> usng SEView 					= SEventView<T>;
 	tplt<tpnm T> usng TEViewQueue 				= aobj<SEView<T>>;
 
-	tplt<tpnm T> usng FEViewHandler			= function<err_t(      SEView<T>&)>;
+	tplt<tpnm T> usng FEViewHandler				= function<err_t(      SEView<T>&)>;
 	tplt<tpnm T> usng FEViewHandlerConst		= function<err_t(const SEView<T>&)>;
-	tplt<tpnm T> usng FEventViewHandler		= function<err_t(      SEView<T>&)>;
+	tplt<tpnm T> usng FEventViewHandler			= function<err_t(      SEView<T>&)>;
 	tplt<tpnm T> usng FEventViewHandlerConst	= function<err_t(const SEView<T>&)>;
 
 	tplt<tpnm _tEventType>
@@ -45,7 +45,7 @@ nmsp gpk
 		au0_t			Data		= {};
 
 						SEvent		(const TEvent &)					= default;
-		cxpr		SEvent		(T type = {})						: Type(type) {}
+		cxpr			SEvent		(T type = {})						: Type(type) {}
 						SEvent		(T type, const vcu0_t data)			: Type(type), Data(data) {}
 						SEvent		(const TEView & eventView)			: Type(eventView.Type), Data(eventView.Data) {}
 
@@ -83,7 +83,7 @@ nmsp gpk
 		}
 	};
 
-	tplt<tpnm T> usng FEventHandler		= function<err_t(      SEvent<T>&)>;
+	tplt<tpnm T> usng FEventHandler			= function<err_t(      SEvent<T>&)>;
 	tplt<tpnm T> usng FEventHandlerConst	= function<err_t(const SEvent<T>&)>;
 
 	tplt<tpnm T> usng PEvent 				= pobj <SEvent<T>>;
@@ -115,14 +115,6 @@ nmsp gpk
 		if_fail_fe(parentEvent.ExtractChild(childEvent)); 
 		rtrn funcHandleChild(childEvent);
 	}
-	tydf SEvent            <RESULT>	SEventResult;
-	tydf SEventView        <RESULT>	SEViewResult;
-	tydf FEventHandler     <RESULT>	FEventResult;
-	tydf FEventHandlerConst<RESULT>	FEventResultConst;
-	tydf SEvent            <COMMAND>	SEventCommand;
-	tydf SEventView        <COMMAND>	SEViewCommand;
-	tydf FEventHandler     <COMMAND>	FEventCommand;
-	tydf FEventHandlerConst<COMMAND>	FEventCommandConst;
 }
 
 #define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s' (0x%llX)(%lli)(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
