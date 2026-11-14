@@ -1,60 +1,61 @@
-#include "gpk_view.h"
+#include "gpk_enum.h"
 
 #ifndef GPK_CTTI_H
 #define GPK_CTTI_H
 
 namespace gpk
 {
-	enum CTTI_PARSE_STATE : u0_t
-		{ CTTI_PARSE_STATE_STRUCT_NAME
-		, CTTI_PARSE_STATE_MODIFIERS
-		, CTTI_PARSE_STATE_TYPE
-		, CTTI_PARSE_STATE_MEMBER_NAME
-		, CTTI_PARSE_STATE_MEMBER_VALUE
-		, CTTI_PARSE_STATE_COMPLETE
-		};
 
-	enum CTTI_PARSE_ERROR : u0_t
-		{ CTTI_PARSE_ERROR_NONE
-		, CTTI_PARSE_ERROR_INVALID_STRUCT_NAME
-		, CTTI_PARSE_ERROR_EXPECTED_OPEN_BRACE
-		, CTTI_PARSE_ERROR_EXPECTED_CLOSE_BRACE
-		, CTTI_PARSE_ERROR_INVALID_MODIFIER
-		, CTTI_PARSE_ERROR_EXPECTED_TYPE
-		, CTTI_PARSE_ERROR_EXPECTED_MEMBER_NAME
-		, CTTI_PARSE_ERROR_INVALID_MEMBER_NAME
-		, CTTI_PARSE_ERROR_EXPECTED_SEMICOLON
-		};
+	inxp bool cttiSpace		(cnst sc_t character) nxpt { rtrn ' ' == character || '\t' == character || '\r' == character || '\n' == character; }
+	inxp bool cttiNameStart	(cnst sc_t character) nxpt { rtrn '_' == character || (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z'); }
+	inxp bool cttiNamePart	(cnst sc_t character) nxpt { rtrn cttiNameStart(character) || (character >= '0' && character <= '9'); }
+	tplt<tpnm T>
+	inxp auto cttiFirstMember(cnst T & source) nxpt {
+		cnst auto & [result] = source;
+		rtrn result;
+	}
+
+	GDEFINE_ENUM_TYPE (CTTI_PARSE_STATE, u0_t);
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_STATE, STRUCT_NAME	, 0);
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_STATE, MODIFIERS		, 1);
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_STATE, TYPE			, 2);
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_STATE, MEMBER_NAME	, 3);
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_STATE, MEMBER_VALUE	, 4);
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_STATE, COMPLETE		, 5);
+
+	GDEFINE_ENUM_TYPE (CTTI_PARSE_ERROR,  u0_t);
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, NONE						, 0);	
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, INVALID_STRUCT_NAME		, 1);					
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, EXPECTED_OPEN_BRACE		, 2);					
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, EXPECTED_CLOSE_BRACE		, 3);					
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, INVALID_MODIFIER			, 4);				
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, EXPECTED_TYPE				, 5);			
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, EXPECTED_MEMBER_NAME		, 6);					
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, INVALID_MEMBER_NAME		, 7);					
+	GDEFINE_ENUM_VALUE(CTTI_PARSE_ERROR, EXPECTED_SEMICOLON			, 8);				
+
+	GDEFINE_ENUM_TYPE(CTTI_ENUM_PARSE_STATE,  u0_t);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_STATE, ENUM_NAME				, 0);		
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_STATE, UNDERLYING_TYPE		, 1);				
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_STATE, VALUE_NAME			, 2);			
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_STATE, VALUE_INITIALIZER		, 3);				
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_STATE, COMPLETE				, 4);
+
+	GDEFINE_ENUM_TYPE(CTTI_ENUM_PARSE_ERROR, u0_t);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, NONE							, 0);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, INVALID_ENUM_NAME				, 1);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, EXPECTED_OPEN_BRACE			, 2);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, EXPECTED_CLOSE_BRACE			, 3);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, EXPECTED_UNDERLYING_TYPE		, 4);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, INVALID_VALUE_NAME			, 5);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, EXPECTED_VALUE_INITIALIZER	, 6);
+	GDEFINE_ENUM_VALUE(CTTI_ENUM_PARSE_ERROR, VALUE_COUNT					, 7);
 
 	stct SCTTISpan {
 		u2_t		Offset	= {};
 		u2_t		Count	= {};
 		inxp bool	empty	() cnst nxpt { rtrn 0 == Count; }
 	};
-
-	stct SCTTIMember {
-		SCTTISpan	Modifiers	= {};
-		SCTTISpan	TypeName	= {};
-		SCTTISpan	Name		= {};
-		SCTTISpan	Value		= {};
-	};
-
-	tplt<size_t NDeclaration>
-	stct SCTTIParseResult {
-		sc_t				SourceText	[NDeclaration]	= {};
-		SCTTISpan			StructName				= {};
-		SCTTIMember		Members		[NDeclaration]	= {};
-		u2_t				Count					= {};
-		u2_t				ErrorOffset				= {};
-		CTTI_PARSE_STATE	State					= CTTI_PARSE_STATE_STRUCT_NAME;
-		CTTI_PARSE_ERROR	Error					= CTTI_PARSE_ERROR_NONE;
-
-		inxp bool		Success		() cnst nxpt { rtrn CTTI_PARSE_ERROR_NONE == Error && CTTI_PARSE_STATE_COMPLETE == State; }
-	};
-
-	inxp bool cttiSpace		(cnst sc_t character) nxpt { rtrn ' ' == character || '\t' == character || '\r' == character || '\n' == character; }
-	inxp bool cttiNameStart	(cnst sc_t character) nxpt { rtrn '_' == character || (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z'); }
-	inxp bool cttiNamePart	(cnst sc_t character) nxpt { rtrn cttiNameStart(character) || (character >= '0' && character <= '9'); }
 
 	tplt<size_t N>
 	inxp SCTTISpan cttiTrim(cnst sc_t (&text)[N], u2_t offset, u2_t count) nxpt {
@@ -99,11 +100,48 @@ namespace gpk
 				rtrn false;
 		rtrn true;
 	}
-	tplt<tpnm T>
-	inxp auto cttiFirstMember(cnst T & source) nxpt {
-		cnst auto & [result] = source;
-		rtrn result;
-	}
+
+	stct SCTTIMember {
+		SCTTISpan	Modifiers	= {};
+		SCTTISpan	TypeName	= {};
+		SCTTISpan	Name		= {};
+		SCTTISpan	Value		= {};
+	};
+
+	stct SCTTIValue {
+		vu0_t		Data		= {};
+		vcst_t		Type		= {};
+		vcst_t		Name		= {};
+	};
+
+	tplt<tpnm TEnum>
+	stct SCTTIEnumValue {
+		SCTTISpan	Name		= {};
+		SCTTISpan	Initializer	= {};
+		TEnum		Value		= {};
+		bool		ValueResolved	= false;
+	};
+
+	tplt<size_t NDeclaration>
+	stct SCTTIParseResult {
+		sc_t				SourceText	[NDeclaration]	= {};
+		SCTTISpan			StructName				= {};
+		SCTTIMember		Members		[NDeclaration]	= {};
+		u2_t				Count					= {};
+		u2_t				ErrorOffset				= {};
+		CTTI_PARSE_STATE	State					= CTTI_PARSE_STATE_STRUCT_NAME;
+		CTTI_PARSE_ERROR	Error					= CTTI_PARSE_ERROR_NONE;
+
+		inxp bool		Success		() cnst nxpt { rtrn CTTI_PARSE_ERROR_NONE == Error && CTTI_PARSE_STATE_COMPLETE == State; }
+		inxp vcst_t	View		(cnst SCTTISpan span) cnst nxpt { rtrn {&SourceText[span.Offset], span.Count}; }
+		inxp err_t	Find		(cnst vcst_t name) cnst nxpt {
+			for(u2_t iMember = 0; iMember < Count; ++iMember)
+				if(View(Members[iMember].Name) == name)
+					rtrn iMember;
+			rtrn -1;
+		}
+	};
+
 	tplt<size_t NDeclaration>
 	inxp SCTTIParseResult<NDeclaration> cttiParseStruct(cnst sc_t (&declaration)[NDeclaration]) nxpt {
 		static_assert(NDeclaration <= 0xFFFFFFFFULL, "CTTI source text exceeds the supported size.");
@@ -207,51 +245,109 @@ namespace gpk
 	tplt<tpnm T>
 	inxp cnst auto & cttiStruct() nxpt { rtrn SCTTIStructRegistry<T>::Value; }
 
-	enum CTTI_ENUM_PARSE_STATE : u0_t
-		{ CTTI_ENUM_PARSE_STATE_ENUM_NAME
-		, CTTI_ENUM_PARSE_STATE_UNDERLYING_TYPE
-		, CTTI_ENUM_PARSE_STATE_VALUE_NAME
-		, CTTI_ENUM_PARSE_STATE_VALUE_INITIALIZER
-		, CTTI_ENUM_PARSE_STATE_COMPLETE
-		};
+	tplt<tpnm T, size_t N>
+	stct SCTTIMemberAccess;
 
-	enum CTTI_ENUM_PARSE_ERROR : u0_t
-		{ CTTI_ENUM_PARSE_ERROR_NONE
-		, CTTI_ENUM_PARSE_ERROR_INVALID_ENUM_NAME
-		, CTTI_ENUM_PARSE_ERROR_EXPECTED_OPEN_BRACE
-		, CTTI_ENUM_PARSE_ERROR_EXPECTED_CLOSE_BRACE
-		, CTTI_ENUM_PARSE_ERROR_EXPECTED_UNDERLYING_TYPE
-		, CTTI_ENUM_PARSE_ERROR_INVALID_VALUE_NAME
-		, CTTI_ENUM_PARSE_ERROR_EXPECTED_VALUE_INITIALIZER
-		, CTTI_ENUM_PARSE_ERROR_VALUE_COUNT
-		};
-
-	tplt<tpnm TEnum>
-	stct SCTTIEnumValue {
-		SCTTISpan	Name		= {};
-		SCTTISpan	Initializer	= {};
-		TEnum		Value		= {};
-		bool		ValueResolved	= false;
+	tplt<tpnm T>
+	stct SCTTIMemberAccess<T, 1> {
+		tplt<tpnm TVisitor>
+		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+			auto & [member0] = instance;
+			rtrn 0 == index ? visitor(member0) : -1;
+		}
 	};
+
+	tplt<tpnm T>
+	stct SCTTIMemberAccess<T, 2> {
+		tplt<tpnm TVisitor>
+		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+			auto & [member0, member1] = instance;
+			switch(index) {
+			case 0: rtrn visitor(member0);
+			case 1: rtrn visitor(member1);
+			default: rtrn -1;
+			}
+		}
+	};
+
+	tplt<tpnm T>
+	stct SCTTIMemberAccess<T, 3> {
+		tplt<tpnm TVisitor>
+		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+			auto & [member0, member1, member2] = instance;
+			switch(index) {
+			case 0: rtrn visitor(member0);
+			case 1: rtrn visitor(member1);
+			case 2: rtrn visitor(member2);
+			default: rtrn -1;
+			}
+		}
+	};
+
+	tplt<tpnm T>
+	stct SCTTIMemberAccess<T, 4> {
+		tplt<tpnm TVisitor>
+		sttc err_t Visit(T & instance, cnst u2_t index, TVisitor & visitor) {
+			auto & [member0, member1, member2, member3] = instance;
+			switch(index) {
+			case 0: rtrn visitor(member0);
+			case 1: rtrn visitor(member1);
+			case 2: rtrn visitor(member2);
+			case 3: rtrn visitor(member3);
+			default: rtrn -1;
+			}
+		}
+	};
+
+	tplt<tpnm T>
+	inxp err_t cttiMemberIndex(cnst vcst_t name) nxpt { rtrn cttiStruct<T>().Find(name); }
+
+	tplt<tpnm T, tpnm TVisitor>
+	err_t cttiVisit(T & instance, cnst vcst_t name, TVisitor && visitor) {
+		cnst err_t iMember = cttiMemberIndex<T>(name);
+		if(0 > iMember)
+			rtrn iMember;
+		rtrn SCTTIMemberAccess<T, SCTTIStructRegistry<T>::Value.Count>::Visit(instance, (u2_t)iMember, visitor);
+	}
+
+	tplt<tpnm T>
+	err_t cttiValue(T & instance, cnst vcst_t name, SCTTIValue & output) {
+		output = {};
+		cnst err_t iMember = cttiMemberIndex<T>(name);
+		if(0 > iMember)
+			rtrn iMember;
+		auto memberView = [&output](auto & member) -> err_t {
+			output.Data = {(u0_t*)&member, sizeof(member)};
+			rtrn 0;
+		};
+		cnst err_t visitResult = SCTTIMemberAccess<T, SCTTIStructRegistry<T>::Value.Count>::Visit(instance, (u2_t)iMember, memberView);
+		if(0 > visitResult)
+			rtrn visitResult;
+		cnst auto & metadata = cttiStruct<T>();
+		cnst SCTTIMember & member = metadata.Members[iMember];
+		output.Type = metadata.View(member.TypeName);
+		output.Name = metadata.View(member.Name);
+		rtrn iMember;
+	}
 
 	tplt<size_t NDeclaration>
 	stct SCTTIEnumViews {
-		vcst_t	Names		[NDeclaration]	= {};
+		vcst_t	Names			[NDeclaration]	= {};
 		vcst_t	Initializers	[NDeclaration]	= {};
-		u2_t	Count					= {};
+		u2_t	Count							= {};
 	};
 
 	tplt<tpnm TEnum, size_t NDeclaration>
 	stct SCTTIEnumParseResult {
-		sc_t				SourceText		[NDeclaration]	= {};
-		SCTTISpan			EnumName				= {};
-		SCTTISpan			UnderlyingType			= {};
+		sc_t					SourceText		[NDeclaration]	= {};
+		SCTTISpan				EnumName						= {};
+		SCTTISpan				UnderlyingType					= {};
 		SCTTIEnumValue<TEnum>	Values			[NDeclaration]	= {};
-		u2_t				Count						= {};
-		u2_t				ErrorOffset					= {};
-		bool				ValuesCompiled				= false;
-		CTTI_ENUM_PARSE_STATE	State						= CTTI_ENUM_PARSE_STATE_ENUM_NAME;
-		CTTI_ENUM_PARSE_ERROR	Error						= CTTI_ENUM_PARSE_ERROR_NONE;
+		u2_t					Count							= {};
+		u2_t					ErrorOffset						= {};
+		bool					ValuesCompiled					= false;
+		CTTI_ENUM_PARSE_STATE	State							= CTTI_ENUM_PARSE_STATE_ENUM_NAME;
+		CTTI_ENUM_PARSE_ERROR	Error							= CTTI_ENUM_PARSE_ERROR_NONE;
 
 		inxp bool	Success() cnst nxpt { rtrn CTTI_ENUM_PARSE_ERROR_NONE == Error && CTTI_ENUM_PARSE_STATE_COMPLETE == State; }
 		tplt<size_t N>
