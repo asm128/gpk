@@ -331,7 +331,7 @@ sttc ::gpk::err_t sampleGUIViewportCreate(SSampleGUI & app, ::gpk::cid_t & idVie
 		::getGUI(app.Dialog).Controls.Text[idName].Align = ::gpk::ALIGN_CENTER_RIGHT;
 		::getGUI(app.Dialog).Controls.Text[idState].Align = ::gpk::ALIGN_CENTER_LEFT;
 		::getGUI(app.Dialog).Controls.Draw[idName].ColorMode = ::getGUI(app.Dialog).Controls.Draw[idState].ColorMode = ::gpk::GUI_COLOR_MODE_Default;
-		::getGUI(app.Dialog).Controls.Draw[idState].UseNewPalettes = true;
+		::getGUI(app.Dialog).Controls.Draw[idState].UseNewPalettes = false;
 	}
 	::gpk::pobj<::gpk::SDialogViewport> viewportInspectors = {};
 	if_fail_fe(::sampleGUIViewportCreate(app, app.ViewportInspectors, viewportInspectors, "INSPECTORS", {{384, 18}, {300, 456}}));

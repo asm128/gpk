@@ -99,7 +99,7 @@ gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)										
 	return 0;
 }
 
-gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, cnst vcst_t& text)				{
+gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList & menu, cnst vcst_t & text)				{
 	if(menu.IdControl == -1)
 		if_fail_fe(gpk::controlListInitialize(gui, menu));
 
@@ -113,7 +113,7 @@ gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList& menu, cnst vcst_t& 
 	return 0;
 }
 
-gpk::err_t 		gpk::paletteGridInitialize	(SGUI & gui, SPaletteGrid& palette)				{
+gpk::err_t 		gpk::paletteGridInitialize	(SGUI & gui, SPaletteGrid & palette)				{
 	cnst n2f3_t			targetSize					= {256.0, 256.0};
 	palette.IdControl		= controlCreate(gui);
 
@@ -125,7 +125,7 @@ gpk::err_t 		gpk::paletteGridInitialize	(SGUI & gui, SPaletteGrid& palette)				{
 	return 0;
 }
 
-gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, cnst g8bgra& colors)			{
+gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid & palette, cnst g8bgra & colors)			{
 	if(-1 == palette.IdControl)
 		if_fail_e(paletteGridInitialize(gui, palette));
 
@@ -141,18 +141,18 @@ gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, cnst 
 
 	for(u2_t y = 0; y < gridMetrics.y; ++y)
 	for(u2_t x = 0; x < gridMetrics.x; ++x) {
-		cnst s2_t				linearIndex					= y * gridMetrics.x + x;
-		u2_t					iFoundColor					= 0;
-		s2_t						themeIndex					= -1;
+		cnst s2_t			linearIndex					= y * gridMetrics.x + x;
+		u2_t				iFoundColor					= 0;
+		s2_t				themeIndex					= -1;
 		cnst bgra			& gridCellColor				= colors[y][x];
 		for(; iFoundColor < gui.Colors->Palette->size(); ++iFoundColor)
 			if((*gui.Colors->Palette)[iFoundColor] == gridCellColor) {
-				themeIndex				= iFoundColor;
+				themeIndex		= iFoundColor;
 				break;
 			}
 		if(iFoundColor >= gui.Colors->Palette->size()) {
-			s2_t						indexColor			= gui.Colors->Palette->push_back(gridCellColor);
-			themeIndex				= gui.Colors->ControlThemes->push_back({});
+			s2_t				indexColor			= gui.Colors->Palette->push_back(gridCellColor);
+			themeIndex		= gui.Colors->ControlThemes->push_back({});
 			SControlTheme		& theme				= (*gui.Colors->ControlThemes)[themeIndex];
 			astu2_t<UI_CONTROL_AREA_COUNT>	& comboDisabled		= theme.ColorCombos[GUI_CONTROL_PALETTE_DISABLED	] = {};
 			astu2_t<UI_CONTROL_AREA_COUNT>	& comboPressed 		= theme.ColorCombos[GUI_CONTROL_PALETTE_PRESSED	] = {};
@@ -173,10 +173,10 @@ gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid& palette, cnst 
 			//for(u2_t iArea = 0; iArea < GUI_CONTROL_COLOR_COUNT; ++iArea)
 			//	theme.ColorCombos[iState][iArea]	= min((u2_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);
 		}
-		u2_c				paletteElemIndex	= linearIndex;
-		palette.IdControls[paletteElemIndex] = controlCreate(gui);
-		SControlPlacement	& control			= gui.Controls.Placement[palette.IdControls[paletteElemIndex]];
-		SControlDraw			& controlDraw		= gui.Controls.Draw[palette.IdControls[paletteElemIndex]];
+		u2_c						paletteElemIndex	= linearIndex;
+		palette.IdControls[paletteElemIndex]	= controlCreate(gui);
+		SControlPlacement			& control			= gui.Controls.Placement[palette.IdControls[paletteElemIndex]];
+		SControlDraw				& controlDraw		= gui.Controls.Draw[palette.IdControls[paletteElemIndex]];
 		controlDraw.ColorTheme	= s1_t(themeIndex + 1);
 		control.Area.Offset		= {(s1_t)(controlSize.x * x), (s1_t)(controlSize.y * y)};
 		control.Area.Size		= controlSize.s1();

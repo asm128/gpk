@@ -11,9 +11,7 @@ usns gpk;
 stct SSampleGUIInspector {
 	cid_t			IdRoot			= CID_INVALID;
 	cid_t			IdTitle			= CID_INVALID;
-	SControlList	Names			= {};
-	SControlList	Values			= {};
-	astsc_t<512>	TextValues[5]	= {};
+ 	astsc_t<512>	TextValues[5]	= {};
 };
 
 stct SFontPicker {
@@ -24,9 +22,6 @@ stct SFontPicker {
 
 
 stct SSampleGUI {
-	pobj<SGUI>		GUIHandle	= {};
-
-	SSampleGUI(pobj<SGUI> & gui) : GUIHandle(gui) {}
 	b8_t			UseNewPalettes			= false;
 	cid_t			ControlMode				= CID_INVALID;
 	cid_t			ControlGeometry			= CID_INVALID;
@@ -36,19 +31,21 @@ stct SSampleGUI {
 	SControlList	ListExit			= {};
 	SPalettePicker		PalettePicker			= {};
 	SFontPicker			FontPicker				= {};
-	cid_t		ViewportStates			= CID_INVALID;
-	SControlGrid	GridStates				= {};
-	cid_t		ControlLive				= CID_INVALID;
-	cid_t		ViewportInspectors		= CID_INVALID;
+	cid_t				ViewportStates			= CID_INVALID;
+	SControlGrid		GridStates				= {};
+	cid_t				ControlLive				= CID_INVALID;
+	cid_t				ViewportInspectors		= CID_INVALID;
 	SSampleGUIInspector	InspectorLive			= {};
 	SSampleGUIInspector	InspectorHovered		= {};
 	SSampleGUIInspector	InspectorFocused		= {};
-	cid_t		ControlScreenshot		= CID_INVALID;
-	cid_t		ControlExit				= CID_INVALID;
+	cid_t				ControlScreenshot		= CID_INVALID;
+	cid_t				ControlExit				= CID_INVALID;
 	b8_t				ScreenshotRequested		= false;
-	cid_t		ViewportAlignments		= CID_INVALID;
-	astcid<9>	ControlsAlignment		= {};
-	astcid<4>	ControlsKeyboard		= {};
+	cid_t				ViewportAlignments		= CID_INVALID;
+	astcid<9>			ControlsAlignment		= {};
+	astcid<4>			ControlsKeyboard		= {};
+
+	SSampleGUI(pobj<SGUI> & gui) { Dialog.create(gui); }
 };
 
 err_t		sampleGUISetup				(SSampleGUI & app, pobj<SInput> & input);

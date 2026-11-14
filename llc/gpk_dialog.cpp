@@ -90,7 +90,7 @@ sttc gpk::err_t dialogInitialize				(SDialog & dialog) {
 	gui.Controls.States			[dialog.Root].Mask					&= ~GUI_CONTROL_FLAG_Dragging;
 	gui.Controls.States			[dialog.Root].Mask					&= ~GUI_CONTROL_FLAG_Pressed;
 	dialog.DefaultControlDraw.FrameOut			= 1;
-	dialog.DefaultControlDraw.UseNewPalettes	= 1;
+	dialog.DefaultControlDraw.UseNewPalettes	= false;
 	if(!dialog.Colors) {
 		sttc pobj<SDialogColors>	globalDefaultColors			= {};
 		if(!globalDefaultColors) {
@@ -161,7 +161,7 @@ gpk::cid_t			gpk::sliderCreate							(SDialog & dialog)								{
 	controlTable.Placement	[slider->IdButton].Area.Size				= {16, 16};
 	controlTable.Text		[slider->IdButton].Text						= "-";
 	controlTable.Constraints[slider->IdButton].AttachSizeToControl.y	= slider->IdButton;
-	controlTable.Draw		[slider->IdButton].UseNewPalettes			= true;
+	controlTable.Draw		[slider->IdButton].UseNewPalettes			= false;
 	controlTable.Draw		[slider->IdButton].ColorMode				= GUI_COLOR_MODE_3D;
 	memcpy_s(controlTable.Draw[slider->IdButton		].Palettes.Storage, dialog.Colors->Button	.Storage);
 	memcpy_s(controlTable.Draw[slider->IdGUIControl	].Palettes.Storage, dialog.Colors->CheckBox	.Storage);
@@ -251,7 +251,7 @@ gpk::cid_t			gpk::editBoxCreate		(SDialog & dialog)								{
 	pobj<SDialogEditBox>	editBox;
 	SControlTable		& controlTable			= dialog.GUI->Controls;
 	if_fail_fe(index = dialog.Create(editBox));
-	controlTable.Draw[editBox->IdGUIControl].UseNewPalettes	= true;
+	controlTable.Draw[editBox->IdGUIControl].UseNewPalettes	= false;
 	controlTable.Draw[editBox->IdGUIControl].ColorMode		= GUI_COLOR_MODE_Flat;
 	memcpy_s(controlTable.Draw[editBox->IdGUIControl].Palettes.Storage, dialog.Colors->CheckBox.Storage);
 	return index;
@@ -268,7 +268,7 @@ gpk::cid_t			gpk::viewportCreate		(SDialog & dialog) {
 	SControlTable		& controlTable			= dialog.GUI->Controls;
 	if_fail_fe(index = dialog.Create(viewport));
 	if_fail_fe(controlSetParent(*dialog.GUI, viewport->IdGUIControl, dialog.Root));
-	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= true;
+	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= false;
 	controlTable.Draw[viewport->IdGUIControl].FrameOut			= true;
 	controlTable.States[viewport->IdGUIControl].Mask			&= ~GUI_CONTROL_FLAG_Hovered;
 	controlTable.Placement[viewport->IdGUIControl].Margin		= {};
@@ -281,7 +281,7 @@ gpk::cid_t			gpk::viewportCreate		(SDialog & dialog) {
 		control.Align			= ALIGN_TOP_RIGHT;
 		controlTable.Constraints[idControl].AttachSizeToControl	= {-1, -1};
 		controlTable.States[idControl].Mask		= dialog.DefaultControlMask;
-		controlTable.Draw[idControl].UseNewPalettes	= true;
+		controlTable.Draw[idControl].UseNewPalettes	= false;
 		controlTable.Draw[idControl].Palettes		= dialog.Colors->ViewportTitle;
 		controlTable.Text[idControl].Text			= "X";
 		controlTable.Text[idControl].Align			= ALIGN_CENTER;
@@ -295,7 +295,7 @@ gpk::cid_t			gpk::viewportCreate		(SDialog & dialog) {
 		control.Align			= ALIGN_BOTTOM_RIGHT;
 		controlTable.Constraints[idControl].AttachSizeToControl	= {-1, -1};
 		controlTable.States[idControl].Mask		= dialog.DefaultControlMask;
-		controlTable.Draw[idControl].UseNewPalettes	= true;
+		controlTable.Draw[idControl].UseNewPalettes	= false;
 		controlTable.Draw[idControl].Palettes		= dialog.Colors->Viewport;
 	}
 	{ // Create field group

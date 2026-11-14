@@ -73,7 +73,6 @@ sttc gpk::err_t fileViewerListCreate(SFileViewer & viewer, SControlList & list, 
 
 sttc void fileViewerListRowConfigure(SFileViewer & viewer, cid_t idControl, b8_t interactive, b8_t buttonPalette = true) {
 	SControlTable & controls = viewer.Dialog->GUI->Controls;
-	controls.Draw[idControl].UseNewPalettes = true;
 	controls.Draw[idControl].Palettes = buttonPalette ? viewer.Dialog->Colors->Button : viewer.Dialog->Colors->Control;
 	controls.Text[idControl].Align = ALIGN_CENTER_LEFT;
 	if(false == interactive) {
@@ -120,7 +119,6 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer) {
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.AttachSizeToControl = {-1, -1};
 		constraints.DockToControl.Right = viewport->IdClose;
-		draw.UseNewPalettes = true;
 		draw.Palettes = viewer.Dialog->Colors->Button;
 		text.Text = "Save";
 		text.Align = ALIGN_CENTER;
@@ -134,7 +132,6 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer) {
 		placement.Area.Size = {88, gui.Controls.Placement[viewport->IdClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.DockToControl.Right = viewer.Editor.IdSave;
-		draw.UseNewPalettes = true;
 		draw.Palettes = viewer.Dialog->Colors->Button;
 		text.Text = "Keyboard";
 		text.Align = ALIGN_CENTER;

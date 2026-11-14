@@ -39,7 +39,6 @@ nmsp gpk
 		pobj<SGUIColors>	Colors;
 		// Font
 		apobj<SRasterFont>	Fonts				= {};
-
 		SGUIZoom			LastZoom			= {};
 		SGUIZoom			Zoom				= {};
 		u1_t				SelectedFont		= 7;
@@ -54,7 +53,6 @@ nmsp gpk
 	err_t				guiGetProcessableControls		(cnst SGUI & gui, acid & controlIndices);
 	err_t				guiDeselect						(SGUI & gui);
 	err_t				guiSelect						(SGUI & gui, cid_t controlToSelect);
-
 	err_t				controlDelete					(SGUI & gui, cid_t iControl, b8_t recursive = true);
 	cid_t 				controlCreate					(SGUI & gui);
 	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
@@ -105,6 +103,29 @@ nmsp gpk
 		);
 		return iControl;
 	}
+
+	//stin	err_t	withControlState		(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlState			&> & funcWithControl) { rtrn withControlState		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlPrevious		(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlState			&> & funcWithControl) { rtrn withControlPrevious	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlPlacement	(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlPlacement		&> & funcWithControl) { rtrn withControlPlacement	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlArea			(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlArea			&> & funcWithControl) { rtrn withControlArea		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlConstraints	(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlConstraints	&> & funcWithControl) { rtrn withControlConstraints	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlDraw			(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlDraw			&> & funcWithControl) { rtrn withControlDraw		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlText			(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlText			&> & funcWithControl) { rtrn withControlText		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlImages		(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlImage			&> & funcWithControl) { rtrn withControlImages		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 acid					&> & funcWithControl) { rtrn withControlChildren	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 cid_t					&> & funcWithNesting) { rtrn withControlChildren	(gui.Controls, idControl, funcWithNesting); }
+
+	//stin	err_t	withControlState		(SGUI & gui, cid_t idControl, cnst FError<SControlState			&> & funcWithControl) { rtrn withControlState		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlPrevious		(SGUI & gui, cid_t idControl, cnst FError<SControlState			&> & funcWithControl) { rtrn withControlPrevious	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlPlacement	(SGUI & gui, cid_t idControl, cnst FError<SControlPlacement		&> & funcWithControl) { rtrn withControlPlacement	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlArea			(SGUI & gui, cid_t idControl, cnst FError<SControlArea			&> & funcWithControl) { rtrn withControlArea		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlConstraints	(SGUI & gui, cid_t idControl, cnst FError<SControlConstraints	&> & funcWithControl) { rtrn withControlConstraints	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlDraw			(SGUI & gui, cid_t idControl, cnst FError<SControlDraw			&> & funcWithControl) { rtrn withControlDraw		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlText			(SGUI & gui, cid_t idControl, cnst FError<SControlText			&> & funcWithControl) { rtrn withControlText		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlImages		(SGUI & gui, cid_t idControl, cnst FError<SControlImage			&> & funcWithControl) { rtrn withControlImages		(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(SGUI & gui, cid_t idControl, cnst FError<acid					&> & funcWithControl) { rtrn withControlChildren	(gui.Controls, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(SGUI & gui, cid_t idControl, cnst FError<cid_t					&> & funcWithNesting) { rtrn withControlChildren	(gui.Controls, idControl, funcWithNesting); }
+
 } // nmsp
 
 #endif // GPK_GUI_H_23627

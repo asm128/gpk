@@ -174,7 +174,6 @@ err_t			setup		(::gme::SApplication & app)						{
 
 	::gpk::astatic<::gpk::s1_t, DIALOG_THEME_COUNT>	viewportPalettes		= {};
 	if_fail_fe(::dialogThemeResourcesCreate(app.DialogMain, viewportPalettes));
-	gui.Controls.Draw[app.IdExit].UseNewPalettes = true;
 	for(::gpk::u0_t iState = 0; iState < ::gpk::GUI_CONTROL_PALETTE_COUNT; ++iState)
 		gui.Controls.Draw[app.IdExit].Palettes[iState] = viewportPalettes[2];
 	if_fail_fe(::dialogViewportCreate(app, 0, ::gpk::get_enum_namev<::gpk::GUI_CONTROL_PALETTE>(), {{ 80,  92}, {420, 250}}, viewportPalettes[0]));
@@ -193,7 +192,6 @@ err_t			setup		(::gme::SApplication & app)						{
 	for(::gpk::u0_t iList = 0; iList < ::gpk::size(enumLists); ++iList)
 	for(::gpk::u2_t iControl = 0; iControl <= enumLists[iList]->IdControls.size(); ++iControl) {
 		cnst ::gpk::cid_t idControl = iControl ? enumLists[iList]->IdControls[iControl - 1] : enumLists[iList]->IdControl;
-		gui.Controls.Draw[idControl].UseNewPalettes = true;
 		for(::gpk::u0_t iState = 0; iState < ::gpk::GUI_CONTROL_PALETTE_COUNT; ++iState)
 			gui.Controls.Draw[idControl].Palettes[iState] = viewportPalettes[0];
 	}

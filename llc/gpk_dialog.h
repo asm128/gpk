@@ -28,56 +28,56 @@ nmsp gpk
 		cxpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();
 
-		virtual	gpk::err_t Resize				(cnst ::gpk::n2<u1_t> & newSize)				{ (void)newSize; return 0; }
-		virtual	gpk::err_t Update				(::gpk::view<cnst ::gpk::pobj<::gpk::SEventSystem>> eventsIn)	= 0;
+		virtual	err_t Resize				(cnst n2<u1_t> & newSize)				{ (void)newSize; return 0; }
+		virtual	err_t Update				(view<cnst pobj<SEventSystem>> eventsIn)	= 0;
 	};
 	//tplt<tpnm _TDialogControl>
-	//gpk::err_t 			dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
-	//	::gpk::gpk_ref<_TDialogControl>								* newRef							= 0;
-	//	if_true_vef(-1, 0 == ::gpk::ref_create(&newRef));
-	//	createdControl.set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);
+	//err_t 			dialogCreate										(SGUI & gui, pnco<_TDialogControl>& createdControl)	{
+	//	gpk_ref<_TDialogControl>								* newRef							= 0;
+	//	if_true_vef(-1, 0 == ref_create(&newRef));
+	//	createdControl.set_ref((gpk_ref<IDialogControl>*)newRef);
 	//	createdControl->Dialog									= this;
-	//	createdControl->IdGUIControl							= ::gpk::controlCreate(gui);
+	//	createdControl->IdGUIControl							= controlCreate(gui);
 	//	return 0;
 	//}
 #pragma pack(pop)
 
 	struct SDialogColors {
-		::gpk::apod<::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType	= {};
-		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					Control			= {};
-		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					Button			= {};
-		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					CheckBox		= {};
-		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					Viewport		= {};
-		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>					ViewportTitle	= {};
+		apod<asts1_t<GUI_CONTROL_PALETTE_COUNT>>	PerControlType	= {};
+		asts1_t<GUI_CONTROL_PALETTE_COUNT>			Control			= {};
+		asts1_t<GUI_CONTROL_PALETTE_COUNT>			Button			= {};
+		asts1_t<GUI_CONTROL_PALETTE_COUNT>			CheckBox		= {};
+		asts1_t<GUI_CONTROL_PALETTE_COUNT>			Viewport		= {};
+		asts1_t<GUI_CONTROL_PALETTE_COUNT>			ViewportTitle	= {};
 	};
 
 	struct SDialog {
-		::gpk::pobj<::gpk::SDialogColors>	Colors					= {};
+		pobj<SDialogColors>			Colors				= {};
 
-		cid_t					FocusedCurrent		= (cid_t)-1;
-		cid_t					FocusedPrevious		= (cid_t)-1;
-		cid_t					SelectedCurrent		= (cid_t)-1;
-		cid_t					SelectedPrevious	= (cid_t)-1;
-		::gpk::n2u1_t			LastSize			= {};
-		cid_t					Root				= (cid_t)-1;
-		::gpk::as2_t			Buttons				= {};
+		cid_t						FocusedCurrent		= (cid_t)-1;
+		cid_t						FocusedPrevious		= (cid_t)-1;
+		cid_t						SelectedCurrent		= (cid_t)-1;
+		cid_t						SelectedPrevious	= (cid_t)-1;
+		n2u1_t						LastSize			= {};
+		cid_t						Root				= (cid_t)-1;
+		as2_t						Buttons				= {};
 
-		::gpk::GUI_CONTROL_FLAG	DefaultControlMask	= (::gpk::GUI_CONTROL_FLAG)-1;
-		::gpk::SControlDraw		DefaultControlDraw	= {};
+		GUI_CONTROL_FLAG			DefaultControlMask	= (GUI_CONTROL_FLAG)-1;
+		SControlDraw				DefaultControlDraw	= {};
 
-		::gpk::pobj<::gpk::SInput>					Input			= {};
-		::gpk::pobj<::gpk::SGUI>					GUI				= {};
-		::gpk::aobj<::gpk::pnco<IDialogControl>>	Controls		= {};
-		::gpk::img<::gpk::bgra>						ImageCrossBGRA	= {};
-		::gpk::imgmonou3_t							ImageCross		= {};
+		pobj<SInput>				Input				= {};
+		pobj<SGUI>					GUI					= {};
+		aobj<pnco<IDialogControl>>	Controls			= {};
+		img<bgra>					ImageCrossBGRA		= {};
+		imgmonou3_t					ImageCross			= {};
 
-								SDialog			(cnst ::gpk::pobj<::gpk::SGUI> & gui);
-								SDialog			(::gpk::pobj<::gpk::SGUI> & gui);
-								SDialog			();
+									SDialog				(cnst pobj<SGUI> & gui);
+									SDialog				(pobj<SGUI> & gui);
+									SDialog				();
 
-		inln	gpk::err_t Focused			()	csnx	{ return FocusedCurrent; }
+		inln	err_t				Focused				()	csnx	{ return FocusedCurrent; }
 
-		gpk::err_t 		Focus			(cid_t iControl)		{ 
+		err_t 						Focus				(cid_t iControl)		{ 
 			if_true_vef(-1, Controls.size() <= (u2_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
 			FocusedPrevious	= FocusedCurrent; 
 			FocusedCurrent	= iControl; 
@@ -85,11 +85,11 @@ nmsp gpk
 		}
 
 		tplt<tpnm _TDialogControl>
-		::gpk::cid_t			Create			(::gpk::pnco<_TDialogControl> & createdControl)	{
+		cid_t						Create				(pnco<_TDialogControl> & createdControl)	{
 			if(0 == GUI.get_ref())
 				GUI.create();
-			::gpk::SGUI				& gui				= *GUI;
-			cid_t					index				= (cid_t)-1;
+			SGUI						& gui				= *GUI;
+			cid_t						index				= (cid_t)-1;
 			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl].get_ref()) {
 					index				= (cid_t)iControl;
@@ -97,57 +97,56 @@ nmsp gpk
 				}
 
 			if(-1 == index)
-				if_fail_fe(index = (::gpk::cid_t)Controls.push_back({}));
+				if_fail_fe(index = (cid_t)Controls.push_back({}));
 
-			//::gpk::dialogCreate(createdControl);
+			//dialogCreate(createdControl);
 			//Controls[index]	= createdControl;
-			::gpk::gref<_TDialogControl>	* newRef	= 0;
-			if_true_ve(-1, 0 == ::gpk::ref_create(newRef));
-			Controls[index].set_ref((::gpk::gref<::gpk::IDialogControl>*)newRef);
+			gref<_TDialogControl>		* newRef			= 0;
+			if_true_ve(-1, 0 == ref_create(newRef));
+			Controls[index].set_ref((gref<IDialogControl>*)newRef);
 			Controls[index]->Dialog	= this;
-			u2_c			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
-			gui.Controls.Draw[idGUIControl].UseNewPalettes	= true;
-			::gpk::memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
-			//if_fail_fef(gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
+			u2_c			idGUIControl		= Controls[index]->IdGUIControl = controlCreate(*GUI);
+			memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
+			//if_fail_fef(controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;
 		}
 
 		tplt<tpnm _TDialogControl>
-		::gpk::cid_t			Get				(cid_t index, ::gpk::pnco<_TDialogControl> & control)	{
+		cid_t			Get				(cid_t index, pnco<_TDialogControl> & control)	{
 			Controls[index].as(control);
 			return index;
 		}
 
-		gpk::err_t 		Update			()		{
+		err_t 		Update			()		{
 			if(0 == GUI.get_ref())
 				GUI.create();
 
-			::gpk::SGUI					& gui			= *GUI;
+			SGUI					& gui			= *GUI;
 			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl) {
-				if(0 == Controls[iControl].get_ref() || ::gpk::controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
-					Controls.remove_unordered(iControl);
+				if(0 == Controls[iControl].get_ref() || controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
+					if_fail_ef(Controls.remove_unordered(iControl), "iControl=%u", iControl);
 					--iControl;
 					continue;
 				}
 			}
 			if(LastSize != gui.LastSize) {
 				for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)
-					Controls[iControl]->Resize(gui.LastSize);
+					if_fail_ef(Controls[iControl]->Resize(gui.LastSize), "iControl=%u, cid_t=%i", iControl, Controls[iControl]->IdGUIControl);
 				LastSize				= gui.LastSize;
 			}
 			//if(0 != Input)
-			//	if_fail_fef(gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
+			//	if_fail_fef(guiProcessInput(gui, *Input), "%s", "Unknown reason.");
 			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
-					Controls[iControl]->Update(gui.Controls.EventQueue);
+					if_fail_ef(Controls[iControl]->Update(gui.Controls.EventQueue), "iControl=%u", iControl, Controls[iControl]->IdGUIControl);
 
 			return 0;
 		}
 	};
 
 	tplt<tpnm _TDialogControl>
-	gpk::err_t		dialogControlGet	(SDialog & dialog, cid_t idGUIControl, ::gpk::pnco<_TDialogControl> & control) {
+	err_t		dialogControlGet	(SDialog & dialog, cid_t idGUIControl, pnco<_TDialogControl> & control) {
 		control = {};
 		for(u2_t iControl = 0; iControl < dialog.Controls.size(); ++iControl) {
 			if(0 == dialog.Controls[iControl].get_ref() || dialog.Controls[iControl]->IdGUIControl != idGUIControl)
@@ -158,6 +157,27 @@ nmsp gpk
 		if_true_fef(0 == control.get_ref(), "Dialog control not found for GUI control id: %i.", idGUIControl);
 		return 0;
 	}
+
+	//stin	err_t	withControlState		(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlState			&> & funcWithControl) { rtrn withControlState		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlPrevious		(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlState			&> & funcWithControl) { rtrn withControlPrevious	(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlPlacement	(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlPlacement		&> & funcWithControl) { rtrn withControlPlacement	(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlArea			(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlArea			&> & funcWithControl) { rtrn withControlArea		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlConstraints	(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlConstraints	&> & funcWithControl) { rtrn withControlConstraints	(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlDraw			(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlDraw			&> & funcWithControl) { rtrn withControlDraw		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlText			(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlText			&> & funcWithControl) { rtrn withControlText		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlImages		(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst SControlImage			&> & funcWithControl) { rtrn withControlImages		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst acid					&> & funcWithControl) { rtrn withControlChildren	(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(cnst SDialog & dialog, cid_t idControl, cnst FError<cnst cid_t					&> & funcWithNesting) { rtrn withControlChildren	(*dialog.GUI, idControl, funcWithNesting); }
+	//stin	err_t	withControlState		(SDialog & dialog, cid_t idControl, cnst FError< SControlState			&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlState			(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlPrevious		(SDialog & dialog, cid_t idControl, cnst FError< SControlState			&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlPrevious		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlPlacement	(SDialog & dialog, cid_t idControl, cnst FError< SControlPlacement		&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlPlacement		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlArea			(SDialog & dialog, cid_t idControl, cnst FError< SControlArea			&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlArea			(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlConstraints	(SDialog & dialog, cid_t idControl, cnst FError< SControlConstraints	&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlConstraints	(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlDraw			(SDialog & dialog, cid_t idControl, cnst FError< SControlDraw			&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlDraw			(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlText			(SDialog & dialog, cid_t idControl, cnst FError< SControlText			&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlText			(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlImages		(SDialog & dialog, cid_t idControl, cnst FError< SControlImage			&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlImages		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(SDialog & dialog, cid_t idControl, cnst FError< acid					&> & funcWithControl)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlChildren		(*dialog.GUI, idControl, funcWithControl); }
+	//stin	err_t	withControlChildren		(SDialog & dialog, cid_t idControl, cnst FError< cid_t					&> & funcWithNesting)	{ if(not dialog.GUI) if_null_fe(dialog.GUI.create()); rtrn withControlChildren		(*dialog.GUI, idControl, funcWithNesting); }
 }
 
 #endif // GPK_DIALOG_H_23627

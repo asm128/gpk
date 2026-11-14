@@ -161,7 +161,6 @@ nmsp gpk
 			controlButton.Align		= (iControl == tuner->IdDecrease) ? ALIGN_CENTER_LEFT : ALIGN_CENTER_RIGHT;
 			memcpy_s(controlTable.Draw[iControl].Palettes.Storage, dialog.Colors->Button.Storage);
 			controlTable.Text			[iControl].Text						= (iControl == tuner->IdDecrease) ? "-" : "+";
-			controlTable.Draw			[iControl].UseNewPalettes			= true;
 			controlTable.Draw			[iControl].ColorMode				= GUI_COLOR_MODE_3D;
 			controlTable.Constraints	[iControl].AttachSizeToControl.y	= (cid_t)iControl;
 		}
