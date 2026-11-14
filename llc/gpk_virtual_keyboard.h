@@ -22,6 +22,7 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Right		, 5);
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Up			, 6);
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Down		, 7);
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Delete		, 8);
 #pragma pack(push, 1)
 	struct SVirtualKeyboardEvent {
 		VK_EVENT		Type;
