@@ -1,4 +1,4 @@
-#include "gpk_gui_control_state.h"
+#include "gpk_gui_control_flag.h"
 
 #include "gpk_tri2.h"
 #include "gpk_rect.h"
@@ -52,10 +52,10 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YOffsetMax	, 1 << 11);
 
 	struct SControlPlacement {
-		rect2s1_t			Area				= {{}, {16, 16}};
-		rectu1_t				Margin				= {1, 1, 1, 1};
-		rectu1_t				Border				= {1, 1, 1, 1};
-		ALIGN				Align				= ALIGN_TOP_LEFT;
+		rect2s1_t					Area				= {{}, {16, 16}};
+		rectu1_t					Margin				= {1, 1, 1, 1};
+		rectu1_t					Border				= {1, 1, 1, 1};
+		ALIGN						Align				= ALIGN_TOP_LEFT;
 		GUI_CONTROL_LIMIT			RelativeBorderSize	: 4;
 		GUI_CONTROL_LIMIT			RelativeMarginSize	: 4;
 		GUI_CONTROL_METRICS_FLAG	RelativeMetrics		= {};
@@ -161,35 +161,22 @@ nmsp gpk
 		tri2s1_t				Triangles	[8]		= {};
 	};
 
-	struct SControlRectangleGPU {
-		rect2f2_t			Local				= {};
-		rect2f2_t			Global				= {};
-	};
-
-	struct SControlAreaGPU {
-		SControlRectangleGPU	Total				= {};
-		SControlRectangleGPU	Client				= {};
-		rect2f2_t			Text				= {};
-		rect2f2_t			Rectangles	[GUI_CONTROL_AREA_OLD_COUNT]	= {};
-		tri2f2_t				Triangles	[8]		= {};
-	};
-
 	struct SControlAttachId {
 		cid_t						IdControl			: 15;
 		cid_t						Total				: 1;
 	};
 
 	struct SControlConstraints {
-		n2cid				AttachSizeToControl	= {-1, -1};
-		n2<bool>				AttachSizeToText	= {};
-		rectcid				DockToControl		= {-1, -1, -1, -1};
-		minmax2s1_t			SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
+		n2cid						AttachSizeToControl	= {-1, -1};
+		n2<bool>					AttachSizeToText	= {};
+		rectcid						DockToControl		= {-1, -1, -1, -1};
+		minmax2s1_t					SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
 
 	struct SControlText {
-		vcst_t					Text				= {};
-		ALIGN				Align				= ALIGN_CENTER;
-		minmaxu1_t			Selection			= {0, 1};
+		vcst_t						Text				= {};
+		ALIGN						Align				= ALIGN_CENTER;
+		minmaxu1_t					Selection			= {0, 1};
 		s1_t						FontSelected		= -1;
 	};
 
@@ -200,9 +187,9 @@ nmsp gpk
 #pragma pack(pop)
 
 	struct SControlImage {
-		rtbgra8d32			Temp				= {};
-		g8bgra				Image				= {};
-		n2s1_t				ImageOffset			= {};
+		rtbgra8d32					Temp				= {};
+		g8bgra						Image				= {};
+		n2s1_t						ImageOffset			= {};
 		u0_t						ImageAlign			= ALIGN_CENTER;
 		u0_t						ImageInvertX		: 1;
 		u0_t						ImageInvertY		: 1;
@@ -210,17 +197,17 @@ nmsp gpk
 	};
 
 	struct SControlTable {
-		apod<SControlState		>	States			= {};
-		apod<SControlState		>	StatesPrevious	= {};
-		apod<SControlPlacement	>	Placement		= {};
-		apod<SControlArea			>	Area			= {};
-		apod<SControlConstraints	>	Constraints		= {};
-		apod<SControlDraw			>	Draw			= {};
-		aobj<SControlText			>	Text			= {};
-		aobj<SControlImage		>	Images			= {};
-		aobj<acid					>	Children		= {};
+		apod<SControlState		>	States				= {};
+		apod<SControlState		>	Previous			= {};
+		apod<SControlPlacement	>	Placement			= {};
+		apod<SControlArea		>	Area				= {};
+		apod<SControlConstraints>	Constraints			= {};
+		apod<SControlDraw		>	Draw				= {};
+		aobj<SControlText		>	Text				= {};
+		aobj<SControlImage		>	Images				= {};
+		aobj<acid				>	Children			= {};
 		//
-		apobj<SEventSystem		>	EventQueue		= {};
+		apobj<SEventSystem		>	EventQueue			= {};
 
 		inln	bool		SetUnused		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
 	 	inln	bool		SetHidden		(cid_t iControl, bool value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }

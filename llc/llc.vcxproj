@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -90,6 +90,7 @@
     <ClInclude Include="gpk_file_pack.h" />
     <ClInclude Include="gpk_framework_module.h" />
     <ClInclude Include="gpk_gpio.h" />
+    <ClInclude Include="gpk_gui_theme.h" />
     <ClInclude Include="gpk_i2c.h" />
     <ClInclude Include="gpk_index.h" />
     <ClInclude Include="gpk_index_path.h" />
@@ -109,7 +110,7 @@
     <ClInclude Include="gpk_grid_color.h" />
     <ClInclude Include="gpk_gui_control.h" />
     <ClInclude Include="gpk_control_grid.h" />
-    <ClInclude Include="gpk_gui_control_state.h" />
+    <ClInclude Include="gpk_gui_control_flag.h" />
     <ClInclude Include="gpk_gui_inputbox.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
     <ClInclude Include="gpk_img_color.h" />
@@ -147,7 +148,7 @@
     <ClInclude Include="gpk_string_compose.h" />
     <ClInclude Include="gpk_string_time.h" />
     <ClInclude Include="gpk_swap.h" />
-    <ClInclude Include="gpk_system_event.h" />
+    <ClInclude Include="gpk_event_system.h" />
     <ClInclude Include="gpk_system_key.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
     <ClInclude Include="gpk_ptr_obj.h" />
@@ -287,14 +288,21 @@
     <ClCompile Include="gpk_debug.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
+    <ClCompile Include="gpk_event_device.h" />
     <ClCompile Include="gpk_file_pack.cpp" />
     <ClCompile Include="gpk_framework_module.cpp" />
     <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_geometry_draw.cpp" />
     <ClCompile Include="gpk_gltf.cpp" />
     <ClCompile Include="gpk_gui_inputbox.cpp" />
+    <ClCompile Include="gpk_gui_theme.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
-    <ClCompile Include="gpk_header_checkingg.cpp" />
+    <ClCompile Include="gpk_header_checkingg.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="gpk_i2c.cpp" />
     <ClCompile Include="gpk_index.cpp" />
     <ClCompile Include="gpk_index_path.cpp" />

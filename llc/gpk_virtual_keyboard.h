@@ -1,5 +1,5 @@
 #include "gpk_enum.h"
-#include "gpk_gui_control_state.h"
+#include "gpk_gui_control_flag.h"
 
 #ifndef GPK_VIRTUAL_KEYBOARD_H_23627
 #define GPK_VIRTUAL_KEYBOARD_H_23627

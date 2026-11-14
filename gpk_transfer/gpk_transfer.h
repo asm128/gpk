@@ -1,7 +1,8 @@
 #include "gpk_event.h"
 #include "gpk_lifecycle.h"
+#include "gpk_event_device.h"
 
-#include <functional>
+#include "gpk_functional.h"
 
 #ifndef GPK_TRANSFER_H_23627
 #define GPK_TRANSFER_H_23627
