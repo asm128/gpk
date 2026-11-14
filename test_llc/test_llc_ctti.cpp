@@ -32,6 +32,10 @@ GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_FULL_DECLARATION, 22, "The one-a
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_SOURCE_ONLY, 23, "The source-only CTTI enum value resolution is incorrect.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_VIEWS, 24, "The CTTI enum view projection is incorrect.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, TYPE_FACTS, 25, "The CTTI compiler type facts are incorrect.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, MEMBER_FIND, 26, "The CTTI struct registry could not find a member name.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_VALUE, 27, "The CTTI value view did not expose the live instance member.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_VISIT, 28, "The CTTI typed visitor did not receive the live instance member.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_MISSING, 29, "The CTTI instance lookup unexpectedly accepted an unknown member.");
 
 CTTI_STCT(
 	SCTTIJSONTest0 {
@@ -90,6 +94,14 @@ CTTI_STCT(
 	}
 	);
 
+CTTI_STCT(
+	SCTTIInstanceTest {
+		gpk::u2_t Count;
+		gpk::f3_t Weight;
+		bool Enabled;
+	}
+	);
+
 stxp auto cttiBraceValue		= ::gpk::cttiStruct<SCTTIJSONTestBraceValue>();
 stxp auto cttiNumericModifier	= ::gpk::cttiStruct<SCTTIJSONTestNumericModifier>();
 stxp auto cttiJSONMetadata		= ::gpk::cttiStruct<SCTTIJSONTest0>();
@@ -117,6 +129,7 @@ static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::File.size() && ::gpk::SC
 static_assert(sizeof(SCTTIPODTest) == ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Size, "Struct size must come from the completed compiler type.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::IsPOD, "The POD struct must be identified without std traits.");
 static_assert(sizeof(SCTTIEnumFull) == ::gpk::SCTTIEnumRegistry<SCTTIEnumFull>::Size && ::gpk::SCTTIEnumRegistry<SCTTIEnumFull>::IsPOD, "Enum compiler facts must be retained.");
+static_assert(1 == ::gpk::cttiMemberIndex<SCTTIInstanceTest>("Weight"), "CTTI member names must resolve to declaration indices.");
 
 tplt<size_t NDeclaration>
 sttc ::gpk::vcst_t cttiSpanView
@@ -217,6 +230,19 @@ sttc ::gpk::err_t cttiMemberJSON
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY      , false == cttiEnumFull.Values[2].ValueResolved || 2 != cttiEnumFull.Values[2].Value);
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS            , cttiEnumFullViews.Names[0] != "SCTTIEnumFullNone", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFullViews.Names[0]));
 	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS            , cttiEnumFullViews.Names[2] != "SCTTIEnumFullWrite", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFullViews.Names[2]));
+
+	SCTTIInstanceTest instance = {73, 234.25, true};
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_FIND, ::gpk::cttiMemberIndex<SCTTIInstanceTest>("Enabled") != 2);
+	::gpk::SCTTIValue instanceValue = {};
+	cnst ::gpk::err_t valueResult = ::gpk::cttiValue(instance, "Weight", instanceValue);
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_VALUE, ::gpk::failed(valueResult));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_VALUE, instanceValue.Name != "Weight" || instanceValue.Type != "gpk::f3_t" || instanceValue.Data.size() != sizeof(instance.Weight));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_VALUE, *(cnst ::gpk::f3_t*)instanceValue.Data.begin() != instance.Weight);
+	::gpk::f3_t visitedWeight = {};
+	auto weightVisitor = [&visitedWeight](auto & member) -> ::gpk::err_t { visitedWeight = (::gpk::f3_t)member; rtrn 0; };
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_VISIT, ::gpk::failed(::gpk::cttiVisit(instance, "Weight", weightVisitor)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_VISIT, visitedWeight != instance.Weight);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_MISSING, 0 <= ::gpk::cttiValue(instance, "Missing", instanceValue));
 
 	::gpk::string output;
 	cnst ::gpk::err_t buildResult = ::cttiMemberJSON(cttiJSONMetadata, output);
