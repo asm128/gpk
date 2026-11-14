@@ -13,10 +13,6 @@ GDEFINE_ENUM_VALUE(FILE_VIEWER_LAYOUT, FLOATING, 0);
 GDEFINE_ENUM_VALUE(FILE_VIEWER_LAYOUT, SPLIT   , 1);
 
 stct SFileViewer {
-	::gpk::SWindow					& Window;
-	::gpk::pobj<::gpk::SGUI>	GUIHandle	= {};
-	::gpk::SGUI					& GUI;
-
 	::gpk::pobj<::gpk::SDialog>	Dialog		= {};
 	::gpk::astcid<2>			Viewports	= {};
 	::gpk::SControlList			Files		= {};
