@@ -479,4 +479,4 @@ stct SApplication {
 	rtrn ::sampleGUIDraw(app.Sample, window.BackBuffer->Color.View);
 }
 
-GPK_DEFINE_APPLICATION_ENTRY_POINT(SApplication, GPK_GUI_EDITOR_TITLE)
+GPK_DEFINE_APPLICATION_ENTRY_POINT(SApplication, "GPK GUI")
