@@ -45,7 +45,7 @@ nmsp gpk
 		u1_t				SelectedFont		= 7;
 		u1_t				ThemeDefault		= ASCII_COLOR_CYAN * 16 + 8;
 		GUI_COLOR_MODE		ColorModeDefault	= GUI_COLOR_MODE_3D;//GUI_COLOR_MODE_DEFAULT;
-		bool								InputModeTouch		= true;
+		bool				InputModeTouch		= true;
 	};
 
 	err_t				guiProcessInput					(SGUI & gui, const SInput & input, vpobj<SEventSystem> in_Events = {});

@@ -59,7 +59,6 @@ nmsp gpk
 	inxp	GUI_CONTROL_FLAG	setUpdated		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Updated	, value); }
 	inxp	GUI_CONTROL_FLAG	setAction		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Action	, value); }
 
-
 	GDEFINE_ENUM_TYPE (EVENT_GUI_CONTROL, u0_t)
 	GDEFINE_ENUM_VALUE(EVENT_GUI_CONTROL, StateChange, 2);
 
@@ -124,7 +123,6 @@ nmsp gpk
 		inxp	bool		IsDragging		()	csnx	{ return isDragging (Flag, Mask); }
 		inxp	bool		IsAction		()	csnx	{ return isAction   (Flag, Mask); }
 		inxp	bool		IsUnused		()	csnx	{ return isUnused   (Flag); }
-
 	};
 	stxp	size_t SIZEOF_SCONTROL	= sizeof(SControlState);
 #pragma pack(pop)

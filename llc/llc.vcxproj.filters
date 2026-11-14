@@ -327,7 +327,7 @@
     <ClInclude Include="gpk_gui_control_list.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_gui_control_state.h">
+    <ClInclude Include="gpk_gui_control_flag.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_inputbox.h">
@@ -822,6 +822,9 @@
     <ClInclude Include="llc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_control_grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -1086,6 +1089,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="llc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_control_grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

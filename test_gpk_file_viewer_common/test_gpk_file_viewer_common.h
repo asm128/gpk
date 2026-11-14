@@ -24,6 +24,7 @@ stct SFileViewer {
 	::gpk::SPathContents		PathContents= {};
 	::gpk::SVirtualKeyboard	VirtualKeyboard = {};
 	::gpk::cid_t				IdSave		= -1;
+	::gpk::cid_t				IdKeyboard	= -1;
 	::gpk::cid_t				IdCursor	= -1;
 	::gpk::u2_t				CursorLine	= (::gpk::u2_t)-1;
 	::gpk::u2_t				CursorColumn= 0;

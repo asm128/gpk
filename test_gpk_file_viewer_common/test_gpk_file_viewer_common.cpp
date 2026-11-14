@@ -110,12 +110,23 @@ sttc ::gpk::err_t fileViewerEditorCreate(SFileViewer & viewer) {
 	placement.Align = ::gpk::ALIGN_TOP_RIGHT;
 	viewer.GUI.Controls.Constraints[viewer.IdSave].AttachSizeToControl = {-1, -1};
 	viewer.GUI.Controls.Constraints[viewer.IdSave].DockToControl.Right = viewport->IdClose;
-	viewer.GUI.Controls.Constraints[viewport->IdTitle].DockToControl.Right = viewer.IdSave;
 	viewer.GUI.Controls.Draw[viewer.IdSave].UseNewPalettes = true;
 	viewer.GUI.Controls.Draw[viewer.IdSave].Palettes = viewer.Dialog->Colors->Button;
 	viewer.GUI.Controls.Text[viewer.IdSave].Text = "Save";
 	viewer.GUI.Controls.Text[viewer.IdSave].Align = ::gpk::ALIGN_CENTER;
 	viewer.GUI.Controls.SetHidden(viewer.IdSave, true);
+	if_fail_fe(viewer.IdKeyboard = ::gpk::controlCreateChild(viewer.GUI, viewport->IdGUIControl));
+	::gpk::SControlPlacement & keyboardPlacement = viewer.GUI.Controls.Placement[viewer.IdKeyboard];
+	keyboardPlacement.Area.Size = {88, viewer.GUI.Controls.Placement[viewport->IdClose].Area.Size.y};
+	keyboardPlacement.Align = ::gpk::ALIGN_TOP_RIGHT;
+	viewer.GUI.Controls.Constraints[viewer.IdKeyboard].AttachSizeToControl = {-1, -1};
+	viewer.GUI.Controls.Constraints[viewer.IdKeyboard].DockToControl.Right = viewer.IdSave;
+	viewer.GUI.Controls.Constraints[viewport->IdTitle].DockToControl.Right = viewer.IdKeyboard;
+	viewer.GUI.Controls.Draw[viewer.IdKeyboard].UseNewPalettes = true;
+	viewer.GUI.Controls.Draw[viewer.IdKeyboard].Palettes = viewer.Dialog->Colors->Button;
+	viewer.GUI.Controls.Text[viewer.IdKeyboard].Text = "Keyboard";
+	viewer.GUI.Controls.Text[viewer.IdKeyboard].Align = ::gpk::ALIGN_CENTER;
+	viewer.GUI.Controls.SetHidden(viewer.IdKeyboard, true);
 	if_fail_fe(viewer.IdCursor = ::gpk::controlCreateChild(viewer.GUI, viewport->IdClient));
 	viewer.GUI.Controls.Placement[viewer.IdCursor].Border = {};
 	viewer.GUI.Controls.Placement[viewer.IdCursor].Margin = {};
@@ -199,6 +210,7 @@ sttc ::gpk::err_t fileViewerTextLoad(SFileViewer & viewer, ::gpk::vcst_t path) {
 	viewer.VirtualKeyboard.Events.clear();
 	viewer.GUI.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
 	viewer.GUI.Controls.SetHidden(viewer.IdSave, false);
+	viewer.GUI.Controls.SetHidden(viewer.IdKeyboard, false);
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
 	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
 	::gpk::pobj<::gpk::SDialogSlider> scrollbar = {};
@@ -380,6 +392,12 @@ sttc ::gpk::err_t fileViewerEditorUpdate(SFileViewer & viewer) {
 	::gpk::pobj<::gpk::SDialogViewport> viewport = {};
 	::gpk::pobj<::gpk::SDialogSlider> scrollbarY = {};
 	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	if(viewer.GUI.Controls.IsHidden(viewport->IdGUIControl)) {
+		viewer.GUI.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
+		rtrn 0;
+	}
+	if(viewer.GUI.Controls.IsAction(viewer.IdKeyboard))
+		viewer.GUI.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, false == viewer.GUI.Controls.IsHidden(viewer.VirtualKeyboard.IdRoot));
 	if_fail_fe(::gpk::dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbarY));
 	cnst ::gpk::u2_t firstVisible = (::gpk::u2_t)scrollbarY->ValueCurrent;
 	for(::gpk::u2_t iControl = 0; iControl < viewer.Lines.IdControls.size(); ++iControl)
