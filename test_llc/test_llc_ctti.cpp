@@ -66,11 +66,11 @@ CTTI_ENUM_COMPILED(SCTTIEnumBoundary, gpk::u0_t,
 	);
 
 CTTI_ENUM(
-	SCTTIEnumFull : gpk::u1_t {
-		SCTTIEnumFullNone,
+	enum SCTTIEnumFull : gpk::u1_t {
+		SCTTIEnumFullNone = 0,
 		SCTTIEnumFullRead,
 		SCTTIEnumFullWrite
-	}
+	};
 	);
 
 CTTI_STCT(
@@ -107,8 +107,6 @@ CTTI_STCT(
 stxp auto cttiBraceValue		= ::gpk::cttiStruct<SCTTIJSONTestBraceValue>();
 stxp auto cttiNumericModifier	= ::gpk::cttiStruct<SCTTIJSONTestNumericModifier>();
 stxp auto cttiJSONMetadata		= ::gpk::cttiStruct<SCTTIJSONTest0>();
-stxp auto cttiEnumFull			= ::gpk::cttiEnum<SCTTIEnumFull>();
-stxp auto cttiEnumFullViews		= ::gpk::cttiEnumViews<SCTTIEnumFull>();
 static_assert(cttiJSONMetadata.Success(), "The CTTI JSON test declaration must be valid at compile time.");
 static_assert(::gpk::cttiSpanEquals(cttiJSONMetadata.SourceText, cttiJSONMetadata.StructName, "SCTTIJSONTest0"), "The CTTI struct name must come from the complete declaration.");
 static_assert(::gpk::CTTI_PARSE_ERROR_INVALID_MEMBER_NAME == cttiBraceValue.Error, "Brace initialization is outside the positional CTTI grammar.");
@@ -121,16 +119,11 @@ static_assert(SCTTIEnumTest_gpk_ctti.Values[1].Value == CTTIEnumRead, "Implicit 
 static_assert(SCTTIEnumTest_gpk_ctti.Values[2].Value == CTTIEnumWrite, "Explicit enum values must use the compiler-evaluated expression.");
 static_assert(1 == SCTTIEnumSingle_gpk_ctti.Count && SCTTIEnumSingleValue == SCTTIEnumSingle_gpk_ctti.Values[0].Value, "The single-value enum route must preserve its compiled value.");
 static_assert(17 == SCTTIEnumBoundary_gpk_ctti.Count && SCTTIEnumBoundary16 == SCTTIEnumBoundary_gpk_ctti.Values[16].Value, "The enum registry must not inherit the former sixteen-value implementation ceiling.");
-static_assert(cttiEnumFull.Success() && 3 == cttiEnumFull.Count, "The complete one-argument enum declaration must parse at compile time.");
-static_assert(::gpk::cttiSpanEquals(cttiEnumFull.SourceText, cttiEnumFull.EnumName, "SCTTIEnumFull"), "The complete enum declaration must expose its name.");
-static_assert(false == cttiEnumFull.ValuesCompiled, "The complete enum declaration remains source-only until compiler-value capture is merged.");
-static_assert(cttiEnumFull.Values[0].ValueResolved && 0 == cttiEnumFull.Values[0].Value, "The first implicit enum value must resolve to zero.");
-static_assert(cttiEnumFull.Values[2].ValueResolved && 2 == cttiEnumFull.Values[2].Value, "Implicit enum values must resolve in declaration order.");
-static_assert(3 == cttiEnumFullViews.Count && cttiEnumFullViews.Names[1] == "SCTTIEnumFullRead", "Enum names must be exposed as compile-time string views.");
+static_assert(SCTTIEnumFullNone == 0 && SCTTIEnumFullRead == 1 && SCTTIEnumFullWrite == 2, "The wrapped enum declaration must retain its compiler values.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::File.size() && ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Line, "Struct source provenance must be retained.");
 static_assert(sizeof(SCTTIPODTest) == ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Size, "Struct size must come from the completed compiler type.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::IsPOD, "The POD struct must be identified without std traits.");
-static_assert(sizeof(SCTTIEnumFull) == ::gpk::SCTTIEnumRegistry<SCTTIEnumFull>::Size && ::gpk::SCTTIEnumRegistry<SCTTIEnumFull>::IsPOD, "Enum compiler facts must be retained.");
+static_assert(sizeof(SCTTIEnumTest) == SCTTIEnumTest_gpk_ctti_size && SCTTIEnumTest_gpk_ctti_is_pod, "Compiled enum facts must be retained.");
 static_assert(1 == ::gpk::cttiMemberIndex<SCTTIInstanceTest>("Weight"), "CTTI member names must resolve to declaration indices.");
 
 tplt<size_t NDeclaration>
@@ -234,12 +227,16 @@ sttc ::gpk::err_t cttiMemberJSON
 		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Names[iValue] != SCTTIEnumTest_gpk_ctti_views.Names[iValue]);
 		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Titles[iValue] != enumDefinition.Names[iValue] || enumDefinition.Descriptions[iValue] != enumDefinition.Names[iValue]);
 	}
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , ::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.EnumName) != "SCTTIEnumFull", "Unexpected complete enum name:'%.*s'.", GPK_VIEW_ARGS(::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.EnumName)));
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , ::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.UnderlyingType) != "gpk::u1_t", "Unexpected complete enum type:'%.*s'.", GPK_VIEW_ARGS(::cttiEnumSpanView(cttiEnumFull, cttiEnumFull.UnderlyingType)));
-	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY      , cttiEnumFull.ValuesCompiled);
-	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY      , false == cttiEnumFull.Values[2].ValueResolved || 2 != cttiEnumFull.Values[2].Value);
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS            , cttiEnumFullViews.Names[0] != "SCTTIEnumFullNone", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFullViews.Names[0]));
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS            , cttiEnumFullViews.Names[2] != "SCTTIEnumFullWrite", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFullViews.Names[2]));
+	cnst ::gpk::SCTTIEnumDeclaration * cttiEnumFull = ::gpk::cttiEnum("SCTTIEnumFull");
+	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , nullptr == cttiEnumFull);
+	if(cttiEnumFull) {
+		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION, cttiEnumFull->Name != "SCTTIEnumFull", "Unexpected complete enum name:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Name));
+		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION, cttiEnumFull->UnderlyingType != "gpk::u1_t", "Unexpected complete enum type:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->UnderlyingType));
+		GPK_TEST_CHECK (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY, 3 != cttiEnumFull->Count || cttiEnumFull->Values[0].ValueResolved);
+		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_INITIALIZER, cttiEnumFull->Initializers[0] != "0", "Unexpected complete enum initializer:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Initializers[0]));
+		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS, cttiEnumFull->Names[0] != "SCTTIEnumFullNone", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Names[0]));
+		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS, cttiEnumFull->Names[2] != "SCTTIEnumFullWrite", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Names[2]));
+	}
 
 	SCTTIInstanceTest instance = {73, 234.25, true};
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_FIND, ::gpk::cttiMemberIndex<SCTTIInstanceTest>("Enabled") != 2);

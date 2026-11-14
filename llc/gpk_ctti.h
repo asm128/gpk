@@ -381,7 +381,14 @@ namespace gpk
 			rtrn result;
 		}
 
-		cnst SCTTISpan header = cttiTrim(result.SourceText, sourceSpan.Offset, openBrace - sourceSpan.Offset);
+		SCTTISpan header = cttiTrim(result.SourceText, sourceSpan.Offset, openBrace - sourceSpan.Offset);
+		if(header.Count > 4
+		&& 'e' == result.SourceText[header.Offset + 0]
+		&& 'n' == result.SourceText[header.Offset + 1]
+		&& 'u' == result.SourceText[header.Offset + 2]
+		&& 'm' == result.SourceText[header.Offset + 3]
+		&& cttiSpace(result.SourceText[header.Offset + 4]))
+			header = cttiTrim(result.SourceText, header.Offset + 4, header.Count - 4);
 		cnst u2_t typeOffset = cttiFind(result.SourceText, header, ':');
 		result.EnumName = cttiTrim(result.SourceText, header.Offset, typeOffset - header.Offset);
 		if(false == cttiIdentifier(result.SourceText, result.EnumName)) {
@@ -494,6 +501,62 @@ namespace gpk
 		rtrn result;
 	}
 
+	stct SCTTIEnumDeclaration;
+	err_t cttiEnumDeclarationRegister(SCTTIEnumDeclaration & declaration) nxpt;
+
+	stct SCTTIEnumDeclaration {
+		vcst_t					File			= {};
+		u2_t					Line			= {};
+		vcst_t					SourceText		= {};
+		vcst_t					Name			= {};
+		vcst_t					UnderlyingType	= {};
+		cnst SCTTIEnumValue<s3_t> *	Values			= {};
+		cnst vcst_t *				Names			= {};
+		cnst vcst_t *				Initializers	= {};
+		u2_t					Count			= {};
+		SCTTIEnumDeclaration *		Next			= {};
+
+		tplt<size_t NDeclaration>
+		SCTTIEnumDeclaration
+			( cnst vcst_t file
+			, cnst u2_t line
+			, cnst SCTTIEnumParseResult<s3_t, NDeclaration> & metadata
+			, cnst SCTTIEnumViews<NDeclaration> & views
+			) nxpt
+			: File			(file)
+			, Line			(line)
+			, SourceText		{metadata.SourceText, NDeclaration - 1}
+			, Name			{&metadata.SourceText[metadata.EnumName.Offset], metadata.EnumName.Count}
+			, UnderlyingType	{&metadata.SourceText[metadata.UnderlyingType.Offset], metadata.UnderlyingType.Count}
+			, Values			(metadata.Values)
+			, Names			(views.Names)
+			, Initializers	(views.Initializers)
+			, Count			(metadata.Count)
+			{ cttiEnumDeclarationRegister(*this); }
+	};
+
+	inln SCTTIEnumDeclaration * & cttiEnumDeclarationRoot() nxpt {
+		static SCTTIEnumDeclaration * root = {};
+		rtrn root;
+	}
+
+	inln err_t cttiEnumDeclarationRegister(SCTTIEnumDeclaration & declaration) nxpt {
+		SCTTIEnumDeclaration * & root = cttiEnumDeclarationRoot();
+		for(SCTTIEnumDeclaration * current = root; current; current = current->Next)
+			if(current->File == declaration.File && current->Line == declaration.Line && current->Name == declaration.Name)
+				rtrn 0;
+		declaration.Next = root;
+		root = &declaration;
+		rtrn 0;
+	}
+
+	inln cnst SCTTIEnumDeclaration * cttiEnum(cnst vcst_t name) nxpt {
+		for(cnst SCTTIEnumDeclaration * current = cttiEnumDeclarationRoot(); current; current = current->Next)
+			if(current->Name == name)
+				rtrn current;
+		rtrn {};
+	}
+
 	tplt<tpnm T>
 	stct SCTTIEnumRegistry;
 
@@ -519,16 +582,14 @@ namespace gpk
 		sinx bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
 	}
 
-#define CTTI_ENUM(...)																				\
-	extern enum __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__);								\
-	tplt<> stct gpk::SCTTIEnumRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__))> {	\
-		sinx auto Value = ::gpk::cttiParseEnum<decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__))>(#__VA_ARGS__);\
+#define CTTI_ENUM(...)																		\
+	__VA_ARGS__																			\
+	stct GPK_CTTI_JOIN(gpk_ctti_enum_storage_, __LINE__) {									\
+		sinx auto Value = ::gpk::cttiParseEnum<::gpk::s3_t>(#__VA_ARGS__);					\
 		sinx auto Views = ::gpk::cttiEnumViewsMake(Value);								\
-		sinx ::gpk::vcst_t File = __FILE__;										\
-		sinx ::gpk::u2_t Line = __LINE__;										\
-		sinx ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
-		sinx bool IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_enum_tag_, __LINE__)));	\
-	}
+	};																				\
+	static ::gpk::SCTTIEnumDeclaration GPK_CTTI_JOIN(gpk_ctti_enum_declaration_, __LINE__) =	\
+		{__FILE__, __LINE__, GPK_CTTI_JOIN(gpk_ctti_enum_storage_, __LINE__)::Value, GPK_CTTI_JOIN(gpk_ctti_enum_storage_, __LINE__)::Views}
 
 #define GPK_CTTI_PARENS ()
 #define GPK_CTTI_EXPAND(...) GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(__VA_ARGS__))))
