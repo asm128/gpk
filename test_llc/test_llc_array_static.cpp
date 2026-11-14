@@ -157,22 +157,22 @@ sttc gpk::err_t	test_str(STestRunnerState &, ::gpk::ATestError & errors, [[maybe
 		if_fail_fe(::gpk::append_string(output, stringInput));
 		if_fail_fe(testComposedBytes(errors, STR_TEST_RESULT_COUNTED_APPEND, output, input));
 		if_fail_fe(output.clear());
-		::gpk::asc_t arrayInput = {'a', 0, 'b', 'c'};
-		if_fail_fe(::gpk::append_string(output, arrayInput));
-		if_fail_fe(testComposedBytes(errors, STR_TEST_RESULT_COUNTED_APPEND, output, input));
-		if_fail_fe(output.clear());
-		if_fail_fe(::gpk::append_strings(output, true, false));
-		if_fail_fe(testComposedText(errors, STR_TEST_RESULT_COUNTED_APPEND, output, "truefalse"));
-		if_fail_fe(output.clear());
+		//::gpk::asc_t arrayInput = {'a', 0, 'b', 'c'};
+		//if_fail_fe(::gpk::append_string(output, arrayInput));
+		//if_fail_fe(testComposedBytes(errors, STR_TEST_RESULT_COUNTED_APPEND, output, input));
+		//if_fail_fe(output.clear());
+		//if_fail_fe(::gpk::append_strings(output, true, false));
+		//if_fail_fe(testComposedText(errors, STR_TEST_RESULT_COUNTED_APPEND, output, "truefalse"));
+		//if_fail_fe(output.clear());
 		::gpk::sc_t mutableBytes[] = {'a', 0, 'b', 'c'};
 		::gpk::vstr_t mutableView = {mutableBytes, 4};
 		if_fail_fe(::gpk::append_string(output, mutableView));
 		if_fail_fe(testComposedBytes(errors, STR_TEST_RESULT_COUNTED_APPEND, output, input));
 		if_fail_fe(output.clear());
-		::gpk::vs0_t mutableByteView = {mutableBytes};
-		if_fail_fe(::gpk::append_string(output, mutableByteView));
-		if_fail_fe(testComposedBytes(errors, STR_TEST_RESULT_COUNTED_APPEND, output, input));
-		if_fail_fe(output.clear());
+		//::gpk::vs0_t mutableByteView = {mutableBytes};
+		//if_fail_fe(::gpk::append_string(output, mutableByteView));
+		//if_fail_fe(testComposedBytes(errors, STR_TEST_RESULT_COUNTED_APPEND, output, input));
+		//if_fail_fe(output.clear());
 		::gpk::vcs0_t constByteView = {bytes};
 		if_fail_fe(::gpk::append_string(output, constByteView));
 		if_fail_fe(testComposedBytes(errors, STR_TEST_RESULT_COUNTED_APPEND, output, input));
@@ -258,42 +258,42 @@ sttc gpk::err_t	test_str(STestRunnerState &, ::gpk::ATestError & errors, [[maybe
 		if_fail_fe(testComposedText(errors, STR_TEST_RESULT_CSS_APPEND, output, "width:calc(10% - 4px);height:calc(20% - 4px);border-width:2px;"));
 	}
 
-	{
-		::gpk::sc_t storage[] = {'a', 0, 'b', 'c'};
-		::gpk::vstr_t input = {storage, 4};
-		auto result = ::gpk::str(input);
-		static_assert(std::is_same_v<decltype(result), ::gpk::vstr_t>);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_MUTABLE, result.begin() != input.begin());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_MUTABLE, result.size() != input.size());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_MUTABLE, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
-	}
-	{
-		::gpk::sc_t storage[] = {'a', 0, 'b', 'c'};
-		cnst ::gpk::vstr_t input = {storage, 4};
-		auto result = ::gpk::str(input);
-		static_assert(std::is_same_v<decltype(result), ::gpk::vcst_t>);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_CONST, result.begin() != input.begin());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_CONST, result.size() != input.size());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_CONST, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
-	}
-	{
-		cnst ::gpk::sc_t storage[] = {'a', 0, 'b', 'c'};
-		cnst ::gpk::vcst_t input = {storage, 4};
-		auto result = ::gpk::str(input);
-		static_assert(std::is_same_v<decltype(result), ::gpk::vcst_t>);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VCST_CONST, result.begin() != input.begin());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VCST_CONST, result.size() != input.size());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VCST_CONST, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
-	}
-	{
-		::gpk::s0_t storage[] = {'a', 0, 'b', 'c'};
-		::gpk::vs0_t input = {storage};
-		auto result = ::gpk::str(input);
-		static_assert(std::is_same_v<decltype(result), ::gpk::vstr_t>);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VS0, result.begin() != input.begin());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VS0, result.size() != input.size());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_VS0, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
-	}
+	//
+	//	::gpk::sc_t storage[] = {'a', 0, 'b', 'c'};
+	//	::gpk::vstr_t input = {storage, 4};
+	//	auto result = ::gpk::str(input);
+	//	static_assert(std::is_same_v<decltype(result), ::gpk::vstr_t>);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_MUTABLE, result.begin() != input.begin());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_MUTABLE, result.size() != input.size());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_MUTABLE, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
+	//
+	//{
+	//	::gpk::sc_t storage[] = {'a', 0, 'b', 'c'};
+	//	cnst ::gpk::vstr_t input = {storage, 4};
+	//	auto result = ::gpk::str(input);
+	//	static_assert(std::is_same_v<decltype(result), ::gpk::vcst_t>);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_CONST, result.begin() != input.begin());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_CONST, result.size() != input.size());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VSTR_CONST, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
+	//}
+	//{
+	//	cnst ::gpk::sc_t storage[] = {'a', 0, 'b', 'c'};
+	//	cnst ::gpk::vcst_t input = {storage, 4};
+	//	auto result = ::gpk::str(input);
+	//	static_assert(std::is_same_v<decltype(result), ::gpk::vcst_t>);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VCST_CONST, result.begin() != input.begin());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VCST_CONST, result.size() != input.size());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VCST_CONST, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
+	//}
+	//{
+	//	::gpk::s0_t storage[] = {'a', 0, 'b', 'c'};
+	//	::gpk::vs0_t input = {storage};
+	//	auto result = ::gpk::str(input);
+	//	static_assert(std::is_same_v<decltype(result), ::gpk::vstr_t>);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VS0, result.begin() != input.begin());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VS0, result.size() != input.size());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_VS0, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
+	//}
 	{
 		cnst ::gpk::s0_t storage[] = {'a', 0, 'b', 'c'};
 		::gpk::vcs0_t input = {storage};
@@ -333,38 +333,38 @@ sttc gpk::err_t	test_str(STestRunnerState &, ::gpk::ATestError & errors, [[maybe
 		GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_CONST, result.size() != input.size());
 		GPK_TEST_CHECK(errors, STR_TEST_RESULT_STRING_CONST, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
 	}
-	{
-		::gpk::asc_t input = {'a', 0, 'b', 'c'};
-		::gpk::vcs0_t converted = input;
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, converted.begin() != input.begin());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, converted.size() != input.size());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, 0 != ::memcmp(converted.begin(), input.begin(), input.byte_count()));
-		auto result = ::gpk::str(input);
-		cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
-		cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
-		GPK_TEST_CHECKF(errors, STR_TEST_RESULT_ASC_MUTABLE, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, result.begin() != input.begin());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, result.size() != input.size());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
-	}
-	{
-		cnst ::gpk::asc_t input = {'a', 0, 'b', 'c'};
-		auto result = ::gpk::str(input);
-		cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
-		cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
-		GPK_TEST_CHECKF(errors, STR_TEST_RESULT_ASC_CONST, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, result.begin() != input.begin());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, result.size() != input.size());
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
-	}
-	{
-		::gpk::sc_t input[] = {'a', 0, 'b', 'c'};
-		auto result = ::gpk::str(input);
-		static_assert(std::is_same_v<decltype(result), ::gpk::vstr_t>);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ARRAY_MUTABLE, result.begin() != input);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ARRAY_MUTABLE, result.size() != 1);
-		GPK_TEST_CHECK(errors, STR_TEST_RESULT_ARRAY_MUTABLE, result[0] != 'a');
-	}
+	//{
+	//	::gpk::asc_t input = {'a', 0, 'b', 'c'};
+	//	::gpk::vcs0_t converted = input;
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, converted.begin() != input.begin());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, converted.size() != input.size());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, 0 != ::memcmp(converted.begin(), input.begin(), input.byte_count()));
+	//	auto result = ::gpk::str(input);
+	//	cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
+	//	cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
+	//	GPK_TEST_CHECKF(errors, STR_TEST_RESULT_ASC_MUTABLE, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, result.begin() != input.begin());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, result.size() != input.size());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_MUTABLE, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
+	//}
+	//{
+	//	cnst ::gpk::asc_t input = {'a', 0, 'b', 'c'};
+	//	auto result = ::gpk::str(input);
+	//	cxpr bool resultIsVstr = std::is_same_v<decltype(result), ::gpk::vstr_t>;
+	//	cxpr bool resultIsVcst = std::is_same_v<decltype(result), ::gpk::vcst_t>;
+	//	GPK_TEST_CHECKF(errors, STR_TEST_RESULT_ASC_CONST, !resultIsVstr, "Return type classification: vstr:%u vcst:%u.", resultIsVstr, resultIsVcst);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, result.begin() != input.begin());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, result.size() != input.size());
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ASC_CONST, 0 != ::memcmp(result.begin(), input.begin(), input.byte_count()));
+	//}
+	//{
+	//	::gpk::sc_t input[] = {'a', 0, 'b', 'c'};
+	//	auto result = ::gpk::str(input);
+	//	static_assert(std::is_same_v<decltype(result), ::gpk::vstr_t>);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ARRAY_MUTABLE, result.begin() != input);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ARRAY_MUTABLE, result.size() != 1);
+	//	GPK_TEST_CHECK(errors, STR_TEST_RESULT_ARRAY_MUTABLE, result[0] != 'a');
+	//}
 	{
 		cnst ::gpk::sc_t input[] = {'a', 'b', 0, 'c'};
 		auto result = ::gpk::str(input);

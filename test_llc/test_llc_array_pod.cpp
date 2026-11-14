@@ -122,10 +122,11 @@ sttc ::gpk::err_t testPodConstruction(::gpk::ATestError & errors) {
 	::gpk::apod<T> initialized = {T(1), T(2), T(3)};
 	if_fail_fe(podCheck(errors, ARRAY_POD_TEST_RESULT_INITIALIZER_CONSTRUCTION, initialized, {expected}));
 	GPK_TEST_CHECKF(errors, ARRAY_POD_TEST_RESULT_TERMINATOR, podTerminatorMismatch(initialized) , "initializer terminator mismatch. size:%u, terminator:%" GPK_FMT_S3 "." , initialized.size(), (::gpk::s3_t)initialized.begin()[initialized.size()] );
-		::gpk::vcs0_t converted = initialized;
-		GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, converted.begin() != initialized.begin());
-		GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, converted.size() != initialized.size());
-		GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, 0 != ::memcmp(converted.begin(), initialized.begin(), initialized.byte_count()));
+
+	::gpk::view<const T> converted = initialized;
+	GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, converted.begin() != initialized.begin());
+	GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, converted.size() != initialized.size());
+	GPK_TEST_CHECK(errors, ARRAY_POD_TEST_RESULT_ASC_CONST, 0 != ::memcmp(converted.begin(), initialized.begin(), initialized.byte_count()));
 
 	::gpk::apod<T> fromArray{expected};
 	if_fail_fe(podCheck(errors, ARRAY_POD_TEST_RESULT_ARRAY_CONSTRUCTION, fromArray, {expected}));

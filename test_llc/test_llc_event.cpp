@@ -1,3 +1,4 @@
+#include "gpk_event_device.h"
 #include "gpk_event_input.h"
 #include "gpk_event_screen.h"
 #include "gpk_gui_control_flag.h"
