@@ -1,4 +1,5 @@
 #include "gpk_array_static.h"
+#include "gpk_ctti.h"
 
 #ifndef GPK_TCPIP_H_23627
 #define GPK_TCPIP_H_23627
@@ -114,11 +115,12 @@ nmsp gpk
 		err_t			tcpipInitialize						();
 		err_t			tcpipShutdown						();
 
+	CTTI_ENUM(
 	enum TRANSPORT_PROTOCOL
 		{ TRANSPORT_PROTOCOL_UDP			= 0
 		, TRANSPORT_PROTOCOL_TCP
 		};
-
+	);
 
 #define GPK_IPV4_EXPAND_IP(addr)  	::gpk::byte_at(addr.IP, 0)	\
 								, 	::gpk::byte_at(addr.IP, 1)	\

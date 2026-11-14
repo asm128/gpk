@@ -10,6 +10,7 @@
 
 nmsp gpk
 {
+	CTTI_ENUM(
 	enum SERIAL_PARITY : u0_t
 		{ SERIAL_PARITY_NONE	= 0
 		, SERIAL_PARITY_ODD		= 1
@@ -17,7 +18,7 @@ nmsp gpk
 		, SERIAL_PARITY_MARK	= 3
 		, SERIAL_PARITY_SPACE	= 4
 		};
-
+		);
 	enum SERIAL_STOP_BITS : u0_t
 		{ SERIAL_STOP_BITS_ONE	= 0
 		, SERIAL_STOP_BITS_ONE5	= 1

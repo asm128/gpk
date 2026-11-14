@@ -828,6 +828,9 @@
     <ClInclude Include="gpk_gui_theme.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_isa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

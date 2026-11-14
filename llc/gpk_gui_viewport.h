@@ -6,6 +6,7 @@
 nmsp gpk
 {
 #pragma pack(push, 1)
+	CTTI_ENUM(
 	enum VIEWPORT_CONTROL : s0_t
 		{ VIEWPORT_CONTROL_RESIZE_LEFT				= 0
 		, VIEWPORT_CONTROL_RESIZE_TOP
@@ -20,14 +21,15 @@ nmsp gpk
 		, VIEWPORT_CONTROL_TARGET
 		, VIEWPORT_CONTROL_COUNT
 		};
-
+	);
+	CTTI_ENUM(
 	enum GUI_CONTROL_TYPE : s0_t
 		{ GUI_CONTROL_TYPE_Viewport					= 0
 		, GUI_CONTROL_TYPE_PaletteGrid
 		, GUI_CONTROL_TYPE_ControlList
 		, GUI_CONTROL_TYPE_COUNT
 		};
-
+	);
 	struct SViewport {
 		cid_t					IdControl			= (s2_t)-1;
 		::gpk::astcid<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};

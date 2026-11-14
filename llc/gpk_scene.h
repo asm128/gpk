@@ -147,13 +147,14 @@ nmsp gpk
 		f3_t						Angle;
 	};
 
+	CTTI_ENUM(
 	enum SCENE_OBJECT_TYPE
 		{ SCENE_OBJECT_TYPE_BOX
 		, SCENE_OBJECT_TYPE_GRID
 		, SCENE_OBJECT_TYPE_POLYHEDRON
 		, SCENE_OBJECT_TYPE_MODEL
 		};
-
+	);
 	struct SSceneObject {
 		::gpk::SCENE_OBJECT_TYPE	Type;
 		s2_t						IndexTransform;

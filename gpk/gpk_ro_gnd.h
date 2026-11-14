@@ -2,6 +2,8 @@
 #include "gpk_image.h"
 #include "gpk_tri.h"
 #include "gpk_array_obj.h"
+#include "gpk_ctti.h"
+#include "gpk_string.h"	
 
 #ifndef TERRAIN_H_23627
 #define TERRAIN_H_23627
@@ -121,6 +123,8 @@ nmsp gpk
 		u2_t								nTotalChunkCount					;	// Stores the total chunks contained in a map
 	};
 
+
+	CTTI_ENUM(
 	enum TILE_FACE_FACING
 		{ TILE_FACE_FACING_TOP
 		, TILE_FACE_FACING_FRONT
@@ -129,7 +133,7 @@ nmsp gpk
 		, TILE_FACE_FACING_BACK
 		, TILE_FACE_FACING_LEFT
 		};
-
+	);
 	gpk::err_t 						gndGenerateFaceGeometry
 		( const apod<STileSkinGND		>	lstTileTextureData
 		, const apod<STileGeometryGND	>	lstTileGeometryData

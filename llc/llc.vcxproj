@@ -94,6 +94,7 @@
     <ClInclude Include="gpk_i2c.h" />
     <ClInclude Include="gpk_index.h" />
     <ClInclude Include="gpk_index_path.h" />
+    <ClInclude Include="gpk_isa.h" />
     <ClInclude Include="gpk_keyed_bit_array.h" />
     <ClInclude Include="gpk_keyval_view.h" />
     <ClInclude Include="gpk_lifecycle.h" />

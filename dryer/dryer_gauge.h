@@ -24,13 +24,15 @@ namespace dry
 				s1_t										SetValue				(float currentValue, u2_t  maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
 	};
 
+
+	CTTI_ENUM(
 	enum GAUGE : u0_t 
 		{ GAUGE_TEMPERATURE	= 0
 		, GAUGE_VACUUM
 		, GAUGE_HUMIDITY
 		, GAUGE_COUNT
 		};
-
+	);
 	struct SGaugeDryer {
 		::dry::SGaugeFeeder		Gauges[GAUGE_COUNT]		= {};
 		::gpk::img8bgra			Image					= {};
