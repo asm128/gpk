@@ -154,6 +154,7 @@ nmsp gpk
 		}
 
 	};	// struct n2
+	tydf	n2<b8_t>	n2b8_t;	tdcs	n2b8_t	n2b8_c;
 	tydf	n2<uc_t>	n2uc_t;	tdcs	n2uc_t	n2uc_c;
 	tydf	n2<sc_t>	n2sc_t;	tdcs	n2sc_t	n2sc_c;
 	tydf	n2<u0_t>	n2u0_t;	tdcs	n2u0_t	n2u0_c;

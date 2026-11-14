@@ -14,12 +14,12 @@ nmsp gpk
 		minmaxf3_t			ZoomLimits			= {0.1, 10.0};
 		f3_t				ZoomLevel			= 1.0;
 
-		bool				oper==			(const SGUIZoom & other)		csnx	{
+		bool				oper==				(cnst SGUIZoom & other)		csnx	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inln	bool		oper!=			(const SGUIZoom & other)		csnx	{ return !oper==(other); }
+		inln	bool		oper!=				(cnst SGUIZoom & other)		csnx	{ return !oper==(other); }
 	};
 
 	struct SGUIColors {
@@ -48,10 +48,10 @@ nmsp gpk
 		bool				InputModeTouch		= true;
 	};
 
-	err_t				guiProcessInput					(SGUI & gui, const SInput & input, vpobj<SEventSystem> in_Events = {});
-	err_t				guiUpdateMetrics				(SGUI & gui, const n2u1_t & targetSize, bool forceUpdate);
+	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
+	err_t				guiUpdateMetrics				(SGUI & gui, cnst n2u1_t & targetSize, bool forceUpdate);
 	err_t				guiDraw							(SGUI & gui, g8bgra target);
-	err_t				guiGetProcessableControls		(const SGUI & gui, acid & controlIndices);
+	err_t				guiGetProcessableControls		(cnst SGUI & gui, acid & controlIndices);
 	err_t				guiDeselect						(SGUI & gui);
 	err_t				guiSelect						(SGUI & gui, cid_t controlToSelect);
 
@@ -62,17 +62,24 @@ nmsp gpk
 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
 	err_t				controlTextSet					(SGUI & gui, cid_t iControl, vcst_t text);
 	err_t				controlFontSet					(SGUI & gui, cid_t iControl, s1_t iFont);
-	//err_t				controlUpdateMetrics			(SGUI & gui, s2_t iControl, const n2<u2_t> & targetSize);
-	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, const n2u1_t & targetSize, bool forceUpdate);
+	//err_t				controlUpdateMetrics			(SGUI & gui, s2_t iControl, cnst n2<u2_t> & targetSize);
+	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, bool forceUpdate);
 	err_t				controlMetricsInvalidate		(SGUI & gui, cid_t iControl);
-	err_t				controlHidden					(const SGUI & gui, cid_t iControl);
-	err_t				controlDisabled					(const SGUI & gui, cid_t iControl);
-	err_t				controlInvalid					(const SGUI & gui, cid_t iControl);
+	err_t				controlHidden					(cnst SGUI & gui, cid_t iControl);
+	err_t				controlDisabled					(cnst SGUI & gui, cid_t iControl);
+	err_t				controlInvalid					(cnst SGUI & gui, cid_t iControl);
 
-	err_t				guiProcessControls				(const SGUI & gui, const function<err_t(cid_t iControl)> & funcOnExecute);
-	err_t				guiProcessControls				(const SGUI & gui, vcid controlsToProcess, const function<err_t(cid_t iControl)> & funcOnExecute);
+	err_t				guiProcessControls				(cnst SGUI & gui, cnst function<err_t(cid_t iControl)> & funcOnExecute);
+	err_t				guiProcessControls				(cnst SGUI & gui, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnExecute);
 
-	tydf	 FError
+	stin	cid_t		controlParent					(cnst SGUI & gui, cid_t iControl)	{ return controlInvalid(gui, iControl) ? CID_INVALID : gui.Controls.States[iControl].Parent; }
+	stin	err_t		controlToFront					(SGUI & gui, cid_t iControl) {
+		cid_t				iParent		= controlParent(gui, iControl);
+		if_fail_fe(controlSetParent(gui, iControl, -1));
+		if_fail_fe(controlSetParent(gui, iControl, iParent));
+		return 0;
+	}
+	tydf	FError
 		< SControlState			&
 		, SControlState			&
 		, SControlPlacement		&
