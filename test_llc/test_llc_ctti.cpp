@@ -38,14 +38,14 @@ GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_VISIT, 28, "The CTTI typed v
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_MISSING, 29, "The CTTI instance lookup unexpectedly accepted an unknown member.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_DEFINITION, 30, "The CTTI enum definition bridge exposed incorrect registry metadata.");
 
-CTTI_STCT(
-	SCTTIJSONTest0 {
+CTTI_STCT(SCTTIJSONTest0,
+	struct SCTTIJSONTest0 {
 	inln sttc cnst float		Weight		= 234.25f;
 	stxp					f3_t	Height		= 234.25;
 	vltl gpk::view<gpk::sc_c>	Capacity	= "Factory::Build<Value>(7)";
 	sttc b8_c				Enabled		= true;
 	gpk::u2_t						Count;
-	}
+	};
 	);
 
 CTTI_ENUM_COMPILED(SCTTIEnumTest, gpk::u1_t,
@@ -73,35 +73,35 @@ CTTI_ENUM(
 	};
 	);
 
-CTTI_STCT(
-	SCTTIJSONTestBraceValue {
+CTTI_STCT(SCTTIJSONTestBraceValue,
+	struct SCTTIJSONTestBraceValue {
 	gpk::u2_t Count{0};
-	}
+	};
 	);
 
 #define const2 cnst
 
-CTTI_STCT(
-	SCTTIJSONTestNumericModifier {
+CTTI_STCT(SCTTIJSONTestNumericModifier,
+	struct SCTTIJSONTestNumericModifier {
 	const2 	float			Weight		= 234.3f;
 	vltl	gpk::refcount_t Capacity	= 1;
 	sttc	b8_c			Enabled		= true;
 			view<u2_c>		Count		= {};
-	}
+	};
 	);
 
-CTTI_STCT(
-	SCTTIPODTest {
+CTTI_STCT(SCTTIPODTest,
+	struct SCTTIPODTest {
 		gpk::u2_t Value;
-	}
+	};
 	);
 
-CTTI_STCT(
-	SCTTIInstanceTest {
+CTTI_STCT(SCTTIInstanceTest,
+	struct SCTTIInstanceTest {
 		gpk::u2_t Count;
 		gpk::f3_t Weight;
 		b8_t Enabled;
-	}
+	};
 	);
 
 stxp auto cttiBraceValue		= ::gpk::cttiStruct<SCTTIJSONTestBraceValue>();
@@ -140,59 +140,6 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	, cnst ::gpk::SCTTISpan span
 	) {
 	rtrn {&metadata.SourceText[span.Offset], span.Count};
-}
-
-tplt<size_t NDeclaration>
-sttc ::gpk::err_t cttiMemberJSON
-	( cnst ::gpk::SCTTIParseResult<NDeclaration> & metadata
-	, ::gpk::string & output
-	) {
-	output.clear();
-	if_fail_fe(output.push_back('{'));
-	for(::gpk::u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-		cnst ::gpk::SCTTIMember & member = metadata.Members[iMember];
-		cnst ::gpk::vcst_t memberName = {&metadata.SourceText[member.Name.Offset], member.Name.Count};
-		cnst ::gpk::vcst_t typeName = {&metadata.SourceText[member.TypeName.Offset], member.TypeName.Count};
-		if(iMember)
-			if_fail_fe(output.push_back(','));
-		if_fail_fe(output.push_back('"'));
-		if_fail_fe(output.append(memberName));
-		if_fail_fe(output.push_back('"'));
-		if_fail_fe(output.push_back(':'));
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(output.append(::gpk::vcst_t{"\"type\":\""}));
-		if_fail_fe(output.append(typeName));
-		if_fail_fe(output.append(::gpk::vcst_t{"\",\"value\":"}));
-		if(member.Value.empty()) {
-			if_fail_fe(output.append(::gpk::vcst_t{"null"}));
-		}
-		else {
-			cnst ::gpk::vcst_t value = ::cttiSpanView(metadata, member.Value);
-			b8_c floatSuffix = value.size() && ('f' == value[value.size() - 1] || 'F' == value[value.size() - 1]);
-			if_fail_fe(output.append({value.begin(), value.size() - floatSuffix}));
-		}
-		if_fail_fe(output.append(::gpk::vcst_t{",\"modifiers\":["}));
-		b8_t firstModifier = true;
-		for(::gpk::u2_t iModifier = member.Modifiers.Offset, modifierStop = member.Modifiers.Offset + member.Modifiers.Count; iModifier < modifierStop;) {
-			while(iModifier < modifierStop && ::gpk::cttiSpace(metadata.SourceText[iModifier]))
-				++iModifier;
-			cnst ::gpk::u2_t modifierOffset = iModifier;
-			while(iModifier < modifierStop && false == ::gpk::cttiSpace(metadata.SourceText[iModifier]))
-				++iModifier;
-			if(modifierOffset == iModifier)
-				break;
-			if(false == firstModifier)
-				if_fail_fe(output.push_back(','));
-			if_fail_fe(output.push_back('"'));
-			if_fail_fe(output.append(::gpk::vcst_t{&metadata.SourceText[modifierOffset], iModifier - modifierOffset}));
-			if_fail_fe(output.push_back('"'));
-			firstModifier = false;
-		}
-		if_fail_fe(output.push_back(']'));
-		if_fail_fe(output.push_back('}'));
-	}
-	if_fail_fe(output.push_back('}'));
-	rtrn output.size();
 }
 
 ::gpk::err_t test_ctti(STestRunnerState &, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
@@ -252,7 +199,7 @@ sttc ::gpk::err_t cttiMemberJSON
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_MISSING, 0 <= ::gpk::cttiValue(instance, "Missing", instanceValue));
 
 	::gpk::string output;
-	cnst ::gpk::err_t buildResult = ::cttiMemberJSON(cttiJSONMetadata, output);
+	cnst ::gpk::err_t buildResult = ::gpk::cttiMemberJSON(cttiJSONMetadata, output);
 	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_JSON_BUILD, ::gpk::failed(buildResult));
 	stxp ::gpk::vcst_t expected = "{\"Weight\":{\"type\":\"float\",\"value\":234.25,\"modifiers\":[\"inln\",\"sttc\",\"cnst\"]},\"Height\":{\"type\":\"f3_t\",\"value\":234.25,\"modifiers\":[\"stxp\"]},\"Capacity\":{\"type\":\"gpk::view<gpk::sc_c>\",\"value\":\"Factory::Build<Value>(7)\",\"modifiers\":[\"vltl\"]},\"Enabled\":{\"type\":\"b8_t\",\"value\":true,\"modifiers\":[\"sttc\",\"cnst\"]},\"Count\":{\"type\":\"gpk::u2_t\",\"value\":null,\"modifiers\":[]}}";
 	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_JSON_TEXT, output != expected, "Actual:'%.*s'; expected:'%.*s'.", GPK_VIEW_ARGS(output), GPK_VIEW_ARGS(expected));

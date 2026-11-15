@@ -167,6 +167,11 @@ namespace gpk
 		}
 
 		result.StructName = cttiTrim(result.SourceText, sourceSpan.Offset, openBrace - sourceSpan.Offset);
+		if(result.StructName.Count > 6
+		&& cttiSpanEquals(result.SourceText, {result.StructName.Offset, 6}, "struct")
+		&& cttiSpace(result.SourceText[result.StructName.Offset + 6])
+		)
+			result.StructName = cttiTrim(result.SourceText, result.StructName.Offset + 6, result.StructName.Count - 6);
 		if(false == cttiIdentifier(result.SourceText, result.StructName)) {
 			result.Error		= CTTI_PARSE_ERROR_INVALID_STRUCT_NAME;
 			result.State		= CTTI_PARSE_STATE_STRUCT_NAME;
@@ -328,6 +333,69 @@ namespace gpk
 		output.Type = metadata.View(member.TypeName);
 		output.Name = metadata.View(member.Name);
 		rtrn iMember;
+	}
+
+	tplt<size_t NDeclaration>
+	err_t cttiMemberJSON
+		( cnst SCTTIParseResult<NDeclaration> & metadata
+		, string & output
+		) {
+		output.clear();
+		if_fail_fe(output.push_back('{'));
+		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
+			cnst SCTTIMember & member = metadata.Members[iMember];
+			cnst vcst_t memberName = metadata.View(member.Name);
+			cnst vcst_t typeName = metadata.View(member.TypeName);
+			if(iMember)
+				if_fail_fe(output.push_back(','));
+			if_fail_fe(output.push_back('"'));
+			if_fail_fe(output.append(memberName));
+			if_fail_fe(output.push_back('"'));
+			if_fail_fe(output.push_back(':'));
+			if_fail_fe(output.push_back('{'));
+			if_fail_fe(output.append(vcst_t{"\"type\":\""}));
+			if_fail_fe(output.append(typeName));
+			if_fail_fe(output.append(vcst_t{"\",\"value\":"}));
+			if(member.Value.empty()) {
+				if_fail_fe(output.append(vcst_t{"null"}));
+			}
+			else {
+				cnst vcst_t value = metadata.View(member.Value);
+				b8_c stringLiteral = value.size() > 1 && '"' == value[0] && '"' == value[value.size() - 1];
+				b8_c keywordLiteral = value == "true" || value == "false" || value == "null" || value == "{}" || value == "[]";
+				b8_c numberLiteral = value.size() && (('-' == value[0]) || ('+' == value[0]) || (value[0] >= '0' && value[0] <= '9'));
+				b8_c floatSuffix = numberLiteral && value.size() && ('f' == value[value.size() - 1] || 'F' == value[value.size() - 1]);
+				if(stringLiteral || keywordLiteral || numberLiteral) {
+					if_fail_fe(output.append({value.begin(), value.size() - floatSuffix}));
+				}
+				else {
+					if_fail_fe(output.push_back('"'));
+					if_fail_fe(output.append(value));
+					if_fail_fe(output.push_back('"'));
+				}
+			}
+			if_fail_fe(output.append(vcst_t{",\"modifiers\":["}));
+			b8_t firstModifier = true;
+			for(u2_t iModifier = member.Modifiers.Offset, modifierStop = member.Modifiers.Offset + member.Modifiers.Count; iModifier < modifierStop;) {
+				while(iModifier < modifierStop && cttiSpace(metadata.SourceText[iModifier]))
+					++iModifier;
+				cnst u2_t modifierOffset = iModifier;
+				while(iModifier < modifierStop && false == cttiSpace(metadata.SourceText[iModifier]))
+					++iModifier;
+				if(modifierOffset == iModifier)
+					break;
+				if(false == firstModifier)
+					if_fail_fe(output.push_back(','));
+				if_fail_fe(output.push_back('"'));
+				if_fail_fe(output.append(vcst_t{&metadata.SourceText[modifierOffset], iModifier - modifierOffset}));
+				if_fail_fe(output.push_back('"'));
+				firstModifier = false;
+			}
+			if_fail_fe(output.push_back(']'));
+			if_fail_fe(output.push_back('}'));
+		}
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size();
 	}
 
 	tplt<size_t NDeclaration>
@@ -572,14 +640,14 @@ namespace gpk
 #define GDEFINE_ENUM_CTTI(cttiObject)																\
 	sttc cnst ::gpk::err_t GPK_CTTI_JOIN(gpk_ctti_enum_definition_, __LINE__) =						\
 		::gpk::enumDefinitionFromCTTI(cttiObject)
-#define CTTI_STCT(...)																				\
-	extern stct __VA_ARGS__ GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__);							\
-	tplt<> stct gpk::SCTTIStructRegistry<decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__))> {	\
+#define CTTI_STCT(type, ...)															\
+	__VA_ARGS__																	\
+	tplt<> stct gpk::SCTTIStructRegistry<type> {									\
 		sinx auto Value = ::gpk::cttiParseStruct(#__VA_ARGS__);							\
 		sinx ::gpk::vcst_t File = __FILE__;										\
 		sinx ::gpk::u2_t Line = __LINE__;										\
-		sinx ::gpk::uP_t Size = sizeof(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
-		sinx b8_t IsPOD = __is_pod(decltype(GPK_CTTI_JOIN(gpk_ctti_struct_tag_, __LINE__)));	\
+		sinx ::gpk::uP_t Size = sizeof(type);										\
+		sinx b8_t IsPOD = __is_pod(type);										\
 	}
 
 #define CTTI_ENUM(...)																		\

@@ -142,6 +142,24 @@ sttc gpk::err_t	buildControlGeometry	(cnst SControlPlacement & control, cnst SCo
 	return 0;
 }
 
+sttc gpk::cid_t	controlDockTarget	(cnst SGUI & gui, cid_t idTarget, GUI_CONTROL_LIMIT side) nxpt {
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size() && idTarget != CID_INVALID; ++iControl) {
+		if((u2_t)idTarget >= gui.Controls.States.size())
+			return idTarget;
+		if(false == controlHidden(gui, idTarget))
+			return idTarget;
+		cnst rectcid & dock = gui.Controls.Constraints[idTarget].DockToControl;
+		switch(side) {
+		default: return CID_INVALID;
+		case GUI_CONTROL_LIMIT_Left  : idTarget = dock.Left  ; break;
+		case GUI_CONTROL_LIMIT_Top   : idTarget = dock.Top   ; break;
+		case GUI_CONTROL_LIMIT_Right : idTarget = dock.Right ; break;
+		case GUI_CONTROL_LIMIT_Bottom: idTarget = dock.Bottom; break;
+		}
+	}
+	return CID_INVALID;
+}
+
 sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> & _targetSize)					{
 	if_fail_fef(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 
@@ -194,10 +212,12 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 
 	cnst rectcid		& dockToControl			= controlConstraints.DockToControl;
 	if(dockToControl.Right != -1) {
-		if_fail_fef(gpk::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right);
-		controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.u1(), true);
-		cnst SControlPlacement	& other				= gui.Controls.Placement[dockToControl.Right];
-		cnst SControlArea		& otherMetrics		= gui.Controls.Area	[dockToControl.Right];
+		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Right, GUI_CONTROL_LIMIT_Right);
+		if(idDock != CID_INVALID) {
+		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		controlUpdateMetricsTopToDown(gui, idDock, targetSize.u1(), true);
+		cnst SControlPlacement	& other				= gui.Controls.Placement[idDock];
+		cnst SControlArea		& otherMetrics		= gui.Controls.Area	[idDock];
 		if(bit_true(other.Align, ALIGN_RIGHT) && bit_false(other.Align, ALIGN_HCENTER)) {
 			controlMetrics.Total .Global.Offset.x	= otherMetrics.Total.Global.Offset.x - controlMetrics.Total.Global.Size.x;
 			controlMetrics.Client.Global.Offset.x	= (s1_t)(controlMetrics.Total.Global.Offset.x + ncSizesScaled.Left);
@@ -213,11 +233,14 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 			controlMetrics.Total .Global.Offset.x	= otherMetrics.Total.Global.Offset.x + otherMetrics.Total.Global.Size.x;
 			controlMetrics.Client.Global.Offset.x	= (s1_t)(controlMetrics.Total.Global.Offset.x + ncSizesScaled.Left);
 		}
+		}
 	}
 	if(dockToControl.Bottom != -1) {
-		if_fail_fef(gpk::controlInvalid(gui, dockToControl.Bottom), "Invalid control id: %i.", dockToControl.Bottom);
-		cnst SControlPlacement	& other					= gui.Controls.Placement[dockToControl.Bottom];
-		cnst SControlArea		& otherMetrics			= gui.Controls.Area[dockToControl.Bottom	];
+		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Bottom, GUI_CONTROL_LIMIT_Bottom);
+		if(idDock != CID_INVALID) {
+		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		cnst SControlPlacement	& other					= gui.Controls.Placement[idDock];
+		cnst SControlArea		& otherMetrics			= gui.Controls.Area[idDock];
 		if(bit_true(other.Align, ALIGN_BOTTOM	) && bit_false(other.Align, ALIGN_VCENTER)) {
 			controlMetrics.Total.Global.Offset.y	= otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y;
 			controlMetrics.Client.Global.Offset.y	= (s1_t)(controlMetrics.Total.Global.Offset.y + ncSizesScaled.Top);
@@ -225,12 +248,15 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 			controlMetrics.Total.Global.Offset.y	= otherMetrics.Total.Global.Offset.y + otherMetrics.Total.Global.Size.y;
 			controlMetrics.Client.Global.Offset.y	= (s1_t)(controlMetrics.Total.Global.Offset.y + ncSizesScaled.Top);
 		}
+		}
 	}
 	if(dockToControl.Left != -1) {
-		if_fail_fef(gpk::controlInvalid(gui, dockToControl.Left), "Invalid control id: %i.", dockToControl.Left);
-		controlUpdateMetricsTopToDown(gui, dockToControl.Left, targetSize, true);
-		cnst SControlPlacement	& other			= gui.Controls.Placement[dockToControl.Left];
-		cnst SControlArea		& otherMetrics	= gui.Controls.Area	[dockToControl.Left];
+		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Left, GUI_CONTROL_LIMIT_Left);
+		if(idDock != CID_INVALID) {
+		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		controlUpdateMetricsTopToDown(gui, idDock, targetSize, true);
+		cnst SControlPlacement	& other			= gui.Controls.Placement[idDock];
+		cnst SControlArea		& otherMetrics	= gui.Controls.Area	[idDock];
 		if(bit_true(other.Align, ALIGN_RIGHT) && bit_false(other.Align, ALIGN_HCENTER)) {
 			controlMetrics.Total	.Global.Offset.x	= otherMetrics				.Total.Global.Offset.x + otherMetrics.Total.Global.Size.x - controlMetrics.Total.Global.Size.x;
 			controlMetrics.Client	.Global.Offset.x	= s1_t(controlMetrics	.Total.Global.Offset.x + ncSizesScaled.Left);
@@ -239,11 +265,14 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 			controlMetrics.Total	.Global.Offset.x	= otherMetrics				.Total.Global.Offset.x;
 			controlMetrics.Client	.Global.Offset.x	= s1_t(controlMetrics	.Total.Global.Offset.x + ncSizesScaled.Left);
 		}
+		}
 	}
 	if(dockToControl.Top	!= -1) {
-		if_fail_fef(gpk::controlInvalid(gui, dockToControl.Top), "Invalid control id: %i.", dockToControl.Top);
-		cnst SControlPlacement	& other					= gui.Controls.Placement[dockToControl.Top ];
-		cnst SControlArea		& otherMetrics			= gui.Controls.Area	[dockToControl.Top ];
+		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Top, GUI_CONTROL_LIMIT_Top);
+		if(idDock != CID_INVALID) {
+		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		cnst SControlPlacement	& other					= gui.Controls.Placement[idDock];
+		cnst SControlArea		& otherMetrics			= gui.Controls.Area	[idDock];
 		if(bit_true(other.Align, ALIGN_BOTTOM	) && bit_false(other.Align, ALIGN_VCENTER)) {
 			controlMetrics.Total.Global.Offset.y	= otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y;
 			controlMetrics.Client.Global.Offset.y	= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
@@ -251,6 +280,7 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 		else {
 			controlMetrics.Total.Global.Offset.y	= otherMetrics.Total.Global.Offset.y + controlMetrics.Total.Global.Offset.y;
 			controlMetrics.Client.Global.Offset.y	= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
+		}
 		}
 	}
 	{ // calculate text rectangle

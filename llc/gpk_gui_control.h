@@ -16,7 +16,6 @@
 
 nmsp gpk
 {
-#pragma pack(push, 1)
 	tydf	n2<cid_t>		n2cid;
 	tydf	rect<cid_t>		rectcid;
 
@@ -57,6 +56,8 @@ nmsp gpk
 		};
 		);
 	
+#pragma pack(push, 1)
+	CTTI_STCT(SControlPlacement,
 	struct SControlPlacement {
 		rect2s1_t					Area				= {{}, {16, 16}};
 		rectu1_t					Margin				= {1, 1, 1, 1};
@@ -65,7 +66,9 @@ nmsp gpk
 		GUI_CONTROL_LIMIT			RelativeBorderSize	: 4;
 		GUI_CONTROL_LIMIT			RelativeMarginSize	: 4;
 		GUI_CONTROL_METRICS_FLAG	RelativeMetrics		= {};
-	}; 
+	};
+	);
+#pragma pack(pop)
 
 	sinx	rectu1_t	controlNCRect		(cnst SControlPlacement & ctl)	nxpt	{ return ctl.Border + ctl.Margin; }
 	stxp	n2u1_t		controlNCSpacing	(cnst SControlPlacement & ctl)	nxpt	{ cnst rectu1_t rc = controlNCRect(ctl); return n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
@@ -99,6 +102,8 @@ nmsp gpk
 			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 			;
 	}
+#pragma pack(push, 1)
+	CTTI_STCT(SControlDraw,
 	struct SControlDraw {
 		u0_t			ColorMode			: 2;
 		u0_t			FrameOut			: 1;
@@ -109,6 +114,8 @@ nmsp gpk
 		asts1_t<GUI_CONTROL_PALETTE_COUNT>	
 						Palettes			= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}};
 	};
+	);
+#pragma pack(pop)
 	CTTI_ENUM(
 	enum CONTROL_AREA_BASE : u0_t 
 		{ CONTROL_AREA_BASE_BACKGROUND		= 0
@@ -123,7 +130,7 @@ nmsp gpk
 		, CONTROL_AREA_BASE_CORNER_LEFT_BOTTOM
 		, CONTROL_AREA_BASE_COUNT
 		};
-		);
+	);
 	CTTI_ENUM(
 	enum GUI_CONTROL_AREA_OLD : u0_t
 		{ GUI_CONTROL_AREA_OLD_CLIENT		= 0
@@ -159,38 +166,52 @@ nmsp gpk
 		, UI_CONTROL_AREA_COUNT
 		};
 	);
+#pragma pack(push, 1)
+	CTTI_STCT(SControlRectangle,
 	struct SControlRectangle {
-		rect2s1_t				Local				= {};
-		rect2s1_t				Global				= {};
+		rect2s1_t			Local				= {};
+		rect2s1_t			Global				= {};
 	};
+	);
+	CTTI_STCT(SControlArea,
 	struct SControlArea {
 		SControlRectangle	Total				= {};
 		SControlRectangle	Client				= {};
 		rect2s1_t			Text				= {};
 		rect2s1_t			Rectangles	[GUI_CONTROL_AREA_OLD_COUNT]	= {};
-		tri2s1_t				Triangles	[8]		= {};
+		tri2s1_t			Triangles	[8]		= {};
 	};
+	);
+	CTTI_STCT(SControlAttachId,
 	struct SControlAttachId {
-		cid_t						IdControl			: 15;
-		cid_t						Total				: 1;
+		cid_t				IdControl			: 15;
+		cid_t				Total				: 1;
 	};
+	);
+	CTTI_STCT(SControlConstraints,
 	struct SControlConstraints {
-		n2cid						AttachSizeToControl	= {-1, -1};
-		n2<b8_t>					AttachSizeToText	= {};
-		rectcid						DockToControl		= {-1, -1, -1, -1};
-		minmax2s1_t					SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
+		n2cid				AttachSizeToControl	= {-1, -1};
+		n2<b8_t>			AttachSizeToText	= {};
+		rectcid				DockToControl		= {-1, -1, -1, -1};
+		minmax2s1_t			SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
+	);
+	CTTI_STCT(SControlText,
 	struct SControlText {
-		vcst_t						Text				= {};
-		ALIGN						Align				= ALIGN_CENTER;
-		minmaxu1_t					Selection			= {0, 1};
-		s1_t						FontSelected		= -1;
+		vcst_t				Text				= {};
+		ALIGN				Align				= ALIGN_CENTER;
+		minmaxu1_t			Selection			= {0, 1};
+		s1_t				FontSelected		= -1;
 	};
+	);
+	CTTI_STCT(SControlTheme,
 	struct SControlTheme {
 		astatic<astu2_t<UI_CONTROL_AREA_COUNT>, GUI_CONTROL_PALETTE_COUNT>
 									ColorCombos			= {};
 	};
+	);
 #pragma pack(pop)
+	CTTI_STCT(SControlImage,
 	struct SControlImage {
 		rtbgra8d32					Temp				= {};
 		g8bgra						Image				= {};
@@ -200,6 +221,7 @@ nmsp gpk
 		u0_t						ImageInvertY		: 1;
 		u0_t						Rotation			: 2;
 	};
+	);
 	struct SControlTable {
 		apod<SControlState		>	States				= {};
 		apod<SControlState		>	Previous			= {};
@@ -236,7 +258,35 @@ nmsp gpk
 		inln	b8_t		IsAction				(cid_t iControl)				csnx	{ return States[iControl].IsAction   (); }
 	};
 
-	cid_t		controlCreate					(SControlTable & gui, vs1_t defaultColors);
+			cid_t		controlCreate			(SControlTable & controls, vs1_t defaultColors);
+	//stin	err_t		withControlState		(SControlTable & controls, cid_t idControl, cnst FError<SControlState		&> & funcWithControl) { rtrn funcWithControl(controls.States		[idControl]); }
+	//stin	err_t		withControlPrevious		(SControlTable & controls, cid_t idControl, cnst FError<SControlState		&> & funcWithControl) { rtrn funcWithControl(controls.Previous		[idControl]); }
+	//stin	err_t		withControlPlacement	(SControlTable & controls, cid_t idControl, cnst FError<SControlPlacement	&> & funcWithControl) { rtrn funcWithControl(controls.Placement		[idControl]); }
+	//stin	err_t		withControlArea			(SControlTable & controls, cid_t idControl, cnst FError<SControlArea		&> & funcWithControl) { rtrn funcWithControl(controls.Area			[idControl]); }
+	//stin	err_t		withControlConstraints	(SControlTable & controls, cid_t idControl, cnst FError<SControlConstraints	&> & funcWithControl) { rtrn funcWithControl(controls.Constraints	[idControl]); }
+	//stin	err_t		withControlDraw			(SControlTable & controls, cid_t idControl, cnst FError<SControlDraw		&> & funcWithControl) { rtrn funcWithControl(controls.Draw			[idControl]); }
+	//stin	err_t		withControlText			(SControlTable & controls, cid_t idControl, cnst FError<SControlText		&> & funcWithControl) { rtrn funcWithControl(controls.Text			[idControl]); }
+	//stin	err_t		withControlImages		(SControlTable & controls, cid_t idControl, cnst FError<SControlImage		&> & funcWithControl) { rtrn funcWithControl(controls.Images		[idControl]); }
+	//stin	err_t		withControlChildren		(SControlTable & controls, cid_t idControl, cnst FError<acid				&> & funcWithControl) { rtrn funcWithControl(controls.Children		[idControl]); }
+	//stin	err_t		withControlChildren		(SControlTable & controls, cid_t idControl, cnst FError<cid_t				&> & funcWithNesting) {
+	//	rtrn withControlChildren(controls, idControl, [&](acid & nested) {
+	//		return funcWithNesting(nested[idControl]);
+	//	});
+	//}
+	//stin	err_t		withControlState		(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlState			&> & funcWithControl) { rtrn funcWithControl(controls.States		[idControl]); }
+	//stin	err_t		withControlPrevious		(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlState			&> & funcWithControl) { rtrn funcWithControl(controls.Previous		[idControl]); }
+	//stin	err_t		withControlPlacement	(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlPlacement		&> & funcWithControl) { rtrn funcWithControl(controls.Placement		[idControl]); }
+	//stin	err_t		withControlArea			(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlArea			&> & funcWithControl) { rtrn funcWithControl(controls.Area			[idControl]); }
+	//stin	err_t		withControlConstraints	(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlConstraints	&> & funcWithControl) { rtrn funcWithControl(controls.Constraints	[idControl]); }
+	//stin	err_t		withControlDraw			(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlDraw			&> & funcWithControl) { rtrn funcWithControl(controls.Draw			[idControl]); }
+	//stin	err_t		withControlText			(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlText			&> & funcWithControl) { rtrn funcWithControl(controls.Text			[idControl]); }
+	//stin	err_t		withControlImages		(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst SControlImage			&> & funcWithControl) { rtrn funcWithControl(controls.Images		[idControl]); }
+	//stin	err_t		withControlChildren		(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst acid					&> & funcWithControl) { rtrn funcWithControl(controls.Children		[idControl]); }
+	//stin	err_t		withControlChildren		(cnst SControlTable & controls, cid_t idControl, cnst FError<cnst cid_t					&> & funcWithNesting) {
+	//	rtrn withControlChildren(controls, idControl, [&](cnst acid & nested) {
+	//		return funcWithNesting(nested[idControl]);
+	//	});
+	//}
 } // nmsp
 
 #endif // GPK_GUI_CONTROL_H_23627
