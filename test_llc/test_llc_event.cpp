@@ -116,7 +116,7 @@ sttc ::gpk::err_t testEventNesting(::gpk::ATestError & errors) {
 	cnst SEventTestPOD pod = {77, 0xA55A, 0xC3};
 	if_fail_fe(::gpk::eventEnqueueChild(queue, EVENT_TEST_PARENT_Application, EVENT_TEST_CHILD_POD, pod));
 	cnst ::gpk::vcst_t text = {".join embedded"};
-	if_fail_fe(::gpk::eventEnqueueChild<EVENT_TEST_PARENT>(queue, EVENT_TEST_PARENT_Application, EVENT_TEST_CHILD_Text, text));
+	if_fail_fe(::gpk::eventEnqueueChild(queue, EVENT_TEST_PARENT_Application, EVENT_TEST_CHILD_Text, text.bytes()));
 	if_fail_fe(::gpk::eventEnqueueChild(queue, EVENT_TEST_PARENT_Application, EVENT_TEST_CHILD_Empty, ::gpk::vcu0_t{}));
 	GPK_TEST_REQUIRE(errors, EVENT_TEST_RESULT_ENQUEUE_RAW, queue.size() != 5);
 

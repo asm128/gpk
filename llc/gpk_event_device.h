@@ -1,11 +1,12 @@
 #include "gpk_event_system.h"
+#include "gpk_ctti_enum.h"
 
 #ifndef GPK_EVENT_DEVICE_H_23627
 #define GPK_EVENT_DEVICE_H_23627
 
 nmsp  gpk
 {
-	CTTI_ENUM(
+	CTTI_ENUM(RESULT,
 	enum RESULT
 		{ RESULT_Ok					= 0
 		, RESULT_Error

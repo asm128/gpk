@@ -1,7 +1,7 @@
 #include "gpk_img_color.h"
 #include "gpk_circle.h"
 #include "gpk_tri.h"
-#include "gpk_ctti.h"
+#include "gpk_ctti_enum.h"
 
 #ifndef DRYER_GAUGE_H_92863423
 #define DRYER_GAUGE_H_92863423
@@ -26,7 +26,7 @@ namespace dry
 	};
 
 
-	CTTI_ENUM(
+	CTTI_ENUM(GAUGE,
 	enum GAUGE : u0_t 
 		{ GAUGE_TEMPERATURE	= 0
 		, GAUGE_VACUUM

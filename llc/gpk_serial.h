@@ -1,4 +1,5 @@
 #include "gpk_array_pod.h"
+#include "gpk_ctti_enum.h"
 
 #ifdef GPK_WINDOWS
 #	define WIN32_LEAN_AND_MEAN
@@ -10,7 +11,7 @@
 
 nmsp gpk
 {
-	CTTI_ENUM(
+	CTTI_ENUM(SERIAL_PARITY,
 	enum SERIAL_PARITY : u0_t
 		{ SERIAL_PARITY_NONE	= 0
 		, SERIAL_PARITY_ODD		= 1

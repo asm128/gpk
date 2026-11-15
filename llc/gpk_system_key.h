@@ -1,5 +1,4 @@
 #include "gpk_enum.h"
-#include "gpk_ctti.h"
 
 #ifndef GPK_SYSTEM_KEY_H_23627
 #define GPK_SYSTEM_KEY_H_23627

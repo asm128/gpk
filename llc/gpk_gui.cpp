@@ -546,3 +546,58 @@ gpk::cid_t			gpk::controlCreate		(SControlTable & controlTable, vs1_t defaultCol
 	if_fail_fe(::controlInstanceReset(controlTable, (cid_t)iControl, defaultColors));
 	return (cid_t)iControl;
 }
+
+gpk::cid_t			gpk::guiCreateControlList	(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, vcid out_ids) {
+	cid_t					result						= -1;
+	for(u1_t iButton = 0; iButton < buttonText.size(); ++iButton) {
+		cid_t				idControl					= {};
+		if_fail_fe(idControl = controlCreate(gui));
+		if(out_ids.size() > iButton)
+			out_ids[iButton]		= idControl;
+
+		if(0 == iButton)
+			result					= idControl;
+
+		SControlPlacement	& control					= gui.Controls.Placement[idControl];
+		control					= args;
+		if(direction & (DIRECTION_LEFT | DIRECTION_RIGHT))
+			control.Area.Offset.x	+= s1_t(args.Area.Size.x * iButton);
+		else
+			control.Area.Offset.y	+= s1_t(args.Area.Size.y * iButton);
+
+		SControlText			& controlText				= gui.Controls.Text[idControl];
+		controlText.Text		= buttonText[iButton];
+		controlText.Align		= textAlign;
+
+		SControlConstraints	& itemConstraints	= gui.Controls.Constraints[idControl];
+		if(direction & (DIRECTION_UP | DIRECTION_DOWN))
+			itemConstraints.AttachSizeToControl.x	= iParent;
+		else if(direction & (DIRECTION_LEFT | DIRECTION_RIGHT)) {
+			itemConstraints.AttachSizeToText.x		= true;
+			itemConstraints.AttachSizeToControl.y	= iParent;
+		}
+
+		if(iButton) {
+			if(direction & DIRECTION_LEFT)
+				itemConstraints.DockToControl.Left	= out_ids[iButton - 1];
+			else if(direction & DIRECTION_RIGHT)
+				itemConstraints.DockToControl.Right	= out_ids[iButton - 1];
+			else if(direction & DIRECTION_UP)
+				itemConstraints.DockToControl.Top	= out_ids[iButton - 1];
+			else if(direction & DIRECTION_DOWN)
+				itemConstraints.DockToControl.Bottom	= out_ids[iButton - 1];
+
+		}
+		if_fail_fef(gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %.*s", idControl, GPK_VIEW_ARGS(buttonText[iButton])); // Make a tplt and macro for this pattern
+	}
+	return result;
+}
+
+gpk::cid_t			gpk::guiCreateControlList		(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, n2u1_c & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids) {
+	SControlPlacement		controlArgs					= {};
+	controlArgs.Align	= controlAlign;
+	controlArgs.Area	= {offset, buttonSize.s1()};
+	controlArgs.Border	= {1, 1, 1, 1};
+	controlArgs.Margin	= {1, 1, 1, 1};
+	return guiCreateControlList(gui, {}, buttonText, iParent, controlArgs, textAlign, out_ids);
+}

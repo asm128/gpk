@@ -1,5 +1,6 @@
 #include "gpk_enum.h"
 #include "gpk_gui_control_flag.h"
+#include "gpk_gui_keyboard.h"
 
 #ifndef GPK_VIRTUAL_KEYBOARD_H_23627
 #define GPK_VIRTUAL_KEYBOARD_H_23627
@@ -7,43 +8,41 @@
 nmsp gpk
 {
 	GDEFINE_ENUM_TYPE (VK_EVENT, u0_t);
-	GDEFINE_ENUM_VALUE(VK_EVENT, Press		,  1);
-	GDEFINE_ENUM_VALUE(VK_EVENT, Release	,  2);
-	GDEFINE_ENUM_VALUE(VK_EVENT, Hold		,  3);
-	GDEFINE_ENUM_VALUE(VK_EVENT, Edit		,  4);
-	GDEFINE_ENUM_VALUE(VK_EVENT, Arrow		,  5);
+	GDEFINE_ENUM_VALUE(VK_EVENT, Press		, GK_EVENT_Press   );
+	GDEFINE_ENUM_VALUE(VK_EVENT, Release	, GK_EVENT_Release );
+	GDEFINE_ENUM_VALUE(VK_EVENT, Hold		, GK_EVENT_Hold    );
+	GDEFINE_ENUM_VALUE(VK_EVENT, Edit		, GK_EVENT_Edit    );
+	GDEFINE_ENUM_VALUE(VK_EVENT, Arrow		, GK_EVENT_Arrow   );
 
 	GDEFINE_ENUM_TYPE (VK_SCANCODE, u0_t);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Escape		, 0);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Enter		, 1);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Backspace	, 2);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Clear		, 3);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Left		, 4);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Right		, 5);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Up			, 6);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Down		, 7);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Front		, 6);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Back		, 7);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Delete		, 8);
-#pragma pack(push, 1)
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Escape		, GK_SCANCODE_Escape    );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Enter		, GK_SCANCODE_Enter     );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Backspace	, GK_SCANCODE_Backspace );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Clear		, GK_SCANCODE_Clear     );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Left		, GK_SCANCODE_Left      );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Right		, GK_SCANCODE_Right     );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Up			, GK_SCANCODE_Up        );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Down		, GK_SCANCODE_Down      );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Front		, GK_SCANCODE_Front     );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Back		, GK_SCANCODE_Back      );
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Delete		, GK_SCANCODE_Delete    );
+
 	struct SVirtualKeyboardEvent {
 		VK_EVENT		Type;
 		VK_SCANCODE		ScanCode;
 	};
-#pragma pack(pop)
 
 	struct SVirtualKeyboard {
-		::gpk::cid_t	IdRoot;
-		::gpk::acid		IdKeys;
-		::gpk::au1_t	Keys;
+		cid_t						IdRoot;
+		acid						IdKeys;
+		au1_t						Keys;
 
-		::gpk::apod<::gpk::SVirtualKeyboardEvent>	Events;
+		apod<SVirtualKeyboardEvent>	Events;
 	};
 
-	
-	gpk::err_t 		virtualKeyboardHandleEvent	(cnst ::gpk::SVirtualKeyboard & vk, ::gpk::cid_t iControl, ::gpk::apod<::gpk::SVirtualKeyboardEvent> & events);
+	err_t 		virtualKeyboardHandleEvent	(cnst SVirtualKeyboard & vk, cid_t iControl, apod<SVirtualKeyboardEvent> & events);
 
-	//stin	gpk::err_t virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, cid_t iControl) { return ::gpk::virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
+	//stin	gpk::err_t virtualKeyboardHandleEvent	(SVirtualKeyboard & vk, cid_t iControl) { return virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
 } // nmsp 
 
 #endif // GPK_VIRTUAL_KEYBOARD_H_23627

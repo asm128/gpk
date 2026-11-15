@@ -1,5 +1,5 @@
 #include "gpk_gui.h"
-#include "gpk_ctti.h"
+#include "gpk_ctti_enum.h"
 
 #ifndef GPK_GUI_VIEWPORT_H_23627
 #define GPK_GUI_VIEWPORT_H_23627
@@ -7,7 +7,7 @@
 nmsp gpk
 {
 #pragma pack(push, 1)
-	CTTI_ENUM(
+	CTTI_ENUM(VIEWPORT_CONTROL,
 	enum VIEWPORT_CONTROL : s0_t
 		{ VIEWPORT_CONTROL_RESIZE_LEFT				= 0
 		, VIEWPORT_CONTROL_RESIZE_TOP
@@ -23,7 +23,7 @@ nmsp gpk
 		, VIEWPORT_CONTROL_COUNT
 		};
 	);
-	CTTI_ENUM(
+	CTTI_ENUM(GUI_CONTROL_TYPE,
 	enum GUI_CONTROL_TYPE : s0_t
 		{ GUI_CONTROL_TYPE_Viewport					= 0
 		, GUI_CONTROL_TYPE_PaletteGrid
@@ -33,12 +33,12 @@ nmsp gpk
 	);
 	struct SViewport {
 		cid_t					IdControl			= (s2_t)-1;
-		::gpk::astcid<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};
+		astcid<VIEWPORT_CONTROL_COUNT>	IdControls		= {};
 		cid_t					IdDesktopElement	= (s2_t)-1;
 		GUI_CONTROL_TYPE		ControlType			= (GUI_CONTROL_TYPE)-1;
 	};
 
-	gpk::err_t 		viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
+	err_t 		viewportInitialize		(SGUI & gui, SViewport & viewport);
 #pragma pack(pop)
 }
 

@@ -270,6 +270,9 @@
     <ClInclude Include="gpk_enum.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_enum_operators.h">
+      <Filter>base</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_eval.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -328,6 +331,9 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_inputbox.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_system.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_text.h">
@@ -510,7 +516,13 @@
     <ClInclude Include="gpk_typeint.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_ctti.h">
+    <ClInclude Include="gpk_ctti_parse.h">
+      <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ctti_enum.h">
+      <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ctti_stct.h">
       <Filter>type</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view.h">
@@ -828,6 +840,9 @@
     <ClInclude Include="gpk_isa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -915,6 +930,9 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_inputbox.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_system.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_viewport.cpp">

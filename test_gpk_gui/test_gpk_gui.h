@@ -1,8 +1,11 @@
 #include "gpk_gui.h"
 #include "gpk_gui_control_list.h"
+#include "gpk_gui_system.h"
 #include "gpk_control_grid.h"
 #include "gpk_dialog.h"
 #include "gpk_dialog_controls.h"
+#include "gpk_ctti_enum.h"
+#include "gpk_ctti_stct.h"
 #include "gpk_json.h"
 
 #ifndef TEST_GPK_GUI_H_23627
@@ -23,8 +26,14 @@ stct SSampleGUIInspector {
 };
 
 stct SFontPicker {
-	SControlGrid	Grid			= {};
+	u2_t			IndexGrid		= (u2_t)-1;
 	aobj<string>	Labels	= {};
+};
+
+stct SSampleGUIPalettePicker {
+	cid_t			IdViewport		= CID_INVALID;
+	u2_t			IndexGridTones[2]	= {(u2_t)-1, (u2_t)-1};
+	u2_t			IndexGridShades	= (u2_t)-1;
 };
 
 CTTI_STCT(SGUIEditor,
@@ -32,7 +41,7 @@ CTTI_STCT(SGUIEditor,
 	pobj<SDialogViewport>
 				Viewport		= {};
 	pobj<SDialog>	Dialog			= {};
-	SControlList	Actions			= {};
+	u2_t			IndexActions	= (u2_t)-1;
 	apobj<SDialogViewport>
 				DataViews		= {};
 	SJSONFile		Data			= {};
@@ -42,8 +51,8 @@ CTTI_STCT(SGUIEditor,
 
 CTTI_STCT(SGUIWorkspace,
 	struct SGUIWorkspace {
-	SControlList	Actions			= {};
-	SControlList	Taskbar			= {};
+	u2_t			IndexActions	= (u2_t)-1;
+	u2_t			IndexTaskbar	= (u2_t)-1;
 	apobj<SGUIEditor>
 				Editors			= {};
 	};
@@ -55,11 +64,14 @@ stct SSampleGUI {
 	cid_t			ControlMode				= CID_INVALID;
 	cid_t			ControlGeometry			= CID_INVALID;
 	pobj<SDialog>	Dialog			= {};
-	SControlList	ListViewports			= {};
-	SControlList	ListExit			= {};
-	SPalettePicker		PalettePicker			= {};
+	astatic<acid, GUI_TYPE_COUNT>
+					System				= {};
+	u2_t			IndexListViewports		= (u2_t)-1;
+	u2_t			IndexListExit			= (u2_t)-1;
+	SSampleGUIPalettePicker
+					PalettePicker			= {};
 	SFontPicker			FontPicker				= {};
-	SControlGrid		GridStates				= {};
+	u2_t			IndexGridStates			= (u2_t)-1;
 	SGUIWorkspace		Workspace				= {};
 	SSampleGUIInspector	Inspectors[sample_gui::INSPECTOR_gpk_ctti.Count] = {};
 	b8_t				ScreenshotRequested		= false;

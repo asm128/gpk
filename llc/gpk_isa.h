@@ -1,11 +1,11 @@
-#include "gpk_ctti.h"
+#include "gpk_ctti_enum.h"
 
 #ifndef GPK_ISA_H_23627
 #define GPK_ISA_H_23627
 
 nmsp gpk
 {
-	CTTI_ENUM(
+	CTTI_ENUM(OPCODE_SET,
 		enum OPCODE_SET : u0_t
 		{ OPCODE_SET_UNKNOWN
 		, OPCODE_SET_ARM32
@@ -22,7 +22,7 @@ nmsp gpk
 		, OPCODE_SET_CUSTOM		 = 0x40U
 		};
 	);
-	CTTI_ENUM(
+	CTTI_ENUM(OPCODE_EXT,
 	enum OPCODE_EXT : u0_t
 		{ OPCODE_EXT_NONE
 		, OPCODE_EXT_AVX
@@ -34,7 +34,7 @@ nmsp gpk
 		, OPCODE_EXT_CUSTOM		 = 0x40U
 		};
 	);
-	CTTI_ENUM(
+	CTTI_ENUM(DEVICE_TYPE,
 	enum DEVICE_TYPE : u0_t
 		{ DEVICE_TYPE_UNKNOWN
 		, DEVICE_TYPE_ANDROID
@@ -46,7 +46,7 @@ nmsp gpk
 		, DEVICE_TYPE_CUSTOM		= 0x40U
 		};
 	);
-	CTTI_ENUM(
+	CTTI_ENUM(OS_FAMILY,
 	enum OS_FAMILY : u0_t
 		{ OS_FAMILY_UNKNOWN
 		, OS_FAMILY_ANDROID

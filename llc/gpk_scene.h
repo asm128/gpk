@@ -5,7 +5,7 @@
 #include "gpk_tri2.h"
 #include "gpk_apod_color.h"
 #include "gpk_camera.h"
-#include "gpk_ctti.h"
+#include "gpk_ctti_enum.h"
 
 // TODO: Throw away
 #ifndef GPK_SCENE_H_23627
@@ -148,7 +148,7 @@ nmsp gpk
 		f3_t						Angle;
 	};
 
-	CTTI_ENUM(
+	CTTI_ENUM(SCENE_OBJECT_TYPE,
 	enum SCENE_OBJECT_TYPE
 		{ SCENE_OBJECT_TYPE_BOX
 		, SCENE_OBJECT_TYPE_GRID

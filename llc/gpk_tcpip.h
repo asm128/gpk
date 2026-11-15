@@ -1,5 +1,5 @@
 #include "gpk_array_static.h"
-#include "gpk_ctti.h"
+#include "gpk_ctti_enum.h"
 
 #ifndef GPK_TCPIP_H_23627
 #define GPK_TCPIP_H_23627
@@ -115,8 +115,8 @@ nmsp gpk
 		err_t			tcpipInitialize						();
 		err_t			tcpipShutdown						();
 
-	CTTI_ENUM(
-	enum TRANSPORT_PROTOCOL
+	CTTI_ENUM(TRANSPORT_PROTOCOL,
+	enum TRANSPORT_PROTOCOL : u0_t
 		{ TRANSPORT_PROTOCOL_UDP			= 0
 		, TRANSPORT_PROTOCOL_TCP
 		};

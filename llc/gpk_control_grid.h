@@ -4,7 +4,7 @@
 #define GPK_CONTROL_GRID_H_23627
 
 nmsp gpk
-{
+{	
 	struct SControlGrid {
 		cid_t			IdControl	= CID_INVALID;
 		aobj<SControlList>	Lists		= {};

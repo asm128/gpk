@@ -55,7 +55,7 @@ sttc u2_t sampleGUIPaletteToneCount(cnst SSampleGUI & app) nxpt {
 }
 
 sttc u2_t sampleGUIPaletteToneRowCount(cnst SSampleGUI & app, cnst u2_t toneCount, cnst u2_t iColumn) nxpt {
-	cnst u2_t columnCount = size(app.PalettePicker.GridTones);
+	cnst u2_t columnCount = size(app.PalettePicker.IndexGridTones);
 	cnst u2_t columnSize = ASCII_COLOR_COUNT / columnCount;
 	cnst u2_t completeGroupRows = toneCount / ASCII_COLOR_COUNT * columnSize;
 	cnst u2_t remainingTones = toneCount % ASCII_COLOR_COUNT;
@@ -63,7 +63,7 @@ sttc u2_t sampleGUIPaletteToneRowCount(cnst SSampleGUI & app, cnst u2_t toneCoun
 }
 
 sttc u2_t sampleGUIPaletteToneFromCell(cnst SSampleGUI & app, cnst n2u2_t & cell, cnst u2_t toneCount) nxpt {
-	cnst u2_t columnCount = size(app.PalettePicker.GridTones);
+	cnst u2_t columnCount = size(app.PalettePicker.IndexGridTones);
 	cnst u2_t columnSize = ASCII_COLOR_COUNT / columnCount;
 	cnst u2_t completeGroups = toneCount / ASCII_COLOR_COUNT;
 	cnst u2_t completeGroupRows = completeGroups * columnSize;
@@ -76,31 +76,31 @@ sttc u2_t sampleGUIPaletteToneFromCell(cnst SSampleGUI & app, cnst n2u2_t & cell
 
 sttc void sampleGUIPaletteToneSelect(SSampleGUI & app, cnst cid_t idSelected) nxpt {
 	cnst u2_t toneCount = ::sampleGUIPaletteToneCount(app);
-	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.GridTones); ++iColumn)
+	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.IndexGridTones); ++iColumn)
 	for(u2_t iRow = 0; iRow < ::sampleGUIPaletteToneRowCount(app, toneCount, iColumn); ++iRow)
 	for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade) {
-		cnst cid_t idControl = controlGridControl(app.PalettePicker.GridTones[iColumn], {iShade, iRow});
+		cnst cid_t idControl = guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridTones[iColumn]], DIRECTION_RIGHT, {iShade, iRow});
 		app.Dialog->GUI->Controls.SetSelected(idControl, idControl == idSelected);
 	}
 }
 
 sttc u2_t sampleGUIPaletteToneSelected(cnst SSampleGUI & app, cnst u2_t toneCount) nxpt {
-	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.GridTones); ++iColumn)
+	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.IndexGridTones); ++iColumn)
 	for(u2_t iRow = 0; iRow < ::sampleGUIPaletteToneRowCount(app, toneCount, iColumn); ++iRow)
 	for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade)
-		if(app.Dialog->GUI->Controls.IsSelected(controlGridControl(app.PalettePicker.GridTones[iColumn], {iShade, iRow})))
+		if(app.Dialog->GUI->Controls.IsSelected(guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridTones[iColumn]], DIRECTION_RIGHT, {iShade, iRow})))
 			rtrn ::sampleGUIPaletteToneFromCell(app, {iColumn, iRow}, toneCount);
 	rtrn app.Dialog->GUI->ThemeDefault / ASCII_COLOR_COUNT % toneCount;
 }
 
 sttc void sampleGUIPaletteShadeSelect(SSampleGUI & app, cnst u2_t selected) nxpt {
 	for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade)
-		app.Dialog->GUI->Controls.SetSelected(controlGridControl(app.PalettePicker.GridShades, iShade), iShade == selected);
+		app.Dialog->GUI->Controls.SetSelected(guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridShades], DIRECTION_RIGHT, iShade), iShade == selected);
 }
 
 sttc u2_t sampleGUIPaletteShadeSelected(cnst SSampleGUI & app) nxpt {
 	for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade)
-		if(app.Dialog->GUI->Controls.IsSelected(controlGridControl(app.PalettePicker.GridShades, iShade)))
+		if(app.Dialog->GUI->Controls.IsSelected(guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridShades], DIRECTION_RIGHT, iShade)))
 			rtrn iShade;
 	rtrn app.Dialog->GUI->ThemeDefault % ASCII_COLOR_COUNT;
 }
@@ -112,15 +112,15 @@ sttc err_t sampleGUIPalettePickerApply(SSampleGUI & app) {
 	cnst u2_t tone = ::sampleGUIPaletteToneSelected(app, toneCount);
 	cnst u2_t shade = ::sampleGUIPaletteShadeSelected(app);
 	app.Dialog->GUI->ThemeDefault = (u1_t)(tone * ASCII_COLOR_COUNT + shade);
-	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.GridTones); ++iColumn)
+	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.IndexGridTones); ++iColumn)
 	for(u2_t iRow = 0; iRow < ::sampleGUIPaletteToneRowCount(app, toneCount, iColumn); ++iRow)
 	for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade) {
 		cnst u2_t iTone = ::sampleGUIPaletteToneFromCell(app, {iColumn, iRow}, toneCount);
-		cnst cid_t idControl = controlGridControl(app.PalettePicker.GridTones[iColumn], {iShade, iRow});
+		cnst cid_t idControl = guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridTones[iColumn]], DIRECTION_RIGHT, {iShade, iRow});
 		app.Dialog->GUI->Controls.Draw[idControl].ColorTheme = (s1_t)(iTone * ASCII_COLOR_COUNT + iShade + 1);
 	}
 	for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade) {
-		cnst cid_t idControl = controlGridControl(app.PalettePicker.GridShades, iShade);
+		cnst cid_t idControl = guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridShades], DIRECTION_RIGHT, iShade);
 		app.Dialog->GUI->Controls.Draw[idControl].ColorTheme = (s1_t)(tone * ASCII_COLOR_COUNT + iShade + 1);
 	}
 	rtrn 0;
@@ -128,12 +128,12 @@ sttc err_t sampleGUIPalettePickerApply(SSampleGUI & app) {
 
 sttc void sampleGUIFontSelect(SSampleGUI & app, cnst u2_t selected) nxpt {
 	for(u2_t iFont = 0; iFont < app.Dialog->GUI->Fonts.size(); ++iFont)
-		app.Dialog->GUI->Controls.SetSelected(controlGridControl(app.FontPicker.Grid, iFont), iFont == selected);
+		app.Dialog->GUI->Controls.SetSelected(guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.FontPicker.IndexGrid], DIRECTION_RIGHT, iFont), iFont == selected);
 }
 
 sttc u2_t sampleGUIFontSelected(cnst SSampleGUI & app) nxpt {
 	for(u2_t iFont = 0; iFont < app.Dialog->GUI->Fonts.size(); ++iFont)
-		if(app.Dialog->GUI->Controls.IsSelected(controlGridControl(app.FontPicker.Grid, iFont)))
+		if(app.Dialog->GUI->Controls.IsSelected(guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.FontPicker.IndexGrid], DIRECTION_RIGHT, iFont)))
 			rtrn iFont;
 	rtrn app.Dialog->GUI->SelectedFont % app.Dialog->GUI->Fonts.size();
 }
@@ -281,7 +281,8 @@ sttc err_t sampleGUIDataViewportCreate(SSampleGUI & app, SGUIEditor & editor, vc
 	if_fail_fe(guiCreateControlList(*app.Dialog->GUI, memberNames, viewport->IdClient, {220, 18}, {4, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT, idFields));
 	controls.SetHidden(viewport->IdGUIControl, true);
 	if_fail_fe(editor.DataViews.push_back(viewport));
-	rtrn controlListPush(*app.Dialog->GUI, app.ListViewports, title);
+	if_fail_fe(guiControlListPush(*app.Dialog->GUI, app.System[GUI_TYPE_Control_list][app.IndexListViewports], DIRECTION_RIGHT, title));
+	rtrn 0;
 }
 
 sttc err_t sampleGUIDataViewportsCreate(SSampleGUI & app, SGUIEditor & editor) {
@@ -306,24 +307,39 @@ sttc err_t sampleGUIEditorFieldProcess(SSampleGUI & app, SGUIEditor & editor, ci
 	cnst cid_t idEditedControl = ::sampleGUIEditorSelectedControl(editor);
 	if(controlInvalid(*editor.Dialog->GUI, idEditedControl))
 		rtrn 0;
-	cnst cid_t idDropdown = controlParent(gui, idControl);
-	if(false == controlInvalid(gui, idDropdown)) {
-		cnst SControlConstraints & dropdownConstraints = gui.Controls.Constraints[idDropdown];
-		cnst cid_t idField = dropdownConstraints.DockToControl.Bottom;
-		if(false == controlInvalid(gui, idField)
-		&& dropdownConstraints.DockToControl.Left == idField
-		&& controlParent(gui, idField) == controlParent(gui, idDropdown)
+	cid_t idField = idControl;
+	cid_t idDropdown = CID_INVALID;
+	err_t iOption = -1;
+	cnst cid_t idCandidateDropdown = controlParent(gui, idControl);
+	if(false == controlInvalid(gui, idCandidateDropdown)) {
+		cnst SControlConstraints & dropdownConstraints = gui.Controls.Constraints[idCandidateDropdown];
+		cnst cid_t idCandidateField = dropdownConstraints.DockToControl.Bottom;
+		if(false == controlInvalid(gui, idCandidateField)
+		&& dropdownConstraints.DockToControl.Left == idCandidateField
+		&& controlParent(gui, idCandidateField) == controlParent(gui, idCandidateDropdown)
 		) {
-			cnst acid & options = gui.Controls.Children[idDropdown];
-			for(u2_t iOption = 0; iOption < options.size(); ++iOption)
-				if(idControl == options[iOption]) {
+			cnst err_t iCandidateOption = gui.Controls.Children[idCandidateDropdown].find(idControl);
+			if(0 <= iCandidateOption) {
+				idField = idCandidateField;
+				idDropdown = idCandidateDropdown;
+				iOption = iCandidateOption;
+			}
+		}
+	}
+	for(u2_t iView = 0; iView < editor.DataViews.size(); ++iView) {
+		SDialogViewport & viewport = *editor.DataViews[iView];
+		cnst acid & fields = gui.Controls.Children[viewport.IdClient];
+		for(u2_t iDataField = 0; iDataField < fields.size(); ++iDataField) {
+			cnst cid_t idDataField = fields[iDataField];
+			if(idField == idDataField) {
+				if(0 <= iOption) {
 					b8_t handled = false;
 					auto setEnum = [&](auto & member) -> err_t {
 						auto memberValue = member;
 						if constexpr(__is_enum(decltype(memberValue))) {
 							handled = true;
 							cnst enum_definition<decltype(memberValue)> & definition = get_enum<decltype(memberValue)>();
-							if_true_fe(iOption >= definition.Values.size());
+							if_true_fe((u2_t)iOption >= definition.Values.size());
 							member = definition.Values[iOption];
 							if_fail_fe(guiSelect(gui, idControl));
 							if_fail_fe(dropdownCollapse(gui, idDropdown));
@@ -331,21 +347,13 @@ sttc err_t sampleGUIEditorFieldProcess(SSampleGUI & app, SGUIEditor & editor, ci
 						}
 						rtrn 0;
 					};
-					if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idField].Text, setEnum));
+					if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idDataField].Text, setEnum));
 					if(handled) {
 						cnst cid_t idClient = controlParent(gui, idDropdown);
 						if_fail_fe(controlMetricsInvalidate(gui, controlParent(gui, idClient)));
 					}
 					rtrn handled;
 				}
-		}
-	}
-	for(u2_t iView = 0; iView < editor.DataViews.size(); ++iView) {
-		SDialogViewport & viewport = *editor.DataViews[iView];
-		cnst acid & fields = gui.Controls.Children[viewport.IdClient];
-		for(u2_t iField = 0; iField < fields.size(); ++iField) {
-			cnst cid_t idField = fields[iField];
-			if(idControl == idField) {
 				b8_t handled = false;
 				auto openEnum = [&](auto & member) -> err_t {
 					auto memberValue = member;
@@ -353,7 +361,7 @@ sttc err_t sampleGUIEditorFieldProcess(SSampleGUI & app, SGUIEditor & editor, ci
 						handled = true;
 						SControlPlacement placement = {};
 						placement.Area.Size = {160, 18};
-						cnst cid_t idDropdown = guiDropdownCreate(gui, get_value_labels<decltype(memberValue)>(), idField, placement, ALIGN_CENTER_LEFT);
+						cnst cid_t idDropdown = guiCreateDropdown(gui, app.System, get_value_labels<decltype(memberValue)>(), idDataField, placement, ALIGN_CENTER_LEFT);
 						if_fail_fe(idDropdown);
 						cnst acid & options = gui.Controls.Children[idDropdown];
 						cnst s2_t iSelected = get_value_index(memberValue);
@@ -368,7 +376,7 @@ sttc err_t sampleGUIEditorFieldProcess(SSampleGUI & app, SGUIEditor & editor, ci
 					}
 					rtrn 0;
 				};
-				if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idField].Text, openEnum));
+				if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idDataField].Text, openEnum));
 				if(handled)
 					if_fail_fe(controlMetricsInvalidate(gui, viewport.IdGUIControl));
 				rtrn handled;
@@ -383,6 +391,7 @@ err_t sampleGUISetup(SSampleGUI & app, pobj<SInput> & input) {
 	app.Dialog->GUI->ColorModeDefault = GUI_COLOR_MODE_3D;
 	pobj<SDialogViewport> viewportPalette = {};
 	cid_t idViewport = CID_INVALID;
+	cid_t idComposite = CID_INVALID;
 	if_fail_fe(::sampleGUIViewportCreate(app, idViewport, viewportPalette, "PALETTE", {{20, 18}, {300, 220}}));
 	cnst u2_t toneCount = ::sampleGUIPaletteToneCount(app);
 	if_true_fe(0 == toneCount);
@@ -391,22 +400,24 @@ err_t sampleGUISetup(SSampleGUI & app, pobj<SInput> & input) {
 	aobj<vcst_t> toneTexts = {};
 	aobj<vcst_t> shadeTexts = {};
 	if_fail_fe(shadeTexts.resize(ASCII_COLOR_COUNT));
-	if_fail_fe(controlGridCreate(*app.Dialog->GUI, app.PalettePicker.GridShades, view<vcst_c>{shadeTexts}, viewportPalette->IdClient, DIRECTION_RIGHT, ASCII_COLOR_COUNT / 2, {16, 16}, {1, 1}, {78, 4}));
-	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.GridTones); ++iColumn) {
+	if_fail_fe(idComposite = guiControlGridCreate(*app.Dialog->GUI, view<vcst_c>{shadeTexts}, viewportPalette->IdClient, DIRECTION_RIGHT, ASCII_COLOR_COUNT / 2, {16, 16}, {1, 1}, {78, 4}));
+	if_fail_fe(app.PalettePicker.IndexGridShades = app.System[GUI_TYPE_Control_grid].push_back(idComposite));
+	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.IndexGridTones); ++iColumn) {
 		if_fail_fe(toneTexts.resize(::sampleGUIPaletteToneRowCount(app, toneCount, iColumn) * ASCII_COLOR_COUNT));
-		if_fail_fe(controlGridCreate(*app.Dialog->GUI, app.PalettePicker.GridTones[iColumn], view<vcst_c>{toneTexts}, viewportPalette->IdClient, DIRECTION_RIGHT, ASCII_COLOR_COUNT, {8, 5}, {}, {(s1_t)(16 + iColumn * 132), 40}));
+		if_fail_fe(idComposite = guiControlGridCreate(*app.Dialog->GUI, view<vcst_c>{toneTexts}, viewportPalette->IdClient, DIRECTION_RIGHT, ASCII_COLOR_COUNT, {8, 5}, {}, {(s1_t)(16 + iColumn * 132), 40}));
+		if_fail_fe(app.PalettePicker.IndexGridTones[iColumn] = app.System[GUI_TYPE_Control_grid].push_back(idComposite));
 		for(u2_t iColor = 0; iColor < toneTexts.size(); ++iColor) {
-			cnst cid_t idControl = controlGridControl(app.PalettePicker.GridTones[iColumn], iColor);
+			cnst cid_t idControl = guiControlGridControl(*app.Dialog->GUI, idComposite, DIRECTION_RIGHT, iColor);
 			app.Dialog->GUI->Controls.Placement[idControl].Border = {};
 			app.Dialog->GUI->Controls.Placement[idControl].Margin = {};
 			app.Dialog->GUI->Controls.Draw[idControl].NoBorder = true;
 		}
 	}
 	::sampleGUIPaletteShadeSelect(app, shadeDefault);
-	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.GridTones); ++iColumn)
+	for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.IndexGridTones); ++iColumn)
 	for(u2_t iRow = 0; iRow < ::sampleGUIPaletteToneRowCount(app, toneCount, iColumn); ++iRow)
 		if(toneDefault == ::sampleGUIPaletteToneFromCell(app, {iColumn, iRow}, toneCount))
-			::sampleGUIPaletteToneSelect(app, controlGridControl(app.PalettePicker.GridTones[iColumn], {shadeDefault, iRow}));
+			::sampleGUIPaletteToneSelect(app, guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridTones[iColumn]], DIRECTION_RIGHT, {shadeDefault, iRow}));
 	pobj<SDialogViewport> viewportFonts = {};
 	if_fail_fe(::sampleGUIViewportCreate(app, idViewport, viewportFonts, "FONTS", {{332, 18}, {252, 264}}));
 	if_fail_fe(app.FontPicker.Labels.resize(app.Dialog->GUI->Fonts.size()));
@@ -414,9 +425,10 @@ err_t sampleGUISetup(SSampleGUI & app, pobj<SInput> & input) {
 		cnst n2u0_t charSize = app.Dialog->GUI->Fonts[iFont]->CharSize;
 		if_fail_fe(append_strings(app.FontPicker.Labels[iFont], str(charSize.x), "x", str(charSize.y)));
 	}
-	if_fail_fe(controlGridCreate(*app.Dialog->GUI, app.FontPicker.Grid, view<string>{app.FontPicker.Labels}, viewportFonts->IdClient, DIRECTION_RIGHT, 2, {120, 28}, {4, 6}));
+	if_fail_fe(idComposite = guiControlGridCreate(*app.Dialog->GUI, view<string>{app.FontPicker.Labels}, viewportFonts->IdClient, DIRECTION_RIGHT, 2, {120, 28}, {4, 6}));
+	if_fail_fe(app.FontPicker.IndexGrid = app.System[GUI_TYPE_Control_grid].push_back(idComposite));
 	for(u2_t iFont = 0; iFont < app.Dialog->GUI->Fonts.size(); ++iFont)
-		if_fail_fe(controlFontSet(*app.Dialog->GUI, controlGridControl(app.FontPicker.Grid, iFont), (s1_t)iFont));
+		if_fail_fe(controlFontSet(*app.Dialog->GUI, guiControlGridControl(*app.Dialog->GUI, idComposite, DIRECTION_RIGHT, iFont), (s1_t)iFont));
 	::sampleGUIFontSelect(app, app.Dialog->GUI->SelectedFont);
 	cnst enum_definition<GUI_CONTROL_FLAG> & stateDefinition = get_enum<GUI_CONTROL_FLAG>();
 	pobj<SDialogViewport> viewportStates = {};
@@ -430,10 +442,11 @@ err_t sampleGUISetup(SSampleGUI & app, pobj<SInput> & input) {
 	if_fail_fe(stateTexts.resize(stateDefinition.Values.size() * 2));
 	for(u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState)
 		stateTexts[iState * 2] = stateTexts[iState * 2 + 1] = stateDefinition.Names[iState];
-	if_fail_fe(controlGridCreate(*app.Dialog->GUI, app.GridStates, view<vcst_c>{stateTexts}, viewportStates->IdClient, DIRECTION_RIGHT, 2, {76, 18}, {}, {8, 6}));
+	if_fail_fe(idComposite = guiControlGridCreate(*app.Dialog->GUI, view<vcst_c>{stateTexts}, viewportStates->IdClient, DIRECTION_RIGHT, 2, {76, 18}, {}, {8, 6}));
+	if_fail_fe(app.IndexGridStates = app.System[GUI_TYPE_Control_grid].push_back(idComposite));
 	for(u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState) {
-		cnst cid_t idName = controlGridControl(app.GridStates, {0, iState});
-		cnst cid_t idState = controlGridControl(app.GridStates, {1, iState});
+		cnst cid_t idName = guiControlGridControl(*app.Dialog->GUI, idComposite, DIRECTION_RIGHT, {0, iState});
+		cnst cid_t idState = guiControlGridControl(*app.Dialog->GUI, idComposite, DIRECTION_RIGHT, {1, iState});
 		app.Dialog->GUI->Controls.Text[idName].Align = ALIGN_CENTER_RIGHT;
 		app.Dialog->GUI->Controls.Text[idState].Align = ALIGN_CENTER_LEFT;
 		app.Dialog->GUI->Controls.Draw[idName].ColorMode = app.Dialog->GUI->Controls.Draw[idState].ColorMode = GUI_COLOR_MODE_Default;
@@ -473,19 +486,24 @@ err_t sampleGUISetup(SSampleGUI & app, pobj<SInput> & input) {
 		if(app.Dialog->GUI->Controls.States[viewport->IdGUIControl].Parent == app.Dialog->Root)
 			if_fail_fe(viewportTitles.push_back(app.Dialog->GUI->Controls.Text[viewport->IdTitle].Text));
 	}
-	if_fail_fe(controlListCreate(*app.Dialog->GUI, app.ListViewports, view<vcst_c>{viewportTitles}, CID_INVALID, DIRECTION_RIGHT));
-	app.Dialog->GUI->Controls.Placement[app.ListViewports.IdControl].Area.Offset = {0, 0};
-	app.Dialog->GUI->Controls.Placement[app.ListViewports.IdControl].Align = ALIGN_TOP_LEFT;
-	if_fail_fe(controlListCreate(*app.Dialog->GUI, app.ListExit, get_value_labels<sample_gui::ACTION>(), CID_INVALID, DIRECTION_RIGHT));
-	app.Dialog->GUI->Controls.Placement[app.ListExit.IdControl].Area.Offset = {0, 0};
-	app.Dialog->GUI->Controls.Placement[app.ListExit.IdControl].Align = ALIGN_TOP_RIGHT;
-	if_fail_fe(controlListCreate(*app.Dialog->GUI, app.Workspace.Actions, get_value_labels<sample_gui::WORKSPACE_ACTION>(), CID_INVALID, DIRECTION_RIGHT));
-	app.Dialog->GUI->Controls.Placement[app.Workspace.Actions.IdControl].Area.Offset = {0, 0};
-	app.Dialog->GUI->Controls.Placement[app.Workspace.Actions.IdControl].Align = ALIGN_BOTTOM_LEFT;
-	if_fail_fe(controlListCreate(*app.Dialog->GUI, app.Workspace.Taskbar, view<vcst_c>{}, CID_INVALID, DIRECTION_RIGHT));
-	app.Dialog->GUI->Controls.Placement[app.Workspace.Taskbar.IdControl].Area.Offset = {0, 0};
-	app.Dialog->GUI->Controls.Placement[app.Workspace.Taskbar.IdControl].Align = ALIGN_BOTTOM_LEFT;
-	app.Dialog->GUI->Controls.Constraints[app.Workspace.Taskbar.IdControl].DockToControl.Right = app.Workspace.Actions.IdControl;
+	if_fail_fe(idComposite = guiControlListCreate(*app.Dialog->GUI, DIRECTION_RIGHT, view<vcst_c>{viewportTitles}));
+	if_fail_fe(app.IndexListViewports = app.System[GUI_TYPE_Control_list].push_back(idComposite));
+	app.Dialog->GUI->Controls.Placement[idComposite].Area.Offset = {0, 0};
+	app.Dialog->GUI->Controls.Placement[idComposite].Align = ALIGN_TOP_LEFT;
+	if_fail_fe(idComposite = guiControlListCreate(*app.Dialog->GUI, DIRECTION_RIGHT, get_value_labels<sample_gui::ACTION>()));
+	if_fail_fe(app.IndexListExit = app.System[GUI_TYPE_Control_list].push_back(idComposite));
+	app.Dialog->GUI->Controls.Placement[idComposite].Area.Offset = {0, 0};
+	app.Dialog->GUI->Controls.Placement[idComposite].Align = ALIGN_TOP_RIGHT;
+	if_fail_fe(idComposite = guiControlListCreate(*app.Dialog->GUI, DIRECTION_RIGHT, get_value_labels<sample_gui::WORKSPACE_ACTION>()));
+	if_fail_fe(app.Workspace.IndexActions = app.System[GUI_TYPE_Control_list].push_back(idComposite));
+	app.Dialog->GUI->Controls.Placement[idComposite].Area.Offset = {0, 0};
+	app.Dialog->GUI->Controls.Placement[idComposite].Align = ALIGN_BOTTOM_LEFT;
+	if_fail_fe(idComposite = guiControlListCreate(*app.Dialog->GUI, DIRECTION_RIGHT, view<vcst_c>{}));
+	if_fail_fe(app.Workspace.IndexTaskbar = app.System[GUI_TYPE_Control_list].push_back(idComposite));
+	app.Dialog->GUI->Controls.Placement[idComposite].Area.Offset = {0, 0};
+	app.Dialog->GUI->Controls.Placement[idComposite].Align = ALIGN_BOTTOM_LEFT;
+	app.Dialog->GUI->Controls.Constraints[idComposite].DockToControl.Right = app.System[GUI_TYPE_Control_list][app.Workspace.IndexActions];
+	if_fail_fe(idComposite = guiCreateKeyboard(*app.Dialog->GUI, app.System));
 	if_fail_fe(::sampleGUIGeometryModeApply(app));
 	if_fail_fe(::sampleGUIPalettePickerApply(app));
 	::sampleGUIFontPickerApply(app);
@@ -502,7 +520,7 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 		rtrn APPLICATION_STATE_EXIT;
 	b8_t exitRequested = false;
 	if_fail_fe(guiProcessControls(*app.Dialog->GUI, [&](cid_t idControl) -> err_t {
-		if(idControl == app.Workspace.Actions.IdControls[sample_gui::NEW_GUI]) {
+		if(idControl == app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][app.Workspace.IndexActions]][sample_gui::NEW_GUI]) {
 			pobj<SGUIEditor> editor = {};
 			if_null_fe(editor.create());
 			pobj<SGUI> guiEdited = {};
@@ -513,26 +531,28 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 			cid_t idViewport = CID_INVALID;
 			if_fail_fe(::sampleGUIViewportCreate(app, idViewport, editor->Viewport, "GUI", {{}, {320, 240}}));
 			app.Dialog->GUI->Controls.Placement[editor->Viewport->IdGUIControl].Align = ALIGN_CENTER;
-			if_fail_fe(controlListCreate(*app.Dialog->GUI, editor->Actions, get_value_labels<sample_gui::EDITOR_ACTION>(), editor->Viewport->IdClient, DIRECTION_RIGHT));
-			app.Dialog->GUI->Controls.Placement[editor->Actions.IdControl].Area.Offset = {4, 4};
-			app.Dialog->GUI->Controls.Placement[editor->Actions.IdControl].Align = ALIGN_TOP_LEFT;
+			cid_t idComposite = CID_INVALID;
+			if_fail_fe(idComposite = guiControlListCreate(*app.Dialog->GUI, DIRECTION_RIGHT, get_value_labels<sample_gui::EDITOR_ACTION>(), editor->Viewport->IdClient));
+			if_fail_fe(editor->IndexActions = app.System[GUI_TYPE_Control_list].push_back(idComposite));
+			app.Dialog->GUI->Controls.Placement[idComposite].Area.Offset = {4, 4};
+			app.Dialog->GUI->Controls.Placement[idComposite].Align = ALIGN_TOP_LEFT;
 			app.Dialog->GUI->Controls.Images[editor->Viewport->IdClient].ImageAlign = ALIGN_BOTTOM | ALIGN_HCENTER;
-			if_fail_fe(controlListPush(*app.Dialog->GUI, app.ListViewports, app.Dialog->GUI->Controls.Text[editor->Viewport->IdTitle].Text));
+			if_fail_fe(guiControlListPush(*app.Dialog->GUI, app.System[GUI_TYPE_Control_list][app.IndexListViewports], DIRECTION_RIGHT, app.Dialog->GUI->Controls.Text[editor->Viewport->IdTitle].Text));
 			if_fail_fe(::sampleGUIDataViewportsCreate(app, *editor));
 			if_fail_fe(app.Workspace.Editors.push_back(editor));
-			if_fail_fe(controlListPush(*app.Dialog->GUI, app.Workspace.Taskbar, app.Dialog->GUI->Controls.Text[editor->Viewport->IdTitle].Text));
+			if_fail_fe(guiControlListPush(*app.Dialog->GUI, app.System[GUI_TYPE_Control_list][app.Workspace.IndexTaskbar], DIRECTION_RIGHT, app.Dialog->GUI->Controls.Text[editor->Viewport->IdTitle].Text));
 			rtrn 0;
 		}
 		for(u2_t iEditor = 0; iEditor < app.Workspace.Editors.size(); ++iEditor) {
 			SGUIEditor & editor = *app.Workspace.Editors[iEditor];
-			if(idControl == editor.Actions.IdControls[sample_gui::NEW_CONTROL]) {
+			if(idControl == app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][editor.IndexActions]][sample_gui::NEW_CONTROL]) {
 				cid_t idNewControl = CID_INVALID;
 				if_fail_fe(idNewControl = controlCreate(*editor.Dialog->GUI));
 				editor.Dialog->GUI->Controls.Placement[idNewControl].Align = ALIGN_CENTER;
 				if_fail_fe(guiSelect(*editor.Dialog->GUI, idNewControl));
 				rtrn controlMetricsInvalidate(*editor.Dialog->GUI, idNewControl);
 			}
-			if(idControl == app.Workspace.Taskbar.IdControls[iEditor]) {
+			if(idControl == app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][app.Workspace.IndexTaskbar]][iEditor]) {
 				if_fail_fe(viewportFold(*editor.Viewport, false));
 				app.Dialog->GUI->Controls.SetHidden(editor.Viewport->IdGUIControl, false);
 				if_fail_fe(controlToFront(*app.Dialog->GUI, editor.Viewport->IdGUIControl));
@@ -543,11 +563,11 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 			if(fieldHandled)
 				rtrn 0;
 		}
-		if(idControl == app.ListExit.IdControls[sample_gui::SCREENSHOT]) {
+		if(idControl == app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][app.IndexListExit]][sample_gui::SCREENSHOT]) {
 			app.ScreenshotRequested = true;
 			rtrn 0;
 		}
-		if(idControl == app.ListExit.IdControls[sample_gui::EXIT]) {
+		if(idControl == app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][app.IndexListExit]][sample_gui::EXIT]) {
 			exitRequested = true;
 			rtrn 0;
 		}
@@ -559,8 +579,8 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 			app.UseNewPalettes = !app.UseNewPalettes;
 			rtrn ::sampleGUIGeometryModeApply(app);
 		}
-		for(u2_t iViewport = 0; iViewport < app.ListViewports.IdControls.size(); ++iViewport)
-			if(idControl == app.ListViewports.IdControls[iViewport]) {
+		for(u2_t iViewport = 0; iViewport < app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][app.IndexListViewports]].size(); ++iViewport)
+			if(idControl == app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][app.IndexListViewports]][iViewport]) {
 				u2_t iTopLevel = 0;
 				for(u2_t iDialogControl = 0; iDialogControl < app.Dialog->Controls.size(); ++iDialogControl) {
 					pobj<SDialogViewport> viewport = {};
@@ -577,20 +597,20 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 				rtrn 0;
 			}
 		cnst u2_t toneCount = ::sampleGUIPaletteToneCount(app);
-		for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.GridTones); ++iColumn)
+		for(u2_t iColumn = 0; iColumn < size(app.PalettePicker.IndexGridTones); ++iColumn)
 		for(u2_t iRow = 0; iRow < ::sampleGUIPaletteToneRowCount(app, toneCount, iColumn); ++iRow)
 		for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade)
-			if(idControl == controlGridControl(app.PalettePicker.GridTones[iColumn], {iShade, iRow})) {
+			if(idControl == guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridTones[iColumn]], DIRECTION_RIGHT, {iShade, iRow})) {
 				::sampleGUIPaletteToneSelect(app, idControl);
 				rtrn ::sampleGUIPalettePickerApply(app);
 			}
 		for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade)
-			if(idControl == controlGridControl(app.PalettePicker.GridShades, iShade)) {
+			if(idControl == guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridShades], DIRECTION_RIGHT, iShade)) {
 				::sampleGUIPaletteShadeSelect(app, iShade);
 				rtrn ::sampleGUIPalettePickerApply(app);
 			}
 		for(u2_t iFont = 0; iFont < app.Dialog->GUI->Fonts.size(); ++iFont)
-			if(idControl == controlGridControl(app.FontPicker.Grid, iFont)) {
+			if(idControl == guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.FontPicker.IndexGrid], DIRECTION_RIGHT, iFont)) {
 				::sampleGUIFontSelect(app, iFont);
 				::sampleGUIFontPickerApply(app);
 				rtrn 0;
@@ -602,7 +622,7 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 	cnst enum_definition<GUI_CONTROL_FLAG> & stateDefinition = get_enum<GUI_CONTROL_FLAG>();
 	for(u2_t iState = 0; iState < stateDefinition.Values.size(); ++iState)
 		if(stateDefinition.Values[iState] < GUI_CONTROL_FLAG_Updated) {
-			SControlState & state = app.Dialog->GUI->Controls.States[controlGridControl(app.GridStates, {1, iState})];
+			SControlState & state = app.Dialog->GUI->Controls.States[guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.IndexGridStates], DIRECTION_RIGHT, {1, iState})];
 			state.Flag = bit_set(state.Flag, stateDefinition.Values[iState]);
 		}
 	cnst cid_t idHovered = ::sampleGUIHoveredControl(app);
@@ -628,7 +648,7 @@ err_t sampleGUIDraw(SSampleGUI & app, g8bgra target) {
 			continue;
 		SControlImage & editorImage = app.Dialog->GUI->Controls.Images[editor.Viewport->IdClient];
 		cnst SControlPlacement & placementClient = app.Dialog->GUI->Controls.Placement[editor.Viewport->IdClient];
-		cnst SControlPlacement & placementActions = app.Dialog->GUI->Controls.Placement[editor.Actions.IdControl];
+		cnst SControlPlacement & placementActions = app.Dialog->GUI->Controls.Placement[app.System[GUI_TYPE_Control_list][editor.IndexActions]];
 		n2s1_t surfaceSize = placementClient.Area.Size - controlNCSpacing(placementClient).s1();
 		surfaceSize.x -= placementActions.Area.Offset.x * 2;
 		surfaceSize.y -= placementActions.Area.Offset.y * 2 + placementActions.Area.Size.y;

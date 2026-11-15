@@ -16,7 +16,7 @@ GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, EMPTY_RESULT		, 7, "A missing cat
 GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, SCRIPT_RESULT		, 8, "outputSearchScript() rejected the catalog index.");
 GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, SCRIPT_DATA		, 9, "outputSearchScript() omitted catalog index data.");
 
-stxp ::gpk::vcst_c INDEX_CATALOG_FILE = "D:/enterprise/programming_sciences/codebases/Axiom/bundle_galaxy_hell/gpk_data/test_llc/ads.json";
+stxp ::gpk::vcst_c INDEX_CATALOG_FILE = "D:/enterprise/programming_sciences/codebases/Callsite/old_web_resu/demo/obelisco/ads.json";
 
 ::gpk::err_t SIndexCatalog::Load(::gpk::vcst_t fileName, ::gpk::AD_SHOP_CATEGORY category, ::gpk::vcst_t language) {
 	if_fail_fe(Item.clear());

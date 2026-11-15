@@ -1,4 +1,5 @@
-#include "gpk_ctti.h"
+#include "gpk_ctti_enum.h"
+#include "gpk_ctti_stct.h"
 #include "gpk_json.h"
 
 #include "test_llc_suites.h"
@@ -65,11 +66,11 @@ CTTI_ENUM_COMPILED(SCTTIEnumBoundary, gpk::u0_t,
 	SCTTIEnumBoundary16
 	);
 
-CTTI_ENUM(
+CTTI_ENUM(SCTTIEnumFull,
 	enum SCTTIEnumFull : gpk::u1_t {
-		SCTTIEnumFullNone = 0,
-		SCTTIEnumFullRead,
-		SCTTIEnumFullWrite
+		SCTTIEnumFull_None = 0,
+		SCTTIEnumFull_Read,
+		SCTTIEnumFull_Write
 	};
 	);
 
@@ -119,7 +120,7 @@ static_assert(SCTTIEnumTest_gpk_ctti.Values[1].Value == CTTIEnumRead, "Implicit 
 static_assert(SCTTIEnumTest_gpk_ctti.Values[2].Value == CTTIEnumWrite, "Explicit enum values must use the compiler-evaluated expression.");
 static_assert(1 == SCTTIEnumSingle_gpk_ctti.Count && SCTTIEnumSingleValue == SCTTIEnumSingle_gpk_ctti.Values[0].Value, "The single-value enum route must preserve its compiled value.");
 static_assert(17 == SCTTIEnumBoundary_gpk_ctti.Count && SCTTIEnumBoundary16 == SCTTIEnumBoundary_gpk_ctti.Values[16].Value, "The enum registry must not inherit the former sixteen-value implementation ceiling.");
-static_assert(SCTTIEnumFullNone == 0 && SCTTIEnumFullRead == 1 && SCTTIEnumFullWrite == 2, "The wrapped enum declaration must retain its compiler values.");
+static_assert(SCTTIEnumFull_None == 0 && SCTTIEnumFull_Read == 1 && SCTTIEnumFull_Write == 2, "The wrapped enum declaration must retain its compiler values.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::File.size() && ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Line, "Struct source provenance must be retained.");
 static_assert(sizeof(SCTTIPODTest) == ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Size, "Struct size must come from the completed compiler type.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::IsPOD, "The POD struct must be identified without std traits.");
@@ -179,10 +180,19 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	if(cttiEnumFull) {
 		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION, cttiEnumFull->Name != "SCTTIEnumFull", "Unexpected complete enum name:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Name));
 		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION, cttiEnumFull->UnderlyingType != "gpk::u1_t", "Unexpected complete enum type:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->UnderlyingType));
-		GPK_TEST_CHECK (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY, 3 != cttiEnumFull->Count || cttiEnumFull->Values[0].ValueResolved);
+		GPK_TEST_CHECK (errors, CTTI_JSON_TEST_RESULT_ENUM_SOURCE_ONLY, 3 != cttiEnumFull->Count || false == cttiEnumFull->Values[0].ValueResolved || 0 != cttiEnumFull->Values[0].Value);
 		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_INITIALIZER, cttiEnumFull->Initializers[0] != "0", "Unexpected complete enum initializer:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Initializers[0]));
-		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS, cttiEnumFull->Names[0] != "SCTTIEnumFullNone", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Names[0]));
-		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS, cttiEnumFull->Names[2] != "SCTTIEnumFullWrite", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Names[2]));
+		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS, cttiEnumFull->Names[0] != "SCTTIEnumFull_None", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Names[0]));
+		GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_ENUM_VIEWS, cttiEnumFull->Names[2] != "SCTTIEnumFull_Write", "Unexpected enum name view:'%.*s'.", GPK_VIEW_ARGS(cttiEnumFull->Names[2]));
+	}
+	cnst ::gpk::enum_definition<SCTTIEnumFull> & enumDefinitionFull = ::gpk::get_enum<SCTTIEnumFull>();
+	cnst auto & enumMetadataFull = SCTTIEnumFull_gpk_ctti_storage::TypedValue;
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinitionFull.Name != "SCTTIEnumFull", "Unexpected automatic enum definition name:'%.*s'.", GPK_VIEW_ARGS(enumDefinitionFull.Name));
+	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinitionFull.Values.size() != enumMetadataFull.Count || enumDefinitionFull.Names.size() != enumMetadataFull.Count);
+	stxp ::gpk::vcst_t expectedEnumNames[] = {"None", "Read", "Write"};
+	for(::gpk::u2_t iValue = 0; iValue < enumMetadataFull.Count; ++iValue) {
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinitionFull.Values[iValue] != enumMetadataFull.Values[iValue].Value);
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinitionFull.Names[iValue] != expectedEnumNames[iValue]);
 	}
 
 	SCTTIInstanceTest instance = {73, 234.25, true};
