@@ -2,6 +2,7 @@
 // Ogarnd - Copyright (c) 2016-2024
 #include "gpk_string.h"
 #include "gpk_array_obj.h"
+#include "gpk_enum_operators.h"
 
 #ifndef GPK_ENUM_H_23627
 #define GPK_ENUM_H_23627
@@ -284,13 +285,7 @@ nmsp gpk
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																							\
 	enum EnumName : IntType {};																											\
 	sttc	::gpk::u2_c		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);					\
-	sinx	EnumName		oper &	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a & (IntType)b);				}	\
-	sinx	EnumName		oper ~	(EnumName  a)				nxpt	{ return (EnumName)		(~(IntType)a);					}	\
-	sinx	EnumName		oper ^	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a ^ (IntType)b);				}	\
-	stin	EnumName&		oper |=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
-	stin	EnumName&		oper &=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
-	stin	EnumName&		oper ^=	(EnumName &a, EnumName b)	nxpt	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	sinx	EnumName		oper |	(EnumName  a, EnumName b)	nxpt	{ return (EnumName)		(a | (IntType)b);				}
+	GDEFINE_ENUM_OPERATORS(EnumName)
 //
 #define GDEFINE_ENUM_STRUCT(EnumName, IntType)																								\
 	struct EnumName {																														\

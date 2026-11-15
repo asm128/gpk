@@ -4,6 +4,7 @@
 #include "gpk_engine.h"
 #include "gpk_gui.h"
 #include "gpk_gui_inputbox.h"
+#include "gpk_ctti_enum.h"
 #include "gpk_dialog.h"
 #include "gpk_file_pack.h"
 #include "gpk_string_compose.h"
@@ -32,7 +33,7 @@ namespace lls
 		::gpk::aobj<::lls::SUIPlayer>	PlayerUI		= {};
 	};
 
-	CTTI_ENUM(
+	CTTI_ENUM(SAVE_MODE,
 	enum SAVE_MODE { SAVE_MODE_AUTO, SAVE_MODE_QUICK, SAVE_MODE_STAGE, SAVE_MODE_USER };
 	);
 	struct SFileStrings {

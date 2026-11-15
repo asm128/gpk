@@ -21,7 +21,7 @@ namespace gfe
 		::std::mutex					LockGUI;
 		::std::mutex					LockRender;
 
-										SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
+										SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues), DialogMain(Framework.GUI)	{}
 	};
 } // namespace gpk_file_explorer
 

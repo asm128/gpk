@@ -1,5 +1,6 @@
 #include "gpk_transfer.h"
 #include "gpk_crc.h"
+#include "gpk_ctti_enum.h"
 
 #include <algorithm>
 #include <chrono>
@@ -107,7 +108,7 @@ sttc int socketReceiveAll(socket_handle_t socketHandle, void * data, size_t size
 	return 0;
 }
 
-CTTI_ENUM(
+CTTI_ENUM(PEER_FRAME,
 enum class PEER_FRAME : uint8_t {
 	HELLO		= 1,
 	TRANSFER	= 2,

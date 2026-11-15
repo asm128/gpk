@@ -1,6 +1,7 @@
 #include "gpk_event_system.h"
 
 #include "gpk_bit.h"
+#include "gpk_ctti_enum.h"
 #define gpk_gui_printf verbose_printf
 
 #ifndef GPK_GUI_CONTROL_FLAG_H_23627
@@ -17,17 +18,20 @@ nmsp gpk
 	tydf	view<cid_t>		vcid;
 	tydf	view<ccid_t>	vccid;
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG, u1_t)
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Hidden		, 0x01U);	// Prevents from drawing the control and its children
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Disabled	, 0x02U);	// Prevents the control from responding to user interaction
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Hovered	, 0x04U);	// Modifies behavior depending on whether the mouse pointer top is inside the control area.
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Focused	, 0x08U);	// Modified behavior depending on wether the control is selected for receiving user input.
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Pressed	, 0x10U);	// Modifies behavior depending on whether the control is being pressed by holding the mouse button, a key or a touch event.
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Dragging	, 0x20U);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Selected	, 0x40U);	// 
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Updated	, 0x80U);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Action		, 0x100U);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Unused		, 0xFFFFU);
+	CTTI_ENUM(GUI_CONTROL_FLAG,
+	enum GUI_CONTROL_FLAG : u1_t
+		{ GUI_CONTROL_FLAG_Hidden	= 0x01U	// Prevents from drawing the control and its children
+		, GUI_CONTROL_FLAG_Disabled	= 0x02U	// Prevents the control from responding to user interaction
+		, GUI_CONTROL_FLAG_Hovered	= 0x04U	// Modifies behavior depending on whether the mouse pointer top is inside the control area.
+		, GUI_CONTROL_FLAG_Focused	= 0x08U	// Modified behavior depending on wether the control is selected for receiving user input.
+		, GUI_CONTROL_FLAG_Pressed	= 0x10U	// Modifies behavior depending on whether the control is being pressed by holding the mouse button, a key or a touch event.
+		, GUI_CONTROL_FLAG_Dragging	= 0x20U
+		, GUI_CONTROL_FLAG_Selected	= 0x40U	//
+		, GUI_CONTROL_FLAG_Updated	= 0x80U
+		, GUI_CONTROL_FLAG_Action	= 0x100U
+		, GUI_CONTROL_FLAG_Unused	= 0xFFFFU
+		};
+	);
 	stxp	GUI_CONTROL_FLAG	GUI_CONTROL_FLAG_All	= GUI_CONTROL_FLAG_Unused;
 	inxp	GUI_CONTROL_FLAG	setFlag			(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hidden	, value); }
 
@@ -58,8 +62,11 @@ nmsp gpk
 	inxp	GUI_CONTROL_FLAG	setUpdated		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Updated	, value); }
 	inxp	GUI_CONTROL_FLAG	setAction		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Action	, value); }
 
-	GDEFINE_ENUM_TYPE (EVENT_GUI_CONTROL, u0_t)
-	GDEFINE_ENUM_VALUE(EVENT_GUI_CONTROL, StateChange, 2);
+	CTTI_ENUM(EVENT_GUI_CONTROL,
+	enum EVENT_GUI_CONTROL : u0_t
+		{ EVENT_GUI_CONTROL_StateChange = 2
+		};
+	);
 
 	struct SChangeControlState { 
 		cid_t				Id		= -1; 

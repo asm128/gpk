@@ -87,7 +87,9 @@
     <ClInclude Include="gpk_cpow.h" />
     <ClInclude Include="gpk_cstdio.h" />
     <ClInclude Include="gpk_cstring.h" />
-    <ClInclude Include="gpk_ctti.h" />
+    <ClInclude Include="gpk_ctti_parse.h" />
+    <ClInclude Include="gpk_ctti_enum.h" />
+    <ClInclude Include="gpk_ctti_stct.h" />
     <ClInclude Include="gpk_d3d.h" />
     <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_debug.h" />
@@ -96,6 +98,7 @@
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_encoding.h" />
     <ClInclude Include="gpk_enum.h" />
+    <ClInclude Include="gpk_enum_operators.h" />
     <ClInclude Include="gpk_eval.h" />
     <ClInclude Include="gpk_event.h" />
     <ClInclude Include="gpk_event_input.h" />
@@ -129,6 +132,8 @@
     <ClInclude Include="gpk_gui_control_flag.h" />
     <ClInclude Include="gpk_gui_control_list.h" />
     <ClInclude Include="gpk_gui_inputbox.h" />
+    <ClInclude Include="gpk_gui_keyboard.h" />
+    <ClInclude Include="gpk_gui_system.h" />
     <ClInclude Include="gpk_gui_text.h" />
     <ClInclude Include="gpk_gui_theme.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
@@ -305,6 +310,7 @@
     <ClCompile Include="gpk_gui_control_list.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
     <ClCompile Include="gpk_gui_inputbox.cpp" />
+    <ClCompile Include="gpk_gui_system.cpp" />
     <ClCompile Include="gpk_gui_theme.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
     <ClCompile Include="gpk_http_client.cpp" />

@@ -25,7 +25,7 @@ GDEFINE_ENUM_VALUED(ENUM_TEST_RESULT, LOWERCASE_LOOKUP	, 5, "The lowercase comma
 	GPK_TEST_CHECK(errors, ENUM_TEST_RESULT_COMMAND_ARGS, commandArgs != ::gpk::vcst_t{"abc"});
 	GPK_TEST_CHECK(errors, ENUM_TEST_RESULT_REGISTERED_LABEL, ::gpk::get_value_namev(ENUM_TEST_COMMAND_Join) != ::gpk::vcst_t{"Join"});
 
-	cnst ENUM_TEST_COMMAND command = ::gpk::get_value<ENUM_TEST_COMMAND>(commandName);
+	cnst ENUM_TEST_COMMAND command = ::gpk::get_value_camelcased<ENUM_TEST_COMMAND>(commandName);
 	GPK_TEST_CHECK(errors, ENUM_TEST_RESULT_LOWERCASE_LOOKUP, command != ENUM_TEST_COMMAND_Join);
 	rtrn 0;
 }

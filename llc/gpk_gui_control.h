@@ -1,4 +1,5 @@
 #include "gpk_gui_control_flag.h"
+#include "gpk_ctti_stct.h"
 
 #include "gpk_tri2.h"
 #include "gpk_rect.h"
@@ -22,14 +23,14 @@ nmsp gpk
 	tplt<u2_t _sizeArray>	
 	usng	astcid	= astatic<cid_t, _sizeArray>;
 
-	CTTI_ENUM(
+	CTTI_ENUM(GUI_COLOR_MODE,
 	enum GUI_COLOR_MODE : u0_t 
 		{ GUI_COLOR_MODE_Default
 		, GUI_COLOR_MODE_3D	
 		, GUI_COLOR_MODE_Flat	
 		};
 		);
-	CTTI_ENUM(
+	CTTI_ENUM(GUI_CONTROL_LIMIT,
 	enum GUI_CONTROL_LIMIT : u0_t
 		{ GUI_CONTROL_LIMIT_Left	= ALIGN_LEFT	
 		, GUI_CONTROL_LIMIT_Top		= ALIGN_TOP		
@@ -39,7 +40,7 @@ nmsp gpk
 		, GUI_CONTROL_LIMIT_Inner	= ALIGN_NEAR	
 		};
 		);
-	CTTI_ENUM(
+	CTTI_ENUM(GUI_CONTROL_METRICS_FLAG,
 	enum GUI_CONTROL_METRICS_FLAG : u1_t 
 		{ GUI_CONTROL_METRICS_FLAG_XSize		=	(1 << 0	)
 		, GUI_CONTROL_METRICS_FLAG_YSize		=	(1 << 1	)
@@ -75,7 +76,7 @@ nmsp gpk
 	sinx	void		controlNCSpacing	(cnst SControlPlacement & ctl, rectu1_t & ncSpacing)	nxpt	{ ncSpacing = controlNCRect(ctl); }
 	sinx	void		controlNCSpacing	(cnst SControlPlacement & ctl, n2u1_t   & ncSpacing)	nxpt	{ ncSpacing = controlNCSpacing(ctl); }
 
-	CTTI_ENUM(
+	CTTI_ENUM(GUI_CONTROL_PALETTE,
 	enum GUI_CONTROL_PALETTE : u1_t
 		{ GUI_CONTROL_PALETTE_NORMAL				
 		, GUI_CONTROL_PALETTE_HIDDEN				
@@ -116,7 +117,7 @@ nmsp gpk
 	};
 	);
 #pragma pack(pop)
-	CTTI_ENUM(
+	CTTI_ENUM(CONTROL_AREA_BASE,
 	enum CONTROL_AREA_BASE : u0_t 
 		{ CONTROL_AREA_BASE_BACKGROUND		= 0
 		, CONTROL_AREA_BASE_CONTENT
@@ -131,7 +132,7 @@ nmsp gpk
 		, CONTROL_AREA_BASE_COUNT
 		};
 	);
-	CTTI_ENUM(
+	CTTI_ENUM(GUI_CONTROL_AREA_OLD,
 	enum GUI_CONTROL_AREA_OLD : u0_t
 		{ GUI_CONTROL_AREA_OLD_CLIENT		= 0
 		, GUI_CONTROL_AREA_OLD_BORDER_LEFT
@@ -141,7 +142,7 @@ nmsp gpk
 		, GUI_CONTROL_AREA_OLD_COUNT
 		};
 	);
-	CTTI_ENUM(
+	CTTI_ENUM(UI_CONTROL_AREA,
 	enum UI_CONTROL_AREA : u0_t
 		{ UI_CONTROL_AREA_BACKGROUND		= 0
 		, UI_CONTROL_AREA_CLIENT

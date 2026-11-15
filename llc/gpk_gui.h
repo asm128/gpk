@@ -66,10 +66,6 @@ nmsp gpk
 	err_t				controlHidden					(cnst SGUI & gui, cid_t iControl);
 	err_t				controlDisabled					(cnst SGUI & gui, cid_t iControl);
 	err_t				controlInvalid					(cnst SGUI & gui, cid_t iControl);
-
-	err_t				guiProcessControls				(cnst SGUI & gui, cnst function<err_t(cid_t iControl)> & funcOnExecute);
-	err_t				guiProcessControls				(cnst SGUI & gui, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnExecute);
-
 	stin	cid_t		controlParent					(cnst SGUI & gui, cid_t iControl)	{ return controlInvalid(gui, iControl) ? CID_INVALID : gui.Controls.States[iControl].Parent; }
 	stin	err_t		controlToFront					(SGUI & gui, cid_t iControl) {
 		cid_t				iParent		= controlParent(gui, iControl);
@@ -77,6 +73,11 @@ nmsp gpk
 		if_fail_fe(controlSetParent(gui, iControl, iParent));
 		return 0;
 	}
+
+	err_t				guiProcessControls				(cnst SGUI & gui, cnst function<err_t(cid_t iControl)> & funcOnExecute);
+	err_t				guiProcessControls				(cnst SGUI & gui, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnExecute);
+	cid_t				guiCreateControlList			(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, vcid out_ids);
+	cid_t				guiCreateControlList			(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids);
 	tydf	FError
 		< SControlState			&
 		, SControlState			&
