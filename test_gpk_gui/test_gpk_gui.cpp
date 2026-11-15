@@ -306,41 +306,15 @@ sttc err_t sampleGUIEditorFieldProcess(SSampleGUI & app, SGUIEditor & editor, ci
 	cnst cid_t idEditedControl = ::sampleGUIEditorSelectedControl(editor);
 	if(controlInvalid(*editor.Dialog->GUI, idEditedControl))
 		rtrn 0;
-	for(u2_t iView = 0; iView < editor.DataViews.size(); ++iView) {
-		SDialogViewport & viewport = *editor.DataViews[iView];
-		cnst acid & fields = gui.Controls.Children[viewport.IdClient];
-		for(u2_t iField = 0; iField < fields.size(); ++iField) {
-			cnst cid_t idField = fields[iField];
-			cnst acid & options = gui.Controls.Children[idField];
-			if(idControl == idField) {
-				b8_t handled = false;
-				auto openEnum = [&](auto & member) -> err_t {
-					auto memberValue = member;
-					if constexpr(__is_enum(decltype(memberValue))) {
-						handled = true;
-						if(options.size()) {
-							b8_c hide = false == gui.Controls.IsHidden(options[0]);
-							for(u2_t iOption = 0; iOption < options.size(); ++iOption)
-								gui.Controls.SetHidden(options[iOption], hide);
-						}
-						else {
-							acid optionIds = {};
-							SControlPlacement placement = {};
-							placement.Align = ALIGN_TOP_RIGHT;
-							placement.Area.Size = {160, 18};
-							if_fail_fe(guiCreateControlList(gui, DIRECTION_DOWN, get_value_labels<decltype(memberValue)>(), idField, placement, ALIGN_CENTER_LEFT, optionIds));
-							cnst s2_t iSelected = get_value_index(memberValue);
-							if(in_range(iSelected, (s2_t)0, (s2_t)optionIds.size()))
-								if_fail_fe(guiSelect(gui, optionIds[iSelected]));
-						}
-					}
-					rtrn 0;
-				};
-				if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idField].Text, openEnum));
-				if(handled)
-					if_fail_fe(controlMetricsInvalidate(gui, viewport.IdGUIControl));
-				rtrn handled;
-			}
+	cnst cid_t idDropdown = controlParent(gui, idControl);
+	if(false == controlInvalid(gui, idDropdown)) {
+		cnst SControlConstraints & dropdownConstraints = gui.Controls.Constraints[idDropdown];
+		cnst cid_t idField = dropdownConstraints.DockToControl.Bottom;
+		if(false == controlInvalid(gui, idField)
+		&& dropdownConstraints.DockToControl.Left == idField
+		&& controlParent(gui, idField) == controlParent(gui, idDropdown)
+		) {
+			cnst acid & options = gui.Controls.Children[idDropdown];
 			for(u2_t iOption = 0; iOption < options.size(); ++iOption)
 				if(idControl == options[iOption]) {
 					b8_t handled = false;
@@ -352,17 +326,53 @@ sttc err_t sampleGUIEditorFieldProcess(SSampleGUI & app, SGUIEditor & editor, ci
 							if_true_fe(iOption >= definition.Values.size());
 							member = definition.Values[iOption];
 							if_fail_fe(guiSelect(gui, idControl));
-							for(u2_t iHide = 0; iHide < options.size(); ++iHide)
-								gui.Controls.SetHidden(options[iHide], true);
+							if_fail_fe(dropdownCollapse(gui, idDropdown));
 							if_fail_fe(controlMetricsInvalidate(*editor.Dialog->GUI, idEditedControl));
 						}
 						rtrn 0;
 					};
 					if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idField].Text, setEnum));
-					if(handled)
-						if_fail_fe(controlMetricsInvalidate(gui, viewport.IdGUIControl));
+					if(handled) {
+						cnst cid_t idClient = controlParent(gui, idDropdown);
+						if_fail_fe(controlMetricsInvalidate(gui, controlParent(gui, idClient)));
+					}
 					rtrn handled;
 				}
+		}
+	}
+	for(u2_t iView = 0; iView < editor.DataViews.size(); ++iView) {
+		SDialogViewport & viewport = *editor.DataViews[iView];
+		cnst acid & fields = gui.Controls.Children[viewport.IdClient];
+		for(u2_t iField = 0; iField < fields.size(); ++iField) {
+			cnst cid_t idField = fields[iField];
+			if(idControl == idField) {
+				b8_t handled = false;
+				auto openEnum = [&](auto & member) -> err_t {
+					auto memberValue = member;
+					if constexpr(__is_enum(decltype(memberValue))) {
+						handled = true;
+						SControlPlacement placement = {};
+						placement.Area.Size = {160, 18};
+						cnst cid_t idDropdown = guiDropdownCreate(gui, get_value_labels<decltype(memberValue)>(), idField, placement, ALIGN_CENTER_LEFT);
+						if_fail_fe(idDropdown);
+						cnst acid & options = gui.Controls.Children[idDropdown];
+						cnst s2_t iSelected = get_value_index(memberValue);
+						if(in_range(iSelected, (s2_t)0, (s2_t)options.size()))
+							if_fail_fe(guiSelect(gui, options[iSelected]));
+						if(gui.Controls.IsHidden(idDropdown)) {
+							if_fail_fe(dropdownExpand(gui, idDropdown));
+						}
+						else {
+							if_fail_fe(dropdownCollapse(gui, idDropdown));
+						}
+					}
+					rtrn 0;
+				};
+				if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idField].Text, openEnum));
+				if(handled)
+					if_fail_fe(controlMetricsInvalidate(gui, viewport.IdGUIControl));
+				rtrn handled;
+			}
 		}
 	}
 	rtrn 0;

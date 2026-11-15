@@ -239,3 +239,50 @@ gpk::cid_t			gpk::guiCreateControlList		(SGUI & gui, view<vcst_c> buttonText, ci
 	controlArgs.Margin	= {1, 1, 1, 1};
 	return guiCreateControlList(gui, {}, buttonText, iParent, controlArgs, textAlign, out_ids);
 }
+
+gpk::cid_t			gpk::guiDropdownCreate			(SGUI & gui, view<vcst_c> buttonText, cid_t idAnchor, cnst SControlPlacement & args, ALIGN textAlign) {
+	if_fail_fe(controlInvalid(gui, idAnchor));
+	cnst cid_t			idParent					= controlParent(gui, idAnchor);
+	if_fail_fe(controlInvalid(gui, idParent));
+	cnst acid			& siblings					= gui.Controls.Children[idParent];
+	for(u2_t iSibling = 0; iSibling < siblings.size(); ++iSibling) {
+		cnst cid_t			idSibling					= siblings[iSibling];
+		cnst SControlConstraints & constraints				= gui.Controls.Constraints[idSibling];
+		if(constraints.DockToControl.Left == idAnchor && constraints.DockToControl.Bottom == idAnchor)
+			return idSibling;
+	}
+
+	cnst cid_t			idDropdown					= controlCreateChild(gui, idParent);
+	SControlPlacement	& placement					= gui.Controls.Placement[idDropdown];
+	placement.Border								= {};
+	placement.Margin								= {};
+	placement.Area.Size							= {args.Area.Size.x, (s1_t)(args.Area.Size.y * buttonText.size())};
+	SControlConstraints	& constraints				= gui.Controls.Constraints[idDropdown];
+	constraints.DockToControl.Left					= idAnchor;
+	constraints.DockToControl.Bottom					= idAnchor;
+	gui.Controls.Draw[idDropdown].NoClient			= true;
+	gui.Controls.States[idDropdown].Mask				&= ~GUI_CONTROL_FLAG_Hovered;
+	gui.Controls.States[idDropdown].Mask				&= ~GUI_CONTROL_FLAG_Action;
+	acid				idOptions					= {};
+	if_fail_fe(guiCreateControlList(gui, DIRECTION_DOWN, buttonText, idDropdown, args, textAlign, idOptions));
+	gui.Controls.SetHidden(idDropdown, true);
+	return idDropdown;
+}
+
+gpk::err_t			gpk::dropdownExpand				(SGUI & gui, cid_t idDropdown) {
+	if_fail_fe(controlInvalid(gui, idDropdown));
+	cnst cid_t			idParent					= controlParent(gui, idDropdown);
+	cnst cid_t			idAnchor					= gui.Controls.Constraints[idDropdown].DockToControl.Bottom;
+	if_fail_fe(controlInvalid(gui, idParent));
+	if_fail_fe(controlInvalid(gui, idAnchor));
+	if_fail_fe(controlSetParent(gui, idDropdown, idAnchor));
+	if_fail_fe(controlSetParent(gui, idDropdown, idParent));
+	gui.Controls.SetHidden(idDropdown, false);
+	return controlMetricsInvalidate(gui, idDropdown);
+}
+
+gpk::err_t			gpk::dropdownCollapse			(SGUI & gui, cid_t idDropdown) {
+	if_fail_fe(controlInvalid(gui, idDropdown));
+	gui.Controls.SetHidden(idDropdown, true);
+	return 0;
+}

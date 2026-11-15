@@ -19,6 +19,9 @@ nmsp gpk
 	}
 
 	cid_t			guiCreateControlList		(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids);
+	cid_t			guiDropdownCreate			(SGUI & gui, view<vcst_c> buttonText, cid_t idAnchor, cnst SControlPlacement & args, ALIGN textAlign);
+	err_t			dropdownExpand				(SGUI & gui, cid_t idDropdown);
+	err_t			dropdownCollapse			(SGUI & gui, cid_t idDropdown);
 	tplt<tpnm _tUIEnum>
 	stin	cid_t	guiCreateControlList		(SGUI & gui, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids) {
 		return guiCreateControlList(gui, get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
