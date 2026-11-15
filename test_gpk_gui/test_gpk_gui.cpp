@@ -602,6 +602,7 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 		for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade)
 			if(idControl == guiControlGridControl(*app.Dialog->GUI, app.System[GUI_TYPE_Control_grid][app.PalettePicker.IndexGridTones[iColumn]], DIRECTION_RIGHT, {iShade, iRow})) {
 				::sampleGUIPaletteToneSelect(app, idControl);
+				::sampleGUIPaletteShadeSelect(app, iShade);
 				rtrn ::sampleGUIPalettePickerApply(app);
 			}
 		for(u2_t iShade = 0; iShade < ASCII_COLOR_COUNT; ++iShade)
