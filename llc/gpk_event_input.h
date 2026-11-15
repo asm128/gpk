@@ -67,10 +67,6 @@ nmsp gpk
 	stin	err_t	eventEnqueueKeyboardDown	(apobj<SEventSystem> & queue, u0_t key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD_Down	, key); }
 	stin	err_t	eventEnqueueKeyboardSysUp	(apobj<SEventSystem> & queue, u0_t key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD_SysUp	, key); }
 	stin	err_t	eventEnqueueKeyboardSysDown	(apobj<SEventSystem> & queue, u0_t key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD_SysDown, key); }
-	stin	err_t	eventEnqueueKeyboardInfoUp		(apobj<SEventSystem> & queue, cnst SInputKeyEvent & event)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD(0x80 & EVENT_KEYBOARD_Up		), event); }
-	stin	err_t	eventEnqueueKeyboardInfoDown	(apobj<SEventSystem> & queue, cnst SInputKeyEvent & event)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD(0x80 & EVENT_KEYBOARD_Down		), event); }
-	stin	err_t	eventEnqueueKeyboardInfoSysUp	(apobj<SEventSystem> & queue, cnst SInputKeyEvent & event)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD(0x80 & EVENT_KEYBOARD_SysUp		), event); }
-	stin	err_t	eventEnqueueKeyboardInfoSysDown	(apobj<SEventSystem> & queue, cnst SInputKeyEvent & event)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD(0x80 & EVENT_KEYBOARD_SysDown	), event); }
 
 	GDEFINE_ENUM_TYPE (EVENT_MOUSE, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Position	, 0);
