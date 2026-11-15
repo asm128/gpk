@@ -170,11 +170,6 @@ sttc	gpk::err_t	win32EnqueueText		(SWindow & window, u2_t codePoint, LPARAM lPar
 	u2_c		keySym					= ::win32KeySym(0, lParam);
 	return eventEnqueueTextChar(window.EventQueue, SInputTextEvent{codePoint, keySym, 0, scanCode});
 }
-sttc	gpk::err_t	win32EnqueueText		(SWindow & window, u2_t codePoint) {
-	if(0 == codePoint)
-		return 0;
-	return eventEnqueueTextChar(window.EventQueue, codePoint);
-}
 sttc	gpk::err_t	win32EnqueueKey			(SWindow & window, UINT message, WPARAM wParam, LPARAM lParam) {
 	b8_c		pressed					= WM_KEYDOWN == message || WM_SYSKEYDOWN == message;
 	cnst u0_t		keyCode					= ::win32SystemKey(wParam, lParam);
@@ -183,10 +178,10 @@ sttc	gpk::err_t	win32EnqueueKey			(SWindow & window, UINT message, WPARAM wParam
 	cnst SInputKeyEvent keyEvent				= {keyCode, ::win32ScanCode(lParam), 0, ::win32KeySym(wParam, lParam), ::win32InputModifiers(), time};
 	switch(message) {
 	default				: return -1;
-	case WM_KEYDOWN		: return eventEnqueueKeyboardInfoDown	(window.EventQueue, keyEvent) | eventEnqueueKeyboardDown	(window.EventQueue, keyCode);
-	case WM_KEYUP		: return eventEnqueueKeyboardInfoUp		(window.EventQueue, keyEvent) | eventEnqueueKeyboardUp		(window.EventQueue, keyCode);
-	case WM_SYSKEYDOWN	: return eventEnqueueKeyboardInfoSysDown(window.EventQueue, keyEvent) | eventEnqueueKeyboardSysDown	(window.EventQueue, keyCode);
-	case WM_SYSKEYUP	: return eventEnqueueKeyboardInfoSysUp	(window.EventQueue, keyEvent) | eventEnqueueKeyboardSysUp	(window.EventQueue, keyCode);
+	case WM_KEYDOWN		: return eventEnqueueKeyboardDown	(window.EventQueue, keyEvent);
+	case WM_KEYUP		: return eventEnqueueKeyboardUp		(window.EventQueue, keyEvent);
+	case WM_SYSKEYDOWN	: return eventEnqueueKeyboardSysDown(window.EventQueue, keyEvent);
+	case WM_SYSKEYUP	: return eventEnqueueKeyboardSysUp	(window.EventQueue, keyEvent);
 	}
 }
 
@@ -249,7 +244,6 @@ sttc	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	case WM_CHAR			:
 	case WM_SYSCHAR		: {
 		verbose_printf("WM_CHAR          '%u'.", wParam);
-		if_fail_e(::win32EnqueueText(mainDisplay, ::win32TextCodePoint(displayDetail, (u1_t)wParam)));
 		if_fail_e(::win32EnqueueText(mainDisplay, ::win32TextCodePoint(displayDetail, (u1_t)wParam), lParam));
 		mainDisplay.Repaint = true;
 		break;
@@ -257,7 +251,6 @@ sttc	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	case WM_UNICHAR		: {
 		if(UNICODE_NOCHAR == wParam)
 			return TRUE;
-		if_fail_e(::win32EnqueueText(mainDisplay, (u2_t)wParam));
 		if_fail_e(::win32EnqueueText(mainDisplay, (u2_t)wParam, lParam));
 		mainDisplay.Repaint = true;
 		return 0;

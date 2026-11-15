@@ -254,11 +254,11 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			cnst SInputKeyEvent keyEvent = {keyCode, key.detail, detail.XKBDeviceId, keySym, ::xcbInputModifiers(detail, input.KeyboardCurrent), key.time};
 			b8_c			systemKey					= SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[SYSTEM_KEY_Menu];
 			if_fail_e(pressed
-				? systemKey ? err_t(eventEnqueueKeyboardInfoSysDown(displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardInfoDown(displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardDown(displayInstance.EventQueue, keyCode))
-				: systemKey ? err_t(eventEnqueueKeyboardInfoSysUp  (displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardInfoUp  (displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyCode))
+				? systemKey ? eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyEvent) : eventEnqueueKeyboardDown(displayInstance.EventQueue, keyEvent)
+				: systemKey ? eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyEvent) : eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyEvent)
 				);
 			if(codePoint)
-				if_fail_e(err_t(eventEnqueueTextInfoChar(displayInstance.EventQueue, SInputTextEvent{codePoint, keySym, detail.XKBDeviceId, key.detail}) | eventEnqueueTextChar(displayInstance.EventQueue, codePoint)));
+				if_fail_e(eventEnqueueTextChar(displayInstance.EventQueue, SInputTextEvent{codePoint, keySym, detail.XKBDeviceId, key.detail}));
 			//
 			displayInstance.Repaint = true;
 			break;
