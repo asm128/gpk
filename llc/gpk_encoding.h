@@ -1,4 +1,5 @@
 #include "gpk_array.h"
+#include "gpk_array_static.h"
 #include "gpk_string.h"
 #include "gpk_stdstring.h"
 
@@ -12,6 +13,10 @@ nmsp gpk
 	err_t			hexDecode				(vcst_t in_hexed, au0_t & outputBinary	);
 	err_t			hexDecode				(vcst_t in_hexed, as0_t & outputBinary	);
 	stin	err_t	hexEncode				(cnst vcs0_t & inputBinary, string & out_hexed	)			{ return hexEncode(vcu0_t{(cnst u0_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
+
+	extern astu2_c<128>	CP437Map;
+	u2_t			unicodeFromCP437		(u0_t glyph);
+	u0_t			cp437FromUnicode		(u2_t codePoint, u0_t fallback = '?');
 
 	// Based on Gary Ardell's code for VB.
 	err_t			ardellEncode			(as2_t & cache, vcu0_c & input, u3_t key, b8_t salt, au0_t & output);

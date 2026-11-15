@@ -233,33 +233,33 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			quit = true;
 	}
 #elif defined(GPK_XCB)
-	::gpk::SInput				& input						= *displayInstance.Input;
+	SInput				& input						= *displayInstance.Input;
 	int							counter						= 0;
 	while(xcb_generic_event_t * event = xcb_poll_for_event(displayInstance.PlatformDetail.Connection)) {
 		switch(event->response_type & ~0x80) {
 		default					: break;
-		case XCB_EXPOSE			: displayInstance.Repaint = true; if_fail_e(::gpk::eventEnqueueScreenRedraw(displayInstance.EventQueue, 0)); break;
+		case XCB_EXPOSE			: displayInstance.Repaint = true; if_fail_e(eventEnqueueScreenRedraw(displayInstance.EventQueue, 0)); break;
 		case XCB_KEY_PRESS		:
 		case XCB_KEY_RELEASE	: {
 			b8_c				pressed					= XCB_KEY_PRESS == (event->response_type & ~0x80);
 			cnst xcb_key_press_event_t & key					= *(xcb_key_press_event_t*)event;
-			::gpk::SWindowPlatformDetail & detail				= displayInstance.PlatformDetail;
+			SWindowPlatformDetail & detail				= displayInstance.PlatformDetail;
 			cnst xkb_keysym_t	keySym						= xkb_state_key_get_one_sym(detail.XKBState, key.detail);
 			cnst xkb_keysym_t	baseKeySym					= ::xcbBaseKeySym(detail, key.detail, keySym);
-			cnst u0_t			keyCode						= ::xcbSystemKey(baseKeySym);
-			u2_c			codePoint					= pressed ? ::xcbTextCodePoint(detail, key.detail, keySym) : 0;
-
+			u0_c				keyCode						= ::xcbSystemKey(baseKeySym);
+			u2_c				codePoint					= pressed ? ::xcbTextCodePoint(detail, key.detail, keySym) : 0;
 			xkb_state_update_key(detail.XKBState, key.detail, pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
-			if_fail_e(::gpk::inputKeyboardStateSet(input, keyCode, pressed, detail.XKBDeviceId, key.time * .001f));
+			if_fail_e(inputKeyboardStateSet(input, keyCode, pressed, detail.XKBDeviceId, key.time * .001f));
 
-			cnst ::gpk::SInputKeyEvent keyEvent = {keyCode, key.detail, detail.XKBDeviceId, keySym, ::xcbInputModifiers(detail, input.KeyboardCurrent), key.time};
-			b8_c			systemKey					= ::gpk::SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[::gpk::SYSTEM_KEY_Menu];
+			cnst SInputKeyEvent keyEvent = {keyCode, key.detail, detail.XKBDeviceId, keySym, ::xcbInputModifiers(detail, input.KeyboardCurrent), key.time};
+			b8_c			systemKey					= SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[SYSTEM_KEY_Menu];
 			if_fail_e(pressed
-				? systemKey ? ::gpk::eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyEvent) : ::gpk::eventEnqueueKeyboardDown(displayInstance.EventQueue, keyEvent)
-				: systemKey ? ::gpk::eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyEvent) : ::gpk::eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyEvent)
+				? systemKey ? err_t(eventEnqueueKeyboardInfoSysDown(displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardInfoDown(displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardDown(displayInstance.EventQueue, keyCode))
+				: systemKey ? err_t(eventEnqueueKeyboardInfoSysUp  (displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardInfoUp  (displayInstance.EventQueue, keyEvent) | eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyCode))
 				);
 			if(codePoint)
-				if_fail_e(::gpk::eventEnqueueTextChar(displayInstance.EventQueue, ::gpk::SInputTextEvent{codePoint, keySym, detail.XKBDeviceId, key.detail}));
+				if_fail_e(err_t(eventEnqueueTextInfoChar(displayInstance.EventQueue, SInputTextEvent{codePoint, keySym, detail.XKBDeviceId, key.detail}) | eventEnqueueTextChar(displayInstance.EventQueue, codePoint)));
+			//
 			displayInstance.Repaint = true;
 			break;
 		}
@@ -268,11 +268,11 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			displayInstance.Repaint = true;
 			if(button.detail == 4 || button.detail == 5) {
 				input.MouseCurrent.Deltas.z = button.detail == 4 ? 1 : -1;
-				if_fail_e(::gpk::eventEnqueueMouseWheel(displayInstance.EventQueue, input.MouseCurrent.Deltas.z));
+				if_fail_e(eventEnqueueMouseWheel(displayInstance.EventQueue, input.MouseCurrent.Deltas.z));
 			}
 			else if(button.detail && button.detail <= input.MouseCurrent.ButtonState.size()) {
 				input.MouseCurrent.ButtonState[button.detail - 1] = 1;
-				if_fail_e(::gpk::eventEnqueueMouseDown(displayInstance.EventQueue, button.detail - 1));
+				if_fail_e(eventEnqueueMouseDown(displayInstance.EventQueue, button.detail - 1));
 			}
 			break;
 		}
@@ -281,7 +281,7 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			displayInstance.Repaint = true;
 			if(button.detail && button.detail <= input.MouseCurrent.ButtonState.size() && button.detail != 4 && button.detail != 5) {
 				input.MouseCurrent.ButtonState[button.detail - 1] = 0;
-				if_fail_e(::gpk::eventEnqueueMouseUp(displayInstance.EventQueue, button.detail - 1));
+				if_fail_e(eventEnqueueMouseUp(displayInstance.EventQueue, button.detail - 1));
 			}
 			break;
 		}
@@ -289,22 +289,22 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			cnst xcb_motion_notify_event_t & motion = *(xcb_motion_notify_event_t*)event;
 			cnst s2_t x = motion.same_screen ? motion.event_x : motion.root_x;
 			cnst s2_t y = motion.same_screen ? motion.event_y : motion.root_y;
-			input.MouseCurrent.Position.x = ::gpk::clamped(x, 0, (s2_t)displayInstance.Size.x);
-			input.MouseCurrent.Position.y = ::gpk::clamped(y, 0, (s2_t)displayInstance.Size.y);
+			input.MouseCurrent.Position.x = clamped(x, 0, (s2_t)displayInstance.Size.x);
+			input.MouseCurrent.Position.y = clamped(y, 0, (s2_t)displayInstance.Size.y);
 			input.MouseCurrent.Deltas.x = input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 			input.MouseCurrent.Deltas.y = input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 			displayInstance.Repaint = true;
-			if_fail_e(::gpk::eventEnqueueMousePosition(displayInstance.EventQueue, input.MouseCurrent.Position));
+			if_fail_e(eventEnqueueMousePosition(displayInstance.EventQueue, input.MouseCurrent.Position));
 			break;
 		}
 		case XCB_CONFIGURE_NOTIFY: {
 			cnst xcb_configure_notify_event_t & configure = *(xcb_configure_notify_event_t*)event;
-			cnst ::gpk::n2u1_t size = {configure.width, configure.height};
+			cnst n2u1_t size = {configure.width, configure.height};
 			if(size != displayInstance.Size) {
 				displayInstance.PreviousSize = displayInstance.Size;
 				displayInstance.Size = size;
 				displayInstance.Resized = displayInstance.Repaint = true;
-				if_fail_e(::gpk::eventEnqueueScreenResize(displayInstance.EventQueue, size));
+				if_fail_e(eventEnqueueScreenResize(displayInstance.EventQueue, size));
 			}
 			break;
 		}
@@ -312,11 +312,11 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			cnst xcb_client_message_event_t & message = *(xcb_client_message_event_t*)event;
 			if(message.data.data32[0] == displayInstance.PlatformDetail.WMDelete) {
 				displayInstance.Closed = quit = true;
-				if_fail_e(::gpk::eventEnqueueScreenClose(displayInstance.EventQueue));
+				if_fail_e(eventEnqueueScreenClose(displayInstance.EventQueue));
 			}
 			break;
 		}
-		case XCB_DESTROY_NOTIFY	: displayInstance.Closed = quit = true; if_fail_e(::gpk::eventEnqueueScreenDestroy(displayInstance.EventQueue)); break;
+		case XCB_DESTROY_NOTIFY	: displayInstance.Closed = quit = true; if_fail_e(eventEnqueueScreenDestroy(displayInstance.EventQueue)); break;
 		}
 		free(event);
 		if(100 <= ++counter)
@@ -328,7 +328,7 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 	return quit ? 1 : 0;
 }
 
-gpk::err_t 		gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
+gpk::err_t 		gpk::windowUpdate		(SWindow & displayInstance)											{
 	displayInstance.EventQueue.clear();
 	displayInstance.Resized	= false;
 	displayInstance.Repaint	= false;
@@ -339,8 +339,8 @@ gpk::err_t 		gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
 		if(1 == windowUpdateTick(displayInstance))
 			quit					= true;
 #elif defined(GPK_XCB)
-	cnst ::gpk::err_t updateResult = ::gpk::windowUpdateTick(displayInstance);
-	if_true_ve(updateResult, ::gpk::failed(updateResult));
+	err_t updateResult;
+	if_fail_vef(updateResult, updateResult = windowUpdateTick(displayInstance), "updateResult:%" GPK_FMT_U2, updateResult);
 	quit = 1 == updateResult;
 #endif // GPK_WINDOWS
 	return quit ? 1 : 0;
