@@ -2,6 +2,7 @@
 #include "gpk_file.h"
 #include "gpk_chrono.h"
 #include "gpk_parse.h"
+#include "gpk_append_json.h"
 #include "gpk_string_compose.h"
 #include "gpk_string_time.h"
 
@@ -12,19 +13,6 @@ GPK_USING_ASTATIC();
 
 usng gpk::err_t, gpk::SRuntimeValues, gpk::STestRunReport, gpk::aobj;
 
-sttc gpk::err_t testJSONString		(::gpk::vcst_t text, ::gpk::string & result) {
-	result.clear();
-	if_fail_fe(result.push_back('"'));
-	stxp sc_t hex[] = "0123456789abcdef";
-	for(::gpk::u2_t i = 0; i < text.size(); ++i) {
-		cnst auto c = (::gpk::u0_t)text[i];
-		if(c == '"' || c == '\\') { if_fail_fe(::gpk::append_strings(result, '\\', (::gpk::sc_t)c)); }
-		else if(c < 32) { if_fail_fe(::gpk::append_strings(result, "\\u00", hex[c >> 4], hex[c & 15])); }
-		else { if_fail_fe(result.push_back((::gpk::sc_t)c)); }
-	}
-	rtrn result.push_back('"');
-}
-
 sttc gpk::err_t	testReportWrite		(::gpk::vcst_t folder, ::gpk::vcst_t filename, ::gpk::vcst_t contents) {
 	::gpk::string path;
 	if_fail_fe(::gpk::pathNameCompose(folder, filename, path));
@@ -32,8 +20,8 @@ sttc gpk::err_t	testReportWrite		(::gpk::vcst_t folder, ::gpk::vcst_t filename, 
 }
 sttc gpk::err_t	testSummaryJSON		(cnst gpk::STestSuiteReport & report, ::gpk::string & output) {
 	::gpk::string name, folder;
-	if_fail_fe(testJSONString(report.Name, name));
-	if_fail_fe(testJSONString(report.Folder, folder));
+	if_fail_fe(::gpk::appendJSONString(name, report.Name));
+	if_fail_fe(::gpk::appendJSONString(folder, report.Folder));
 	output.clear();
 	rtrn ::gpk::append_strings(output, "{\"name\":", name
 		, ",\"folder\":"		, folder
@@ -45,30 +33,30 @@ sttc gpk::err_t	testSummaryJSON		(cnst gpk::STestSuiteReport & report, ::gpk::st
 		, ",\"failed\":"		, ::gpk::str(report.Failures)
 		, ",\"result_groups\":"	, ::gpk::str(report.Groups));
 }
-gpk::err_t	gpk::testSuiteReportWrite		(::gpk::vcst_t folder, cnst gpk::STestSuiteReport & report, cnst gpk::ATestError & results, cnst gpk::STestLogBuffer & log) {
-	::gpk::string		json;
+gpk::err_t	gpk::testSuiteReportWrite		(vcst_t folder, cnst gpk::STestSuiteReport & report, cnst gpk::ATestError & results, cnst gpk::STestLogBuffer & log) {
+	string		json;
 	if_fail_fe(testSummaryJSON(report, json));
 	if_fail_fe(append_strings(json, ",\"schema_version\":1,\"results\":["));
-	for(::gpk::u2_t i = 0; i < results.size(); ++i) {
+	for(u2_t i = 0; i < results.size(); ++i) {
 		cnst auto & item = results[i];
-		::gpk::string enumName, valueName, description;
-		if_fail_fe(testJSONString(item.EnumName, enumName));
-		if_fail_fe(testJSONString(item.ValueName, valueName));
-		if_fail_fe(testJSONString(item.Description, description));
+		string enumName, valueName, description;
+		if_fail_fe(appendJSONString(enumName, item.EnumName));
+		if_fail_fe(appendJSONString(valueName, item.ValueName));
+		if_fail_fe(appendJSONString(description, item.Description));
 		if(i) {
 			if_fail_fe(json.push_back(','));
 		}
-		if_fail_fe(::gpk::append_strings(json, "{\"enum\":", enumName
+		if_fail_fe(append_strings(json, "{\"enum\":", enumName
 			, ",\"name\":", valueName
-			, ",\"value\":", ::gpk::str(item.Value)
+			, ",\"value\":", str(item.Value)
 			, ",\"description\":", description
-			, ",\"passed\":", ::gpk::str(item.SuccessCount)
-			, ",\"failed\":", ::gpk::str(item.Count), '}'));
+			, ",\"passed\":", str(item.SuccessCount)
+			, ",\"failed\":", str(item.Count), '}'));
 	}
 	if_fail_fe(append_strings(json, "]}\n"));
 	cnst gpk::err_t logResult = testReportWrite(folder, "console.log", log.Text);
 	cnst gpk::err_t jsonResult = testReportWrite(folder, "results.json", json);
-	rtrn ::gpk::min(logResult, jsonResult);
+	rtrn min(logResult, jsonResult);
 }
 
 sttc gpk::err_t	testRunFolder			(::gpk::vcst_t parent, ::gpk::string & folder) {
@@ -88,7 +76,7 @@ sttc gpk::err_t	testRunReportWrite		(cnst gpk::STestRunReport & run, gpk::err_t 
 		::gpk::string summary, relativePath, relativeName;
 		if_fail_fe(testSummaryJSON(suite, summary));
 		if_fail_fe(::gpk::append_strings(relativeName, suite.Folder, "/results.json"));
-		if_fail_fe(testJSONString(relativeName, relativePath));
+		if_fail_fe(::gpk::appendJSONString(relativePath, relativeName));
 		if_fail_fe(::gpk::append_strings(suites, summary, ",\"results\":", relativePath, '}'));
 	}
 #ifdef _DEBUG
@@ -97,7 +85,7 @@ sttc gpk::err_t	testRunReportWrite		(cnst gpk::STestRunReport & run, gpk::err_t 
 	stxp ::gpk::vcst_t configuration = "Release";
 #endif
 	::gpk::string config, json;
-	if_fail_fe(testJSONString(configuration, config));
+	if_fail_fe(::gpk::appendJSONString(config, configuration));
 	if_fail_fe(::gpk::append_strings(json
 		, "{\"schema_version\":1,\"name\":\"gpk_test_core\",\"configuration\":", config
 		, ",\"pointer_bits\":", ::gpk::str(sizeof(void*) * 8), ",\"status\":", ::gpk::str(status)

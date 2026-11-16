@@ -140,6 +140,7 @@ nmsp gpk
 
 	err_t	jsonObjectGetCString(cnst SJSONReader & reader, u2_t iNode, vcst_t	& value);
 	err_t	jsonObjectGetString (cnst SJSONReader & reader, u2_t iNode, vcst_t	& value);
+	err_t	jsonObjectGetString (cnst SJSONReader & reader, u2_t iNode, string	& value);
 	err_t	jsonObjectGetBoolean(cnst SJSONReader & reader, u2_t iNode, b8_t	& value);
 	err_t	jsonObjectGetInteger(cnst SJSONReader & reader, u2_t iNode, u0_t	& value);
 	err_t	jsonObjectGetInteger(cnst SJSONReader & reader, u2_t iNode, u1_t	& value);

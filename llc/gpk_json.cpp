@@ -4,6 +4,7 @@
 #include "gpk_parse.h"
 #include "gpk_math.h"
 #include "gpk_cstring.h"
+#include "gpk_encoding.h"
 #include "gpk_string_compose.h"
 
 gpk::err_t	gpk::jsonParseError	(cnst SJSONReaderState & reader, asc_t & errorString) {
@@ -735,6 +736,35 @@ tplTstin	gpk::err_t	jsonObjectGetInteger	(cnst gpk::SJSONReader & reader, u2_t i
 tplTstin	gpk::err_t	jsonObjectGetDecimal	(cnst gpk::SJSONReader & reader, u2_t iNode, T & value)	{ f3_t dealiased; memcpy(&dealiased, &reader[iNode]->Token->Value, szof(f3_t)); value = (T)dealiased; rtrn iNode; }
 gpk::err_t	gpk::jsonObjectGetCString	(cnst SJSONReader & reader, u2_t iNode, vcst_t 	& value)	{ value = reader.View[iNode]; rtrn iNode; }
 gpk::err_t	gpk::jsonObjectGetString	(cnst SJSONReader & reader, u2_t iNode, vcst_t 	& value)	{ rtrn jsonObjectGetCString(reader, iNode, value); }
+gpk::err_t	gpk::jsonObjectGetString	(cnst SJSONReader & reader, u2_t iNode, string 	& value)	{
+	vcst_t encoded = {};
+	if_fail_fe(jsonObjectGetCString(reader, iNode, encoded));
+	value.clear();
+	for(u2_t i = 0; i < encoded.size(); ++i) {
+		if('\\' != encoded[i]) {
+			if_fail_fe(value.push_back(encoded[i]));
+			continue;
+		}
+		if_true_fe(++i >= encoded.size());
+		switch(encoded[i]) {
+		case '"': case '\\': case '/': if_fail_fe(value.push_back(encoded[i])); break;
+		case 'b': if_fail_fe(value.push_back('\b')); break;
+		case 'f': if_fail_fe(value.push_back('\f')); break;
+		case 'n': if_fail_fe(value.push_back('\n')); break;
+		case 'r': if_fail_fe(value.push_back('\r')); break;
+		case 't': if_fail_fe(value.push_back('\t')); break;
+		case 'u': {
+			u2_t codePoint = {};
+			if_fail_fe(jsonToCodePoint({&encoded[i + 1], encoded.size() - i - 1}, codePoint));
+			if_fail_fe(utf8FromCodePoint(codePoint, value));
+			i += codePoint > 0xFFFF ? 10 : 4;
+			break;
+		}
+		default: rtrn -1;
+		}
+	}
+	rtrn iNode;
+}
 gpk::err_t	gpk::jsonObjectGetInteger	(cnst SJSONReader & reader, u2_t iNode, u0_t	& value)	{ rtrn ::jsonObjectGetInteger(reader, iNode, value); }
 gpk::err_t	gpk::jsonObjectGetInteger	(cnst SJSONReader & reader, u2_t iNode, u1_t	& value)	{ rtrn ::jsonObjectGetInteger(reader, iNode, value); }
 gpk::err_t	gpk::jsonObjectGetInteger	(cnst SJSONReader & reader, u2_t iNode, u2_t	& value)	{ rtrn ::jsonObjectGetInteger(reader, iNode, value); }

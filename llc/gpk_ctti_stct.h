@@ -1,6 +1,7 @@
 #include "gpk_ctti_parse.h"
 #include "gpk_append_json.h"
 #include "gpk_array_obj.h"
+#include "gpk_array_static.h"
 #include "gpk_cstring.h"
 #include "gpk_json.h"
 #include "gpk_string.h"
@@ -256,6 +257,39 @@ nmsp gpk
 	err_t cttiValueSave(string & output, cnst T & input) {
 		rtrn saveCTTI(output, input);
 	}
+	inln err_t cttiValueSave(string & output, cnst string & input) {
+		rtrn appendJSONString(output, input);
+	}
+	inln err_t cttiValueSave(string & output, vcst_t input) {
+		rtrn appendJSONString(output, input);
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, view<T> input) {
+		u2_c offset = output.size();
+		if_fail_fe(output.push_back('['));
+		for(u2_t i = 0; i < input.size(); ++i) {
+			if(i) if_fail_fe(output.push_back(','));
+			if_fail_fe(cttiValueSave(output, input[i]));
+		}
+		if_fail_fe(output.push_back(']'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T, u2_t N>
+	err_t cttiValueSave(string & output, cnst T (&input)[N]) {
+		rtrn cttiValueSave(output, view<cnst T>{input});
+	}
+	tplt<tpnm T, u2_t N>
+	err_t cttiValueSave(string & output, cnst array_static<T, N> & input) {
+		rtrn cttiValueSave(output, view<cnst T>{input.begin(), input.size()});
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, cnst array_pod<T> & input) {
+		rtrn cttiValueSave(output, view<cnst T>{input.begin(), input.size()});
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, cnst array_obj<T> & input) {
+		rtrn cttiValueSave(output, view<cnst T>{input.begin(), input.size()});
+	}
 
 	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, b8_t & output) {
 		if_true_fe(input.Token[iNode].Type != JSON_TYPE_BOOLEAN);
@@ -287,6 +321,51 @@ nmsp gpk
 	tplt<tpnm T> requires ctti_struct<T>
 	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
 		rtrn loadCTTI(input, iNode, output);
+	}
+	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, string & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
+		rtrn jsonObjectGetString(input, iNode, output);
+	}
+	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, vcst_t & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
+		rtrn jsonObjectGetString(input, iNode, output);
+	}
+	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, view<T> output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_ARRAY);
+		cnst err_t count = jsonArraySize(input, iNode);
+		if_fail_fe(count);
+		if_true_fe((u2_t)count != output.size());
+		for(u2_t i = 0; i < output.size(); ++i) {
+			cnst err_t iValue = jsonArrayValueGet(input, iNode, i);
+			if_fail_fe(iValue);
+			if_fail_fe(cttiValueLoad(input, (u2_t)iValue, output[i]));
+		}
+		rtrn iNode;
+	}
+	tplt<tpnm T, u2_t N>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T (&output)[N]) {
+		rtrn cttiValueLoad(input, iNode, view<T>{output});
+	}
+	tplt<tpnm T, u2_t N>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, array_static<T, N> & output) {
+		rtrn cttiValueLoad(input, iNode, view<T>{output.begin(), output.size()});
+	}
+	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, array_pod<T> & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_ARRAY);
+		cnst err_t count = jsonArraySize(input, iNode);
+		if_fail_fe(count);
+		if_fail_fe(output.resize((u2_t)count));
+		rtrn cttiValueLoad(input, iNode, view<T>{output.begin(), output.size()});
+	}
+	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, array_obj<T> & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_ARRAY);
+		cnst err_t count = jsonArraySize(input, iNode);
+		if_fail_fe(count);
+		if_fail_fe(output.resize((u2_t)count));
+		rtrn cttiValueLoad(input, iNode, view<T>{output.begin(), output.size()});
 	}
 
 	tplt<tpnm T> requires ctti_struct<T>

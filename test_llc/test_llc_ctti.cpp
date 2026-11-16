@@ -106,6 +106,25 @@ CTTI_STCT(SCTTIInstancePacked,
 	);
 #pragma pack(pop)
 
+CTTI_STCT(SCTTIInstanceText,
+	struct SCTTIInstanceText {
+		gpk::string		Text	= {};
+		gpk::vcst_t		Label	= {};
+	};
+	);
+
+usng SCTTIFixedValues	= ::gpk::astatic<::gpk::u1_t, 3>;
+usng SCTTIPodValues		= ::gpk::apod<::gpk::s1_t>;
+usng SCTTIObjectValues	= ::gpk::aobj<SCTTIInstanceNested>;
+CTTI_STCT(SCTTIInstanceArrays,
+	struct SCTTIInstanceArrays {
+		SCTTIFixedValues		Fixed	= {};
+		SCTTIPodValues			Pods	= {};
+		SCTTIObjectValues		Objects	= {};
+		gpk::view<gpk::s1_t>	Window	= {};
+	};
+	);
+
 CTTI_ENUM_COMPILED(SCTTIEnumSingle, gpk::u0_t, SCTTIEnumSingleValue = 9);
 CTTI_ENUM_COMPILED(SCTTIEnumBoundary, gpk::u0_t,
 	SCTTIEnumBoundary00, SCTTIEnumBoundary01, SCTTIEnumBoundary02, SCTTIEnumBoundary03,
@@ -312,6 +331,44 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 		|| loadedPacked.Enabled != sourcePacked.Enabled
 		|| loadedPacked.Signed32 != sourcePacked.Signed32
 		);
+
+	SCTTIInstanceText sourceText = {};
+	sourceText.Text = ::gpk::string{"quoted \"text\" \\ path\nnext"};
+	sourceText.Label = ::gpk::vcst_t{"Static GUI label"};
+	::gpk::string serializedText = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(::gpk::saveCTTI(serializedText, sourceText)));
+	::gpk::vcst_t serializedTextInput = serializedText;
+	SCTTIInstanceText loadedText = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedTextInput, loadedText)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedTextInput.size());
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedText.Text != sourceText.Text);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedText.Label != sourceText.Label);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedText.Label.begin() < serializedText.begin() || loadedText.Label.end() > serializedText.end());
+
+	SCTTIInstanceArrays sourceArrays = {};
+	sourceArrays.Fixed[0] = 31;
+	sourceArrays.Fixed[1] = 32;
+	sourceArrays.Fixed[2] = 33;
+	sourceArrays.Pods = ::gpk::apod<::gpk::s1_t>{-41, 42, -43, 44};
+	if_fail_fe(sourceArrays.Objects.resize(2));
+	sourceArrays.Objects[0] = {51, -520000};
+	sourceArrays.Objects[1] = {53, 540000};
+	::gpk::s1_t sourceWindow[] = {-61, 62};
+	sourceArrays.Window = {sourceWindow};
+	::gpk::string serializedArrays = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(::gpk::saveCTTI(serializedArrays, sourceArrays)));
+	::gpk::vcst_t serializedArraysInput = serializedArrays;
+	::gpk::s1_t loadedWindow[2] = {};
+	SCTTIInstanceArrays loadedArrays = {};
+	loadedArrays.Window = {loadedWindow};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedArraysInput, loadedArrays)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedArraysInput.size());
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Fixed != sourceArrays.Fixed);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Pods != sourceArrays.Pods);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Objects.size() != sourceArrays.Objects.size());
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Objects[0].Code != sourceArrays.Objects[0].Code || loadedArrays.Objects[0].Offset != sourceArrays.Objects[0].Offset);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Objects[1].Code != sourceArrays.Objects[1].Code || loadedArrays.Objects[1].Offset != sourceArrays.Objects[1].Offset);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedWindow[0] != sourceWindow[0] || loadedWindow[1] != sourceWindow[1]);
 
 	::gpk::vcst_t invalidInput = "{\"Count\":1}";
 	cnst ::gpk::vcst_t invalidInputOriginal = invalidInput;
