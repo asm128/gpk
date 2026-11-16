@@ -125,7 +125,7 @@ nmsp gpk
 				Dialog.Input								= inputState;
 			}
 			SGUI										 & gui				= *Dialog.GUI;
-			sttc cnst vcst_t							connectingString	= {"Connecting..."};
+			sttc vcst_c							connectingString	= {"Connecting..."};
 			switch(Client.Connection.State) {
 			case CONNECTION_STATE_IDLE			: break;
 			case CONNECTION_STATE_DISCONNECTED	: 

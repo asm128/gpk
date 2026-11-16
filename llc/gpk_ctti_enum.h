@@ -197,14 +197,14 @@ nmsp gpk
 		vcst_t					Name			= {};
 		vcst_t					UnderlyingType	= {};
 		cnst SCTTIEnumValue<s3_t> *	Values			= {};
-		cnst vcst_t *				Names			= {};
-		cnst vcst_t *				Initializers	= {};
+		vcst_c *				Names			= {};
+		vcst_c *				Initializers	= {};
 		u2_t					Count			= {};
 		SCTTIEnumDeclaration *		Next			= {};
 
 		tplt<size_t NDeclaration>
 		SCTTIEnumDeclaration
-			( cnst vcst_t file
+			( vcst_c file
 			, u2_c line
 			, cnst SCTTIEnumParseResult<s3_t, NDeclaration> & metadata
 			, cnst SCTTIEnumViews<NDeclaration> & views
@@ -236,7 +236,7 @@ nmsp gpk
 		rtrn 0;
 	}
 
-	inln cnst SCTTIEnumDeclaration * cttiEnum(cnst vcst_t name) nxpt {
+	inln cnst SCTTIEnumDeclaration * cttiEnum(vcst_c name) nxpt {
 		for(cnst SCTTIEnumDeclaration * current = cttiEnumDeclarationRoot(); current; current = current->Next)
 			if(current->Name == name)
 				rtrn current;

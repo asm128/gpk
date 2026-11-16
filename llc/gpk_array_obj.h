@@ -299,8 +299,8 @@ nmsp gpk
 	}
 
 	
-	err_t			filterPrefix	(view<cnst vcst_t> input, vcst_t prefix, aobj<vcst_t> & filtered, b8_t nullIncluded = false);
-	err_t			filterPostfix	(view<cnst vcst_t> input, vcst_t prefix, aobj<vcst_t> & filtered, b8_t nullIncluded = false);
+	err_t			filterPrefix	(view<vcst_c> input, vcst_t prefix, aobj<vcst_t> & filtered, b8_t nullIncluded = false);
+	err_t			filterPostfix	(view<vcst_c> input, vcst_t prefix, aobj<vcst_t> & filtered, b8_t nullIncluded = false);
 }
 
 #define GPK_USING_AOBJ()													\

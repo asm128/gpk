@@ -51,7 +51,7 @@ sttc ::gpk::err_t connectionReceive(::gpk::SSocketConnection & client, cnst ::gp
 }
 
 ::gpk::err_t gpk::connectionSendQueue(SConnection & connection, SSocketConnection & client, apobj<SMessage> & messageCacheSent, apobj<SMessage> & messageCacheSend) {
-	cnst FConnectionSend send = [&client](cnst vcu0_t & frame) -> err_t {
+	cnst FConnectionSend send = [&client](vcu0_c & frame) -> err_t {
 		sockaddr_in remote = {};
 		::gpk::tcpipAddressToSockaddr(client.Address, remote);
 		cnst int sent = ::sendto(client.Socket.Handle, (sc_c*)frame.begin(), (int)frame.size(), 0, (sockaddr*)&remote, sizeof(remote));

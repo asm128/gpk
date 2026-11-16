@@ -44,27 +44,25 @@ nmsp gpk
 		au0_t			Data		= {};
 
 						SEvent		(cnst TEvent &)					= default;
-		cxpr			SEvent		(T type = {})						: Type(type) {}
-						SEvent		(T type, cnst vcu0_t data)			: Type(type), Data(data) {}
-						SEvent		(cnst TEView & eventView)			: Type(eventView.Type), Data(eventView.Data) {}
+		cxpr			SEvent		(T type = {})					: Type(type) {}
+						SEvent		(T type, vcu0_c data)			: Type(type), Data(data) {}
+						SEvent		(cnst TEView & eventView)		: Type(eventView.Type), Data(eventView.Data) {}
 
 		TEvent&			oper= 		(cnst TEvent &)					= default;
-		TEvent&			oper= 		(cnst TEView & eventView)			{ Type = eventView.Type; Data = eventView.Data; rtrn *this; }
+		TEvent&			oper= 		(cnst TEView & eventView)		{ Type = eventView.Type; Data = eventView.Data; rtrn *this; }
 
-		oper			TEView		()							cnst	{ rtrn {Type, Data}; }
+		oper			TEView		()						cnst	{ rtrn {Type, Data}; }
 
-		err_t			Save		(au0_t & output)			cnst	{
+		err_t			Save		(au0_t & output)		cnst	{
 			if_fail_fe(savePOD(output, Type));
 			if_fail_fe(saveView(output, Data));
 			rtrn 0;
 		}
-
 		err_t			Load		(vcu0_t & input)			{
 			if_fail_fe(loadPOD(input, Type));
 			if_fail_fe(loadView(input, Data));
 			rtrn 0;
 		}
-
 		tplt<tpnm _tETypeOther>
 		err_t			ExtractChild(SEvent<_tETypeOther> & outputEvent)	cnst	{
 			vcu0_t			input				= Data;
@@ -72,9 +70,8 @@ nmsp gpk
 			gpk_event_printf("%s", get_value_namep(outputEvent.Type)); 
 			rtrn 0; 
 		}
-
 		tplt<tpnm _tETypeOther>
-		err_t	ExtractChild(SEView<_tETypeOther> & outputEvent)	cnst	{
+		err_t			ExtractChild(SEView<_tETypeOther> & outputEvent)	cnst	{
 			vcu0_t			input				= Data;
 			if_fail_fe(outputEvent.Load(input));
 			gpk_event_printf("%s", get_value_namep(outputEvent.Type)); 

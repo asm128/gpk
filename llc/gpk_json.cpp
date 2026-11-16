@@ -11,8 +11,8 @@ GPK_USING_TYPEINT();
 #define json_info_printf(...) ::gpk::dummy(__VA_ARGS__) // info_printf
 #define json_error_printf error_printf
 
-gpk::err_t			gpk::jsonCompareObject		(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; for(u2_t iChild = 0; iChild < node.Children.size(); iChild += 2)	if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
-gpk::err_t			gpk::jsonCompareNumber		(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
+gpk::err_t			gpk::jsonCompareObject		(cnst SJSONNode & node, view<vcst_c> views, cnst SJSONNode & other, view<vcst_c> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; for(u2_t iChild = 0; iChild < node.Children.size(); iChild += 2)	if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
+gpk::err_t			gpk::jsonCompareNumber		(cnst SJSONNode & node, view<vcst_c> views, cnst SJSONNode & other, view<vcst_c> otherViews) { if(node.Children.size() != other.Children.size()) rtrn 0; if(node.Children.size() == 0) rtrn 1; if(node.Token->Type != other.Token->Type) rtrn 0; rtrn (views[node.ObjectIndex] == otherViews[other.ObjectIndex]) ? 1 : 0; }
 //gpk::err_t			gpk::jsonArrayEnumerate		(cnst SJSONNode & node, FError<cnst SJSONNode &> funcEnumerate) { rtrn iElem}
 gpk::err_t			gpk::jsonArrayForEach		(cnst SJSONNode & node, FError<cnst SJSONNode &> funcForEach) {
 		s2_t				iElement = 0;
@@ -71,7 +71,7 @@ gpk::err_t			gpk::jsonFileRead			(gpk::SJSONFile & file, gpk::vcst_t filename) {
 	rtrn gpk::jsonParse(file.Reader, file.Bytes);
 }
 
-gpk::err_t			gpk::jsonArraySplit			(cnst gpk::SJSONNode & jsonArrayToSplit, gpk::view<cnst vcst_t> jsonViews, u2_c blockSize, gpk::aobj<gpk::string> & outputJsons)		{
+gpk::err_t			gpk::jsonArraySplit			(cnst gpk::SJSONNode & jsonArrayToSplit, gpk::view<vcst_c> jsonViews, u2_c blockSize, gpk::aobj<gpk::string> & outputJsons)		{
 	u2_c				remainder					= jsonArrayToSplit.Children.size() % blockSize;
 	u2_c				countParts					= jsonArrayToSplit.Children.size() / blockSize + one_if(remainder);
 	if_fail_fe(outputJsons.resize(countParts));
@@ -91,7 +91,7 @@ gpk::err_t			gpk::jsonArraySplit			(cnst gpk::SJSONNode & jsonArrayToSplit, gpk:
 	rtrn 0;
 }
 
-gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, gpk::view<cnst vcst_t> jsonViews, gpk::string & output)			{
+gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, gpk::view<vcst_c> jsonViews, gpk::string & output)			{
 	if(node->Token->Type == gpk::JSON_TYPE_VALUE && node->Children.size())
 		node				= node->Children[0];
 	switch(node->Token->Type) {
@@ -620,7 +620,7 @@ gpk::err_t			gpk::jsonParse				(gpk::SJSONReader & reader, gpk::vcst_t jsonAsStr
 	rtrn options.All(gpk::JSON_PARSE_OPTION_BUILD_TREE) ? gpk::jsonTreeRebuild(reader.Token, reader.Tree) : 0;
 }
 
-gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, gpk::view<cnst vcst_t> views, gpk::as2_t & indices, gpk::aobj<vcst_t> & keys)	{
+gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, gpk::view<vcst_c> views, gpk::as2_t & indices, gpk::aobj<vcst_t> & keys)	{
 	cnst gpk::vcst_t		objectTypeName			= gpk::get_value_label(node_object.Token->Type);
 	if_true_fef(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%.*s). Only objects are allowed to be accessed by key.", node_object.Token->Type, (int)objectTypeName.size(), objectTypeName.begin());
 	for(u2_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
@@ -646,7 +646,7 @@ gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, gpk::as
 	rtrn indices.size();
 }
 
-gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, gpk::view<cnst vcst_t> views, gpk::aobj<vcst_t> & keys)	{
+gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, gpk::view<vcst_c> views, gpk::aobj<vcst_t> & keys)	{
 	cnst gpk::vcst_t		objectTypeName			= gpk::get_value_label(node_object.Token->Type);
 	if_true_fef(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%.*s). Only objects are allowed to be accessed by key.", node_object.Token->Type, (int)objectTypeName.size(), objectTypeName.begin());
 	for(u2_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
@@ -659,7 +659,7 @@ gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, gpk::vi
 	rtrn keys.size();
 }
 
-gpk::err_t			gpk::jsonObjectValueGet		(cnst gpk::SJSONNode & node_object, gpk::view<cnst vcst_t> views, gpk::vcst_t key)	{
+gpk::err_t			gpk::jsonObjectValueGet		(cnst gpk::SJSONNode & node_object, gpk::view<vcst_c> views, gpk::vcst_t key)	{
 	cnst gpk::vcst_t		objectTypeName			= gpk::get_value_label(node_object.Token->Type);
 	if_true_fef(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%.*s). Only objects are allowed to be accessed by key (\"%.*s\").", node_object.Token->Type, (int)objectTypeName.size(), objectTypeName.begin(), (int)key.size(), key.begin());
 	for(u2_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
@@ -683,7 +683,7 @@ gpk::err_t			gpk::jsonArrayValueGet		(cnst gpk::SJSONNode & tree, u2_t index)			
 	rtrn node->ObjectIndex;
 }
 
-gpk::err_t			gpk::jsonCompareArray		(cnst gpk::SJSONNode & node, gpk::view<cnst vcst_t> views, cnst gpk::SJSONNode & other, gpk::view<cnst vcst_t> otherViews) {
+gpk::err_t			gpk::jsonCompareArray		(cnst gpk::SJSONNode & node, gpk::view<vcst_c> views, cnst gpk::SJSONNode & other, gpk::view<vcst_c> otherViews) {
 	if_true_vif(0, node.Children.size() != other.Children.size(), GPK_FMT_NE_U2, node.Children.size(), other.Children.size())
 	if_zero_vi(1, node.Children.size());
 	for(u2_t iChild = 0; iChild < node.Children.size(); ++iChild) {

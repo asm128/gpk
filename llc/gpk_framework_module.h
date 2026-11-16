@@ -47,7 +47,7 @@ nmsp gpk
 	};
 #pragma pack(pop)
 
-	err_t	frameworkModuleLoad		(SRuntimeModule & loadedModule, cnst vcst_t & moduleName);
+	err_t	frameworkModuleLoad		(SRuntimeModule & loadedModule, vcst_c & moduleName);
 	err_t	frameworkModuleUnload	(SRuntimeModule & loadedModule);
 
 	GDEFINE_ENUM_TYPE (RUNTIME_CALLBACK_ID, u0_t);

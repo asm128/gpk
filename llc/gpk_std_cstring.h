@@ -12,7 +12,7 @@ nmsp gpk
 	stin	err_t	tovcc   (vcst_t	& output, sc_c * srcstr)	{ rtrn (output = tovcc(srcstr)).size(); }
 	stin	err_t	tolabel (vcst_t	& output, sc_c * srcstr)	{ rtrn (output = label(tovcc(srcstr))).size(); }
 	stin	err_t	toachar (string	& output, sc_c * srcstr)	{
-		cnst vcst_t			vsrc	= tovcc(srcstr);
+		vcst_c			vsrc	= tovcc(srcstr);
 		if_fail_fe(output.reserve(vsrc.size())); 
 		rtrn (output = vsrc).size(); 
 	}

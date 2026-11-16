@@ -1113,7 +1113,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_event_device.h">
-      <Filter>Source Files</Filter>
+      <Filter>system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

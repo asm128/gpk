@@ -20,7 +20,7 @@ nmsp gpk
 		return indexKey;
 	}
 	tplt <tpnm... _tArgs>
-			err_t		keyValVerify		(view<cnst keyval<vcst_t>> environViews, vcst_t keyToVerify, view<cnst vcst_t> valueToVerify)	{
+			err_t		keyValVerify		(view<cnst keyval<vcst_t>> environViews, vcst_t keyToVerify, view<vcst_c> valueToVerify)	{
 		for(u2_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
 			err_c					val					= keyValVerify(environViews, keyToVerify, valueToVerify[iKey]);
 			if(-1 != val)

@@ -35,10 +35,10 @@ nmsp gpk
 	//err_t					httpsClientRequest
 	//	(	cnst SIPv4End			& remoteAddress
 	//	,	HTTP_METHOD			method
-	//	,	cnst vcst_t			& hostName
-	//	,	cnst vcst_t			& path
-	//	,	cnst vcst_t			& contentType
-	//	,	cnst vcst_t			& body
+	//	,	vcst_c			& hostName
+	//	,	vcst_c			& path
+	//	,	vcst_c			& contentType
+	//	,	vcst_c			& body
 	//	,	apod<sc_t>			& out_received
 	//	);
 

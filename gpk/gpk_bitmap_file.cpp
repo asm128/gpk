@@ -48,7 +48,7 @@ GPK_USING_APOD    ();
 #pragma pack(push, 1)
 
 
-sttc	gpk::err_t LoadBitmapFromBMPFile		(cnst vcst_t & szFileName, gpk::a8bgra & out_Colors, gpk::g8bgra& out_ImageView, cnst gpk::bgra & alphaKey, b8_t* out_alphaFound)		{
+sttc	gpk::err_t LoadBitmapFromBMPFile		(vcst_c & szFileName, gpk::a8bgra & out_Colors, gpk::g8bgra& out_ImageView, cnst gpk::bgra & alphaKey, b8_t* out_alphaFound)		{
 	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, gpk::string(szFileName).begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
 	if_true_vef(-1, phBitmap == NULL, "Failed to load bitmap file: %.*s.", GPK_VIEW_ARGS(szFileName));
 

@@ -192,7 +192,7 @@ gpk::err_t	llswin32::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::S
 			job->CommandLineApp						= broker.CommandLineApp;
 			job->CommandLine							= broker.CommandLine;
 			do { if_fail_fe(broker.Jobs.push_back(job)); } while(0);
-			if((uintptr_t)-1L == ::_beginthread(::threadProcessRequest, 0, job.operator->())) {
+			if((uP_t)-1L == ::_beginthread(::threadProcessRequest, 0, job.operator->())) {
 				job->Result								= -1;
 				stxp cnst sc_t	failureResponse[]				= "LLS process broker failed to start its request worker.";
 				job->Response.append((cnst uint8_t*)failureResponse, ::gpk::size(failureResponse) - 1);

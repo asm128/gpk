@@ -44,7 +44,7 @@ nmsp gpk
 } // nmsp
 
 
-gpk::err_t	gpk::wordListNormalize			(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> exceptions) {
+gpk::err_t	gpk::wordListNormalize			(aobj<string> & itemWords, view<vcst_c> upper, view<vcst_c> exceptions) {
 	if_fail_fe(itemWords.resize(upper.size()));
 	cnst kv<vcst_t>			replaceDict	[]						=
 		{	{ "áéíóúàèìòùäëïöüãõñçºª"
@@ -85,7 +85,7 @@ gpk::err_t	gpk::wordListNormalize			(aobj<string> & itemWords, view<cnst vcst_t>
 	return 0;
 }
 
-gpk::err_t	gpk::getWordList				(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> exceptions) {
+gpk::err_t	gpk::getWordList				(aobj<string> & itemWords, view<vcst_c> upper, view<vcst_c> exceptions) {
 	rtrn wordListNormalize(itemWords, upper, exceptions);
 }
 
@@ -126,7 +126,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 	for(u2_t iItem = 0; iItem < matchedItems.size(); ++iItem)
 		matchedItems[iItem] = 0;
 	for(u2_t iInputWord = 0; iInputWord < normalizedWords.size(); ++iInputWord) {
-		cnst vcst_t		inputWord						= normalizedWords[iInputWord];
+		vcst_c		inputWord						= normalizedWords[iInputWord];
 		if(0 == inputWord.size())
 			continue;
 		for(u2_t iWord = 0; iWord < wordSet.size(); ++iWord) {
@@ -290,7 +290,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 //	return 0;
 //
 
-//sttc	err_t								pageCatalog					(vcst_t contentFileName, vcst_t /*pathScript*/, n2s2_t screenSize, cnst vcst_t & /*pathStyles*/, cnst AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output) {
+//sttc	err_t								pageCatalog					(vcst_t contentFileName, vcst_t /*pathScript*/, n2s2_t screenSize, vcst_c & /*pathStyles*/, cnst AD_SHOP_CATEGORY category, vcst_t title, vcst_t lang, string & output) {
 //
 //	append_strings(output, "\n<html>");
 //	// --- Head
@@ -332,7 +332,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 //	append_strings(output, fontSize);
 //	append_strings(output, "px;\" >");
 //
-//	cnst vcst_t							textSearch							= (lang == "es") ? "Buscar" : "Search";
+//	vcst_c							textSearch							= (lang == "es") ? "Buscar" : "Search";
 //	//::ntl::htmlTag("h5", textSearch, {}, output);
 //
 //	append_strings(output, 

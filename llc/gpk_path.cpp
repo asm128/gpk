@@ -353,7 +353,7 @@ sttc gpk::err_t		pathListNative			(vcst_t pathToList, gpk::SPathContents & pathC
 	HANDLE						hFind						= FindFirstFile(sPath.begin(), &fdFile);
 	if_true_fef(hFind == INVALID_HANDLE_VALUE, "Path not found: [%.*s].", (int)pathToList.size(), pathToList.begin());
 	do {
-		cnst vcst_t		entryName						= {fdFile.cFileName, (u2_t)-1};
+		vcst_c		entryName						= {fdFile.cFileName, (u2_t)-1};
 		if_fail_bef(result = ::pathListEntry(pathToList, pathContents, onItem, extension, entryName, 0 != (fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)), "'%.*s'", (int)entryName.size(), entryName.begin());
 	}
 	while(FindNextFile(hFind, &fdFile));
@@ -363,7 +363,7 @@ sttc gpk::err_t		pathListNative			(vcst_t pathToList, gpk::SPathContents & pathC
 	if_true_fef(0 == dir, "Path not found: [%.*s].", (int)pathToList.size(), pathToList.begin());
 	struct dirent				* drnt						= nullptr;
 	while((drnt = readdir(dir))) {
-		cnst vcst_t		entryName						= {drnt->d_name, (u2_t)-1};
+		vcst_c		entryName						= {drnt->d_name, (u2_t)-1};
 		b8_t					isFolder						= drnt->d_type == DT_DIR;
 		if(drnt->d_type == DT_UNKNOWN) {
 			gpk::string		entryPath;

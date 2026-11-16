@@ -11,12 +11,12 @@
 #ifndef GPK_MEMORY_H__92836409283642038462309846
 #define GPK_MEMORY_H__92836409283642038462309846
 
-//#define	gpk_calc_align_address		(alignment, address)	((alignment - ((alignment - 1) & (uintptr_t)address)) & (alignment - 1))	// returns the difference between an origin address and the next aligned addres. The alignment must always be a power of two.
-//#define	gpk_calc_align_address_4	(address)				gpk_calc_align_address( 4, address)	// (0x04 - (0x03 & (uintptr_t)address) & 0x03)
-//#define	gpk_calc_align_address_8	(address)				gpk_calc_align_address( 8, address)	// (0x08 - (0x07 & (uintptr_t)address) & 0x07)
-//#define	gpk_calc_align_address_16	(address)				gpk_calc_align_address(16, address)	// (0x10 - (0x0F & (uintptr_t)address) & 0x0F)
-//#define	gpk_calc_align_address_32	(address)				gpk_calc_align_address(32, address)	// (0x20 - (0x1F & (uintptr_t)address) & 0x1F)
-//#define	gpk_calc_align_address_64	(address)				gpk_calc_align_address(64, address)	// (0x40 - (0x3F & (uintptr_t)address) & 0x3F)
+//#define	gpk_calc_align_address		(alignment, address)	((alignment - ((alignment - 1) & (uP_t)address)) & (alignment - 1))	// returns the difference between an origin address and the next aligned addres. The alignment must always be a power of two.
+//#define	gpk_calc_align_address_4	(address)				gpk_calc_align_address( 4, address)	// (0x04 - (0x03 & (uP_t)address) & 0x03)
+//#define	gpk_calc_align_address_8	(address)				gpk_calc_align_address( 8, address)	// (0x08 - (0x07 & (uP_t)address) & 0x07)
+//#define	gpk_calc_align_address_16	(address)				gpk_calc_align_address(16, address)	// (0x10 - (0x0F & (uP_t)address) & 0x0F)
+//#define	gpk_calc_align_address_32	(address)				gpk_calc_align_address(32, address)	// (0x20 - (0x1F & (uP_t)address) & 0x1F)
+//#define	gpk_calc_align_address_64	(address)				gpk_calc_align_address(64, address)	// (0x40 - (0x3F & (uP_t)address) & 0x3F)
 
 nmsp gpk
 {
@@ -28,12 +28,12 @@ nmsp gpk
 		szof(void*);
 #endif
 
-	ndsx	uintptr_t	calc_align_address		(uintptr_t alignment, uintptr_t address)	nxpt	{ cnst uintptr_t amask = alignment - 1; return (alignment - (amask & address)) & amask; }
-	nsix	uintptr_t	calc_align_address_4	(uintptr_t address)							nxpt	{ return calc_align_address( 4, address); }
-	nsix	uintptr_t	calc_align_address_8	(uintptr_t address)							nxpt	{ return calc_align_address( 8, address); }
-	nsix	uintptr_t	calc_align_address_16	(uintptr_t address)							nxpt	{ return calc_align_address(16, address); }
-	nsix	uintptr_t	calc_align_address_32	(uintptr_t address)							nxpt	{ return calc_align_address(32, address); }
-	nsix	uintptr_t	calc_align_address_64	(uintptr_t address)							nxpt	{ return calc_align_address(64, address); }
+	ndsx	uP_t	calc_align_address		(uP_t alignment, uP_t address)	nxpt	{ cnst uP_t amask = alignment - 1; return (alignment - (amask & address)) & amask; }
+	nsix	uP_t	calc_align_address_4	(uP_t address)							nxpt	{ return calc_align_address( 4, address); }
+	nsix	uP_t	calc_align_address_8	(uP_t address)							nxpt	{ return calc_align_address( 8, address); }
+	nsix	uP_t	calc_align_address_16	(uP_t address)							nxpt	{ return calc_align_address(16, address); }
+	nsix	uP_t	calc_align_address_32	(uP_t address)							nxpt	{ return calc_align_address(32, address); }
+	nsix	uP_t	calc_align_address_64	(uP_t address)							nxpt	{ return calc_align_address(64, address); }
 
 #if defined(GPK_WINDOWS)
 	stin		void*	gpk_free				(void* ptr)					nxpt	{ _aligned_free(ptr); rtrn 0; }

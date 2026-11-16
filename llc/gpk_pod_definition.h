@@ -43,7 +43,7 @@ nmsp gpk
 		::gpk::au1_t					Offsets;
 		::gpk::apod<::gpk::C_TYPE>	Types;
 
-		gpk::err_t 			push_any		(cnst ::gpk::C_TYPE type, cnst ::gpk::vcst_t label, cnst vcu0_t & defaultValue) { 
+		gpk::err_t 			push_any		(cnst ::gpk::C_TYPE type, cnst ::gpk::vcst_t label, vcu0_c & defaultValue) { 
 			if_true_vef(Labels.size() > (u2_t)Labels.find(label), "'%.*s' already exists.", GPK_VIEW_ARGS(label));
 			if_fail_fe(Types.push_back(type));
 			if_fail_fe(Offsets.push_back((u1_t)DefaultData.size()));

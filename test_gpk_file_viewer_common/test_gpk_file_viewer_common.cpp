@@ -165,14 +165,14 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer) {
 sttc gpk::err_t fileViewerMenuCreate(SFileViewer & viewer) {
 	SGUI & gui = *viewer.Dialog->GUI;
 	SControlList menuViewports = {};
-	sttc cnst vcst_t viewportText[] = {"FILES"};
+	sttc vcst_c viewportText[] = {"FILES"};
 	if_fail_fe(controlListCreate(gui, menuViewports, view<vcst_c>{viewportText}, CID_INVALID, DIRECTION_RIGHT));
 	gui.Controls.Placement[menuViewports.IdControl].Area.Offset = {};
 	gui.Controls.Placement[menuViewports.IdControl].Align = ALIGN_TOP_LEFT;
 	if_fail_fe(viewer.Dialog->Buttons.push_back(menuViewports.IdControls[0]));
 
 	SControlList menuActions = {};
-	sttc cnst vcst_t actionText[] = {"EXIT"};
+	sttc vcst_c actionText[] = {"EXIT"};
 	if_fail_fe(controlListCreate(gui, menuActions, view<vcst_c>{actionText}, CID_INVALID, DIRECTION_RIGHT));
 	gui.Controls.Placement[menuActions.IdControl].Area.Offset = {};
 	gui.Controls.Placement[menuActions.IdControl].Align = ALIGN_TOP_RIGHT;
@@ -304,7 +304,7 @@ sttc u2_t fileViewerLineOffset(cnst SFileViewer & viewer, u2_t line) {
 sttc u2_t fileViewerCursorOffset(cnst SFileViewer & viewer) {
 	if(viewer.Editor.Cursor.y >= viewer.Editor.FileLines.size())
 		rtrn viewer.Editor.FileText.size();
-	cnst vcst_t line = viewer.Editor.FileLines[viewer.Editor.Cursor.y];
+	vcst_c line = viewer.Editor.FileLines[viewer.Editor.Cursor.y];
 	rtrn ::fileViewerLineOffset(viewer, viewer.Editor.Cursor.y) + min(viewer.Editor.Cursor.x, line.size());
 }
 
@@ -332,7 +332,7 @@ sttc gpk::err_t fileViewerTextBackspace(SFileViewer & viewer) {
 		--viewer.Editor.Cursor.x;
 	}
 	else if(viewer.Editor.Cursor.y) {
-		cnst vcst_t previousLine = viewer.Editor.FileLines[viewer.Editor.Cursor.y - 1];
+		vcst_c previousLine = viewer.Editor.FileLines[viewer.Editor.Cursor.y - 1];
 		u2_c separatorOffset = ::fileViewerLineOffset(viewer, viewer.Editor.Cursor.y - 1) + previousLine.size();
 		u2_c separatorCount = cursorOffset - separatorOffset;
 		viewer.Editor.Cursor.x = previousLine.size();
@@ -484,7 +484,7 @@ sttc gpk::err_t fileViewerEditorUpdate(SFileViewer & viewer, vpobj<SEventSystem>
 	for(u2_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent)
 		if_fail_fe(::fileViewerEditorHandle(viewer, vkEvents[iEvent]));
 	if_fail_fe(::fileViewerEditorPhysicalInput(viewer, frameEvents));
-	cnst vcst_t filePath = gui.Controls.Text[viewport->IdTitle].Text;
+	vcst_c filePath = gui.Controls.Text[viewport->IdTitle].Text;
 	if(gui.Controls.IsAction(viewer.Editor.IdSave) && filePath.size())
 		if_fail_fef(fileFromMemory(filePath, viewer.Editor.FileText), "Failed to save '%.*s'.", GPK_VIEW_ARGS(filePath));
 	rtrn 0;
@@ -550,7 +550,7 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer) {
 		u2_c iLine = firstVisible + iControl;
 		b8_c visible = iControl < (u2_t)visibleCount && iLine < viewer.Editor.FileLines.size();
 		if(visible) {
-			cnst vcst_t sourceLine = viewer.Editor.FileLines[iLine];
+			vcst_c sourceLine = viewer.Editor.FileLines[iLine];
 			u2_c offset = min(firstColumn, sourceLine.size());
 			u2_c count = min((u2_t)visibleColumns, (u2_t)(sourceLine.size() - offset));
 			vcst_t visibleText = {};

@@ -60,7 +60,7 @@ nmsp gpk
 	}
 	tplTstin		err_t	loadView					(vcs0_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
 
-	//err_t					keyValConstStringSerialize	(view<cnst keyval<vcst_t>> keyVals, view<cnst vcst_t> keysToSave, au0_t & output);
+	//err_t					keyValConstStringSerialize	(view<cnst keyval<vcst_t>> keyVals, view<vcst_c> keysToSave, au0_t & output);
 } // nmsp
 
 #endif // GPK_APOD_SERIALIZE_H_23627

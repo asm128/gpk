@@ -21,8 +21,8 @@ nmsp gpk
 		aobj<vcst_t>	ItemViews			= {};
 		aobj<string>	ItemWords			= {};
 	};
-	err_t	wordListNormalize	(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
-	err_t	getWordList			(aobj<string> & itemWords, view<cnst vcst_t> upper, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
+	err_t	wordListNormalize	(aobj<string> & itemWords, view<vcst_c> upper, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
+	err_t	getWordList			(aobj<string> & itemWords, view<vcst_c> upper, view<vcst_c> indexExceptions = INDEX_EXCLUSION_DEFAULTS);
 	err_t	wordDictAppend		(aobj<SWordIndices> & wordSet, u2_t iItem, view<cnst string> itemWords);
 	err_t	wordDictResolve		(view<cnst SWordIndices> wordSet, vcst_t input, u2_t itemCount, au2_t & itemIndices, view<vcst_c> exceptions = INDEX_EXCLUSION_DEFAULTS);
 

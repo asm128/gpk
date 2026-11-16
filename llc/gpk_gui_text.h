@@ -28,7 +28,7 @@ nmsp gpk
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	tplt<tpnm _tColor>
-	sttc	err_t	textLineDrawFixedSizeLit		(grid<_tColor> & target, cnst view_bit<u3_t> & viewTextureFont, cnst n2u2_t & viewMetrics, u1_t characterCellsX, s1_t dstOffsetY, cnst n2u0_t & sizeCharCell, cnst vcst_t & text0, n2s1_c dstTextOffset, cnst _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	sttc	err_t	textLineDrawFixedSizeLit		(grid<_tColor> & target, cnst view_bit<u3_t> & viewTextureFont, cnst n2u2_t & viewMetrics, u1_t characterCellsX, s1_t dstOffsetY, cnst n2u0_t & sizeCharCell, vcst_c & text0, n2s1_c dstTextOffset, cnst _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		apod<n2u1_t>	dstCoords;
 		for(s2_t iChar = 0, charCount = (s2_t)text0.size(); iChar < charCount; ++iChar) {
 			cnst uc_t					charToDraw						= (uc_t)text0[iChar];
@@ -47,14 +47,14 @@ nmsp gpk
 	}
 
 	tplt<tpnm _tColor>
-	sttc	err_t	textLineDrawAlignedFixedSize	(grid<_tColor> & targetView, cnst grid<_tColor> & fontAtlas, u1_t lineOffset, cnst n2u1_t & targetSize, cnst n2u0_t & sizeCharCell, cnst vcst_t & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	sttc	err_t	textLineDrawAlignedFixedSize	(grid<_tColor> & targetView, cnst grid<_tColor> & fontAtlas, u1_t lineOffset, cnst n2u1_t & targetSize, cnst n2u0_t & sizeCharCell, vcst_c & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		n2s1_c			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
 		u1_t					dstOffsetY						= s1_t(lineOffset * sizeCharCell.y);
 		return textLineDrawFixedSize(targetView, fontAtlas, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset);
 	}
 
 	tplt<tpnm _tColor>
-	sttc	err_t	textLineDrawAlignedFixedSizeLit	(grid<_tColor> & targetView, cnst view_bit<u3_t> & fontAtlas, cnst n2u2_t & viewMetrics, u1_t lineOffset, cnst n2u1_t & targetSize, cnst n2u0_t & sizeCharCell, cnst vcst_t & text0, cnst _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	sttc	err_t	textLineDrawAlignedFixedSizeLit	(grid<_tColor> & targetView, cnst view_bit<u3_t> & fontAtlas, cnst n2u2_t & viewMetrics, u1_t lineOffset, cnst n2u1_t & targetSize, cnst n2u0_t & sizeCharCell, vcst_c & text0, cnst _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		n2s1_c			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
 		u1_t					dstOffsetY						= s1_t(lineOffset * sizeCharCell.y);
 		return textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);

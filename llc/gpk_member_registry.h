@@ -42,9 +42,9 @@ nmsp gpk {
 	stct member_registry {
 		sinx	u2_t						get_member_count	()	nxpt { rtrn (u2_t)sizeof...(_tArgs); }
 		sinx	view<cnst STypeIdentifier>	get_types			()	nxpt { stxp cnst STypeIdentifier	results[] = {{_tArgs::get_member_namespace(), _tArgs::get_member_type_name()}..., {}}; stxp cnst view<cnst STypeIdentifier> results_view = {results}; return results_view; }
-		sinx	view<vcst_c>				get_names			()	nxpt { stxp cnst vcst_t				results[] = {_tArgs ::get_member_name			()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
-		sinx	view<vcst_c>				get_display_names	()	nxpt { stxp cnst vcst_t				results[] = {_tArgs ::get_member_display_name	()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
-		sinx	view<vcst_c>				get_descriptions	()	nxpt { stxp cnst vcst_t				results[] = {_tArgs ::get_member_description	()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
+		sinx	view<vcst_c>				get_names			()	nxpt { stxp vcst_c				results[] = {_tArgs ::get_member_name			()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
+		sinx	view<vcst_c>				get_display_names	()	nxpt { stxp vcst_c				results[] = {_tArgs ::get_member_display_name	()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
+		sinx	view<vcst_c>				get_descriptions	()	nxpt { stxp vcst_c				results[] = {_tArgs ::get_member_description	()..., {}}; stxp cnst view<vcst_c> results_view = {results}; rtrn results_view;	}
 		sinx	view<cnst DATA_TYPE>		get_data_type_ids	()	nxpt { stxp cnst DATA_TYPE			results[] = {_tArgs ::get_member_data_type_id	()..., ::gpk::DATA_TYPE_UNKNOWN }; return results; }
 		sinx	view<u2_c>					get_member_sizes	()	nxpt { stxp u2_c					results[] = {_tArgs ::get_member_size			()..., 0}; stxp vcu2_c results_view = {results}; return results_view;	}
 	}; // struct

@@ -64,7 +64,7 @@ gpk::err_t		gpk::rsaKeys	(u2_t prime1, u2_t prime2, u2_t offset, u3_t limit, apo
 }
 
 //function to encrypt the message
-gpk::err_t			gpk::rsaEncode	(cnst vcu0_t & decrypted, u3_t n, u3_t key, u3_t testkey, au3_t & encrypted) {
+gpk::err_t			gpk::rsaEncode	(vcu0_c & decrypted, u3_t n, u3_t key, u3_t testkey, au3_t & encrypted) {
 	u2_t				offset			= encrypted.size();
 	u2_t				i				= 0;
 	if_fail_fe(encrypted.resize(offset + decrypted.size()));
@@ -93,7 +93,7 @@ gpk::err_t			gpk::rsaEncode	(cnst vcu0_t & decrypted, u3_t n, u3_t key, u3_t tes
 }
 
 // function to decrypt the message
-gpk::err_t			gpk::rsaDecode	(cnst vcu3_t & encrypted, u3_t n, u3_t key, au0_t & decrypted) {
+gpk::err_t			gpk::rsaDecode	(vcu3_c & encrypted, u3_t n, u3_t key, au0_t & decrypted) {
 	u2_t				offset			= decrypted.size();
 	u2_t				i				= 0;
 	if_fail_fe(decrypted.resize(offset + encrypted.size() + 1));
@@ -171,7 +171,7 @@ sttc	gpk::err_t	gpcFilter1Apply		(vu0_t & scanline) { if_fail_fe(::gpcFilterSub2
 sttc	gpk::err_t	gpcFilter1Remove	(vu0_t & scanline) { if_fail_fe(::gpcDefilterSub	(scanline, 4)); return ::gpcDefilterSub2	(scanline, 2); }
 
 //function to encrypt the message
-gpk::err_t			gpk::gpcEncode		(cnst vcu0_t & decrypted, u3_t n, u3_t key, u3_t testkey, b8_t salt, au3_t & encrypted) {
+gpk::err_t			gpk::gpcEncode		(vcu0_c & decrypted, u3_t n, u3_t key, u3_t testkey, b8_t salt, au3_t & encrypted) {
 	u2_t								offset								= encrypted.size();
 	u2_t								i									= 0;
 
@@ -202,7 +202,7 @@ gpk::err_t			gpk::gpcEncode		(cnst vcu0_t & decrypted, u3_t n, u3_t key, u3_t te
 }
 
 // function to decrypt the message
-gpk::err_t			gpk::gpcDecode		(cnst vcu3_t & encrypted, u3_t n, u3_t key, b8_t salt, au0_t & decrypted) {
+gpk::err_t			gpk::gpcDecode		(vcu3_c & encrypted, u3_t n, u3_t key, b8_t salt, au0_t & decrypted) {
 	u2_t								offset								= decrypted.size();
 	u2_t								i									= 0;
 	au3_t								defiltered							(encrypted);

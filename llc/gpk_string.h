@@ -14,7 +14,7 @@ nmsp gpk
         usng    asc_t       ::Count;
 
         inln                string      ()                      nxpt    = dflt;
-        inln                string      (cnst vcst_t & other)           : asc_t(other)                                          {}
+        inln                string      (vcst_c & other)           : asc_t(other)                                          {}
         tplN2uinln          string      (sc_c (&other)[N])              : asc_t(vcst_t(other))                                  {}
 #ifdef GPK_ARDUINO
         inln                string      (cnst String & other)           : asc_t(vcst_t{other.begin(), (u2_t)other.length()})    {}
@@ -25,8 +25,8 @@ nmsp gpk
         ndin        oper    String      ()                      cnst    { return String(Data, Count); }
 #   endif
 #endif
-        inln        b8_t    oper==      (cnst vcst_t & other)   cnst    { rtrn asc_t::oper==(other); }
-        inln        b8_t    oper!=      (cnst vcst_t & other)   cnst    { rtrn asc_t::oper!=(other); }
+        inln        b8_t    oper==      (vcst_c & other)   cnst    { rtrn asc_t::oper==(other); }
+        inln        b8_t    oper!=      (vcst_c & other)   cnst    { rtrn asc_t::oper!=(other); }
         tplN2uinln  b8_t    oper==      (sc_c (&other)[N])      cnst    { rtrn oper==(vcst_t{other}); }
         tplN2uinln  b8_t    oper!=      (sc_c (&other)[N])      cnst    { rtrn oper!=(vcst_t{other}); }
 

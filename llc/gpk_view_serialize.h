@@ -41,8 +41,8 @@ nmsp gpk
 		headerToRead			= {elementCount ? (T*)byteInput.begin() : 0, elementCount};
 		rtrn counterWidth + dataSize;
 	}
-	tplTstin	err_t	viewRead		(view<cnst T> & headerToRead, cnst vcu0_t & input)	{ rtrn viewRead<cnst T, u0_c>(headerToRead, input); }
-	tplTstin	err_t	viewRead		(view<cnst T> & headerToRead, cnst vcs0_t  & input)	{ rtrn viewRead<cnst T, s0_c>(headerToRead, input); }
+	tplTstin	err_t	viewRead		(view<cnst T> & headerToRead, vcu0_c & input)	{ rtrn viewRead<cnst T, u0_c>(headerToRead, input); }
+	tplTstin	err_t	viewRead		(view<cnst T> & headerToRead, vcs0_c  & input)	{ rtrn viewRead<cnst T, s0_c>(headerToRead, input); }
 	tplTstin	err_t	viewRead		(view<T> & headerToRead, vu0_t input)					{ rtrn viewRead<T, u0_t>(headerToRead, input); }
 	tplTstin	err_t	viewRead		(view<T> & headerToRead, vs0_t input)					{ rtrn viewRead<T, s0_t>(headerToRead, input); }
 	//

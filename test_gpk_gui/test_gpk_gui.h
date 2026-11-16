@@ -6,7 +6,6 @@
 #include "gpk_dialog_controls.h"
 #include "gpk_ctti_enum.h"
 #include "gpk_ctti_stct.h"
-#include "gpk_json.h"
 
 #ifndef TEST_GPK_GUI_H_23627
 #define TEST_GPK_GUI_H_23627
@@ -44,7 +43,7 @@ CTTI_STCT(SGUIEditor,
 	u2_t			IndexActions	= (u2_t)-1;
 	apobj<SDialogViewport>
 				DataViews		= {};
-	SJSONFile		Data			= {};
+	aobj<string>	DataValues		= {};
 	img<bgra>		Target			= {};
 	};
 	);

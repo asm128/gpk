@@ -53,7 +53,7 @@ nmsp gpk
 			return 0;
 		}
 
-		err_t							Index		(cnst vcst_t & elements) {
+		err_t							Index		(vcst_c & elements) {
 			if_true_vef(-1, elements.size() >= CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
 
 			for(u2_t iView = 0, countLabels = Texts.size(); iView < countLabels; ++iView) {

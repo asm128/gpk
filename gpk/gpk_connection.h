@@ -65,7 +65,7 @@ nmsp gpk
 	};
 
 	tydf FError<au0_t &>		FConnectionReceive;
-	tydf FError<cnst vcu0_t &>	FConnectionSend;
+	tydf FError<vcu0_c &>	FConnectionSend;
 
 	stxp	u2_c				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
@@ -74,7 +74,7 @@ nmsp gpk
 	err_t						connectionHandleCommand		(SConnection & client, SCommand & command, cnst FConnectionReceive & receive, au0_t & receiveBuffer);
 	err_t						connectionPushData			(SConnection & client, SClientQueue & queue, vcu0_t data, b8_t bEncrypted = true, b8_t bCompress = true, u0_t retryCount = 0);
 	stin	err_t				connectionPushData			(SConnection & client, SClientQueue & queue, vcst_t data, b8_t bEncrypted = true, b8_t bCompress = true, u0_t retryCount = 0) {
-		return connectionPushData(client, queue, *(cnst vcu0_t*)&data, bEncrypted, bCompress, retryCount);
+		return connectionPushData(client, queue, *(vcu0_c*)&data, bEncrypted, bCompress, retryCount);
 	}
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 

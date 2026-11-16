@@ -12,7 +12,7 @@ nmsp gpk
 
 	err_t			hexDecode				(vcst_t in_hexed, au0_t & outputBinary	);
 	err_t			hexDecode				(vcst_t in_hexed, as0_t & outputBinary	);
-	stin	err_t	hexEncode				(cnst vcs0_t & inputBinary, string & out_hexed	)			{ return hexEncode(vcu0_t{(cnst u0_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
+	stin	err_t	hexEncode				(vcs0_c & inputBinary, string & out_hexed	)			{ return hexEncode(vcu0_t{(cnst u0_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
 
 	extern astu2_c<128>	CP437Map;
 	u2_t			unicodeFromCP437		(u0_t glyph);
@@ -24,10 +24,10 @@ nmsp gpk
 
 	stin	err_t	ardellEncode			(vcu0_c & input, u3_t key, b8_t salt, au0_t & output)			{ as2_t tempCache; return ardellEncode(tempCache, input, key, salt, output); }
 	stin	err_t	ardellDecode			(vcu0_c & input, u3_t key, b8_t salt, au0_t & output)			{ as2_t tempCache; return ardellDecode(tempCache, input, key, salt, output); }
-	stin	err_t	ardellEncode			(cnst vcs0_t & input, u3_t key, b8_t salt, au0_t & output)		{ as2_t tempCache; return ardellEncode(tempCache, *(vcu0_c*)&input, key, salt, output); }
+	stin	err_t	ardellEncode			(vcs0_c & input, u3_t key, b8_t salt, au0_t & output)		{ as2_t tempCache; return ardellEncode(tempCache, *(vcu0_c*)&input, key, salt, output); }
 	stin	err_t	ardellDecode			(vcu0_c & input, u3_t key, b8_t salt, as0_t & output)			{ as2_t tempCache; return ardellDecode(tempCache, input, key, salt, *(au0_t*)&output); }
 
-	stin	err_t	ardellEncode			(as2_t & cache, cnst vcs0_t & input, u3_t key, b8_t salt, au0_t & output)	{ return ardellEncode(cache, *(vcu0_c*)&input, key, salt, output); }
+	stin	err_t	ardellEncode			(as2_t & cache, vcs0_c & input, u3_t key, b8_t salt, au0_t & output)	{ return ardellEncode(cache, *(vcu0_c*)&input, key, salt, output); }
 	stin	err_t	ardellDecode			(as2_t & cache, vcu0_c & input, u3_t key, b8_t salt, as0_t & output)		{ return ardellDecode(cache, input, key, salt, *(au0_t*)&output); }
 	err_t			saltDataSalt			(vcu0_c & binary, au0_t & salted);
 	err_t			saltDataUnsalt			(vcu0_c & salted, au0_t & binary);
@@ -67,7 +67,7 @@ nmsp gpk
 	err_t			utf8FromCodePoint	(u2_t codePoint, string & output);
 	err_t			digest				(vcu0_c & input, au2_t & digest);
 	err_t			digest				(vcu0_c & input, string & digest);
-	stin	err_t	digest				(cnst vcs0_t & input, string & digest) { return ::gpk::digest(*(vcu0_c*)&input, digest); }
+	stin	err_t	digest				(vcs0_c & input, string & digest) { return ::gpk::digest(*(vcu0_c*)&input, digest); }
 }
 
 #endif // GPK_ENCODING_H_23627

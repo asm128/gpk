@@ -15,7 +15,7 @@ nmsp gpk
 		aau3_t				Bits;		// One data array per client.
 		aobj<vcst_t>		FieldNames;	// One for all.
 
-		inln	err_t		GetFieldIndex	(cnst vcst_t & fieldName)			cnst	{ return FieldNames.find(fieldName); }
+		inln	err_t		GetFieldIndex	(vcst_c & fieldName)			cnst	{ return FieldNames.find(fieldName); }
 
 		TViewConst			GetView			(u2_t client)						cnst	{ 
 			cnst au3_t				& data			= Bits[client]; 
@@ -30,7 +30,7 @@ nmsp gpk
 			return {data.begin(), ::gpk::min(FieldNames.size(), (u2_t)data.bit_count())}; 
 		}
 
-		err_t 				CreateField		(cnst vcst_t & fieldName)					{ 
+		err_t 				CreateField		(vcst_c & fieldName)					{ 
 			s2_t					fieldIndex;
 			if_true_fef(succeeded(fieldIndex = FieldNames.find(fieldName)), "Duplicated field name at index %i: %.*s", fieldIndex, GPK_VIEW_ARGS(fieldName));
 			return FieldNames.push_back(fieldName);

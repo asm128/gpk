@@ -111,13 +111,13 @@ nmsp gpk
 	err_t			jsonTreeEnsure		(SJSONReader & reader);
 
 	err_t			jsonArrayValueGet	(cnst SJSONNode & node, u2_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
-	err_t			jsonObjectValueGet	(cnst SJSONNode & node, view<cnst vcst_t> views, vcst_t key);
+	err_t			jsonObjectValueGet	(cnst SJSONNode & node, view<vcst_c> views, vcst_t key);
 	err_t			jsonObjectKeyList	(cnst SJSONNode & node, as2_t & indices);
-	err_t			jsonObjectKeyList	(cnst SJSONNode & node, view<cnst vcst_t> views, aobj<vcst_t> & keys);
-	err_t			jsonObjectKeyList	(cnst SJSONNode & node, view<cnst vcst_t> views, as2_t & indices, aobj<vcst_t> & keys);
-	err_t			jsonCompareNumber	(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews);
-	err_t			jsonCompareArray	(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews);
-	err_t			jsonCompareObject	(cnst SJSONNode & node, view<cnst vcst_t> views, cnst SJSONNode & other, view<cnst vcst_t> otherViews);
+	err_t			jsonObjectKeyList	(cnst SJSONNode & node, view<vcst_c> views, aobj<vcst_t> & keys);
+	err_t			jsonObjectKeyList	(cnst SJSONNode & node, view<vcst_c> views, as2_t & indices, aobj<vcst_t> & keys);
+	err_t			jsonCompareNumber	(cnst SJSONNode & node, view<vcst_c> views, cnst SJSONNode & other, view<vcst_c> otherViews);
+	err_t			jsonCompareArray	(cnst SJSONNode & node, view<vcst_c> views, cnst SJSONNode & other, view<vcst_c> otherViews);
+	err_t			jsonCompareObject	(cnst SJSONNode & node, view<vcst_c> views, cnst SJSONNode & other, view<vcst_c> otherViews);
 
 	nsix	err_t	jsonArraySize		(cnst SJSONNode & node)												nxpt	{ rtrn node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
 	nsix	err_t	jsonObjectKeyCount	(cnst SJSONNode & node)												nxpt	{ rtrn node.Children.size() / 2; }
@@ -132,9 +132,9 @@ nmsp gpk
 	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, aobj<vcst_t> & keys)					{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, keys); }
 	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, aobj<vcst_t> & keys)	{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, indices, keys); }
 
-	ndsi	err_t	jsonCompareArray	(cnst SJSONNode & node, cnst SJSONNode & other, view<cnst vcst_t> views)	{ rtrn jsonCompareArray		(node, views, other, views); }
-	ndsi	err_t	jsonCompareObject	(cnst SJSONNode & node, cnst SJSONNode & other, view<cnst vcst_t> views)	{ rtrn jsonCompareObject	(node, views, other, views); }
-	ndsi	err_t	jsonCompareNumber	(cnst SJSONNode & node, cnst SJSONNode & other, view<cnst vcst_t> views)	{ rtrn jsonCompareNumber	(node, views, other, views); }
+	ndsi	err_t	jsonCompareArray	(cnst SJSONNode & node, cnst SJSONNode & other, view<vcst_c> views)	{ rtrn jsonCompareArray		(node, views, other, views); }
+	ndsi	err_t	jsonCompareObject	(cnst SJSONNode & node, cnst SJSONNode & other, view<vcst_c> views)	{ rtrn jsonCompareObject	(node, views, other, views); }
+	ndsi	err_t	jsonCompareNumber	(cnst SJSONNode & node, cnst SJSONNode & other, view<vcst_c> views)	{ rtrn jsonCompareNumber	(node, views, other, views); }
 
 	err_t	jsonObjectGetCString(cnst SJSONReader & reader, u2_t iNode, vcst_t	& value);
 	err_t	jsonObjectGetString (cnst SJSONReader & reader, u2_t iNode, vcst_t	& value);
@@ -198,8 +198,8 @@ nmsp gpk
 	tydf keyval<vcst_t, SJSONFile>	TKeyValJSONFile;
 
 	err_t			jsonFileRead			(SJSONFile & file, vcst_t filename);
-	err_t			jsonWrite				(cnst SJSONNode * node, view<cnst vcst_t> jsonViews, string & output);
-	err_t			jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<cnst vcst_t> jsonViews, u2_c blockSize, aobj<string> & outputJsons);
+	err_t			jsonWrite				(cnst SJSONNode * node, view<vcst_c> jsonViews, string & output);
+	err_t			jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c> jsonViews, u2_c blockSize, aobj<string> & outputJsons);
 
 	stct SJSONFieldBinding {
 		vcst_t			Field					= {};

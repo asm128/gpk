@@ -67,7 +67,7 @@ nmsp gpk
 	};
 	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, cnst vu0_t	& input);
 	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, FILE				* input);
-	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, cnst vcst_t	& input);
+	gpk::err_t 						rsmFileLoad			(SRSMFileContents & loaded, vcst_c	& input);
 
 	struct SModelNodeRSM {
 		apod<n3f2_t>				Normals			;

@@ -88,7 +88,7 @@ gpk::err_t 		gpk::gndFileLoad											(SGNDFileContents& loaded, FILE								*
 	return 0;
 }
 
-gpk::err_t 		gpk::gndFileLoad											(SGNDFileContents& loaded, cnst vcst_t	& input)							{
+gpk::err_t 		gpk::gndFileLoad											(SGNDFileContents& loaded, vcst_c	& input)							{
 	apod<s0_t>									fileInMemory												= {};
 	if_fail_fef(gpk::fileToMemory(input, fileInMemory), "Failed to load .gnd file: %s", input.begin());
 	return gndFileLoad(loaded, vu0_t((u0_t*)fileInMemory.begin(), fileInMemory.size()));

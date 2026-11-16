@@ -15,4 +15,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerCommandArgumentsHistory>modules.gpk|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommandArgumentsHistory>modules.gpk|</LocalDebuggerCommandArgumentsHistory>
+  </PropertyGroup>
 </Project>

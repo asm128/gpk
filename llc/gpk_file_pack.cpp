@@ -16,7 +16,7 @@ gpk::err_t			gpk::folderUnpack			(SFolderInMemory & out_loaded, vcst_t nameFileS
 	if_fail_fef(folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %.*s.", GPK_VIEW_ARGS(nameFileSrc));
 	return 0;
 }
-gpk::err_t			gpk::folderToDisk			(cnst SFolderPackage & folderPackage, cnst vcst_t nameFileDst)			{
+gpk::err_t			gpk::folderToDisk			(cnst SFolderPackage & folderPackage, vcst_c nameFileDst)			{
 	cnst SPackHeader 	& fileHeader				= folderPackage.PackageInfo;
 	vcu0_c				compressedTableFiles		= folderPackage.CompressedTableFiles		;
 	vcu0_c				compressedContentsPacked	= folderPackage.CompressedContentsPacked	;
@@ -35,7 +35,7 @@ gpk::err_t			gpk::folderToDisk			(cnst SFolderPackage & folderPackage, cnst vcst
 
 stxp u2_t			DEFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
 stxp u2_t			INFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
-gpk::err_t			gpk::folderPack				(SFolderPackage & output, cnst vcst_t nameFolderSrc) {
+gpk::err_t			gpk::folderPack				(SFolderPackage & output, vcst_c nameFolderSrc) {
 	SPackHeader 			& fileHeader			= output.PackageInfo = {};
 	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
 	au0_t					tableFiles				;
@@ -89,7 +89,7 @@ gpk::err_t			gpk::folderLoad				(vcst_t nameFolderSrc, au0_t & tableFiles, au0_t
 		rangeu2_t			fileLocation			= {0, 0};
 		for(u2_t iFile = 0; iFile < listFiles.size(); ++iFile) {
 			fileLocation.Offset		= contentsPacked.size();
-			cnst vcst_t			pathToLoad				= {listFiles[iFile].begin(), listFiles[iFile].size()};
+			vcst_c			pathToLoad				= {listFiles[iFile].begin(), listFiles[iFile].size()};
 			if(0 == pathToLoad.size())
 				continue;
 
@@ -112,7 +112,7 @@ gpk::err_t			gpk::folderToDisk			(cnst SFolderInMemory & virtualFolder, vcst_t d
 	FILE						* fp						= 0;
 	for(u2_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
 		gpk::safe_fclose(fp);
-		cnst vcst_t			& fileName					= virtualFolder.Names		[iFile];
+		vcst_c			& fileName					= virtualFolder.Names		[iFile];
 		vcu0_c			& fileContent				= virtualFolder.Contents	[iFile];
 		finalPathName.clear();
 		if_fail_fe(pathNameCompose(destinationPath, fileName, finalPathName));

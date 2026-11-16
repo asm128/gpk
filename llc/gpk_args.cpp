@@ -44,7 +44,7 @@ gpk::err_t		gpk::viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, sc_t * envp[]) 
 	if_null_fe(envp);
 	u2_t				iVar					= 0;
 	for(; envp[iVar]; ++iVar) {
-		cnst vcst_t		environmentEntry		= {envp[iVar], (u2_t)-1};
+		vcst_c		environmentEntry		= {envp[iVar], (u2_t)-1};
 		kv<vcst_t>			keyVal					= {};
 		if(-1 == keyval_split(environmentEntry, keyVal))
 			keyVal.Key								= environmentEntry;
@@ -107,7 +107,7 @@ gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, sc_t ** argv,
 	return argsParse(output, arguments, envvars);
 }
 
-gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, view<cnst vcst_t> argv, view<cnst kv<vcst_t>> envp) {
+gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, view<vcst_c> argv, view<cnst kv<vcst_t>> envp) {
 	output				= {};
 	output.Environment	= envp;
 	if_zero_vw(0, argv.size()); // Exit early if no argv: nothing to do

@@ -65,7 +65,7 @@ sttc	::gpk::err_t								createChildProcess
 	::gpk::string								userMessage				= {};
 	{
 		userMessage.resize(2 * appPath.size() + 2 * commandLine.size() + 1024);
-		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%.*s' and press OK to initiate the process' main thread.", GPK_VIEW_ARGS(appPath));
+		::gpk::sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%.*s' and press OK to initiate the process' main thread.", GPK_VIEW_ARGS(appPath));
 	}
 
 	MessageBoxA(0, userMessage.begin(), (cnst sc_t*)popupTitle.begin(), MB_OK | MB_TOPMOST);	// Tell the user to attach the debugger to the child process.

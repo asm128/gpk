@@ -223,9 +223,9 @@ nmsp gpk
 				cnst SVOXChunkHeader							& readChunkHeader	= *(cnst SVOXChunkHeader*)input.begin(); 
 				input												= {input.begin() + bytesRead, input.size() - bytesRead};
 
-				cnst vcst_t										CHUNK_TAGS_STATIC[]	= {"MAIN", "SIZE", "PACK", "RGBA"};
+				vcst_c										CHUNK_TAGS_STATIC[]	= {"MAIN", "SIZE", "PACK", "RGBA"};
 				gpk_vox_info_printf("Chunk type: %.*s.", GPK_VIEW_ARGS(readChunkHeader.Type));
-				if(-1 != find(vcst_t{readChunkHeader.Type}, view<cnst vcst_t>{CHUNK_TAGS_STATIC})) {
+				if(-1 != find(vcst_t{readChunkHeader.Type}, view<vcst_c>{CHUNK_TAGS_STATIC})) {
 					SVOXChunk										newChunk				= {};
 					newChunk.Header										= readChunkHeader;
 

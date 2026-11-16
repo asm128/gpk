@@ -192,7 +192,7 @@ sttc vcst_t sampleGUIPaletteName(cnst GUI_CONTROL_PALETTE palette) nxpt {
 	if(definition)
 		for(u2_t iValue = 0; iValue < definition->Count; ++iValue)
 			if(definition->Values[iValue].Value == (s3_t)palette) {
-				cnst vcst_t name = definition->Names[iValue];
+				vcst_c name = definition->Names[iValue];
 				cnst u2_t prefixLength = definition->Name.size() + 1;
 				rtrn name.size() > prefixLength ? vcst_t{name.begin() + prefixLength, name.size() - prefixLength} : name;
 			}
@@ -211,7 +211,7 @@ sttc err_t sampleGUIInspectorCreate(SSampleGUI & app, SSampleGUIInspector & insp
 		constraints.DockToControl.Bottom = previous->IdGUIControl;
 	cnst cid_t idClient = inspector.Viewport->IdClient;
 	cnst s1_t clientWidth = (s1_t)(app.Dialog->GUI->Controls.Placement[idClient].Area.Size.x - controlNCSpacing(app.Dialog->GUI->Controls.Placement[idClient]).x);
-	sttc cnst vcst_t emptyValues[] = {"NONE", "-", "-", "-", "-"};
+	sttc vcst_c emptyValues[] = {"NONE", "-", "-", "-", "-"};
 	acid idNames = {}, idValues = {};
 	if_fail_fe(guiCreateControlList<sample_gui::INSPECTOR_FIELD>(*app.Dialog->GUI, idClient, {88, 18}, {0, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_RIGHT, idNames));
 	if_fail_fe(guiCreateControlList(*app.Dialog->GUI, {emptyValues}, idClient, {(u1_t)(clientWidth - 88), 18}, {88, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT, idValues));
@@ -267,123 +267,54 @@ sttc err_t sampleGUIViewportCreate(SSampleGUI & app, cid_t & idViewport, pobj<SD
 	rtrn controlMetricsInvalidate(*app.Dialog->GUI, viewport->IdGUIControl);
 }
 
-sttc err_t sampleGUIDataViewportCreate(SSampleGUI & app, SGUIEditor & editor, vcst_t title, view<vcst_c> memberNames) {
+sttc b8_t sampleGUICTTIGUIType(cnst SCTTIStructDeclaration & declaration) {
+	u2_t iName = declaration.File.size();
+	while(iName && declaration.File[iName - 1] != '/' && declaration.File[iName - 1] != '\\')
+		--iName;
+	cnst vcst_t fileName = {declaration.File.begin() + iName, declaration.File.size() - iName};
+	rtrn fileName.size() >= 7 && vcst_t{fileName.begin(), 7} == "gpk_gui";
+}
+
+sttc err_t sampleGUIDataViewportCreate(SSampleGUI & app, SGUIEditor & editor, cnst SCTTIStructDeclaration & metadata, u2_t & iValue) {
 	pobj<SDialogViewport> viewport = {};
 	cid_t idViewport = CID_INVALID;
-	if_fail_fe(::sampleGUIViewportCreate(app, idViewport, viewport, title, {{}, {240, (s1_t)(42 + memberNames.size() * 18)}}));
+	if_fail_fe(::sampleGUIViewportCreate(app, idViewport, viewport, metadata.Name, {{}, {360, (s1_t)(42 + metadata.Members.size() * 18)}}));
 	SControlTable & controls = app.Dialog->GUI->Controls;
 	controls.Placement[viewport->IdGUIControl].Align = ALIGN_CENTER;
 	controls.Constraints[viewport->IdGUIControl].DockToControl.Right = editor.DataViews.size()
 		? editor.DataViews[editor.DataViews.size() - 1]->IdGUIControl
 		: editor.Viewport->IdGUIControl
 		;
-	acid idFields = {};
-	if_fail_fe(guiCreateControlList(*app.Dialog->GUI, memberNames, viewport->IdClient, {220, 18}, {4, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT, idFields));
+	aobj<vcst_t> cells = {};
+	if_fail_fe(cells.resize(metadata.Members.size() * 2));
+	for(u2_t iMember = 0; iMember < metadata.Members.size(); ++iMember) {
+		cnst SCTTIMember & member = metadata.Members[iMember];
+		cells[iMember * 2 + 0] = metadata.View(member.Name);
+		string & value = editor.DataValues[iValue++];
+		value = member.Value.Count ? metadata.View(member.Value) : vcst_t{"{}"};
+		cells[iMember * 2 + 1] = value;
+	}
+	cid_t idGrid = guiControlGridCreate(*app.Dialog->GUI, view<vcst_c>{cells}, viewport->IdClient, DIRECTION_RIGHT, 2, {170, 18}, {}, {4, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT);
+	if_fail_fe(idGrid);
+	if_fail_fe(app.System[GUI_TYPE_Control_grid].push_back(idGrid));
 	controls.SetHidden(viewport->IdGUIControl, true);
 	if_fail_fe(editor.DataViews.push_back(viewport));
-	if_fail_fe(guiControlListPush(*app.Dialog->GUI, app.System[GUI_TYPE_Control_list][app.IndexListViewports], DIRECTION_RIGHT, title));
+	if_fail_fe(guiControlListPush(*app.Dialog->GUI, app.System[GUI_TYPE_Control_list][app.IndexListViewports], DIRECTION_RIGHT, metadata.Name));
 	rtrn 0;
 }
 
 sttc err_t sampleGUIDataViewportsCreate(SSampleGUI & app, SGUIEditor & editor) {
-	cnst auto & metadata = cttiStruct<SControlText>();
-	if_fail_fe(cttiMemberJSON(metadata, editor.Data.Bytes));
-	if_fail_fe(jsonParse(editor.Data.Reader, editor.Data.Bytes));
-	aobj<vcst_t> memberNames = {};
-	if_fail_fe(jsonObjectKeyList(editor.Data.Reader, 0, memberNames));
-	rtrn ::sampleGUIDataViewportCreate(app, editor, metadata.View(metadata.StructName), memberNames);
-}
-
-sttc cid_t sampleGUIEditorSelectedControl(cnst SGUIEditor & editor) {
-	cnst SGUI & gui = *editor.Dialog->GUI;
-	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
-		if(false == controlInvalid(gui, (cid_t)iControl) && gui.Controls.IsSelected((cid_t)iControl))
-			rtrn (cid_t)iControl;
-	rtrn CID_INVALID;
-}
-
-sttc err_t sampleGUIEditorFieldProcess(SSampleGUI & app, SGUIEditor & editor, cid_t idControl) {
-	SGUI & gui = *app.Dialog->GUI;
-	cnst cid_t idEditedControl = ::sampleGUIEditorSelectedControl(editor);
-	if(controlInvalid(*editor.Dialog->GUI, idEditedControl))
-		rtrn 0;
-	cid_t idField = idControl;
-	cid_t idDropdown = CID_INVALID;
-	err_t iOption = -1;
-	cnst cid_t idCandidateDropdown = controlParent(gui, idControl);
-	if(false == controlInvalid(gui, idCandidateDropdown)) {
-		cnst SControlConstraints & dropdownConstraints = gui.Controls.Constraints[idCandidateDropdown];
-		cnst cid_t idCandidateField = dropdownConstraints.DockToControl.Bottom;
-		if(false == controlInvalid(gui, idCandidateField)
-		&& dropdownConstraints.DockToControl.Left == idCandidateField
-		&& controlParent(gui, idCandidateField) == controlParent(gui, idCandidateDropdown)
-		) {
-			cnst err_t iCandidateOption = gui.Controls.Children[idCandidateDropdown].find(idControl);
-			if(0 <= iCandidateOption) {
-				idField = idCandidateField;
-				idDropdown = idCandidateDropdown;
-				iOption = iCandidateOption;
-			}
-		}
-	}
-	for(u2_t iView = 0; iView < editor.DataViews.size(); ++iView) {
-		SDialogViewport & viewport = *editor.DataViews[iView];
-		cnst acid & fields = gui.Controls.Children[viewport.IdClient];
-		for(u2_t iDataField = 0; iDataField < fields.size(); ++iDataField) {
-			cnst cid_t idDataField = fields[iDataField];
-			if(idField == idDataField) {
-				if(0 <= iOption) {
-					b8_t handled = false;
-					auto setEnum = [&](auto & member) -> err_t {
-						auto memberValue = member;
-						if constexpr(__is_enum(decltype(memberValue))) {
-							handled = true;
-							cnst enum_definition<decltype(memberValue)> & definition = get_enum<decltype(memberValue)>();
-							if_true_fe((u2_t)iOption >= definition.Values.size());
-							member = definition.Values[iOption];
-							if_fail_fe(guiSelect(gui, idControl));
-							if_fail_fe(dropdownCollapse(gui, idDropdown));
-							if_fail_fe(controlMetricsInvalidate(*editor.Dialog->GUI, idEditedControl));
-						}
-						rtrn 0;
-					};
-					if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idDataField].Text, setEnum));
-					if(handled) {
-						cnst cid_t idClient = controlParent(gui, idDropdown);
-						if_fail_fe(controlMetricsInvalidate(gui, controlParent(gui, idClient)));
-					}
-					rtrn handled;
-				}
-				b8_t handled = false;
-				auto openEnum = [&](auto & member) -> err_t {
-					auto memberValue = member;
-					if constexpr(__is_enum(decltype(memberValue))) {
-						handled = true;
-						SControlPlacement placement = {};
-						placement.Area.Size = {160, 18};
-						cnst cid_t idDropdown = guiCreateDropdown(gui, app.System, get_value_labels<decltype(memberValue)>(), idDataField, placement, ALIGN_CENTER_LEFT);
-						if_fail_fe(idDropdown);
-						cnst acid & options = gui.Controls.Children[idDropdown];
-						cnst s2_t iSelected = get_value_index(memberValue);
-						if(in_range(iSelected, (s2_t)0, (s2_t)options.size()))
-							if_fail_fe(guiSelect(gui, options[iSelected]));
-						if(gui.Controls.IsHidden(idDropdown)) {
-							if_fail_fe(dropdownExpand(gui, idDropdown));
-						}
-						else {
-							if_fail_fe(dropdownCollapse(gui, idDropdown));
-						}
-					}
-					rtrn 0;
-				};
-				if_fail_fe(cttiVisit(editor.Dialog->GUI->Controls.Text[idEditedControl], gui.Controls.Text[idDataField].Text, openEnum));
-				if(handled)
-					if_fail_fe(controlMetricsInvalidate(gui, viewport.IdGUIControl));
-				rtrn handled;
-			}
-		}
-	}
-	rtrn 0;
+	cnst aobj<SCTTIStructDeclaration> & declarations = cttiStructDeclarations();
+	u2_t valueCount = 0;
+	for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration)
+		if(::sampleGUICTTIGUIType(declarations[iDeclaration]))
+			valueCount += declarations[iDeclaration].Members.size();
+	if_fail_fe(editor.DataValues.resize(valueCount));
+	u2_t iValue = 0;
+	for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration)
+		if(::sampleGUICTTIGUIType(declarations[iDeclaration]))
+			if_fail_fe(::sampleGUIDataViewportCreate(app, editor, declarations[iDeclaration], iValue));
+	rtrn editor.DataViews.size();
 }
 
 err_t sampleGUISetup(SSampleGUI & app, pobj<SInput> & input) {
@@ -558,10 +489,6 @@ err_t sampleGUIUpdate(SSampleGUI & app, gpk::b8_t systemRequestedExit) {
 				if_fail_fe(controlToFront(*app.Dialog->GUI, editor.Viewport->IdGUIControl));
 				rtrn 0;
 			}
-			cnst err_t fieldHandled = ::sampleGUIEditorFieldProcess(app, editor, idControl);
-			if_fail_fe(fieldHandled);
-			if(fieldHandled)
-				rtrn 0;
 		}
 		if(idControl == app.Dialog->GUI->Controls.Children[app.System[GUI_TYPE_Control_list][app.IndexListExit]][sample_gui::SCREENSHOT]) {
 			app.ScreenshotRequested = true;

@@ -167,7 +167,7 @@ nmsp gpk
 	err_t			testSuiteReportWrite	(vcst_t folder, cnst STestSuiteReport & report, cnst ATestError & results, cnst STestLogBuffer & log);
 
 	tplt<tpnm TFunction>
-	sttc	err_t	testSuiteRun			(STestRunnerState & runner, ATestError & results, STestRunReport & run, view<cnst vcst_t> selectedSuites, cnst STestSuite<TFunction> & suite) {
+	sttc	err_t	testSuiteRun			(STestRunnerState & runner, ATestError & results, STestRunReport & run, view<vcst_c> selectedSuites, cnst STestSuite<TFunction> & suite) {
 		if(selectedSuites.size() && -1 == selectedSuites.find(suite.Name))
 			rtrn 0;
 		STestSuiteReport		report		= {suite.Name, suite.Folder};
@@ -236,7 +236,7 @@ nmsp gpk
 			status = [&]() -> err_t {
 				aobj<vcst_t>		selectedSuites;
 				if_fail_fe(testRunPrepare(runner, runtimeValues, run, selectedSuites));
-				for(cnst vcst_t & selectedSuite : selectedSuites) {
+				for(vcst_c & selectedSuite : selectedSuites) {
 					b8_c			found				= ((suites.Name == selectedSuite) || ...);
 					if_zero_fef(found, "Unknown test suite:'%.*s'.", GPK_VIEW_ARGS(selectedSuite));
 				}

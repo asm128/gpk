@@ -23,7 +23,7 @@
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, F3					, 11, "str(f3_t) produced unexpected fixed storage.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VSTR_MUTABLE		, 12, "str(vstr_t&) did not preserve the counted mutable string view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VSTR_CONST		, 13, "str(cnst vstr_t&) did not preserve the counted string view.");
-//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VCST_CONST		, 14, "str(cnst vcst_t&) did not preserve the counted cnst string view.");
+//GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VCST_CONST		, 14, "str(vcst_c&) did not preserve the counted cnst string view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VS0					, 15, "str(vs0_t) did not preserve the counted mutable character view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, VCS0				, 16, "str(vcs0_t) did not preserve the counted cnst character view.");
 //GDEFINE_ENUM_VALUED(STR_TEST_RESULT, ARRAY_MUTABLE	, 17, "str(sc_t (&)[N]) produced an unexpected mutable string view.");

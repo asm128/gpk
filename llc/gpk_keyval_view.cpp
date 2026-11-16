@@ -41,7 +41,7 @@ gpk::err_t			gpk::token_split		(sc_t valueSeparator, vcst_t input_string, keyval
 // 	}
 // 	return 0;
 // }
-//gpk::err_t			gpk::keyValConstStringSerialize		(view<cnst keyval<vcst_t>> keyVals, view<cnst vcst_t> keysToSave, au0_t & output)	{
+//gpk::err_t			gpk::keyValConstStringSerialize		(view<cnst keyval<vcst_t>> keyVals, view<vcst_c> keysToSave, au0_t & output)	{
 //	apod<keyval<vcst_t>>	keyValsToSave						= {};
 //	for(u2_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 //		for(u2_t iRef = 0; iRef < keysToSave.size(); ++iRef) {

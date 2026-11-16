@@ -29,7 +29,7 @@ gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & solarSystem, cnst SJS
 		// Load planet properties.
 		if_fail_cw(indexProperty = jsonObjectValueGet(jsonData, jsonIndexStellarBody + 2, "type")); // ?? no type? shouldn't happen
 
-		cnst vcst_t			strType						= jsonData.View[indexProperty]; 
+		vcst_c			strType						= jsonData.View[indexProperty]; 
 		cnst CELESTIAL_BODY	bodyType					= bodyTypeFromString(strType);
 		SCelestialBody		bodyProperties				= {};
 		if_fail_cw(loadCelestialBody(bodyProperties, bodyType, jsonData, jsonIndexStellarBody + 2));

@@ -14,7 +14,7 @@ nmsp gpk
 		aobj<kv<vcst_t>>		Environment	= {};
 	};
 
-	err_t			argsParse					(SCommandLineArgs & output, view<cnst vcst_t> argv, view<cnst kv<vcst_t>> envp = {});
+	err_t			argsParse					(SCommandLineArgs & output, view<vcst_c> argv, view<cnst kv<vcst_t>> envp = {});
 	err_t			argsParse					(SCommandLineArgs & output, int argc, sc_t ** argv, sc_t ** envp = 0);
 	err_t			argsOptionValue				(cnst SCommandLineArgs & input, vcst_t key, vcst_t & output);
 	err_t			argsOptionValues			(cnst SCommandLineArgs & input, vcst_t key, aobj<vcst_t> & output);

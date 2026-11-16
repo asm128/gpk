@@ -35,7 +35,7 @@ gpk::err_t	gpk::pathNodePath			(gpk::string & output, cnst gpk::SPathTree & tree
 sttc gpk::err_t	pathWordViews				(gpk::aobj<gpk::vcst_t> & upper, cnst gpk::SPathTree & tree, cnst gpk::SPathNode & node) {
 	for(cnst SPathNode * parent = node.Parent; parent; parent = parent->Parent)
 		if_fail_fe(split(tree.Name[parent->ObjectIndex], ' ', upper));
-	cnst vcst_t			fileName							= tree.Name[node.ObjectIndex];
+	vcst_c			fileName							= tree.Name[node.ObjectIndex];
 	if_fail_fe(split(fileName, ' ', upper));
 	vcst_t				title								= fileName;
 	if(false == node.Info->Folder) {

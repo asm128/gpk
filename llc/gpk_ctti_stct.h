@@ -1,4 +1,5 @@
 #include "gpk_ctti_parse.h"
+#include "gpk_array_obj.h"
 #include "gpk_string.h"
 
 #ifndef GPK_CTTI_STCT_H
@@ -46,7 +47,7 @@ nmsp gpk
 
 		inxp b8_t			Success		() cnst nxpt { rtrn CTTI_PARSE_ERROR_NONE == Error && CTTI_PARSE_STATE_COMPLETE == State; }
 		inxp vcst_t			View		(cnst SCTTISpan span) cnst nxpt { rtrn {&SourceText[span.Offset], span.Count}; }
-		inxp err_t			Find		(cnst vcst_t name) cnst nxpt {
+		inxp err_t			Find		(vcst_c name) cnst nxpt {
 			for(u2_t iMember = 0; iMember < Count; ++iMember)
 				if(View(Members[iMember].Name) == name)
 					rtrn iMember;
@@ -54,102 +55,68 @@ nmsp gpk
 		}
 	};
 
-	stct SCTTIValue {
-		vu0_t		Data		= {};
-		vcst_t		Type		= {};
-		vcst_t		Name		= {};
+	stct SCTTIStructDeclaration;
+	err_t cttiStructDeclarationRegister(cnst SCTTIStructDeclaration & declaration) nxpt;
+
+	stct SCTTIStructDeclaration {
+		vcst_t				File		= {};
+		u2_t				Line		= {};
+		vcst_t				SourceText	= {};
+		vcst_t				Name		= {};
+		view<cnst SCTTIMember>
+							Members		= {};
+		uP_t				Size		= {};
+		b8_t				IsPOD		= {};
+
+		SCTTIStructDeclaration() nxpt = dflt;
+
+		tplt<size_t NDeclaration>
+		SCTTIStructDeclaration
+			( vcst_c file
+			, u2_c line
+			, cnst SCTTIParseResult<NDeclaration> & metadata
+			, uP_c size
+			, b8_c isPOD
+			) nxpt
+			: File		(file)
+			, Line		(line)
+			, SourceText	{metadata.SourceText, NDeclaration - 1}
+			, Name		{metadata.View(metadata.StructName)}
+			, Members	{metadata.Members, metadata.Count}
+			, Size		(size)
+			, IsPOD		(isPOD)
+			{}
+
+		inxp vcst_t View(cnst SCTTISpan span) cnst nxpt { rtrn {SourceText.begin() + span.Offset, span.Count}; }
 	};
+
+	inln aobj<SCTTIStructDeclaration> & cttiStructDeclarations() nxpt {
+		sttc aobj<SCTTIStructDeclaration> declarations = {};
+		rtrn declarations;
+	}
+
+	inln err_t cttiStructDeclarationRegister(cnst SCTTIStructDeclaration & declaration) nxpt {
+		aobj<SCTTIStructDeclaration> & declarations = cttiStructDeclarations();
+		for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration)
+			if(declarations[iDeclaration].File == declaration.File && declarations[iDeclaration].Line == declaration.Line && declarations[iDeclaration].Name == declaration.Name)
+				rtrn 0;
+		rtrn declarations.push_back(declaration);
+	}
+
+	inln cnst SCTTIStructDeclaration & cttiStruct(vcst_c name) nxpt {
+		cnst aobj<SCTTIStructDeclaration> & declarations = cttiStructDeclarations();
+		for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration)
+			if(declarations[iDeclaration].Name == name)
+				rtrn declarations[iDeclaration];
+		sttc cnst SCTTIStructDeclaration empty = {};
+		rtrn empty;
+	}
 
 	tplt<tpnm T>
 	stct SCTTIStructRegistry;
 
 	tplt<tpnm T>
 	inxp cnst auto & cttiStruct() nxpt { rtrn SCTTIStructRegistry<T>::Value; }
-
-	tplt<tpnm T, size_t N>
-	stct SCTTIMemberAccess;
-
-	tplt<tpnm T>
-	stct SCTTIMemberAccess<T, 1> {
-		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
-			auto & [member0] = instance;
-			rtrn 0 == index ? visitor(member0) : -1;
-		}
-	};
-
-	tplt<tpnm T>
-	stct SCTTIMemberAccess<T, 2> {
-		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
-			auto & [member0, member1] = instance;
-			switch(index) {
-			case 0: rtrn visitor(member0);
-			case 1: rtrn visitor(member1);
-			default: rtrn -1;
-			}
-		}
-	};
-
-	tplt<tpnm T>
-	stct SCTTIMemberAccess<T, 3> {
-		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
-			auto & [member0, member1, member2] = instance;
-			switch(index) {
-			case 0: rtrn visitor(member0);
-			case 1: rtrn visitor(member1);
-			case 2: rtrn visitor(member2);
-			default: rtrn -1;
-			}
-		}
-	};
-
-	tplt<tpnm T>
-	stct SCTTIMemberAccess<T, 4> {
-		tplt<tpnm TVisitor>
-		sttc err_t Visit(T & instance, u2_c index, TVisitor & visitor) {
-			auto & [member0, member1, member2, member3] = instance;
-			switch(index) {
-			case 0: rtrn visitor(member0);
-			case 1: rtrn visitor(member1);
-			case 2: rtrn visitor(member2);
-			case 3: rtrn visitor(member3);
-			default: rtrn -1;
-			}
-		}
-	};
-
-	tplt<tpnm T>
-	inxp err_t cttiMemberIndex(cnst vcst_t name) nxpt { rtrn cttiStruct<T>().Find(name); }
-
-	tplt<tpnm T, tpnm TVisitor>
-	err_t cttiVisit(T & instance, cnst vcst_t name, TVisitor && visitor) {
-		cnst err_t iMember = cttiMemberIndex<T>(name);
-		if(0 > iMember)
-			rtrn iMember;
-		rtrn SCTTIMemberAccess<T, SCTTIStructRegistry<T>::Value.Count>::Visit(instance, (u2_t)iMember, visitor);
-	}
-
-	tplt<tpnm T>
-	err_t cttiValue(T & instance, cnst vcst_t name, SCTTIValue & output) {
-		output = {};
-		cnst err_t iMember = cttiMemberIndex<T>(name);
-		if(0 > iMember)
-			rtrn iMember;
-		auto memberView = [&output](auto & member) -> err_t {
-			output.Data = {(u0_t*)&member, sizeof(member)};
-			rtrn 0;
-		};
-		cnst err_t visitResult = SCTTIMemberAccess<T, SCTTIStructRegistry<T>::Value.Count>::Visit(instance, (u2_t)iMember, memberView);
-		if(0 > visitResult)
-			rtrn visitResult;
-		cnst auto & metadata = cttiStruct<T>();
-		cnst SCTTIMember & member = metadata.Members[iMember];
-		output.Type = metadata.View(member.TypeName);
-		output.Name = metadata.View(member.Name);
-		rtrn iMember;
-	}
 
 	tplt<size_t NDeclaration>
 	err_t cttiMemberJSON
@@ -160,8 +127,8 @@ nmsp gpk
 		if_fail_fe(output.push_back('{'));
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
 			cnst SCTTIMember & member = metadata.Members[iMember];
-			cnst vcst_t memberName = metadata.View(member.Name);
-			cnst vcst_t typeName = metadata.View(member.TypeName);
+			vcst_c memberName = metadata.View(member.Name);
+			vcst_c typeName = metadata.View(member.TypeName);
 			if(iMember)
 				if_fail_fe(output.push_back(','));
 			if_fail_fe(output.push_back('"'));
@@ -176,7 +143,7 @@ nmsp gpk
 				if_fail_fe(output.append(vcst_t{"null"}));
 			}
 			else {
-				cnst vcst_t value = metadata.View(member.Value);
+				vcst_c value = metadata.View(member.Value);
 				b8_c stringLiteral = value.size() > 1 && '"' == value[0] && '"' == value[value.size() - 1];
 				b8_c keywordLiteral = value == "true" || value == "false" || value == "null" || value == "{}" || value == "[]";
 				b8_c numberLiteral = value.size() && (('-' == value[0]) || ('+' == value[0]) || (value[0] >= '0' && value[0] <= '9'));
@@ -279,10 +246,38 @@ nmsp gpk
 				? cttiTrim(result.SourceText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
 				: SCTTISpan{};
 
-			u2_t nameOffset = declarationSpan.Offset + declarationSpan.Count;
+			u2_t declaratorEnd = declarationSpan.Offset + declarationSpan.Count;
+			while(declaratorEnd > declarationSpan.Offset && cttiSpace(result.SourceText[declaratorEnd - 1]))
+				--declaratorEnd;
+			while(declaratorEnd > declarationSpan.Offset && ']' == result.SourceText[declaratorEnd - 1]) {
+				u2_t depth = 1;
+				u2_t iSuffix = declaratorEnd - 1;
+				while(iSuffix > declarationSpan.Offset && depth) {
+					--iSuffix;
+					depth += ']' == result.SourceText[iSuffix];
+					depth -= '[' == result.SourceText[iSuffix];
+				}
+				if(depth)
+					break;
+				declaratorEnd = iSuffix;
+				while(declaratorEnd > declarationSpan.Offset && cttiSpace(result.SourceText[declaratorEnd - 1]))
+					--declaratorEnd;
+			}
+			for(u2_t iColon = declaratorEnd; iColon-- > declarationSpan.Offset; )
+				if(':' == result.SourceText[iColon]
+				&& (iColon == declarationSpan.Offset || ':' != result.SourceText[iColon - 1])
+				&& (iColon + 1 == declaratorEnd || ':' != result.SourceText[iColon + 1])
+				) {
+					declaratorEnd = iColon;
+					while(declaratorEnd > declarationSpan.Offset && cttiSpace(result.SourceText[declaratorEnd - 1]))
+						--declaratorEnd;
+					break;
+				}
+
+			u2_t nameOffset = declaratorEnd;
 			while(nameOffset > declarationSpan.Offset && cttiNamePart(result.SourceText[nameOffset - 1]))
 				--nameOffset;
-			cnst SCTTISpan memberName = {nameOffset, declarationSpan.Offset + declarationSpan.Count - nameOffset};
+			cnst SCTTISpan memberName = {nameOffset, declaratorEnd - nameOffset};
 			if(false == cttiIdentifier(result.SourceText, memberName)) {
 				result.Error		= CTTI_PARSE_ERROR_INVALID_MEMBER_NAME;
 				result.State		= CTTI_PARSE_STATE_MEMBER_NAME;
@@ -326,6 +321,10 @@ nmsp gpk
 		sinx ::gpk::u2_t Line = __LINE__; \
 		sinx ::gpk::uP_t Size = sizeof(type); \
 		sinx b8_t IsPOD = __is_pod(type); \
-	}
+	}; \
+	sttc ::gpk::SCTTIStructDeclaration type##_gpk_ctti_declaration = \
+		{::gpk::SCTTIStructRegistry<type>::File, ::gpk::SCTTIStructRegistry<type>::Line, ::gpk::SCTTIStructRegistry<type>::Value, ::gpk::SCTTIStructRegistry<type>::Size, ::gpk::SCTTIStructRegistry<type>::IsPOD}; \
+	sttc cnst ::gpk::err_t type##_gpk_ctti_registration = \
+		::gpk::cttiStructDeclarationRegister(type##_gpk_ctti_declaration)
 
 #endif // GPK_CTTI_STCT_H

@@ -8,7 +8,7 @@ gpk::err_t gpk::frameworkModuleUnload(SRuntimeModule & loadedModule) {
 	loadedModule = {};
 	rtrn 0;
 }
-gpk::err_t gpk::frameworkModuleLoad(SRuntimeModule & loadedModule, cnst vcst_t & moduleName) {
+gpk::err_t gpk::frameworkModuleLoad(SRuntimeModule & loadedModule, vcst_c & moduleName) {
 	string strModuleName;
 	if_fail_fe(append_strings(strModuleName, moduleName));
 	if_null_fef(loadedModule.Handle = GPK_LOAD_MODULE(strModuleName.begin()), "moduleName:%.*s.", GPK_VIEW_ARGS(moduleName));
