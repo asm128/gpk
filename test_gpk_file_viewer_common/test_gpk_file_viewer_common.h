@@ -4,6 +4,7 @@
 #include "gpk_gui_control_list.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_path.h"
+#include "gpk_range.h"
 
 #ifndef TEST_GPK_FILE_VIEWER_COMMON_H_23627
 #define TEST_GPK_FILE_VIEWER_COMMON_H_23627
@@ -25,6 +26,7 @@ stct SFileEditor {
 	string				FilePath			= {};
 	string				FileText			= {};
 	apod<vcst_t>		FileLines			= {};
+	apod<rangeu2_t>	TextSelections		= {};
 	n2u2_t				Cursor				= {};
 	cid_t				IdCursor			= -1;
 	cid_t				IdSave				= -1;

@@ -269,6 +269,7 @@ sttc gpk::err_t fileViewerTextLoad(SFileViewer & viewer, SFileEditor & editor, v
 	if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
 	editor.FilePath = path;
 	editor.FileText.clear();
+	editor.TextSelections.clear();
 	if_fail_fef(fileToMemory(path, editor.FileText), "Failed to load '%.*s'.", GPK_VIEW_ARGS(path));
 	if_fail_fe(::fileViewerTextViewsRebuild(editor));
 	editor.Cursor = {0, (u2_t)-1};
@@ -303,10 +304,23 @@ sttc u2_t fileViewerCursorOffset(cnst SFileEditor & editor) {
 	rtrn ::fileViewerLineOffset(editor, editor.Cursor.y) + min(editor.Cursor.x, line.size());
 }
 
+sttc void fileViewerCursorOffsetSet(SFileEditor & editor, u2_t offset) {
+	editor.Cursor = {};
+	for(u2_t iCharacter = 0, countCharacter = min(offset, editor.FileText.size()); iCharacter < countCharacter; ++iCharacter) {
+		if('\n' == editor.FileText[iCharacter]) {
+			++editor.Cursor.y;
+			editor.Cursor.x = 0;
+		}
+		else if('\r' != editor.FileText[iCharacter] || iCharacter + 1 >= editor.FileText.size() || '\n' != editor.FileText[iCharacter + 1])
+			++editor.Cursor.x;
+	}
+}
+
 sttc gpk::err_t fileViewerTextInsert(SFileViewer & viewer, SFileEditor & editor, sc_t character) {
 	u2_c offset = ::fileViewerCursorOffset(editor);
 	if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
 	if_fail_fe(editor.FileText.insert(offset, character));
+	editor.TextSelections.clear();
 	if_fail_fe(::fileViewerTextViewsRebuild(editor));
 	if('\n' == character) {
 		++editor.Cursor.y;
@@ -337,10 +351,44 @@ sttc gpk::err_t fileViewerTextBackspace(SFileViewer & viewer, SFileEditor & edit
 			if_fail_fe(editor.FileText.remove(separatorOffset));
 	}
 	if_fail_fe(::fileViewerTextViewsRebuild(editor));
+	editor.TextSelections.clear();
 	rtrn 0;
 }
 
 sttc gpk::err_t fileViewerTextDelete(SFileViewer & viewer, SFileEditor & editor) {
+	if(editor.TextSelections.size()) {
+		u2_t cursorOffset = editor.FileText.size();
+		b8_t selectedText = false;
+		for(u2_t iSelection = 0; iSelection < editor.TextSelections.size(); ++iSelection) {
+			rangeu2_c selection = editor.TextSelections[iSelection];
+			u2_c selectionBegin = min(selection.Offset, editor.FileText.size());
+			u2_c selectionEnd = (u2_t)min((u3_t)editor.FileText.size(), (u3_t)selection.Offset + selection.Count);
+			if(selectionBegin < selectionEnd) {
+				cursorOffset = min(cursorOffset, selectionBegin);
+				selectedText = true;
+			}
+		}
+		if(selectedText) {
+			if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
+			for(u2_t iCharacter = editor.FileText.size(); iCharacter; ) {
+				--iCharacter;
+				for(u2_t iSelection = 0; iSelection < editor.TextSelections.size(); ++iSelection) {
+					rangeu2_c selection = editor.TextSelections[iSelection];
+					u2_c selectionBegin = min(selection.Offset, editor.FileText.size());
+					u2_c selectionEnd = (u2_t)min((u3_t)editor.FileText.size(), (u3_t)selection.Offset + selection.Count);
+					if(iCharacter >= selectionBegin && iCharacter < selectionEnd) {
+						if_fail_fe(editor.FileText.remove(iCharacter));
+						break;
+					}
+				}
+			}
+			if_fail_fe(::fileViewerTextViewsRebuild(editor));
+			::fileViewerCursorOffsetSet(editor, cursorOffset);
+			editor.TextSelections.clear();
+			rtrn 0;
+		}
+		editor.TextSelections.clear();
+	}
 	if(editor.Cursor.y >= editor.FileLines.size())
 		rtrn 0;
 	u2_c cursorOffset = ::fileViewerCursorOffset(editor);
@@ -352,6 +400,7 @@ sttc gpk::err_t fileViewerTextDelete(SFileViewer & viewer, SFileEditor & editor)
 	if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
 	for(u2_t iCharacter = 0; iCharacter < count; ++iCharacter)
 		if_fail_fe(editor.FileText.remove(cursorOffset));
+	editor.TextSelections.clear();
 	rtrn ::fileViewerTextViewsRebuild(editor);
 }
 
@@ -373,6 +422,7 @@ sttc gpk::err_t fileViewerEditorHandle(SFileViewer & viewer, SFileEditor & edito
 	case VK_SCANCODE_Backspace	: if_fail_fe(::fileViewerTextBackspace(viewer, editor));	break;
 	case VK_SCANCODE_Clear		: if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
 		editor.FileText.clear();
+		editor.TextSelections.clear();
 		editor.Cursor = {};
 		if_fail_fe(::fileViewerTextViewsRebuild(editor));
 		break;
