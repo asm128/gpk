@@ -25,46 +25,46 @@ nmsp gpk
 		, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240
 		, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, '!', '?'
 		};
-	CTTI_ENUM(GK_EVENT,
-	enum GK_EVENT : u0_t
-		{ GK_EVENT_Press	
-		, GK_EVENT_Release	
-		, GK_EVENT_Hold		
-		, GK_EVENT_Edit		
-		, GK_EVENT_Arrow
+	CTTI_ENUM(VK_EVENT,
+	enum VK_EVENT : u0_t
+		{ VK_EVENT_Press	
+		, VK_EVENT_Release	
+		, VK_EVENT_Hold		
+		, VK_EVENT_Edit		
+		, VK_EVENT_Arrow
 		};
 	);
-	CTTI_ENUM(GK_SCANCODE,
-	enum GK_SCANCODE : u0_t
-		{ GK_SCANCODE_Escape
-		, GK_SCANCODE_Enter     
-		, GK_SCANCODE_Backspace 
-		, GK_SCANCODE_Clear     
-		, GK_SCANCODE_Left      
-		, GK_SCANCODE_Right     
-		, GK_SCANCODE_Up        
-		, GK_SCANCODE_Down      
-		, GK_SCANCODE_Front     
-		, GK_SCANCODE_Back      
-		, GK_SCANCODE_Delete    
-		, GK_SCANCODE_Insert
-		, GK_SCANCODE_Home
-		, GK_SCANCODE_End
-		, GK_SCANCODE_Page_Up
-		, GK_SCANCODE_Page_Down
-		, GK_SCANCODE_LeftShift
-		, GK_SCANCODE_RightShift
-		, GK_SCANCODE_Alt
-		, GK_SCANCODE_Alt_Gr
-		, GK_SCANCODE_LControl
-		, GK_SCANCODE_RControl
-		, GK_SCANCODE_System // "Windows Key" on windows
+	CTTI_ENUM(VK_SCANCODE,
+	enum VK_SCANCODE : u0_t
+		{ VK_SCANCODE_Escape
+		, VK_SCANCODE_Enter     
+		, VK_SCANCODE_Backspace 
+		, VK_SCANCODE_Clear     
+		, VK_SCANCODE_Left      
+		, VK_SCANCODE_Right     
+		, VK_SCANCODE_Up        
+		, VK_SCANCODE_Down      
+		, VK_SCANCODE_Front     
+		, VK_SCANCODE_Back      
+		, VK_SCANCODE_Delete    
+		, VK_SCANCODE_Insert
+		, VK_SCANCODE_Home
+		, VK_SCANCODE_End
+		, VK_SCANCODE_Page_Up
+		, VK_SCANCODE_Page_Down
+		, VK_SCANCODE_LeftShift
+		, VK_SCANCODE_RightShift
+		, VK_SCANCODE_Alt
+		, VK_SCANCODE_Alt_Gr
+		, VK_SCANCODE_LControl
+		, VK_SCANCODE_RControl
+		, VK_SCANCODE_System // "Windows Key" on windows
 		};
 	);
 #pragma pack(push, 1)
 	struct SGUIKeyboardEvent {
-		GK_EVENT		Type;
-		GK_SCANCODE		ScanCode;
+		VK_EVENT		Type;
+		VK_SCANCODE		ScanCode;
 	};
 #pragma pack(pop)
 }
