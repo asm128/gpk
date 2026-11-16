@@ -195,6 +195,9 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_JSON_BUILD, ::gpk::failed(buildResult));
 	stxp ::gpk::vcst_t expected = "{\"Weight\":{\"type\":\"float\",\"value\":234.25,\"modifiers\":[\"inln\",\"sttc\",\"cnst\"]},\"Height\":{\"type\":\"f3_t\",\"value\":234.25,\"modifiers\":[\"stxp\"]},\"Capacity\":{\"type\":\"gpk::view<gpk::sc_c>\",\"value\":\"Factory::Build<Value>(7)\",\"modifiers\":[\"vltl\"]},\"Enabled\":{\"type\":\"b8_c\",\"value\":true,\"modifiers\":[\"sttc\"]},\"Count\":{\"type\":\"gpk::u2_t\",\"value\":null,\"modifiers\":[]}}";
 	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_JSON_TEXT, output != expected, "Actual:'%.*s'; expected:'%.*s'.", GPK_VIEW_ARGS(output), GPK_VIEW_ARGS(expected));
+	::gpk::string registeredOutput;
+	if_fail_fe(::gpk::cttiMemberJSON(::gpk::cttiStruct("SCTTIJSONTest0"), registeredOutput));
+	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_JSON_TEXT, registeredOutput != expected, "Registered:'%.*s'; expected:'%.*s'.", GPK_VIEW_ARGS(registeredOutput), GPK_VIEW_ARGS(expected));
 
 	::gpk::SJSONReader reader;
 	cnst ::gpk::err_t parseResult = ::gpk::jsonParse(reader, output);

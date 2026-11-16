@@ -2,6 +2,8 @@
 
 #include "gpk_bit.h"
 #include "gpk_ctti_enum.h"
+#include "gpk_ctti_stct.h"
+
 #define gpk_gui_printf verbose_printf
 
 #ifndef GPK_GUI_CONTROL_FLAG_H_23627
@@ -68,11 +70,13 @@ nmsp gpk
 		};
 	);
 
+	CTTI_STCT(SChangeControlState,
 	struct SChangeControlState { 
 		cid_t				Id		= -1; 
 		GUI_CONTROL_FLAG	Clear	= {}; 
 		GUI_CONTROL_FLAG	Set		= {};
 	};
+	);
 
 	stin	gpk::err_t eventEnqueueGuiControlStateChange(apobj<SEventSystem> & queue, cid_t iControl, GUI_CONTROL_FLAG oldState, GUI_CONTROL_FLAG newState) {
 		SChangeControlState			stateChange				= {iControl};
@@ -87,11 +91,6 @@ nmsp gpk
 		return eventEnqueueChild(queue, SYSTEM_EVENT_GUI, EVENT_GUI_CONTROL_StateChange, stateChange); 
 	}
 
-	struct SChangeControlParent { 
-		cid_t				Id		= -1; 
-		cid_t				Parent	= -1; 
-	};
-
 	tplt<tpnm _tState>
 	usng TFuncSetMaskedValue = function<_tState(void)>; 
 
@@ -104,6 +103,7 @@ nmsp gpk
 		return state;
 	}
 
+	CTTI_STCT(SControlState,
 	struct SControlState {
 		cid_t				Parent			= -1;
 		GUI_CONTROL_FLAG	Flag			= {};
@@ -130,34 +130,10 @@ nmsp gpk
 		inxp	b8_t		IsAction		()	csnx	{ return isAction   (Flag, Mask); }
 		inxp	b8_t		IsUnused		()	csnx	{ return isUnused   (Flag); }
 	};
+	);
 	stxp	size_t SIZEOF_SCONTROL	= sizeof(SControlState);
 #pragma pack(pop)
 
 } // nmsp
 
 #endif // GPK_GUI_CONTROL_FLAG_H_23627
-
-
-	//GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG_EX, u0_t)
-	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Open		, 0x01U);
-	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Locked		, 0x02U);
-	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Expanded	, 0x04U);
-	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Minimized	, 0x08U);	// Prevents from drawing the control and its children, draws the icon form of the control if required
-	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Maximized	, 0x10U);
-	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, FullScreen	, 0x20U);
-	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Active		, 0x40U);
-	//inxp	b8_t	isOpen				(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Open			); }
-	//inxp	b8_t	isLocked			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Locked		); }
-	//inxp	b8_t	isExpanded			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Expanded		); }
-	//inxp	b8_t	isMinimized			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Minimized	); }
-	//inxp	b8_t	isMaximized			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Maximized	); }
-	//inxp	b8_t	isFullScreen		(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_FullScreen	); }
-	//inxp	b8_t	isActive			(cnst GUI_CONTROL_FLAG_EX state, cnst GUI_CONTROL_FLAG_EX mask)			nxpt	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_EX_Active		); }
-
-	//inxp	GUI_CONTROL_FLAG_EX	setOpen				(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Open			, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setLocked			(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Locked		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setExpanded			(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Expanded		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setMinimized		(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Minimized		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setMaximized		(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Maximized		, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setFullScreen		(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_FullScreen	, value); }
-	//inxp	GUI_CONTROL_FLAG_EX	setActive			(GUI_CONTROL_FLAG_EX & state, cnst GUI_CONTROL_FLAG_EX mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Active		, value); }

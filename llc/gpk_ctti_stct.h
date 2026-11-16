@@ -118,14 +118,13 @@ nmsp gpk
 	tplt<tpnm T>
 	inxp cnst auto & cttiStruct() nxpt { rtrn SCTTIStructRegistry<T>::Value; }
 
-	tplt<size_t NDeclaration>
-	err_t cttiMemberJSON
-		( cnst SCTTIParseResult<NDeclaration> & metadata
+	inln err_t cttiMemberJSON
+		( cnst SCTTIStructDeclaration & metadata
 		, string & output
 		) {
 		output.clear();
 		if_fail_fe(output.push_back('{'));
-		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
+		for(u2_t iMember = 0; iMember < metadata.Members.size(); ++iMember) {
 			cnst SCTTIMember & member = metadata.Members[iMember];
 			vcst_c memberName = metadata.View(member.Name);
 			vcst_c typeName = metadata.View(member.TypeName);
@@ -179,6 +178,15 @@ nmsp gpk
 		}
 		if_fail_fe(output.push_back('}'));
 		rtrn output.size();
+	}
+
+	tplt<size_t NDeclaration>
+	err_t cttiMemberJSON
+		( cnst SCTTIParseResult<NDeclaration> & metadata
+		, string & output
+		) {
+		cnst SCTTIStructDeclaration declaration = {vcst_t{}, 0, metadata, 0, false};
+		rtrn cttiMemberJSON(declaration, output);
 	}
 
 

@@ -94,22 +94,26 @@ nmsp gpk
 		usng	astsc_t<N>	::Storage;
 		u2_t					Count			= {};
 
-		inxp					static_string	()						{}
-		inxp					static_string	(astsc_c<N> & other)	: astsc_t<N>(other), Count(vcst_t(other.Storage).size()) {}
+		inxp					static_string	()							{}
+		inxp					static_string	(astsc_c<N> & other)		: astsc_t<N>(other), Count(vcst_t(other.Storage).size()) {}
 
-		inln	static_string&	oper=			(astsc_c<N> & other)	{ Count = vcst_t(other.Storage).size(); return astsc_t<N>::oper=(other); }
+		inln	static_string&	oper=			(astsc_c<N> & other)		{ Count = vcst_t(other.Storage).size(); return astsc_t<N>::oper=(other); }
+		inln	sc_c&			oper[]			(u2_t index)		cnst	{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
+		inln	sc_t&			oper[]			(u2_t index)				{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
+		inxp	sc_t&			oper==			(vcst_c & other)	cnst	{ rtrn other == Storage; }
+		inxp	sc_t&			oper!=			(vcst_c & other)	cnst	{ rtrn other != Storage; }
 
-		inln	oper			vstr_t			()						{ rtrn Storage; }
-		inxp	oper			vcst_t			()				csnx	{ rtrn Storage; }
-		ndix	oper			sc_c* 			()				csnx	{ rtrn begin(); }
+		inln	oper			vstr_t			()							{ rtrn Storage; }
+		inxp	oper			vcst_t			()					csnx	{ rtrn Storage; }
+		ndix	oper			sc_c* 			()					csnx	{ rtrn begin(); }
 
-		inxp	u2_t			byte_count		()				csnx	{ rtrn vcst_t{Storage}.byte_count	(); } 
-		inxp	u2_t			bit_count		()				csnx	{ rtrn vcst_t{Storage}.bit_count	(); } 
-		inxp	u2_t			size			()				csnx	{ rtrn vcst_t{Storage}.size			(); }
-		inln	sc_t*			begin			()				nxpt	{ rtrn vstr_t{Storage}.begin(); }
-		inln	sc_t*			end				()				nxpt	{ rtrn vstr_t{Storage}.end  (); }
-		inxp	sc_c*			begin			()				csnx	{ rtrn vcst_t{Storage}.begin(); }
-		inxp	sc_c*			end				()				csnx	{ rtrn vcst_t{Storage}.end  (); }
+		inxp	u2_t			byte_count		()					csnx	{ rtrn vcst_t{Storage}.byte_count	(); } 
+		inxp	u2_t			bit_count		()					csnx	{ rtrn vcst_t{Storage}.bit_count	(); } 
+		inxp	u2_t			size			()					csnx	{ rtrn vcst_t{Storage}.size			(); }
+		inln	sc_t*			begin			()					nxpt	{ rtrn vstr_t{Storage}.begin(); }
+		inln	sc_t*			end				()					nxpt	{ rtrn vstr_t{Storage}.end  (); }
+		inxp	sc_c*			begin			()					csnx	{ rtrn vcst_t{Storage}.begin(); }
+		inxp	sc_c*			end				()					csnx	{ rtrn vcst_t{Storage}.end  (); }
 	};
 	tplN2uusng			sstring		= static_string<N>;
 	tplTN2sinx	u2_t	size		(cnst sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }

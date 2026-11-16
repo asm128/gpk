@@ -264,31 +264,90 @@ sttc err_t sampleGUIViewportCreate(SSampleGUI & app, cid_t & idViewport, pobj<SD
 	rtrn controlMetricsInvalidate(*app.Dialog->GUI, viewport->IdGUIControl);
 }
 
-sttc err_t sampleGUIDataViewportCreate(SSampleGUI & app, SGUIEditor & editor, vcst_t title, view<vcst_c> memberNames) {
+sttc b8_t sampleGUICTTIGUIType(cnst SCTTIStructDeclaration & declaration) {
+	u2_t iName = declaration.File.size();
+	while(iName && declaration.File[iName - 1] != '/' && declaration.File[iName - 1] != '\\')
+		--iName;
+	cnst vcst_t fileName = {declaration.File.begin() + iName, declaration.File.size() - iName};
+	rtrn fileName.size() >= 7 && vcst_t{fileName.begin(), 7} == "gpk_gui";
+}
+
+sttc err_t sampleGUIJSONColumns(SJSONFile & document, aobj<vcst_t> & types, aobj<vcst_t> & members, aobj<vcst_t> & values) {
+	document.Reader = {};
+	if_fail_fe(jsonParse(document.Reader, document.Bytes));
+	if_fail_fe(jsonObjectKeyList(document.Reader, 0, members));
+	if_fail_fe(types.resize(members.size()));
+	if_fail_fe(values.resize(members.size()));
+	for(u2_t iMember = 0; iMember < members.size(); ++iMember) {
+		err_t iMemberNode = jsonObjectValueGet(document.Reader, 0, members[iMember]);
+		if_fail_fe(iMemberNode);
+		if_fail_fe(jsonObjectGetAsString(document.Reader, (u2_t)iMemberNode, "type", types[iMember]));
+		err_t iValueNode = jsonObjectValueGet(document.Reader, (u2_t)iMemberNode, "value");
+		if_fail_fe(iValueNode);
+		values[iMember] = document.Reader.View[iValueNode];
+	}
+	rtrn members.size();
+}
+
+sttc err_t sampleGUIDataViewportRefresh(SSampleGUI & app, SDialogViewport & viewport, SJSONFile & document) {
+	aobj<vcst_t> types = {}, members = {}, values = {};
+	if_fail_fe(::sampleGUIJSONColumns(document, types, members, values));
+	SControlTable & controls = app.Dialog->GUI->Controls;
+	if(0 == controls.Children[viewport.IdClient].size()) {
+		acid fields = {};
+		if_fail_fe(guiCreateControlList(*app.Dialog->GUI, view<vcst_c>{types  }, viewport.IdClient, {110, 18}, {  4, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT, fields));
+		if_fail_fe(guiCreateControlList(*app.Dialog->GUI, view<vcst_c>{members}, viewport.IdClient, {110, 18}, {114, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT, fields));
+		if_fail_fe(guiCreateControlList(*app.Dialog->GUI, view<vcst_c>{values }, viewport.IdClient, {130, 18}, {224, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT, fields));
+		rtrn fields.size();
+	}
+	cnst acid & fields = controls.Children[viewport.IdClient];
+	if_true_fef(fields.size() != members.size() * 3, "JSON viewport field count changed. Controls: %u. JSON columns: %u.", fields.size(), members.size() * 3);
+	for(u2_t iMember = 0; iMember < members.size(); ++iMember) {
+		if_fail_fe(controlTextSet(*app.Dialog->GUI, fields[iMember                     ], types  [iMember]));
+		if_fail_fe(controlTextSet(*app.Dialog->GUI, fields[iMember + members.size()    ], members[iMember]));
+		if_fail_fe(controlTextSet(*app.Dialog->GUI, fields[iMember + members.size() * 2], values [iMember]));
+	}
+	rtrn fields.size();
+}
+
+sttc err_t sampleGUIDataViewportCreate(SSampleGUI & app, SGUIEditor & editor, vcst_t title, SJSONFile & document) {
+	aobj<vcst_t> members = {};
+	if_fail_fe(jsonParse(document.Reader, document.Bytes));
+	if_fail_fe(jsonObjectKeyList(document.Reader, 0, members));
 	pobj<SDialogViewport> viewport = {};
 	cid_t idViewport = CID_INVALID;
-	if_fail_fe(::sampleGUIViewportCreate(app, idViewport, viewport, title, {{}, {240, (s1_t)(42 + memberNames.size() * 18)}}));
+	if_fail_fe(::sampleGUIViewportCreate(app, idViewport, viewport, title, {{4, 4}, {362, (s1_t)(42 + members.size() * 18)}}));
 	SControlTable & controls = app.Dialog->GUI->Controls;
-	controls.Placement[viewport->IdGUIControl].Align = ALIGN_CENTER;
-	controls.Constraints[viewport->IdGUIControl].DockToControl.Right = editor.DataViews.size()
-		? editor.DataViews[editor.DataViews.size() - 1]->IdGUIControl
-		: editor.Viewport->IdGUIControl
-		;
-	acid idFields = {};
-	if_fail_fe(guiCreateControlList(*app.Dialog->GUI, memberNames, viewport->IdClient, {220, 18}, {4, 4}, ALIGN_TOP_LEFT, ALIGN_CENTER_LEFT, idFields));
-	controls.SetHidden(viewport->IdGUIControl, true);
+	if_fail_fe(controlSetParent(*app.Dialog->GUI, viewport->IdGUIControl, editor.DataViewport->IdClient));
+	SControlConstraints & constraints = controls.Constraints[viewport->IdGUIControl];
+	constraints.AttachSizeToControl.x = editor.DataViewport->IdClient;
+	if(editor.DataViews.size())
+		constraints.DockToControl.Bottom = editor.DataViews[editor.DataViews.size() - 1]->IdGUIControl;
+	if_fail_fe(::sampleGUIDataViewportRefresh(app, *viewport, document));
 	if_fail_fe(editor.DataViews.push_back(viewport));
-	if_fail_fe(guiControlListPush(*app.Dialog->GUI, app.System[GUI_TYPE_Control_list][app.IndexListViewports], DIRECTION_RIGHT, title));
 	rtrn 0;
 }
 
 sttc err_t sampleGUIDataViewportsCreate(SSampleGUI & app, SGUIEditor & editor) {
-	cnst auto & metadata = cttiStruct<SControlText>();
-	if_fail_fe(cttiMemberJSON(metadata, editor.Data.Bytes));
-	if_fail_fe(jsonParse(editor.Data.Reader, editor.Data.Bytes));
-	aobj<vcst_t> memberNames = {};
-	if_fail_fe(jsonObjectKeyList(editor.Data.Reader, 0, memberNames));
-	rtrn ::sampleGUIDataViewportCreate(app, editor, metadata.View(metadata.StructName), memberNames);
+	cid_t idViewport = CID_INVALID;
+	if_fail_fe(::sampleGUIViewportCreate(app, idViewport, editor.DataViewport, "STRUCTS", {{}, {380, 500}}));
+	SControlTable & controls = app.Dialog->GUI->Controls;
+	controls.Placement[editor.DataViewport->IdGUIControl].Align = ALIGN_TOP_RIGHT;
+	controls.Constraints[editor.DataViewport->IdGUIControl].DockToControl.Right = editor.Viewport->IdGUIControl;
+	editor.DataViewport->Settings.ScrollBarY = true;
+	if_fail_fe(guiControlListPush(*app.Dialog->GUI, app.System[GUI_TYPE_Control_list][app.IndexListViewports], DIRECTION_RIGHT, app.Dialog->GUI->Controls.Text[editor.DataViewport->IdTitle].Text));
+	cnst aobj<SCTTIStructDeclaration> & declarations = cttiStructDeclarations();
+	for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration) {
+		cnst SCTTIStructDeclaration & metadata = declarations[iDeclaration];
+		if(false == ::sampleGUICTTIGUIType(metadata))
+			continue;
+		pobj<SJSONFile> document = {};
+		if_null_fe(document.create());
+		if_fail_fe(cttiMemberJSON(metadata, document->Bytes));
+		if_fail_fe(::sampleGUIDataViewportCreate(app, editor, metadata.Name, *document));
+		if_fail_fe(editor.Data.push_back(document));
+	}
+	rtrn editor.DataViews.size();
 }
 
 err_t sampleGUISetup(SSampleGUI & app, pobj<SInput> & input) {
