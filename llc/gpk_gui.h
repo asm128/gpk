@@ -109,7 +109,7 @@ nmsp gpk
 		return guiCreateControlList(gui, get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	} 
 
-	cid_t			createScreenLayout			(SGUI & gui, cid_t parent = -1);
+	cid_t				createScreenLayout				(SGUI & gui, cid_t parent = -1);
 	tplt<tpnm _tEnum>
 	err_t				setupControlListWithRoot		(SGUI & gui, acid & outIds, cid_t parent, cnst n2u1_t & buttonSize, ALIGN controlAlign, ALIGN textAlign = ALIGN_CENTER) {
 		cid_t					root							= outIds[outIds.push_back(createScreenLayout(gui, parent))];

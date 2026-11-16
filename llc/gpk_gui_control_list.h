@@ -19,7 +19,7 @@ nmsp gpk
 
 	err_t			controlListInitialize	(SGUI & gui, SControlList & menu);
 	err_t			controlListArrange		(SGUI & gui, SControlList & menu);
-	err_t			controlListPush			(SGUI & gui, SControlList & menu, vcst_c text, s2_t eventCode);
+	err_t			controlListPush			(SGUI & gui, SControlList & menu, vcst_c text, s2_t eventCode = -1);
 	tplT	err_t	controlListCreate		(SGUI & gui, SControlList & menu, view<T>  stringifiable, cid_t parent = CID_INVALID, DIRECTION orientation = DIRECTION_RIGHT) {
 		if_fail_fe(controlListInitialize(gui, menu));
 		menu.Orientation	= orientation;
