@@ -380,7 +380,7 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 			++intCount;	// Skip dot.
 			s2_t						lenDec						= sizeNum - intCount;
 			if(lenDec > 0) { // there are leftover digits after the integer part
-				u2_t					offsetStart					= currentElement.Span.Begin + sizeNum - (sizeNum - intCount);
+				u2_t					offsetStart					= index + intCount;
 				f3_t						decValue					= 0;
 				if_fail_fe(jsonAsString.slice(numString, offsetStart, lenDec));
 				gpk::err_t		decCount;

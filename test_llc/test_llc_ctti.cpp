@@ -34,7 +34,11 @@ GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_SOURCE_ONLY, 23, "The source-onl
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_VIEWS, 24, "The CTTI enum view projection is incorrect.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, TYPE_FACTS, 25, "The CTTI compiler type facts are incorrect.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, MEMBER_FIND, 26, "The CTTI struct registry could not find a member name.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, MEMBER_VISIT, 27, "The CTTI visitor could not reach a live member.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_SAVE, 28, "The CTTI instance could not be saved.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_LOAD, 29, "The CTTI instance could not be loaded.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_DEFINITION, 30, "The CTTI enum definition bridge exposed incorrect registry metadata.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INPUT_CURSOR, 31, "The CTTI input cursor was advanced incorrectly.");
 
 CTTI_STCT(SCTTIJSONTest0,
 	struct SCTTIJSONTest0 {
@@ -53,6 +57,15 @@ CTTI_ENUM_COMPILED(SCTTIEnumTest, gpk::u1_t,
 	CTTIEnumAlias	= CTTIEnumWrite
 	);
 GDEFINE_ENUM_CTTI(SCTTIEnumTest_gpk_ctti);
+
+CTTI_STCT(SCTTIInstanceTest,
+	struct SCTTIInstanceTest {
+		gpk::u2_t		Count	= {};
+		gpk::f3_t		Ratio	= {};
+		SCTTIEnumTest	Mode	= CTTIEnumNone;
+		gpk::b8_t		Enabled	= {};
+	};
+	);
 
 CTTI_ENUM_COMPILED(SCTTIEnumSingle, gpk::u0_t, SCTTIEnumSingleValue = 9);
 CTTI_ENUM_COMPILED(SCTTIEnumBoundary, gpk::u0_t,
@@ -189,6 +202,32 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_STRUCT_NAME, structDeclaration.Name != "SCTTIPODTest");
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_COUNT, 1 != structDeclaration.Members.size());
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_NAME, structDeclaration.View(structDeclaration.Members[0].Name) != "Value");
+
+	SCTTIInstanceTest sourceA = {7, 1.25, CTTIEnumWrite, true};
+	SCTTIInstanceTest sourceB = {9, -2.5, CTTIEnumRead, false};
+	::gpk::string serialized = {};
+	cnst ::gpk::err_t savedA = ::gpk::saveCTTI(serialized, sourceA);
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(savedA));
+	cnst ::gpk::err_t savedB = ::gpk::saveCTTI(serialized, sourceB);
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(savedB));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, (::gpk::u2_t)(savedA + savedB) != serialized.size());
+
+	::gpk::vcst_t serializedInput = serialized;
+	SCTTIInstanceTest loadedA = {};
+	SCTTIInstanceTest loadedB = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedInput, loadedA)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedInput.size() != serialized.size() - (u2_t)savedA);
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedInput, loadedB)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedInput.size());
+	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedA.Count != sourceA.Count || loadedA.Ratio != sourceA.Ratio || loadedA.Mode != sourceA.Mode || loadedA.Enabled != sourceA.Enabled, "Loaded A:{%u,%.17g,%u,%u}; expected:{%u,%.17g,%u,%u}.", loadedA.Count, loadedA.Ratio, (u2_t)loadedA.Mode, loadedA.Enabled, sourceA.Count, sourceA.Ratio, (u2_t)sourceA.Mode, sourceA.Enabled);
+	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedB.Count != sourceB.Count || loadedB.Ratio != sourceB.Ratio || loadedB.Mode != sourceB.Mode || loadedB.Enabled != sourceB.Enabled, "Loaded B:{%u,%.17g,%u,%u}; expected:{%u,%.17g,%u,%u}.", loadedB.Count, loadedB.Ratio, (u2_t)loadedB.Mode, loadedB.Enabled, sourceB.Count, sourceB.Ratio, (u2_t)sourceB.Mode, sourceB.Enabled);
+
+	::gpk::vcst_t invalidInput = "{\"Count\":1}";
+	cnst ::gpk::vcst_t invalidInputOriginal = invalidInput;
+	SCTTIInstanceTest invalidOutput = {};
+	cnst ::gpk::err_t invalidResult = ::gpk::loadCTTI(invalidInput, invalidOutput);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, false == ::gpk::failed(invalidResult));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, invalidInput.begin() != invalidInputOriginal.begin() || invalidInput.size() != invalidInputOriginal.size());
 
 	::gpk::string output;
 	cnst ::gpk::err_t buildResult = ::gpk::cttiMemberJSON(cttiJSONMetadata, output);

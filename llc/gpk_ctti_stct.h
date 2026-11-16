@@ -1,5 +1,8 @@
 #include "gpk_ctti_parse.h"
+#include "gpk_append_json.h"
 #include "gpk_array_obj.h"
+#include "gpk_cstring.h"
+#include "gpk_json.h"
 #include "gpk_string.h"
 
 #ifndef GPK_CTTI_STCT_H
@@ -117,6 +120,178 @@ nmsp gpk
 
 	tplt<tpnm T>
 	inxp cnst auto & cttiStruct() nxpt { rtrn SCTTIStructRegistry<T>::Value; }
+
+	tplt<tpnm T, tpnm U>
+	stct ctti_same {
+		stxp b8_t Value = false;
+	};
+	tplt<tpnm T>
+	stct ctti_same<T, T> {
+		stxp b8_t Value = true;
+	};
+	tplt<tpnm T, tpnm TPack>
+	stct ctti_type_in_pack;
+	tplt<tpnm T, tpnm... TArgs>
+	stct ctti_type_in_pack<T, type_pack<TArgs...>> {
+		stxp b8_t Value = (ctti_same<T, TArgs>::Value || ...);
+	};
+
+	tplt<u2_t N, tpnm T, tpnm TFunc>
+	err_t cttiVisitAggregate(T & instance, u2_c index, TFunc func) {
+		if constexpr(1 == N) {
+			auto & [m0] = instance;
+			switch(index) {
+			case 0: rtrn func(m0);
+			}
+		}
+		else if constexpr(2 == N) {
+			auto & [m0, m1] = instance;
+			switch(index) {
+			case 0: rtrn func(m0);
+			case 1: rtrn func(m1);
+			}
+		}
+		else if constexpr(3 == N) {
+			auto & [m0, m1, m2] = instance;
+			switch(index) {
+			case 0: rtrn func(m0);
+			case 1: rtrn func(m1);
+			case 2: rtrn func(m2);
+			}
+		}
+		else if constexpr(4 == N) {
+			auto & [m0, m1, m2, m3] = instance;
+			switch(index) {
+			case 0: rtrn func(m0);
+			case 1: rtrn func(m1);
+			case 2: rtrn func(m2);
+			case 3: rtrn func(m3);
+			}
+		}
+		rtrn -1;
+	}
+
+	tplt<tpnm T, tpnm TFunc>
+	err_t cttiVisit(T & instance, u2_c index, TFunc func) {
+		usng TStruct = rm_csvl_t<T>;
+		rtrn cttiVisitAggregate<SCTTIStructRegistry<TStruct>::Value.Count>(instance, index, func);
+	}
+
+	tplt<tpnm T>
+	concept ctti_struct = requires { SCTTIStructRegistry<rm_csvl_t<T>>::Value; };
+	tplt<tpnm T>
+	concept ctti_integer = ctti_type_in_pack<rm_csvl_t<T>, type_pack_integers>::Value;
+	tplt<tpnm T>
+	concept ctti_decimal = ctti_type_in_pack<rm_csvl_t<T>, type_pack<f2_t, f3_t>>::Value;
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t saveCTTI(string & output, cnst T & input);
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output);
+
+	inln err_t cttiValueSave(string & output, b8_c input) {
+		rtrn output.append(input ? vcst_t{"true"} : vcst_t{"false"});
+	}
+	tplt<tpnm T> requires ctti_integer<T>
+	err_t cttiValueSave(string & output, cnst T & input) {
+		sc_t text[64] = {};
+		err_t length = {};
+		if constexpr(ctti_same<rm_csvl_t<T>, s0_t>::Value || ctti_same<rm_csvl_t<T>, s1_t>::Value || ctti_same<rm_csvl_t<T>, s2_t>::Value || ctti_same<rm_csvl_t<T>, s3_t>::Value)
+			length = sprintf_s(text, "%" GPK_FMT_S3, (s3_t)input);
+		else
+			length = sprintf_s(text, "%" GPK_FMT_U3, (u3_t)input);
+		if_fail_fe(length);
+		rtrn output.append({text, (u2_t)length});
+	}
+	tplt<tpnm T> requires ctti_decimal<T>
+	err_t cttiValueSave(string & output, cnst T & input) {
+		sc_t text[64] = {};
+		cnst err_t length = sprintf_s(text, "%.17g", (f3_t)input);
+		if_fail_fe(length);
+		rtrn output.append({text, (u2_t)length});
+	}
+	tplt<tpnm T> requires(__is_enum(T))
+	err_t cttiValueSave(string & output, cnst T & input) {
+		vcst_t name = {};
+		if_fail_fe(get_enum<T>().get_value_label(input, name));
+		if_fail_fe(output.push_back('"'));
+		if_fail_fe(output.append(name));
+		rtrn output.push_back('"');
+	}
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t cttiValueSave(string & output, cnst T & input) {
+		rtrn saveCTTI(output, input);
+	}
+
+	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, b8_t & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_BOOLEAN);
+		rtrn jsonObjectGetBoolean(input, iNode, output);
+	}
+	tplt<tpnm T> requires ctti_integer<T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_INTEGER);
+		rtrn jsonObjectGetInteger(input, iNode, output);
+	}
+	tplt<tpnm T> requires ctti_decimal<T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
+		if(JSON_TYPE_INTEGER == input.Token[iNode].Type) {
+			s3_t integer = {};
+			if_fail_fe(jsonObjectGetInteger(input, iNode, integer));
+			output = (T)integer;
+			rtrn iNode;
+		}
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_DECIMAL);
+		rtrn jsonObjectGetDecimal(input, iNode, output);
+	}
+	tplt<tpnm T> requires(__is_enum(T))
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
+		vcst_t name = {};
+		if_fail_fe(jsonObjectGetString(input, iNode, name));
+		rtrn get_enum<T>().get_value(name, output);
+	}
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
+		rtrn loadCTTI(input, iNode, output);
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t saveCTTI(string & output, cnst T & input) {
+		u2_c offset = output.size();
+		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
+		if_fail_fe(output.push_back('{'));
+		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
+			if_fail_fe(appendOpenKey(output, metadata.View(metadata.Members[iMember].Name), 0 != iMember));
+			if_fail_fe(cttiVisit(input, iMember, [&](cnst auto & member) { rtrn cttiValueSave(output, member); }));
+		}
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output) {
+		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
+		if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
+		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
+			cnst err_t iValue = jsonObjectValueGet(input, iNode, metadata.View(metadata.Members[iMember].Name));
+			if_fail_fe(iValue);
+			if_fail_fe(cttiVisit(output, iMember, [&](auto & member) { rtrn cttiValueLoad(input, (u2_t)iValue, member); }));
+		}
+		rtrn 0;
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(cnst SJSONReader & input, T & output) {
+		rtrn loadCTTI(input, 0, output);
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(vcst_t & input, T & output) {
+		SJSONReader reader = {};
+		if_fail_fe(jsonParse(reader, input));
+		if_fail_fe(loadCTTI(reader, output));
+		rtrn input.slice(input, reader.StateRead.IndexCurrentChar + 1);
+	}
 
 	inln err_t cttiMemberJSON
 		( cnst SCTTIStructDeclaration & metadata
