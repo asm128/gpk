@@ -47,6 +47,18 @@ nmsp gpk
 		, GK_SCANCODE_Front     
 		, GK_SCANCODE_Back      
 		, GK_SCANCODE_Delete    
+		, GK_SCANCODE_Insert
+		, GK_SCANCODE_Home
+		, GK_SCANCODE_End
+		, GK_SCANCODE_Page_Up
+		, GK_SCANCODE_Page_Down
+		, GK_SCANCODE_LeftShift
+		, GK_SCANCODE_RightShift
+		, GK_SCANCODE_Alt
+		, GK_SCANCODE_Alt_Gr
+		, GK_SCANCODE_LControl
+		, GK_SCANCODE_RControl
+		, GK_SCANCODE_System // "Windows Key" on windows
 		};
 	);
 #pragma pack(push, 1)
