@@ -15,24 +15,31 @@ GDEFINE_ENUM_VALUE(FILE_VIEWER_LAYOUT, FLOATING, 0);
 GDEFINE_ENUM_VALUE(FILE_VIEWER_LAYOUT, SPLIT   , 1);
 
 stct SPathList {
+	cid_t				IdViewport			= -1;
 	SControlList		Files				= {};
 	SPathTree			PathContents		= {};
 };
 stct SFileEditor {
+	cid_t				IdViewport			= -1;
 	SControlList		Lines				= {};
+	string				FilePath			= {};
 	string				FileText			= {};
 	apod<vcst_t>		FileLines			= {};
 	n2u2_t				Cursor				= {};
 	cid_t				IdCursor			= -1;
 	cid_t				IdSave				= -1;
+	cid_t				IdKeyboard			= -1;
 	u2_t				FileLineWidthMax	= 0;
 };
 stct SFileViewer {
 	pobj<SDialog>		Dialog				= {};
-	astcid<2>			Viewports			= {};
 	SVirtualKeyboard	VirtualKeyboard		= {};
-	SFileEditor			Editor				=  {};
-	SPathList 			Directory			=  {};
+	apobj<SFileEditor>	Editors				= {};
+	apobj<SPathList>	Directories			= {};
+	string				RootPath			= {};
+	cid_t				IdEditorCurrent		= -1;
+	cid_t				IdMenuFiles			= -1;
+	cid_t				IdMenuExit			= -1;
 };
 
 err_t	fileViewerSetup		(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vcst_t rootPath = {});

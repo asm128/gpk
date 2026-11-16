@@ -5,16 +5,10 @@
 #include "gpk_label.h"
 #include "gpk_path.h"
 
-stxp u0_t FILE_VIEWPORT_FILES = 0;
-stxp u0_t FILE_VIEWPORT_TEXT  = 1;
-stxp u0_t FILE_VIEWER_BUTTON_KEYBOARD = 0;
-stxp u0_t FILE_VIEWER_BUTTON_FILES    = 1;
-stxp u0_t FILE_VIEWER_BUTTON_EXIT     = 2;
-
-sttc gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, u0_t index, vcst_t title, cnst rect2s1_t & area) {
+sttc gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, cid_t & idViewport, vcst_t title, cnst rect2s1_t & area) {
 	pobj<SDialogViewport> viewport = {};
 	if_fail_fe(viewportCreate(*viewer.Dialog, viewport));
-	viewer.Viewports[index] = viewport->IdGUIControl;
+	idViewport = viewport->IdGUIControl;
 	SGUI & gui = *viewer.Dialog->GUI;
 	SControlTable		& controls = gui.Controls;
 	SControlPlacement	& root = controls.Placement[viewport->IdGUIControl];
@@ -29,9 +23,9 @@ sttc gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, u0_t index, vcst_
 	rtrn controlMetricsInvalidate(gui, viewport->IdGUIControl);
 }
 
-sttc gpk::err_t fileViewerViewportAreaSet(SFileViewer & viewer, u0_t index, cnst rect2s1_t & area) {
+sttc gpk::err_t fileViewerViewportAreaSet(SFileViewer & viewer, cid_t idViewport, cnst rect2s1_t & area) {
 	pobj<SDialogViewport> viewport = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[index], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, idViewport, viewport));
 	SGUI & gui = *viewer.Dialog->GUI;
 	gui.Controls.Placement[viewport->IdGUIControl].Area = area;
 	gui.Controls.Placement[viewport->IdClient].Area.Size = {(s1_t)(area.Size.x - 8), (s1_t)(area.Size.y - 32)};
@@ -39,26 +33,25 @@ sttc gpk::err_t fileViewerViewportAreaSet(SFileViewer & viewer, u0_t index, cnst
 }
 
 sttc gpk::err_t fileViewerLayoutSet(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout) {
-	if(FILE_VIEWER_LAYOUT_FLOATING == layout) {
-		if_fail_fe(::fileViewerViewportAreaSet(viewer, FILE_VIEWPORT_FILES, {{ 40, 48}, {420, 600}}));
-		if_fail_fe(::fileViewerViewportAreaSet(viewer, FILE_VIEWPORT_TEXT , {{480, 72}, {760, 560}}));
+	if(FILE_VIEWER_LAYOUT_FLOATING == layout)
 		rtrn 0;
-	}
 	SGUI & gui = *viewer.Dialog->GUI;
 	n2s1_c windowSize = gui.LastSize.s1();
 	cnst s1_t margin = 12;
 	cnst s1_t gap = 8;
-	cnst s1_t top = max(margin, gui.Controls.Placement[(cid_t)viewer.Dialog->Buttons[FILE_VIEWER_BUTTON_FILES]].Area.Size.y);
+	cnst s1_t top = max(margin, gui.Controls.Placement[viewer.IdMenuFiles].Area.Size.y);
 	cnst s1_t leftWidth = min((s1_t)360, (s1_t)((windowSize.x - margin * 2 - gap) / 3));
 	cnst s1_t height = (s1_t)(windowSize.y - top - margin);
-	if_fail_fe(::fileViewerViewportAreaSet(viewer, FILE_VIEWPORT_FILES, {{margin, top}, {leftWidth, height}}));
-	if_fail_fe(::fileViewerViewportAreaSet(viewer, FILE_VIEWPORT_TEXT , {{(s1_t)(margin + leftWidth + gap), top}, {(s1_t)(windowSize.x - margin * 2 - leftWidth - gap), height}}));
+	for(u2_t iDirectory = 0; iDirectory < viewer.Directories.size(); ++iDirectory)
+		if_fail_fe(::fileViewerViewportAreaSet(viewer, viewer.Directories[iDirectory]->IdViewport, {{margin, top}, {leftWidth, height}}));
+	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
+		if_fail_fe(::fileViewerViewportAreaSet(viewer, viewer.Editors[iEditor]->IdViewport, {{(s1_t)(margin + leftWidth + gap), top}, {(s1_t)(windowSize.x - margin * 2 - leftWidth - gap), height}}));
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerListCreate(SFileViewer & viewer, SControlList & list, u0_t viewportIndex) {
+sttc gpk::err_t fileViewerListCreate(SFileViewer & viewer, SControlList & list, cid_t idViewport) {
 	pobj<SDialogViewport> viewport = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[viewportIndex], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, idViewport, viewport));
 	SGUI & gui = *viewer.Dialog->GUI;
 	if_fail_fe(controlListInitialize(gui, list));
 	list.Orientation = DIRECTION_DOWN;
@@ -90,10 +83,10 @@ sttc gpk::err_t fileViewerListRowPush(SFileViewer & viewer, SControlList & list,
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerScrollCreate(SFileViewer & viewer, u0_t viewportIndex, b8_t vertical) {
+sttc gpk::err_t fileViewerScrollCreate(SFileViewer & viewer, cid_t idViewport, b8_t vertical) {
 	pobj<SDialogViewport> viewport = {};
 	pobj<SDialogSlider> scrollbar = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[viewportIndex], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, idViewport, viewport));
 	if_fail_fe(sliderCreate(*viewer.Dialog, scrollbar));
 	scrollbar->Vertical = vertical;
 	scrollbar->FuncValueFormat = [](vcst_t & format, s3_t, cnst minmax<s3_t> &) { format = ""; rtrn 0; };
@@ -110,11 +103,15 @@ sttc gpk::err_t fileViewerScrollCreate(SFileViewer & viewer, u0_t viewportIndex,
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer) {
+sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & editor, cnst rect2s1_t & area) {
+	if_fail_fe(::fileViewerViewportCreate(viewer, editor.IdViewport, "SELECT A FILE", area));
+	if_fail_fe(::fileViewerListCreate(viewer, editor.Lines, editor.IdViewport));
+	if_fail_fe(::fileViewerScrollCreate(viewer, editor.IdViewport, true));
+	if_fail_fe(::fileViewerScrollCreate(viewer, editor.IdViewport, false));
 	pobj<SDialogViewport> viewport = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, editor.IdViewport, viewport));
 	SGUI & gui = *viewer.Dialog->GUI;
-	if_fail_fe(viewer.Editor.IdSave = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdSave = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {64, gui.Controls.Placement[viewport->IdClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.AttachSizeToControl = {-1, -1};
@@ -124,25 +121,23 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer) {
 		text.Align = ALIGN_CENTER;
 		rtrn 0;
 	}));
-	if_fail_fe(controlSetParent(gui, viewer.Editor.IdSave, viewport->IdGUIControl));
-	gui.Controls.SetHidden(viewer.Editor.IdSave, true);
+	if_fail_fe(controlSetParent(gui, editor.IdSave, viewport->IdGUIControl));
+	gui.Controls.SetHidden(editor.IdSave, true);
 
-	cid_t idKeyboard = {};
-	if_fail_fe(idKeyboard = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdKeyboard = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {88, gui.Controls.Placement[viewport->IdClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
-		constraints.DockToControl.Right = viewer.Editor.IdSave;
+		constraints.DockToControl.Right = editor.IdSave;
 		draw.Palettes = viewer.Dialog->Colors->Button;
 		text.Text = "Keyboard";
 		text.Align = ALIGN_CENTER;
 		rtrn 0;
 	}));
-	if_fail_fe(controlSetParent(gui, idKeyboard, viewport->IdGUIControl));
-	if_fail_fe(viewer.Dialog->Buttons.push_back(idKeyboard));
-	gui.Controls.Constraints[viewport->IdTitle].DockToControl.Right = idKeyboard;
-	gui.Controls.SetHidden(idKeyboard, true);
+	if_fail_fe(controlSetParent(gui, editor.IdKeyboard, viewport->IdGUIControl));
+	gui.Controls.Constraints[viewport->IdTitle].DockToControl.Right = editor.IdKeyboard;
+	gui.Controls.SetHidden(editor.IdKeyboard, true);
 
-	if_fail_fe(viewer.Editor.IdCursor = controlCreate(gui, [](SControlState & state, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints &, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdCursor = controlCreate(gui, [](SControlState & state, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Border = {};
 		placement.Margin = {};
 		draw.NoBorder = true;
@@ -155,10 +150,8 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer) {
 		state.Mask &= ~GUI_CONTROL_FLAG_Action;
 		rtrn 0;
 	}));
-	if_fail_fe(controlSetParent(gui, viewer.Editor.IdCursor, viewport->IdClient));
-	gui.Controls.SetHidden(viewer.Editor.IdCursor, true);
-	if_fail_fe(virtualKeyboardSetup437(gui, viewer.VirtualKeyboard));
-	if_fail_fe(controlSetParent(gui, viewer.VirtualKeyboard.IdRoot, viewer.Dialog->Root));
+	if_fail_fe(controlSetParent(gui, editor.IdCursor, viewport->IdClient));
+	gui.Controls.SetHidden(editor.IdCursor, true);
 	rtrn 0;
 }
 
@@ -169,23 +162,16 @@ sttc gpk::err_t fileViewerMenuCreate(SFileViewer & viewer) {
 	if_fail_fe(controlListCreate(gui, menuViewports, view<vcst_c>{viewportText}, CID_INVALID, DIRECTION_RIGHT));
 	gui.Controls.Placement[menuViewports.IdControl].Area.Offset = {};
 	gui.Controls.Placement[menuViewports.IdControl].Align = ALIGN_TOP_LEFT;
-	if_fail_fe(viewer.Dialog->Buttons.push_back(menuViewports.IdControls[0]));
+	viewer.IdMenuFiles = menuViewports.IdControls[0];
+	if_fail_fe(viewer.Dialog->Buttons.push_back(viewer.IdMenuFiles));
 
 	SControlList menuActions = {};
 	sttc vcst_c actionText[] = {"EXIT"};
 	if_fail_fe(controlListCreate(gui, menuActions, view<vcst_c>{actionText}, CID_INVALID, DIRECTION_RIGHT));
 	gui.Controls.Placement[menuActions.IdControl].Area.Offset = {};
 	gui.Controls.Placement[menuActions.IdControl].Align = ALIGN_TOP_RIGHT;
-	if_fail_fe(viewer.Dialog->Buttons.push_back(menuActions.IdControls[0]));
-	rtrn 0;
-}
-
-sttc gpk::err_t fileViewerMenuUpdate(SFileViewer & viewer) {
-	SGUI & gui = *viewer.Dialog->GUI;
-	if(gui.Controls.IsAction((cid_t)viewer.Dialog->Buttons[FILE_VIEWER_BUTTON_FILES]))
-		gui.Controls.SetHidden(viewer.Viewports[FILE_VIEWPORT_FILES], false);
-	if(gui.Controls.IsAction((cid_t)viewer.Dialog->Buttons[FILE_VIEWER_BUTTON_EXIT]))
-		rtrn APPLICATION_STATE_EXIT;
+	viewer.IdMenuExit = menuActions.IdControls[0];
+	if_fail_fe(viewer.Dialog->Buttons.push_back(viewer.IdMenuExit));
 	rtrn 0;
 }
 
@@ -194,29 +180,29 @@ sttc b8_t fileViewerFolderHasParent(cnst SPathTree & paths) {
 	rtrn 0 <= pathDirectory(paths.Root, parent) && parent.size() && parent != paths.Root;
 }
 
-sttc gpk::err_t fileViewerFolderLoad(SFileViewer & viewer, vcst_t path) {
+sttc gpk::err_t fileViewerFolderLoad(SFileViewer & viewer, SPathList & directory, vcst_t path) {
 	pobj<SDialogViewport> viewport = {};
 	pobj<SDialogSlider> scrollbar = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_FILES], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, directory.IdViewport, viewport));
 	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbar));
 	SGUI & gui = *viewer.Dialog->GUI;
-	for(u2_t iControl = 0; iControl < viewer.Directory.Files.IdControls.size(); ++iControl)
-		if_fail_fe(controlTextSet(gui, viewer.Directory.Files.IdControls[iControl], {}));
+	for(u2_t iControl = 0; iControl < directory.Files.IdControls.size(); ++iControl)
+		if_fail_fe(controlTextSet(gui, directory.Files.IdControls[iControl], {}));
 	gui.Controls.Text[viewport->IdTitle].Text = {};
 	string absolutePath = {};
 	if_fail_fe(pathAbsolute(path, absolutePath));
-	if_fail_fe(pathList(viewer.Directory.PathContents, absolutePath, [](b8_t folder, vcst_c &) { rtrn folder ? 2 : 0; }));
+	if_fail_fe(pathList(directory.PathContents, absolutePath, [](b8_t folder, vcst_c &) { rtrn folder ? 2 : 0; }));
 	if_fail_fe(sliderSetValue(*scrollbar, 0));
-	gui.Controls.Text[viewport->IdTitle].Text = viewer.Directory.PathContents.Root;
-	for(u2_t iControl = 0; iControl < viewer.Directory.Files.IdControls.size(); ++iControl)
-		gui.Controls.SetSelected(viewer.Directory.Files.IdControls[iControl], false);
+	gui.Controls.Text[viewport->IdTitle].Text = directory.PathContents.Root;
+	for(u2_t iControl = 0; iControl < directory.Files.IdControls.size(); ++iControl)
+		gui.Controls.SetSelected(directory.Files.IdControls[iControl], false);
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerListWindowUpdate(SFileViewer & viewer, SControlList & list, cnst SPathTree & items, u0_t viewportIndex) {
+sttc gpk::err_t fileViewerListWindowUpdate(SFileViewer & viewer, SControlList & list, cnst SPathTree & items, cid_t idViewport) {
 	pobj<SDialogViewport> viewport = {};
 	pobj<SDialogSlider> scrollbar = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[viewportIndex], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, idViewport, viewport));
 	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbar));
 	SGUI & gui = *viewer.Dialog->GUI;
 	b8_c hasParent = ::fileViewerFolderHasParent(items);
@@ -244,26 +230,26 @@ sttc gpk::err_t fileViewerListWindowUpdate(SFileViewer & viewer, SControlList & 
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerTextViewsClear(SFileViewer & viewer) {
-	for(u2_t iControl = 0; iControl < viewer.Editor.Lines.IdControls.size(); ++iControl)
-		if_fail_fe(controlTextSet(*viewer.Dialog->GUI, viewer.Editor.Lines.IdControls[iControl], {}));
-	viewer.Editor.FileLines.clear();
-	viewer.Editor.FileLineWidthMax = 0;
+sttc gpk::err_t fileViewerTextViewsClear(SFileViewer & viewer, SFileEditor & editor) {
+	for(u2_t iControl = 0; iControl < editor.Lines.IdControls.size(); ++iControl)
+		if_fail_fe(controlTextSet(*viewer.Dialog->GUI, editor.Lines.IdControls[iControl], {}));
+	editor.FileLines.clear();
+	editor.FileLineWidthMax = 0;
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerTextViewsRebuild(SFileViewer & viewer) {
-	viewer.Editor.FileLines.clear();
-	viewer.Editor.FileLineWidthMax = 0;
-	vcst_t remaining = viewer.Editor.FileText;
+sttc gpk::err_t fileViewerTextViewsRebuild(SFileEditor & editor) {
+	editor.FileLines.clear();
+	editor.FileLineWidthMax = 0;
+	vcst_t remaining = editor.FileText;
 	do {
 		vcst_t line = {};
 		vcst_t next = {};
 		cnst gpk::err_t splitResult = split('\n', remaining, line, next);
 		if(line.size() && '\r' == line[line.size() - 1])
 			if_fail_fe(line.slice(line, 0, line.size() - 1));
-		if_fail_fe(viewer.Editor.FileLines.push_back(line));
-		viewer.Editor.FileLineWidthMax = max(viewer.Editor.FileLineWidthMax, line.size());
+		if_fail_fe(editor.FileLines.push_back(line));
+		editor.FileLineWidthMax = max(editor.FileLineWidthMax, line.size());
 		if(0 > splitResult)
 			break;
 		remaining = next;
@@ -271,18 +257,19 @@ sttc gpk::err_t fileViewerTextViewsRebuild(SFileViewer & viewer) {
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerTextLoad(SFileViewer & viewer, vcst_t path) {
-	if_fail_fe(::fileViewerTextViewsClear(viewer));
-	viewer.Editor.FileText.clear();
-	if_fail_fef(fileToMemory(path, viewer.Editor.FileText), "Failed to load '%.*s'.", GPK_VIEW_ARGS(path));
-	if_fail_fe(::fileViewerTextViewsRebuild(viewer));
-	viewer.Editor.Cursor = {0, (u2_t)-1};
+sttc gpk::err_t fileViewerTextLoad(SFileViewer & viewer, SFileEditor & editor, vcst_t path) {
+	if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
+	editor.FilePath = path;
+	editor.FileText.clear();
+	if_fail_fef(fileToMemory(path, editor.FileText), "Failed to load '%.*s'.", GPK_VIEW_ARGS(path));
+	if_fail_fe(::fileViewerTextViewsRebuild(editor));
+	editor.Cursor = {0, (u2_t)-1};
 	SGUI & gui = *viewer.Dialog->GUI;
 	gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
-	gui.Controls.SetHidden(viewer.Editor.IdSave, false);
-	gui.Controls.SetHidden((cid_t)viewer.Dialog->Buttons[FILE_VIEWER_BUTTON_KEYBOARD], false);
+	gui.Controls.SetHidden(editor.IdSave, false);
+	gui.Controls.SetHidden(editor.IdKeyboard, false);
 	pobj<SDialogViewport> viewport = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, editor.IdViewport, viewport));
 	pobj<SDialogSlider> scrollbar = {};
 	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbar));
 	if_fail_fe(sliderSetValue(*scrollbar, 0));
@@ -292,141 +279,139 @@ sttc gpk::err_t fileViewerTextLoad(SFileViewer & viewer, vcst_t path) {
 	rtrn 0;
 }
 
-sttc u2_t fileViewerLineOffset(cnst SFileViewer & viewer, u2_t line) {
+sttc u2_t fileViewerLineOffset(cnst SFileEditor & editor, u2_t line) {
 	u2_t offset = 0;
 	u2_t iLine = 0;
-	while(offset < viewer.Editor.FileText.size() && iLine < line)
-		if('\n' == viewer.Editor.FileText[offset++])
+	while(offset < editor.FileText.size() && iLine < line)
+		if('\n' == editor.FileText[offset++])
 			++iLine;
 	rtrn offset;
 }
 
-sttc u2_t fileViewerCursorOffset(cnst SFileViewer & viewer) {
-	if(viewer.Editor.Cursor.y >= viewer.Editor.FileLines.size())
-		rtrn viewer.Editor.FileText.size();
-	vcst_c line = viewer.Editor.FileLines[viewer.Editor.Cursor.y];
-	rtrn ::fileViewerLineOffset(viewer, viewer.Editor.Cursor.y) + min(viewer.Editor.Cursor.x, line.size());
+sttc u2_t fileViewerCursorOffset(cnst SFileEditor & editor) {
+	if(editor.Cursor.y >= editor.FileLines.size())
+		rtrn editor.FileText.size();
+	vcst_c line = editor.FileLines[editor.Cursor.y];
+	rtrn ::fileViewerLineOffset(editor, editor.Cursor.y) + min(editor.Cursor.x, line.size());
 }
 
-sttc gpk::err_t fileViewerTextInsert(SFileViewer & viewer, sc_t character) {
-	u2_c offset = ::fileViewerCursorOffset(viewer);
-	if_fail_fe(::fileViewerTextViewsClear(viewer));
-	if_fail_fe(viewer.Editor.FileText.insert(offset, character));
-	if_fail_fe(::fileViewerTextViewsRebuild(viewer));
+sttc gpk::err_t fileViewerTextInsert(SFileViewer & viewer, SFileEditor & editor, sc_t character) {
+	u2_c offset = ::fileViewerCursorOffset(editor);
+	if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
+	if_fail_fe(editor.FileText.insert(offset, character));
+	if_fail_fe(::fileViewerTextViewsRebuild(editor));
 	if('\n' == character) {
-		++viewer.Editor.Cursor.y;
-		viewer.Editor.Cursor.x = 0;
+		++editor.Cursor.y;
+		editor.Cursor.x = 0;
 	}
 	else
-		++viewer.Editor.Cursor.x;
+		++editor.Cursor.x;
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerTextBackspace(SFileViewer & viewer) {
-	if(viewer.Editor.Cursor.y >= viewer.Editor.FileLines.size())
+sttc gpk::err_t fileViewerTextBackspace(SFileViewer & viewer, SFileEditor & editor) {
+	if(editor.Cursor.y >= editor.FileLines.size())
 		rtrn 0;
-	u2_c cursorOffset = ::fileViewerCursorOffset(viewer);
-	if(viewer.Editor.Cursor.x) {
-		if_fail_fe(::fileViewerTextViewsClear(viewer));
-		if_fail_fe(viewer.Editor.FileText.remove(cursorOffset - 1));
-		--viewer.Editor.Cursor.x;
+	u2_c cursorOffset = ::fileViewerCursorOffset(editor);
+	if(editor.Cursor.x) {
+		if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
+		if_fail_fe(editor.FileText.remove(cursorOffset - 1));
+		--editor.Cursor.x;
 	}
-	else if(viewer.Editor.Cursor.y) {
-		vcst_c previousLine = viewer.Editor.FileLines[viewer.Editor.Cursor.y - 1];
-		u2_c separatorOffset = ::fileViewerLineOffset(viewer, viewer.Editor.Cursor.y - 1) + previousLine.size();
+	else if(editor.Cursor.y) {
+		vcst_c previousLine = editor.FileLines[editor.Cursor.y - 1];
+		u2_c separatorOffset = ::fileViewerLineOffset(editor, editor.Cursor.y - 1) + previousLine.size();
 		u2_c separatorCount = cursorOffset - separatorOffset;
-		viewer.Editor.Cursor.x = previousLine.size();
-		--viewer.Editor.Cursor.y;
-		if_fail_fe(::fileViewerTextViewsClear(viewer));
+		editor.Cursor.x = previousLine.size();
+		--editor.Cursor.y;
+		if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
 		for(u2_t iCharacter = 0; iCharacter < separatorCount; ++iCharacter)
-			if_fail_fe(viewer.Editor.FileText.remove(separatorOffset));
+			if_fail_fe(editor.FileText.remove(separatorOffset));
 	}
-	if_fail_fe(::fileViewerTextViewsRebuild(viewer));
+	if_fail_fe(::fileViewerTextViewsRebuild(editor));
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerTextDelete(SFileViewer & viewer) {
-	if(viewer.Editor.Cursor.y >= viewer.Editor.FileLines.size())
+sttc gpk::err_t fileViewerTextDelete(SFileViewer & viewer, SFileEditor & editor) {
+	if(editor.Cursor.y >= editor.FileLines.size())
 		rtrn 0;
-	u2_c cursorOffset = ::fileViewerCursorOffset(viewer);
-	if(cursorOffset >= viewer.Editor.FileText.size())
+	u2_c cursorOffset = ::fileViewerCursorOffset(editor);
+	if(cursorOffset >= editor.FileText.size())
 		rtrn 0;
 	u2_t count = 1;
-	if('\r' == viewer.Editor.FileText[cursorOffset] && cursorOffset + 1 < viewer.Editor.FileText.size() && '\n' == viewer.Editor.FileText[cursorOffset + 1])
+	if('\r' == editor.FileText[cursorOffset] && cursorOffset + 1 < editor.FileText.size() && '\n' == editor.FileText[cursorOffset + 1])
 		count = 2;
-	if_fail_fe(::fileViewerTextViewsClear(viewer));
+	if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
 	for(u2_t iCharacter = 0; iCharacter < count; ++iCharacter)
-		if_fail_fe(viewer.Editor.FileText.remove(cursorOffset));
-	rtrn ::fileViewerTextViewsRebuild(viewer);
+		if_fail_fe(editor.FileText.remove(cursorOffset));
+	rtrn ::fileViewerTextViewsRebuild(editor);
 }
 
-sttc gpk::err_t fileViewerEditorHandle(SFileViewer & viewer, cnst SVirtualKeyboardEvent & eventToProcess) {
-	if(viewer.Editor.Cursor.y >= viewer.Editor.FileLines.size())
+sttc gpk::err_t fileViewerEditorHandle(SFileViewer & viewer, SFileEditor & editor, cnst SVirtualKeyboardEvent & eventToProcess) {
+	if(editor.Cursor.y >= editor.FileLines.size())
 		rtrn 0;
 	if(VK_EVENT_Release == eventToProcess.Type)
-		rtrn ::fileViewerTextInsert(viewer, (sc_t)eventToProcess.ScanCode);
+		rtrn ::fileViewerTextInsert(viewer, editor, (sc_t)eventToProcess.ScanCode);
 	if(VK_EVENT_Edit != eventToProcess.Type)
 		rtrn 0;
 	switch(eventToProcess.ScanCode) {
 	default: break;
 	case VK_SCANCODE_Escape:
 		viewer.Dialog->GUI->Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
-		viewer.Editor.Cursor = {0, (u2_t)-1};
+		editor.Cursor = {0, (u2_t)-1};
 		break;
-	case VK_SCANCODE_Delete		: if_fail_fe(::fileViewerTextDelete(viewer));		break;
-	case VK_SCANCODE_Enter		: if_fail_fe(::fileViewerTextInsert(viewer, '\n'));	break;
-	case VK_SCANCODE_Backspace	: if_fail_fe(::fileViewerTextBackspace(viewer));	break;
-	case VK_SCANCODE_Clear		: if_fail_fe(::fileViewerTextViewsClear(viewer));
-		viewer.Editor.FileText.clear();
-		viewer.Editor.Cursor = {};
-		if_fail_fe(::fileViewerTextViewsRebuild(viewer));
+	case VK_SCANCODE_Delete		: if_fail_fe(::fileViewerTextDelete(viewer, editor));		break;
+	case VK_SCANCODE_Enter		: if_fail_fe(::fileViewerTextInsert(viewer, editor, '\n'));	break;
+	case VK_SCANCODE_Backspace	: if_fail_fe(::fileViewerTextBackspace(viewer, editor));	break;
+	case VK_SCANCODE_Clear		: if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
+		editor.FileText.clear();
+		editor.Cursor = {};
+		if_fail_fe(::fileViewerTextViewsRebuild(editor));
 		break;
 	case VK_SCANCODE_Left:
-		if(viewer.Editor.Cursor.x)
-			--viewer.Editor.Cursor.x;
-		else if(viewer.Editor.Cursor.y) {
-			--viewer.Editor.Cursor.y;
-			viewer.Editor.Cursor.x = viewer.Editor.FileLines[viewer.Editor.Cursor.y].size();
+		if(editor.Cursor.x)
+			--editor.Cursor.x;
+		else if(editor.Cursor.y) {
+			--editor.Cursor.y;
+			editor.Cursor.x = editor.FileLines[editor.Cursor.y].size();
 		}
 		break;
 	case VK_SCANCODE_Right:
-		if(viewer.Editor.Cursor.x < viewer.Editor.FileLines[viewer.Editor.Cursor.y].size())
-			++viewer.Editor.Cursor.x;
-		else if(viewer.Editor.Cursor.y + 1 < viewer.Editor.FileLines.size()) {
-			++viewer.Editor.Cursor.y;
-			viewer.Editor.Cursor.x = 0;
+		if(editor.Cursor.x < editor.FileLines[editor.Cursor.y].size())
+			++editor.Cursor.x;
+		else if(editor.Cursor.y + 1 < editor.FileLines.size()) {
+			++editor.Cursor.y;
+			editor.Cursor.x = 0;
 		}
 		break;
 	case VK_SCANCODE_Up:
-		if(viewer.Editor.Cursor.y) {
-			--viewer.Editor.Cursor.y;
-			viewer.Editor.Cursor.x = min(viewer.Editor.Cursor.x, viewer.Editor.FileLines[viewer.Editor.Cursor.y].size());
+		if(editor.Cursor.y) {
+			--editor.Cursor.y;
+			editor.Cursor.x = min(editor.Cursor.x, editor.FileLines[editor.Cursor.y].size());
 		}
 		break;
 	case VK_SCANCODE_Down:
-		if(viewer.Editor.Cursor.y + 1 < viewer.Editor.FileLines.size()) {
-			++viewer.Editor.Cursor.y;
-			viewer.Editor.Cursor.x = min(viewer.Editor.Cursor.x, viewer.Editor.FileLines[viewer.Editor.Cursor.y].size());
+		if(editor.Cursor.y + 1 < editor.FileLines.size()) {
+			++editor.Cursor.y;
+			editor.Cursor.x = min(editor.Cursor.x, editor.FileLines[editor.Cursor.y].size());
 		}
 		break;
 	}
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerEditorPhysicalInput(SFileViewer & viewer, vpobj<SEventSystem> frameEvents) {
-	if(viewer.Dialog->GUI->Controls.IsHidden(viewer.VirtualKeyboard.IdRoot))
-		rtrn 0;
+sttc gpk::err_t fileViewerEditorPhysicalInput(SFileViewer & viewer, SFileEditor & editor, vpobj<SEventSystem> frameEvents) {
 	for(u2_t iEvent = 0; iEvent < frameEvents.size(); ++iEvent) {
 		cnst pobj<SEventSystem> & systemEvent = frameEvents[iEvent];
 		if(systemEvent->Type == SYSTEM_EVENT_Text) {
-			if_fail_fe(eventExtractAndHandle<EVENT_TEXT>(*systemEvent, [&viewer](cnst SEventView<EVENT_TEXT> & eventText) {
+			if_fail_fe(eventExtractAndHandle<EVENT_TEXT>(*systemEvent, [&viewer, &editor](cnst SEventView<EVENT_TEXT> & eventText) {
 				if(eventText.Type == EVENT_TEXT_Char && eventText.Data.size() && eventText.Data[0] >= 0x20 && eventText.Data[0] <= 0x7F)
-					if_fail_fe(::fileViewerTextInsert(viewer, (sc_t)eventText.Data[0]));
+					if_fail_fe(::fileViewerTextInsert(viewer, editor, (sc_t)eventText.Data[0]));
 				rtrn 0;
 			}));
 		}
 		else if(systemEvent->Type == SYSTEM_EVENT_Keyboard) {
-			if_fail_fe(eventExtractAndHandle<EVENT_KEYBOARD>(*systemEvent, [&viewer](cnst SEventView<EVENT_KEYBOARD> & eventKeyboard) {
+			if_fail_fe(eventExtractAndHandle<EVENT_KEYBOARD>(*systemEvent, [&viewer, &editor](cnst SEventView<EVENT_KEYBOARD> & eventKeyboard) {
 				if(eventKeyboard.Type != EVENT_KEYBOARD_Down || 0 == eventKeyboard.Data.size())
 					rtrn 0;
 				VK_SCANCODE scanCode = {};
@@ -443,35 +428,48 @@ sttc gpk::err_t fileViewerEditorPhysicalInput(SFileViewer & viewer, vpobj<SEvent
 				case SYSTEM_KEY_Down		: scanCode = VK_SCANCODE_Down	; break;
 				}
 				cnst SVirtualKeyboardEvent editorEvent = {VK_EVENT_Edit, scanCode};
-				rtrn ::fileViewerEditorHandle(viewer, editorEvent);
+				rtrn ::fileViewerEditorHandle(viewer, editor, editorEvent);
 			}));
 		}
 	}
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerEditorUpdate(SFileViewer & viewer, vpobj<SEventSystem> frameEvents) {
+sttc gpk::err_t fileViewerEditorUpdate(SFileViewer & viewer, SFileEditor & editor, cid_t iEditor) {
 	pobj<SDialogViewport> viewport = {};
 	pobj<SDialogSlider> scrollbarY = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, editor.IdViewport, viewport));
 	SGUI & gui = *viewer.Dialog->GUI;
-	if(gui.Controls.IsHidden(viewport->IdGUIControl)) {
-		gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
+	if(gui.Controls.IsHidden(viewport->IdGUIControl))
 		rtrn 0;
-	}
-	cnst cid_t idKeyboard = (cid_t)viewer.Dialog->Buttons[FILE_VIEWER_BUTTON_KEYBOARD];
-	if(gui.Controls.IsAction(idKeyboard))
+	if(gui.Controls.IsAction(editor.IdKeyboard)) {
+		viewer.IdEditorCurrent = iEditor;
 		gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, false == gui.Controls.IsHidden(viewer.VirtualKeyboard.IdRoot));
+	}
 	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbarY));
 	u2_c firstVisible = (u2_t)scrollbarY->ValueCurrent;
-	for(u2_t iControl = 0; iControl < viewer.Editor.Lines.IdControls.size(); ++iControl)
-		if(gui.Controls.IsAction(viewer.Editor.Lines.IdControls[iControl])) {
+	for(u2_t iControl = 0; iControl < editor.Lines.IdControls.size(); ++iControl)
+		if(gui.Controls.IsAction(editor.Lines.IdControls[iControl])) {
 			u2_c iLine = firstVisible + iControl;
-			if(iLine < viewer.Editor.FileLines.size()) {
-				viewer.Editor.Cursor = {viewer.Editor.FileLines[iLine].size(), iLine};
-				gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, false);
+			if(iLine < editor.FileLines.size()) {
+				viewer.IdEditorCurrent = iEditor;
+				editor.Cursor = {editor.FileLines[iLine].size(), iLine};
 			}
 		}
+	if(gui.Controls.IsAction(editor.IdSave) && editor.FilePath.size())
+		if_fail_fef(fileFromMemory(editor.FilePath, editor.FileText), "Failed to save '%.*s'.", GPK_VIEW_ARGS(editor.FilePath));
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerEditorInputUpdate(SFileViewer & viewer, vpobj<SEventSystem> frameEvents) {
+	if(viewer.IdEditorCurrent < 0 || (u2_t)viewer.IdEditorCurrent >= viewer.Editors.size())
+		rtrn 0;
+	SFileEditor & editor = *viewer.Editors[viewer.IdEditorCurrent];
+	if(viewer.Dialog->GUI->Controls.IsHidden(editor.IdViewport)) {
+		viewer.Dialog->GUI->Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
+		rtrn 0;
+	}
+	SGUI & gui = *viewer.Dialog->GUI;
 	apod<SVirtualKeyboardEvent> vkEvents = {};
 	cnst cid_t idCharacterBegin = viewer.VirtualKeyboard.IdRoot + 1;
 	cnst cid_t idCharacterEnd = idCharacterBegin + (cid_t)viewer.VirtualKeyboard.Keys.size();
@@ -482,25 +480,21 @@ sttc gpk::err_t fileViewerEditorUpdate(SFileViewer & viewer, vpobj<SEventSystem>
 		if(gui.Controls.IsAction(viewer.VirtualKeyboard.IdKeys[iKey]))
 			if_fail_fe(virtualKeyboardHandleEvent(viewer.VirtualKeyboard, viewer.VirtualKeyboard.IdKeys[iKey], vkEvents));
 	for(u2_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent)
-		if_fail_fe(::fileViewerEditorHandle(viewer, vkEvents[iEvent]));
-	if_fail_fe(::fileViewerEditorPhysicalInput(viewer, frameEvents));
-	vcst_c filePath = gui.Controls.Text[viewport->IdTitle].Text;
-	if(gui.Controls.IsAction(viewer.Editor.IdSave) && filePath.size())
-		if_fail_fef(fileFromMemory(filePath, viewer.Editor.FileText), "Failed to save '%.*s'.", GPK_VIEW_ARGS(filePath));
-	rtrn 0;
+		if_fail_fe(::fileViewerEditorHandle(viewer, editor, vkEvents[iEvent]));
+	rtrn ::fileViewerEditorPhysicalInput(viewer, editor, frameEvents);
 }
 
-sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer) {
+sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer, SFileEditor & editor) {
 	pobj<SDialogViewport> viewport = {};
 	pobj<SDialogSlider> scrollbarY = {};
 	pobj<SDialogSlider> scrollbarX = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, editor.IdViewport, viewport));
 	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbarY));
 	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarX, scrollbarX));
 	SGUI & gui = *viewer.Dialog->GUI;
-	if(0 == viewer.Editor.Lines.IdControls.size())
-		if_fail_fe(::fileViewerListRowPush(viewer, viewer.Editor.Lines, {}, true, false));
-	cnst s1_t rowHeight = max((s1_t)1, gui.Controls.Placement[viewer.Editor.Lines.IdControls[0]].Area.Size.y);
+	if(0 == editor.Lines.IdControls.size())
+		if_fail_fe(::fileViewerListRowPush(viewer, editor.Lines, {}, true, false));
+	cnst s1_t rowHeight = max((s1_t)1, gui.Controls.Placement[editor.Lines.IdControls[0]].Area.Size.y);
 	n2s1_c clientSize = gui.Controls.Area[viewport->IdClient].Client.Global.Size;
 	cnst s1_t scrollbarWidth = gui.Controls.Placement[scrollbarY->IdGUIControl].Area.Size.x;
 	cnst s1_t scrollbarHeight = gui.Controls.Placement[scrollbarX->IdGUIControl].Area.Size.y;
@@ -512,45 +506,45 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer) {
 	for(u0_t iPass = 0; iPass < 3; ++iPass) {
 		visibleCount = max((s3_t)1, (s3_t)(clientSize.y - (scrollX ? scrollbarHeight : 0)) / rowHeight);
 		visibleColumns = max((s3_t)1, (s3_t)(clientSize.x - (scrollY ? scrollbarWidth : 0)) / characterWidth);
-		scrollY = viewer.Editor.FileLines.size() > (u2_t)visibleCount;
-		scrollX = viewer.Editor.FileLineWidthMax > (u2_t)visibleColumns;
+		scrollY = editor.FileLines.size() > (u2_t)visibleCount;
+		scrollX = editor.FileLineWidthMax > (u2_t)visibleColumns;
 	}
 	b8_t arrange = false;
-	while(viewer.Editor.Lines.IdControls.size() < (u2_t)visibleCount) {
-		if_fail_fe(::fileViewerListRowPush(viewer, viewer.Editor.Lines, {}, true, false));
+	while(editor.Lines.IdControls.size() < (u2_t)visibleCount) {
+		if_fail_fe(::fileViewerListRowPush(viewer, editor.Lines, {}, true, false));
 		arrange = true;
 	}
-	cnst s3_t maxOffsetY = max((s3_t)0, (s3_t)viewer.Editor.FileLines.size() - visibleCount);
-	b8_c cursorActive = viewer.Editor.Cursor.y < viewer.Editor.FileLines.size();
-	cnst s3_t maxOffsetX = max((s3_t)0, (s3_t)viewer.Editor.FileLineWidthMax + one_if(cursorActive) - visibleColumns);
+	cnst s3_t maxOffsetY = max((s3_t)0, (s3_t)editor.FileLines.size() - visibleCount);
+	b8_c cursorActive = editor.Cursor.y < editor.FileLines.size();
+	cnst s3_t maxOffsetX = max((s3_t)0, (s3_t)editor.FileLineWidthMax + one_if(cursorActive) - visibleColumns);
 	scrollbarY->ValueLimits = {0, max((s3_t)1, maxOffsetY)};
 	scrollbarX->ValueLimits = {0, max((s3_t)1, maxOffsetX)};
 	if_fail_fe(sliderSetValue(*scrollbarY, maxOffsetY ? scrollbarY->ValueCurrent : 0));
 	if_fail_fe(sliderSetValue(*scrollbarX, maxOffsetX ? scrollbarX->ValueCurrent : 0));
 	if(cursorActive) {
-		if(viewer.Editor.Cursor.y < (u2_t)scrollbarY->ValueCurrent) {
-			if_fail_fe(sliderSetValue(*scrollbarY, viewer.Editor.Cursor.y));
+		if(editor.Cursor.y < (u2_t)scrollbarY->ValueCurrent) {
+			if_fail_fe(sliderSetValue(*scrollbarY, editor.Cursor.y));
 		}
-		else if(viewer.Editor.Cursor.y >= (u2_t)(scrollbarY->ValueCurrent + visibleCount)) {
-			if_fail_fe(sliderSetValue(*scrollbarY, viewer.Editor.Cursor.y - visibleCount + 1));
+		else if(editor.Cursor.y >= (u2_t)(scrollbarY->ValueCurrent + visibleCount)) {
+			if_fail_fe(sliderSetValue(*scrollbarY, editor.Cursor.y - visibleCount + 1));
 		}
-		if(viewer.Editor.Cursor.x < (u2_t)scrollbarX->ValueCurrent) {
-			if_fail_fe(sliderSetValue(*scrollbarX, viewer.Editor.Cursor.x));
+		if(editor.Cursor.x < (u2_t)scrollbarX->ValueCurrent) {
+			if_fail_fe(sliderSetValue(*scrollbarX, editor.Cursor.x));
 		}
-		else if(viewer.Editor.Cursor.x >= (u2_t)(scrollbarX->ValueCurrent + visibleColumns)) {
-			if_fail_fe(sliderSetValue(*scrollbarX, viewer.Editor.Cursor.x - visibleColumns + 1));
+		else if(editor.Cursor.x >= (u2_t)(scrollbarX->ValueCurrent + visibleColumns)) {
+			if_fail_fe(sliderSetValue(*scrollbarX, editor.Cursor.x - visibleColumns + 1));
 		}
 	}
 	viewport->Settings.ScrollBarY = 0 != maxOffsetY;
 	viewport->Settings.ScrollBarX = 0 != maxOffsetX;
 	u2_c firstVisible = (u2_t)(maxOffsetY ? scrollbarY->ValueCurrent : 0);
 	u2_c firstColumn = (u2_t)(maxOffsetX ? scrollbarX->ValueCurrent : 0);
-	for(u2_t iControl = 0; iControl < viewer.Editor.Lines.IdControls.size(); ++iControl) {
-		cnst cid_t idControl = viewer.Editor.Lines.IdControls[iControl];
+	for(u2_t iControl = 0; iControl < editor.Lines.IdControls.size(); ++iControl) {
+		cnst cid_t idControl = editor.Lines.IdControls[iControl];
 		u2_c iLine = firstVisible + iControl;
-		b8_c visible = iControl < (u2_t)visibleCount && iLine < viewer.Editor.FileLines.size();
+		b8_c visible = iControl < (u2_t)visibleCount && iLine < editor.FileLines.size();
 		if(visible) {
-			vcst_c sourceLine = viewer.Editor.FileLines[iLine];
+			vcst_c sourceLine = editor.FileLines[iLine];
 			u2_c offset = min(firstColumn, sourceLine.size());
 			u2_c count = min((u2_t)visibleColumns, (u2_t)(sourceLine.size() - offset));
 			vcst_t visibleText = {};
@@ -558,68 +552,114 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer) {
 			if(gui.Controls.Text[idControl].Text != visibleText)
 				if_fail_fe(controlTextSet(gui, idControl, visibleText));
 		}
-		gui.Controls.SetSelected(idControl, visible && iLine == viewer.Editor.Cursor.y);
+		gui.Controls.SetSelected(idControl, visible && iLine == editor.Cursor.y);
 		if(gui.Controls.IsHidden(idControl) == visible) {
 			gui.Controls.SetHidden(idControl, false == visible);
 			arrange = true;
 		}
 	}
 	b8_c cursorVisible = cursorActive
-		&& viewer.Editor.Cursor.y >= firstVisible && viewer.Editor.Cursor.y < firstVisible + visibleCount
-		&& viewer.Editor.Cursor.x >= firstColumn && viewer.Editor.Cursor.x < firstColumn + visibleColumns;
+		&& editor.Cursor.y >= firstVisible && editor.Cursor.y < firstVisible + visibleCount
+		&& editor.Cursor.x >= firstColumn && editor.Cursor.x < firstColumn + visibleColumns;
 	if(cursorVisible) {
-		SControlPlacement & cursorPlacement = gui.Controls.Placement[viewer.Editor.IdCursor];
+		SControlPlacement & cursorPlacement = gui.Controls.Placement[editor.IdCursor];
 		n2s1_c cursorOffset = {
-			(s1_t)((viewer.Editor.Cursor.x - firstColumn) * characterWidth),
-			(s1_t)((viewer.Editor.Cursor.y - firstVisible) * rowHeight),
+			(s1_t)((editor.Cursor.x - firstColumn) * characterWidth),
+			(s1_t)((editor.Cursor.y - firstVisible) * rowHeight),
 		};
 		n2s1_c cursorSize = {(s1_t)characterWidth, rowHeight};
 		if(cursorPlacement.Area.Offset.x != cursorOffset.x || cursorPlacement.Area.Offset.y != cursorOffset.y || cursorPlacement.Area.Size.x != cursorSize.x || cursorPlacement.Area.Size.y != cursorSize.y) {
 			cursorPlacement.Area.Offset = cursorOffset;
 			cursorPlacement.Area.Size = cursorSize;
-			if_fail_fe(controlMetricsInvalidate(gui, viewer.Editor.IdCursor));
+			if_fail_fe(controlMetricsInvalidate(gui, editor.IdCursor));
 		}
 	}
-	if(gui.Controls.IsHidden(viewer.Editor.IdCursor) == cursorVisible)
-		gui.Controls.SetHidden(viewer.Editor.IdCursor, false == cursorVisible);
+	if(gui.Controls.IsHidden(editor.IdCursor) == cursorVisible)
+		gui.Controls.SetHidden(editor.IdCursor, false == cursorVisible);
 	if(arrange) {
-		if_fail_fe(controlListArrange(gui, viewer.Editor.Lines));
-		if_fail_fe(controlMetricsInvalidate(gui, viewer.Editor.Lines.IdControl));
+		if_fail_fe(controlListArrange(gui, editor.Lines));
+		if_fail_fe(controlMetricsInvalidate(gui, editor.Lines.IdControl));
 	}
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerSelectionUpdate(SFileViewer & viewer) {
-	pobj<SDialogViewport> filesViewport = {};
-	pobj<SDialogSlider> filesScrollbar = {};
-	if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_FILES], filesViewport));
-	if_fail_fe(dialogControlGet(*viewer.Dialog, filesViewport->IdScrollBarY, filesScrollbar));
+sttc gpk::err_t fileViewerViewportLayoutConfigure(SFileViewer & viewer, cid_t idViewport, FILE_VIEWER_LAYOUT layout) {
+	if(FILE_VIEWER_LAYOUT_FLOATING == layout)
+		rtrn 0;
+	pobj<SDialogViewport> viewport = {};
+	if_fail_fe(dialogControlGet(*viewer.Dialog, idViewport, viewport));
+	viewport->Settings.DisplacementLockX = true;
+	viewport->Settings.DisplacementLockY = true;
+	viewer.Dialog->GUI->Controls.SetHidden(viewport->IdResizeBottomRight, true);
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerDirectoryCreate(SFileViewer & viewer, vcst_t path, FILE_VIEWER_LAYOUT layout) {
+	pobj<SPathList> directory = {};
+	if_null_fe(directory.create());
+	s1_c cascade = (s1_t)(24 * (viewer.Directories.size() % 8));
+	if_fail_fe(::fileViewerViewportCreate(viewer, directory->IdViewport, "FILES / CURRENT DIRECTORY", {{(s1_t)(40 + cascade), (s1_t)(48 + cascade)}, {420, 600}}));
+	if_fail_fe(::fileViewerListCreate(viewer, directory->Files, directory->IdViewport));
+	if_fail_fe(::fileViewerScrollCreate(viewer, directory->IdViewport, true));
+	if_fail_fe(::fileViewerFolderLoad(viewer, *directory, path));
+	if_fail_fe(::fileViewerViewportLayoutConfigure(viewer, directory->IdViewport, layout));
+	rtrn viewer.Directories.push_back(directory);
+}
+
+sttc gpk::err_t fileViewerEditorOpen(SFileViewer & viewer, vcst_t path, FILE_VIEWER_LAYOUT layout) {
+	pobj<SFileEditor> editor = {};
+	if_null_fe(editor.create());
+	s1_c cascade = (s1_t)(24 * (viewer.Editors.size() % 8));
+	if_fail_fe(::fileViewerEditorCreate(viewer, *editor, {{(s1_t)(480 + cascade), (s1_t)(72 + cascade)}, {760, 560}}));
+	if_fail_fe(::fileViewerTextLoad(viewer, *editor, path));
+	if_fail_fe(::fileViewerViewportLayoutConfigure(viewer, editor->IdViewport, layout));
+	if_fail_fe(viewer.Editors.push_back(editor));
+	viewer.IdEditorCurrent = (cid_t)viewer.Editors.size() - 1;
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerMenuUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout) {
 	SGUI & gui = *viewer.Dialog->GUI;
-	u2_c firstVisible = (u2_t)filesScrollbar->ValueCurrent;
-	b8_c hasParent = ::fileViewerFolderHasParent(viewer.Directory.PathContents);
-	for(u2_t iFile = 0; iFile < viewer.Directory.Files.IdControls.size(); ++iFile) {
-		cnst cid_t idControl = viewer.Directory.Files.IdControls[iFile];
-		if(false == gui.Controls.IsAction(idControl))
+	if(gui.Controls.IsAction(viewer.IdMenuFiles))
+		if_fail_fe(::fileViewerDirectoryCreate(viewer, viewer.RootPath, layout));
+	if(gui.Controls.IsAction(viewer.IdMenuExit))
+		rtrn APPLICATION_STATE_EXIT;
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerSelectionUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout) {
+	SGUI & gui = *viewer.Dialog->GUI;
+	for(u2_t iDirectory = 0; iDirectory < viewer.Directories.size(); ++iDirectory) {
+		SPathList & directory = *viewer.Directories[iDirectory];
+		if(gui.Controls.IsHidden(directory.IdViewport))
 			continue;
-		u2_c iItem = firstVisible + iFile;
-		for(u2_t iSelection = 0; iSelection < viewer.Directory.Files.IdControls.size(); ++iSelection)
-			gui.Controls.SetSelected(viewer.Directory.Files.IdControls[iSelection], iSelection == iFile);
-		if(hasParent && 0 == iItem) {
-			vcst_t parent = {};
-			if_fail_fe(pathDirectory(viewer.Directory.PathContents.Root, parent));
-			rtrn ::fileViewerFolderLoad(viewer, parent);
+		pobj<SDialogViewport> filesViewport = {};
+		pobj<SDialogSlider> filesScrollbar = {};
+		if_fail_fe(dialogControlGet(*viewer.Dialog, directory.IdViewport, filesViewport));
+		if_fail_fe(dialogControlGet(*viewer.Dialog, filesViewport->IdScrollBarY, filesScrollbar));
+		u2_c firstVisible = (u2_t)filesScrollbar->ValueCurrent;
+		b8_c hasParent = ::fileViewerFolderHasParent(directory.PathContents);
+		for(u2_t iFile = 0; iFile < directory.Files.IdControls.size(); ++iFile) {
+			cnst cid_t idControl = directory.Files.IdControls[iFile];
+			if(false == gui.Controls.IsAction(idControl))
+				continue;
+			u2_c iItem = firstVisible + iFile;
+			for(u2_t iSelection = 0; iSelection < directory.Files.IdControls.size(); ++iSelection)
+				gui.Controls.SetSelected(directory.Files.IdControls[iSelection], iSelection == iFile);
+			if(hasParent && 0 == iItem) {
+				vcst_t parent = {};
+				if_fail_fe(pathDirectory(directory.PathContents.Root, parent));
+				rtrn ::fileViewerFolderLoad(viewer, directory, parent);
+			}
+			u2_c iPath = iItem - one_if(hasParent);
+			if(iPath >= directory.PathContents.Name.size())
+				rtrn 0;
+			string path = {};
+			if_fail_fe(pathNameCompose(directory.PathContents.Root, directory.PathContents.Name[iPath], path));
+			if(directory.PathContents.Info[iPath].Folder)
+				rtrn ::fileViewerFolderLoad(viewer, directory, path);
+			rtrn ::fileViewerEditorOpen(viewer, path, layout);
 		}
-		u2_c iPath = iItem - one_if(hasParent);
-		if(iPath >= viewer.Directory.PathContents.Name.size())
-			rtrn 0;
-		string path = {};
-		if_fail_fe(pathNameCompose(viewer.Directory.PathContents.Root, viewer.Directory.PathContents.Name[iPath], path));
-		if(viewer.Directory.PathContents.Info[iPath].Folder)
-			rtrn ::fileViewerFolderLoad(viewer, path);
-		pobj<SDialogViewport> viewport = {};
-		if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[FILE_VIEWPORT_TEXT], viewport));
-		gui.Controls.SetHidden(viewport->IdGUIControl, false);
-		rtrn ::fileViewerTextLoad(viewer, path);
 	}
 	rtrn 0;
 }
@@ -627,39 +667,30 @@ sttc gpk::err_t fileViewerSelectionUpdate(SFileViewer & viewer) {
 gpk::err_t fileViewerSetup(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vcst_t rootPath) {
 	SGUI & gui = *viewer.Dialog->GUI;
 	gui.ColorModeDefault = GUI_COLOR_MODE_3D;
-	gui.ThemeDefault = ASCII_COLOR_DARKGREY * 16 + ASCII_COLOR_LIGHTGREY;
-	if_fail_fe(::fileViewerViewportCreate(viewer, FILE_VIEWPORT_FILES, "FILES / CURRENT DIRECTORY", {{40, 48}, {420, 600}}));
-	if_fail_fe(::fileViewerViewportCreate(viewer, FILE_VIEWPORT_TEXT , "SELECT A FILE", {{480, 72}, {760, 560}}));
-	if_fail_fe(::fileViewerListCreate(viewer, viewer.Directory.Files, FILE_VIEWPORT_FILES));
-	if_fail_fe(::fileViewerListCreate(viewer, viewer.Editor.Lines, FILE_VIEWPORT_TEXT));
-	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_FILES, true));
-	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_TEXT , true));
-	if_fail_fe(::fileViewerScrollCreate(viewer, FILE_VIEWPORT_TEXT , false));
-	if_fail_fe(::fileViewerEditorCreate(viewer));
+	gui.ThemeDefault = ASCII_COLOR_CYAN * 16 + 8;
+	viewer.RootPath = rootPath.size() ? rootPath : vcst_t{"."};
 	if_fail_fe(::fileViewerMenuCreate(viewer));
-	if_fail_fe(::fileViewerFolderLoad(viewer, rootPath.size() ? rootPath : vcst_t{"."}));
-	if_fail_fe(::fileViewerLayoutSet(viewer, layout));
-	if(FILE_VIEWER_LAYOUT_SPLIT == layout)
-		for(u0_t iViewport = 0; iViewport < viewer.Viewports.size(); ++iViewport) {
-			pobj<SDialogViewport> viewport = {};
-			if_fail_fe(dialogControlGet(*viewer.Dialog, viewer.Viewports[iViewport], viewport));
-			viewport->Settings.DisplacementLockX = true;
-			viewport->Settings.DisplacementLockY = true;
-			gui.Controls.SetHidden(viewport->IdResizeBottomRight, true);
-		}
-	rtrn 0;
+	if_fail_fe(virtualKeyboardSetup437(gui, viewer.VirtualKeyboard));
+	if_fail_fe(controlSetParent(gui, viewer.VirtualKeyboard.IdRoot, viewer.Dialog->Root));
+	gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
+	if_fail_fe(::fileViewerDirectoryCreate(viewer, viewer.RootPath, layout));
+	rtrn ::fileViewerLayoutSet(viewer, layout);
 }
 
 gpk::err_t fileViewerUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vpobj<SEventSystem> frameEvents) {
-	if(gpk::err_t result = ::fileViewerMenuUpdate(viewer))
+	if(gpk::err_t result = ::fileViewerMenuUpdate(viewer, layout))
 		rtrn result;
-	if_fail_fe(::fileViewerSelectionUpdate(viewer));
-	if_fail_fe(::fileViewerEditorUpdate(viewer, frameEvents));
+	if_fail_fe(::fileViewerSelectionUpdate(viewer, layout));
+	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
+		if_fail_fe(::fileViewerEditorUpdate(viewer, *viewer.Editors[iEditor], (cid_t)iEditor));
+	if_fail_fe(::fileViewerEditorInputUpdate(viewer, frameEvents));
 	if_fail_fe(viewer.Dialog->Update());
 	if(FILE_VIEWER_LAYOUT_SPLIT == layout)
 		if_fail_fe(::fileViewerLayoutSet(viewer, layout));
-	if_fail_fe(::fileViewerListWindowUpdate(viewer, viewer.Directory.Files, viewer.Directory.PathContents, FILE_VIEWPORT_FILES));
-	if_fail_fe(::fileViewerTextWindowUpdate(viewer));
+	for(u2_t iDirectory = 0; iDirectory < viewer.Directories.size(); ++iDirectory)
+		if_fail_fe(::fileViewerListWindowUpdate(viewer, viewer.Directories[iDirectory]->Files, viewer.Directories[iDirectory]->PathContents, viewer.Directories[iDirectory]->IdViewport));
+	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
+		if_fail_fe(::fileViewerTextWindowUpdate(viewer, *viewer.Editors[iEditor]));
 	rtrn 0;
 }
 
