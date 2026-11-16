@@ -136,45 +136,79 @@ nmsp gpk
 		stxp b8_t Value = (ctti_same<T, TArgs>::Value || ...);
 	};
 
-	tplt<u2_t N, tpnm T, tpnm TFunc>
-	err_t cttiVisitAggregate(T & instance, u2_c index, TFunc func) {
-		if constexpr(1 == N) {
-			auto & [m0] = instance;
-			switch(index) {
-			case 0: rtrn func(m0);
-			}
-		}
-		else if constexpr(2 == N) {
-			auto & [m0, m1] = instance;
-			switch(index) {
-			case 0: rtrn func(m0);
-			case 1: rtrn func(m1);
-			}
-		}
-		else if constexpr(3 == N) {
-			auto & [m0, m1, m2] = instance;
-			switch(index) {
-			case 0: rtrn func(m0);
-			case 1: rtrn func(m1);
-			case 2: rtrn func(m2);
-			}
-		}
-		else if constexpr(4 == N) {
-			auto & [m0, m1, m2, m3] = instance;
-			switch(index) {
-			case 0: rtrn func(m0);
-			case 1: rtrn func(m1);
-			case 2: rtrn func(m2);
-			case 3: rtrn func(m3);
-			}
-		}
-		rtrn -1;
+	tplt<u2_t... Indices>
+	stct ctti_index_pack {};
+	tplt<u2_t N, u2_t... Indices>
+	stct ctti_index_pack_make : ctti_index_pack_make<N - 1, N - 1, Indices...> {};
+	tplt<u2_t... Indices>
+	stct ctti_index_pack_make<0, Indices...> { usng Type = ctti_index_pack<Indices...>; };
+
+	tplt<tpnm T>
+	stct SCTTIType { usng Type = T; };
+	tplt<tpnm TStruct, u2_t Index>
+	stct SCTTIFieldTag { friend auto cttiFieldType(SCTTIFieldTag<TStruct, Index>); };
+	tplt<tpnm TStruct, tpnm TMember, u2_t Index>
+	stct SCTTIFieldTypeRegister {
+		friend auto cttiFieldType(SCTTIFieldTag<TStruct, Index>) { rtrn SCTTIType<TMember>{}; }
+	};
+	tplt<tpnm TStruct, u2_t Index>
+	stct SCTTIFieldProbe {
+		tplt<tpnm TMember, size_t = sizeof(SCTTIFieldTypeRegister<TStruct, TMember, Index>)>
+		inxp operator TMember & () cnst nxpt;
+	};
+	tplt<tpnm TStruct, tpnm TIndices, tpnm = void>
+	stct SCTTIFieldTypes;
+	tplt<tpnm TStruct, u2_t... Indices>
+	stct SCTTIFieldTypes
+		< TStruct
+		, ctti_index_pack<Indices...>
+		, decltype(void(TStruct{SCTTIFieldProbe<TStruct, Indices>{}...}))
+		> {
+		usng Type = type_pack<tpnm decltype(cttiFieldType(SCTTIFieldTag<TStruct, Indices>{}))::Type...>;
+	};
+
+	tplt<tpnm TStruct, tpnm TMember>
+	inxp uP_t cttiMemberAlignment() nxpt {
+		rtrn alignof(TStruct) < alignof(TMember) ? alignof(TStruct) : alignof(TMember);
+	}
+
+	tplt<tpnm TStruct, tpnm TFunc, tpnm... TMembers>
+	err_t cttiVisitMembers(TStruct & instance, u2_c index, TFunc func, type_pack<TMembers...>) {
+		u0_t (&bytes)[sizeof(TStruct)] = reinterpret_cast<u0_t(&)[sizeof(TStruct)]>(instance);
+		uP_t offset = {};
+		u2_t current = {};
+		err_t result = -1;
+		( [&]() {
+			stxp uP_t alignment = cttiMemberAlignment<TStruct, TMembers>();
+			offset += (alignment - offset % alignment) % alignment;
+			if(current++ == index)
+				result = func(reinterpret_cast<TMembers&>(bytes[offset]));
+			offset += sizeof(TMembers);
+		}(), ... );
+		rtrn result;
+	}
+	tplt<tpnm TStruct, tpnm TFunc, tpnm... TMembers>
+	err_t cttiVisitMembers(cnst TStruct & instance, u2_c index, TFunc func, type_pack<TMembers...>) {
+		cnst u0_t (&bytes)[sizeof(TStruct)] = reinterpret_cast<cnst u0_t(&)[sizeof(TStruct)]>(instance);
+		uP_t offset = {};
+		u2_t current = {};
+		err_t result = -1;
+		( [&]() {
+			stxp uP_t alignment = cttiMemberAlignment<TStruct, TMembers>();
+			offset += (alignment - offset % alignment) % alignment;
+			if(current++ == index)
+				result = func(reinterpret_cast<cnst TMembers&>(bytes[offset]));
+			offset += sizeof(TMembers);
+		}(), ... );
+		rtrn result;
 	}
 
 	tplt<tpnm T, tpnm TFunc>
 	err_t cttiVisit(T & instance, u2_c index, TFunc func) {
 		usng TStruct = rm_csvl_t<T>;
-		rtrn cttiVisitAggregate<SCTTIStructRegistry<TStruct>::Value.Count>(instance, index, func);
+		usng TIndices = tpnm ctti_index_pack_make<SCTTIStructRegistry<TStruct>::Value.Count>::Type;
+		usng TMembers = tpnm SCTTIFieldTypes<TStruct, TIndices>::Type;
+		rtrn cttiVisitMembers(instance, index, func, TMembers{});
 	}
 
 	tplt<tpnm T>

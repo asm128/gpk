@@ -67,6 +67,45 @@ CTTI_STCT(SCTTIInstanceTest,
 	};
 	);
 
+CTTI_STCT(SCTTIInstanceNested,
+	struct SCTTIInstanceNested {
+		gpk::u0_t		Code	= {};
+		gpk::s2_t		Offset	= {};
+	};
+	);
+
+CTTI_STCT(SCTTIInstanceMany,
+	struct SCTTIInstanceMany {
+		gpk::u0_t		Unsigned8	= {};
+		gpk::s0_t		Signed8		= {};
+		gpk::u1_t		Unsigned16	= {};
+		gpk::s1_t		Signed16	= {};
+		gpk::u2_t		Unsigned32	= {};
+		gpk::s2_t		Signed32	= {};
+		gpk::u3_t		Unsigned64	= {};
+		gpk::f2_t		Ratio32		= {};
+		gpk::f3_t		Ratio64		= {};
+		SCTTIEnumTest	Mode		= CTTIEnumNone;
+		gpk::b8_t		Enabled		= {};
+		SCTTIInstanceNested
+						Nested		= {};
+	};
+	);
+
+#pragma pack(push, 1)
+CTTI_STCT(SCTTIInstancePacked,
+	struct SCTTIInstancePacked {
+		gpk::u0_t		Unsigned8	= {};
+		gpk::u3_t		Unsigned64	= {};
+		gpk::u1_t		Unsigned16	= {};
+		gpk::f3_t		Ratio64		= {};
+		SCTTIEnumTest	Mode		= CTTIEnumNone;
+		gpk::b8_t		Enabled		= {};
+		gpk::s2_t		Signed32	= {};
+	};
+	);
+#pragma pack(pop)
+
 CTTI_ENUM_COMPILED(SCTTIEnumSingle, gpk::u0_t, SCTTIEnumSingleValue = 9);
 CTTI_ENUM_COMPILED(SCTTIEnumBoundary, gpk::u0_t,
 	SCTTIEnumBoundary00, SCTTIEnumBoundary01, SCTTIEnumBoundary02, SCTTIEnumBoundary03,
@@ -221,6 +260,58 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedInput.size());
 	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedA.Count != sourceA.Count || loadedA.Ratio != sourceA.Ratio || loadedA.Mode != sourceA.Mode || loadedA.Enabled != sourceA.Enabled, "Loaded A:{%u,%.17g,%u,%u}; expected:{%u,%.17g,%u,%u}.", loadedA.Count, loadedA.Ratio, (u2_t)loadedA.Mode, loadedA.Enabled, sourceA.Count, sourceA.Ratio, (u2_t)sourceA.Mode, sourceA.Enabled);
 	GPK_TEST_CHECKF(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedB.Count != sourceB.Count || loadedB.Ratio != sourceB.Ratio || loadedB.Mode != sourceB.Mode || loadedB.Enabled != sourceB.Enabled, "Loaded B:{%u,%.17g,%u,%u}; expected:{%u,%.17g,%u,%u}.", loadedB.Count, loadedB.Ratio, (u2_t)loadedB.Mode, loadedB.Enabled, sourceB.Count, sourceB.Ratio, (u2_t)sourceB.Mode, sourceB.Enabled);
+
+	SCTTIInstanceMany sourceMany = {11, -12, 1300, -1400, 150000, -160000, 17000000, 18.25f, -19.5, CTTIEnumAlias, true, {20, -210000}};
+	cnst ::gpk::err_t lastVisit = ::gpk::cttiVisit(sourceMany, 11, [](auto & member) {
+		if constexpr(requires { member.Code; member.Offset; }) {
+			member.Offset = -220000;
+			rtrn 0;
+		}
+		else
+			rtrn -1;
+	});
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, ::gpk::failed(lastVisit) || sourceMany.Nested.Offset != -220000);
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, false == ::gpk::failed(::gpk::cttiVisit(sourceMany, 12, [](auto &) { rtrn 0; })));
+	::gpk::string serializedMany = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(::gpk::saveCTTI(serializedMany, sourceMany)));
+	::gpk::vcst_t serializedManyInput = serializedMany;
+	SCTTIInstanceMany loadedMany = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedManyInput, loadedMany)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedManyInput.size());
+	GPK_TEST_CHECK
+		( errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT
+		, loadedMany.Unsigned8 != sourceMany.Unsigned8
+		|| loadedMany.Signed8 != sourceMany.Signed8
+		|| loadedMany.Unsigned16 != sourceMany.Unsigned16
+		|| loadedMany.Signed16 != sourceMany.Signed16
+		|| loadedMany.Unsigned32 != sourceMany.Unsigned32
+		|| loadedMany.Signed32 != sourceMany.Signed32
+		|| loadedMany.Unsigned64 != sourceMany.Unsigned64
+		|| loadedMany.Ratio32 != sourceMany.Ratio32
+		|| loadedMany.Ratio64 != sourceMany.Ratio64
+		|| loadedMany.Mode != sourceMany.Mode
+		|| loadedMany.Enabled != sourceMany.Enabled
+		|| loadedMany.Nested.Code != sourceMany.Nested.Code
+		|| loadedMany.Nested.Offset != sourceMany.Nested.Offset
+		);
+
+	SCTTIInstancePacked sourcePacked = {23, 24000000, 2500, -26.75, CTTIEnumRead, true, -270000};
+	::gpk::string serializedPacked = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(::gpk::saveCTTI(serializedPacked, sourcePacked)));
+	::gpk::vcst_t serializedPackedInput = serializedPacked;
+	SCTTIInstancePacked loadedPacked = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedPackedInput, loadedPacked)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedPackedInput.size());
+	GPK_TEST_CHECK
+		( errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT
+		, loadedPacked.Unsigned8 != sourcePacked.Unsigned8
+		|| loadedPacked.Unsigned64 != sourcePacked.Unsigned64
+		|| loadedPacked.Unsigned16 != sourcePacked.Unsigned16
+		|| loadedPacked.Ratio64 != sourcePacked.Ratio64
+		|| loadedPacked.Mode != sourcePacked.Mode
+		|| loadedPacked.Enabled != sourcePacked.Enabled
+		|| loadedPacked.Signed32 != sourcePacked.Signed32
+		);
 
 	::gpk::vcst_t invalidInput = "{\"Count\":1}";
 	cnst ::gpk::vcst_t invalidInputOriginal = invalidInput;
