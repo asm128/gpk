@@ -1,36 +1,33 @@
 #include "gpk_gui.h"
 #include "gpk_virtual_keyboard.h"
-#include "gpk_system_key.h"
 #include "gpk_event_input.h"
-
-#include <limits.h>
 
 #ifndef GPK_GUI_INPUTBOX_H_23627
 #define GPK_GUI_INPUTBOX_H_23627
 
 nmsp gpk
 {
-	gpk::err_t 		virtualKeyboardSetup	(SGUI & gui, SVirtualKeyboard & vk, u0_t rowWidth, cnst vcu1_t & keys);
-	gpk::err_t 		virtualKeyboardSetup437	(SGUI & gui, SVirtualKeyboard & vk);
+	err_t 		virtualKeyboardSetup	(SGUI & gui, SVirtualKeyboard & vk, u0_t rowWidth, cnst vcu1_t & keys);
+	err_t 		virtualKeyboardSetup437	(SGUI & gui, SVirtualKeyboard & vk);
 
 	struct SInputBox {
-		cid_t					IdRoot				= {};
-		cid_t					IdText				= {};
-		SVirtualKeyboard		VirtualKeyboard		= {};
-		string					Text				= {};
-		u2_t					MaxLength			= 16;
-		b8_t					Editing				= false;
+		cid_t				IdRoot				= {};
+		cid_t				IdText				= {};
+		SVirtualKeyboard	VirtualKeyboard		= {};
+		string				Text				= {};
+		u2_t				MaxLength			= 16;
+		b8_t				Editing				= false;
 
 
-		inln	gpk::err_t SetText				(SGUI & gui, vcst_t text) { return controlTextSet(gui, IdText, vcst_t{Text = text}); }
-		gpk::err_t 		Edit				(SGUI & gui, b8_t editing) {
+		inln	err_t		SetText				(SGUI & gui, vcst_t text) { return controlTextSet(gui, IdText, vcst_t{Text = text}); }
+		err_t 				Edit				(SGUI & gui, b8_t editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
 			return one_if(Editing);
 		}
 #ifndef GPK_ATMEL		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		gpk::err_t 		Update				(SGUI & gui, cnst SVirtualKeyboard & virtualKeyboard, view<cnst pobj<SEventSystem>> frameEvents, vcid processableControls) { 
+		err_t 				Update				(SGUI & gui, cnst SVirtualKeyboard & virtualKeyboard, view<cnst pobj<SEventSystem>> frameEvents, vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
@@ -53,10 +50,10 @@ nmsp gpk
 					}
 					break;
 				case VK_EVENT_Edit:
-						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Backspace)); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Enter	)); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Escape	)); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Clear		) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Clear	)); } 
+						 if(vkEvents[iEvent].ScanCode == VK_SCANCODE_Backspace	) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, SYSTEM_KEY_Backspace)); } 
+					else if(vkEvents[iEvent].ScanCode == VK_SCANCODE_Enter		) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, SYSTEM_KEY_Enter	)); } 
+					else if(vkEvents[iEvent].ScanCode == VK_SCANCODE_Escape		) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, SYSTEM_KEY_Escape	)); } 
+					else if(vkEvents[iEvent].ScanCode == VK_SCANCODE_Clear		) { if_fail_e(eventEnqueueKeyboardDown(sysEvents, SYSTEM_KEY_Clear	)); } 
 				}
 			}
 			;
@@ -82,12 +79,12 @@ nmsp gpk
 							case SYSTEM_KEY_Backspace	: 
 								if(Text.size()) {
 									if_fail_fe(Text.pop_back());
-									if_fail_fe(gpk::controlTextSet(gui, IdText, vcst_t{Text})); 
+									if_fail_fe(controlTextSet(gui, IdText, Text)); 
 								}
 								break;
 							case SYSTEM_KEY_Clear		: 
 								Text.clear();				
-								if_fail_fe(gpk::controlTextSet(gui, IdText, vcst_t{Text})); 
+								if_fail_fe(controlTextSet(gui, IdText, Text)); 
 								break;
 							}
 						}
@@ -102,7 +99,7 @@ nmsp gpk
 #endif // GPK_ATMEL
 	};
 
-	gpk::err_t 		inputBoxCreate		(SInputBox & inputBox, SGUI & gui, cid_t iParent = -1);
+	err_t 		inputBoxCreate		(SInputBox & inputBox, SGUI & gui, cid_t iParent = -1);
 } // nmsp
 
 #endif // GPK_GUI_INPUTBOX_H_23627

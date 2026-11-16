@@ -162,19 +162,9 @@ sttc ::gpk::err_t testEventPlatformInput(::gpk::ATestError & errors) {
 	cnst ::gpk::n2u1_t dimensions = {480, 320};
 	if_fail_fe(::gpk::eventEnqueueScreenResize(queue, dimensions));
 	if_fail_fe(::gpk::eventEnqueueScreenClose(queue));
-	::gpk::SInputKeyEvent key = {};
-	key.Key = 13;
-	key.ScanCode = 28;
-	key.DeviceId = 0;
-	key.KeySym = 0xFF0D;
-	key.Modifiers = ::gpk::INPUT_MODIFIER_Alt;
-	key.Time = 123456;
+	cnst ::gpk::u0_t key = 13;
 	if_fail_fe(::gpk::eventEnqueueKeyboardDown(queue, key));
-	::gpk::SInputTextEvent text = {};
-	text.CodePoint = 0x00E9;
-	text.KeySym = 0x00E9;
-	text.DeviceId = 0;
-	text.ScanCode = 18;
+	cnst ::gpk::u2_t text = 0x00E9;
 	if_fail_fe(::gpk::eventEnqueueTextChar(queue, text));
 	cnst ::gpk::n2s1_t mousePosition = {123, -45};
 	if_fail_fe(::gpk::eventEnqueueMousePosition(queue, mousePosition));
@@ -194,13 +184,13 @@ sttc ::gpk::err_t testEventPlatformInput(::gpk::ATestError & errors) {
 
 	::gpk::SEView<::gpk::EVENT_KEYBOARD> keyboardEvent;
 	if_fail_fe(queue[2]->ExtractChild(keyboardEvent));
-	::gpk::SInputKeyEvent restoredKey;
-	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_KEYBOARD_EVENT, queue[2]->Type != ::gpk::SYSTEM_EVENT_Keyboard || keyboardEvent.Type != ::gpk::EVENT_KEYBOARD_Down || !eventTestPODRead(keyboardEvent.Data, restoredKey) || 0 != ::memcmp(&restoredKey, &key, szof(key)));
+	::gpk::u0_t restoredKey;
+	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_KEYBOARD_EVENT, queue[2]->Type != ::gpk::SYSTEM_EVENT_Keyboard || keyboardEvent.Type != ::gpk::EVENT_KEYBOARD_Down || !eventTestPODRead(keyboardEvent.Data, restoredKey) || restoredKey != key);
 
 	::gpk::SEView<::gpk::EVENT_TEXT> textEvent;
 	if_fail_fe(queue[3]->ExtractChild(textEvent));
-	::gpk::SInputTextEvent restoredText;
-	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_TEXT_EVENT, queue[3]->Type != ::gpk::SYSTEM_EVENT_Text || textEvent.Type != ::gpk::EVENT_TEXT_Char || !eventTestPODRead(textEvent.Data, restoredText) || restoredText.CodePoint != text.CodePoint || restoredText.KeySym != text.KeySym || restoredText.DeviceId != text.DeviceId || restoredText.ScanCode != text.ScanCode || restoredText.UTF8Length != 2 || restoredText.UTF8[0] != 0xC3 || restoredText.UTF8[1] != 0xA9);
+	::gpk::u2_t restoredText;
+	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_TEXT_EVENT, queue[3]->Type != ::gpk::SYSTEM_EVENT_Text || textEvent.Type != ::gpk::EVENT_TEXT_Char || !eventTestPODRead(textEvent.Data, restoredText) || restoredText != text);
 
 	::gpk::SEView<::gpk::EVENT_MOUSE> mouseEvent;
 	if_fail_fe(queue[4]->ExtractChild(mouseEvent));
@@ -219,8 +209,7 @@ sttc ::gpk::err_t testEventPlatformInput(::gpk::ATestError & errors) {
 	::gpk::SChangeControlState stateChange;
 	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_GUI_EVENT, queue[7]->Type != ::gpk::SYSTEM_EVENT_GUI || guiEvent.Type != ::gpk::EVENT_GUI_CONTROL_StateChange || !eventTestPODRead(guiEvent.Data, stateChange) || stateChange.Id != 42 || stateChange.Clear != ::gpk::GUI_CONTROL_FLAG_Hidden || stateChange.Set != ::gpk::GUI_CONTROL_FLAG_Disabled);
 
-	::gpk::SInputTextEvent invalidText = {};
-	invalidText.CodePoint = 0xD800;
+	cnst ::gpk::u2_t invalidText = 0xD800;
 	cnst ::gpk::u2_t countBeforeInvalid = queue.size();
 	cnst ::gpk::err_t invalidResult = ::gpk::eventEnqueueTextChar(queue, invalidText);
 	GPK_TEST_CHECK(errors, EVENT_TEST_RESULT_INVALID_TEXT, ::gpk::succeeded(invalidResult) || queue.size() != countBeforeInvalid);

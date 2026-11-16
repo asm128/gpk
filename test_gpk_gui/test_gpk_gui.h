@@ -80,7 +80,7 @@ stct SSampleGUI {
 };
 
 err_t		sampleGUISetup				(SSampleGUI & app, pobj<SInput> & input);
-err_t		sampleGUIUpdate				(SSampleGUI & app, gpk::b8_t systemRequestedExit);
+err_t		sampleGUIUpdate				(SSampleGUI & app, apobj<SEventSystem> & systemEvents, gpk::b8_t systemRequestedExit);
 err_t		sampleGUIDraw				(SSampleGUI & app, g8bgra target);
 
 #endif // TEST_GPK_GUI_H_23627

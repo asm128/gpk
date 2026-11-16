@@ -1,7 +1,5 @@
 #include "gpk_file_pack.h"
-#include "gpk_array_static.h"
 #include "gpk_runtime.h"
-#include "gpk_string_compose.h"
 
 sttc gpk::err_t				pakMain			(::gpk::SRuntimeValues & runtimeValues) {
 	cnst ::gpk::SCommandLineArgs	& args			= runtimeValues.EntryPointArgs;

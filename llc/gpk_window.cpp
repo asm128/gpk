@@ -207,18 +207,18 @@ sttc	u2_t		xcbTextCodePoint		(cnst ::gpk::SWindowPlatformDetail & detail, xkb_ke
 		return composed;
 	}	}
 }
-
-sttc	u2_t		xcbInputModifiers		(cnst ::gpk::SWindowPlatformDetail & detail, cnst ::gpk::SInputKeyboard & keyboard) {
-	u2_t				modifiers					= {};
-	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_SHIFT, XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Shift;
-	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_CAPS , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_CapsLock;
-	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_CTRL , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Control;
-	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_ALT  , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Alt;
-	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_NUM  , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_NumLock;
-	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_LOGO , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Super;
-	if(keyboard.KeyState[::gpk::SYSTEM_KEY_RMenu]) modifiers |= ::gpk::INPUT_MODIFIER_AltGr;
-	return modifiers;
-}
+//
+//sttc	u2_t		xcbInputModifiers		(cnst ::gpk::SWindowPlatformDetail & detail, cnst ::gpk::SInputKeyboard & keyboard) {
+//	u2_t				modifiers					= {};
+//	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_SHIFT, XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Shift;
+//	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_CAPS , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_CapsLock;
+//	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_CTRL , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Control;
+//	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_ALT  , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Alt;
+//	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_NUM  , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_NumLock;
+//	if(0 < xkb_state_mod_name_is_active(detail.XKBState, XKB_MOD_NAME_LOGO , XKB_STATE_MODS_EFFECTIVE)) modifiers |= ::gpk::INPUT_MODIFIER_Super;
+//	if(keyboard.KeyState[::gpk::SYSTEM_KEY_RMenu]) modifiers |= ::gpk::INPUT_MODIFIER_AltGr;
+//	return modifiers;
+//}
 #endif
 
 gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
@@ -251,14 +251,13 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			xkb_state_update_key(detail.XKBState, key.detail, pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 			if_fail_e(inputKeyboardStateSet(input, keyCode, pressed, detail.XKBDeviceId, key.time * .001f));
 
-			cnst SInputKeyEvent keyEvent = {keyCode, key.detail, detail.XKBDeviceId, keySym, ::xcbInputModifiers(detail, input.KeyboardCurrent), key.time};
 			b8_c			systemKey					= SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[SYSTEM_KEY_Menu];
 			if_fail_e(pressed
-				? systemKey ? eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyEvent) : eventEnqueueKeyboardDown(displayInstance.EventQueue, keyEvent)
-				: systemKey ? eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyEvent) : eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyEvent)
+				? systemKey ? eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardDown(displayInstance.EventQueue, keyCode)
+				: systemKey ? eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyCode)
 				);
 			if(codePoint)
-				if_fail_e(eventEnqueueTextChar(displayInstance.EventQueue, SInputTextEvent{codePoint, keySym, detail.XKBDeviceId, key.detail}));
+				if_fail_e(eventEnqueueTextChar(displayInstance.EventQueue, codePoint));
 			//
 			displayInstance.Repaint = true;
 			break;

@@ -7,6 +7,7 @@
 
 nmsp gpk
 {
+	tydf SGUIKeyboardEvent SVirtualKeyboardEvent ;
 	GDEFINE_ENUM_TYPE (VK_EVENT, u0_t);
 	GDEFINE_ENUM_VALUE(VK_EVENT, Press		, GK_EVENT_Press   );
 	GDEFINE_ENUM_VALUE(VK_EVENT, Release	, GK_EVENT_Release );
@@ -27,11 +28,6 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Back		, GK_SCANCODE_Back      );
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Delete		, GK_SCANCODE_Delete    );
 
-	struct SVirtualKeyboardEvent {
-		VK_EVENT		Type;
-		VK_SCANCODE		ScanCode;
-	};
-
 	struct SVirtualKeyboard {
 		cid_t						IdRoot;
 		acid						IdKeys;
@@ -39,7 +35,6 @@ nmsp gpk
 
 		apod<SVirtualKeyboardEvent>	Events;
 	};
-
 	err_t 		virtualKeyboardHandleEvent	(cnst SVirtualKeyboard & vk, cid_t iControl, apod<SVirtualKeyboardEvent> & events);
 
 	//stin	gpk::err_t virtualKeyboardHandleEvent	(SVirtualKeyboard & vk, cid_t iControl) { return virtualKeyboardHandleEvent(vk, iControl, vk.Events); }

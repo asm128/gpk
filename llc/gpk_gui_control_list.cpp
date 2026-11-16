@@ -28,87 +28,70 @@ gpk::err_t 		gpk::controlListInitialize	(SGUI & gui, SControlList& menu)								
 	return 0;
 }
 
-gpk::err_t 		gpk::controlListArrange	(SGUI & gui, SControlList & menu)													{
-	cnst SRasterFont	& selectedFont			= *gui.Fonts[in_range(gui.Controls.Text[menu.IdControl].FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
-	cid_t				iPreviousVisible		= -1;
+gpk::err_t		gpk::controlListArrange	(SGUI & gui, SControlList & menu)													{
+	const SRasterFont	& selectedFont			= *gui.Fonts[in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
 	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		cnst cid_t		idControl				= menu.IdControls[iItem];
 		SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[idControl];
 		SControlPlacement	& control				= gui.Controls.Placement	[idControl];
 		SControlText			& controlText			= gui.Controls.Text			[idControl];
-		controlConstraints.DockToControl					= {-1, -1, -1, -1};
-		controlConstraints.AttachSizeToControl			= {-1, -1};
-		if(gui.Controls.States[idControl].IsHidden())
-			continue;
-		cnst n2u0_t			fontCharSize			= selectedFont.CharSize;
+		const uint32_t				iPrevItem				= iItem - 1;
+		const n2u0_t			fontCharSize			= selectedFont.CharSize;
 		control.Area.Size.y		= fontCharSize.y + controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
-		case DIRECTION_LEFT	:
 		case DIRECTION_RIGHT	:
-			control.Area.Size.x		= s1_t(fontCharSize.x * controlText.Text.size() + controlNCSpacing(control).x);
-			control.Area.Offset.x	= 0;
-			if(-1 != iPreviousVisible)
-				controlConstraints.DockToControl.Right	= iPreviousVisible;
+			control.Area.Size.x		= int16_t(fontCharSize.x * controlText.Text.size() + controlNCSpacing(control).x);
+			if(menu.IdControls.size() > iPrevItem)
+				control.Area.Offset.x	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().x;
 			break;
-		case DIRECTION_UP	:
-		case DIRECTION_DOWN	:
+		case DIRECTION_DOWN:
 			controlConstraints.AttachSizeToControl.x	= menu.IdControl;
-			control.Area.Offset.y	= 0;
+			if(menu.IdControls.size() > iPrevItem)
+				control.Area.Offset.y	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().y;
 			break;
 		}
-		if(-1 != iPreviousVisible) {
-			if(DIRECTION_LEFT == menu.Orientation)
-				controlConstraints.DockToControl.Left	= iPreviousVisible;
-			else if(DIRECTION_UP == menu.Orientation)
-				controlConstraints.DockToControl.Top		= iPreviousVisible;
-			else if(DIRECTION_DOWN == menu.Orientation)
-				controlConstraints.DockToControl.Bottom	= iPreviousVisible;
-			else
-				controlConstraints.DockToControl.Right	= iPreviousVisible;
-		}
-		iPreviousVisible			= idControl;
 	}
 
-	SControlPlacement	& controlMenu			= gui.Controls.Placement[menu.IdControl];
+	SControlPlacement			& controlMenu			= gui.Controls.Placement[menu.IdControl];
 	controlMenu.Area.Size	= {};
-	cnst n2u0_t			fontCharSize			= selectedFont.CharSize;
-	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		u2_c				idControl			= menu.IdControls		[iItem];
-		if(gui.Controls.States[idControl].IsHidden())
-			continue;
-		SControlPlacement	& control			= gui.Controls.Placement[idControl];
-		SControlText			& controlText		= gui.Controls.Text		[idControl];
+	n2u0_c						fontCharSize			= selectedFont.CharSize;
+	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
+		u2_c						idControl			= menu.IdControls		[iItem];
+		SControlPlacement			& control			= gui.Controls.Placement[idControl];
+		SControlText				& controlText		= gui.Controls.Text		[idControl];
 		switch(menu.Orientation) {
 		default:
-		case DIRECTION_LEFT	:
 		case DIRECTION_RIGHT	:
 			controlMenu.Area.Size.x	+= gui.Controls.Placement[idControl].Area.Size.x;
 			controlMenu.Area.Size.y	= max(controlMenu.Area.Size.y, gui.Controls.Placement[idControl].Area.Size.y);
 			break;
-		case DIRECTION_UP		:
 		case DIRECTION_DOWN		:
 			controlMenu.Area.Size.y	+= gui.Controls.Placement[idControl].Area.Size.y;
 			controlMenu.Area.Size.x	= max(controlMenu.Area.Size.x, (s1_t)(controlText.Text.size() * fontCharSize.x + controlNCSpacing(control).x));
 			break;
 		}
 	}
-	if(DIRECTION_DOWN == menu.Orientation || DIRECTION_UP == menu.Orientation)
+	if(DIRECTION_DOWN == menu.Orientation)
 		controlMenu.Area.Size.x	+= 16;
 
 	return 0;
 }
 
-gpk::err_t 		gpk::controlListPush	(SGUI & gui, SControlList & menu, cnst vcst_t & text)				{
+gpk::err_t			gpk::controlListPush	(SGUI & gui, SControlList & menu, vcst_t text, s2_t eventCode)				{
 	if(menu.IdControl == -1)
 		if_fail_fe(gpk::controlListInitialize(gui, menu));
 
-	SControlPlacement	control					= {};
-	control.Margin								= {4, 2, 4, 2};
-	cid_t				idControl					= CID_INVALID;
-	if_fail_fe(guiCreateControlList(gui, menu.Orientation, view<vcst_c>{&text, 1}, menu.IdControl, control, ALIGN_CENTER_LEFT, vcid{&idControl, 1}));
-	gui.Controls.Constraints[idControl].AttachSizeToText	= {};
-	if_fail_fe(menu.IdControls.push_back(idControl));
+	cid_t						idControl;
+	if_fail_fe(idControl = controlCreate(gui));
+	controlSetParent(gui, idControl, menu.IdControl);
+	SControlPlacement			& control				= gui.Controls.Placement[idControl];
+	SControlText				& controlText			= gui.Controls.Text		[idControl];
+	control		.Margin		= {4, 2, 4, 2};
+	controlText	.Text		= {text.begin(), text.size()};
+	controlText	.Align		= ALIGN_CENTER_LEFT;
+	menu.IdControls	.push_back(idControl);
+	menu.Events		.push_back(eventCode);
 	gpk::controlListArrange(gui, menu);
 	return 0;
 }
@@ -135,9 +118,9 @@ gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid & palette, cnst
 	if_fail_fe(palette.IdControls.resize(colors.size()));
 	palette.Colors			= colors;
 
-	cnst SControlPlacement	& controlPalette			= gui.Controls.Placement[palette.IdControl];
-	cnst n2f3_t			targetSize					= controlPalette.Area.Size.f3() - controlNCSpacing(controlPalette).f3();
-	n2f3_t				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
+	cnst SControlPlacement	& controlPalette	= gui.Controls.Placement[palette.IdControl];
+	const n2f3_t				targetSize		= gui.Controls.Area[palette.IdControl].Client.Local.Size.f3(); //{256.0, 256.0};
+	n2f3_t						controlSize		= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(u2_t y = 0; y < gridMetrics.y; ++y)
 	for(u2_t x = 0; x < gridMetrics.x; ++x) {

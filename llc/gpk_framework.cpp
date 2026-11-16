@@ -127,27 +127,6 @@ sttc	u0_t		win32SystemKey			(WPARAM wParam, LPARAM lParam) {
 	case VK_MENU		: return lParam & (1 << 24) ? VK_RMENU : VK_LMENU;
 	}
 }
-
-sttc	u2_t		win32InputModifiers		() {
-	u2_t				modifiers				= {};
-	if(::GetKeyState(VK_SHIFT  ) & 0x8000) modifiers |= INPUT_MODIFIER_Shift;
-	if(::GetKeyState(VK_CAPITAL) & 0x0001) modifiers |= INPUT_MODIFIER_CapsLock;
-	if(::GetKeyState(VK_CONTROL) & 0x8000) modifiers |= INPUT_MODIFIER_Control;
-	if(::GetKeyState(VK_MENU   ) & 0x8000) modifiers |= INPUT_MODIFIER_Alt;
-	if(::GetKeyState(VK_NUMLOCK) & 0x0001) modifiers |= INPUT_MODIFIER_NumLock;
-	if(::GetKeyState(VK_SCROLL ) & 0x0001) modifiers |= INPUT_MODIFIER_ScrollLock;
-	if((::GetKeyState(VK_LWIN) | ::GetKeyState(VK_RWIN)) & 0x8000) modifiers |= INPUT_MODIFIER_Super;
-	if(::GetKeyState(VK_RMENU) & 0x8000) modifiers |= INPUT_MODIFIER_AltGr;
-	return modifiers;
-}
-
-sttc	u2_t		win32KeySym				(WPARAM wParam, LPARAM lParam) {
-	if(wParam)
-		return (u2_t)wParam;
-	u2_c		scanCode				= ::win32ScanCode(lParam) | ((lParam & (1 << 24)) ? 0xE000 : 0);
-	return (u2_t)::MapVirtualKeyExW(scanCode, MAPVK_VSC_TO_VK_EX, ::GetKeyboardLayout(0));
-}
-
 sttc	u2_t		win32TextCodePoint		(SWindowPlatformDetail & detail, u1_t codeUnit) {
 	if(codeUnit >= 0xD800 && codeUnit <= 0xDBFF) {
 		detail.PendingHighSurrogate = codeUnit;
@@ -163,25 +142,22 @@ sttc	u2_t		win32TextCodePoint		(SWindowPlatformDetail & detail, u1_t codeUnit) {
 	detail.PendingHighSurrogate = 0;
 	return codeUnit;
 }
-sttc	gpk::err_t	win32EnqueueText		(SWindow & window, u2_t codePoint, LPARAM lParam) {
+sttc	gpk::err_t	win32EnqueueText		(SWindow & window, u2_t codePoint) {
 	if(0 == codePoint)
 		return 0;
-	cnst u0_t		scanCode				= ::win32ScanCode(lParam);
-	u2_c		keySym					= ::win32KeySym(0, lParam);
-	return eventEnqueueTextChar(window.EventQueue, SInputTextEvent{codePoint, keySym, 0, scanCode});
+	return eventEnqueueTextChar(window.EventQueue, codePoint);
 }
 sttc	gpk::err_t	win32EnqueueKey			(SWindow & window, UINT message, WPARAM wParam, LPARAM lParam) {
 	b8_c		pressed					= WM_KEYDOWN == message || WM_SYSKEYDOWN == message;
 	cnst u0_t		keyCode					= ::win32SystemKey(wParam, lParam);
 	u2_c		time						= (u2_t)::GetMessageTime();
 	if_fail_fe(inputKeyboardStateSet(*window.Input, keyCode, pressed, 0, time * .001f));
-	cnst SInputKeyEvent keyEvent				= {keyCode, ::win32ScanCode(lParam), 0, ::win32KeySym(wParam, lParam), ::win32InputModifiers(), time};
 	switch(message) {
 	default				: return -1;
-	case WM_KEYDOWN		: return eventEnqueueKeyboardDown	(window.EventQueue, keyEvent);
-	case WM_KEYUP		: return eventEnqueueKeyboardUp		(window.EventQueue, keyEvent);
-	case WM_SYSKEYDOWN	: return eventEnqueueKeyboardSysDown(window.EventQueue, keyEvent);
-	case WM_SYSKEYUP	: return eventEnqueueKeyboardSysUp	(window.EventQueue, keyEvent);
+	case WM_KEYDOWN		: return eventEnqueueKeyboardDown	(window.EventQueue, keyCode);
+	case WM_KEYUP		: return eventEnqueueKeyboardUp		(window.EventQueue, keyCode);
+	case WM_SYSKEYDOWN	: return eventEnqueueKeyboardSysDown(window.EventQueue, keyCode);
+	case WM_SYSKEYUP	: return eventEnqueueKeyboardSysUp	(window.EventQueue, keyCode);
 	}
 }
 
@@ -244,14 +220,14 @@ sttc	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	case WM_CHAR			:
 	case WM_SYSCHAR		: {
 		verbose_printf("WM_CHAR          '%u'.", wParam);
-		if_fail_e(::win32EnqueueText(mainDisplay, ::win32TextCodePoint(displayDetail, (u1_t)wParam), lParam));
+		if_fail_e(::win32EnqueueText(mainDisplay, ::win32TextCodePoint(displayDetail, (u1_t)wParam)));
 		mainDisplay.Repaint = true;
 		break;
 	}
 	case WM_UNICHAR		: {
 		if(UNICODE_NOCHAR == wParam)
 			return TRUE;
-		if_fail_e(::win32EnqueueText(mainDisplay, (u2_t)wParam, lParam));
+		if_fail_e(::win32EnqueueText(mainDisplay, (u2_t)wParam));
 		mainDisplay.Repaint = true;
 		return 0;
 	}

@@ -10,7 +10,6 @@ nmsp gpk
 	GDEFINE_ENUM_VALUE(EVENT_TEXT, Char		, 0);
 	GDEFINE_ENUM_VALUE(EVENT_TEXT, Position	, 1);
 	GDEFINE_ENUM_VALUE(EVENT_TEXT, Cursor	, 2);
-
 	stin	err_t	eventEnqueueTextChar		(apobj<SEventSystem> & queue, u2_t codePoint) {
 		if(codePoint > 0x10FFFF || (codePoint >= 0xD800 && codePoint <= 0xDFFF))
 			return -1;
