@@ -34,6 +34,7 @@ stct SFileEditor {
 stct SFileViewer {
 	pobj<SDialog>		Dialog				= {};
 	SVirtualKeyboard	VirtualKeyboard		= {};
+	SControlList		EditorTabs			= {};
 	apobj<SFileEditor>	Editors				= {};
 	apobj<SPathList>	Directories			= {};
 	string				RootPath			= {};

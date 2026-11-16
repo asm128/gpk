@@ -164,6 +164,14 @@ sttc gpk::err_t fileViewerMenuCreate(SFileViewer & viewer) {
 	gui.Controls.Placement[menuViewports.IdControl].Align = ALIGN_TOP_LEFT;
 	viewer.IdMenuFiles = menuViewports.IdControls[0];
 	if_fail_fe(viewer.Dialog->Buttons.push_back(viewer.IdMenuFiles));
+	if_fail_fe(controlListInitialize(gui, viewer.EditorTabs));
+	viewer.EditorTabs.Orientation = DIRECTION_RIGHT;
+	gui.Controls.Placement[viewer.EditorTabs.IdControl].Area.Offset.x = gui.Controls.Placement[menuViewports.IdControl].Area.Size.x;
+	gui.Controls.Placement[viewer.EditorTabs.IdControl].Align = ALIGN_TOP_LEFT;
+	gui.Controls.States[viewer.EditorTabs.IdControl].Mask &= ~GUI_CONTROL_FLAG_Hovered;
+	gui.Controls.States[viewer.EditorTabs.IdControl].Mask &= ~GUI_CONTROL_FLAG_Pressed;
+	gui.Controls.States[viewer.EditorTabs.IdControl].Mask &= ~GUI_CONTROL_FLAG_Dragging;
+	gui.Controls.States[viewer.EditorTabs.IdControl].Mask &= ~GUI_CONTROL_FLAG_Action;
 
 	SControlList menuActions = {};
 	sttc vcst_c actionText[] = {"EXIT"};
@@ -615,6 +623,12 @@ sttc gpk::err_t fileViewerEditorOpen(SFileViewer & viewer, vcst_t path, FILE_VIE
 	if_fail_fe(::fileViewerViewportLayoutConfigure(viewer, editor->IdViewport, layout));
 	if_fail_fe(viewer.Editors.push_back(editor));
 	viewer.IdEditorCurrent = (cid_t)viewer.Editors.size() - 1;
+	vcst_t fileName = {};
+	if_fail_fe(pathFilename(path, fileName));
+	if_fail_fe(controlListPush(*viewer.Dialog->GUI, viewer.EditorTabs, label(fileName)));
+	cnst cid_t idTab = viewer.EditorTabs.IdControls[viewer.EditorTabs.IdControls.size() - 1];
+	::fileViewerListRowConfigure(viewer, idTab, true);
+	viewer.Dialog->GUI->Controls.SetSelected(idTab, true);
 	rtrn 0;
 }
 
@@ -624,6 +638,24 @@ sttc gpk::err_t fileViewerMenuUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT la
 		if_fail_fe(::fileViewerDirectoryCreate(viewer, viewer.RootPath, layout));
 	if(gui.Controls.IsAction(viewer.IdMenuExit))
 		rtrn APPLICATION_STATE_EXIT;
+	for(u2_t iEditor = 0; iEditor < viewer.Editors.size() && iEditor < viewer.EditorTabs.IdControls.size(); ++iEditor) {
+		SFileEditor & editor = *viewer.Editors[iEditor];
+		cnst cid_t idTab = viewer.EditorTabs.IdControls[iEditor];
+		b8_t hidden = gui.Controls.IsHidden(editor.IdViewport);
+		if(gui.Controls.IsAction(idTab)) {
+			gui.Controls.SetHidden(editor.IdViewport, false == hidden);
+			hidden = false == hidden;
+			if(false == hidden) {
+				viewer.IdEditorCurrent = (cid_t)iEditor;
+				if_fail_fe(controlToFront(gui, editor.IdViewport));
+			}
+			else if(viewer.IdEditorCurrent == (cid_t)iEditor) {
+				viewer.IdEditorCurrent = -1;
+				gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
+			}
+		}
+		gui.Controls.SetSelected(idTab, false == hidden);
+	}
 	rtrn 0;
 }
 
