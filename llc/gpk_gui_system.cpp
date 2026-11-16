@@ -29,7 +29,7 @@ gpk::cid_t gpk::guiCreateKeyboard(SGUI & gui, view<acid> system, u0_t rowWidth, 
 		if_fail_fe(controlSetParent(gui, idKey, idRoot));
 	}
 	acid idActions = {};
-	cnst view<vcst_c> actionLabels = get_value_labels<GK_SCANCODE>();
+	cnst view<vcst_c> actionLabels = get_value_labels<VK_SCANCODE>();
 	if_fail_fe(idActions.resize(actionLabels.size()));
 	if_fail_fe(guiCreateControlList(gui, actionLabels, idRoot, {SIZE_BUTTON, 20}, {}, ALIGN_TOP_RIGHT, ALIGN_CENTER, idActions));
 	if_fail_fe(system[GUI_TYPE_Keyboard].push_back(idRoot));

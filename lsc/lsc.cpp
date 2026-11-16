@@ -25,10 +25,3 @@ sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues) {
 		if_fail_fe(::gpk::pak(pathSource, pathTarget));	return 0;
 }
 GPK_OS_ENTRY_POINT(::test_llc_entry_point);
-
-sttc gpk::err_t				pakMain			(::gpk::SRuntimeValues & runtimeValues) {
-
-	return 0;
-}
-
-GPK_OS_ENTRY_POINT(::pakMain);

@@ -102,7 +102,6 @@ gpk::err_t 		gpk::paletteGridColorsSet	(SGUI & gui, SPaletteGrid & palette, cnst
 	if_fail_fe(palette.IdControls.resize(colors.size()));
 	palette.Colors			= colors;
 
-	cnst SControlPlacement	& controlPalette	= gui.Controls.Placement[palette.IdControl];
 	const n2f3_t				targetSize		= gui.Controls.Area[palette.IdControl].Client.Local.Size.f3(); //{256.0, 256.0};
 	n2f3_t						controlSize		= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
