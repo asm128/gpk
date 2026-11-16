@@ -1,22 +1,6 @@
 #include "gpk_gui_control_list.h"
 #include "gpk_label.h"
 
-gpk::cid_t			gpk::createScreenLayout(SGUI & gui, cid_t parent) {
-	cid_t				controlId;
-	if_fail_fe(controlId = controlCreate(gui));
-
-	gui.Controls.Placement	[controlId].Border				= 
-	gui.Controls.Placement	[controlId].Margin				= {};
-	gui.Controls.Constraints[controlId].AttachSizeToControl	= {controlId, controlId};
-	gui.Controls.Draw		[controlId].NoClient			= true;
-	gui.Controls.States		[controlId].Mask				&= ~GUI_CONTROL_FLAG_Hovered;
-
-	if(parent != CID_INVALID)
-		if_fail_fe(gpk::controlSetParent(gui, controlId, parent));
-
-	return controlId;
-}
-
 gpk::err_t 		gpk::controlListInitialize	(SGUI & gui, SControlList& menu)													{
 	menu					= {};
 	if_fail_fe(menu.IdControl = controlCreate(gui));

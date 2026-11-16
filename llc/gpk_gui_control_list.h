@@ -8,8 +8,6 @@
 nmsp gpk
 {
 
-	cid_t			createScreenLayout			(SGUI & gui, cid_t parent = -1);
-
 	struct SControlList {
 		cid_t			IdControl				= (cid_t)-1;
 		DIRECTION		Orientation				= DIRECTION_RIGHT;

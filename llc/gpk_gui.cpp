@@ -547,6 +547,22 @@ gpk::cid_t			gpk::controlCreate		(SControlTable & controlTable, vs1_t defaultCol
 	return (cid_t)iControl;
 }
 
+gpk::cid_t			gpk::createScreenLayout(SGUI & gui, cid_t parent) {
+	cid_t				controlId;
+	if_fail_fe(controlId = controlCreate(gui));
+
+	gui.Controls.Placement	[controlId].Border				= 
+	gui.Controls.Placement	[controlId].Margin				= {};
+	gui.Controls.Constraints[controlId].AttachSizeToControl	= {controlId, controlId};
+	gui.Controls.Draw		[controlId].NoClient			= true;
+	gui.Controls.States		[controlId].Mask				&= ~GUI_CONTROL_FLAG_Hovered;
+
+	if(parent != CID_INVALID)
+		if_fail_fe(gpk::controlSetParent(gui, controlId, parent));
+
+	return controlId;
+}
+
 gpk::cid_t			gpk::guiCreateControlList	(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, vcid out_ids) {
 	cid_t					result						= -1;
 	for(u1_t iButton = 0; iButton < buttonText.size(); ++iButton) {
