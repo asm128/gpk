@@ -224,7 +224,7 @@ nmsp gpk
 	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output);
 
 	inln err_t cttiValueSave(string & output, b8_c input) {
-		rtrn output.append(input ? vcst_t{"true"} : vcst_t{"false"});
+		rtrn output.append(str(input));
 	}
 	tplt<tpnm T> requires ctti_integer<T>
 	err_t cttiValueSave(string & output, cnst T & input) {

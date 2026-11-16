@@ -834,14 +834,14 @@
     <ClInclude Include="gpk_control_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_gui_theme.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_isa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_keyboard.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_theme.h">
+      <Filter>gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1114,6 +1114,9 @@
     </ClCompile>
     <ClCompile Include="gpk_event_device.h">
       <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

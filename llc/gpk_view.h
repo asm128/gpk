@@ -15,6 +15,8 @@
 #ifndef GPK_ARRAY_VIEW_H_23627
 #define GPK_ARRAY_VIEW_H_23627
 
+#define GPK_VIEW_ARGS(view) (int)view.size(), view.begin() // Parenthesizing the argument does not merely tolerate expressions—it legitimizes and conceals them. Without those parentheses, the macro enforces its intended use.
+
 nmsp gpk
 {
 #pragma pack(push, 1)
@@ -244,125 +246,8 @@ nmsp gpk
 	tydf	view<vs3_c>	vcvs3_t;	tdcs	vcvs3_t	vcvs3_c;
 	tydf	view<vf2_c>	vcvf2_t;	tdcs	vcvf2_t	vcvf2_c;
 	tydf	view<vf3_c>	vcvf3_t;	tdcs	vcvf3_t	vcvf3_c;
-	
-	struct view_const_string : vcsc_c {
-		inxp				view_const_string		()										nxpt	= dflt;
-		inxp				view_const_string		(cnst view<sc_c> & other)				nxpt	: view(other)			{}
-		inxp				view_const_string		(sc_c * storage, u2_t length)					: view()	{
-			Data = storage;
-			Count = length;
-			if_true_tef(0 == storage && 0 != length, "%" GPK_FMT_U2 " -> 0.", length);
-			if((u2_t)-1 == length)
-				for(Count = 0; storage[Count]; ++Count) {}
-		}
-		tplN2u		inxp	view_const_string		(sc_c (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{
-			for(Count = 0; Count < ::gpk::min(N, length); ++Count)
-				if(0 == storage[Count])
-					break;
-		}
-
-#ifdef GPK_ARDUINO
-#   ifdef GPK_ESP8266
-        ndin		oper	String					()  cnst   { return String(Data); }
-#   else
-        ndin		oper	String					()  cnst   { return String(Data, Count); }
-#   endif
-#endif
-		ndix		b8_t	oper==					(view_const_string other)	csnx	{ rtrn view<sc_c>::oper==(other); }
-		ndix		b8_t	oper!=					(view_const_string other)	csnx	{ rtrn !oper==(other); }
-		tplN2undix	b8_t	oper==					(sc_c (&other)[N])			csnx	{ rtrn view<sc_c>::oper==(view_const_string(other)); }
-		tplN2undix	b8_t	oper!=					(sc_c (&other)[N])			csnx	{ rtrn !oper==(other); }
-
-		ndix		sc_c*	begin					()							csnx	{ rtrn (Data && Count) ? Data : ""; }
-		ndix		sc_c*	end						()							csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
-		ndix		oper	sc_c* 					()							csnx	{ rtrn begin(); }
-	};
-	//tplN2u	b8_t	view_string	::oper==	(sc_c (&other)[N])	cnst	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
-	tydf	view_const_string	vcst_t;
-	tdcs	vcst_t				vcst_c;
-
-	struct view_string : view<sc_t> {
-		inxp				view_string			()										nxpt	= dflt;
-		inln				view_string			(cnst view<sc_t> & other)				nxpt	: view(other)			{}
-							view_string			(sc_t * storage, u2_t length)					: view(storage, length)	{ Count = (length == (u2_t)-1) ? (u2_t)strlen(storage) : length; }
-		tplN2u				view_string			(sc_t (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{
-			for(Count = 0; Count < ::gpk::min(N, length); ++Count)
-				if(0 == storage[Count])
-					break;
-		}
-
-		ndin		oper	vcst_t				()					csnx	{ rtrn {Data, Count}; };
-
-		ndin		b8_t	oper==				(vcst_t other)		csnx	{ rtrn view<sc_t>::oper==(other); }
-		ndin		b8_t	oper!=				(vcst_t other)		csnx	{ rtrn !oper==(other); }
-		tplN2undix	b8_t	oper==				(sc_c (&other)[N])	csnx	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
-		tplN2undix	b8_t	oper!=				(sc_c (&other)[N])	csnx	{ rtrn !oper==(other); }
-
-		ndix		sc_c*	begin				()					csnx	{ rtrn (Data && Count) ? Data : ""; }
-		ndix		sc_c*	end					()					csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
-		ndix		oper	sc_c* 				()					csnx	{ rtrn begin(); }
-		ndin		sc_t*	begin				()					nxpt	{ rtrn Data; }
-		ndin		sc_t*	end					()					nxpt	{ rtrn begin() + Count; }
-		ndin		oper	sc_t* 				()					nxpt	{ rtrn begin(); }
-
-	};
-	tydf	view_string		vstr_t;
-	tdcs	vstr_t			vstr_c;
-#define GPK_VIEW_ARGS(view) (int)view.size(), view.begin() // Parenthesizing the argument does not merely tolerate expressions—it legitimizes and conceals them. Without those parentheses, the macro enforces its intended use.
-
-	tplt<tpnm _tVal>		usng kvvcst_t	= kv<vcst_t, _tVal>;
-	stxp		vcst_t	VCC_NULL		= "null";
-	stxp		vcst_t	VCC_TRUE		= "true";
-	stxp		vcst_t	VCC_FALSE		= "false";
-
-	nsix		vcst_t	b82st			(b8_t b)					nxpt	{ rtrn b ? VCC_TRUE : VCC_FALSE; }
-	nsix		u0_t	b82u0			(b8_t b)					nxpt	{ rtrn b ? 1 : 0; }
-	nsix		u0_t	b82s0			(b8_t b)					nxpt	{ rtrn b ? 1 : 0; }
-	ndsi		sc_c*	b82sc			(b8_t b)					nxpt	{ rtrn b ? VCC_TRUE : VCC_FALSE; }
-	stin		sc_c*	b82sc			(b8_t b, vcst_t & output)	nxpt	{ rtrn output = b ? VCC_TRUE : VCC_FALSE; }
-	stin		b8_t	cst2b8			(vcst_t b)					nxpt	{ rtrn b.size() && b != VCC_FALSE; }
-	stin		vcst_t	str				(vcst_t arg)				nxpt	{ rtrn arg; }
-	tplN2usinx	vcst_t	str				(sc_c (&arg)[N])			nxpt	{ rtrn arg; }
-	sinx		vcst_t	str				(b8_c arg)				nxpt	{ rtrn arg ? VCC_TRUE : VCC_FALSE; }
 	//
-	tplTnsix	vcst_t	get_type_namev	()							nxpt	{ rtrn "unknown"; }
-	tplTnsix	sc_c*	get_type_namep	()							nxpt	{ rtrn get_type_namev<T>().begin(); }
-
-#define GDEFINE_TYPE_NAME_STR(typeIdentifier)																										\
-			nsix	::gpk::vcst_t	get_type_namev					(typeIdentifier &)	nxpt	{ rtrn #typeIdentifier; }					\
-	tplt<>	ndix	::gpk::vcst_t	get_type_namev<typeIdentifier>	()					nxpt	{ rtrn #typeIdentifier; }					\
-			nsix	::gpk::sc_c*	get_type_namep					(typeIdentifier &)	nxpt	{ rtrn get_type_namev<typeIdentifier>().begin(); }	\
-	tplt<>	ndix	::gpk::sc_c*	get_type_namep<typeIdentifier>	()					nxpt	{ rtrn get_type_namev<typeIdentifier>().begin(); }
-
-	GDEFINE_TYPE_NAME_STR(b8_t);
-	GDEFINE_TYPE_NAME_STR(sc_t);
-	GDEFINE_TYPE_NAME_STR(u0_t);
-	GDEFINE_TYPE_NAME_STR(u1_t);
-	GDEFINE_TYPE_NAME_STR(u2_t);
-	GDEFINE_TYPE_NAME_STR(u3_t);
-	GDEFINE_TYPE_NAME_STR(s1_t);
-	GDEFINE_TYPE_NAME_STR(s2_t);
-	GDEFINE_TYPE_NAME_STR(s3_t);
-	GDEFINE_TYPE_NAME_STR(f2_t);
-	GDEFINE_TYPE_NAME_STR(f3_t);
-	GDEFINE_TYPE_NAME_STR(b8_c);
-	GDEFINE_TYPE_NAME_STR(sc_c);
-	GDEFINE_TYPE_NAME_STR(u0_c);
-	GDEFINE_TYPE_NAME_STR(u1_c);
-	GDEFINE_TYPE_NAME_STR(u2_c);
-	GDEFINE_TYPE_NAME_STR(u3_c);
-	GDEFINE_TYPE_NAME_STR(s1_c);
-	GDEFINE_TYPE_NAME_STR(s2_c);
-	GDEFINE_TYPE_NAME_STR(s3_c);
-	GDEFINE_TYPE_NAME_STR(f2_c);
-	GDEFINE_TYPE_NAME_STR(f3_c);
-	//
-	tydf	view<vstr_t>	vvstr_t;
-	tydf	view<vcst_t>	vvcst_t;
-	tydf	view<vstr_c>	vcvstr_t;
-	tydf	view<vcst_c>	vcvcst_t;
-
-	stxp	vcst_t		TRIM_CHARACTERS		= " \t\b\n\r";
+	stxp	vcsc_t		TRIM_CHARACTERS		= " \t\b\n\r";
 
 	err_t			rtrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
 	err_t			ltrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
@@ -371,9 +256,9 @@ nmsp gpk
 	stin	err_t	ltrim				(vcsc_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
 	stin	err_t	trim				(vcsc_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
 
-	stin	err_t	rtrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = rtrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
-	stin	err_t	ltrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = ltrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
-	stin	err_t	trim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcst_t result = {}; cnst err_t count = trim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	rtrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcsc_t result = {}; cnst err_t count = rtrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	ltrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcsc_t result = {}; cnst err_t count = ltrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	trim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcsc_t result = {}; cnst err_t count = trim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
 	stin	err_t	rtrim				(vsc_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
 	stin	err_t	ltrim				(vsc_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
 	stin	err_t	trim				(vsc_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
@@ -388,30 +273,17 @@ nmsp gpk
 		rtrn 0;
 	}
 
-	tplT	err_t	find					(cnst T & valueToFind, view<cnst T> target, u2_t offset = 0)		{ rtrn target.find(valueToFind, offset); }
+	tplTnsix	err_t	find					(cnst T & valueToFind, view<cnst T> target, u2_t offset = 0)		{ rtrn target.find(valueToFind, offset); }
 
-	tplT	err_t	rfind					(cnst T & valueToFind, view<cnst T> target, u2_t offset = 0)		{ rtrn target.rfind(valueToFind, offset); }
+	tplTnsix	err_t	rfind					(cnst T & valueToFind, view<cnst T> target, u2_t offset = 0)		{ rtrn target.rfind(valueToFind, offset); }
 	tplt<tpnm _tKey, tpnm _tVal>
-	err_t			find					(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals) {
-		for(u2_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal)
-			if(keyToFind == keyvals[iKeyVal].Key)
-				rtrn iKeyVal;
-		rtrn -1;
+	nsix		err_t	find					(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals) {
+		rtrn keyvals.find([&](cnst kv<_tKey, _tVal> & keyVal) { rtrn keyToFind == keyVal.Key; });
 	}
-	tplt<tpnm _tKey, tpnm _tVal>
-	err_t			find					(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals, gpk_rmcnst(_tVal) & out_val) {
-		cnst err_t		index						= find(keyToFind, keyvals);
-		out_val		= 0 > index ? gpk_rmcnst(_tVal){} : keyvals[index].Val;
-		rtrn index;
-	}
-	stin	err_t	find_string				(vcst_t toFind, vcst_t target, u2_t offset = 0) { rtrn target.find(toFind, offset); }
-	stin	err_t	rfind_string			(vcst_t toFind, vcst_t target, u2_t offset = 0) { rtrn target.rfind(toFind, offset); }
-
-	tplT	err_t	split					(tpnm view<T>::TCnst & valueToFind, view<T> & input) {
+	tplT		err_t	split					(tpnm view<T>::TCnst & valueToFind, view<T> & input) {
 		cnst err_t			iValue					= find<gpk_rmcnst(T)>(valueToFind, input);
 		rtrn input.slice(input, 0, (u2_t)iValue);
 	}
-
 	tplT	err_t	split					(tpnm view<T>::TCnst & valueToFind, view<T> original, view<T> & left, view<T> & right) {
 		left			= original;
 		if_fail_fe(split(valueToFind, left));
@@ -507,7 +379,6 @@ nmsp gpk
 		}
 		rtrn iMax;
 	}
-
 	tplT	err_t	min						(view<T> input, T ** result) {
 		if_true_fef(0 == input.size(), "%s", "Cannot get reference to min element of an empty array.");
 		*result				= &input[0];
@@ -521,11 +392,127 @@ nmsp gpk
 		}
 		rtrn iMin;
 	}
-
 	tplT		T&	max						(view<T> elements)		{ T * rmax	{}; if_fail_e(max(elements, &rmax));	rtrn *rmax; }
 	tplT		T&	min						(view<T> elements)		{ T * rmin	{}; if_fail_e(min(elements, &rmin));	rtrn *rmin; }
 	tplT		T	sum						(view<cnst T> elements)	{ T result	{}; for(T element : elements) result += element; rtrn result; }
 	tplTstin	T&	be2le					(T & number)			{ reverse<u0_t>({(u0_t*)&number, sizeof(T)}); rtrn number; }
+	struct view_const_string : vcsc_c {
+		inxp				view_const_string		()										nxpt	= dflt;
+		inxp				view_const_string		(cnst view<sc_c> & other)				nxpt	: view(other)			{}
+		inxp				view_const_string		(sc_c * storage, u2_t length)					: view()	{
+			Data = storage;
+			Count = length;
+			if_true_tef(0 == storage && 0 != length, "%" GPK_FMT_U2 " -> 0.", length);
+			if((u2_t)-1 == length)
+				for(Count = 0; storage[Count]; ++Count) {}
+		}
+		tplN2u		inxp	view_const_string		(sc_c (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{
+			for(Count = 0; Count < ::gpk::min(N, length); ++Count)
+				if(0 == storage[Count])
+					break;
+		}
+
+#ifdef GPK_ARDUINO
+#   ifdef GPK_ESP8266
+        ndin		oper	String					()  cnst   { return String(Data); }
+#   else
+        ndin		oper	String					()  cnst   { return String(Data, Count); }
+#   endif
+#endif
+		ndix		b8_t	oper==					(view_const_string other)	csnx	{ rtrn view<sc_c>::oper==(other); }
+		ndix		b8_t	oper!=					(view_const_string other)	csnx	{ rtrn !oper==(other); }
+		tplN2undix	b8_t	oper==					(sc_c (&other)[N])			csnx	{ rtrn view<sc_c>::oper==(view_const_string(other)); }
+		tplN2undix	b8_t	oper!=					(sc_c (&other)[N])			csnx	{ rtrn !oper==(other); }
+
+		ndix		sc_c*	begin					()							csnx	{ rtrn (Data && Count) ? Data : ""; }
+		ndix		sc_c*	end						()							csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
+		ndix		oper	sc_c* 					()							csnx	{ rtrn begin(); }
+	};
+	tydf		view_const_string		vcst_t;
+	tdcs		vcst_t					vcst_c;
+	tydf		view<vcst_t>			vvcst_t;
+	tydf		view<vcst_c>			vcvcst_t;
+
+	ndsi		err_t	find_string		(vcst_c & toFind, vcst_c & target, u2_t offset = 0) { rtrn target.find(toFind, offset); }
+	ndsi		err_t	rfind_string	(vcst_c & toFind, vcst_c & target, u2_t offset = 0) { rtrn target.rfind(toFind, offset); }
+
+	nsix		vcst_t	str				(vcst_c & arg)				nxpt	{ rtrn arg; }
+	tplN2unsix	vcst_t	str				(sc_c (&arg)[N])			nxpt	{ rtrn arg; }
+
+	stxp		vcst_t	VCST_NULL		= "null";
+	stxp		vcst_t	VCST_TRUE		= "true";
+	stxp		vcst_t	VCST_FALSE		= "false";
+	nsix		vcst_t	str				(b8_c & arg)				nxpt	{ rtrn arg ? VCST_TRUE : VCST_FALSE; }
+	nsix		vcst_t	b82st			(b8_t b)					nxpt	{ rtrn b ? VCST_TRUE : VCST_FALSE; }
+	nsix		b8_t	st2b8			(vcst_t b)					nxpt	{ rtrn b.size() && b != VCST_FALSE; }
+
+	tplTnsix	vcst_t	get_type_namev	()							nxpt	{ rtrn "unknown"; }
+	tplTnsix	sc_c*	get_type_namep	()							nxpt	{ rtrn get_type_namev<T>().begin(); }
+#define GDEFINE_TYPE_NAME_STR(typeIdentifier)																										\
+			nsix	::gpk::vcst_t	get_type_namev					(typeIdentifier &)	nxpt	{ rtrn #typeIdentifier; }					\
+	tplt<>	ndix	::gpk::vcst_t	get_type_namev<typeIdentifier>	()					nxpt	{ rtrn #typeIdentifier; }					\
+
+	tplt<tpnm _tVal>		usng kvvcst_t	= kv<vcst_t, _tVal>;
+	tplt<tpnm _tKey, tpnm _tVal>
+	err_t			find					(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals, gpk_rmcnst(_tVal) & out_val) {
+		cnst err_t		index						= find(keyToFind, keyvals);
+		out_val		= 0 > index ? gpk_rmcnst(_tVal){} : keyvals[index].Val;
+		rtrn index;
+	}
+	GDEFINE_TYPE_NAME_STR(b8_t);
+	GDEFINE_TYPE_NAME_STR(sc_t);
+	GDEFINE_TYPE_NAME_STR(u0_t);
+	GDEFINE_TYPE_NAME_STR(u1_t);
+	GDEFINE_TYPE_NAME_STR(u2_t);
+	GDEFINE_TYPE_NAME_STR(u3_t);
+	GDEFINE_TYPE_NAME_STR(s1_t);
+	GDEFINE_TYPE_NAME_STR(s2_t);
+	GDEFINE_TYPE_NAME_STR(s3_t);
+	GDEFINE_TYPE_NAME_STR(f2_t);
+	GDEFINE_TYPE_NAME_STR(f3_t);
+	GDEFINE_TYPE_NAME_STR(b8_c);
+	GDEFINE_TYPE_NAME_STR(sc_c);
+	GDEFINE_TYPE_NAME_STR(u0_c);
+	GDEFINE_TYPE_NAME_STR(u1_c);
+	GDEFINE_TYPE_NAME_STR(u2_c);
+	GDEFINE_TYPE_NAME_STR(u3_c);
+	GDEFINE_TYPE_NAME_STR(s1_c);
+	GDEFINE_TYPE_NAME_STR(s2_c);
+	GDEFINE_TYPE_NAME_STR(s3_c);
+	GDEFINE_TYPE_NAME_STR(f2_c);
+	GDEFINE_TYPE_NAME_STR(f3_c);
+
+	struct view_string : view<sc_t> {
+		inxp				view_string			()										nxpt	= dflt;
+		inln				view_string			(cnst view<sc_t> & other)				nxpt	: view(other)			{}
+							view_string			(sc_t * storage, u2_t length)					: view(storage, length)	{ Count = (length == (u2_t)-1) ? (u2_t)strlen(storage) : length; }
+		tplN2u				view_string			(sc_t (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{
+			for(Count = 0; Count < ::gpk::min(N, length); ++Count)
+				if(0 == storage[Count])
+					break;
+		}
+
+		ndin		oper	vcst_t				()					csnx	{ rtrn {Data, Count}; };
+
+		ndin		b8_t	oper==				(vcst_t other)		csnx	{ rtrn view<sc_t>::oper==(other); }
+		ndin		b8_t	oper!=				(vcst_t other)		csnx	{ rtrn !oper==(other); }
+		tplN2undix	b8_t	oper==				(sc_c (&other)[N])	csnx	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
+		tplN2undix	b8_t	oper!=				(sc_c (&other)[N])	csnx	{ rtrn !oper==(other); }
+
+		ndix		sc_c*	begin				()					csnx	{ rtrn (Data && Count) ? Data : ""; }
+		ndix		sc_c*	end					()					csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
+		ndix		oper	sc_c* 				()					csnx	{ rtrn begin(); }
+		ndin		sc_t*	begin				()					nxpt	{ rtrn Data; }
+		ndin		sc_t*	end					()					nxpt	{ rtrn begin() + Count; }
+		ndin		oper	sc_t* 				()					nxpt	{ rtrn begin(); }
+
+	};
+	tydf	view_string		vstr_t;
+	tdcs	vstr_t			vstr_c;
+	tydf	view<vstr_t>	vvstr_t;
+	tydf	view<vstr_c>	vcvstr_t;
+
+} // nmsp
 
 #define GPK_USING_VIEW()												\
 	usng	::gpk::vb8_t, ::gpk::vb8_c, ::gpk::vcb8_t, ::gpk::vcb8_c	\
@@ -542,7 +529,5 @@ nmsp gpk
 		,	::gpk::vf2_t, ::gpk::vf2_c, ::gpk::vcf2_t, ::gpk::vcf2_c	\
 		,	::gpk::vf3_t, ::gpk::vf3_c, ::gpk::vcf3_t, ::gpk::vcf3_c	\
 		,	::gpk::vstr_t, ::gpk::vcst_t, ::gpk::vstr_c, ::gpk::vcst_c
-
-} // nmsp
 
 #endif // GPK_ARRAY_VIEW_H_23627

@@ -49,33 +49,13 @@ nmsp gpk
 
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
 	err_t				guiUpdateMetrics				(SGUI & gui, cnst n2u1_t & targetSize, b8_t forceUpdate);
-	err_t				guiDraw							(SGUI & gui, g8bgra target);
-	err_t				guiGetProcessableControls		(cnst SGUI & gui, acid & controlIndices);
-	err_t				guiDeselect						(SGUI & gui);
-	err_t				guiSelect						(SGUI & gui, cid_t controlToSelect);
-	err_t				controlDelete					(SGUI & gui, cid_t iControl, b8_t recursive = true);
+	err_t				guiDraw							(SGUI & gui, cnst g8bgra & target);
 	cid_t 				controlCreate					(SGUI & gui);
 	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
-	err_t				controlSetParent				(SGUI & gui, cid_t iControl, cid_t iParent);
 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
-	err_t				controlTextSet					(SGUI & gui, cid_t iControl, vcst_t text);
-	err_t				controlFontSet					(SGUI & gui, cid_t iControl, s1_t iFont);
 	//err_t				controlUpdateMetrics			(SGUI & gui, s2_t iControl, cnst n2<u2_t> & targetSize);
 	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, b8_t forceUpdate);
-	err_t				controlMetricsInvalidate		(SGUI & gui, cid_t iControl);
-	err_t				controlHidden					(cnst SGUI & gui, cid_t iControl);
-	err_t				controlDisabled					(cnst SGUI & gui, cid_t iControl);
-	err_t				controlInvalid					(cnst SGUI & gui, cid_t iControl);
-	stin	cid_t		controlParent					(cnst SGUI & gui, cid_t iControl)	{ return controlInvalid(gui, iControl) ? CID_INVALID : gui.Controls.States[iControl].Parent; }
-	stin	err_t		controlToFront					(SGUI & gui, cid_t iControl) {
-		cid_t				iParent		= controlParent(gui, iControl);
-		if_fail_fe(controlSetParent(gui, iControl, -1));
-		if_fail_fe(controlSetParent(gui, iControl, iParent));
-		return 0;
-	}
 
-	err_t				guiProcessControls				(cnst SGUI & gui, cnst function<err_t(cid_t iControl)> & funcOnExecute);
-	err_t				guiProcessControls				(cnst SGUI & gui, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnExecute);
 	cid_t				guiCreateControlList			(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, vcid out_ids);
 	cid_t				guiCreateControlList			(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids);
 	stin	cid_t		guiCreateControlList			(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, acid & out_ids)									{ 
@@ -140,10 +120,25 @@ nmsp gpk
 			, gui.Controls.Draw				[iControl]  
 			, gui.Controls.Text				[iControl]  
 			, gui.Controls.Images			[iControl]  
-			)), { (controlDelete(gui, iControl)); return -1; }
+			)), { (controlDelete(gui.Controls, iControl)); return -1; }
 		);
 		return iControl;
 	}
+	stin	err_t		controlHidden					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlHidden   (gui.Controls, iControl); }
+	stin	err_t		controlDisabled					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlDisabled (gui.Controls, iControl); }
+	stin	err_t		controlInvalid					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlInvalid  (gui.Controls, iControl); }
+	stin	cid_t		controlParent					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlParent   (gui.Controls, iControl); }
+	stin	err_t		controlMetricsInvalidate		(SGUI & gui, cid_t iControl)						{ rtrn controlMetricsInvalidate (gui.Controls, iControl); }
+	stin	err_t		controlDelete					(SGUI & gui, cid_t iControl, b8_t recursive = true)	{ rtrn controlDelete   (gui.Controls, iControl, recursive); }
+	stin	err_t		controlSetParent				(SGUI & gui, cid_t iControl, cid_t	iParent)		{ rtrn controlSetParent(gui.Controls, iControl, iParent); }
+	stin	err_t		controlFontSet					(SGUI & gui, cid_t iControl, s1_t	iFont)			{ rtrn controlFontSet  (gui.Controls, iControl, iFont); }
+	stin	err_t		controlTextSet					(SGUI & gui, cid_t iControl, vcst_t	text)			{ rtrn controlTextSet  (gui.Controls, iControl, text); }
+	stin	err_t		controlToFront					(SGUI & gui, cid_t iControl)						{ rtrn controlToFront  (gui.Controls, iControl); }
+	stin	err_t		guiSelect						(SGUI & gui, cid_t controlToSelect)					{ rtrn controlSelect   (gui.Controls, controlToSelect); }
+	stin	err_t		guiDeselect						(SGUI & gui)										{ rtrn controlDeselect (gui.Controls); }
+	stin	err_t		guiGetProcessableControls		(cnst SGUI & gui, acid & controlIndices)														{ rtrn controlActions(gui.Controls, controlIndices)	; }		
+	stin	err_t		guiProcessControls				(cnst SGUI & gui, cnst function<err_t(cid_t iControl)> & funcOnAction)							{ rtrn controlHandle(gui.Controls, funcOnAction)	; }			
+	stin	err_t		guiProcessControls				(cnst SGUI & gui, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnAction)	{ rtrn controlHandle(gui.Controls, controlsToProcess, funcOnAction)	; }		
 
 	//stin	err_t	withControlState		(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlState			&> & funcWithControl) { rtrn withControlState		(gui.Controls, idControl, funcWithControl); }
 	//stin	err_t	withControlPrevious		(cnst SGUI & gui, cid_t idControl, cnst FError<cnst	 SControlState			&> & funcWithControl) { rtrn withControlPrevious	(gui.Controls, idControl, funcWithControl); }

@@ -202,58 +202,83 @@ nmsp gpk
 	CTTI_STCT(SControlTheme,
 	struct SControlTheme {
 		astatic<astu2_t<UI_CONTROL_AREA_COUNT>, GUI_CONTROL_PALETTE_COUNT>
-									ColorCombos			= {};
+							ColorCombos			= {};
 	};
 	);
 #pragma pack(pop)
 	CTTI_STCT(SControlImage,
 	struct SControlImage {
-		rtbgra8d32					Temp				= {};
-		g8bgra						Image				= {};
-		n2s1_t						ImageOffset			= {};
-		u0_t						ImageAlign			= ALIGN_CENTER;
-		u0_t						ImageInvertX		: 1;
-		u0_t						ImageInvertY		: 1;
-		u0_t						Rotation			: 2;
+		rtbgra8d32			Temp				= {};
+		g8bgra				Image				= {};
+		n2s1_t				ImageOffset			= {};
+		u0_t				ImageAlign			= ALIGN_CENTER;
+		u0_t				ImageInvertX: 1;
+		u0_t				ImageInvertY: 1;
+		u0_t				Rotation	: 2;
 	};
 	);
 	struct SControlTable {
-		apod<SControlState		>	States				= {};
-		apod<SControlState		>	Previous			= {};
-		apod<SControlPlacement	>	Placement			= {};
-		apod<SControlArea		>	Area				= {};
-		apod<SControlConstraints>	Constraints			= {};
-		apod<SControlDraw		>	Draw				= {};
-		aobj<SControlText		>	Text				= {};
-		aobj<SControlImage		>	Images				= {};
-		aobj<acid				>	Children			= {};
+		apod<SControlState		>	States		= {};
+		apod<SControlState		>	Previous	= {};
+		apod<SControlPlacement	>	Placement	= {};
+		apod<SControlArea		>	Area		= {};
+		apod<SControlConstraints>	Constraints	= {};
+		apod<SControlDraw		>	Draw		= {};
+		aobj<SControlText		>	Text		= {};
+		aobj<SControlImage		>	Images		= {};
+		aobj<acid				>	Children	= {};
 		//
-		apobj<SEventSystem		>	EventQueue			= {};
+		apobj<SEventSystem		>	EventQueue	= {};
 
-		inln	b8_t		SetUnused				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
-	 	inln	b8_t		SetHidden				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
-		inln	b8_t		SetDisabled				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
-		inln	b8_t		SetHovered				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
-		inln	b8_t		SetFocused				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
-		inln	b8_t		SetPressed				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
-		inln	b8_t		SetDragging				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetDragging(iControl, EventQueue, value); }
-		inln	b8_t		SetSelected				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
-		inln	b8_t		SetUpdated				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
-		inln	b8_t		SetAction				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
+		inln	b8_t	SetUnused				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
+	 	inln	b8_t	SetHidden				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
+		inln	b8_t	SetDisabled				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
+		inln	b8_t	SetHovered				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
+		inln	b8_t	SetFocused				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
+		inln	b8_t	SetPressed				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
+		inln	b8_t	SetDragging				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetDragging(iControl, EventQueue, value); }
+		inln	b8_t	SetSelected				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
+		inln	b8_t	SetUpdated				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
+		inln	b8_t	SetAction				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
 
-		inln	b8_t		IsUnused				(cid_t iControl)				csnx	{ return States[iControl].IsUnused   (); }
-		inln	b8_t		IsHidden				(cid_t iControl)				csnx	{ return States[iControl].IsHidden   (); }
-		inln	b8_t		IsDisabled				(cid_t iControl)				csnx	{ return States[iControl].IsDisabled (); }
-		inln	b8_t		IsHovered				(cid_t iControl)				csnx	{ return States[iControl].IsHovered  (); }
-		inln	b8_t		IsFocused				(cid_t iControl)				csnx	{ return States[iControl].IsFocused  (); }
-		inln	b8_t		IsPressed				(cid_t iControl)				csnx	{ return States[iControl].IsPressed  (); }
-		inln	b8_t		IsDragging				(cid_t iControl)				csnx	{ return States[iControl].IsDragging (); }
-		inln	b8_t		IsSelected				(cid_t iControl)				csnx	{ return States[iControl].IsSelected (); }
-		inln	b8_t		IsUpdated				(cid_t iControl)				csnx	{ return States[iControl].IsUpdated  (); }
-		inln	b8_t		IsAction				(cid_t iControl)				csnx	{ return States[iControl].IsAction   (); }
+		inln	b8_t	IsUnused				(cid_t iControl)				csnx	{ return States[iControl].IsUnused   (); }
+		inln	b8_t	IsHidden				(cid_t iControl)				csnx	{ return States[iControl].IsHidden   (); }
+		inln	b8_t	IsDisabled				(cid_t iControl)				csnx	{ return States[iControl].IsDisabled (); }
+		inln	b8_t	IsHovered				(cid_t iControl)				csnx	{ return States[iControl].IsHovered  (); }
+		inln	b8_t	IsFocused				(cid_t iControl)				csnx	{ return States[iControl].IsFocused  (); }
+		inln	b8_t	IsPressed				(cid_t iControl)				csnx	{ return States[iControl].IsPressed  (); }
+		inln	b8_t	IsDragging				(cid_t iControl)				csnx	{ return States[iControl].IsDragging (); }
+		inln	b8_t	IsSelected				(cid_t iControl)				csnx	{ return States[iControl].IsSelected (); }
+		inln	b8_t	IsUpdated				(cid_t iControl)				csnx	{ return States[iControl].IsUpdated  (); }
+		inln	b8_t	IsAction				(cid_t iControl)				csnx	{ return States[iControl].IsAction   (); }
 	};
-
-			cid_t		controlCreate			(SControlTable & controls, vs1_t defaultColors);
+	err_t			controlHidden            (cnst SControlTable & controls, cid_t iControl);
+	err_t			controlDisabled          (cnst SControlTable & controls, cid_t iControl);
+	err_t			controlInvalid           (cnst SControlTable & controls, cid_t iControl);
+	err_t			controlActions           (cnst SControlTable & controls, acid & controlIndices);
+	err_t			controlHandle            (cnst SControlTable & controls, cnst function<err_t(cid_t iControl)> & funcOnExecute);
+	err_t			controlHandle            (cnst SControlTable & controls, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnExecute);
+	ndsi	cid_t	controlParent            (cnst SControlTable & controls, cid_t iControl)	{ return controlInvalid(controls, iControl) ? CID_INVALID : controls.States[iControl].Parent; }
+	ndsi	err_t	controlAction            (cnst SControlTable & controls) {
+		acid			controlIndices;
+		if_fail_fe(controlActions(controls, controlIndices));
+		rtrn controlIndices.size() ? controlIndices[0] : 0;
+	}
+	cid_t			controlCreate            (SControlTable & controls, vs1_t defaultColors);
+	err_t			controlDeselect          (SControlTable & controls);
+	err_t			controlSelect            (SControlTable & controls, cid_t controlToSelect);
+	err_t			controlDelete            (SControlTable & controls, cid_t iControl, b8_t recursive = true);
+	err_t			controlSetParent         (SControlTable & controls, cid_t iControl, cid_t iParent);
+	err_t			controlTextSet           (SControlTable & controls, cid_t iControl, vcst_t text);
+	err_t			controlFontSet           (SControlTable & controls, cid_t iControl, s1_t iFont);
+	err_t			controlMetricsInvalidate (SControlTable & controls, cid_t iControl);
+	err_t			controlInstanceReset     (SControlTable & controlTable, cid_t iControl, vs1_t defaultColors);
+	ndsi	err_t	controlToFront           (SControlTable & controls, cid_t iControl) {
+		cid_t			iParent		= controlParent(controls, iControl);
+		if_fail_fe(controlSetParent(controls, iControl, -1));
+		if_fail_fe(controlSetParent(controls, iControl, iParent));
+		return 0;
+	}
 	//stin	err_t		withControlState		(SControlTable & controls, cid_t idControl, cnst FError<SControlState		&> & funcWithControl) { rtrn funcWithControl(controls.States		[idControl]); }
 	//stin	err_t		withControlPrevious		(SControlTable & controls, cid_t idControl, cnst FError<SControlState		&> & funcWithControl) { rtrn funcWithControl(controls.Previous		[idControl]); }
 	//stin	err_t		withControlPlacement	(SControlTable & controls, cid_t idControl, cnst FError<SControlPlacement	&> & funcWithControl) { rtrn funcWithControl(controls.Placement		[idControl]); }

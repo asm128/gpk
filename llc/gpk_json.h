@@ -106,6 +106,8 @@ nmsp gpk
 		options.Set(JSON_PARSE_OPTION_BUILD_VIEWS, buildViews);
 		rtrn jsonParse(reader, jsonAsString, options);
 	}
+	err_t			jsonParseError		(cnst SJSONReaderState & reader, asc_t & errorString);
+	err_t			jsonParseError		(cnst SJSONReader & reader, asc_t & errorString);
 	err_t			jsonTreeRebuild		(view<cnst SJSONToken> in_object, apobj<SJSONNode> & out_nodes);
 	err_t			jsonTreeInvalidate	(SJSONReader & reader);
 	err_t			jsonTreeEnsure		(SJSONReader & reader);

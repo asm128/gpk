@@ -6,21 +6,13 @@
 
 usns gpk;
 
-gpk::err_t 		gpk::controlInvalid			(cnst SGUI & gui, cid_t iControl)				{
-	if(gui.Controls.States.size() <= u2_t(iControl)	) 
-		return -1;
-	if(gui.Controls.IsUnused(iControl)) 
-		return -1;
-	return 0;
-}
-
-cid_t			gpk::controlCreateChild	(SGUI & gui, cid_t iParent)						{
+gpk::cid_t		gpk::controlCreateChild	(SGUI & gui, cid_t iParent)						{
 	cid_t				idControl				= controlCreate(gui);
-	controlSetParent(gui, idControl, iParent);
+	controlSetParent(gui.Controls, idControl, iParent);
 	return idControl;
 }
 
-cid_t			gpk::controlCreate		(SGUI & gui)							{
+gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
 	if_fail_fe(guiSetupDefaultColors(gui.Colors));
 
 	if(0 == gui.Fonts.size())
@@ -30,73 +22,6 @@ cid_t			gpk::controlCreate		(SGUI & gui)							{
 		gui.SelectedFont = u1_t(gui.Fonts.size() - 1);
 
 	return controlCreate(gui.Controls, gui.Colors->DefaultColors);
-}
-
-gpk::err_t 		gpk::controlDelete		(SGUI & gui, cid_t iControl, b8_t recursive)			{
-	if_fail_fef(controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
-	info_printf("Deleting control id: %i.", iControl);
-	if(recursive) { // Delete children first.
-		acid					children				= gui.Controls.Children[iControl];
-		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-			if_true_ef(failed(controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
-	}
-	// Remove from parent list
-	cnst cid_t			indexParent				= gui.Controls.States[iControl].Parent;
-#if defined(GPK_DEBUG_ENABLED)
-	u2_t					childrenRemoved			= 0;
-#endif
-	if((u2_t)indexParent < gui.Controls.States.size() && false == gui.Controls.IsUnused(indexParent)) {
-		acid					& children				= gui.Controls.Children[indexParent];
-		for(u2_t iChild = 0; iChild < children.size(); ++iChild)
-			if(children[iChild] == iControl) {
-				if_fail_fef(children.remove_unordered(iChild), "Failed to remove child at index: %u.", iChild);
-#if defined(GPK_DEBUG_ENABLED)
-				--iChild;
-				++childrenRemoved;
-#else
-				break;
-#endif
-			}
-	}
-#if defined(GPK_DEBUG_ENABLED)
-	if_true_ef(childrenRemoved > 1, "Parent should not reference a child control more than once. References found: %i.", childrenRemoved);
-#endif
-	gui.Controls.SetUnused(iControl, true);
-	return 0;
-}
-
-gpk::err_t		gpk::controlSetParent	(SGUI & gui, cid_t iControl, cid_t iParent)	{
-	if_fail_fef(controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
-	cnst cid_t			oldParent				= gui.Controls.States[iControl].Parent;
-	SControlState		& control				= gui.Controls.States[iControl];
-	if(control.Parent == iParent)	// Exit early if there is nothing to do here.
-		return 0;
-
-	control.Parent		= iParent;
-	if((u2_t)oldParent < gui.Controls.States.size() && false == gui.Controls.IsUnused(oldParent)) {
-		acid					& children				= gui.Controls.Children[oldParent];
-		for(s2_t iChild = 0; iChild < (s2_t)children.size(); ++iChild)
-			if(children[iChild] == iControl) {
-				gui.Controls.SetUpdated(oldParent, false);
-				if_fail_fef(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
-				break;
-			}
-	}
-	if(controlInvalid(gui, iParent)) {
-		if_true_vef(-1, -1 != iParent, "Invalid parent control id: %u.", iParent);
-		return 0;
-	}
-
-	// Set iControl to parent's children array.
-	acid					& children				= gui.Controls.Children[iParent];
-	for(s2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-		if(children[iChild] == iControl)
-			return 0;
-
-	gui.Controls.SetUpdated(iParent , false);
-	gui.Controls.SetUpdated(iControl, false);
-	if_fail_fe(children.push_back(iControl));
-	return 0;
 }
 
 sttc gpk::err_t	buildControlGeometry	(cnst SControlPlacement & control, cnst SControlArea & controlMetrics, cnst SGUIZoom & zoom, view<rect2s1_t> finalRects, view<tri2s1_t> triangles)					{
@@ -145,7 +70,7 @@ sttc gpk::cid_t	controlDockTarget	(cnst SGUI & gui, cid_t idTarget, GUI_CONTROL_
 	for(u2_t iControl = 0; iControl < gui.Controls.States.size() && idTarget != CID_INVALID; ++iControl) {
 		if((u2_t)idTarget >= gui.Controls.States.size())
 			return idTarget;
-		if(false == controlHidden(gui, idTarget))
+		if(false == controlHidden(gui.Controls, idTarget))
 			return idTarget;
 		cnst rectcid & dock = gui.Controls.Constraints[idTarget].DockToControl;
 		switch(side) {
@@ -160,7 +85,7 @@ sttc gpk::cid_t	controlDockTarget	(cnst SGUI & gui, cid_t idTarget, GUI_CONTROL_
 }
 
 sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> & _targetSize)					{
-	if_fail_fef(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
+	if_fail_fef(gpk::controlInvalid(gui.Controls, iControl), "Invalid control id: %u.", iControl);
 
 	SControlState		& controlState			= gui.Controls.States[iControl];
 	cnst SControlPlacement	& controlPlacement	= gui.Controls.Placement[iControl];
@@ -188,11 +113,11 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 	n2f3_c			ncTotalSizeScaled		= ncTotalSize.GetScaled(scale.x, scale.y);
 	if(controlConstraints.AttachSizeToText.x) scaledSize.x	= rectText.Size.x + ncTotalSizeScaled.x;
 	if(controlConstraints.AttachSizeToText.y) scaledSize.y	= rectText.Size.y + ncTotalSizeScaled.y;
-	b8_c			isValidParent			= 0 == controlInvalid(gui, controlState.Parent);
+	b8_c			isValidParent			= 0 == controlInvalid(gui.Controls, controlState.Parent);
 	n2u1_c			targetSize				= isValidParent ? gui.Controls.Area[controlState.Parent].Client.Global.Size.u1() : _targetSize.u1();
 
-	if(controlConstraints.AttachSizeToControl.x == iControl) { if(controlConstraints.DockToControl.Left	!= -1) {} else { scaledPosition.x = 0; } scaledSize.x = targetSize.x; } else if(false == controlInvalid(gui, controlConstraints.AttachSizeToControl.x)) { if(controlConstraints.DockToControl.Left != -1) {} else { scaledPosition.x = 0;} scaledSize.x = gui.Controls.Area[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
-	if(controlConstraints.AttachSizeToControl.y == iControl) { if(controlConstraints.DockToControl.Top	!= -1) {} else { scaledPosition.y = 0; } scaledSize.y = targetSize.y; } else if(false == controlInvalid(gui, controlConstraints.AttachSizeToControl.y)) { if(controlConstraints.DockToControl.Top  != -1) {} else { scaledPosition.y = 0;} scaledSize.y = gui.Controls.Area[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
+	if(controlConstraints.AttachSizeToControl.x == iControl) { if(controlConstraints.DockToControl.Left	!= -1) {} else { scaledPosition.x = 0; } scaledSize.x = targetSize.x; } else if(false == controlInvalid(gui.Controls, controlConstraints.AttachSizeToControl.x)) { if(controlConstraints.DockToControl.Left != -1) {} else { scaledPosition.x = 0;} scaledSize.x = gui.Controls.Area[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
+	if(controlConstraints.AttachSizeToControl.y == iControl) { if(controlConstraints.DockToControl.Top	!= -1) {} else { scaledPosition.y = 0; } scaledSize.y = targetSize.y; } else if(false == controlInvalid(gui.Controls, controlConstraints.AttachSizeToControl.y)) { if(controlConstraints.DockToControl.Top  != -1) {} else { scaledPosition.y = 0;} scaledSize.y = gui.Controls.Area[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
 
 	controlMetrics.Client.Local	= {{(s1_t)ncSizesScaled.Left, (s1_t)ncSizesScaled.Top}, (scaledSize - ncTotalSizeScaled).s1()};
 	n2f3_t				minSizeScaled			= (controlConstraints.SizeMinMax.Min.f3().InPlaceScale(scale.x, scale.y));
@@ -213,7 +138,7 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 	if(dockToControl.Right != -1) {
 		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Right, GUI_CONTROL_LIMIT_Right);
 		if(idDock != CID_INVALID) {
-		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		if_fail_fef(gpk::controlInvalid(gui.Controls, idDock), "Invalid control id: %i.", idDock);
 		controlUpdateMetricsTopToDown(gui, idDock, targetSize.u1(), true);
 		cnst SControlPlacement	& other				= gui.Controls.Placement[idDock];
 		cnst SControlArea		& otherMetrics		= gui.Controls.Area	[idDock];
@@ -237,7 +162,7 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 	if(dockToControl.Bottom != -1) {
 		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Bottom, GUI_CONTROL_LIMIT_Bottom);
 		if(idDock != CID_INVALID) {
-		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		if_fail_fef(gpk::controlInvalid(gui.Controls, idDock), "Invalid control id: %i.", idDock);
 		cnst SControlPlacement	& other					= gui.Controls.Placement[idDock];
 		cnst SControlArea		& otherMetrics			= gui.Controls.Area[idDock];
 		if(bit_true(other.Align, ALIGN_BOTTOM	) && bit_false(other.Align, ALIGN_VCENTER)) {
@@ -252,7 +177,7 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 	if(dockToControl.Left != -1) {
 		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Left, GUI_CONTROL_LIMIT_Left);
 		if(idDock != CID_INVALID) {
-		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		if_fail_fef(gpk::controlInvalid(gui.Controls, idDock), "Invalid control id: %i.", idDock);
 		controlUpdateMetricsTopToDown(gui, idDock, targetSize, true);
 		cnst SControlPlacement	& other			= gui.Controls.Placement[idDock];
 		cnst SControlArea		& otherMetrics	= gui.Controls.Area	[idDock];
@@ -269,7 +194,7 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 	if(dockToControl.Top	!= -1) {
 		cnst cid_t idDock = ::controlDockTarget(gui, dockToControl.Top, GUI_CONTROL_LIMIT_Top);
 		if(idDock != CID_INVALID) {
-		if_fail_fef(gpk::controlInvalid(gui, idDock), "Invalid control id: %i.", idDock);
+		if_fail_fef(gpk::controlInvalid(gui.Controls, idDock), "Invalid control id: %i.", idDock);
 		cnst SControlPlacement	& other					= gui.Controls.Placement[idDock];
 		cnst SControlArea		& otherMetrics			= gui.Controls.Area	[idDock];
 		if(bit_true(other.Align, ALIGN_BOTTOM	) && bit_false(other.Align, ALIGN_VCENTER)) {
@@ -307,7 +232,7 @@ gpk::err_t 		gpk::controlUpdateMetricsTopToDown							(SGUI & gui, cid_t iContro
 
 gpk::err_t 		gpk::guiUpdateMetrics									(SGUI & gui, cnst n2<u1_t> & targetSize, b8_t forceUpdate)								{
 	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
-		if(controlInvalid(gui, gui.Controls.States[iControl].Parent) && false == controlInvalid(gui, (cid_t)iControl))
+		if(controlInvalid(gui.Controls, gui.Controls.States[iControl].Parent) && false == controlInvalid(gui.Controls, (cid_t)iControl))
 			if_fail_fef(gpk::controlUpdateMetricsTopToDown(gui, (cid_t)iControl, targetSize, forceUpdate), "Failed to update metrics for control %i", iControl);
 	return 0;
 }
@@ -337,7 +262,7 @@ sttc	cid_t	controlProcessInput		(SGUI & gui, cnst SInput & input, cid_t iControl
 	{
 		vcid					& children				= gui.Controls.Children[iControl];
 		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
-			if(controlHidden(gui, children[iChild]))
+			if(controlHidden(gui.Controls, children[iChild]))
 				continue;
 			cid_t				controlPressed			= ::controlProcessInput(gui, input, children[iChild]);
 			if(gui.Controls.States.size() > (u2_t)controlPressed) {
@@ -348,12 +273,12 @@ sttc	cid_t	controlProcessInput		(SGUI & gui, cnst SInput & input, cid_t iControl
 			}
 		}
 	}
-	if(input.ButtonDown(0) && controlInvalid(gui, controlState.Parent) && false == controlInvalid(gui, controlBranch))
-		if_fail_e(controlToFront(gui, controlBranch));
+	if(input.ButtonDown(0) && controlInvalid(gui.Controls, controlState.Parent) && false == controlInvalid(gui.Controls, controlBranch))
+		if_fail_e(controlToFront(gui.Controls, controlBranch));
 	if(controlHovered == -1 && in_range(gui.CursorPos.s1(), gui.Controls.Area[iControl].Total.Global)) {
 		if(controlState.IsPressed() && input.MouseCurrent.ButtonState[0] && input.MouseCurrent.Position != input.MousePrevious.Position)
 			gui.Controls.SetDragging(iControl, true);
-		controlHovered			= ::updateGUIControlHovered(gui, iControl, controlState, input, controlDisabled(gui, iControl) || controlHidden(gui, iControl));
+		controlHovered			= ::updateGUIControlHovered(gui, iControl, controlState, input, controlDisabled(gui.Controls, iControl) || controlHidden(gui.Controls, iControl));
 	}
 	else {
 		gui.Controls.SetHovered(iControl, false);
@@ -387,10 +312,10 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 		if(controlState.IsDisabled())
 			continue;
 
-		if(controlHidden(gui, (cid_t)iControl))
+		if(controlHidden(gui.Controls, (cid_t)iControl))
 			continue;
 
-		if(false == controlInvalid(gui, controlState.Parent))
+		if(false == controlInvalid(gui.Controls, controlState.Parent))
 			continue;
 
 		rootControlsToProcess.push_back((cid_t)iControl);
@@ -398,7 +323,7 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 
 	gui.CursorPos			= {(f2_t)input.MouseCurrent.Position.x, (f2_t)input.MouseCurrent.Position.y}; //+= {(f2_t)input.MouseCurrent.Deltas.x, (f2_t)input.MouseCurrent.Deltas.y};
 	for(u2_t iControl = 0, countControls = rootControlsToProcess.size(); iControl < countControls; ++iControl) {
-		if(controlHidden(gui, rootControlsToProcess[iControl]))
+		if(controlHidden(gui.Controls, rootControlsToProcess[iControl]))
 			continue;
 
 		cid_t				controlPressed		= ::controlProcessInput(gui, input, rootControlsToProcess[iControl]);
@@ -427,131 +352,6 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 	return controlHovered;
 }
 
-gpk::err_t 		gpk::guiDeselect		(SGUI & gui)	{
-	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
-		gui.Controls.SetSelected((cid_t)iControl, false);
-
-	return 0;
-}
-
-gpk::err_t 		gpk::guiSelect			(SGUI & gui, cid_t controlToSelect)	{
-	if_true_fe(controlInvalid(gui, controlToSelect));
-	cnst cid_t parent = gui.Controls.States[controlToSelect].Parent;
-	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
-		if(gui.Controls.States[iControl].Parent == parent)
-			gui.Controls.SetSelected((cid_t)iControl, controlToSelect == (cid_t)iControl);
-
-	return 0;
-}
-
-gpk::err_t 		gpk::controlHidden		(cnst SGUI & gui, cid_t iControl)	{
-	b8_t						imHidden				= controlInvalid(gui, iControl) || gui.Controls.States[iControl].IsHidden();
-	return imHidden ? imHidden : (0 == controlInvalid(gui, gui.Controls.States[iControl].Parent) && controlHidden(gui, gui.Controls.States[iControl].Parent));
-}
-
-gpk::err_t 		gpk::controlDisabled	(cnst SGUI & gui, cid_t iControl)	{
-	b8_t						imDisabled				= controlInvalid(gui, iControl) || gui.Controls.States[iControl].IsDisabled();
-	return imDisabled ? imDisabled : (false == controlInvalid(gui, gui.Controls.States[iControl].Parent) && controlDisabled(gui, gui.Controls.States[iControl].Parent));
-}
-
-gpk::err_t 		gpk::controlMetricsInvalidate	(SGUI & gui, cid_t iControl)	{
-	gui.Controls.SetUpdated(iControl, false);
-	cnst vcid			& controlChildren		= gui.Controls.Children[iControl];
-	for(u2_t iChild = 0, countChild = controlChildren.size(); iChild < countChild; ++iChild)
-		if_fail_fef(gpk::controlMetricsInvalidate(gui, controlChildren[iChild]), "%s", "Invalid child?");
-
-	return 0;
-}
-
-gpk::err_t 		gpk::guiGetProcessableControls	(cnst SGUI & gui, acid & controlIndices)													{
-	for(u2_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {	// Only process root parents
-		cnst SControlState	& controlState					= gui.Controls.States[iControl];
-		if(controlState.IsUnused() || controlDisabled(gui, (cid_t)iControl) || controlHidden(gui, (cid_t)iControl))
-			continue;
-		if_fail_fe(controlIndices.push_back((cid_t)iControl));
-	}
-	return controlIndices.size();
-}
-
-gpk::err_t 		gpk::guiProcessControls		(cnst SGUI & gui, cnst function<err_t(cid_t iControl)> & funcOnExecute) {
-	acid					controlsToProcess			= {};
-	if_fail_fe(gpk::guiGetProcessableControls(gui, controlsToProcess));
-	return guiProcessControls(gui, controlsToProcess, funcOnExecute);
-}
-
-gpk::err_t 		gpk::guiProcessControls		(cnst SGUI & gui, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnExecute) {
-	for(u2_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
-		cnst cid_t			idControl					= controlsToProcess[iControl];
-		cnst SControlState	& controlState				= gui.Controls.States[idControl];
-		if(controlState.IsAction()) {
-			info_printf("Executed control %i (0x%x).", idControl, idControl);
-			return funcOnExecute(idControl);
-		}
-	}
-	return 0;
-}
-
-gpk::err_t 		gpk::controlTextSet		(SGUI & gui, cid_t iControl, vcst_t text)				{
-	vcst_t					& oldText				= gui.Controls.Text[iControl].Text;
-	if(text != oldText) {
-		oldText					= text;
-		gui.Controls.SetUpdated(iControl, false);
-	}
-	return 0;
-}
-
-gpk::err_t 		gpk::controlFontSet		(SGUI & gui, cid_t iControl, s1_t iFont)				{
-	s1_t						& oldText				= gui.Controls.Text[iControl].FontSelected;
-	if(iFont != oldText) {
-		oldText					= iFont;
-		gui.Controls.SetUpdated(iControl, false);
-	}
-	return 0;
-}
-
-sttc	gpk::err_t controlInstanceReset	(SControlTable & controlTable, cid_t iControl, vs1_t defaultColors)										{
-	controlTable.States			[iControl]	= {};
-	controlTable.Previous		[iControl]	= {};
-	controlTable.Placement		[iControl]	= {};
-	controlTable.Area			[iControl]	= {};
-	controlTable.Constraints	[iControl]	= {};
-	controlTable.Draw			[iControl]	= {};
-	controlTable.Text			[iControl]	= {};
-	controlTable.Images			[iControl]	= {};
-	controlTable.Children		[iControl]	= vcid{};
-	
-	SControlDraw			& controlDraw			= controlTable.Draw[iControl];
-	for(u2_t iColor = 0, countColors = min(controlDraw.Palettes.size(), defaultColors.size()); iColor < countColors; ++iColor)
-		controlDraw.Palettes[iColor] = defaultColors[iColor];
-
-	return 0;
-}
-
-
-gpk::cid_t			gpk::controlCreate		(SControlTable & controlTable, vs1_t defaultColors)	{
-	for(u2_t iControl = 0; iControl < controlTable.States.size(); ++iControl) {
-		if(controlTable.IsUnused((cid_t)iControl)) {
-			if_fail_fef(::controlInstanceReset(controlTable, (cid_t)iControl, defaultColors), "iControl: %i", iControl);
-			return (cid_t)iControl;
-		}
-	}
-
-	err_t				iControl				= -1;
-	if_fail_fe(iControl = resize(controlTable.States.size() + 1
-		, controlTable.States
-		, controlTable.Previous
-		, controlTable.Placement
-		, controlTable.Area
-		, controlTable.Constraints
-		, controlTable.Draw
-		, controlTable.Text
-		, controlTable.Images
-		, controlTable.Children
-		) - 1);
-	if_fail_fe(::controlInstanceReset(controlTable, (cid_t)iControl, defaultColors));
-	return (cid_t)iControl;
-}
-
 gpk::cid_t			gpk::createScreenLayout(SGUI & gui, cid_t parent) {
 	cid_t				controlId;
 	if_fail_fe(controlId = controlCreate(gui));
@@ -563,7 +363,7 @@ gpk::cid_t			gpk::createScreenLayout(SGUI & gui, cid_t parent) {
 	gui.Controls.States		[controlId].Mask				&= ~GUI_CONTROL_FLAG_Hovered;
 
 	if(parent != CID_INVALID)
-		if_fail_fe(gpk::controlSetParent(gui, controlId, parent));
+		if_fail_fe(gpk::controlSetParent(gui.Controls, controlId, parent));
 
 	return controlId;
 }
@@ -609,7 +409,7 @@ gpk::cid_t			gpk::guiCreateControlList	(SGUI & gui, DIRECTION direction, view<vc
 				itemConstraints.DockToControl.Bottom	= out_ids[iButton - 1];
 
 		}
-		if_fail_fef(gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %.*s", idControl, GPK_VIEW_ARGS(buttonText[iButton])); // Make a tplt and macro for this pattern
+		if_fail_fef(gpk::controlSetParent(gui.Controls, idControl, iParent), "idControl: %i, buttonText[iButton]: %.*s", idControl, GPK_VIEW_ARGS(buttonText[iButton])); // Make a tplt and macro for this pattern
 	}
 	return result;
 }

@@ -63,7 +63,7 @@ sttc	gpk::err_t	getNodeTransform		(cnst gpk::SRenderNodeManager & nodeManager, u
 	return 0;
 }
 
-gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, cnst SEngineScene & engineScene, cnst n2u1_t & targetMetrics, cnst n3f2_t & lightPos, cnst n3f2_t & cameraPosition, cnst gpk::n3f2_t & cameraTarget, cnst gpk::minmaxf2_t & nearFar)	{
+gpk::err_t	gpk::d3dDrawEngineScene	(Sample3DSceneRenderer & d3dScene, cnst SEngineScene & engineScene, n2u1_c & targetMetrics, cnst n3f2_t & lightPos, cnst n3f2_t & cameraPosition, cnst gpk::n3f2_t & cameraTarget, cnst gpk::minmaxf2_t & nearFar)	{
 	n3f2_t				cameraFront				= (cameraTarget - cameraPosition).Normalize();
 
 	SEngineSceneConstants& constants				= d3dScene.ConstantBufferScene;

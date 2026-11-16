@@ -307,6 +307,7 @@
     <ClCompile Include="gpk_geometry_lh.cpp" />
     <ClCompile Include="gpk_gltf.cpp" />
     <ClCompile Include="gpk_gui.cpp" />
+    <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_control_list.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
     <ClCompile Include="gpk_gui_inputbox.cpp" />

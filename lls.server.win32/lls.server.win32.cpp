@@ -17,125 +17,125 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "LLS Server v0.1");
 
 usns gpk;
 
-sttc	::gpk::err_t	loadNetworkConfig		(cnst ::gpk::SJSONReader & jsonConfig, ::gpk::vcst_t & port, ::gpk::vcst_t & adapter) {
-	::gpk::err_t				appNodeIndex;
-	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve("application.test_udp_server", jsonConfig, 0)); } while(0);
-	return ::gpk::loadServerConfig(jsonConfig, appNodeIndex, port, adapter);
+sttc	gpk::err_t	loadNetworkConfig		(cnst SJSONReader & jsonConfig, vcst_t & port, vcst_t & adapter) {
+	gpk::err_t				appNodeIndex;
+	do { if_fail_fe(appNodeIndex = jsonExpressionResolve("application.test_udp_server", jsonConfig, 0)); } while(0);
+	return loadServerConfig(jsonConfig, appNodeIndex, port, adapter);
 }
 
 // --- Cleanup application resources.
-::gpk::err_t			cleanup					(::SApplication & app)											{
-	::gpk::SFramework			& framework				= app.Framework;
-	::gpk::SWindow				& mainWindow			= framework.RootWindow;
+gpk::err_t			cleanup					(::SApplication & app)											{
+	SFramework			& framework				= app.Framework;
+	SWindow				& mainWindow			= framework.RootWindow;
 	if_fail_w(::lls::llsUpdate(app.LLSApp, 0, mainWindow.Input, mainWindow.EventQueue, {}));
 
 #if !defined(DISABLE_D3D11)
 	app.D3DApp.Shutdown();
 #endif
 
-	if_fail_w(::gpk::serverStop(app.Server->SocketServer));
-	if_fail_w(::gpk::mainWindowDestroy(mainWindow));
+	if_fail_w(serverStop(app.Server->SocketServer));
+	if_fail_w(mainWindowDestroy(mainWindow));
 	if_fail_w(::lls::llsUpdate(app.LLSApp, 0, mainWindow.Input, mainWindow.EventQueue, {}));
-	if_fail_w(::gpk::tcpipShutdown());
+	if_fail_w(tcpipShutdown());
 	return 0;
 }
 
-sttc	::gpk::err_t	updateSizeDependentResources(::SApplication & app)											{
-	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
-	cnst ::gpk::n2u1_t			newSize					= mainWindow.Size;
+sttc	gpk::err_t	updateSizeDependentResources(::SApplication & app)											{
+	SWindow				& mainWindow			= app.Framework.RootWindow;
+	n2u1_c			newSize					= mainWindow.Size;
 #if !defined(DISABLE_D3D11)
 	mainWindow.BackBuffer	= {};
 	do { if_fail_fe(app.D3DApp.SetWindowSize(newSize)); } while(0);
 #else
-	do { if_fail_fe(mainWindow.BackBuffer->resize(newSize, ::gpk::bgra{0, 0, 0, 0}, 0xFFFFFFFF)); } while(0);
+	do { if_fail_fe(mainWindow.BackBuffer->resize(newSize, bgra{0, 0, 0, 0}, 0xFFFFFFFF)); } while(0);
 #endif
 	mainWindow.Resized		= false;
 
 	return 0;
 }
 
-sttc	::gpk::err_t	processScreenEvent		(::SApplication & app, cnst ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) { 
+sttc	gpk::err_t	processScreenEvent		(::SApplication & app, cnst SEventView<EVENT_SCREEN> & screenEvent) { 
 	switch(screenEvent.Type) {
 	default: break;
-	case ::gpk::EVENT_SCREEN_Create:
+	case EVENT_SCREEN_Create:
 #if !defined(DISABLE_D3D11)
 		do { if_fail_fe(app.D3DApp.Initialize(app.Framework.RootWindow.PlatformDetail.WindowHandle, app.LLSApp.Game.Engine.Scene->Graphics)); } while(0);
 #endif
-	case ::gpk::EVENT_SCREEN_Resize: 
+	case EVENT_SCREEN_Resize: 
 		do { if_fail_fe(::updateSizeDependentResources(app)); } while(0);
 		break;
 	}
 	return 0;
 }
 
-sttc	::gpk::err_t	processSystemEvent		(::SApplication & app, cnst ::gpk::SEventSystem & sysEvent) { 
+sttc	gpk::err_t	processSystemEvent		(::SApplication & app, cnst SEventSystem & sysEvent) { 
 	switch(sysEvent.Type) {
 	default: break;
-	case ::gpk::SYSTEM_EVENT_Screen	: return ::gpk::eventExtractAndHandle<::gpk::EVENT_SCREEN		>(sysEvent, [&app](cnst ::gpk::SEventView<::gpk::EVENT_SCREEN		> & screenEvent) { return processScreenEvent(app, screenEvent); }); 
-	case ::gpk::SYSTEM_EVENT_GUI	: return ::gpk::eventExtractAndHandle<::gpk::EVENT_GUI_CONTROL	>(sysEvent, [&app](cnst ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL	> & screenEvent) { return ::gpk::processGUIEvent(*app.Server, *app.Framework.GUI, screenEvent); }); 
+	case SYSTEM_EVENT_Screen	: return eventExtractAndHandle<EVENT_SCREEN		>(sysEvent, [&app](cnst SEventView<EVENT_SCREEN		> & screenEvent) { return processScreenEvent(app, screenEvent); }); 
+	case SYSTEM_EVENT_GUI	: return eventExtractAndHandle<EVENT_GUI_CONTROL	>(sysEvent, [&app](cnst SEventView<EVENT_GUI_CONTROL	> & screenEvent) { return processGUIEvent(*app.Server, *app.Framework.GUI, screenEvent); }); 
 	}
 	return 0;
 }
 
-::gpk::err_t			setup					(::SApplication& app)											{
+gpk::err_t			setup					(::SApplication& app)											{
 #if !defined(DISABLE_D3D11)
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 #endif
-	::gpk::SFramework			& framework				= app.Framework;
-	::gpk::SWindow				& mainWindow			= framework.RootWindow;
+	SFramework			& framework				= app.Framework;
+	SWindow				& mainWindow			= framework.RootWindow;
 	mainWindow.Size			= {1280, 720};
-	do { if_fail_fe(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)); } while(0);
+	do { if_fail_fe(mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)); } while(0);
 
-	do { if_fail_fe(::gpk::setupGUI(app.Server->UI, *framework.GUI)); } while(0);
+	do { if_fail_fe(setupGUI(app.Server->UI, *framework.GUI)); } while(0);
 
-	do { if_fail_fe(::gpk::tcpipInitialize()); } while(0);
+	do { if_fail_fe(tcpipInitialize()); } while(0);
 
 	if_fail_w(::loadNetworkConfig(framework.JSONConfig.Reader, app.Server->Port, app.Server->Adapter));
-	if_fail_e(::gpk::serverStart(*app.Server, *framework.GUI));
+	if_fail_e(serverStart(*app.Server, *framework.GUI));
 
 	return 0;
 }
 
-::gpk::err_t			update					(::SApplication & app, ::gpk::b8_t systemRequestedExit) {
-	::gpk::SFramework			& framework				= app.Framework;
-	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
-	::gpk::SGUI					& gui					= *framework.GUI;
+gpk::err_t			update					(::SApplication & app, b8_t systemRequestedExit) {
+	SFramework			& framework				= app.Framework;
+	SWindow				& mainWindow			= app.Framework.RootWindow;
+	SGUI					& gui					= *framework.GUI;
 
-	::gpk::b8_t						systemExit				= false;
+	b8_t						systemExit				= false;
 
-	::gpk::TQueueSystemEvent	eventsToProcess			= mainWindow.EventQueue;
+	TQueueSystemEvent	eventsToProcess			= mainWindow.EventQueue;
 	do { if_fail_fe(eventsToProcess.append(gui.Controls.EventQueue)); } while(0);
-	do { if_fail_fe(eventsToProcess.for_each([&app, &systemExit](cnst ::gpk::pobj<::gpk::SEventSystem> & sysEvent) { 
-		::gpk::err_t				result; 
+	do { if_fail_fe(eventsToProcess.for_each([&app, &systemExit](cnst pobj<SEventSystem> & sysEvent) { 
+		gpk::err_t				result; 
 		do { if_fail_fe(result = ::processSystemEvent(app, *sysEvent)); } while(0); 
 		if(result == 1) 
 			systemExit				= true; 
 		return result;
 	})); } while(0);
 
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::b82sc(systemExit), ::gpk::b82sc(systemRequestedExit));
+	if_true_vif(APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", (sc_c*)b82st(systemExit), (sc_c*)b82st(systemRequestedExit));
 
-	::gpk::SFrameInfo			& frameInfo				= framework.FrameInfo;
+	SFrameInfo			& frameInfo				= framework.FrameInfo;
 	{
-		::gpk::STimer				timer					= {};
-		if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::lls::APP_STATE_Quit == ::lls::llsServerUpdate(app.LLSApp, frameInfo.Seconds.LastFrame, mainWindow.Input, mainWindow.EventQueue));
+		STimer				timer					= {};
+		if_true_vi(APPLICATION_STATE_EXIT, ::lls::APP_STATE_Quit == ::lls::llsServerUpdate(app.LLSApp, frameInfo.Seconds.LastFrame, mainWindow.Input, mainWindow.EventQueue));
 		timer.Frame();
 		//info_printf("Update engine in %f seconds", timer.LastTimeSeconds);
 	}
 
 	int32_t						serverResult;
-	if_fail_e(serverResult = ::gpk::serverUpdate(*app.Server, gui));
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, serverResult == 1, "%s", "User requested close. Terminating execution.");
+	if_fail_e(serverResult = serverUpdate(*app.Server, gui));
+	if_true_vif(APPLICATION_STATE_EXIT, serverResult == 1, "%s", "User requested close. Terminating execution.");
 
-	if_fail_e(app.Server->QueueReceived.for_each([&app](::gpk::TPacketQueue & messages) {
-		messages.enumerate([&app](uint32_t & index, ::gpk::pobj<::gpk::SMessage> & message) {
+	if_fail_e(app.Server->QueueReceived.for_each([&app](TPacketQueue & messages) {
+		messages.enumerate([&app](uint32_t & index, pobj<SMessage> & message) {
 			if(!message)
 				return 0;
 
-			::gpk::vcu0_t						input					= message->Payload;
+			vcu0_t						input					= message->Payload;
 			gpk::pobj<lls::EventLLS>	newEvent;
 			if_fail_fe(newEvent->Load(input));
-			info_printf("Received '%s' from client %i: %s.", ::gpk::get_enum_namep(newEvent->Type), index, ::gpk::get_value_namep(newEvent->Type));
+			info_printf("Received '%s' from client %i: %s.", get_enum_namep(newEvent->Type), index, get_value_namep(newEvent->Type));
 			if_fail_fe(app.LLSApp.EventsReceived.push_back(newEvent));
 			return 0;
 		});
@@ -151,37 +151,37 @@ sttc	::gpk::err_t	processSystemEvent		(::SApplication & app, cnst ::gpk::SEventS
 #endif
 
 	//-----------------------------
-	::gpk::STimer				& timer					= app.Framework.Timer;
-	::gpk::sc_t						buffer	[256]			= {};
+	STimer				& timer					= app.Framework.Timer;
+	sc_t						buffer	[256]			= {};
 	gpk::sprintf_s(buffer, "[%u x %u]. FPS: %g. Last frame seconds: %g.", mainWindow.Size.x, mainWindow.Size.y, 1 / timer.LastTimeSeconds, timer.LastTimeSeconds);
 	::HWND						windowHandle			= mainWindow.PlatformDetail.WindowHandle;
 	SetWindowTextA(windowHandle, buffer);
 	
-	return ::gpk::updateFramework(framework);
+	return updateFramework(framework);
 }
 
-::gpk::err_t			draw					(::SApplication& app)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-	cnst ::gpk::n3f2_t			sunlightPos				= {}; //::gpk::calcSunPosition();
-	//cnst double				sunlightFactor			= .1;//:::gpk::calcSunlightFactor(app.LLSApp.World.WorldState.DaylightRatioExtra, app.LLSApp.World.WorldState.DaylightOffsetMinutes);
-	cnst ::gpk::rgbaf			clearColor				= ::gpk::DARKBLUE * .0625;//::gpk::interpolate_linear(::gpk::DARKBLUE * .25, ::gpk::LIGHTBLUE * 1.1, sunlightFactor);
+gpk::err_t			draw					(::SApplication& app)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	cnst n3f2_t			sunlightPos				= {}; //calcSunPosition();
+	//cnst double				sunlightFactor			= .1;//:calcSunlightFactor(app.LLSApp.World.WorldState.DaylightRatioExtra, app.LLSApp.World.WorldState.DaylightOffsetMinutes);
+	cnst rgbaf			clearColor				= DARKBLUE * .0625;//interpolate_linear(DARKBLUE * .25, LIGHTBLUE * 1.1, sunlightFactor);
 
 #if !defined(DISABLE_D3D11) 
 	memset(app.D3DApp.GUIStuff.RenderTarget.begin(), 0, app.D3DApp.GUIStuff.RenderTarget.byte_count());
 	
-	do { if_fail_fe(::gpk::guiDraw(*app.LLSApp.GUI, app.D3DApp.GUIStuff.RenderTarget)); } while(0);
+	do { if_fail_fe(guiDraw(*app.LLSApp.GUI, app.D3DApp.GUIStuff.RenderTarget)); } while(0);
 
 	app.D3DApp.Scene.ConstantBufferScene.Time	= (float)app.Framework.FrameInfo.Seconds.Total;
 
-	cnst ::gpk::SCamera		& cameraSelected		= app.LLSApp.Game.Camera;
-	cnst ::gpk::SEngineScene	& engineScene			= *app.LLSApp.Game.Engine.Scene;
-	do { if_fail_fe(::gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, cameraSelected.NearFar)); } while(0);
+	cnst SCamera		& cameraSelected		= app.LLSApp.Game.Camera;
+	cnst SEngineScene	& engineScene			= *app.LLSApp.Game.Engine.Scene;
+	do { if_fail_fe(d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, cameraSelected.NearFar)); } while(0);
 #else 
-	::gpk::SFramework			& framework				= app.Framework;
-	::gpk::prtbgra8d32			backBuffer				= framework.RootWindow.BackBuffer;
+	SFramework			& framework				= app.Framework;
+	prtbgra8d32			backBuffer				= framework.RootWindow.BackBuffer;
 	backBuffer->resize(framework.RootWindow.BackBuffer->Color.metrics(), clearColor, (uint32_t)-1);
 	do { if_fail_fe(::lls::llsDraw(app.LLSApp, *backBuffer, false)); } while(0);
 	memcpy(framework.RootWindow.BackBuffer->Color.View.begin(), backBuffer->Color.View.begin(), backBuffer->Color.View.byte_count());
-	//::gpk::grid_mirror_y(framework.RootWindow.BackBuffer->Color.View, backBuffer->Color.View);
+	//grid_mirror_y(framework.RootWindow.BackBuffer->Color.View, backBuffer->Color.View);
 	//framework.RootWindow.BackBuffer		= backBuffer;
 #endif
 	return 0;

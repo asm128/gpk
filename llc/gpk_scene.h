@@ -64,18 +64,18 @@ nmsp gpk
 			);
 	}
 
-	err_t 		generateGridPositions			(cnst n2u1_t & gridMetrics, apod<tri3f2_t> & out_Positions	);
-	err_t 		generateGridNormalsTriangle		(cnst n2u1_t & gridMetrics, apod<n3f2_t  > & out_Normals	);
-	err_t 		generateGridNormalsVertex		(cnst n2u1_t & gridMetrics, apod<tri3f2_t> & out_Normals	);
-	err_t 		generateGridUV					(cnst n2u1_t & gridMetrics, apod<tri2f2_t> & out_UV		);
+	err_t 		generateGridPositions			(n2u1_c & gridMetrics, apod<tri3f2_t> & out_Positions	);
+	err_t 		generateGridNormalsTriangle		(n2u1_c & gridMetrics, apod<n3f2_t  > & out_Normals	);
+	err_t 		generateGridNormalsVertex		(n2u1_c & gridMetrics, apod<tri3f2_t> & out_Normals	);
+	err_t 		generateGridUV					(n2u1_c & gridMetrics, apod<tri2f2_t> & out_UV		);
 	err_t 		generateGridGeometry
-		( cnst n2u1_t			& gridMetrics
+		( n2u1_c			& gridMetrics
 		, apod<tri3f2_t>	& out_Positions
 		, apod<n3f2_t  >	& out_Normals
 		, apod<tri3f2_t>	& out_NormalsVertex
 		, apod<tri2f2_t>	& out_UV
 		);
-	stin	err_t generateGridGeometry			(cnst n2u1_t & gridMetrics, SModelGeometry<f2_t>& out_Geometry)	{
+	stin	err_t generateGridGeometry			(n2u1_c & gridMetrics, SModelGeometry<f2_t>& out_Geometry)	{
 		return generateGridGeometry
 			( gridMetrics
 			, out_Geometry.Positions

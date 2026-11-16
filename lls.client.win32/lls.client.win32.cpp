@@ -110,7 +110,7 @@ sttc	::gpk::err_t	processSystemEvent	(::SApplication & app, cnst ::gpk::SEventSy
 		return result;
 	})); } while(0);
 
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", ::gpk::b82sc(systemExit), ::gpk::b82sc(systemRequestedExit));
+	if_true_vif(::gpk::APPLICATION_STATE_EXIT, systemExit || systemRequestedExit, "%s || %s", (::gpk::sc_c*)::gpk::b82st(systemExit), (::gpk::sc_c*)::gpk::b82st(systemRequestedExit));
 
 	::gpk::SFrameInfo			& frameInfo			= framework.FrameInfo;
 	{	

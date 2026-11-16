@@ -298,7 +298,7 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 		}
 		case XCB_CONFIGURE_NOTIFY: {
 			cnst xcb_configure_notify_event_t & configure = *(xcb_configure_notify_event_t*)event;
-			cnst n2u1_t size = {configure.width, configure.height};
+			n2u1_c size = {configure.width, configure.height};
 			if(size != displayInstance.Size) {
 				displayInstance.PreviousSize = displayInstance.Size;
 				displayInstance.Size = size;

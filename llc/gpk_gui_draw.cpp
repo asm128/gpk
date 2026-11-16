@@ -165,31 +165,31 @@ sttc	gpk::err_t actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl, 
 	if_true_e(::gpk::failed(::controlTextDraw(gui, iControl, target, disabled)));
 	return 0;
 }
-gpk::err_t 		gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra target)								{
+gpk::err_t 		gpk::controlDrawHierarchy		(SGUI & gui, cid_t iControl, g8bgra target)								{
 	if_fail_fef(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics16()) {
 		for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
-			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
+			gui.Controls.SetUpdated((cid_t)iOutdated, false);
 		gui.LastSize			= target.metrics().u1();
 	}
-	if(false == ::gpk::controlHidden(gui, iControl)) {
+	if(false == controlHidden(gui, iControl)) {
 		if_fail_fe(::actualControlDraw(gui, iControl, target));
-		::gpk::vccid				children						= gui.Controls.Children[iControl];
+		vccid				children						= gui.Controls.Children[iControl];
 		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 			if_fail_fe(gpk::controlDrawHierarchy(gui, children[iChild], target));
 	}
 	return 0;
 }
-gpk::err_t 		gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::g8bgra target)													{
+gpk::err_t 		gpk::guiDraw					(SGUI & gui, cnst g8bgra & target)													{
 	if(gui.LastSize != target.metrics().u1() || gui.LastZoom != gui.Zoom) {
 		for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
-			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
+			gui.Controls.SetUpdated((cid_t)iOutdated, false);
 		gui.LastSize			= target.metrics().u1();
 		gui.LastZoom			= gui.Zoom;
 	}
 	if_fail_fe(gpk::guiUpdateMetrics(gui, gui.LastSize, false));;
 	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
-		if(false == ::gpk::controlInvalid(gui, (::gpk::cid_t)iControl) && ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent))
-			if_true_e(::gpk::failed(::gpk::controlDrawHierarchy(gui, (::gpk::cid_t)iControl, target)));
+		if(false == controlInvalid(gui, (cid_t)iControl) && controlInvalid(gui, gui.Controls.States[iControl].Parent))
+			if_true_e(failed(controlDrawHierarchy(gui, (cid_t)iControl, target)));
 	return 0;
 }

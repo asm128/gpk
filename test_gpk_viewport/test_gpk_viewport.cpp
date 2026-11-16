@@ -143,7 +143,7 @@ err_t			update				(::gme::SApplication & app, b8_t exitSignal)	{
 		scene.ViewMatrix.LookAt(scene.Camera.Position, scene.Camera.Target, scene.CameraUp);
 		pobj<SDialogViewport>									viewport									= {};
 		app.DialogMain.Controls[app.Viewport].as(viewport);
-		cnst n2u1_t											offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
+		n2u1_c											offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
 		scene.Projection.FieldOfView(.25 * math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar);
 		scene.Projection															= scene.ViewMatrix * scene.Projection;
 		scene.LightPos.Normalize();
@@ -172,7 +172,7 @@ err_t			draw			(::gme::SApplication & app)							{
 	pobj<rtbgra8d32>	buffer3d	= app.Buffer3D;
 	pobj<SDialogViewport>	viewport	= {};
 	app.DialogMain.Controls[app.Viewport].as(viewport);
-	cnst n2u1_t											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
+	n2u1_c											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
 	buffer3d->resize(offscreenMetrics.Cast<uint32_t>(), {0, 0, 0, 0}, (uint32_t)-1);
 
 	apod<tri3f2_t>				& triangle3dList							= app.VertexCache.Triangle3dTransformed	;
