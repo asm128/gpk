@@ -1,64 +1,86 @@
 #include "gpk_gui.h"
 #include "gpk_gui_control_list.h"
+#include "gpk_gui_system.h"
 #include "gpk_control_grid.h"
 #include "gpk_dialog.h"
+#include "gpk_dialog_controls.h"
+#include "gpk_ctti_enum.h"
+#include "gpk_ctti_stct.h"
+#include "gpk_json.h"
 
 #ifndef TEST_GPK_GUI_H_23627
 #define TEST_GPK_GUI_H_23627
 
+usns gpk;
+
+nmsp sample_gui {
+	CTTI_ENUM_COMPILED(INSPECTOR, u0_t, LIVE, HOVERED, FOCUSED);
+	CTTI_ENUM_COMPILED(WORKSPACE_ACTION, u0_t, NEW_GUI);
+	CTTI_ENUM_COMPILED(EDITOR_ACTION, u0_t, NEW_CONTROL);
+}
+
 stct SSampleGUIInspector {
-	::gpk::cid_t				IdRoot			= ::gpk::CID_INVALID;
-	::gpk::cid_t				IdTitle			= ::gpk::CID_INVALID;
-	::gpk::SControlList			Names			= {};
-	::gpk::SControlList			Values			= {};
-	::gpk::astsc_t<512>			TextValues[5]	= {};
+	pobj<SDialogViewport>
+					Viewport		= {};
+ 	astsc_t<512>	TextValues[5]	= {};
 };
 
 stct SFontPicker {
-	::gpk::cid_t				IdViewport		= ::gpk::CID_INVALID;
-	::gpk::SControlGrid			Grid			= {};
-	::gpk::aobj<::gpk::string>	Labels	= {};
+	u2_t			IndexGrid		= (u2_t)-1;
+	aobj<string>	Labels	= {};
 };
 
-stct SPalettePicker {
-	::gpk::cid_t				IdViewport		= ::gpk::CID_INVALID;
-	::gpk::SControlGrid			GridTones[2]	= {};
-	::gpk::SControlGrid			GridShades		= {};
+stct SSampleGUIPalettePicker {
+	cid_t			IdViewport		= CID_INVALID;
+	u2_t			IndexGridTones[2]	= {(u2_t)-1, (u2_t)-1};
+	u2_t			IndexGridShades	= (u2_t)-1;
 };
 
-stct SSampleGUIEdited {
-	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
-	::gpk::cid_t				Control			= ::gpk::CID_INVALID;
-};
+CTTI_STCT(SGUIEditor,
+	struct SGUIEditor {
+	pobj<SDialogViewport>
+				Viewport		= {};
+	pobj<SDialog>	Dialog			= {};
+	u2_t			IndexActions	= (u2_t)-1;
+	apobj<SDialogViewport>
+				DataViews		= {};
+	SJSONFile		Data			= {};
+	img<bgra>		Target			= {};
+	};
+	);
+
+CTTI_STCT(SGUIWorkspace,
+	struct SGUIWorkspace {
+	u2_t			IndexActions	= (u2_t)-1;
+	u2_t			IndexTaskbar	= (u2_t)-1;
+	apobj<SGUIEditor>
+				Editors			= {};
+	};
+	);
+
 
 stct SSampleGUI {
-	::gpk::pobj<::gpk::SDialog>	Dialog			= {};
-	SSampleGUIEdited			Edited			= {};
-	::gpk::b8_t					UseNewPalettes			= false;
-	::gpk::cid_t				ControlMode				= ::gpk::CID_INVALID;
-	::gpk::cid_t				ControlGeometry			= ::gpk::CID_INVALID;
-	::gpk::acid					ViewportIds				= {};
-	::gpk::SControlList			ListViewports			= {};
-	::gpk::SControlList			ListExit				= {};
-	SPalettePicker				PalettePicker			= {};
-	SFontPicker					FontPicker				= {};
-	::gpk::cid_t				ViewportStates			= ::gpk::CID_INVALID;
-	::gpk::SControlGrid			GridStates				= {};
-	::gpk::cid_t				ControlLive				= ::gpk::CID_INVALID;
-	::gpk::cid_t				ViewportInspectors		= ::gpk::CID_INVALID;
-	SSampleGUIInspector			InspectorLive			= {};
-	SSampleGUIInspector			InspectorHovered		= {};
-	SSampleGUIInspector			InspectorFocused		= {};
-	::gpk::cid_t				ControlScreenshot		= ::gpk::CID_INVALID;
-	::gpk::cid_t				ControlExit				= ::gpk::CID_INVALID;
-	::gpk::b8_t					ScreenshotRequested		= false;
-	::gpk::cid_t				ViewportAlignments		= ::gpk::CID_INVALID;
-	::gpk::astcid<9>			ControlsAlignment		= {};
-	::gpk::astcid<4>			ControlsKeyboard		= {};
+	b8_t			UseNewPalettes			= false;
+	cid_t			ControlMode				= CID_INVALID;
+	cid_t			ControlGeometry			= CID_INVALID;
+	pobj<SDialog>	Dialog			= {};
+	astatic<acid, GUI_TYPE_COUNT>
+					System				= {};
+	u2_t			IndexListViewports		= (u2_t)-1;
+	u2_t			IndexListExit			= (u2_t)-1;
+	SSampleGUIPalettePicker
+					PalettePicker			= {};
+	SFontPicker			FontPicker				= {};
+	u2_t			IndexGridStates			= (u2_t)-1;
+	SGUIWorkspace		Workspace				= {};
+	SSampleGUIInspector	Inspectors[sample_gui::INSPECTOR_gpk_ctti.Count] = {};
+	b8_t				ScreenshotRequested		= false;
+
+	SSampleGUI(pobj<SGUI> & gui) { Dialog.create(gui); }
 };
 
-::gpk::err_t				sampleGUISetup				(SSampleGUI & app, ::gpk::pobj<::gpk::SGUI> & gui, ::gpk::pobj<::gpk::SInput> & input);
-::gpk::err_t				sampleGUIUpdate				(SSampleGUI & app, ::gpk::b8_t systemRequestedExit);
-::gpk::err_t				sampleGUIDraw				(SSampleGUI & app, ::gpk::g8bgra target);
+err_t		sampleGUISetup				(SSampleGUI & app, pobj<SInput> & input);
+err_t		sampleGUIUpdate				(SSampleGUI & app, gpk::b8_t systemRequestedExit);
+err_t		sampleGUIDraw				(SSampleGUI & app, g8bgra target);
 
 #endif // TEST_GPK_GUI_H_23627
