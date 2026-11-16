@@ -73,11 +73,6 @@ gpk::err_t		gpk::controlSetParent	(SGUI & gui, cid_t iControl, cid_t iParent)	{
 		return 0;
 
 	control.Parent		= iParent;
-	if(controlInvalid(gui, iParent)) {
-		if_true_vef(-1, -1 != iParent, "Invalid parent control id: %u.", iParent);
-		return 0;
-	}
-
 	if((u2_t)oldParent < gui.Controls.States.size() && false == gui.Controls.IsUnused(oldParent)) {
 		acid					& children				= gui.Controls.Children[oldParent];
 		for(s2_t iChild = 0; iChild < (s2_t)children.size(); ++iChild)
@@ -86,6 +81,10 @@ gpk::err_t		gpk::controlSetParent	(SGUI & gui, cid_t iControl, cid_t iParent)	{
 				if_fail_fef(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
 				break;
 			}
+	}
+	if(controlInvalid(gui, iParent)) {
+		if_true_vef(-1, -1 != iParent, "Invalid parent control id: %u.", iParent);
+		return 0;
 	}
 
 	// Set iControl to parent's children array.
@@ -334,6 +333,7 @@ sttc	cid_t	controlProcessInput		(SGUI & gui, cnst SInput & input, cid_t iControl
 	//--------------------
 	SControlState		& controlState			= gui.Controls.States[iControl];
 	cid_t				controlHovered			= -1;
+	cid_t				controlBranch			= -1;
 	{
 		vcid					& children				= gui.Controls.Children[iControl];
 		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
@@ -344,9 +344,12 @@ sttc	cid_t	controlProcessInput		(SGUI & gui, cnst SInput & input, cid_t iControl
 				//controlState.Hover		= false;
 				gui.Controls.SetPressed(iControl, false);
 				controlHovered			= controlPressed;
+				controlBranch			= children[iChild];
 			}
 		}
 	}
+	if(input.ButtonDown(0) && controlInvalid(gui, controlState.Parent) && false == controlInvalid(gui, controlBranch))
+		if_fail_e(controlToFront(gui, controlBranch));
 	if(controlHovered == -1 && in_range(gui.CursorPos.s1(), gui.Controls.Area[iControl].Total.Global)) {
 		if(controlState.IsPressed() && input.MouseCurrent.ButtonState[0] && input.MouseCurrent.Position != input.MousePrevious.Position)
 			gui.Controls.SetDragging(iControl, true);
@@ -403,6 +406,8 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 			controlHovered			= controlPressed;
 	}
 	for(u2_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {
+		if(input.ButtonDown(0))
+			gui.Controls.SetFocused((cid_t)iControl, (cid_t)iControl == controlHovered);
 		if(iControl != (u2_t)controlHovered) {
 			gui.Controls.SetHovered((cid_t)iControl, false);;
 			if(0 == input.MouseCurrent.ButtonState[0]) {
