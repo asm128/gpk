@@ -183,12 +183,6 @@ nmsp gpk
 		tri2s1_t			Triangles	[8]		= {};
 	};
 	);
-	CTTI_STCT(SControlAttachId,
-	struct SControlAttachId {
-		cid_t				IdControl			: 15;
-		cid_t				Total				: 1;
-	};
-	);
 	CTTI_STCT(SControlConstraints,
 	struct SControlConstraints {
 		n2cid				AttachSizeToControl	= {-1, -1};
