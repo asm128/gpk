@@ -3,6 +3,20 @@
 
 usns gpk;
 
+stxp vcst_c viewportControlIdentifiers[VIEWPORT_CONTROL_COUNT] =
+	{ "resize_left"
+	, "resize_top"
+	, "resize_right"
+	, "resize_bottom"
+	, "resize_top_left"
+	, "resize_top_right"
+	, "resize_bottom_left"
+	, "resize_bottom_right"
+	, "title"
+	, "close"
+	, "target"
+	};
+
 gpk::cid_t gpk::viewportControl(cnst SGUI & gui, cid_t idViewport, VIEWPORT_CONTROL control) {
 	if_true_vef(CID_INVALID, controlInvalid(gui, idViewport), "Invalid viewport control: %i.", idViewport);
 	if_true_vef(CID_INVALID, control < 0 || control >= VIEWPORT_CONTROL_COUNT, "Invalid viewport part: %i.", control);
@@ -16,8 +30,13 @@ gpk::cid_t gpk::viewportCreate(SGUI & gui, cid_t idParent) {
 	s1_c heightTitleBar = fontCharSize.y + 4;
 	u2_c widthTarget = 800;
 	cnst n2f3_t targetSize = {(f3_t)widthTarget, widthTarget * (9 / 16.0)};
+	sttc s2_t counterVPs = 0;
+	s2_c viewportSequence = ++counterVPs;
 	cid_t idViewport = -1;
 	if_fail_fe(idViewport = controlCreate(gui));
+	string viewportIdentifier = {};
+	if_fail_fe(append_strings(viewportIdentifier, "viewport_", str(viewportSequence)));
+	gui.Controls.Identifier[idViewport] = label(viewportIdentifier);
 	if(-1 != idParent)
 		if_fail_fe(controlSetParent(gui, idViewport, idParent));
 	SControlPlacement & viewport = gui.Controls.Placement[idViewport];
@@ -30,6 +49,7 @@ gpk::cid_t gpk::viewportCreate(SGUI & gui, cid_t idParent) {
 	for(u2_t iElement = 0; iElement < VIEWPORT_CONTROL_COUNT; ++iElement) {
 		cid_t idControl = -1;
 		if_fail_fe(idControl = controlCreateChild(gui, idViewport));
+		gui.Controls.Identifier[idControl] = viewportControlIdentifiers[iElement];
 		gui.Controls.Constraints[idControl].AttachSizeToControl.x = idControl;
 	}
 	for(u2_t iElement = 0; iElement < VIEWPORT_CONTROL_TITLE; ++iElement) {
@@ -53,11 +73,11 @@ gpk::cid_t gpk::viewportCreate(SGUI & gui, cid_t idParent) {
 	gui.Controls.Text[idClose].Text = "X";
 	gui.Controls.Text[idClose].Align = ALIGN_CENTER;
 	gui.Controls.Constraints[idClose].AttachSizeToControl = {-1, -1};
+	if_fail_fe(append_strings(gui.Controls.Script[idClose], "{\"", gui.Controls.Identifier[idViewport], "\":{\"State\":{\"Flag\":1}}}"));
 	cid_t idTitle = viewportControl(gui, idViewport, VIEWPORT_CONTROL_TITLE);
 	gui.Controls.Placement[idTitle].Area.Size.y = heightTitleBar;
-	sttc s2_t counterVPs = 0;
 	sc_t buffer[256] = {};
-	cnst s2_t titleLen = snprintf(buffer, size(buffer) - 2, "Viewport #%i", ++counterVPs);
+	cnst s2_t titleLen = snprintf(buffer, size(buffer) - 2, "Viewport #%i", viewportSequence);
 	gui.Controls.Text[idTitle].Text = {label(buffer).begin(), (u2_t)titleLen};
 	gui.Controls.Text[idTitle].Align = ALIGN_CENTER;
 	gui.Controls.Placement[idTitle].Area.Offset.x = heightTitleBar;
@@ -136,16 +156,10 @@ gpk::err_t gpk::viewportUpdate(SGUI & gui, cnst SInput & input, cid_t idViewport
 	if_true_vef(-1, controlInvalid(gui, idViewport), "Invalid viewport control: %i.", idViewport);
 	if(gui.Controls.IsHidden(idViewport))
 		rtrn 0;
-	cid_t idClose = -1;
 	cid_t idTitle = -1;
 	cid_t idTarget = -1;
-	if_fail_fe(idClose = viewportControl(gui, idViewport, VIEWPORT_CONTROL_CLOSE));
 	if_fail_fe(idTitle = viewportControl(gui, idViewport, VIEWPORT_CONTROL_TITLE));
 	if_fail_fe(idTarget = viewportControl(gui, idViewport, VIEWPORT_CONTROL_TARGET));
-	if(gui.Controls.IsAction(idClose)) {
-		gui.Controls.SetHidden(idViewport, true);
-		rtrn 0;
-	}
 	cnst SControlState & titleState = gui.Controls.States[idTitle];
 	if(input.ButtonDown(0) && titleState.IsPressed())
 		if_fail_fe(controlToFront(gui, idViewport));
