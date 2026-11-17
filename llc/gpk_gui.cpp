@@ -169,6 +169,33 @@ gpk::err_t gpk::guiJSONLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input, 
 	rtrn 0;
 }
 
+sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, ::gpk::b8_t & dynamic) {
+	if_true_fef(iSource >= source.Token.size(), "iSource:%u, TokenCount:%u", iSource, source.Token.size());
+	cnst ::gpk::JSON_TYPE type = source.Token[iSource].Type;
+	if(::gpk::JSON_TYPE_STRING == type) {
+		::gpk::vcst_t value = {};
+		if_fail_fef(::gpk::jsonObjectGetString(source, iSource, value), "iSource:%u", iSource);
+		for(::gpk::u2_t iCharacter = 0; iCharacter < value.size(); ++iCharacter)
+			if('{' == value[iCharacter]) {
+				dynamic = true;
+				rtrn 0;
+			}
+		rtrn 0;
+	}
+	if(::gpk::JSON_TYPE_OBJECT != type && ::gpk::JSON_TYPE_ARRAY != type)
+		rtrn 0;
+	cnst ::gpk::SJSONNode & node = *source.Tree[iSource];
+	cnst ::gpk::u2_t first = ::gpk::JSON_TYPE_OBJECT == type ? 1U : 0U;
+	cnst ::gpk::u2_t step = ::gpk::JSON_TYPE_OBJECT == type ? 2U : 1U;
+	for(::gpk::u2_t iChild = first; iChild < node.Children.size(); iChild += step) {
+		cnst ::gpk::u2_t iChildNode = (::gpk::u2_t)node.Children[iChild]->ObjectIndex;
+		if_fail_fef(::guiJSONTemplateDynamic(source, iChildNode, dynamic), "iSource:%u, iChild:%u, iChildNode:%u", iSource, iChild, iChildNode);
+		if(dynamic)
+			break;
+	}
+	rtrn 0;
+}
+
 sttc ::gpk::err_t guiJSONTemplateResolveNode(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, cnst ::gpk::SJSONReader & values, ::gpk::u2_t iValues, ::gpk::string & output) {
 	if_true_fe(iSource >= source.Token.size());
 	cnst ::gpk::JSON_TYPE type = source.Token[iSource].Type;
@@ -212,21 +239,36 @@ sttc ::gpk::err_t guiJSONTemplateResolveNode(cnst ::gpk::SJSONReader & source, :
 }
 
 gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
-	if_fail_fe(controlInvalid(gui, iControl));
+	if_true_fef(controlInvalid(gui, iControl), "iControl:%i", iControl);
+	cnst vcst_t identifier = gui.Controls.Identifier[iControl];
 	cnst vcst_t script = gui.Controls.Script[iControl];
 	if(0 == script.size())
 		rtrn 0;
-	string valuesJSON = {};
-	if_fail_fe(guiJSONSave(valuesJSON, gui));
-	SJSONReader values = {};
-	if_fail_fe(jsonParse(values, valuesJSON));
 	SJSONReader source = {};
-	if_fail_fe(jsonParse(source, script));
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), "script.jsonParse", GPK_VIEW_ARGS(script));
+	if_fail_fef(jsonParse(source, script), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+	b8_t dynamic = false;
+	if_fail_fef(::guiJSONTemplateDynamic(source, 0, dynamic), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+	if(false == dynamic) {
+		always_printf("iControl:%i, Identifier:%.*s, Stage:%s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), "guiJSONLoad", GPK_VIEW_ARGS(script));
+		if_fail_fef(guiJSONLoad(gui, source), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+		rtrn 0;
+	}
+	string valuesJSON = {};
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s", iControl, GPK_VIEW_ARGS(identifier), "guiJSONSave");
+	if_fail_fef(guiJSONSave(valuesJSON, gui), "iControl:%i, Identifier:%.*s", iControl, GPK_VIEW_ARGS(identifier));
+	SJSONReader values = {};
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), "values.jsonParse", valuesJSON.size());
+	if_fail_fef(jsonParse(values, valuesJSON), "iControl:%i, Identifier:%.*s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), valuesJSON.size());
 	string patchJSON = {};
-	if_fail_fe(::guiJSONTemplateResolveNode(source, 0, values, 0, patchJSON));
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s", iControl, GPK_VIEW_ARGS(identifier), "guiJSONTemplateResolveNode");
+	if_fail_fef(::guiJSONTemplateResolveNode(source, 0, values, 0, patchJSON), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 	SJSONReader patch = {};
-	if_fail_fe(jsonParse(patch, patchJSON));
-	rtrn guiJSONLoad(gui, patch);
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), "patch.jsonParse", GPK_VIEW_ARGS(patchJSON));
+	if_fail_fef(jsonParse(patch, patchJSON), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), "guiJSONLoad", GPK_VIEW_ARGS(patchJSON));
+	if_fail_fef(guiJSONLoad(gui, patch), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
+	rtrn 0;
 }
 //err_t			gpk::guiUpdate			(SGUI & gui, cnst SInput & input, cnst n2u1_t & targetMetrics, vpobj<SEventSystem> in_Events) {
 //	guiProcessInput(gui, input, in_Events);
@@ -585,9 +627,15 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 	//	if(statePrevious != stateCurrent)
 	//		if_fail_fe(eventEnqueueGuiControlStateChange(gui.Controls.EventQueue, (cid_t)iControl, statePrevious, stateCurrent));
 	//}
-	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
-		if(gui.Controls.States[iControl].IsAction() && gui.Controls.Script[iControl].size())
-			if_fail_fe(guiScriptRun(gui, (cid_t)iControl));
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
+		if(false == gui.Controls.States[iControl].IsAction())
+			continue;
+		cnst vcst_t identifier = gui.Controls.Identifier[iControl];
+		cnst vcst_t script = gui.Controls.Script[iControl];
+		always_printf("iControl:%u, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+		if(script.size())
+			if_fail_fef(guiScriptRun(gui, (cid_t)iControl), "iControl:%u, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+	}
 	return controlHovered;
 }
 

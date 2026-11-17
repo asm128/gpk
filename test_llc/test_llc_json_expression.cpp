@@ -433,11 +433,19 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 		|| gui.Controls.Placement[idStructural].Area.Size.x != 41
 		|| gui.Controls.Placement[idStructural].Area.Size.y != 43
 		);
-	gui.Controls.Script[idAction] = "{\"target\":{\"State\":{\"Flag\":\"{target.State.Flag ? '0' : '1'}\"}}}";
+	gui.Controls.Script[idAction] = "{\"target\":{\"State\":{\"Flag\":\"{target.State.Flag == 'GUI_CONTROL_FLAG_Hidden' ? '0' : '1'}\"}}}";
 	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_FORMAT_RESULT, ::gpk::failed(::gpk::guiScriptRun(gui, idAction)), "%s", "Failed to show target through ternary script.");
 	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, gui.Controls.States[idTarget].IsHidden());
 	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_FORMAT_RESULT, ::gpk::failed(::gpk::guiScriptRun(gui, idAction)), "%s", "Failed to hide target through ternary script.");
 	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, false == gui.Controls.States[idTarget].IsHidden());
+	gui.Controls.Script[idAction] = "{\"target\":{\"Text\":{\"FontSelected\":5}}}";
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_RESULT, ::gpk::failed(::gpk::guiScriptRun(gui, idAction)), "%s", "Failed to load static script patch.");
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE
+		, gui.Controls.Text[idTarget].FontSelected != 5
+		|| gui.Controls.Text[idTarget].Text != target.Text
+		|| gui.Controls.Text[idTarget].Align != target.Align
+		|| gui.Controls.Text[idTarget].Selection != target.Selection
+		);
 	rtrn 0;
 }
 

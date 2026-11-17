@@ -93,26 +93,6 @@ gpk::cid_t gpk::viewportCreate(SGUI & gui, cid_t idParent) {
 	rtrn idViewport;
 }
 
-gpk::err_t gpk::viewportFold(SGUI & gui, cid_t idViewport, b8_t fold) {
-	cid_t idTitle = -1;
-	cid_t idTarget = -1;
-	if_fail_fe(idTitle = viewportControl(gui, idViewport, VIEWPORT_CONTROL_TITLE));
-	if_fail_fe(idTarget = viewportControl(gui, idViewport, VIEWPORT_CONTROL_TARGET));
-	b8_c unfolded = false == gui.Controls.IsHidden(idTarget);
-	if(fold == unfolded) {
-		SControlPlacement & placementViewport = gui.Controls.Placement[idViewport];
-		cnst SControlPlacement & placementTitle = gui.Controls.Placement[idTitle];
-		if(fold)
-			placementViewport.Area.Size.y = placementTitle.Area.Size.y + controlNCSpacing(placementViewport).y;
-		else
-			placementViewport.Area.Size.y = gui.Controls.Placement[idTarget].Area.Size.y + placementTitle.Area.Size.y + controlNCSpacing(placementViewport).y;
-		gui.Controls.SetHidden(idTarget, fold);
-		cid_t idParent = controlParent(gui, idViewport);
-		if_fail_fe(controlMetricsInvalidate(gui, -1 == idParent ? idViewport : idParent));
-	}
-	rtrn one_if(gui.Controls.IsHidden(idTarget));
-}
-
 sttc gpk::err_t viewportResize(SGUI & gui, cnst SInput & input, cid_t idViewport, gpk::VIEWPORT_CONTROL resizeControl) {
 	cid_t idTarget = -1;
 	if_fail_fe(idTarget = viewportControl(gui, idViewport, VIEWPORT_CONTROL_TARGET));
@@ -183,8 +163,6 @@ gpk::err_t gpk::viewportUpdate(SGUI & gui, cnst SInput & input, cid_t idViewport
 			if(gui.Controls.States[idResize].IsDragging())
 				rtrn ::viewportResize(gui, input, idViewport, resizeControl);
 		}
-	if(gui.Controls.IsAction(idTitle))
-		if_fail_fe(viewportFold(gui, idViewport, false == gui.Controls.IsHidden(idTarget)));
 	rtrn 0;
 }
 

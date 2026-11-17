@@ -53,15 +53,19 @@ sttc gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, cid_t & idViewpor
 	controls.Placement[idClient].Area.Size = {(s1_t)(area.Size.x - 8), (s1_t)(area.Size.y - 32)};
 	controls.Placement[idClient].Margin = {};
 	controls.Placement[idClient].Border = {1, 1, 1, 1};
-	controls.States[idClient].Mask = viewer.Dialog->DefaultControlMask;
-	controls.States[idClient].Mask &= ~GUI_CONTROL_FLAG_Hovered;
-	controls.States[idClient].Mask &= ~GUI_CONTROL_FLAG_Action;
+	controls.States[idClient].Mask = (GUI_CONTROL_FLAG)(GUI_CONTROL_FLAG_Hidden | GUI_CONTROL_FLAG_Updated);
 	controls.Draw[idClient].Palettes = viewer.Dialog->Colors->Viewport;
 	controls.Placement[idTitle].Border = {2, 2, 2, 2};
 	controls.States[idTitle].Mask = viewer.Dialog->DefaultControlMask;
 	controls.Draw[idTitle].UseNewPalettes = false;
 	controls.Draw[idTitle].Palettes = viewer.Dialog->Colors->ViewportTitle;
 	controls.Text[idTitle].Text = title;
+	s1_c foldedHeight = controls.Placement[idTitle].Area.Size.y + controlNCSpacing(root).y;
+	if_fail_fe(append_strings(controls.Script[idTitle]
+		, "{\"", controls.Identifier[idViewport]
+		, "\":{\"Placement\":{\"Area\":{\"Size\":{\"y\":\"{", controls.Identifier[idViewport], ".target.State.Flag == 'GUI_CONTROL_FLAG_Updated' ? '", str(foldedHeight), "' : '", str(area.Size.y), "'}\"}}},"
+		, "\"target\":{\"State\":{\"Flag\":\"{", controls.Identifier[idViewport], ".target.State.Flag == 'GUI_CONTROL_FLAG_Updated' ? '1' : '0'}\"}}}}"
+		));
 	rtrn controlMetricsInvalidate(gui, idViewport);
 }
 
