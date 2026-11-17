@@ -2,15 +2,17 @@
 #include "gpk_string.h"
 #include "gpk_sync.h"
 #include "gpk_json.h"
+#ifdef GPK_WINDOWS
+#	include <Windows.h>
+#endif
 
-#include <Windows.h>
-
-#ifndef LLS_PROCESS_BROKER_H_23627
-#define LLS_PROCESS_BROKER_H_23627
+#ifndef GPK_PROCESS_BROKER_H_23627
+#define GPK_PROCESS_BROKER_H_23627
 
 
-namespace llswin32
+namespace gpk
 {
+#ifdef GPK_WINDOWS
 	struct SProcessHandles {
 		HANDLE							ChildStd_IN_Read	= INVALID_HANDLE_VALUE;
 		HANDLE							ChildStd_IN_Write	= INVALID_HANDLE_VALUE;
@@ -24,7 +26,7 @@ namespace llswin32
 		PROCESS_INFORMATION				ProcessInfo			= {};
 		STARTUPINFOA					StartInfo			= {sizeof(STARTUPINFOA)};
 	};
-
+#endif
 	struct SProcessBrokerJob {
 		::gpk::pobj<::gpk::SConnection>	Connection;
 		::gpk::au0_t					Request;

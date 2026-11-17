@@ -1,4 +1,4 @@
-#include "lls_process_broker.h"
+#include "gpk_process_broker.h"
 
 #include "gpk_json_expression.h"
 #include "gpk_parse.h"
@@ -14,7 +14,7 @@ sttc	void	closeHandle				(HANDLE & handle) {
 	handle								= INVALID_HANDLE_VALUE;
 }
 
-sttc	void	closeProcessHandles		(::llswin32::SProcessBrokerJob & job) {
+sttc	void	closeProcessHandles		(::gpk::SProcessBrokerJob & job) {
 	::closeHandle(job.IOHandles.ChildStd_IN_Read);
 	::closeHandle(job.IOHandles.ChildStd_IN_Write);
 	::closeHandle(job.IOHandles.ChildStd_OUT_Read);
@@ -25,7 +25,7 @@ sttc	void	closeProcessHandles		(::llswin32::SProcessBrokerJob & job) {
 	::closeHandle(job.Process.ProcessInfo.hThread);
 }
 
-sttc	::gpk::err_t	initHandles		(::llswin32::SProcessHandles & handles) {
+sttc	::gpk::err_t	initHandles		(::gpk::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES			saAttr					= {sizeof(SECURITY_ATTRIBUTES)};
 	saAttr.bInheritHandle							= TRUE;
 	saAttr.lpSecurityDescriptor					= nullptr;
@@ -39,7 +39,7 @@ sttc	::gpk::err_t	initHandles		(::llswin32::SProcessHandles & handles) {
 }
 
 sttc	::gpk::err_t	createChildProcess
-	( ::llswin32::SProcess	& process
+	( ::gpk::SProcess	& process
 	, ::gpk::vu0_t			environmentBlock
 	, ::gpk::vcst_t		appPath
 	, ::gpk::vsc_t		commandLine
@@ -64,7 +64,7 @@ sttc	::gpk::err_t	createChildProcess
 	return 0;
 }
 
-sttc	::gpk::err_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gpk::vcu0_t bytesToSend) {
+sttc	::gpk::err_t	writeToPipe			(::gpk::SProcessHandles & handles, ::gpk::vcu0_t bytesToSend) {
 	uint32_t					offsetWritten				= 0;
 	while(offsetWritten < bytesToSend.size()) {
 		DWORD						dwWritten					= 0;
@@ -76,7 +76,7 @@ sttc	::gpk::err_t	writeToPipe			(::llswin32::SProcessHandles & handles, ::gpk::v
 	return 0;
 }
 
-sttc	::gpk::err_t	readFromPipe			(cnst ::llswin32::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
+sttc	::gpk::err_t	readFromPipe			(cnst ::gpk::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
 	stxp	uint32_t		bufferSize					= 1024 * 1024;
 	::gpk::au0_t				buffer;
 	do { if_fail_fe(buffer.resize(bufferSize)); } while(0);
@@ -95,7 +95,7 @@ sttc	::gpk::err_t	readFromPipe			(cnst ::llswin32::SProcessHandles & handles, ::
 	return 0;
 }
 
-sttc	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
+sttc	::gpk::err_t	processRequest			(::gpk::SProcessBrokerJob & job) {
 	cnst ::gpk::err_t		result						= [&job]() -> ::gpk::err_t {
 		do { if_fail_fe(::initHandles(job.IOHandles)); } while(0);
 		job.Process.StartInfo.hStdError				= job.IOHandles.ChildStd_ERR_Write;
@@ -127,7 +127,7 @@ sttc	::gpk::err_t	processRequest			(::llswin32::SProcessBrokerJob & job) {
 }
 
 sttc	void	threadProcessRequest		(void * jobAddress) {
-	::llswin32::SProcessBrokerJob	& job			= *(::llswin32::SProcessBrokerJob*)jobAddress;
+	::gpk::SProcessBrokerJob	& job			= *(::gpk::SProcessBrokerJob*)jobAddress;
 	if_true_block_log(error_printf, ::gpk::failed(job.Result = ::processRequest(job)) && 0 == job.Response.size(), ) {
 		stxp	::gpk::vcst_c	failureResponse		= "LLS process broker failed to execute the configured process.";
 		if_fail_re(job.Response.append(failureResponse.bytes()));
@@ -135,7 +135,7 @@ sttc	void	threadProcessRequest		(void * jobAddress) {
 	gpk_sync_increment(job.Done);
 }
 
-gpk::err_t	llswin32::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::SJSONReader & jsonReader) {
+gpk::err_t	gpk::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::SJSONReader & jsonReader) {
 	u3_t				port						= broker.Port;
 	u3_t				adapter					= broker.Adapter;
 	::gpk::vcst_t		jsonNumber					= {};
@@ -169,7 +169,7 @@ gpk::err_t	llswin32::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::S
 	return 0;
 }
 
-::gpk::err_t	llswin32::processBrokerUpdate		(::llswin32::SProcessBroker & broker) {
+::gpk::err_t	gpk::processBrokerUpdate		(::gpk::SProcessBroker & broker) {
 	::gpk::aobj<::gpk::TPacketQueue>	receivedPerClient;
 	do { if_fail_fe(::gpk::serverPayloadCollect(broker.Server, receivedPerClient)); } while(0);
 	for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
@@ -185,7 +185,7 @@ gpk::err_t	llswin32::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::S
 			cnst ::gpk::pobj<::gpk::SMessage>	& message			= receivedPerClient[iClient][iMessage];
 			if(!message)
 				continue;
-			::gpk::pobj<::llswin32::SProcessBrokerJob>	job;
+			::gpk::pobj<::gpk::SProcessBrokerJob>	job;
 			job.create();
 			job->Connection							= connection;
 			job->Request								= message->Payload;
@@ -202,7 +202,7 @@ gpk::err_t	llswin32::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::S
 	}
 
 	for(uint32_t iJob = 0; iJob < broker.Jobs.size();) {
-		::gpk::pobj<::llswin32::SProcessBrokerJob>	job				= broker.Jobs[iJob];
+		::gpk::pobj<::gpk::SProcessBrokerJob>	job				= broker.Jobs[iJob];
 		if(!job || false == gpk_sync_compare_exchange(job->Done, 1, 1)) {
 			++iJob;
 			continue;
@@ -216,13 +216,13 @@ gpk::err_t	llswin32::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::S
 	return 0;
 }
 
-::gpk::err_t	llswin32::processBrokerShutdown	(::llswin32::SProcessBroker & broker) {
+::gpk::err_t	gpk::processBrokerShutdown	(::gpk::SProcessBroker & broker) {
 	if(broker.Started)
 		if_fail_w(::gpk::serverStop(broker.Server));
 	broker.Started								= false;
 	while(broker.Jobs.size()) {
 		for(uint32_t iJob = 0; iJob < broker.Jobs.size();) {
-			::gpk::pobj<::llswin32::SProcessBrokerJob>	& job		= broker.Jobs[iJob];
+			::gpk::pobj<::gpk::SProcessBrokerJob>	& job		= broker.Jobs[iJob];
 			if(job && false == gpk_sync_compare_exchange(job->Done, 1, 1)) {
 				++iJob;
 				continue;
