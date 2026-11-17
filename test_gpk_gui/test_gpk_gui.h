@@ -8,6 +8,7 @@ usns gpk;
 
 	CTTI_STCT(SGUIEditor,
 	stct SGUIEditor {
+		cid_t							IdRoot					= CID_INVALID;
 		SGUI							GUI						= {};
 		apobj<string>					Text					= {};
 		apobj<img8bgra>					Images					= {};

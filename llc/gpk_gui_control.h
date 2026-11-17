@@ -17,6 +17,13 @@
 
 nmsp gpk
 {
+	CTTI_STCT_EXISTING(minmaxu1_t,
+	struct minmaxu1_t {
+		u1_t Min;
+		u1_t Max;
+	};
+	);
+
 	tydf	n2<cid_t>		n2cid;
 	tydf	rect<cid_t>		rectcid;
 

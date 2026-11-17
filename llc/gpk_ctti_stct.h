@@ -609,10 +609,9 @@ nmsp gpk
 	}
 } // nmsp
 
-#define CTTI_STCT(type, ...) \
-	__VA_ARGS__ \
+#define GPK_CTTI_STCT_REGISTER(type, declaration) \
 	tplt<> stct gpk::SCTTIStructRegistry<type> { \
-		sinx auto Value = ::gpk::cttiParseStruct(#__VA_ARGS__); \
+		sinx auto Value = ::gpk::cttiParseStruct(declaration); \
 		sinx ::gpk::vcst_t File = __FILE__; \
 		sinx ::gpk::u2_t Line = __LINE__; \
 		sinx ::gpk::uP_t Size = sizeof(type); \
@@ -622,5 +621,12 @@ nmsp gpk
 		{::gpk::SCTTIStructRegistry<type>::File, ::gpk::SCTTIStructRegistry<type>::Line, ::gpk::SCTTIStructRegistry<type>::Value, ::gpk::SCTTIStructRegistry<type>::Size, ::gpk::SCTTIStructRegistry<type>::IsPOD}; \
 	sttc cnst ::gpk::err_t type##_gpk_ctti_registration = \
 		::gpk::cttiStructDeclarationRegister(type##_gpk_ctti_declaration)
+
+#define CTTI_STCT_EXISTING(type, ...) \
+	GPK_CTTI_STCT_REGISTER(type, #__VA_ARGS__)
+
+#define CTTI_STCT(type, ...) \
+	__VA_ARGS__ \
+	GPK_CTTI_STCT_REGISTER(type, #__VA_ARGS__)
 
 #endif // GPK_CTTI_STCT_H

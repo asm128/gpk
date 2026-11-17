@@ -54,7 +54,7 @@ nmsp gpk
 	inxp	GUI_CONTROL_FLAG	setHovered		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hovered	, value); }
 	inxp	GUI_CONTROL_FLAG	setFocused		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Focused	, value); }
 	inxp	GUI_CONTROL_FLAG	setPressed		(GUI_CONTROL_FLAG & state, cnst GUI_CONTROL_FLAG mask, b8_t value)	nxpt	{ 
-		return (value == false && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed) && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered)) 
+		return (value == false && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed) && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered) && false == bit_test_masked(state, mask, GUI_CONTROL_FLAG_Dragging))
 			? state = bit_set_masked(bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value), mask, GUI_CONTROL_FLAG_Action, true)
 			: state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value)
 			; 

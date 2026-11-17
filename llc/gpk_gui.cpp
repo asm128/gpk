@@ -259,6 +259,11 @@ sttc	cid_t	controlProcessInput		(SGUI & gui, cnst SInput & input, cid_t iControl
 	SControlState		& controlState			= gui.Controls.States[iControl];
 	cid_t				controlHovered			= -1;
 	cid_t				controlBranch			= -1;
+	if(controlState.IsPressed() && input.MouseCurrent.ButtonState[0]) {
+		if(input.MouseCurrent.Position != input.MousePrevious.Position)
+			gui.Controls.SetDragging(iControl, true);
+		return iControl;
+	}
 	{
 		vcid					& children				= gui.Controls.Children[iControl];
 		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
@@ -338,6 +343,18 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 			if(0 == input.MouseCurrent.ButtonState[0]) {
 				gui.Controls.SetPressed((cid_t)iControl, false);
 				gui.Controls.SetDragging((cid_t)iControl, false);
+			}
+		}
+		SControlState & controlState = gui.Controls.States[iControl];
+		if(controlState.IsDragging() && controlInvalid(gui.Controls, controlState.Parent)) {
+			n2s1_t mouseDeltas = (input.MouseCurrent.Position - input.MousePrevious.Position).s1();
+			mouseDeltas.InPlaceScale(1 / gui.Zoom.DPI.x, 1 / gui.Zoom.DPI.y);
+			mouseDeltas.InPlaceScale(1 / gui.Zoom.ZoomLevel);
+			if(mouseDeltas.x || mouseDeltas.y) {
+				SControlPlacement & controlPlacement = gui.Controls.Placement[iControl];
+				controlPlacement.Area.Offset.x += ((controlPlacement.Align & ALIGN_HCENTER) == ALIGN_RIGHT ) ? -mouseDeltas.x : mouseDeltas.x;
+				controlPlacement.Area.Offset.y += ((controlPlacement.Align & ALIGN_VCENTER) == ALIGN_BOTTOM) ? -mouseDeltas.y : mouseDeltas.y;
+				if_fail_fe(controlMetricsInvalidate(gui.Controls, (cid_t)iControl));
 			}
 		}
 	}

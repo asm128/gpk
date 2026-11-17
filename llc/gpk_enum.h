@@ -17,6 +17,34 @@ nmsp gpk
 	stxp	vcst_c		UNRESOLVED_ENUM_LABEL_STR	= "Unresolved enumeration value name.";
 	stxp	vcst_c		UNRESOLVED_ENUM_NAME_STR	= "Enum definition name not set.";
 
+	tplt<tpnm T>
+	stct enum_definition;
+
+	stct SEnumDefinition {
+		vcst_t		Name			= {};
+		cnst void *	Instance		= {};
+		uP_t		ValueSize		= {};
+		view<vcst_c>	(*Names)		(cnst void *)						= {};
+		err_t		(*Value)		(cnst void *, vcst_t, void *)			= {};
+		err_t		(*Label)		(cnst void *, cnst void *, vcst_t &)	= {};
+	};
+
+	inln aobj<SEnumDefinition> & enumDefinitions() nxpt {
+		sttc aobj<SEnumDefinition> definitions = {};
+		rtrn definitions;
+	}
+
+	inln cnst SEnumDefinition * enumDefinition(vcst_c name) nxpt {
+		cnst aobj<SEnumDefinition> & definitions = enumDefinitions();
+		for(u2_t iDefinition = 0; iDefinition < definitions.size(); ++iDefinition)
+			if(definitions[iDefinition].Name == name)
+				rtrn &definitions[iDefinition];
+		rtrn {};
+	}
+
+	tplt<tpnm T>
+	err_t enumDefinitionRegister(enum_definition<T> & definition);
+
 	// This tplt is intended to store the name of an enumeration, the values of such enumeration and a string representing each value.
 	// The implementation separates names from values for improving search speed by reducing the memory usage when performing searches for names/values.
 	tpl_tstct enum_definition {
@@ -41,6 +69,7 @@ nmsp gpk
 
 			if(instanceHere.Name.size() != enumName.size())
 				instanceHere.Name			= enumName;
+			if_fail_ve(INVALID_VALUE, enumDefinitionRegister(instanceHere));
 
 			return INVALID_VALUE;
 		}
@@ -213,6 +242,30 @@ nmsp gpk
 			return newIndex;
 		}
 	};
+
+	tplt<tpnm T>
+	err_t enumDefinitionRegister(enum_definition<T> & definition) {
+		aobj<SEnumDefinition> & definitions = enumDefinitions();
+		for(u2_t iDefinition = 0; iDefinition < definitions.size(); ++iDefinition)
+			if(definitions[iDefinition].Name == definition.Name) {
+				if_true_fe(definitions[iDefinition].ValueSize != sizeof(T));
+				rtrn 0;
+			}
+		rtrn definitions.push_back
+			({ definition.Name
+			, &definition
+			, sizeof(T)
+			, [](cnst void * instance) -> view<vcst_c> {
+				rtrn ((cnst enum_definition<T> *)instance)->Names;
+				}
+			, [](cnst void * instance, vcst_t name, void * value) -> err_t {
+				rtrn ((cnst enum_definition<T> *)instance)->get_value(name, *(T *)value);
+				}
+			, [](cnst void * instance, cnst void * value, vcst_t & name) -> err_t {
+				rtrn ((cnst enum_definition<T> *)instance)->get_value_label(*(cnst T *)value, name);
+				}
+			});
+	}
 
 	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	()					nxpt	{ return enum_definition<TEnum>::get();	}
 	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	(cnst TEnum & )	nxpt	{ return enum_definition<TEnum>::get();	}

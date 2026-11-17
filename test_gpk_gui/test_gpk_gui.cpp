@@ -49,25 +49,21 @@ sttc cid_t sampleGUIPanelCreate
 	if(idParent != CID_INVALID)
 		if_fail_fe(controlSetParent(gui, idRoot, idParent));
 	SControlPlacement & rootPlacement = gui.Controls.Placement[idRoot];
-	rootPlacement.Area = area;
+	rootPlacement.Area = {area.Offset, {area.Size.x, 22}};
 	rootPlacement.Margin = {1, 1, 1, 1};
 	rootPlacement.Border = {3, 3, 3, 3};
 	gui.Controls.Draw[idRoot].FrameOut = true;
-	gui.Controls.States[idRoot].Mask &= ~GUI_CONTROL_FLAG_Hovered;
+	gui.Controls.Text[idRoot].Text = title;
+	gui.Controls.Text[idRoot].Align = ALIGN_CENTER;
 
 	cid_t idClose = ::sampleGUIControlCreate(gui, idRoot, "X", {{}, {18, 18}}, ALIGN_TOP_RIGHT);
 	if_fail_fe(idClose);
 	gui.Controls.Placement[idClose].Margin = {};
 	gui.Controls.Placement[idClose].Border = {1, 1, 1, 1};
 
-	cid_t idResize = ::sampleGUIControlCreate(gui, idRoot, {}, {{-2, -2}, {16, 16}}, ALIGN_BOTTOM_RIGHT);
-	if_fail_fe(idResize);
-	gui.Controls.Placement[idResize].Margin = {};
-	gui.Controls.Text[idResize].Text = {};
-
 	idClient = ::sampleGUIControlCreate
 		( gui, idRoot, {}
-		, {{4, 22}, {(s1_t)(area.Size.x - 8), (s1_t)(area.Size.y - 26)}}
+		, {{0, 18}, {(s1_t)(area.Size.x - 8), (s1_t)(area.Size.y - 26)}}
 		);
 	if_fail_fe(idClient);
 	gui.Controls.Placement[idClient].Margin = {};
@@ -75,13 +71,10 @@ sttc cid_t sampleGUIPanelCreate
 	gui.Controls.States[idClient].Mask &= ~(GUI_CONTROL_FLAG_Hovered | GUI_CONTROL_FLAG_Action);
 	gui.Controls.Text[idClient].Text = {};
 
-	cid_t idTitle = ::sampleGUIControlCreate
-		( gui, idRoot, title
-		, {{}, {(s1_t)(area.Size.x - 18), 18}}
-		);
-	if_fail_fe(idTitle);
-	gui.Controls.Placement[idTitle].Margin = {};
-	gui.Controls.Placement[idTitle].Border = {1, 1, 1, 1};
+	cid_t idResize = ::sampleGUIControlCreate(gui, idClient, {}, {{-2, -2}, {16, 16}}, ALIGN_BOTTOM_RIGHT);
+	if_fail_fe(idResize);
+	gui.Controls.Placement[idResize].Margin = {};
+	gui.Controls.Text[idResize].Text = {};
 	return idRoot;
 }
 
@@ -163,6 +156,91 @@ sttc err_t sampleGUIMenuCreate(SGUI & gui, view<vcst_c> labels, ALIGN align) {
 		offset += width;
 	}
 	root.Area.Size.x = offset;
+	return 0;
+}
+
+sttc err_t sampleGUIEditorCreate(SSampleGUI & app, SGUI & gui) {
+	pobj<SGUIEditor> editor = {};
+	if_null_fe(editor.create());
+	if_fail_fe(guiSetupDefaultColors(editor->GUI.Colors));
+	if_fail_fe(guiSetupDefaultFonts(editor->GUI));
+	editor->GUI.ColorModeDefault = GUI_COLOR_MODE_3D;
+	if_fail_fe(editor->Target.resize(n2u1_t{752, 440}));
+
+	if_fail_fe(guiUpdateMetrics(editor->GUI, editor->Target.metrics().u1(), true));
+
+	u2_c editorIndex = app.Workspace.Editors.size();
+	cid_t idClient = CID_INVALID;
+	cid_t idViewport = ::sampleGUIPanelCreate
+		( gui, "GUI"
+		, {{(s1_t)(160 + editorIndex * 24), (s1_t)(40 + editorIndex * 24)}, {760, 466}}
+		, idClient
+		);
+	if_fail_fe(idViewport);
+	editor->IdRoot = idViewport;
+	gui.Controls.Images[idClient].Image = editor->Target.View;
+	gui.Controls.Images[idClient].ImageAlign = ALIGN_TOP_LEFT;
+	if_fail_fe(::sampleGUIControlCreate(gui, idClient, "NEW CONTROL", {{4, 4}, {112, 24}}));
+	if_fail_fe(app.Workspace.Editors.push_back(editor));
+	return controlMetricsInvalidate(gui, idViewport);
+}
+
+sttc cid_t sampleGUIPanelBody(cnst SGUI & gui, cid_t idRoot) {
+	if(controlInvalid(gui, idRoot) || false == controlInvalid(gui, gui.Controls.States[idRoot].Parent))
+		return CID_INVALID;
+	cnst vcid & children = gui.Controls.Children[idRoot];
+	return children.size() > 1 ? children[1] : CID_INVALID;
+}
+
+sttc err_t sampleGUIAction(SSampleGUI & app, SGUI & gui, cid_t idControl) {
+	cnst vcst_t text = gui.Controls.Text[idControl].Text;
+	if(text == "NEW GUI")
+		return ::sampleGUIEditorCreate(app, gui);
+	if(text == "NEW CONTROL") {
+		cid_t idRoot = idControl;
+		while(false == controlInvalid(gui, gui.Controls.States[idRoot].Parent))
+			idRoot = gui.Controls.States[idRoot].Parent;
+		for(u2_t iEditor = 0; iEditor < app.Workspace.Editors.size(); ++iEditor) {
+			SGUIEditor & editor = *app.Workspace.Editors[iEditor];
+			if(editor.IdRoot != idRoot)
+				continue;
+			cid_t idCreated = ::sampleGUIControlCreate(editor.GUI, CID_INVALID, "CONTROL", {{}, {128, 48}}, ALIGN_CENTER);
+			if_fail_fe(idCreated);
+			return controlMetricsInvalidate(editor.GUI, idCreated);
+		}
+		return 0;
+	}
+
+	cnst cid_t idParent = gui.Controls.States[idControl].Parent;
+	if(text == "X" && false == controlInvalid(gui, idParent)) {
+		gui.Controls.SetHidden(idParent, true);
+		return 0;
+	}
+
+	if(controlInvalid(gui, idParent)) {
+		cnst cid_t idBody = ::sampleGUIPanelBody(gui, idControl);
+		if(false == controlInvalid(gui, idBody)) {
+			gui.Controls.SetHidden(idBody, false == gui.Controls.IsHidden(idBody));
+			return controlMetricsInvalidate(gui, idControl);
+		}
+		return 0;
+	}
+
+	if(gui.Controls.Text[idParent].Text.size())
+		return 0;
+	for(u2_t iRoot = 0; iRoot < gui.Controls.States.size(); ++iRoot) {
+		if(false == controlInvalid(gui, gui.Controls.States[iRoot].Parent))
+			continue;
+		if(gui.Controls.Text[iRoot].Text != text)
+			continue;
+		cnst cid_t idBody = ::sampleGUIPanelBody(gui, (cid_t)iRoot);
+		if(controlInvalid(gui, idBody))
+			continue;
+		gui.Controls.SetHidden((cid_t)iRoot, false);
+		gui.Controls.SetHidden(idBody, false);
+		if_fail_fe(controlToFront(gui, (cid_t)iRoot));
+		return controlMetricsInvalidate(gui, (cid_t)iRoot);
+	}
 	return 0;
 }
 
@@ -280,13 +358,18 @@ err_t sampleGUISetup(SSampleGUI & app, SGUI & gui) {
 }
 
 err_t sampleGUIUpdate(SSampleGUI & app, SGUI & gui, b8_t systemRequestedExit) {
-	(void)app;
-	(void)gui;
-	return systemRequestedExit ? APPLICATION_STATE_EXIT : 0;
+	if(systemRequestedExit)
+		return APPLICATION_STATE_EXIT;
+	if_fail_fe(guiProcessControls(gui, [&](cid_t idControl) { return ::sampleGUIAction(app, gui, idControl); }));
+	return 0;
 }
 
 err_t sampleGUIDraw(SSampleGUI & app, SGUI & gui, g8bgra target) {
-	(void)app;
+	for(u2_t iEditor = 0; iEditor < app.Workspace.Editors.size(); ++iEditor) {
+		SGUIEditor & editor = *app.Workspace.Editors[iEditor];
+		if_fail_fe(editor.Target.View.fill(SColorBGRA{8, 10, 12}));
+		if_fail_fe(guiDraw(editor.GUI, editor.Target.View));
+	}
 	if_fail_fe(target.fill(SColorBGRA{16, 14, 12}));
 	return guiDraw(gui, target);
 }
