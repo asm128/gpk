@@ -5,6 +5,7 @@
 #include "gpk_string_compose.h"
 
 #include <process.h>
+#include <thread>
 
 usns gpk;
 
@@ -76,13 +77,13 @@ sttc	::gpk::err_t	writeToPipe			(::gpk::SProcessHandles & handles, ::gpk::vcu0_t
 	return 0;
 }
 
-sttc	::gpk::err_t	readFromPipe			(cnst ::gpk::SProcessHandles & handles, ::gpk::au0_t & readBytes) {
+sttc	::gpk::err_t	readFromPipe			(HANDLE pipe, ::gpk::au0_t & readBytes) {
 	stxp	uint32_t		bufferSize					= 1024 * 1024;
 	::gpk::au0_t				buffer;
 	do { if_fail_fe(buffer.resize(bufferSize)); } while(0);
 	for(;;) {
 		DWORD						dwRead						= 0;
-		if(false == (b8_t)::ReadFile(handles.ChildStd_OUT_Read, buffer.begin(), buffer.size(), &dwRead, nullptr)) {
+		if(false == (b8_t)::ReadFile(pipe, buffer.begin(), buffer.size(), &dwRead, nullptr)) {
 			cnst DWORD				lastError					= ::GetLastError();
 			if(ERROR_BROKEN_PIPE == lastError)
 				break;
@@ -113,13 +114,20 @@ sttc	::gpk::err_t	processRequest			(::gpk::SProcessBrokerJob & job) {
 		::closeHandle(job.IOHandles.ChildStd_ERR_Write);
 		::closeHandle(job.IOHandles.ChildStd_IN_Read);
 
+		::gpk::err_t				errorReadResult				= 0;
+		::std::thread				errorReadThread				{[&job, &errorReadResult]() { errorReadResult = ::readFromPipe(job.IOHandles.ChildStd_ERR_Read, job.ErrorOutput); }};
+		::gpk::err_t				inputWriteResult				= 0;
 		cnst uint32_t			contentBegin					= (uint32_t)contentOffset + 2;
 		if(packet.size() > contentBegin)
-			do { if_fail_fe(::writeToPipe(job.IOHandles, {&packet[contentBegin], packet.size() - contentBegin})); } while(0);
+			inputWriteResult						= ::writeToPipe(job.IOHandles, {&packet[contentBegin], packet.size() - contentBegin});
 		else
 			::closeHandle(job.IOHandles.ChildStd_IN_Write);
 
-		do { if_fail_fe(::readFromPipe(job.IOHandles, job.Response)); } while(0);
+		cnst ::gpk::err_t		responseReadResult			= ::readFromPipe(job.IOHandles.ChildStd_OUT_Read, job.Response);
+		errorReadThread.join();
+		if_fail_fe(inputWriteResult);
+		if_fail_fe(responseReadResult);
+		if_fail_fe(errorReadResult);
 		return 0;
 	}();
 	::closeProcessHandles(job);

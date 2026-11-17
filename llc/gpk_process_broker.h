@@ -31,6 +31,7 @@ namespace gpk
 		::gpk::pobj<::gpk::SConnection>	Connection;
 		::gpk::au0_t					Request;
 		::gpk::au0_t					Response;
+		::gpk::au0_t					ErrorOutput;
 		::gpk::string					CommandLineApp;
 		::gpk::string					CommandLine;
 		SProcessHandles					IOHandles;
