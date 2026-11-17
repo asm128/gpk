@@ -10,24 +10,36 @@ GPK_USING_TYPEINT();
 GPK_USING_VIEW();
 GPK_USING_N2();
 
+sttc void controlTextColors(::gpk::SGUI & gui, cnst ::gpk::SControlDraw & controlDraw, ::gpk::GUI_CONTROL_PALETTE paletteIndex, ::gpk::bgra & colorFace, ::gpk::bgra & colorBack) {
+	if(0 == controlDraw.UseNewPalettes) {
+		cnst ::gpk::SControlTheme & theme = (*gui.Colors->ControlThemes)[(0 == controlDraw.ColorTheme) ? gui.ThemeDefault : controlDraw.ColorTheme - 1];
+		cnst ::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT> & colorCombo = theme.ColorCombos[paletteIndex];
+		colorFace = (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE]];
+		colorBack = (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND]];
+	}
+	else {
+		cnst ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT> & colorCombo = gui.Colors->Palettes[controlDraw.Palettes[paletteIndex]];
+		colorFace = colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE];
+		colorBack = colorCombo[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND];
+	}
+}
+
 sttc	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8bgra & target, b8_t bDisabled)				{
 	::gpk::SControlState		& controlState		= gui.Controls.States	[iControl];
 	::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw	[iControl];
 	cnst ::gpk::GUI_CONTROL_PALETTE	paletteIndex		= ::gpk::paletteIndexFromState(bDisabled, controlState);
 	::gpk::bgra					colorFace			= {0xFF, 0x00, 0xFF, 0xFF};
-	if(0 == gui.Controls.Draw[iControl].UseNewPalettes) {
-		cnst ::gpk::SControlTheme	& theme				= (*gui.Colors->ControlThemes)[(0 == controlDraw.ColorTheme) ? gui.ThemeDefault : controlDraw.ColorTheme - 1];
-		cnst ::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>	
-									& colorCombo		= theme.ColorCombos[paletteIndex];
-		colorFace				= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE]];
-		//cnst ::gpk::bgra			colorBack			= gui.Palette[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND]];
-	}
-	else {
-		cnst ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>	& colorCombo											=
-			gui.Colors->Palettes[controlDraw.Palettes[paletteIndex]]
-				;
-		colorFace				= colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE];
-	}
+	::gpk::bgra					colorBack			= {};
+	::controlTextColors(gui, controlDraw, paletteIndex, colorFace, colorBack);
+	cnst ::gpk::GUI_CONTROL_PALETTE selectedPaletteIndex = bDisabled ? ::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED
+		: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED_DRAGGING
+		: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED
+		: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER
+		: ::gpk::GUI_CONTROL_PALETTE_SELECTED
+		;
+	::gpk::bgra					colorSelectedFace	= colorFace;
+	::gpk::bgra					colorSelectedBack	= colorBack;
+	::controlTextColors(gui, controlDraw, selectedPaletteIndex, colorSelectedFace, colorSelectedBack);
 
 	::gpk::SControlArea		& controlMetrics	= gui.Controls.Area[iControl];
 	::gpk::rect2s1_t				rectText			= controlMetrics.Text;
@@ -43,10 +55,26 @@ sttc	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8bgr
 	::gpk::apod<::gpk::n2u1_t>	dstCoords;
 	u2_c				iFont				= ::gpk::in_range(controlText.FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	cnst ::gpk::SRasterFont	& selectedFont		= *gui.Fonts[iFont];
+	cnst ::gpk::apod<::gpk::STextState> & textState = gui.Controls.ControlTextState[iControl];
+	for(u2_t iCharacter = 0, countCharacter = ::gpk::min(textState.size(), controlText.Text.size()); iCharacter < countCharacter; ++iCharacter)
+		if(textState[iCharacter].IsSelected()) {
+			cnst ::gpk::rect2s1_t characterRectangle = {
+				{s1_t(rectText.Offset.x + selectedFont.CharSize.x * iCharacter), rectText.Offset.y},
+				selectedFont.CharSize.s1()
+			};
+			::gpk::drawRectangle(target, colorSelectedBack, characterRectangle);
+		}
 	if_fail_fe(gpk::textLineRaster(target.metrics(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(u2_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
 		cnst ::gpk::n2u1_t			dstCoord			= dstCoords[iCoord];
-		target[dstCoord.y][dstCoord.x]	= colorFace;
+		::gpk::bgra colorGlyph = colorFace;
+		cnst s2_t characterOffsetX = (s2_t)dstCoord.x - rectText.Offset.x;
+		if(0 <= characterOffsetX && selectedFont.CharSize.x) {
+			u2_c iCharacter = characterOffsetX / selectedFont.CharSize.x;
+			if(iCharacter < textState.size() && textState[iCharacter].IsSelected())
+				colorGlyph = colorSelectedFace;
+		}
+		target[dstCoord.y][dstCoord.x]	= colorGlyph;
 		//::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
 	}
 	return 0;

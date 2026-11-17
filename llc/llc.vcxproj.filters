@@ -330,6 +330,9 @@
     <ClInclude Include="gpk_gui_control_flag.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_text_flag.h">
+      <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_gui_inputbox.h">
       <Filter>gui</Filter>
     </ClInclude>

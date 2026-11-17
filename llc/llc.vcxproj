@@ -135,6 +135,7 @@
     <ClInclude Include="gpk_gui_keyboard.h" />
     <ClInclude Include="gpk_gui_system.h" />
     <ClInclude Include="gpk_gui_text.h" />
+    <ClInclude Include="gpk_gui_text_flag.h" />
     <ClInclude Include="gpk_gui_theme.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
     <ClInclude Include="gpk_http.h" />

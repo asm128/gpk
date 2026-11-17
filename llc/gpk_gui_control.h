@@ -1,4 +1,5 @@
 #include "gpk_gui_control_flag.h"
+#include "gpk_gui_text_flag.h"
 #include "gpk_ctti_stct.h"
 
 #include "gpk_tri2.h"
@@ -232,6 +233,7 @@ nmsp gpk
 		apod<SControlConstraints>	Constraints	= {};
 		apod<SControlDraw		>	Draw		= {};
 		aobj<SControlText		>	Text		= {};
+		aobj<apod<STextState		>>	ControlTextState	= {};
 		aobj<SControlImage		>	Images		= {};
 		aobj<acid				>	Children	= {};
 		//
