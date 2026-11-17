@@ -125,8 +125,8 @@ namespace dry
 #pragma pack(pop)
 
 	struct SSerialClientQueues {
-		::std::mutex								LockSend;
-		::std::mutex								LockReceive;
+		::gpk::mutex								LockSend;
+		::gpk::mutex								LockReceive;
 		::gpk::array_obj<::gpk::array_pod<::gpk::sc_t>>	Send;
 		::gpk::array_obj<::gpk::array_pod<::gpk::sc_t>>	Received;
 	};

@@ -18,8 +18,8 @@ namespace gfe
 
 		::gpk::cid_t					IdExit								= -1;
 
-		::std::mutex					LockGUI;
-		::std::mutex					LockRender;
+		::gpk::mutex					LockGUI;
+		::gpk::mutex					LockRender;
 
 										SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues), DialogMain(Framework.GUI)	{}
 	};

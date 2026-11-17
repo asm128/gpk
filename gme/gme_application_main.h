@@ -14,8 +14,8 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 		::gpk::cid_t					IdExit								= -1;
 
-		::std::mutex					LockGUI;
-		::std::mutex					LockRender;
+		::gpk::mutex					LockGUI;
+		::gpk::mutex					LockRender;
 
 										SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
