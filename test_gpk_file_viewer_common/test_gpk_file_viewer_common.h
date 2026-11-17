@@ -27,6 +27,8 @@ stct SFileEditor {
 	string				FileText			= {};
 	apod<vcst_t>		FileLines			= {};
 	apod<rangeu2_t>	TextSelections		= {};
+	u2_t				SelectionAnchor		= (u2_t)-1;
+	u2_t				SelectionActive		= (u2_t)-1;
 	n2u2_t				Cursor				= {};
 	cid_t				IdCursor			= -1;
 	cid_t				IdSave				= -1;

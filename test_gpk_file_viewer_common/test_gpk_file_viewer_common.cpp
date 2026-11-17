@@ -270,6 +270,8 @@ sttc gpk::err_t fileViewerTextLoad(SFileViewer & viewer, SFileEditor & editor, v
 	editor.FilePath = path;
 	editor.FileText.clear();
 	editor.TextSelections.clear();
+	editor.SelectionAnchor = (u2_t)-1;
+	editor.SelectionActive = (u2_t)-1;
 	if_fail_fef(fileToMemory(path, editor.FileText), "Failed to load '%.*s'.", GPK_VIEW_ARGS(path));
 	if_fail_fe(::fileViewerTextViewsRebuild(editor));
 	editor.Cursor = {0, (u2_t)-1};
@@ -350,41 +352,53 @@ sttc gpk::err_t fileViewerTextBackspace(SFileViewer & viewer, SFileEditor & edit
 		for(u2_t iCharacter = 0; iCharacter < separatorCount; ++iCharacter)
 			if_fail_fe(editor.FileText.remove(separatorOffset));
 	}
-	if_fail_fe(::fileViewerTextViewsRebuild(editor));
 	editor.TextSelections.clear();
+	if_fail_fe(::fileViewerTextViewsRebuild(editor));
 	rtrn 0;
 }
 
 sttc gpk::err_t fileViewerTextDelete(SFileViewer & viewer, SFileEditor & editor) {
 	if(editor.TextSelections.size()) {
+		apod<rangeu2_t> deletions = {};
 		u2_t cursorOffset = editor.FileText.size();
-		b8_t selectedText = false;
 		for(u2_t iSelection = 0; iSelection < editor.TextSelections.size(); ++iSelection) {
 			rangeu2_c selection = editor.TextSelections[iSelection];
 			u2_c selectionBegin = min(selection.Offset, editor.FileText.size());
 			u2_c selectionEnd = (u2_t)min((u3_t)editor.FileText.size(), (u3_t)selection.Offset + selection.Count);
 			if(selectionBegin < selectionEnd) {
+				if_fail_fe(deletions.push_back({selectionBegin, selectionEnd - selectionBegin}));
 				cursorOffset = min(cursorOffset, selectionBegin);
-				selectedText = true;
 			}
 		}
-		if(selectedText) {
-			if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
-			for(u2_t iCharacter = editor.FileText.size(); iCharacter; ) {
-				--iCharacter;
-				for(u2_t iSelection = 0; iSelection < editor.TextSelections.size(); ++iSelection) {
-					rangeu2_c selection = editor.TextSelections[iSelection];
-					u2_c selectionBegin = min(selection.Offset, editor.FileText.size());
-					u2_c selectionEnd = (u2_t)min((u3_t)editor.FileText.size(), (u3_t)selection.Offset + selection.Count);
-					if(iCharacter >= selectionBegin && iCharacter < selectionEnd) {
-						if_fail_fe(editor.FileText.remove(iCharacter));
-						break;
-					}
+		if(deletions.size()) {
+			for(u2_t iDeletion = 1; iDeletion < deletions.size(); ++iDeletion) {
+				rangeu2_c deletion = deletions[iDeletion];
+				u2_t iPrevious = iDeletion;
+				while(iPrevious && deletions[iPrevious - 1].Offset > deletion.Offset) {
+					deletions[iPrevious] = deletions[iPrevious - 1];
+					--iPrevious;
 				}
+				deletions[iPrevious] = deletion;
 			}
+			u2_t countMerged = 1;
+			for(u2_t iDeletion = 1; iDeletion < deletions.size(); ++iDeletion) {
+				rangeu2_t & previous = deletions[countMerged - 1];
+				rangeu2_c current = deletions[iDeletion];
+				u3_c previousEnd = (u3_t)previous.Offset + previous.Count;
+				u3_c currentEnd = (u3_t)current.Offset + current.Count;
+				if(current.Offset <= previousEnd)
+					previous.Count = (u2_t)(max(previousEnd, currentEnd) - previous.Offset);
+				else
+					deletions[countMerged++] = current;
+			}
+			if_fail_fe(deletions.resize(countMerged));
+			if_fail_fe(::fileViewerTextViewsClear(viewer, editor));
+			for(u2_t iDeletion = deletions.size(); iDeletion; --iDeletion)
+				for(u2_t iCharacter = 0; iCharacter < deletions[iDeletion - 1].Count; ++iCharacter)
+					if_fail_fe(editor.FileText.remove(deletions[iDeletion - 1].Offset));
+			editor.TextSelections.clear();
 			if_fail_fe(::fileViewerTextViewsRebuild(editor));
 			::fileViewerCursorOffsetSet(editor, cursorOffset);
-			editor.TextSelections.clear();
 			rtrn 0;
 		}
 		editor.TextSelections.clear();
@@ -511,11 +525,73 @@ sttc gpk::err_t fileViewerEditorUpdate(SFileViewer & viewer, SFileEditor & edito
 			u2_c iLine = firstVisible + iControl;
 			if(iLine < editor.FileLines.size()) {
 				viewer.IdEditorCurrent = iEditor;
-				editor.Cursor = {editor.FileLines[iLine].size(), iLine};
 			}
 		}
 	if(gui.Controls.IsAction(editor.IdSave) && editor.FilePath.size())
 		if_fail_fef(fileFromMemory(editor.FilePath, editor.FileText), "Failed to save '%.*s'.", GPK_VIEW_ARGS(editor.FilePath));
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerEditorMousePosition(SFileViewer & viewer, SFileEditor & editor, n2u2_t & cursor, u2_t & characterOffset, b8_t & overTextLine) {
+	overTextLine = false;
+	pobj<SDialogViewport> viewport = {};
+	pobj<SDialogSlider> scrollbarY = {};
+	pobj<SDialogSlider> scrollbarX = {};
+	if_fail_fe(dialogControlGet(*viewer.Dialog, editor.IdViewport, viewport));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarY, scrollbarY));
+	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarX, scrollbarX));
+	SGUI & gui = *viewer.Dialog->GUI;
+	u2_c firstVisible = (u2_t)scrollbarY->ValueCurrent;
+	u2_c firstColumn = (u2_t)scrollbarX->ValueCurrent;
+	u0_c characterWidth = max((u0_t)1, gui.Fonts[gui.SelectedFont]->CharSize.x);
+	for(u2_t iControl = 0; iControl < editor.Lines.IdControls.size(); ++iControl) {
+		cnst cid_t idControl = editor.Lines.IdControls[iControl];
+		if(gui.Controls.IsHidden(idControl) || false == gui.Controls.IsHovered(idControl))
+			continue;
+		u2_c iLine = firstVisible + iControl;
+		if(iLine >= editor.FileLines.size())
+			continue;
+		cnst s2_t mouseOffsetX = (s2_t)viewer.Dialog->Input->MouseCurrent.Position.x - gui.Controls.Area[idControl].Text.Offset.x;
+		u2_c visibleColumn = 0 >= mouseOffsetX ? 0 : (u2_t)(mouseOffsetX / characterWidth);
+		u2_c iColumn = min((u2_t)(firstColumn + visibleColumn), editor.FileLines[iLine].size());
+		cursor = {iColumn, iLine};
+		characterOffset = ::fileViewerLineOffset(editor, iLine) + iColumn;
+		overTextLine = true;
+		break;
+	}
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerEditorSelectionUpdate(SFileViewer & viewer, SFileEditor & editor, cid_t iEditor) {
+	SGUI & gui = *viewer.Dialog->GUI;
+	if(gui.Controls.IsHidden(editor.IdViewport))
+		rtrn 0;
+	n2u2_t cursor = {};
+	u2_t characterOffset = 0;
+	b8_t overTextLine = false;
+	if_fail_fe(::fileViewerEditorMousePosition(viewer, editor, cursor, characterOffset, overTextLine));
+	if(viewer.Dialog->Input->ButtonDown(0) && overTextLine) {
+		viewer.IdEditorCurrent = iEditor;
+		editor.Cursor = cursor;
+		if(0 == viewer.Dialog->Input->KeyboardCurrent.KeyState[SYSTEM_KEY_Control])
+			editor.TextSelections.clear();
+		editor.SelectionAnchor = characterOffset;
+		err_t iSelection = editor.TextSelections.push_back({characterOffset, 0});
+		if_fail_fe(iSelection);
+		editor.SelectionActive = (u2_t)iSelection;
+	}
+	if((u2_t)-1 != editor.SelectionAnchor && (u2_t)-1 != editor.SelectionActive && editor.SelectionActive < editor.TextSelections.size() && overTextLine) {
+		editor.Cursor = cursor;
+		rangeu2_t & selection = editor.TextSelections[editor.SelectionActive];
+		selection.Offset = min(editor.SelectionAnchor, characterOffset);
+		selection.Count = max(editor.SelectionAnchor, characterOffset) - selection.Offset;
+	}
+	if(viewer.Dialog->Input->ButtonUp(0) && (u2_t)-1 != editor.SelectionAnchor) {
+		if(editor.SelectionActive < editor.TextSelections.size() && 0 == editor.TextSelections[editor.SelectionActive].Count)
+			if_fail_fe(editor.TextSelections.remove(editor.SelectionActive));
+		editor.SelectionAnchor = (u2_t)-1;
+		editor.SelectionActive = (u2_t)-1;
+	}
 	rtrn 0;
 }
 
@@ -609,7 +685,25 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer, SFileEditor & e
 			if_fail_fe(sourceLine.slice(visibleText, offset, count));
 			if(gui.Controls.Text[idControl].Text != visibleText)
 				if_fail_fe(controlTextSet(gui, idControl, visibleText));
+			apod<STextState> & textState = gui.Controls.ControlTextState[idControl];
+			if_fail_fe(textState.resize(visibleText.size()));
+			u2_c lineOffset = ::fileViewerLineOffset(editor, iLine);
+			for(u2_t iCharacter = 0; iCharacter < textState.size(); ++iCharacter) {
+				u2_c characterOffset = lineOffset + offset + iCharacter;
+				b8_t selected = false;
+				for(u2_t iSelection = 0; iSelection < editor.TextSelections.size(); ++iSelection) {
+					rangeu2_c selection = editor.TextSelections[iSelection];
+					if(characterOffset >= selection.Offset && (u3_t)characterOffset < (u3_t)selection.Offset + selection.Count) {
+						selected = true;
+						break;
+					}
+				}
+				textState[iCharacter].SetSelected(idControl, iCharacter, gui.Controls.EventQueue, selected);
+				textState[iCharacter].SetCursor(idControl, iCharacter, gui.Controls.EventQueue, iLine == editor.Cursor.y && offset + iCharacter == editor.Cursor.x);
+			}
 		}
+		else
+			gui.Controls.ControlTextState[idControl].clear();
 		gui.Controls.SetSelected(idControl, visible && iLine == editor.Cursor.y);
 		if(gui.Controls.IsHidden(idControl) == visible) {
 			gui.Controls.SetHidden(idControl, false == visible);
@@ -767,6 +861,8 @@ gpk::err_t fileViewerUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vpo
 		if_fail_fe(::fileViewerEditorUpdate(viewer, *viewer.Editors[iEditor], (cid_t)iEditor));
 	if_fail_fe(::fileViewerEditorInputUpdate(viewer, frameEvents));
 	if_fail_fe(viewer.Dialog->Update());
+	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
+		if_fail_fe(::fileViewerEditorSelectionUpdate(viewer, *viewer.Editors[iEditor], (cid_t)iEditor));
 	if(FILE_VIEWER_LAYOUT_SPLIT == layout)
 		if_fail_fe(::fileViewerLayoutSet(viewer, layout));
 	for(u2_t iDirectory = 0; iDirectory < viewer.Directories.size(); ++iDirectory)
