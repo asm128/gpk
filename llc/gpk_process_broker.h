@@ -36,6 +36,8 @@ namespace gpk
 		::gpk::string					CommandLine;
 		SProcessHandles					IOHandles;
 		SProcess						Process;
+		::gpk::refcount_t				ErrorDone			= 0;
+		::gpk::err_t					ErrorResult			= 0;
 		::gpk::refcount_t				Done				= 0;
 		::gpk::err_t					Result				= 0;
 	};
@@ -53,7 +55,7 @@ namespace gpk
 		::gpk::apobj<SProcessBrokerJob>	Jobs				;
 	};
 
-	::gpk::err_t	processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::SJSONReader & jsonReader);
+	::gpk::err_t	processBrokerSetup		(SProcessBroker & broker, u1_t port, s1_t adapter);
 	::gpk::err_t	processBrokerUpdate		(SProcessBroker & broker);
 	::gpk::err_t	processBrokerShutdown	(SProcessBroker & broker);
 }

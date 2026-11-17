@@ -5,7 +5,6 @@
 #include "gpk_string_compose.h"
 
 #include <process.h>
-#include <thread>
 
 usns gpk;
 
@@ -77,28 +76,32 @@ sttc	::gpk::err_t	writeToPipe			(::gpk::SProcessHandles & handles, ::gpk::vcu0_t
 	return 0;
 }
 
-sttc	::gpk::err_t	readFromPipe			(HANDLE pipe, ::gpk::au0_t & readBytes) {
-	stxp	uint32_t		bufferSize					= 1024 * 1024;
-	::gpk::au0_t				buffer;
-	do { if_fail_fe(buffer.resize(bufferSize)); } while(0);
+sttc	gpk::err_t	readFromPipe			(HANDLE pipe, ::gpk::au0_t & readBytes) {
+	stxp	u2_c			bufferSize					= 1024 * 1024;
+	gpk::au0_t				buffer;
+	if_fail_fe(buffer.resize(bufferSize));
 	for(;;) {
-		DWORD						dwRead						= 0;
-		if(false == (b8_t)::ReadFile(pipe, buffer.begin(), buffer.size(), &dwRead, nullptr)) {
+		DWORD					childProcessBytesRead		= 0;
+		if(false == (b8_t)::ReadFile(pipe, buffer.begin(), buffer.size(), &childProcessBytesRead, 0)) {
 			cnst DWORD				lastError					= ::GetLastError();
-			if(ERROR_BROKEN_PIPE == lastError)
-				break;
+			if_true_bw(ERROR_BROKEN_PIPE == lastError);
 			if_true_fef(true, "Failed to read child process' standard output. Windows error: %lu.", lastError);
 		}
-		if(0 == dwRead)
-			break;
-		do { if_fail_fe(readBytes.append(buffer.begin(), dwRead)); } while(0);
+		if_zero_bi(childProcessBytesRead);
+		if_fail_fe(readBytes.append(buffer.begin(), childProcessBytesRead));
 	}
 	return 0;
 }
 
-sttc	::gpk::err_t	processRequest			(::gpk::SProcessBrokerJob & job) {
-	cnst ::gpk::err_t		result						= [&job]() -> ::gpk::err_t {
-		do { if_fail_fe(::initHandles(job.IOHandles)); } while(0);
+sttc	void	threadReadError			(void * jobAddress) {
+	::gpk::SProcessBrokerJob	& job						= *(::gpk::SProcessBrokerJob*)jobAddress;
+	job.ErrorResult								= ::readFromPipe(job.IOHandles.ChildStd_ERR_Read, job.ErrorOutput);
+	gpk_sync_increment(job.ErrorDone);
+}
+
+sttc	gpk::err_t	processRequest			(::gpk::SProcessBrokerJob & job) {
+	gpk::err_c			result						= [&job]() -> ::gpk::err_t {
+		if_fail_fe(::initHandles(job.IOHandles));
 		job.Process.StartInfo.hStdError				= job.IOHandles.ChildStd_ERR_Write;
 		job.Process.StartInfo.hStdOutput				= job.IOHandles.ChildStd_OUT_Write;
 		job.Process.StartInfo.hStdInput				= job.IOHandles.ChildStd_IN_Read;
@@ -109,25 +112,29 @@ sttc	::gpk::err_t	processRequest			(::gpk::SProcessBrokerJob & job) {
 		cnst ::gpk::err_t	contentOffset				= packet.find(::gpk::vcu0_t{(cnst uint8_t*)"\0", 2});
 		if_true_fef(0 > contentOffset, "%s", "Failed to find the CGI environment block terminator.");
 
-		do { if_fail_fe(::createChildProcess(job.Process, environmentBlock, job.CommandLineApp, job.CommandLine)); } while(0);
+		if_fail_fe(::createChildProcess(job.Process, environmentBlock, job.CommandLineApp, job.CommandLine));
 		::closeHandle(job.IOHandles.ChildStd_OUT_Write);
 		::closeHandle(job.IOHandles.ChildStd_ERR_Write);
 		::closeHandle(job.IOHandles.ChildStd_IN_Read);
 
-		::gpk::err_t				errorReadResult				= 0;
-		::std::thread				errorReadThread				{[&job, &errorReadResult]() { errorReadResult = ::readFromPipe(job.IOHandles.ChildStd_ERR_Read, job.ErrorOutput); }};
+		if((uP_t)-1L == ::_beginthread(::threadReadError, 0, &job)) {
+			job.ErrorResult							= -1;
+			::closeHandle(job.IOHandles.ChildStd_ERR_Read);
+			gpk_sync_increment(job.ErrorDone);
+		}
 		::gpk::err_t				inputWriteResult				= 0;
-		cnst uint32_t			contentBegin					= (uint32_t)contentOffset + 2;
+		::gpk::u2_c				contentBegin					= (uint32_t)contentOffset + 2;
 		if(packet.size() > contentBegin)
 			inputWriteResult						= ::writeToPipe(job.IOHandles, {&packet[contentBegin], packet.size() - contentBegin});
 		else
 			::closeHandle(job.IOHandles.ChildStd_IN_Write);
 
-		cnst ::gpk::err_t		responseReadResult			= ::readFromPipe(job.IOHandles.ChildStd_OUT_Read, job.Response);
-		errorReadThread.join();
+		cnst ::gpk::err_t	responseReadResult			= ::readFromPipe(job.IOHandles.ChildStd_OUT_Read, job.Response);
+		while(false == gpk_sync_compare_exchange(job.ErrorDone, 1, 1))
+			::gpk::sleep(1);
 		if_fail_fe(inputWriteResult);
 		if_fail_fe(responseReadResult);
-		if_fail_fe(errorReadResult);
+		if_fail_fe(job.ErrorResult);
 		return 0;
 	}();
 	::closeProcessHandles(job);
@@ -143,28 +150,10 @@ sttc	void	threadProcessRequest		(void * jobAddress) {
 	gpk_sync_increment(job.Done);
 }
 
-gpk::err_t	gpk::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::SJSONReader & jsonReader) {
-	u3_t				port						= broker.Port;
-	u3_t				adapter					= broker.Adapter;
-	::gpk::vcst_t		jsonNumber					= {};
-	cnst gpk::err_t		appNodeIndex				= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, broker.ProcessFileName);
-	if_true_wf(::gpk::failed(appNodeIndex), "Failed to find application node '%s'.", "application.brt")
-	else {
-		if_fail_wf(::gpk::jsonExpressionResolve("process.executable_path", jsonReader, appNodeIndex, broker.ProcessFileName), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(broker.ProcessFileName));
-		if_fail_wf(::gpk::jsonExpressionResolve("process.command_line_app_name", jsonReader, appNodeIndex, broker.ProcessMockPath), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(broker.ProcessMockPath));
-		if_fail_wf(::gpk::jsonExpressionResolve("process.command_line_params", jsonReader, appNodeIndex, broker.ProcessParams), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(broker.ProcessParams));
-		if_fail_wf(::gpk::jsonExpressionResolve("listen_port", jsonReader, appNodeIndex, jsonNumber), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(jsonNumber))
-		else
-			if_fail_e(::gpk::parseIntegerDecimal(jsonNumber, port));
-		jsonNumber								= {};
-		if_fail_wf(::gpk::jsonExpressionResolve("adapter", jsonReader, appNodeIndex, jsonNumber), "Last contents found: '%.*s'.", GPK_VIEW_ARGS(jsonNumber))
-		else
-			if_fail_e(::gpk::parseIntegerDecimal(jsonNumber, adapter));
-	}
-
-	broker.Port								= (uint16_t)port;
-	broker.Adapter							= (int16_t)adapter;
-	broker.CommandLineApp						= broker.ProcessFileName;
+gpk::err_t	gpk::processBrokerSetup		(SProcessBroker & broker, u1_t port, s1_t adapter) {
+	broker.Port								= port;
+	broker.Adapter							= adapter;
+	broker.CommandLineApp					= broker.ProcessFileName;
 	broker.CommandLine						= broker.ProcessMockPath;
 	if(broker.ProcessParams.size()) {
 		broker.CommandLine.push_back(' ');
@@ -172,70 +161,70 @@ gpk::err_t	gpk::processBrokerSetup		(SProcessBroker & broker, cnst ::gpk::SJSONR
 	}
 	broker.CommandLine.push_back(0);
 	broker.CommandLineApp.push_back(0);
-	do { if_fail_fef(::gpk::serverStart(broker.Server, broker.Port, broker.Adapter), "Failed to start process broker on port %u.", broker.Port); } while(0);
+	if_fail_fef(serverStart(broker.Server, broker.Port, broker.Adapter), "Failed to start process broker on port %u.", broker.Port);
 	broker.Started								= true;
 	return 0;
 }
 
-::gpk::err_t	gpk::processBrokerUpdate		(::gpk::SProcessBroker & broker) {
-	::gpk::aobj<::gpk::TPacketQueue>	receivedPerClient;
-	do { if_fail_fe(::gpk::serverPayloadCollect(broker.Server, receivedPerClient)); } while(0);
+gpk::err_t	gpk::processBrokerUpdate		(SProcessBroker & broker) {
+	aobj<TPacketQueue>	receivedPerClient;
+	if_fail_fe(serverPayloadCollect(broker.Server, receivedPerClient));
 	for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
-		::gpk::pobj<::gpk::SConnection>	connection;
+		pobj<SConnection>	connection;
 		{
-			::std::lock_guard			lock						(broker.Server.Mutex);
+			::gpk::lock_guard			lock						(broker.Server.Mutex);
 			if(iClient < broker.Server.Clients.size())
 				connection							= broker.Server.Clients[iClient];
 		}
 		if(!connection)
 			continue;
 		for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
-			cnst ::gpk::pobj<::gpk::SMessage>	& message			= receivedPerClient[iClient][iMessage];
+			cnst pobj<SMessage>	& message			= receivedPerClient[iClient][iMessage];
 			if(!message)
 				continue;
-			::gpk::pobj<::gpk::SProcessBrokerJob>	job;
+			pobj<SProcessBrokerJob>	job;
 			job.create();
 			job->Connection							= connection;
 			job->Request								= message->Payload;
 			job->CommandLineApp						= broker.CommandLineApp;
 			job->CommandLine							= broker.CommandLine;
-			do { if_fail_fe(broker.Jobs.push_back(job)); } while(0);
+			if_fail_fe(broker.Jobs.push_back(job));
 			if((uP_t)-1L == ::_beginthread(::threadProcessRequest, 0, job.operator->())) {
 				job->Result								= -1;
 				stxp cnst sc_t	failureResponse[]				= "LLS process broker failed to start its request worker.";
-				job->Response.append((cnst uint8_t*)failureResponse, ::gpk::size(failureResponse) - 1);
+				job->Response.append((cnst uint8_t*)failureResponse, size(failureResponse) - 1);
 				gpk_sync_increment(job->Done);
 			}
 		}
 	}
 
 	for(uint32_t iJob = 0; iJob < broker.Jobs.size();) {
-		::gpk::pobj<::gpk::SProcessBrokerJob>	job				= broker.Jobs[iJob];
+		pobj<SProcessBrokerJob>	job				= broker.Jobs[iJob];
 		if(!job || false == gpk_sync_compare_exchange(job->Done, 1, 1)) {
 			++iJob;
 			continue;
 		}
 		if(job->Connection && job->Response.size()) {
-			::std::lock_guard			lock						(broker.Server.Mutex);
-			if_fail_e(::gpk::connectionPushData(*job->Connection, job->Connection->Queue, job->Response, true, true));
+			::gpk::lock_guard			lock						(broker.Server.Mutex);
+			if_fail_e(connectionPushData(*job->Connection, job->Connection->Queue, job->Response, true, true));
 		}
-		do { if_fail_fe(broker.Jobs.remove_unordered(iJob)); } while(0);
+		if_fail_fe(broker.Jobs.remove_unordered(iJob));
 	}
 	return 0;
 }
 
-::gpk::err_t	gpk::processBrokerShutdown	(::gpk::SProcessBroker & broker) {
+gpk::err_t	gpk::processBrokerShutdown	(SProcessBroker & broker) {
 	if(broker.Started)
-		if_fail_w(::gpk::serverStop(broker.Server));
+		if_fail_w(serverStop(broker.Server));
 	broker.Started								= false;
 	while(broker.Jobs.size()) {
 		for(uint32_t iJob = 0; iJob < broker.Jobs.size();) {
-			::gpk::pobj<::gpk::SProcessBrokerJob>	& job		= broker.Jobs[iJob];
+			pobj<SProcessBrokerJob>	& job		= broker.Jobs[iJob];
 			if(job && false == gpk_sync_compare_exchange(job->Done, 1, 1)) {
 				++iJob;
 				continue;
 			}
-			do { if_fail_fe(broker.Jobs.remove_unordered(iJob)); } while(0);
+			if_fail_fe(broker.Jobs.remove_unordered(iJob));
 		}
 		if(broker.Jobs.size())
 			::gpk::sleep(1);
