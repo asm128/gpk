@@ -88,7 +88,7 @@ sttc gpk::err_t	testRunReportWrite		(cnst gpk::STestRunReport & run, gpk::err_t 
 	if_fail_fe(::gpk::appendJSONString(config, configuration));
 	if_fail_fe(::gpk::append_strings(json
 		, "{\"schema_version\":1,\"name\":\"gpk_test_core\",\"configuration\":", config
-		, ",\"pointer_bits\":", ::gpk::str(sizeof(void*) * 8), ",\"status\":", ::gpk::str(status)
+		, ",\"pointer_bits\":", ::gpk::str((::gpk::u2_t)(sizeof(void*) * 8)), ",\"status\":", ::gpk::str(status)
 		, ",\"duration_us\":", ::gpk::str(duration), ",\"seed_override\":")
 	);
 	if(seedEnabled) {

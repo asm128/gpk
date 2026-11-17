@@ -115,7 +115,7 @@ gpk::err_t			gpk::jsonWrite				(cnst SJSONNode* node, view<vcst_c> jsonViews, st
 	switch(node->Token->Type) {
 	case JSON_TYPE_INTEGER		: {
 		sc_t					temp[64]					= {};
-		if_fail_fe(::sprintf_s(temp, "%" GPK_FMT_S3, (s3_t)node->Token->Value));
+		if_fail_fe(::gpk::sprintf_s(temp, "%" GPK_FMT_S3, (s3_t)node->Token->Value));
 		if_fail_fe(append_strings(output, temp));
 	}
 		break;
@@ -123,7 +123,7 @@ gpk::err_t			gpk::jsonWrite				(cnst SJSONNode* node, view<vcst_c> jsonViews, st
 		f3_t					f							= 0;
 		memcpy(&f, &node->Token->Value, szof(f3_t));
 		sc_t					temp[64]					= {};
-		err_t					lenNum						= ::sprintf_s(temp, "%.16f", f);
+		err_t					lenNum						= ::gpk::sprintf_s(temp, "%.16f", f);
 		if_fail_fe(lenNum);
 		if_true_fef(lenNum >= (err_t)size(temp), "JSON decimal exceeds the formatting buffer: %.16f.", f);
 		while(lenNum > 0 && (0 == temp[lenNum] || '0' == temp[lenNum]))

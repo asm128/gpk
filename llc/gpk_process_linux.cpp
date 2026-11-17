@@ -2,6 +2,7 @@
 #	define _GNU_SOURCE // pipe2 and F_DUPFD_CLOEXEC.
 #endif
 #include "gpk_process_internal.h"
+#include "gpk_cerrno.h"
 
 #ifdef GPK_LINUX
 #include <errno.h>    // EINTR, EPIPE and errno.
@@ -128,7 +129,7 @@ sttc gpk::err_t processPipe(int & readEnd, int & writeEnd) {
 
 gpk::err_t processRedirect(SProcessLinux & process) {
 	if(0 < process.PID)
-		rtrn OS_BUSY;
+		rtrn ::gpk::ERRNO_EBUSY;
 	if_fail_fe(processPipesClose(process));
 	SProcessNativeScope<SProcessLinux> rollback{process};
 	if_fail_ve(((err_t)-1), processPipe(process.StdinRead, process.StdinWrite));
@@ -179,7 +180,7 @@ sttc gpk::err_t processArguments(as0_t & storage, apod<sc_t*> & arguments) {
 
 gpk::err_t processCreate(SProcessLinux & process, vcst_t application, vcst_t commandLine, vcs0_t environment, u2_t creationFlags) {
 	if(0 < process.PID)
-		rtrn OS_BUSY;
+		rtrn ::gpk::ERRNO_EBUSY;
 	if_true_fef(creationFlags, "%s", "Windows process creation flags are unsupported on Linux.");
 	if_true_fef(application.size() && memchr(application.begin(), 0, application.size()), "%s", "Application contains an embedded zero.");
 	if_true_fef(commandLine.size() && memchr(commandLine.begin(), 0, commandLine.size()), "%s", "Command line contains an embedded zero.");
