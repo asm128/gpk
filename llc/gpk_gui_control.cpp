@@ -163,6 +163,7 @@ gpk::err_t gpk::controlInstanceReset	(SControlTable & controlTable, cid_t iContr
 	controlTable.Constraints	[iControl]	= {};
 	controlTable.Draw			[iControl]	= {};
 	controlTable.Text			[iControl]	= {};
+	controlTable.ControlTextState[iControl].clear();
 	controlTable.Images			[iControl]	= {};
 	controlTable.Children		[iControl]	= vcid{};
 	
@@ -188,6 +189,7 @@ gpk::cid_t			gpk::controlCreate		(SControlTable & controlTable, vs1_t defaultCol
 		, controlTable.Constraints
 		, controlTable.Draw
 		, controlTable.Text
+		, controlTable.ControlTextState
 		, controlTable.Images
 		, controlTable.Children
 		) - 1);
