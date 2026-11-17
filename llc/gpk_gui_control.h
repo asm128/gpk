@@ -229,6 +229,7 @@ nmsp gpk
 		apod<SControlState		>	States				= {};
 		apod<STextState			>	TextState			= {};
 		aobj<vcst_t				>	Identifier			= {};
+		aobj<string				>	Script				= {};
 		apod<SControlConstraints>	Constraints			= {};
 		//apod<SControlState		>	Previous			= {};
 		apod<SControlPlacement	>	Placement			= {};

@@ -55,15 +55,14 @@ sttc	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8bgr
 	::gpk::apod<::gpk::n2u1_t>	dstCoords;
 	u2_c				iFont				= ::gpk::in_range(controlText.FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	cnst ::gpk::SRasterFont	& selectedFont		= *gui.Fonts[iFont];
-	cnst ::gpk::apod<::gpk::STextState> & textState = gui.Controls.TextState[iControl];
-	for(u2_t iCharacter = 0, countCharacter = ::gpk::min(textState.size(), controlText.Text.size()); iCharacter < countCharacter; ++iCharacter)
-		if(textState[iCharacter].IsSelected()) {
+	cnst ::gpk::STextState & textState = gui.Controls.TextState[iControl];
+	for(u2_t iCharacter = controlText.Selection.Min, countCharacter = ::gpk::min((u2_t)controlText.Selection.Max, controlText.Text.size()); textState.IsSelected() && iCharacter < countCharacter; ++iCharacter) {
 			cnst ::gpk::rect2s1_t characterRectangle = {
 				{s1_t(rectText.Offset.x + selectedFont.CharSize.x * iCharacter), rectText.Offset.y},
 				selectedFont.CharSize.s1()
 			};
 			::gpk::drawRectangle(target, colorSelectedBack, characterRectangle);
-		}
+	}
 	if_fail_fe(gpk::textLineRaster(target.metrics(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(u2_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
 		cnst ::gpk::n2u1_t			dstCoord			= dstCoords[iCoord];
@@ -71,7 +70,7 @@ sttc	gpk::err_t controlTextDraw		(::gpk::SGUI & gui, s2_t iControl, ::gpk::g8bgr
 		cnst s2_t characterOffsetX = (s2_t)dstCoord.x - rectText.Offset.x;
 		if(0 <= characterOffsetX && selectedFont.CharSize.x) {
 			u2_c iCharacter = characterOffsetX / selectedFont.CharSize.x;
-			if(iCharacter < textState.size() && textState[iCharacter].IsSelected())
+			if(textState.IsSelected() && ::gpk::in_range(iCharacter, (u2_t)controlText.Selection.Min, (u2_t)controlText.Selection.Max))
 				colorGlyph = colorSelectedFace;
 		}
 		target[dstCoord.y][dstCoord.x]	= colorGlyph;

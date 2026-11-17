@@ -2,6 +2,8 @@
 #include "gpk_gui_theme.h"
 #include "gpk_gui_text.h"
 #include "gpk_base64.h"
+#include "gpk_json_expression.h"
+#include "gpk_label.h"
 #include "gpk_rect_align.h"
 
 usns gpk;
@@ -22,6 +24,209 @@ gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
 		gui.SelectedFont = u1_t(gui.Fonts.size() - 1);
 
 	return controlCreate(gui.Controls, gui.Colors->DefaultColors);
+}
+
+tplt<tpnm T>
+sttc gpk::err_t guiComponentJSONSave(::gpk::string & output, ::gpk::vcst_t name, cnst T & component, b8_t & separator) {
+	if_fail_fe(::gpk::appendOpenKey(output, name, separator));
+	if_fail_fe(::gpk::saveCTTI(output, component));
+	separator = true;
+	rtrn 0;
+}
+
+sttc b8_t guiControlHasIdentifiedAncestor(cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl) {
+	for(::gpk::cid_t iParent = gui.Controls.States[iControl].Parent; false == ::gpk::controlInvalid(gui, iParent); iParent = gui.Controls.States[iParent].Parent)
+		if(gui.Controls.Identifier[iParent].size())
+			rtrn true;
+	rtrn false;
+}
+
+sttc ::gpk::err_t guiControlJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl);
+
+sttc ::gpk::err_t guiControlChildrenJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl, b8_t & separator) {
+	cnst ::gpk::acid & children = gui.Controls.Children[iControl];
+	for(::gpk::u2_t iChild = 0; iChild < children.size(); ++iChild) {
+		cnst ::gpk::cid_t idChild = children[iChild];
+		if(::gpk::controlInvalid(gui, idChild))
+			continue;
+		cnst ::gpk::vcst_t identifier = gui.Controls.Identifier[idChild];
+		if(identifier.size()) {
+			if_fail_fe(::gpk::appendOpenKey(output, identifier, separator));
+			if_fail_fe(::guiControlJSONSave(output, gui, idChild));
+			separator = true;
+		}
+		else
+			if_fail_fe(::guiControlChildrenJSONSave(output, gui, idChild, separator));
+	}
+	rtrn 0;
+}
+
+sttc ::gpk::err_t guiControlJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl) {
+	if_fail_fe(output.push_back('{'));
+	b8_t separator = false;
+	if_fail_fe(::gpk::appendOpenKey(output, "Id"));
+	if_fail_fe(::gpk::cttiValueSave(output, iControl));
+	separator = true;
+	if_fail_fe(::guiComponentJSONSave(output, "State", gui.Controls.States[iControl], separator));
+	if_fail_fe(::guiComponentJSONSave(output, "TextState", gui.Controls.TextState[iControl], separator));
+	if_fail_fe(::guiComponentJSONSave(output, "Constraints", gui.Controls.Constraints[iControl], separator));
+	if_fail_fe(::guiComponentJSONSave(output, "Placement", gui.Controls.Placement[iControl], separator));
+	if_fail_fe(::guiComponentJSONSave(output, "Draw", gui.Controls.Draw[iControl], separator));
+	if_fail_fe(::guiComponentJSONSave(output, "Text", gui.Controls.Text[iControl], separator));
+	if_fail_fe(::guiControlChildrenJSONSave(output, gui, iControl, separator));
+	rtrn output.push_back('}');
+}
+
+gpk::err_t gpk::guiJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui) {
+	u2_c offset = output.size();
+	if_fail_fe(output.push_back('{'));
+	b8_t separator = false;
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
+		if(controlInvalid(gui, (cid_t)iControl) || 0 == gui.Controls.Identifier[iControl].size() || ::guiControlHasIdentifiedAncestor(gui, (cid_t)iControl))
+			continue;
+		if_fail_fe(appendOpenKey(output, gui.Controls.Identifier[iControl], separator));
+		if_fail_fe(::guiControlJSONSave(output, gui, (cid_t)iControl));
+		separator = true;
+	}
+	if_fail_fe(output.push_back('}'));
+	rtrn output.size() - offset;
+}
+
+tplt<tpnm T>
+sttc ::gpk::err_t guiComponentJSONLoad(cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode, ::gpk::vcst_t name, T & component) {
+	cnst ::gpk::err_t iComponent = ::gpk::jsonObjectValueGet(input, iNode, name);
+	if(0 > iComponent)
+		rtrn 0;
+	if_fail_fe(::gpk::loadCTTI(input, (::gpk::u2_t)iComponent, component));
+	rtrn 1;
+}
+
+sttc ::gpk::err_t guiControlJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode);
+
+sttc ::gpk::err_t guiControlChildrenJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode) {
+	cnst ::gpk::acid & children = gui.Controls.Children[iControl];
+	for(::gpk::u2_t iChild = 0; iChild < children.size(); ++iChild) {
+		cnst ::gpk::cid_t idChild = children[iChild];
+		if(::gpk::controlInvalid(gui, idChild))
+			continue;
+		cnst ::gpk::vcst_t identifier = gui.Controls.Identifier[idChild];
+		if(identifier.size()) {
+			cnst ::gpk::err_t iChildNode = ::gpk::jsonObjectValueGet(input, iNode, identifier);
+			if(0 <= iChildNode)
+				if_fail_fe(::guiControlJSONLoad(gui, idChild, input, (::gpk::u2_t)iChildNode));
+		}
+		else
+			if_fail_fe(::guiControlChildrenJSONLoad(gui, idChild, input, iNode));
+	}
+	rtrn 0;
+}
+
+sttc ::gpk::err_t guiControlJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode) {
+	::gpk::err_t loaded = 0;
+	::gpk::SControlState state = gui.Controls.States[iControl];
+	::gpk::err_t loadedState = ::guiComponentJSONLoad(input, iNode, "State", state);
+	if_fail_fe(loadedState);
+	if(loadedState) {
+		cnst ::gpk::cid_t oldParent = gui.Controls.States[iControl].Parent;
+		if(state.Parent != oldParent)
+			if_fail_fe(::gpk::controlSetParent(gui, iControl, state.Parent));
+		gui.Controls.States[iControl] = state;
+		++loaded;
+	}
+	::gpk::err_t result = ::guiComponentJSONLoad(input, iNode, "TextState", gui.Controls.TextState[iControl]);
+	if_fail_fe(result); loaded += result;
+	result = ::guiComponentJSONLoad(input, iNode, "Constraints", gui.Controls.Constraints[iControl]);
+	if_fail_fe(result); loaded += result;
+	result = ::guiComponentJSONLoad(input, iNode, "Placement", gui.Controls.Placement[iControl]);
+	if_fail_fe(result); loaded += result;
+	result = ::guiComponentJSONLoad(input, iNode, "Draw", gui.Controls.Draw[iControl]);
+	if_fail_fe(result); loaded += result;
+	::gpk::SControlText text = gui.Controls.Text[iControl];
+	result = ::guiComponentJSONLoad(input, iNode, "Text", text);
+	if_fail_fe(result);
+	if(result) {
+		cnst ::gpk::err_t iText = ::gpk::jsonObjectValueGet(input, iNode, "Text");
+		if(0 <= iText && 0 <= ::gpk::jsonObjectValueGet(input, (::gpk::u2_t)iText, "Text"))
+			text.Text = ::gpk::label(text.Text);
+		gui.Controls.Text[iControl] = text;
+		loaded += result;
+	}
+	if(loaded)
+		if_fail_fe(::gpk::controlMetricsInvalidate(gui, iControl));
+	if_fail_fe(::guiControlChildrenJSONLoad(gui, iControl, input, iNode));
+	rtrn loaded;
+}
+
+gpk::err_t gpk::guiJSONLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode) {
+	if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
+		if(controlInvalid(gui, (cid_t)iControl) || 0 == gui.Controls.Identifier[iControl].size() || ::guiControlHasIdentifiedAncestor(gui, (cid_t)iControl))
+			continue;
+		cnst err_t iControlNode = jsonObjectValueGet(input, iNode, gui.Controls.Identifier[iControl]);
+		if(0 <= iControlNode)
+			if_fail_fe(::guiControlJSONLoad(gui, (cid_t)iControl, input, (u2_t)iControlNode));
+	}
+	rtrn 0;
+}
+
+sttc ::gpk::err_t guiJSONTemplateResolveNode(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, cnst ::gpk::SJSONReader & values, ::gpk::u2_t iValues, ::gpk::string & output) {
+	if_true_fe(iSource >= source.Token.size());
+	cnst ::gpk::JSON_TYPE type = source.Token[iSource].Type;
+	if(::gpk::JSON_TYPE_OBJECT == type) {
+		if_fail_fe(output.push_back('{'));
+		cnst ::gpk::SJSONNode & node = *source.Tree[iSource];
+		for(::gpk::u2_t iChild = 0; iChild < node.Children.size(); iChild += 2) {
+			::gpk::vcst_t key = {};
+			if_fail_fe(::gpk::jsonObjectGetString(source, (::gpk::u2_t)node.Children[iChild]->ObjectIndex, key));
+			if_fail_fe(::gpk::appendOpenKey(output, key, 0 != iChild));
+			if_fail_fe(::guiJSONTemplateResolveNode(source, (::gpk::u2_t)node.Children[iChild + 1]->ObjectIndex, values, iValues, output));
+		}
+		rtrn output.push_back('}');
+	}
+	if(::gpk::JSON_TYPE_ARRAY == type) {
+		if_fail_fe(output.push_back('['));
+		cnst ::gpk::SJSONNode & node = *source.Tree[iSource];
+		for(::gpk::u2_t iChild = 0; iChild < node.Children.size(); ++iChild) {
+			if(iChild) if_fail_fe(output.push_back(','));
+			if_fail_fe(::guiJSONTemplateResolveNode(source, (::gpk::u2_t)node.Children[iChild]->ObjectIndex, values, iValues, output));
+		}
+		rtrn output.push_back(']');
+	}
+	if(::gpk::JSON_TYPE_STRING == type) {
+		::gpk::vcst_t format = {};
+		if_fail_fe(::gpk::jsonObjectGetString(source, iSource, format));
+		if(format.size() >= 2 && '{' == format[0] && '}' == format[format.size() - 1]) {
+			::gpk::vcst_t expression = {format.begin() + 1, format.size() - 2};
+			::gpk::vcst_t resolved = {};
+			cnst ::gpk::err_t iResolved = ::gpk::jsonExpressionResolve(expression, values, iValues, resolved);
+			if_true_fe(-1 == iResolved);
+			if((::gpk::u2_t)iResolved < values.Token.size() && ::gpk::JSON_TYPE_STRING == values.Token[iResolved].Type)
+				rtrn ::gpk::appendJSONString(output, resolved);
+			rtrn output.append(resolved);
+		}
+		::gpk::string formatted = {};
+		if_fail_fe(::gpk::jsonStringFormat(format, values, iValues, formatted));
+		rtrn ::gpk::appendJSONString(output, formatted);
+	}
+	rtrn ::gpk::jsonWrite(source.Tree[iSource], source.View, output);
+}
+
+gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
+	if_fail_fe(controlInvalid(gui, iControl));
+	cnst vcst_t script = gui.Controls.Script[iControl];
+	if(0 == script.size())
+		rtrn 0;
+	string valuesJSON = {};
+	if_fail_fe(guiJSONSave(valuesJSON, gui));
+	SJSONReader values = {};
+	if_fail_fe(jsonParse(values, valuesJSON));
+	SJSONReader source = {};
+	if_fail_fe(jsonParse(source, script));
+	string patchJSON = {};
+	if_fail_fe(::guiJSONTemplateResolveNode(source, 0, values, 0, patchJSON));
+	SJSONReader patch = {};
+	if_fail_fe(jsonParse(patch, patchJSON));
+	rtrn guiJSONLoad(gui, patch);
 }
 //err_t			gpk::guiUpdate			(SGUI & gui, cnst SInput & input, cnst n2u1_t & targetMetrics, vpobj<SEventSystem> in_Events) {
 //	guiProcessInput(gui, input, in_Events);
@@ -380,6 +585,9 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 	//	if(statePrevious != stateCurrent)
 	//		if_fail_fe(eventEnqueueGuiControlStateChange(gui.Controls.EventQueue, (cid_t)iControl, statePrevious, stateCurrent));
 	//}
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
+		if(gui.Controls.States[iControl].IsAction() && gui.Controls.Script[iControl].size())
+			if_fail_fe(guiScriptRun(gui, (cid_t)iControl));
 	return controlHovered;
 }
 

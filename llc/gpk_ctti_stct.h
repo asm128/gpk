@@ -11,6 +11,11 @@
 
 nmsp gpk
 {
+	tplt<tpnm T> struct n2;
+	tplt<tpnm T> struct rect;
+	tplt<tpnm T> struct rect2;
+	tplt<tpnm T> struct minmax;
+
 	enum CTTI_PARSE_STATE : u0_t
 		{ CTTI_PARSE_STATE_STRUCT_NAME	= 0
 		, CTTI_PARSE_STATE_MODIFIERS		= 1
@@ -247,11 +252,12 @@ nmsp gpk
 	}
 	tplt<tpnm T> requires(__is_enum(T))
 	err_t cttiValueSave(string & output, cnst T & input) {
-		vcst_t name = {};
-		if_fail_fe(get_enum<T>().get_value_label(input, name));
-		if_fail_fe(output.push_back('"'));
-		if_fail_fe(output.append(name));
-		rtrn output.push_back('"');
+		cnst enum_definition<T> & definition = get_enum<T>();
+		for(u2_t iValue = 0; iValue < definition.Values.size(); ++iValue)
+			if(input == definition.Values[iValue])
+				rtrn appendJSONString(output, definition.Names[iValue]);
+		cnst s3_t numeric = (s3_t)input;
+		rtrn cttiValueSave(output, numeric);
 	}
 	tplt<tpnm T> requires ctti_struct<T>
 	err_t cttiValueSave(string & output, cnst T & input) {
@@ -262,6 +268,54 @@ nmsp gpk
 	}
 	inln err_t cttiValueSave(string & output, vcst_t input) {
 		rtrn appendJSONString(output, input);
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, cnst n2<T> & input) {
+		u2_c offset = output.size();
+		if_fail_fe(output.push_back('{'));
+		if_fail_fe(appendOpenKey(output, "x"));
+		if_fail_fe(cttiValueSave(output, input.x));
+		if_fail_fe(appendOpenKey(output, "y", true));
+		if_fail_fe(cttiValueSave(output, input.y));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, cnst rect<T> & input) {
+		u2_c offset = output.size();
+		if_fail_fe(output.push_back('{'));
+		if_fail_fe(appendOpenKey(output, "Left"));
+		if_fail_fe(cttiValueSave(output, input.Left));
+		if_fail_fe(appendOpenKey(output, "Top", true));
+		if_fail_fe(cttiValueSave(output, input.Top));
+		if_fail_fe(appendOpenKey(output, "Right", true));
+		if_fail_fe(cttiValueSave(output, input.Right));
+		if_fail_fe(appendOpenKey(output, "Bottom", true));
+		if_fail_fe(cttiValueSave(output, input.Bottom));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, cnst rect2<T> & input) {
+		u2_c offset = output.size();
+		if_fail_fe(output.push_back('{'));
+		if_fail_fe(appendOpenKey(output, "Offset"));
+		if_fail_fe(cttiValueSave(output, input.Offset));
+		if_fail_fe(appendOpenKey(output, "Size", true));
+		if_fail_fe(cttiValueSave(output, input.Size));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, cnst minmax<T> & input) {
+		u2_c offset = output.size();
+		if_fail_fe(output.push_back('{'));
+		if_fail_fe(appendOpenKey(output, "Min"));
+		if_fail_fe(cttiValueSave(output, input.Min));
+		if_fail_fe(appendOpenKey(output, "Max", true));
+		if_fail_fe(cttiValueSave(output, input.Max));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
 	}
 	tplt<tpnm T>
 	err_t cttiValueSave(string & output, view<T> input) {
@@ -313,10 +367,16 @@ nmsp gpk
 	}
 	tplt<tpnm T> requires(__is_enum(T))
 	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
-		vcst_t name = {};
-		if_fail_fe(jsonObjectGetString(input, iNode, name));
-		rtrn get_enum<T>().get_value(name, output);
+		if(JSON_TYPE_STRING == input.Token[iNode].Type) {
+			vcst_t name = {};
+			if_fail_fe(jsonObjectGetString(input, iNode, name));
+			rtrn get_enum<T>().get_value(name, output);
+		}
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_INTEGER);
+		s3_t numeric = {};
+		if_fail_fe(jsonObjectGetInteger(input, iNode, numeric));
+		output = (T)numeric;
+		rtrn iNode;
 	}
 	tplt<tpnm T> requires ctti_struct<T>
 	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
@@ -329,6 +389,46 @@ nmsp gpk
 	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, vcst_t & output) {
 		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
 		rtrn jsonObjectGetString(input, iNode, output);
+	}
+	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, n2<T> & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
+		cnst err_t iX = jsonObjectValueGet(input, iNode, "x");
+		if(0 <= iX) if_fail_fe(cttiValueLoad(input, (u2_t)iX, output.x));
+		cnst err_t iY = jsonObjectValueGet(input, iNode, "y");
+		if(0 <= iY) if_fail_fe(cttiValueLoad(input, (u2_t)iY, output.y));
+		rtrn iNode;
+	}
+	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, rect<T> & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
+		cnst err_t iLeft = jsonObjectValueGet(input, iNode, "Left");
+		if(0 <= iLeft) if_fail_fe(cttiValueLoad(input, (u2_t)iLeft, output.Left));
+		cnst err_t iTop = jsonObjectValueGet(input, iNode, "Top");
+		if(0 <= iTop) if_fail_fe(cttiValueLoad(input, (u2_t)iTop, output.Top));
+		cnst err_t iRight = jsonObjectValueGet(input, iNode, "Right");
+		if(0 <= iRight) if_fail_fe(cttiValueLoad(input, (u2_t)iRight, output.Right));
+		cnst err_t iBottom = jsonObjectValueGet(input, iNode, "Bottom");
+		if(0 <= iBottom) if_fail_fe(cttiValueLoad(input, (u2_t)iBottom, output.Bottom));
+		rtrn iNode;
+	}
+	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, rect2<T> & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
+		cnst err_t iOffset = jsonObjectValueGet(input, iNode, "Offset");
+		if(0 <= iOffset) if_fail_fe(cttiValueLoad(input, (u2_t)iOffset, output.Offset));
+		cnst err_t iSize = jsonObjectValueGet(input, iNode, "Size");
+		if(0 <= iSize) if_fail_fe(cttiValueLoad(input, (u2_t)iSize, output.Size));
+		rtrn iNode;
+	}
+	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, minmax<T> & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
+		cnst err_t iMin = jsonObjectValueGet(input, iNode, "Min");
+		if(0 <= iMin) if_fail_fe(cttiValueLoad(input, (u2_t)iMin, output.Min));
+		cnst err_t iMax = jsonObjectValueGet(input, iNode, "Max");
+		if(0 <= iMax) if_fail_fe(cttiValueLoad(input, (u2_t)iMax, output.Max));
+		rtrn iNode;
 	}
 	tplt<tpnm T>
 	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, view<T> output) {

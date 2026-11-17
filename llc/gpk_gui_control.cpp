@@ -159,6 +159,7 @@ gpk::err_t gpk::controlInstanceReset	(SControlTable & controlTable, cid_t iContr
 	controlTable.States			[iControl]	= {};
 	controlTable.TextState		[iControl]	= {};
 	controlTable.Identifier		[iControl]	= {};
+	controlTable.Script			[iControl].clear();
 	controlTable.Constraints	[iControl]	= {};
 	//controlTable.Previous		[iControl]	= {};
 	controlTable.Placement		[iControl]	= {};
@@ -186,6 +187,7 @@ gpk::cid_t			gpk::controlCreate		(SControlTable & controlTable, vs1_t defaultCol
 		, controlTable.States
 		, controlTable.TextState
 		, controlTable.Identifier
+		, controlTable.Script
 		, controlTable.Constraints
 		//, controlTable.Previous
 		, controlTable.Placement

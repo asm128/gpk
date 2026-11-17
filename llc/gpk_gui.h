@@ -48,6 +48,9 @@ nmsp gpk
 	};
 
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
+	err_t				guiJSONSave						(string & output, cnst SGUI & gui);
+	err_t				guiJSONLoad						(SGUI & gui, cnst SJSONReader & input, u2_t iNode = 0);
+	err_t				guiScriptRun						(SGUI & gui, cid_t iControl);
 	err_t				guiUpdate						(SGUI & gui, cnst SInput & input, cnst n2u1_t & targetMetrics, vpobj<SEventSystem> in_Events = {});
 	err_t				guiUpdateMetrics				(SGUI & gui, cnst n2u1_t & targetSize, b8_t forceUpdate);
 	err_t				guiDraw							(SGUI & gui, cnst g8bgra & target);

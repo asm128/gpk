@@ -169,7 +169,7 @@ gpk::err_t gpk::viewportUpdate(SGUI & gui, cnst SInput & input, cid_t idViewport
 			if(gui.Controls.States[idResize].IsDragging())
 				rtrn ::viewportResize(gui, input, idViewport, resizeControl);
 		}
-	if(gui.Controls.IsAction(idTitle) && false == gui.Controls.Previous[idTitle].IsDragging())
+	if(gui.Controls.IsAction(idTitle))
 		if_fail_fe(viewportFold(gui, idViewport, false == gui.Controls.IsHidden(idTarget)));
 	rtrn 0;
 }

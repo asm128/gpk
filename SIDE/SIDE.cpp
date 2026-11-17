@@ -162,7 +162,7 @@ sttc gpk::err_t fileViewerDirectoryControlsCreate(SFileViewer & viewer, SPathLis
 	if_fail_fe(idClose = viewportControl(gui, directory.IdViewport, VIEWPORT_CONTROL_CLOSE));
 	if_fail_fe(idTitle = viewportControl(gui, directory.IdViewport, VIEWPORT_CONTROL_TITLE));
 	cid_t idNewFile = -1;
-	if_fail_fe(idNewFile = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(idNewFile = controlCreate(gui, [&](SControlState &, STextState &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {88, gui.Controls.Placement[idClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.AttachSizeToControl = {-1, -1};
@@ -189,7 +189,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	if_fail_fe(idClose = viewportControl(gui, editor.IdViewport, VIEWPORT_CONTROL_CLOSE));
 	if_fail_fe(idClient = viewportControl(gui, editor.IdViewport, VIEWPORT_CONTROL_TARGET));
 	if_fail_fe(idTitle = viewportControl(gui, editor.IdViewport, VIEWPORT_CONTROL_TITLE));
-	if_fail_fe(editor.IdSave = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdSave = controlCreate(gui, [&](SControlState &, STextState &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {64, gui.Controls.Placement[idClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.AttachSizeToControl = {-1, -1};
@@ -202,7 +202,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	if_fail_fe(controlSetParent(gui, editor.IdSave, editor.IdViewport));
 	gui.Controls.SetHidden(editor.IdSave, true);
 
-	if_fail_fe(editor.IdKeyboard = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdKeyboard = controlCreate(gui, [&](SControlState &, STextState &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {88, gui.Controls.Placement[idClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.DockToControl.Right = editor.IdSave;
@@ -215,7 +215,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	gui.Controls.Constraints[idTitle].DockToControl.Right = editor.IdKeyboard;
 	gui.Controls.SetHidden(editor.IdKeyboard, true);
 
-	if_fail_fe(editor.IdCursor = controlCreate(gui, [](SControlState & state, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints &, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdCursor = controlCreate(gui, [](SControlState & state, STextState &, vcst_t &, SControlConstraints &, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Border = {};
 		placement.Margin = {};
 		draw.NoBorder = true;
@@ -782,25 +782,31 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer, SFileEditor & e
 			if_fail_fe(sourceLine.slice(visibleText, offset, count));
 			if(gui.Controls.Text[idControl].Text != visibleText)
 				if_fail_fe(controlTextSet(gui, idControl, visibleText));
-			apod<STextState> & textState = gui.Controls.TextState[idControl];
-			if_fail_fe(textState.resize(visibleText.size()));
+			STextState & textState = gui.Controls.TextState[idControl];
+			SControlText & controlText = gui.Controls.Text[idControl];
+			controlText.Selection = {};
 			u2_c lineOffset = ::fileViewerLineOffset(editor, iLine);
-			for(u2_t iCharacter = 0; iCharacter < textState.size(); ++iCharacter) {
-				u2_c characterOffset = lineOffset + offset + iCharacter;
-				b8_t selected = false;
-				for(u2_t iSelection = 0; iSelection < editor.TextSelections.size(); ++iSelection) {
-					rangeu2_c selection = editor.TextSelections[iSelection];
-					if(characterOffset >= selection.Offset && (u3_t)characterOffset < (u3_t)selection.Offset + selection.Count) {
-						selected = true;
-						break;
-					}
+			b8_t selected = false;
+			u2_c visibleBegin = lineOffset + offset;
+			u2_c visibleEnd = visibleBegin + visibleText.size();
+			for(u2_t iSelection = 0; iSelection < editor.TextSelections.size(); ++iSelection) {
+				rangeu2_c selection = editor.TextSelections[iSelection];
+				u2_c selectionBegin = max(visibleBegin, selection.Offset);
+				u2_c selectionEnd = min(visibleEnd, selection.Offset + selection.Count);
+				if(selectionBegin < selectionEnd) {
+					controlText.Selection = {(u1_t)(selectionBegin - visibleBegin), (u1_t)(selectionEnd - visibleBegin)};
+					selected = true;
+					break;
 				}
-				textState[iCharacter].SetSelected(idControl, iCharacter, gui.Controls.EventQueue, selected);
-				textState[iCharacter].SetCursor(idControl, iCharacter, gui.Controls.EventQueue, iLine == editor.Cursor.y && offset + iCharacter == editor.Cursor.x);
 			}
+			textState.SetSelected(idControl, controlText.Selection.Min, gui.Controls.EventQueue, selected);
+			textState.SetCursor(idControl, controlText.Selection.Min, gui.Controls.EventQueue, false);
 		}
-		else
-			gui.Controls.TextState[idControl].clear();
+		else {
+			gui.Controls.Text[idControl].Selection = {};
+			gui.Controls.TextState[idControl].SetSelected(idControl, 0, gui.Controls.EventQueue, false);
+			gui.Controls.TextState[idControl].SetCursor(idControl, 0, gui.Controls.EventQueue, false);
+		}
 		gui.Controls.SetSelected(idControl, visible && iLine == editor.Cursor.y);
 		if(gui.Controls.IsHidden(idControl) == visible)
 			gui.Controls.SetHidden(idControl, false == visible);

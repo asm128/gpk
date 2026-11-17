@@ -1,6 +1,6 @@
 #include "test_llc_suites.h"
 #include "gpk_json_expression.h"
-#include "gpk_gui_control.h"
+#include "gpk_gui.h"
 
 GDEFINE_ENUM_TYPE(JSON_EXPRESSION_TEST_RESULT, ::gpk::u0_t);
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, OK                       ,  0, "All JSON-expression tests passed.");
@@ -389,6 +389,55 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE
 		, partial.FontSelected != 1 || partial.Text != target.Text || partial.Align != target.Align || partial.Selection != target.Selection
 		);
+
+	::gpk::SGUI gui = {};
+	cnst ::gpk::cid_t idSource = ::gpk::controlCreate(gui);
+	cnst ::gpk::cid_t idTarget = ::gpk::controlCreate(gui);
+	cnst ::gpk::cid_t idAction = ::gpk::controlCreate(gui);
+	cnst ::gpk::cid_t idStructural = ::gpk::controlCreateChild(gui, idTarget);
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_CONTROL_REGISTRY, 0 > idSource || 0 > idTarget || 0 > idAction || 0 > idStructural);
+	gui.Controls.Identifier[idSource] = "source";
+	gui.Controls.Identifier[idTarget] = "target";
+	gui.Controls.Identifier[idAction] = "action";
+	gui.Controls.Text[idSource].FontSelected = 3;
+	gui.Controls.Text[idTarget] = target;
+	gui.Controls.Placement[idTarget].Area = {{17, 19}, {123, 45}};
+	gui.Controls.Text[idStructural].FontSelected = 7;
+	gui.Controls.Placement[idStructural].Area = {{31, 37}, {41, 43}};
+	gui.Controls.Script[idAction] =
+		"{\"target\":{"
+			"\"State\":{\"Flag\":1},"
+			"\"Text\":{\"FontSelected\":\"{source.Text.FontSelected}\"},"
+			"\"Placement\":{\"Area\":{\"Offset\":{\"x\":99}}}"
+		"}}";
+	cnst ::gpk::err_t scriptResult = ::gpk::guiScriptRun(gui, idAction);
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_FORMAT_RESULT, ::gpk::failed(scriptResult), "Result:%i.", scriptResult);
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, false == gui.Controls.States[idTarget].IsHidden());
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE
+		, gui.Controls.Text[idTarget].FontSelected != gui.Controls.Text[idSource].FontSelected
+		|| gui.Controls.Text[idTarget].Text != target.Text
+		|| gui.Controls.Text[idTarget].Align != target.Align
+		|| gui.Controls.Text[idTarget].Selection != target.Selection
+		);
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE
+		, gui.Controls.Placement[idTarget].Area.Offset.x != 99
+		|| gui.Controls.Placement[idTarget].Area.Offset.y != 19
+		|| gui.Controls.Placement[idTarget].Area.Size.x != 123
+		|| gui.Controls.Placement[idTarget].Area.Size.y != 45
+		);
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE
+		, gui.Controls.States[idStructural].IsHidden()
+		|| gui.Controls.Text[idStructural].FontSelected != 7
+		|| gui.Controls.Placement[idStructural].Area.Offset.x != 31
+		|| gui.Controls.Placement[idStructural].Area.Offset.y != 37
+		|| gui.Controls.Placement[idStructural].Area.Size.x != 41
+		|| gui.Controls.Placement[idStructural].Area.Size.y != 43
+		);
+	gui.Controls.Script[idAction] = "{\"target\":{\"State\":{\"Flag\":\"{target.State.Flag ? 0 : 1}\"}}}";
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_FORMAT_RESULT, ::gpk::failed(::gpk::guiScriptRun(gui, idAction)), "%s", "Failed to show target through ternary script.");
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, gui.Controls.States[idTarget].IsHidden());
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_FORMAT_RESULT, ::gpk::failed(::gpk::guiScriptRun(gui, idAction)), "%s", "Failed to hide target through ternary script.");
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, false == gui.Controls.States[idTarget].IsHidden());
 	rtrn 0;
 }
 
