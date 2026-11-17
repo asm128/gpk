@@ -189,7 +189,7 @@ gpk::err_t gpk::guiJSONLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input, 
 	rtrn 0;
 }
 
-sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, ::gpk::b8_t & dynamic) {
+sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, ::gpk::vcst_t rootIdentifier, ::gpk::b8_t & dynamic, ::gpk::b8_t & scoped) {
 	if_true_fef(iSource >= source.Token.size(), "iSource:%u, TokenCount:%u", iSource, source.Token.size());
 	cnst ::gpk::JSON_TYPE type = source.Token[iSource].Type;
 	if(::gpk::JSON_TYPE_STRING == type) {
@@ -198,7 +198,18 @@ sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk
 		for(::gpk::u2_t iCharacter = 0; iCharacter < value.size(); ++iCharacter)
 			if('{' == value[iCharacter]) {
 				dynamic = true;
-				rtrn 0;
+				if(0 == rootIdentifier.size() || value.size() < iCharacter + 1 + rootIdentifier.size())
+					scoped = false;
+				else {
+					for(::gpk::u2_t iRootCharacter = 0; iRootCharacter < rootIdentifier.size(); ++iRootCharacter)
+						if(value[iCharacter + 1 + iRootCharacter] != rootIdentifier[iRootCharacter]) {
+							scoped = false;
+							break;
+						}
+					cnst ::gpk::u2_t iAfterRoot = iCharacter + 1 + rootIdentifier.size();
+					if(scoped && iAfterRoot < value.size() && '.' != value[iAfterRoot] && '[' != value[iAfterRoot] && '}' != value[iAfterRoot])
+						scoped = false;
+				}
 			}
 		rtrn 0;
 	}
@@ -209,9 +220,7 @@ sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk
 	cnst ::gpk::u2_t step = ::gpk::JSON_TYPE_OBJECT == type ? 2U : 1U;
 	for(::gpk::u2_t iChild = first; iChild < node.Children.size(); iChild += step) {
 		cnst ::gpk::u2_t iChildNode = (::gpk::u2_t)node.Children[iChild]->ObjectIndex;
-		if_fail_fef(::guiJSONTemplateDynamic(source, iChildNode, dynamic), "iSource:%u, iChild:%u, iChildNode:%u", iSource, iChild, iChildNode);
-		if(dynamic)
-			break;
+		if_fail_fef(::guiJSONTemplateDynamic(source, iChildNode, rootIdentifier, dynamic, scoped), "iSource:%u, iChild:%u, iChildNode:%u", iSource, iChild, iChildNode);
 	}
 	rtrn 0;
 }
@@ -267,18 +276,24 @@ gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 	SJSONReader source = {};
 	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), "script.jsonParse", GPK_VIEW_ARGS(script));
 	if_fail_fef(jsonParse(source, script), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+	cnst cid_t iRoot = ::guiControlIdentifiedRoot(gui, iControl);
+	cnst vcst_t rootIdentifier = controlInvalid(gui, iRoot) ? vcst_t{} : gui.Controls.Identifier[iRoot];
 	b8_t dynamic = false;
-	if_fail_fef(::guiJSONTemplateDynamic(source, 0, dynamic), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+	b8_t scoped = true;
+	if_fail_fef(::guiJSONTemplateDynamic(source, 0, rootIdentifier, dynamic, scoped), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 	if(false == dynamic) {
 		always_printf("iControl:%i, Identifier:%.*s, Stage:%s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), "guiJSONLoad", GPK_VIEW_ARGS(script));
 		if_fail_fef(guiJSONLoad(gui, source), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 		rtrn 0;
 	}
 	string valuesJSON = {};
-	cnst cid_t iRoot = ::guiControlIdentifiedRoot(gui, iControl);
-	cnst vcst_t rootIdentifier = controlInvalid(gui, iRoot) ? vcst_t{} : gui.Controls.Identifier[iRoot];
-	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, iRoot:%i, RootIdentifier:%.*s", iControl, GPK_VIEW_ARGS(identifier), "guiControlTreeJSONSave", iRoot, GPK_VIEW_ARGS(rootIdentifier));
-	if_fail_fef(::guiControlTreeJSONSave(valuesJSON, gui, iRoot), "iControl:%i, Identifier:%.*s, iRoot:%i, RootIdentifier:%.*s", iControl, GPK_VIEW_ARGS(identifier), iRoot, GPK_VIEW_ARGS(rootIdentifier));
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, iRoot:%i, RootIdentifier:%.*s", iControl, GPK_VIEW_ARGS(identifier), scoped ? "guiControlTreeJSONSave" : "guiJSONSave", iRoot, GPK_VIEW_ARGS(rootIdentifier));
+	if(scoped) {
+		if_fail_fef(::guiControlTreeJSONSave(valuesJSON, gui, iRoot), "iControl:%i, Identifier:%.*s, iRoot:%i, RootIdentifier:%.*s", iControl, GPK_VIEW_ARGS(identifier), iRoot, GPK_VIEW_ARGS(rootIdentifier));
+	}
+	else {
+		if_fail_fef(guiJSONSave(valuesJSON, gui), "iControl:%i, Identifier:%.*s", iControl, GPK_VIEW_ARGS(identifier));
+	}
 	SJSONReader values = {};
 	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), "values.jsonParse", valuesJSON.size());
 	if_fail_fef(jsonParse(values, valuesJSON), "iControl:%i, Identifier:%.*s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), valuesJSON.size());
