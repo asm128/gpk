@@ -380,6 +380,15 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 		, "Loaded Text:'%.*s', Align:%u, Selection:{%u,%u}, Font:%i."
 		, GPK_VIEW_ARGS(loaded.Text), loaded.Align, loaded.Selection.Min, loaded.Selection.Max, loaded.FontSelected
 		);
+
+	::gpk::SControlText partial = target;
+	::gpk::vcst_t partialInput = "{\"FontSelected\":1}";
+	cnst ::gpk::err_t partialResult = ::gpk::loadCTTI(partialInput, partial);
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_RESULT, ::gpk::failed(partialResult), "Result:%i.", partialResult);
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, partialInput.size());
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE
+		, partial.FontSelected != 1 || partial.Text != target.Text || partial.Align != target.Align || partial.Selection != target.Selection
+		);
 	rtrn 0;
 }
 

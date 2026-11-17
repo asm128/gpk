@@ -155,15 +155,16 @@ gpk::err_t 		gpk::controlHandle		(cnst SControlTable & controls, vcid controlsTo
 	}
 	return 0;
 }
-gpk::err_t gpk::controlInstanceReset	(SControlTable & controlTable, cid_t iControl, vs1_t defaultColors)										{
+gpk::err_t gpk::controlInstanceReset	(SControlTable & controlTable, cid_t iControl, vs1_t defaultColors) {
 	controlTable.States			[iControl]	= {};
-	controlTable.Previous		[iControl]	= {};
+	controlTable.TextState		[iControl]	= {};
+	controlTable.Identifier		[iControl]	= {};
+	controlTable.Constraints	[iControl]	= {};
+	//controlTable.Previous		[iControl]	= {};
 	controlTable.Placement		[iControl]	= {};
 	controlTable.Area			[iControl]	= {};
-	controlTable.Constraints	[iControl]	= {};
 	controlTable.Draw			[iControl]	= {};
 	controlTable.Text			[iControl]	= {};
-	controlTable.ControlTextState[iControl].clear();
 	controlTable.Images			[iControl]	= {};
 	controlTable.Children		[iControl]	= vcid{};
 	
@@ -183,13 +184,14 @@ gpk::cid_t			gpk::controlCreate		(SControlTable & controlTable, vs1_t defaultCol
 	err_t				iControl				= -1;
 	if_fail_fe(iControl = resize(controlTable.States.size() + 1
 		, controlTable.States
-		, controlTable.Previous
+		, controlTable.TextState
+		, controlTable.Identifier
+		, controlTable.Constraints
+		//, controlTable.Previous
 		, controlTable.Placement
 		, controlTable.Area
-		, controlTable.Constraints
 		, controlTable.Draw
 		, controlTable.Text
-		, controlTable.ControlTextState
 		, controlTable.Images
 		, controlTable.Children
 		) - 1);

@@ -1,4 +1,8 @@
-#include "gpk_gui_control_flag.h"
+#include "gpk_event_system.h"
+
+#include "gpk_bit.h"
+#include "gpk_ctti_enum.h"
+#include "gpk_ctti_stct.h"
 
 #ifndef GPK_GUI_TEXT_FLAG_H_23627
 #define GPK_GUI_TEXT_FLAG_H_23627
@@ -11,15 +15,15 @@ nmsp gpk
 		, GUI_TEXT_Cursor			= 0x02U
 		, GUI_TEXT_Swap_colors		= 0x04U
 		, GUI_TEXT_Bold				= 0x08U
-		, GUI_TEXT_Underline			= 0x10U
-		, GUI_TEXT_Strikethrough		= 0x20U
+		, GUI_TEXT_Underline		= 0x10U
+		, GUI_TEXT_Strikethrough	= 0x20U
 		, GUI_TEXT_Italic			= 0x40U
 		};
 	);
 	stxp GUI_TEXT_FLAG GUI_TEXT_FLAG_All = (GUI_TEXT_FLAG)-1;
 
 	inxp GUI_TEXT_FLAG isSelected			(cnst GUI_TEXT_FLAG state, cnst GUI_TEXT_FLAG mask) nxpt { return bit_test_masked(state, mask, GUI_TEXT_Selected			); }
-	inxp GUI_TEXT_FLAG isCursor			(cnst GUI_TEXT_FLAG state, cnst GUI_TEXT_FLAG mask) nxpt { return bit_test_masked(state, mask, GUI_TEXT_Cursor			); }
+	inxp GUI_TEXT_FLAG isCursor				(cnst GUI_TEXT_FLAG state, cnst GUI_TEXT_FLAG mask) nxpt { return bit_test_masked(state, mask, GUI_TEXT_Cursor			); }
 	inxp GUI_TEXT_FLAG isSwapColors			(cnst GUI_TEXT_FLAG state, cnst GUI_TEXT_FLAG mask) nxpt { return bit_test_masked(state, mask, GUI_TEXT_Swap_colors			); }
 	inxp GUI_TEXT_FLAG isBold				(cnst GUI_TEXT_FLAG state, cnst GUI_TEXT_FLAG mask) nxpt { return bit_test_masked(state, mask, GUI_TEXT_Bold				); }
 	inxp GUI_TEXT_FLAG isUnderline			(cnst GUI_TEXT_FLAG state, cnst GUI_TEXT_FLAG mask) nxpt { return bit_test_masked(state, mask, GUI_TEXT_Underline			); }
@@ -28,11 +32,11 @@ nmsp gpk
 
 	inxp GUI_TEXT_FLAG setSelected			(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Selected			, value); }
 	inxp GUI_TEXT_FLAG setCursor			(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Cursor			, value); }
-	inxp GUI_TEXT_FLAG setSwapColors			(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Swap_colors			, value); }
+	inxp GUI_TEXT_FLAG setSwapColors		(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Swap_colors			, value); }
 	inxp GUI_TEXT_FLAG setBold				(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Bold				, value); }
 	inxp GUI_TEXT_FLAG setUnderline			(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Underline			, value); }
 	inxp GUI_TEXT_FLAG setStrikethrough		(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Strikethrough		, value); }
-	inxp GUI_TEXT_FLAG setItalic				(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Italic				, value); }
+	inxp GUI_TEXT_FLAG setItalic			(GUI_TEXT_FLAG & state, cnst GUI_TEXT_FLAG mask, b8_t value) nxpt { return state = bit_set_masked(state, mask, GUI_TEXT_Italic				, value); }
 
 	CTTI_ENUM(EVENT_GUI_TEXT,
 	enum EVENT_GUI_TEXT : u0_t
@@ -62,6 +66,13 @@ nmsp gpk
 		GUI_TEXT_FLAG	Flag	= {};
 		GUI_TEXT_FLAG	Mask	= GUI_TEXT_FLAG_All;
 
+		inxp b8_t IsSelected			() csnx { return isSelected			(Flag, Mask); }
+		inxp b8_t IsCursor				() csnx { return isCursor			(Flag, Mask); }
+		inxp b8_t IsSwapColors			() csnx { return isSwapColors		(Flag, Mask); }
+		inxp b8_t IsBold				() csnx { return isBold				(Flag, Mask); }
+		inxp b8_t IsUnderline			() csnx { return isUnderline		(Flag, Mask); }
+		inxp b8_t IsStrikethrough		() csnx { return isStrikethrough	(Flag, Mask); }
+		inxp b8_t IsItalic				() csnx { return isItalic			(Flag, Mask); }
 		b8_t SetSelected(cid_t iControl, u2_t iCharacter, apobj<SEventSystem> & eventQueue, b8_t value) nxpt {
 			cnst GUI_TEXT_FLAG oldState = Flag;
 			Flag = setSelected(Flag, Mask, value);
@@ -111,13 +122,6 @@ nmsp gpk
 				if_fail_e(eventEnqueueGuiTextStateChange(eventQueue, iControl, iCharacter, oldState, Flag));
 			return IsItalic();
 		}
-		inxp b8_t IsSelected			() csnx { return isSelected			(Flag, Mask); }
-		inxp b8_t IsCursor				() csnx { return isCursor			(Flag, Mask); }
-		inxp b8_t IsSwapColors			() csnx { return isSwapColors			(Flag, Mask); }
-		inxp b8_t IsBold					() csnx { return isBold				(Flag, Mask); }
-		inxp b8_t IsUnderline				() csnx { return isUnderline			(Flag, Mask); }
-		inxp b8_t IsStrikethrough			() csnx { return isStrikethrough		(Flag, Mask); }
-		inxp b8_t IsItalic					() csnx { return isItalic				(Flag, Mask); }
 	};
 	);
 } // nmsp

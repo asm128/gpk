@@ -387,7 +387,8 @@ nmsp gpk
 		if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
 			cnst err_t iValue = jsonObjectValueGet(input, iNode, metadata.View(metadata.Members[iMember].Name));
-			if_fail_fe(iValue);
+			if(0 > iValue)
+				continue;
 			if_fail_fe(cttiVisit(output, iMember, [&](auto & member) { rtrn cttiValueLoad(input, (u2_t)iValue, member); }));
 		}
 		rtrn 0;

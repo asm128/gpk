@@ -101,10 +101,11 @@ nmsp gpk
 
 	tydf	FError
 		< SControlState			&
-		, SControlState			&
+		, STextState			&
+		, vcst_t				&
+		, SControlConstraints	&
 		, SControlPlacement		&
 		, SControlArea			&
-		, SControlConstraints	&
 		, SControlDraw			&
 		, SControlText			&
 		, SControlImage			&
@@ -114,14 +115,19 @@ nmsp gpk
 		if_fail_fe(iControl = controlCreate(gui));
 		if_true_block_log(error_printf, failed(funcInitialize
 			( gui.Controls.States			[iControl]  
-			, gui.Controls.Previous			[iControl]  
+			, gui.Controls.TextState		[iControl]  
+			, gui.Controls.Identifier		[iControl]
+			, gui.Controls.Constraints		[iControl]  
+			//, gui.Controls.Previous			[iControl]  
 			, gui.Controls.Placement		[iControl]  
 			, gui.Controls.Area				[iControl]  
-			, gui.Controls.Constraints		[iControl]  
 			, gui.Controls.Draw				[iControl]  
 			, gui.Controls.Text				[iControl]  
 			, gui.Controls.Images			[iControl]  
-			)), { (controlDelete(gui.Controls, iControl)); return -1; }
+			)), {
+				controlDelete(gui.Controls, iControl);
+				return -1;
+			}
 		);
 		return iControl;
 	}

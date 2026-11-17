@@ -226,18 +226,19 @@ nmsp gpk
 	};
 	);
 	struct SControlTable {
-		apod<SControlState		>	States		= {};
-		apod<SControlState		>	Previous	= {};
-		apod<SControlPlacement	>	Placement	= {};
-		apod<SControlArea		>	Area		= {};
-		apod<SControlConstraints>	Constraints	= {};
-		apod<SControlDraw		>	Draw		= {};
-		aobj<SControlText		>	Text		= {};
-		aobj<apod<STextState		>>	ControlTextState	= {};
-		aobj<SControlImage		>	Images		= {};
-		aobj<acid				>	Children	= {};
+		apod<SControlState		>	States				= {};
+		apod<STextState			>	TextState			= {};
+		aobj<vcst_t				>	Identifier			= {};
+		apod<SControlConstraints>	Constraints			= {};
+		//apod<SControlState		>	Previous			= {};
+		apod<SControlPlacement	>	Placement			= {};
+		apod<SControlArea		>	Area				= {};
+		apod<SControlDraw		>	Draw				= {};
+		aobj<SControlText		>	Text				= {};
+		aobj<SControlImage		>	Images				= {};
+		aobj<acid				>	Children			= {};
 		//
-		apobj<SEventSystem		>	EventQueue	= {};
+		apobj<SEventSystem		>	EventQueue			= {};
 
 		inln	b8_t	SetUnused				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
 	 	inln	b8_t	SetHidden				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }

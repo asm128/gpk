@@ -370,12 +370,17 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Objects[1].Code != sourceArrays.Objects[1].Code || loadedArrays.Objects[1].Offset != sourceArrays.Objects[1].Offset);
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT, loadedWindow[0] != sourceWindow[0] || loadedWindow[1] != sourceWindow[1]);
 
-	::gpk::vcst_t invalidInput = "{\"Count\":1}";
-	cnst ::gpk::vcst_t invalidInputOriginal = invalidInput;
-	SCTTIInstanceTest invalidOutput = {};
-	cnst ::gpk::err_t invalidResult = ::gpk::loadCTTI(invalidInput, invalidOutput);
-	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, false == ::gpk::failed(invalidResult));
-	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, invalidInput.begin() != invalidInputOriginal.begin() || invalidInput.size() != invalidInputOriginal.size());
+	::gpk::vcst_t partialInput = "{\"Count\":1}";
+	SCTTIInstanceTest partialOutput = sourceA;
+	cnst ::gpk::err_t partialResult = ::gpk::loadCTTI(partialInput, partialOutput);
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(partialResult));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, partialInput.size());
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_MEMBER_VISIT
+		, partialOutput.Count != 1
+		|| partialOutput.Ratio != sourceA.Ratio
+		|| partialOutput.Mode != sourceA.Mode
+		|| partialOutput.Enabled != sourceA.Enabled
+		);
 
 	::gpk::string output;
 	cnst ::gpk::err_t buildResult = ::gpk::cttiMemberJSON(cttiJSONMetadata, output);

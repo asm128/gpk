@@ -685,7 +685,7 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer, SFileEditor & e
 			if_fail_fe(sourceLine.slice(visibleText, offset, count));
 			if(gui.Controls.Text[idControl].Text != visibleText)
 				if_fail_fe(controlTextSet(gui, idControl, visibleText));
-			apod<STextState> & textState = gui.Controls.ControlTextState[idControl];
+			apod<STextState> & textState = gui.Controls.TextState[idControl];
 			if_fail_fe(textState.resize(visibleText.size()));
 			u2_c lineOffset = ::fileViewerLineOffset(editor, iLine);
 			for(u2_t iCharacter = 0; iCharacter < textState.size(); ++iCharacter) {
@@ -703,7 +703,7 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer, SFileEditor & e
 			}
 		}
 		else
-			gui.Controls.ControlTextState[idControl].clear();
+			gui.Controls.TextState[idControl].clear();
 		gui.Controls.SetSelected(idControl, visible && iLine == editor.Cursor.y);
 		if(gui.Controls.IsHidden(idControl) == visible) {
 			gui.Controls.SetHidden(idControl, false == visible);
