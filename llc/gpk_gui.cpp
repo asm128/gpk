@@ -23,7 +23,22 @@ gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
 
 	return controlCreate(gui.Controls, gui.Colors->DefaultColors);
 }
-
+//err_t			gpk::guiUpdate			(SGUI & gui, cnst SInput & input, cnst n2u1_t & targetMetrics, vpobj<SEventSystem> in_Events) {
+//	guiProcessInput(gui, input, in_Events);
+//	if_true_block_logf(info_printf, gui.LastSize != targetMetrics || gui.LastZoom != gui.Zoom, {
+//			info_printf("GUI Render target size or dpi changed changed.");
+//			for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
+//				gui.Controls.SetUpdated((cid_t)iOutdated, false);
+//			gui.LastSize		= targetMetrics;
+//			gui.LastZoom		= gui.Zoom;
+//		}, "%ux%u != %ux%u || %f != %f"
+//		, gui.LastSize.x, gui.LastSize.y
+//		, targetMetrics.x, targetMetrics.y
+//		, gui.LastZoom, gui.Zoom
+//		);
+//	if_fail_fe(guiUpdateMetrics(gui, targetMetrics, false));
+//	rtrn 0;
+//}
 sttc gpk::err_t	buildControlGeometry	(cnst SControlPlacement & control, cnst SControlArea & controlMetrics, cnst SGUIZoom & zoom, view<rect2s1_t> finalRects, view<tri2s1_t> triangles)					{
 	rects1_t			scaledBorders			= {};
 	n2f3_c				scaleFinal				= zoom.DPI * zoom.ZoomLevel;
@@ -302,7 +317,7 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 
 	gui.Controls.EventQueue.clear();
 	// shouldn't this be somewhere else? gui.Controls.StatesPrevious = gui.Controls.States;
-	if_true_e(failed(guiUpdateMetrics(gui, gui.LastSize, false)));
+	if_fail_e(guiUpdateMetrics(gui, gui.LastSize, false));
 	cid_t				controlHovered			= -1;
 	acid					rootControlsToProcess	= {};
 	rootControlsToProcess.reserve(1000);
@@ -365,7 +380,6 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 	//	if(statePrevious != stateCurrent)
 	//		if_fail_fe(eventEnqueueGuiControlStateChange(gui.Controls.EventQueue, (cid_t)iControl, statePrevious, stateCurrent));
 	//}
-
 	return controlHovered;
 }
 

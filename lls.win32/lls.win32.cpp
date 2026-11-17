@@ -15,13 +15,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "LLS v0.1");
 
 static	::gpk::err_t	loadClientNetworkConfig	(cnst ::gpk::SJSONReader & jsonConfig, ::gpk::vcst_t & remoteIp, ::gpk::vcst_t & remotePort) {
 	::gpk::err_t				appNodeIndex;
-	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve("application.test_udp_client", jsonConfig, 0)); } while(0);
+	if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve("application.test_udp_client", jsonConfig, 0));
 	return ::gpk::loadClientConfig(jsonConfig, appNodeIndex, remoteIp, remotePort);
 }
 
 static	::gpk::err_t	loadServerNetworkConfig	(cnst ::gpk::SJSONReader & jsonConfig, ::gpk::vcst_t & port, ::gpk::vcst_t & adapter) {
 	::gpk::err_t				appNodeIndex;
-	do { if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve("application.test_udp_server", jsonConfig, 0)); } while(0);
+	if_fail_fe(appNodeIndex = ::gpk::jsonExpressionResolve("application.test_udp_server", jsonConfig, 0));
 	return ::gpk::loadServerConfig(jsonConfig, appNodeIndex, port, adapter);
 }
 
@@ -96,19 +96,41 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, cnst ::gpk::SEven
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::SWindow				& mainWindow			= framework.RootWindow;
 	mainWindow.Size				= {1280, 720};
-	do { if_fail_fe(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)); } while(0);
-
-	do { if_fail_fe(::gpk::setupGUI(app.Client.Network.UI, *framework.GUI)); } while(0);
-	do { if_fail_fe(::gpk::setupGUI(app.Server.Network->UI, *framework.GUI)); } while(0);
-
-	do { if_fail_fe(::gpk::tcpipInitialize()); } while(0);
-	do { if_fail_fe(::llswin32::processBrokerSetup(app.ProcessBroker, framework.JSONConfig.Reader)); } while(0);
+	if_fail_fe(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)); 
+	if_fail_fe(::gpk::setupGUI(app.Client.Network.UI, *framework.GUI)); 
+	if_fail_fe(::gpk::setupGUI(app.Server.Network->UI, *framework.GUI)); 
+	if_fail_fe(::gpk::tcpipInitialize()); 
+	if_fail_fe(::llswin32::processBrokerSetup(app.ProcessBroker, framework.JSONConfig.Reader)); 
 
 	if_fail_w(::loadServerNetworkConfig(framework.JSONConfig.Reader, app.Server.Network->Port, app.Server.Network->Adapter));
 	if_fail_e(::gpk::serverStart(*app.Server.Network, *framework.GUI));
 
 	if_fail_w(::loadClientNetworkConfig(framework.JSONConfig.Reader, app.Client.Network.RemoteIp, app.Client.Network.RemotePort));
 	if_fail_e(::gpk::clientConnect(app.Client.Network, *framework.GUI));
+	return 0;
+}
+
+::gpk::err_t			draw					(::SApplication & app) {
+	cnst ::gpk::n3f2_t			sunlightPos			= {};
+	cnst ::gpk::rgbaf			clearColor				= ::gpk::DARKBLUE * .0625;
+
+#if !defined(DISABLE_D3D11)
+	memset(app.D3DApp.GUIStuff.RenderTarget.begin(), 0, app.D3DApp.GUIStuff.RenderTarget.byte_count());
+	do { if_fail_fe(::gpk::guiDraw(*app.Framework.GUI, app.D3DApp.GUIStuff.RenderTarget)); } while(0);
+	do { if_fail_fe(::lls::llsClientUIDraw(app.Client.LLSApp, app.D3DApp.GUIStuff.RenderTarget)); } while(0);
+	app.D3DApp.Scene.ConstantBufferScene.Time = (float)app.Framework.FrameInfo.Seconds.Total;
+
+	cnst ::gpk::SCamera		& cameraSelected		= app.Server.LLSApp.Game.Camera;
+	cnst ::gpk::SEngineScene	& engineScene			= *app.Server.LLSApp.Game.Engine.Scene;
+	do { if_fail_fe(::gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, cameraSelected.NearFar)); } while(0);
+#else
+	::gpk::prtbgra8d32			backBuffer				= app.Framework.RootWindow.BackBuffer;
+	backBuffer->resize(backBuffer->Color.metrics(), clearColor, (uint32_t)-1);
+	cnst ::gpk::SCamera		& cameraSelected		= app.Server.LLSApp.Game.Camera;
+	do { if_fail_fe(::lls::llsGameDraw(app.Server.LLSApp.Game, *backBuffer, cameraSelected.Position, cameraSelected.Target, cameraSelected.Up, cameraSelected.NearFar)); } while(0);
+	do { if_fail_fe(::gpk::guiDraw(*app.Framework.GUI, backBuffer->Color.View)); } while(0);
+	do { if_fail_fe(::lls::llsClientUIDraw(app.Client.LLSApp, backBuffer->Color.View)); } while(0);
+#endif
 	return 0;
 }
 
@@ -187,28 +209,4 @@ static	::gpk::err_t	processSystemEvent		(::SApplication & app, cnst ::gpk::SEven
 	sprintf_s(buffer, "LLS [%u x %u]. FPS: %g. Last frame seconds: %g.", mainWindow.Size.x, mainWindow.Size.y, 1 / timer.LastTimeSeconds, timer.LastTimeSeconds);
 	SetWindowTextA(mainWindow.PlatformDetail.WindowHandle, buffer);
 	return ::gpk::updateFramework(framework);
-}
-
-::gpk::err_t			draw					(::SApplication & app) {
-	cnst ::gpk::n3f2_t			sunlightPos			= {};
-	cnst ::gpk::rgbaf			clearColor				= ::gpk::DARKBLUE * .0625;
-
-#if !defined(DISABLE_D3D11)
-	memset(app.D3DApp.GUIStuff.RenderTarget.begin(), 0, app.D3DApp.GUIStuff.RenderTarget.byte_count());
-	do { if_fail_fe(::gpk::guiDraw(*app.Framework.GUI, app.D3DApp.GUIStuff.RenderTarget)); } while(0);
-	do { if_fail_fe(::lls::llsClientUIDraw(app.Client.LLSApp, app.D3DApp.GUIStuff.RenderTarget)); } while(0);
-	app.D3DApp.Scene.ConstantBufferScene.Time = (float)app.Framework.FrameInfo.Seconds.Total;
-
-	cnst ::gpk::SCamera		& cameraSelected		= app.Server.LLSApp.Game.Camera;
-	cnst ::gpk::SEngineScene	& engineScene			= *app.Server.LLSApp.Game.Engine.Scene;
-	do { if_fail_fe(::gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, cameraSelected.NearFar)); } while(0);
-#else
-	::gpk::prtbgra8d32			backBuffer				= app.Framework.RootWindow.BackBuffer;
-	backBuffer->resize(backBuffer->Color.metrics(), clearColor, (uint32_t)-1);
-	cnst ::gpk::SCamera		& cameraSelected		= app.Server.LLSApp.Game.Camera;
-	do { if_fail_fe(::lls::llsGameDraw(app.Server.LLSApp.Game, *backBuffer, cameraSelected.Position, cameraSelected.Target, cameraSelected.Up, cameraSelected.NearFar)); } while(0);
-	do { if_fail_fe(::gpk::guiDraw(*app.Framework.GUI, backBuffer->Color.View)); } while(0);
-	do { if_fail_fe(::lls::llsClientUIDraw(app.Client.LLSApp, backBuffer->Color.View)); } while(0);
-#endif
-	return 0;
 }

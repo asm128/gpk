@@ -19,30 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gpk_connection.h" />
-    <ClInclude Include="gpk_connection_ip.h" />
     <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_lobby.h" />
-    <ClInclude Include="gpk_socket_client.h" />
-    <ClInclude Include="gpk_client_app.h" />
-    <ClInclude Include="gpk_socket_server.h" />
     <ClInclude Include="gpk_bitmap_file.h" />
     <ClInclude Include="gpk_ro_gnd.h" />
     <ClInclude Include="gpk_ro_rsm.h" />
     <ClInclude Include="gpk_ro_rsw.h" />
-    <ClInclude Include="gpk_server_app.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_bitmap_file.cpp" />
-    <ClCompile Include="gpk_client_app.cpp" />
-    <ClCompile Include="gpk_connection.cpp" />
-    <ClCompile Include="gpk_connection_ip.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
-    <ClCompile Include="gpk_server_app.cpp" />
-    <ClCompile Include="gpk_socket_client.cpp" />
-    <ClCompile Include="gpk_socket_server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -82,7 +70,7 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" >
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -123,7 +111,6 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -148,7 +135,6 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -175,7 +161,6 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
@@ -204,7 +189,6 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <LanguageStandard>stdcpp20</LanguageStandard>
-
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
     </ClCompile>
