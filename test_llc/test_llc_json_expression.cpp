@@ -433,7 +433,7 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 		|| gui.Controls.Placement[idStructural].Area.Size.x != 41
 		|| gui.Controls.Placement[idStructural].Area.Size.y != 43
 		);
-	gui.Controls.Script[idAction] = "{\"target\":{\"State\":{\"Flag\":\"{target.State.Flag ? 0 : 1}\"}}}";
+	gui.Controls.Script[idAction] = "{\"target\":{\"State\":{\"Flag\":\"{target.State.Flag ? '0' : '1'}\"}}}";
 	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_FORMAT_RESULT, ::gpk::failed(::gpk::guiScriptRun(gui, idAction)), "%s", "Failed to show target through ternary script.");
 	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, gui.Controls.States[idTarget].IsHidden());
 	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_FORMAT_RESULT, ::gpk::failed(::gpk::guiScriptRun(gui, idAction)), "%s", "Failed to hide target through ternary script.");
