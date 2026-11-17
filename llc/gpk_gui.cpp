@@ -295,7 +295,7 @@ gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 		if_fail_fef(guiJSONSave(valuesJSON, gui), "iControl:%i, Identifier:%.*s", iControl, GPK_VIEW_ARGS(identifier));
 	}
 	SJSONReader values = {};
-	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), "values.jsonParse", valuesJSON.size());
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, ValuesSize:%u, Values:%.*s", iControl, GPK_VIEW_ARGS(identifier), "values.jsonParse", valuesJSON.size(), GPK_VIEW_ARGS(valuesJSON));
 	if_fail_fef(jsonParse(values, valuesJSON), "iControl:%i, Identifier:%.*s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), valuesJSON.size());
 	string patchJSON = {};
 	always_printf("iControl:%i, Identifier:%.*s, Stage:%s", iControl, GPK_VIEW_ARGS(identifier), "guiJSONTemplateResolveNode");

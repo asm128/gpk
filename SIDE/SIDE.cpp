@@ -63,8 +63,8 @@ sttc gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, cid_t & idViewpor
 	s1_c foldedHeight = controls.Placement[idTitle].Area.Size.y + controlNCSpacing(root).y;
 	if_fail_fe(append_strings(controls.Script[idTitle]
 		, "{\"", controls.Identifier[idViewport]
-		, "\":{\"Placement\":{\"Area\":{\"Size\":{\"y\":\"{", controls.Identifier[idViewport], ".target.State.Flag == 'GUI_CONTROL_FLAG_Updated' ? '", str(foldedHeight), "' : '", str(area.Size.y), "'}\"}}},"
-		, "\"target\":{\"State\":{\"Flag\":\"{", controls.Identifier[idViewport], ".target.State.Flag == 'GUI_CONTROL_FLAG_Updated' ? '1' : '0'}\"}}}}"
+		, "\":{\"Placement\":{\"Area\":{\"Size\":{\"y\":\"{", controls.Identifier[idViewport], ".target.State.Flag == 'Hidden' ? '", str(area.Size.y), "' : '", str(foldedHeight), "'}\"}}},"
+		, "\"target\":{\"State\":{\"Flag\":\"{", controls.Identifier[idViewport], ".target.State.Flag == 'Hidden' ? '0' : '1'}\"}}}}"
 		));
 	rtrn controlMetricsInvalidate(gui, idViewport);
 }
