@@ -41,6 +41,14 @@ sttc b8_t guiControlHasIdentifiedAncestor(cnst ::gpk::SGUI & gui, ::gpk::cid_t i
 	rtrn false;
 }
 
+sttc ::gpk::cid_t guiControlIdentifiedRoot(cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl) {
+	::gpk::cid_t iRoot = gui.Controls.Identifier[iControl].size() ? iControl : ::gpk::CID_INVALID;
+	for(::gpk::cid_t iParent = gui.Controls.States[iControl].Parent; false == ::gpk::controlInvalid(gui, iParent); iParent = gui.Controls.States[iParent].Parent)
+		if(gui.Controls.Identifier[iParent].size())
+			iRoot = iParent;
+	rtrn iRoot;
+}
+
 sttc ::gpk::err_t guiControlJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl);
 
 sttc ::gpk::err_t guiControlChildrenJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl, b8_t & separator) {
@@ -75,6 +83,18 @@ sttc ::gpk::err_t guiControlJSONSave(::gpk::string & output, cnst ::gpk::SGUI & 
 	if_fail_fe(::guiComponentJSONSave(output, "Text", gui.Controls.Text[iControl], separator));
 	if_fail_fe(::guiControlChildrenJSONSave(output, gui, iControl, separator));
 	rtrn output.push_back('}');
+}
+
+sttc ::gpk::err_t guiControlTreeJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl) {
+	if_true_fef(::gpk::controlInvalid(gui, iControl), "iControl:%i", iControl);
+	cnst ::gpk::vcst_t identifier = gui.Controls.Identifier[iControl];
+	if_true_fef(0 == identifier.size(), "iControl:%i", iControl);
+	::gpk::u2_c offset = output.size();
+	if_fail_fe(output.push_back('{'));
+	if_fail_fe(::gpk::appendOpenKey(output, identifier));
+	if_fail_fe(::guiControlJSONSave(output, gui, iControl));
+	if_fail_fe(output.push_back('}'));
+	rtrn output.size() - offset;
 }
 
 gpk::err_t gpk::guiJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui) {
@@ -255,8 +275,10 @@ gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 		rtrn 0;
 	}
 	string valuesJSON = {};
-	always_printf("iControl:%i, Identifier:%.*s, Stage:%s", iControl, GPK_VIEW_ARGS(identifier), "guiJSONSave");
-	if_fail_fef(guiJSONSave(valuesJSON, gui), "iControl:%i, Identifier:%.*s", iControl, GPK_VIEW_ARGS(identifier));
+	cnst cid_t iRoot = ::guiControlIdentifiedRoot(gui, iControl);
+	cnst vcst_t rootIdentifier = controlInvalid(gui, iRoot) ? vcst_t{} : gui.Controls.Identifier[iRoot];
+	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, iRoot:%i, RootIdentifier:%.*s", iControl, GPK_VIEW_ARGS(identifier), "guiControlTreeJSONSave", iRoot, GPK_VIEW_ARGS(rootIdentifier));
+	if_fail_fef(::guiControlTreeJSONSave(valuesJSON, gui, iRoot), "iControl:%i, Identifier:%.*s, iRoot:%i, RootIdentifier:%.*s", iControl, GPK_VIEW_ARGS(identifier), iRoot, GPK_VIEW_ARGS(rootIdentifier));
 	SJSONReader values = {};
 	always_printf("iControl:%i, Identifier:%.*s, Stage:%s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), "values.jsonParse", valuesJSON.size());
 	if_fail_fef(jsonParse(values, valuesJSON), "iControl:%i, Identifier:%.*s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), valuesJSON.size());
