@@ -1,7 +1,6 @@
 #include "gpk_event_system.h"
 
 #include "gpk_bit.h"
-#include "gpk_ctti_enum.h"
 #include "gpk_ctti_stct.h"
 
 #ifndef GPK_GUI_TEXT_FLAG_H_23627

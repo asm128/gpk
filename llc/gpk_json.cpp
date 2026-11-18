@@ -165,6 +165,68 @@ gpk::err_t			gpk::jsonWrite				(cnst SJSONNode* node, view<vcst_c> jsonViews, st
 	rtrn 0;
 }
 
+gpk::err_t gpk::jsonWrite(view<cnst SJSONToken> tokens, vcst_t source, string & output, u2_t iToken) {
+	if_fail_fe(iToken = (u2_t)jsonTokenValueGet(tokens, iToken));
+	if_true_fe(iToken >= tokens.size());
+	cnst SJSONToken & token = tokens[iToken];
+	switch(token.Type) {
+	case JSON_TYPE_INTEGER:
+	case JSON_TYPE_DECIMAL:
+	case JSON_TYPE_BOOLEAN:
+	case JSON_TYPE_NULL:
+		if_fail_fe(output.append(jsonTokenView(source, token)));
+		break;
+	case JSON_TYPE_STRING:
+		if_fail_fe(append_strings(output, '"', jsonTokenView(source, token), '"'));
+		break;
+	case JSON_TYPE_OBJECT: {
+		if_fail_fe(output.push_back('{'));
+		err_t iKey = -1;
+		b8_t first = true;
+		for(u2_t iChild = 0; ; ++iChild) {
+			cnst err_t iWrapper = jsonTokenChildGet(tokens, iToken, iChild);
+			if(0 > iWrapper)
+				break;
+			if(JSON_TYPE_KEY == tokens[iWrapper].Type) {
+				iKey = jsonTokenValueGet(tokens, (u2_t)iWrapper);
+				continue;
+			}
+			if(JSON_TYPE_VALUE == tokens[iWrapper].Type && 0 <= iKey) {
+				if(false == first)
+					if_fail_fe(output.push_back(','));
+				if_fail_fe(jsonWrite(tokens, source, output, (u2_t)iKey));
+				if_fail_fe(output.push_back(':'));
+				if_fail_fe(jsonWrite(tokens, source, output, (u2_t)iWrapper));
+				first = false;
+				iKey = -1;
+			}
+		}
+		if_fail_fe(output.push_back('}'));
+		break;
+	}
+	case JSON_TYPE_ARRAY: {
+		if_fail_fe(output.push_back('['));
+		b8_t first = true;
+		for(u2_t iChild = 0; ; ++iChild) {
+			cnst err_t iWrapper = jsonTokenChildGet(tokens, iToken, iChild);
+			if(0 > iWrapper)
+				break;
+			if(JSON_TYPE_VALUE != tokens[iWrapper].Type)
+				continue;
+			if(false == first)
+				if_fail_fe(output.push_back(','));
+			if_fail_fe(jsonWrite(tokens, source, output, (u2_t)iWrapper));
+			first = false;
+		}
+		if_fail_fe(output.push_back(']'));
+		break;
+	}
+	default:
+		rtrn -1;
+	}
+	rtrn 0;
+}
+
 GPK_USING_TYPEINT();
 
 sttc	gpk::err_t	jsonCloseElement			(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, u2_t indexChar) {
@@ -575,6 +637,83 @@ gpk::err_t			gpk::jsonTreeRebuild		(view<cnst SJSONToken> in_object, apobj<SJSON
 	rtrn 0;
 }
 
+sttc gpk::err_t jsonTokenNumberLoad(gpk::SJSONToken & token, gpk::vcst_t source) {
+	if_true_fe(token.Span.Begin > token.Span.End || token.Span.End > source.size());
+	gpk::u2_t cursor = token.Span.Begin;
+	gpk::b8_t negative = false;
+	if(cursor < token.Span.End && ('+' == source[cursor] || '-' == source[cursor])) {
+		negative = '-' == source[cursor];
+		++cursor;
+	}
+	if(gpk::JSON_TYPE_INTEGER == token.Type) {
+		gpk::u3_t value = 0;
+		for(; cursor < token.Span.End; ++cursor) {
+			if(source[cursor] < '0' || source[cursor] > '9')
+				rtrn -1;
+			value = value * 10 + (gpk::u0_t)(source[cursor] - '0');
+		}
+		token.Value = negative ? 0ULL - value : value;
+		rtrn 0;
+	}
+	gpk::f3_t value = 0;
+	gpk::f3_t fraction = .1;
+	gpk::b8_t decimal = false;
+	gpk::s2_t exponent = 0;
+	gpk::b8_t exponentNegative = false;
+	for(; cursor < token.Span.End; ++cursor) {
+		gpk::sc_c character = source[cursor];
+		if('.' == character) {
+			if(decimal) rtrn -1;
+			decimal = true;
+			continue;
+		}
+		if('e' == character || 'E' == character) {
+			++cursor;
+			if(cursor < token.Span.End && ('+' == source[cursor] || '-' == source[cursor])) {
+				exponentNegative = '-' == source[cursor];
+				++cursor;
+			}
+			for(; cursor < token.Span.End; ++cursor) {
+				if(source[cursor] < '0' || source[cursor] > '9') rtrn -1;
+				exponent = exponent * 10 + (source[cursor] - '0');
+			}
+			break;
+		}
+		if(character < '0' || character > '9') rtrn -1;
+		if(decimal) {
+			value += (character - '0') * fraction;
+			fraction *= .1;
+		}
+		else
+			value = value * 10 + (character - '0');
+	}
+	for(gpk::s2_t iExponent = 0; iExponent < exponent; ++iExponent)
+		value = exponentNegative ? value / 10 : value * 10;
+	if(negative)
+		value = -value;
+	memcpy(&token.Value, &value, szof(value));
+	rtrn 0;
+}
+
+gpk::err_t gpk::jsonReaderLoad(gpk::SJSONReader & reader, gpk::view<cnst gpk::SJSONToken> tokens, gpk::vcst_t source) {
+	reader.Reset();
+	reader.Tree.clear();
+	if_fail_fe(reader.Token.resize(tokens.size()));
+	if_fail_fe(reader.View.resize(tokens.size()));
+	for(gpk::u2_t iToken = 0; iToken < tokens.size(); ++iToken) {
+		reader.Token[iToken] = tokens[iToken];
+		gpk::SJSONToken & token = reader.Token[iToken];
+		if_true_fe(token.Span.Begin > token.Span.End || token.Span.End > source.size());
+		reader.View[iToken] = {source.begin() + token.Span.Begin, token.Span.End - token.Span.Begin};
+		if(gpk::JSON_TYPE_INTEGER == token.Type || gpk::JSON_TYPE_DECIMAL == token.Type) {
+			if_fail_fe(::jsonTokenNumberLoad(token, source));
+		}
+		else if(gpk::JSON_TYPE_BOOLEAN == token.Type)
+			token.Value = reader.View[iToken] == "true";
+	}
+	rtrn jsonTreeRebuild(reader.Token, reader.Tree);
+}
+
 gpk::err_t			gpk::jsonTreeInvalidate	(SJSONReader & reader) {
 	if_zero_fe(reader.Tree.size());
 	if_null_fe(reader.Tree[0]);
@@ -613,6 +752,56 @@ gpk::err_t			gpk::jsonParse				(SJSONReader & reader, vcst_t jsonAsString, SJSON
 		}
 	}	
 	rtrn options.All(JSON_PARSE_OPTION_BUILD_TREE) ? jsonTreeRebuild(reader.Token, reader.Tree) : 0;
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, u2_t iToken, as2_t & indices) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [&indices](u2_t iKey, u2_t) -> err_t { if_fail_fe(indices.push_back(iKey)); rtrn 0; });
+	if(0 > result)
+		rtrn result;
+	rtrn indices.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [tokens, source, &keys](u2_t iKey, u2_t) -> err_t { if_fail_fe(keys.push_back(jsonTokenView(source, tokens[iKey]))); rtrn 0; });
+	if(0 > result)
+		rtrn result;
+	rtrn keys.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [tokens, source, &indices, &keys](u2_t iKey, u2_t) -> err_t {
+		if_fail_fe(indices.push_back(iKey));
+		if_fail_fe(keys.push_back(jsonTokenView(source, tokens[iKey])));
+		rtrn 0;
+		});
+	if(0 > result)
+		rtrn result;
+	rtrn indices.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [views, &keys](u2_t iKey, u2_t) -> err_t {
+		if(iKey >= views.size())
+			rtrn -1;
+		if_fail_fe(keys.push_back(views[iKey]));
+		rtrn 0;
+		});
+	if(0 > result)
+		rtrn result;
+	rtrn keys.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [views, &indices, &keys](u2_t iKey, u2_t) -> err_t {
+		if(iKey >= views.size())
+			rtrn -1;
+		if_fail_fe(indices.push_back(iKey));
+		if_fail_fe(keys.push_back(views[iKey]));
+		rtrn 0;
+		});
+	if(0 > result)
+		rtrn result;
+	rtrn indices.size();
 }
 
 gpk::err_t			gpk::jsonObjectKeyList		(cnst SJSONNode & node_object, view<vcst_c> views, as2_t & indices, aobj<vcst_t> & keys)	{

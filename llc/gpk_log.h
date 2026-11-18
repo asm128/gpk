@@ -31,6 +31,98 @@ nmsp gpk
 	tydf	err_t	(*log_write_t)		(cnst sc_t * text, u2_t textLen);
 	err_t			log_write			(cnst sc_t * text, u2_t textLen);
 
+	inxp b8_t log_constant_evaluated() nxpt {
+#if defined(_MSC_VER) || defined(__clang__) || (defined(__GNUC__) && (__GNUC__ >= 9))
+		rtrn __builtin_is_constant_evaluated();
+#else
+		rtrn false;
+#endif
+	}
+
+	inxp err_t append_log(cnst sc_t * text, u2_t textLen) {
+		if(0 == text && 0 != textLen)
+			rtrn -1;
+		if(log_constant_evaluated())
+			rtrn textLen;
+		rtrn log_write(text, textLen);
+	}
+
+	inxp err_t append_log(cnst sc_t * text) {
+		if(0 == text)
+			rtrn 0;
+		u2_t textLen = 0;
+		while(text[textLen])
+			++textLen;
+		rtrn append_log(text, textLen);
+	}
+
+	tplt<u2_t _size>
+	inxp err_t append_log(cnst sc_t (&text)[_size]) {
+		u2_t textLen = 0;
+		while(textLen < _size && text[textLen])
+			++textLen;
+		rtrn append_log(text, textLen);
+	}
+
+	inxp err_t append_log(sc_c character) {
+		rtrn append_log(&character, 1);
+	}
+
+	inxp err_t append_log_unsigned(u3_t value) {
+		sc_t text[20] = {};
+		u2_t textLen = 0;
+		do {
+			text[textLen++] = sc_t('0' + value % 10);
+			value /= 10;
+		} while(value);
+		for(u2_t iChar = 0; iChar < textLen / 2; ++iChar) {
+			sc_t swap = text[iChar];
+			text[iChar] = text[textLen - 1 - iChar];
+			text[textLen - 1 - iChar] = swap;
+		}
+		rtrn append_log(text, textLen);
+	}
+
+	inxp err_t append_log_signed(s3_t value) {
+		if(0 <= value)
+			rtrn append_log_unsigned((u3_t)value);
+		cnst err_t signResult = append_log('-');
+		if(failed(signResult))
+			rtrn signResult;
+		cnst u3_t magnitude = u3_t(-(value + 1)) + 1;
+		cnst err_t valueResult = append_log_unsigned(magnitude);
+		rtrn failed(valueResult) ? valueResult : signResult + valueResult;
+	}
+
+	inxp err_t append_log(b8_c value) { rtrn append_log(value ? "true" : "false"); }
+	inxp err_t append_log(u0_c value) { rtrn append_log_unsigned(value); }
+	inxp err_t append_log(u1_c value) { rtrn append_log_unsigned(value); }
+	inxp err_t append_log(u2_c value) { rtrn append_log_unsigned(value); }
+	inxp err_t append_log(u3_c value) { rtrn append_log_unsigned(value); }
+	inxp err_t append_log(s1_c value) { rtrn append_log_signed(value); }
+	inxp err_t append_log(s2_c value) { rtrn append_log_signed(value); }
+	inxp err_t append_log(s3_c value) { rtrn append_log_signed(value); }
+
+	tplt<tpnm _tText>
+	inxp err_t append_log(cnst _tText & text) {
+		rtrn append_log((cnst sc_t*)text.begin(), (u2_t)text.size());
+	}
+
+	inxp err_t append_log() { rtrn 0; }
+
+	tplt<tpnm... _tArgs> requires (sizeof...(_tArgs) > 1)
+	inxp err_t append_log(cnst _tArgs &... args) {
+		err_t result = 0;
+		err_t total = 0;
+		((result = failed(result) ? result : append_log(args), total += failed(result) ? 0 : result), ...);
+		rtrn failed(result) ? result : total;
+	}
+
+	tplt<tpnm... _tArgs>
+	inxp err_t _gpk_log(s0_t severity, cnst sc_t * path, u2_t line, cnst sc_t * function, cnst _tArgs &... args) {
+		rtrn append_log(severity, '|', path, '(', line, "){", function, "}:", args..., '\n');
+	}
+
 #ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
 	stin	err_t	log_print_P			(cnst sc_t * text)	{ rtrn log_print(text); }
 	stin	err_t	log_print_F			(cnst sc_t * text)	{ rtrn log_print(text); }
@@ -123,6 +215,12 @@ nmsp gpk
 #	define gpk_debug_printf(severity, ...)			::gpk::debug_printf(severity, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 #else
 #	define gpk_debug_printf(severity, ...)			::gpk::debug_printf(severity, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#endif
+
+#ifdef GPK_WINDOWS
+#	define gpk_log(severity, ...)	::gpk::_gpk_log(severity, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)
+#else
+#	define gpk_log(severity, ...)	::gpk::_gpk_log(severity, __FILE__, __LINE__, __func__, ##__VA_ARGS__)
 #endif
 
 #define always_printf(...)						gpk_debug_printf(3, __VA_ARGS__)

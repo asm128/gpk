@@ -5,7 +5,7 @@
 
 nmsp gpk
 {
-	//
+//
 	void	free		(void* memory);
 	void*	memalign	(uP_t alignment, uP_t size);
 	stin err_t memcmp	(cnst void* left, cnst void* right, uP_t size) {
@@ -30,7 +30,7 @@ nmsp gpk
 			bytesDestination[iByte] = (u0_t)value;
 		return destination;
 	}
-	//
+//
 	sc_t*	strerror	(err_t errorCode);
 	uP_t	strlen		(sc_c* text);
 	err_t	strncmp		(sc_c* left, sc_c* right, uP_t count);
@@ -51,7 +51,7 @@ nmsp gpk
 	sc_t*	setlocale	(int category, sc_c* locale);
 	::va_list;
 	err_t	vsnprintf	(sc_t* buffer, uP_t bufferSize, sc_c* format, ::va_list arguments);
-	//
+//
 	struct FILE;
 	::FILE*	fopen		(sc_c* filename, sc_c* mode);
 	err_t	fclose		(::FILE* stream);

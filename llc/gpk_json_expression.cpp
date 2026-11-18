@@ -304,6 +304,21 @@ gpk::err_t 		gpk::jsonExpressionResolve				(::gpk::vcst_t expression, cnst ::gpk
 	return ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, output);
 }
 
+gpk::err_t gpk::jsonExpressionResolve
+	( view<cnst SExpressionToken> expressionTokens
+	, vcst_t expressionSource
+	, view<cnst SJSONToken> jsonTokens
+	, vcst_t jsonSource
+	, u2_t indexNodeJSON
+	, vcst_t & output
+	) {
+	SExpressionReader expressionReader = {};
+	if_fail_fe(expressionReaderLoad(expressionReader, expressionTokens, expressionSource));
+	SJSONReader jsonReader = {};
+	if_fail_fe(jsonReaderLoad(jsonReader, jsonTokens, jsonSource));
+	rtrn jsonExpressionResolve(expressionReader, jsonReader, indexNodeJSON, output);
+}
+
 gpk::err_t 		gpk::jsonExpressionResolve				(cnst ::gpk::SExpressionReader & reader, cnst ::gpk::SJSONReader & inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::vcst_t & output){
 	gpk::SJSONExpressionSolver	results;
 	gpk::err_t 			jsonNodeResultOfEvaluation;

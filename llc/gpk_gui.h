@@ -1,6 +1,7 @@
 #include "gpk_gui_control.h"
 #include "gpk_input.h"
 #include "gpk_font.h"
+#include "gpk_json.h"
 
 #include "gpk_ascii_color.h"
 
@@ -48,6 +49,7 @@ nmsp gpk
 	};
 
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
+	err_t				guiLoad							(SGUI & gui, cnst SJSONReader & input);
 	err_t				guiJSONSave						(string & output, cnst SGUI & gui);
 	err_t				guiJSONLoad						(SGUI & gui, cnst SJSONReader & input, u2_t iNode = 0);
 	err_t				guiScriptRun					(SGUI & gui, cid_t iControl);

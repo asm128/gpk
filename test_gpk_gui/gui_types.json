@@ -1,0 +1,508 @@
+{
+    "SControlState":  {
+                          "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control_flag.h",
+                          "line":  133,
+                          "size":  6,
+                          "pod":  false,
+                          "declaration":  "struct SControlState { cid_t Parent = -1; GUI_CONTROL_FLAG Flag = {}; GUI_CONTROL_FLAG Mask = (GUI_CONTROL_FLAG)-1; b8_t SetHovered (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setHovered (Flag, Mask, value); })); } b8_t SetPressed (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setPressed (Flag, Mask, value); })); } b8_t SetHidden (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setHidden (Flag, Mask, value); })); } b8_t SetFocused (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setFocused (Flag, Mask, value); })); } b8_t SetSelected (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setSelected(Flag, Mask, value); })); } b8_t SetDisabled (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setDisabled(Flag, Mask, value); })); } b8_t SetUpdated (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setUpdated (Flag, Mask, value); })); } b8_t SetDragging (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setDragging(Flag, Mask, value); })); } b8_t SetAction (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setAction (Flag, Mask, value); })); } b8_t SetUnused (cid_t iControl, apobj\u003cSEventSystem\u003e \u0026 eventQueue, b8_t value) nxpt { return 0 != (Flag = setValue\u003cGUI_CONTROL_FLAG\u003e(iControl, eventQueue, Flag, [this, \u0026value]() { return setUnused (Flag, value); })); } inxp b8_t IsHovered () csnx { return isHovered (Flag, Mask); } inxp b8_t IsPressed () csnx { return isPressed (Flag, Mask); } inxp b8_t IsHidden () csnx { return isHidden (Flag, Mask); } inxp b8_t IsFocused () csnx { return isFocused (Flag, Mask); } inxp b8_t IsSelected () csnx { return isSelected (Flag, Mask); } inxp b8_t IsDisabled () csnx { return isDisabled (Flag, Mask); } inxp b8_t IsUpdated () csnx { return isUpdated (Flag, Mask); } inxp b8_t IsDragging () csnx { return isDragging (Flag, Mask); } inxp b8_t IsAction () csnx { return isAction (Flag, Mask); } inxp b8_t IsUnused () csnx { return isUnused (Flag); } };",
+                          "members":  {
+                                          "Parent":  {
+                                                         "type":  "cid_t",
+                                                         "value":  -1,
+                                                         "modifiers":  [
+
+                                                                       ]
+                                                     },
+                                          "Flag":  {
+                                                       "type":  "GUI_CONTROL_FLAG",
+                                                       "value":  {
+
+                                                                 },
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   },
+                                          "Mask":  {
+                                                       "type":  "GUI_CONTROL_FLAG",
+                                                       "value":  "(GUI_CONTROL_FLAG)-1",
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   }
+                                      }
+                      },
+    "SControlPlacement":  {
+                              "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                              "line":  79,
+                              "size":  28,
+                              "pod":  false,
+                              "declaration":  "struct SControlPlacement { rect2s1_t Area = {{}, {16, 16}}; rectu1_t Margin = {1, 1, 1, 1}; rectu1_t Border = {1, 1, 1, 1}; ALIGN Align = ALIGN_TOP_LEFT; GUI_CONTROL_LIMIT RelativeBorderSize : 4; GUI_CONTROL_LIMIT RelativeMarginSize : 4; GUI_CONTROL_METRICS_FLAG RelativeMetrics = {}; };",
+                              "members":  {
+                                              "Area":  {
+                                                           "type":  "rect2s1_t",
+                                                           "value":  "{{}, {16, 16}}",
+                                                           "modifiers":  [
+
+                                                                         ]
+                                                       },
+                                              "Margin":  {
+                                                             "type":  "rectu1_t",
+                                                             "value":  "{1, 1, 1, 1}",
+                                                             "modifiers":  [
+
+                                                                           ]
+                                                         },
+                                              "Border":  {
+                                                             "type":  "rectu1_t",
+                                                             "value":  "{1, 1, 1, 1}",
+                                                             "modifiers":  [
+
+                                                                           ]
+                                                         },
+                                              "Align":  {
+                                                            "type":  "ALIGN",
+                                                            "value":  "ALIGN_TOP_LEFT",
+                                                            "modifiers":  [
+
+                                                                          ]
+                                                        },
+                                              "RelativeBorderSize":  {
+                                                                         "type":  "GUI_CONTROL_LIMIT",
+                                                                         "value":  null,
+                                                                         "modifiers":  [
+
+                                                                                       ]
+                                                                     },
+                                              "RelativeMarginSize":  {
+                                                                         "type":  "GUI_CONTROL_LIMIT",
+                                                                         "value":  null,
+                                                                         "modifiers":  [
+
+                                                                                       ]
+                                                                     },
+                                              "RelativeMetrics":  {
+                                                                      "type":  "GUI_CONTROL_METRICS_FLAG",
+                                                                      "value":  {
+
+                                                                                },
+                                                                      "modifiers":  [
+
+                                                                                    ]
+                                                                  }
+                                          }
+                          },
+    "SControlDraw":  {
+                         "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                         "line":  126,
+                         "size":  29,
+                         "pod":  false,
+                         "declaration":  "struct SControlDraw { u0_t ColorMode : 2; u0_t FrameOut : 1; u0_t NoBorder : 1; u0_t NoClient : 1; u0_t UseNewPalettes : 1; s1_t ColorTheme = 0; asts1_t\u003cGUI_CONTROL_PALETTE_COUNT\u003e Palettes = {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}; };",
+                         "members":  {
+                                         "ColorMode":  {
+                                                           "type":  "u0_t",
+                                                           "value":  null,
+                                                           "modifiers":  [
+
+                                                                         ]
+                                                       },
+                                         "FrameOut":  {
+                                                          "type":  "u0_t",
+                                                          "value":  null,
+                                                          "modifiers":  [
+
+                                                                        ]
+                                                      },
+                                         "NoBorder":  {
+                                                          "type":  "u0_t",
+                                                          "value":  null,
+                                                          "modifiers":  [
+
+                                                                        ]
+                                                      },
+                                         "NoClient":  {
+                                                          "type":  "u0_t",
+                                                          "value":  null,
+                                                          "modifiers":  [
+
+                                                                        ]
+                                                      },
+                                         "UseNewPalettes":  {
+                                                                "type":  "u0_t",
+                                                                "value":  null,
+                                                                "modifiers":  [
+
+                                                                              ]
+                                                            },
+                                         "ColorTheme":  {
+                                                            "type":  "s1_t",
+                                                            "value":  0,
+                                                            "modifiers":  [
+
+                                                                          ]
+                                                        },
+                                         "Palettes":  {
+                                                          "type":  "asts1_t\u003cGUI_CONTROL_PALETTE_COUNT\u003e",
+                                                          "value":  "{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}}",
+                                                          "modifiers":  [
+
+                                                                        ]
+                                                      }
+                                     }
+                     },
+    "SControlRectangle":  {
+                              "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                              "line":  184,
+                              "size":  16,
+                              "pod":  false,
+                              "declaration":  "struct SControlRectangle { rect2s1_t Local = {}; rect2s1_t Global = {}; };",
+                              "members":  {
+                                              "Local":  {
+                                                            "type":  "rect2s1_t",
+                                                            "value":  {
+
+                                                                      },
+                                                            "modifiers":  [
+
+                                                                          ]
+                                                        },
+                                              "Global":  {
+                                                             "type":  "rect2s1_t",
+                                                             "value":  {
+
+                                                                       },
+                                                             "modifiers":  [
+
+                                                                           ]
+                                                         }
+                                          }
+                          },
+    "SControlArea":  {
+                         "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                         "line":  193,
+                         "size":  176,
+                         "pod":  false,
+                         "declaration":  "struct SControlArea { SControlRectangle Total = {}; SControlRectangle Client = {}; rect2s1_t Text = {}; rect2s1_t Rectangles [GUI_CONTROL_AREA_OLD_COUNT] = {}; tri2s1_t Triangles [8] = {}; };",
+                         "members":  {
+                                         "Total":  {
+                                                       "type":  "SControlRectangle",
+                                                       "value":  {
+
+                                                                 },
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   },
+                                         "Client":  {
+                                                        "type":  "SControlRectangle",
+                                                        "value":  {
+
+                                                                  },
+                                                        "modifiers":  [
+
+                                                                      ]
+                                                    },
+                                         "Text":  {
+                                                      "type":  "rect2s1_t",
+                                                      "value":  {
+
+                                                                },
+                                                      "modifiers":  [
+
+                                                                    ]
+                                                  },
+                                         "Rectangles":  {
+                                                            "type":  "rect2s1_t",
+                                                            "value":  {
+
+                                                                      },
+                                                            "modifiers":  [
+
+                                                                          ]
+                                                        },
+                                         "Triangles":  {
+                                                           "type":  "tri2s1_t",
+                                                           "value":  {
+
+                                                                     },
+                                                           "modifiers":  [
+
+                                                                         ]
+                                                       }
+                                     }
+                     },
+    "SControlConstraints":  {
+                                "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                                "line":  201,
+                                "size":  22,
+                                "pod":  false,
+                                "declaration":  "struct SControlConstraints { n2cid AttachSizeToControl = {-1, -1}; n2\u003cb8_t\u003e AttachSizeToText = {}; rectcid DockToControl = {-1, -1, -1, -1}; minmax2s1_t SizeMinMax = {{}, {0x7FFF, 0x7FFF}}; };",
+                                "members":  {
+                                                "AttachSizeToControl":  {
+                                                                            "type":  "n2cid",
+                                                                            "value":  "{-1, -1}",
+                                                                            "modifiers":  [
+
+                                                                                          ]
+                                                                        },
+                                                "AttachSizeToText":  {
+                                                                         "type":  "n2\u003cb8_t\u003e",
+                                                                         "value":  {
+
+                                                                                   },
+                                                                         "modifiers":  [
+
+                                                                                       ]
+                                                                     },
+                                                "DockToControl":  {
+                                                                      "type":  "rectcid",
+                                                                      "value":  "{-1, -1, -1, -1}",
+                                                                      "modifiers":  [
+
+                                                                                    ]
+                                                                  },
+                                                "SizeMinMax":  {
+                                                                   "type":  "minmax2s1_t",
+                                                                   "value":  "{{}, {0x7FFF, 0x7FFF}}",
+                                                                   "modifiers":  [
+
+                                                                                 ]
+                                                               }
+                                            }
+                            },
+    "SControlText":  {
+                         "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                         "line":  209,
+                         "size":  19,
+                         "pod":  false,
+                         "declaration":  "struct SControlText { vcst_t Text = \"$\"; ALIGN Align = ALIGN_CENTER; minmaxu1_t Selection = {0, 1}; s1_t FontSelected = -1; };",
+                         "members":  {
+                                         "Text":  {
+                                                      "type":  "vcst_t",
+                                                      "value":  "$",
+                                                      "modifiers":  [
+
+                                                                    ]
+                                                  },
+                                         "Align":  {
+                                                       "type":  "ALIGN",
+                                                       "value":  "ALIGN_CENTER",
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   },
+                                         "Selection":  {
+                                                           "type":  "minmaxu1_t",
+                                                           "value":  "{0, 1}",
+                                                           "modifiers":  [
+
+                                                                         ]
+                                                       },
+                                         "FontSelected":  {
+                                                              "type":  "s1_t",
+                                                              "value":  -1,
+                                                              "modifiers":  [
+
+                                                                            ]
+                                                          }
+                                     }
+                     },
+    "SControlTheme":  {
+                          "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                          "line":  215,
+                          "size":  1040,
+                          "pod":  false,
+                          "declaration":  "struct SControlTheme { astatic\u003castu2_t\u003cUI_CONTROL_AREA_COUNT\u003e, GUI_CONTROL_PALETTE_COUNT\u003e ColorCombos = {}; };",
+                          "members":  {
+                                          "ColorCombos":  {
+                                                              "type":  "astatic\u003castu2_t\u003cUI_CONTROL_AREA_COUNT\u003e, GUI_CONTROL_PALETTE_COUNT\u003e",
+                                                              "value":  {
+
+                                                                        },
+                                                              "modifiers":  [
+
+                                                                            ]
+                                                          }
+                                      }
+                      },
+    "SControlImage":  {
+                          "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                          "line":  227,
+                          "size":  86,
+                          "pod":  false,
+                          "declaration":  "struct SControlImage { rtbgra8d32 Temp = {}; g8bgra Image = {}; n2s1_t ImageOffset = {}; u0_t ImageAlign = ALIGN_CENTER; u0_t ImageInvertX: 1; u0_t ImageInvertY: 1; u0_t Rotation : 2; };",
+                          "members":  {
+                                          "Temp":  {
+                                                       "type":  "rtbgra8d32",
+                                                       "value":  {
+
+                                                                 },
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   },
+                                          "Image":  {
+                                                        "type":  "g8bgra",
+                                                        "value":  {
+
+                                                                  },
+                                                        "modifiers":  [
+
+                                                                      ]
+                                                    },
+                                          "ImageOffset":  {
+                                                              "type":  "n2s1_t",
+                                                              "value":  {
+
+                                                                        },
+                                                              "modifiers":  [
+
+                                                                            ]
+                                                          },
+                                          "ImageAlign":  {
+                                                             "type":  "u0_t",
+                                                             "value":  "ALIGN_CENTER",
+                                                             "modifiers":  [
+
+                                                                           ]
+                                                         },
+                                          "ImageInvertX":  {
+                                                               "type":  "u0_t",
+                                                               "value":  null,
+                                                               "modifiers":  [
+
+                                                                             ]
+                                                           },
+                                          "ImageInvertY":  {
+                                                               "type":  "u0_t",
+                                                               "value":  null,
+                                                               "modifiers":  [
+
+                                                                             ]
+                                                           },
+                                          "Rotation":  {
+                                                           "type":  "u0_t",
+                                                           "value":  null,
+                                                           "modifiers":  [
+
+                                                                         ]
+                                                       }
+                                      }
+                      },
+    "SControlTable":  {
+                          "file":  "D:\\enterprise\\programming_sciences\\codebases\\Callsite\\bundle_galaxy_hell\\gpk\\llc\\gpk_gui_control.h",
+                          "line":  281,
+                          "size":  192,
+                          "pod":  false,
+                          "declaration":  "struct SControlTable { apod\u003cSControlState\u003e States = {}; aobj\u003capod\u003cSTextState\u003e\u003e TextState = {}; aobj\u003cvcst_t\u003e Identifier = {}; aobj\u003cstring\u003e Script = {}; apod\u003cSControlConstraints\u003e Constraints = {}; apod\u003cSControlPlacement\u003e Placement = {}; apod\u003cSControlArea\u003e Area = {}; apod\u003cSControlDraw\u003e Draw = {}; aobj\u003cSControlText\u003e Text = {}; aobj\u003cSControlImage\u003e Images = {}; aobj\u003cacid\u003e Children = {}; apobj\u003cSEventSystem\u003e EventQueue = {}; };",
+                          "members":  {
+                                          "States":  {
+                                                         "type":  "apod\u003cSControlState\u003e",
+                                                         "value":  {
+
+                                                                   },
+                                                         "modifiers":  [
+
+                                                                       ]
+                                                     },
+                                          "TextState":  {
+                                                            "type":  "aobj\u003capod\u003cSTextState\u003e\u003e",
+                                                            "value":  {
+
+                                                                      },
+                                                            "modifiers":  [
+
+                                                                          ]
+                                                        },
+                                          "Identifier":  {
+                                                             "type":  "aobj\u003cvcst_t\u003e",
+                                                             "value":  {
+
+                                                                       },
+                                                             "modifiers":  [
+
+                                                                           ]
+                                                         },
+                                          "Script":  {
+                                                         "type":  "aobj\u003cstring\u003e",
+                                                         "value":  {
+
+                                                                   },
+                                                         "modifiers":  [
+
+                                                                       ]
+                                                     },
+                                          "Constraints":  {
+                                                              "type":  "apod\u003cSControlConstraints\u003e",
+                                                              "value":  {
+
+                                                                        },
+                                                              "modifiers":  [
+
+                                                                            ]
+                                                          },
+                                          "Placement":  {
+                                                            "type":  "apod\u003cSControlPlacement\u003e",
+                                                            "value":  {
+
+                                                                      },
+                                                            "modifiers":  [
+
+                                                                          ]
+                                                        },
+                                          "Area":  {
+                                                       "type":  "apod\u003cSControlArea\u003e",
+                                                       "value":  {
+
+                                                                 },
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   },
+                                          "Draw":  {
+                                                       "type":  "apod\u003cSControlDraw\u003e",
+                                                       "value":  {
+
+                                                                 },
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   },
+                                          "Text":  {
+                                                       "type":  "aobj\u003cSControlText\u003e",
+                                                       "value":  {
+
+                                                                 },
+                                                       "modifiers":  [
+
+                                                                     ]
+                                                   },
+                                          "Images":  {
+                                                         "type":  "aobj\u003cSControlImage\u003e",
+                                                         "value":  {
+
+                                                                   },
+                                                         "modifiers":  [
+
+                                                                       ]
+                                                     },
+                                          "Children":  {
+                                                           "type":  "aobj\u003cacid\u003e",
+                                                           "value":  {
+
+                                                                     },
+                                                           "modifiers":  [
+
+                                                                         ]
+                                                       },
+                                          "EventQueue":  {
+                                                             "type":  "apobj\u003cSEventSystem\u003e",
+                                                             "value":  {
+
+                                                                       },
+                                                             "modifiers":  [
+
+                                                                           ]
+                                                         }
+                                      }
+                      }
+}

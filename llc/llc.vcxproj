@@ -92,7 +92,9 @@
     <ClInclude Include="gpk_cstring.h" />
     <ClInclude Include="gpk_ctti_parse.h" />
     <ClInclude Include="gpk_ctti_enum.h" />
+    <ClInclude Include="gpk_ctti_enum_json.h" />
     <ClInclude Include="gpk_ctti_stct.h" />
+    <ClInclude Include="gpk_ctti_stct_json.h" />
     <ClInclude Include="gpk_d3d.h" />
     <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_debug.h" />
@@ -108,6 +110,8 @@
     <ClInclude Include="gpk_event_screen.h" />
     <ClInclude Include="gpk_event_system.h" />
     <ClInclude Include="gpk_expression.h" />
+    <ClInclude Include="gpk_expression_core.h" />
+    <ClInclude Include="gpk_expression_ctti.h" />
     <ClInclude Include="gpk_file.h" />
     <ClInclude Include="gpk_file_pack.h" />
     <ClInclude Include="gpk_font.h" />
@@ -154,7 +158,10 @@
     <ClInclude Include="gpk_io.h" />
     <ClInclude Include="gpk_isa.h" />
     <ClInclude Include="gpk_json.h" />
+    <ClInclude Include="gpk_json_core.h" />
+    <ClInclude Include="gpk_json_ctti.h" />
     <ClInclude Include="gpk_json_expression.h" />
+    <ClInclude Include="gpk_json_expression_ctti.h" />
     <ClInclude Include="gpk_keyed_bit_array.h" />
     <ClInclude Include="gpk_keyval.h" />
     <ClInclude Include="gpk_keyval_view.h" />
@@ -192,9 +199,7 @@
     <ClInclude Include="gpk_platform_globals.h" />
     <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_pod_definition.h" />
-    <ClInclude Include="gpk_process.h" />
     <ClInclude Include="gpk_process_broker.h" />
-    <ClInclude Include="gpk_process_internal.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
     <ClInclude Include="gpk_ptr_obj.h" />
     <ClInclude Include="gpk_ptr_pod.h" />
@@ -344,10 +349,7 @@
     <ClCompile Include="gpk_platform_error.cpp" />
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
-    <ClCompile Include="gpk_process.cpp" />
     <ClCompile Include="gpk_process_broker.cpp" />
-    <ClCompile Include="gpk_process_linux.cpp" />
-    <ClCompile Include="gpk_process_win32.cpp" />
     <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_scene.cpp" />

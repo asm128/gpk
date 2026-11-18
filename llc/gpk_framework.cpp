@@ -4,6 +4,7 @@
 // Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once.
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "gpk_framework.h"
+#include "gpk_framework_module.h"
 //#include "gpk_safe.h"
 #include "gpk_apod_serialize.h"
 
@@ -86,6 +87,14 @@ gpk::err_t 		gpk::updateFramework						(SFramework& framework)													{
 	{
 		lock_guard				lock										(framework.LockGUI);
 		guiProcessInput(gui, *mainWindow.Input, mainWindow.EventQueue);
+	}
+	for(u2_t iEvent = 0; iEvent < gui.Controls.EventQueue.size(); ++iEvent) {
+		cnst pobj<SEventSystem> & event = gui.Controls.EventQueue[iEvent];
+		if(0 == event.get_ref() || SYSTEM_EVENT_Framework != event->Type)
+			continue;
+		SEView<APPLICATION_STATE> state = {};
+		if_fail_fe(event->ExtractChild(state));
+		if_true_vi(state.Type, APPLICATION_STATE_NORMAL != state.Type);
 	}
 
 	if(framework.Settings.GUIZoom) {

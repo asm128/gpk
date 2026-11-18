@@ -1,21 +1,10 @@
 #include "gpk_ctti_parse.h"
-#include "gpk_append_json.h"
-#include "gpk_array_obj.h"
-#include "gpk_array_static.h"
-#include "gpk_cstring.h"
-#include "gpk_json.h"
-#include "gpk_string.h"
 
 #ifndef GPK_CTTI_STCT_H
 #define GPK_CTTI_STCT_H
 
 nmsp gpk
 {
-	tplt<tpnm T> struct n2;
-	tplt<tpnm T> struct rect;
-	tplt<tpnm T> struct rect2;
-	tplt<tpnm T> struct minmax;
-
 	enum CTTI_PARSE_STATE : u0_t
 		{ CTTI_PARSE_STATE_STRUCT_NAME	= 0
 		, CTTI_PARSE_STATE_MODIFIERS		= 1
@@ -64,67 +53,17 @@ nmsp gpk
 		}
 	};
 
-	stct SCTTIStructDeclaration;
-	err_t cttiStructDeclarationRegister(cnst SCTTIStructDeclaration & declaration) nxpt;
-
-	stct SCTTIStructDeclaration {
-		vcst_t				File		= {};
-		u2_t				Line		= {};
-		vcst_t				SourceText	= {};
-		vcst_t				Name		= {};
-		view<cnst SCTTIMember>
-							Members		= {};
-		uP_t				Size		= {};
-		b8_t				IsPOD		= {};
-
-		SCTTIStructDeclaration() nxpt = dflt;
-
-		tplt<size_t NDeclaration>
-		SCTTIStructDeclaration
-			( vcst_c file
-			, u2_c line
-			, cnst SCTTIParseResult<NDeclaration> & metadata
-			, uP_c size
-			, b8_c isPOD
-			) nxpt
-			: File		(file)
-			, Line		(line)
-			, SourceText	{metadata.SourceText, NDeclaration - 1}
-			, Name		{metadata.View(metadata.StructName)}
-			, Members	{metadata.Members, metadata.Count}
-			, Size		(size)
-			, IsPOD		(isPOD)
-			{}
-
-		inxp vcst_t View(cnst SCTTISpan span) cnst nxpt { rtrn {SourceText.begin() + span.Offset, span.Count}; }
-	};
-
-	inln aobj<SCTTIStructDeclaration> & cttiStructDeclarations() nxpt {
-		sttc aobj<SCTTIStructDeclaration> declarations = {};
-		rtrn declarations;
-	}
-
-	inln err_t cttiStructDeclarationRegister(cnst SCTTIStructDeclaration & declaration) nxpt {
-		aobj<SCTTIStructDeclaration> & declarations = cttiStructDeclarations();
-		for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration)
-			if(declarations[iDeclaration].File == declaration.File && declarations[iDeclaration].Line == declaration.Line && declarations[iDeclaration].Name == declaration.Name)
-				rtrn 0;
-		rtrn declarations.push_back(declaration);
-	}
-
-	inln cnst SCTTIStructDeclaration & cttiStruct(vcst_c name) nxpt {
-		cnst aobj<SCTTIStructDeclaration> & declarations = cttiStructDeclarations();
-		for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration)
-			if(declarations[iDeclaration].Name == name)
-				rtrn declarations[iDeclaration];
-		sttc cnst SCTTIStructDeclaration empty = {};
-		rtrn empty;
-	}
+	tplt<tpnm T>
+	stct SCTTIStructTag {};
+	tplt<tpnm T>
+	void cttiStructRegistry(SCTTIStructTag<T>) = delete;
 
 	tplt<tpnm T>
-	stct SCTTIStructRegistry;
+	concept ctti_struct = requires { cttiStructRegistry(SCTTIStructTag<rm_csvl_t<T>>{}); };
+	tplt<tpnm T> requires ctti_struct<T>
+	usng SCTTIStructRegistry = decltype(cttiStructRegistry(SCTTIStructTag<rm_csvl_t<T>>{}));
 
-	tplt<tpnm T>
+	tplt<tpnm T> requires ctti_struct<T>
 	inxp cnst auto & cttiStruct() nxpt { rtrn SCTTIStructRegistry<T>::Value; }
 
 	tplt<tpnm T, tpnm U>
@@ -157,9 +96,18 @@ nmsp gpk
 	stct SCTTIFieldTypeRegister {
 		friend auto cttiFieldType(SCTTIFieldTag<TStruct, Index>) { rtrn SCTTIType<TMember>{}; }
 	};
+	tplt<tpnm TStruct, tpnm TMember, u2_t Index, tpnm = void>
+	stct SCTTIFieldTypeEnsure : SCTTIFieldTypeRegister<TStruct, TMember, Index> {};
+	tplt<tpnm TStruct, tpnm TMember, u2_t Index>
+	stct SCTTIFieldTypeEnsure
+		< TStruct
+		, TMember
+		, Index
+		, decltype(void(sizeof(tpnm decltype(cttiFieldType(SCTTIFieldTag<TStruct, Index>{}))::Type)))
+		> {};
 	tplt<tpnm TStruct, u2_t Index>
 	stct SCTTIFieldProbe {
-		tplt<tpnm TMember, size_t = sizeof(SCTTIFieldTypeRegister<TStruct, TMember, Index>)>
+		tplt<tpnm TMember, size_t = sizeof(SCTTIFieldTypeEnsure<TStruct, TMember, Index>)>
 		inxp operator TMember & () cnst nxpt;
 	};
 	tplt<tpnm TStruct, tpnm TIndices, tpnm = void>
@@ -178,406 +126,10 @@ nmsp gpk
 		rtrn alignof(TStruct) < alignof(TMember) ? alignof(TStruct) : alignof(TMember);
 	}
 
-	tplt<tpnm TStruct, tpnm TFunc, tpnm... TMembers>
-	err_t cttiVisitMembers(TStruct & instance, u2_c index, TFunc func, type_pack<TMembers...>) {
-		u0_t (&bytes)[sizeof(TStruct)] = reinterpret_cast<u0_t(&)[sizeof(TStruct)]>(instance);
-		uP_t offset = {};
-		u2_t current = {};
-		err_t result = -1;
-		( [&]() {
-			stxp uP_t alignment = cttiMemberAlignment<TStruct, TMembers>();
-			offset += (alignment - offset % alignment) % alignment;
-			if(current++ == index)
-				result = func(reinterpret_cast<TMembers&>(bytes[offset]));
-			offset += sizeof(TMembers);
-		}(), ... );
-		rtrn result;
-	}
-	tplt<tpnm TStruct, tpnm TFunc, tpnm... TMembers>
-	err_t cttiVisitMembers(cnst TStruct & instance, u2_c index, TFunc func, type_pack<TMembers...>) {
-		cnst u0_t (&bytes)[sizeof(TStruct)] = reinterpret_cast<cnst u0_t(&)[sizeof(TStruct)]>(instance);
-		uP_t offset = {};
-		u2_t current = {};
-		err_t result = -1;
-		( [&]() {
-			stxp uP_t alignment = cttiMemberAlignment<TStruct, TMembers>();
-			offset += (alignment - offset % alignment) % alignment;
-			if(current++ == index)
-				result = func(reinterpret_cast<cnst TMembers&>(bytes[offset]));
-			offset += sizeof(TMembers);
-		}(), ... );
-		rtrn result;
-	}
-
-	tplt<tpnm T, tpnm TFunc>
-	err_t cttiVisit(T & instance, u2_c index, TFunc func) {
-		usng TStruct = rm_csvl_t<T>;
-		usng TIndices = tpnm ctti_index_pack_make<SCTTIStructRegistry<TStruct>::Value.Count>::Type;
-		usng TMembers = tpnm SCTTIFieldTypes<TStruct, TIndices>::Type;
-		rtrn cttiVisitMembers(instance, index, func, TMembers{});
-	}
-
-	tplt<tpnm T>
-	concept ctti_struct = requires { SCTTIStructRegistry<rm_csvl_t<T>>::Value; };
 	tplt<tpnm T>
 	concept ctti_integer = ctti_type_in_pack<rm_csvl_t<T>, type_pack_integers>::Value;
 	tplt<tpnm T>
 	concept ctti_decimal = ctti_type_in_pack<rm_csvl_t<T>, type_pack<f2_t, f3_t>>::Value;
-
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t saveCTTI(string & output, cnst T & input);
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output);
-
-	inln err_t cttiValueSave(string & output, b8_c input) {
-		rtrn output.append(str(input));
-	}
-	tplt<tpnm T> requires ctti_integer<T>
-	err_t cttiValueSave(string & output, cnst T & input) {
-		sc_t text[64] = {};
-		err_t length = {};
-		if constexpr(ctti_same<rm_csvl_t<T>, s0_t>::Value || ctti_same<rm_csvl_t<T>, s1_t>::Value || ctti_same<rm_csvl_t<T>, s2_t>::Value || ctti_same<rm_csvl_t<T>, s3_t>::Value)
-			length = sprintf_s(text, "%" GPK_FMT_S3, (s3_t)input);
-		else
-			length = sprintf_s(text, "%" GPK_FMT_U3, (u3_t)input);
-		if_fail_fe(length);
-		rtrn output.append({text, (u2_t)length});
-	}
-	tplt<tpnm T> requires ctti_decimal<T>
-	err_t cttiValueSave(string & output, cnst T & input) {
-		sc_t text[64] = {};
-		cnst err_t length = sprintf_s(text, "%.17g", (f3_t)input);
-		if_fail_fe(length);
-		rtrn output.append({text, (u2_t)length});
-	}
-	tplt<tpnm T> requires(__is_enum(T))
-	err_t cttiValueSave(string & output, cnst T & input) {
-		cnst enum_definition<T> & definition = get_enum<T>();
-		for(u2_t iValue = 0; iValue < definition.Values.size(); ++iValue)
-			if(input == definition.Values[iValue])
-				rtrn appendJSONString(output, definition.Names[iValue]);
-		cnst s3_t numeric = (s3_t)input;
-		rtrn cttiValueSave(output, numeric);
-	}
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t cttiValueSave(string & output, cnst T & input) {
-		rtrn saveCTTI(output, input);
-	}
-	inln err_t cttiValueSave(string & output, cnst string & input) {
-		rtrn appendJSONString(output, input);
-	}
-	inln err_t cttiValueSave(string & output, vcst_t input) {
-		rtrn appendJSONString(output, input);
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst n2<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "x"));
-		if_fail_fe(cttiValueSave(output, input.x));
-		if_fail_fe(appendOpenKey(output, "y", true));
-		if_fail_fe(cttiValueSave(output, input.y));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst rect<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "Left"));
-		if_fail_fe(cttiValueSave(output, input.Left));
-		if_fail_fe(appendOpenKey(output, "Top", true));
-		if_fail_fe(cttiValueSave(output, input.Top));
-		if_fail_fe(appendOpenKey(output, "Right", true));
-		if_fail_fe(cttiValueSave(output, input.Right));
-		if_fail_fe(appendOpenKey(output, "Bottom", true));
-		if_fail_fe(cttiValueSave(output, input.Bottom));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst rect2<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "Offset"));
-		if_fail_fe(cttiValueSave(output, input.Offset));
-		if_fail_fe(appendOpenKey(output, "Size", true));
-		if_fail_fe(cttiValueSave(output, input.Size));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst minmax<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "Min"));
-		if_fail_fe(cttiValueSave(output, input.Min));
-		if_fail_fe(appendOpenKey(output, "Max", true));
-		if_fail_fe(cttiValueSave(output, input.Max));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, view<T> input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('['));
-		for(u2_t i = 0; i < input.size(); ++i) {
-			if(i) if_fail_fe(output.push_back(','));
-			if_fail_fe(cttiValueSave(output, input[i]));
-		}
-		if_fail_fe(output.push_back(']'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T, u2_t N>
-	err_t cttiValueSave(string & output, cnst T (&input)[N]) {
-		rtrn cttiValueSave(output, view<cnst T>{input});
-	}
-	tplt<tpnm T, u2_t N>
-	err_t cttiValueSave(string & output, cnst array_static<T, N> & input) {
-		rtrn cttiValueSave(output, view<cnst T>{input.begin(), input.size()});
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst array_pod<T> & input) {
-		rtrn cttiValueSave(output, view<cnst T>{input.begin(), input.size()});
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst array_obj<T> & input) {
-		rtrn cttiValueSave(output, view<cnst T>{input.begin(), input.size()});
-	}
-
-	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, b8_t & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_BOOLEAN);
-		rtrn jsonObjectGetBoolean(input, iNode, output);
-	}
-	tplt<tpnm T> requires ctti_integer<T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_INTEGER);
-		rtrn jsonObjectGetInteger(input, iNode, output);
-	}
-	tplt<tpnm T> requires ctti_decimal<T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
-		if(JSON_TYPE_INTEGER == input.Token[iNode].Type) {
-			s3_t integer = {};
-			if_fail_fe(jsonObjectGetInteger(input, iNode, integer));
-			output = (T)integer;
-			rtrn iNode;
-		}
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_DECIMAL);
-		rtrn jsonObjectGetDecimal(input, iNode, output);
-	}
-	tplt<tpnm T> requires(__is_enum(T))
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
-		if(JSON_TYPE_STRING == input.Token[iNode].Type) {
-			vcst_t name = {};
-			if_fail_fe(jsonObjectGetString(input, iNode, name));
-			rtrn get_enum<T>().get_value(name, output);
-		}
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_INTEGER);
-		s3_t numeric = {};
-		if_fail_fe(jsonObjectGetInteger(input, iNode, numeric));
-		output = (T)numeric;
-		rtrn iNode;
-	}
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
-		rtrn loadCTTI(input, iNode, output);
-	}
-	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, string & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
-		rtrn jsonObjectGetString(input, iNode, output);
-	}
-	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, vcst_t & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
-		rtrn jsonObjectGetString(input, iNode, output);
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, n2<T> & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
-		cnst err_t iX = jsonObjectValueGet(input, iNode, "x");
-		if(0 <= iX) if_fail_fe(cttiValueLoad(input, (u2_t)iX, output.x));
-		cnst err_t iY = jsonObjectValueGet(input, iNode, "y");
-		if(0 <= iY) if_fail_fe(cttiValueLoad(input, (u2_t)iY, output.y));
-		rtrn iNode;
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, rect<T> & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
-		cnst err_t iLeft = jsonObjectValueGet(input, iNode, "Left");
-		if(0 <= iLeft) if_fail_fe(cttiValueLoad(input, (u2_t)iLeft, output.Left));
-		cnst err_t iTop = jsonObjectValueGet(input, iNode, "Top");
-		if(0 <= iTop) if_fail_fe(cttiValueLoad(input, (u2_t)iTop, output.Top));
-		cnst err_t iRight = jsonObjectValueGet(input, iNode, "Right");
-		if(0 <= iRight) if_fail_fe(cttiValueLoad(input, (u2_t)iRight, output.Right));
-		cnst err_t iBottom = jsonObjectValueGet(input, iNode, "Bottom");
-		if(0 <= iBottom) if_fail_fe(cttiValueLoad(input, (u2_t)iBottom, output.Bottom));
-		rtrn iNode;
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, rect2<T> & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
-		cnst err_t iOffset = jsonObjectValueGet(input, iNode, "Offset");
-		if(0 <= iOffset) if_fail_fe(cttiValueLoad(input, (u2_t)iOffset, output.Offset));
-		cnst err_t iSize = jsonObjectValueGet(input, iNode, "Size");
-		if(0 <= iSize) if_fail_fe(cttiValueLoad(input, (u2_t)iSize, output.Size));
-		rtrn iNode;
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, minmax<T> & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
-		cnst err_t iMin = jsonObjectValueGet(input, iNode, "Min");
-		if(0 <= iMin) if_fail_fe(cttiValueLoad(input, (u2_t)iMin, output.Min));
-		cnst err_t iMax = jsonObjectValueGet(input, iNode, "Max");
-		if(0 <= iMax) if_fail_fe(cttiValueLoad(input, (u2_t)iMax, output.Max));
-		rtrn iNode;
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, view<T> output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_ARRAY);
-		cnst err_t count = jsonArraySize(input, iNode);
-		if_fail_fe(count);
-		if_true_fe((u2_t)count != output.size());
-		for(u2_t i = 0; i < output.size(); ++i) {
-			cnst err_t iValue = jsonArrayValueGet(input, iNode, i);
-			if_fail_fe(iValue);
-			if_fail_fe(cttiValueLoad(input, (u2_t)iValue, output[i]));
-		}
-		rtrn iNode;
-	}
-	tplt<tpnm T, u2_t N>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T (&output)[N]) {
-		rtrn cttiValueLoad(input, iNode, view<T>{output});
-	}
-	tplt<tpnm T, u2_t N>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, array_static<T, N> & output) {
-		rtrn cttiValueLoad(input, iNode, view<T>{output.begin(), output.size()});
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, array_pod<T> & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_ARRAY);
-		cnst err_t count = jsonArraySize(input, iNode);
-		if_fail_fe(count);
-		if_fail_fe(output.resize((u2_t)count));
-		rtrn cttiValueLoad(input, iNode, view<T>{output.begin(), output.size()});
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, array_obj<T> & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_ARRAY);
-		cnst err_t count = jsonArraySize(input, iNode);
-		if_fail_fe(count);
-		if_fail_fe(output.resize((u2_t)count));
-		rtrn cttiValueLoad(input, iNode, view<T>{output.begin(), output.size()});
-	}
-
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t saveCTTI(string & output, cnst T & input) {
-		u2_c offset = output.size();
-		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
-		if_fail_fe(output.push_back('{'));
-		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-			if_fail_fe(appendOpenKey(output, metadata.View(metadata.Members[iMember].Name), 0 != iMember));
-			if_fail_fe(cttiVisit(input, iMember, [&](cnst auto & member) { rtrn cttiValueSave(output, member); }));
-		}
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output) {
-		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
-		if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
-		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-			cnst err_t iValue = jsonObjectValueGet(input, iNode, metadata.View(metadata.Members[iMember].Name));
-			if(0 > iValue)
-				continue;
-			if_fail_fe(cttiVisit(output, iMember, [&](auto & member) { rtrn cttiValueLoad(input, (u2_t)iValue, member); }));
-		}
-		rtrn 0;
-	}
-
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t loadCTTI(cnst SJSONReader & input, T & output) {
-		rtrn loadCTTI(input, 0, output);
-	}
-
-	tplt<tpnm T> requires ctti_struct<T>
-	err_t loadCTTI(vcst_t & input, T & output) {
-		SJSONReader reader = {};
-		if_fail_fe(jsonParse(reader, input));
-		if_fail_fe(loadCTTI(reader, output));
-		rtrn input.slice(input, reader.StateRead.IndexCurrentChar + 1);
-	}
-
-	inln err_t cttiMemberJSON
-		( cnst SCTTIStructDeclaration & metadata
-		, string & output
-		) {
-		output.clear();
-		if_fail_fe(output.push_back('{'));
-		for(u2_t iMember = 0; iMember < metadata.Members.size(); ++iMember) {
-			cnst SCTTIMember & member = metadata.Members[iMember];
-			vcst_c memberName = metadata.View(member.Name);
-			vcst_c typeName = metadata.View(member.TypeName);
-			if(iMember)
-				if_fail_fe(output.push_back(','));
-			if_fail_fe(output.push_back('"'));
-			if_fail_fe(output.append(memberName));
-			if_fail_fe(output.push_back('"'));
-			if_fail_fe(output.push_back(':'));
-			if_fail_fe(output.push_back('{'));
-			if_fail_fe(output.append(vcst_t{"\"type\":\""}));
-			if_fail_fe(output.append(typeName));
-			if_fail_fe(output.append(vcst_t{"\",\"value\":"}));
-			if(member.Value.empty()) {
-				if_fail_fe(output.append(vcst_t{"null"}));
-			}
-			else {
-				vcst_c value = metadata.View(member.Value);
-				b8_c stringLiteral = value.size() > 1 && '"' == value[0] && '"' == value[value.size() - 1];
-				b8_c keywordLiteral = value == "true" || value == "false" || value == "null" || value == "{}" || value == "[]";
-				b8_c numberLiteral = value.size() && (('-' == value[0]) || ('+' == value[0]) || (value[0] >= '0' && value[0] <= '9'));
-				b8_c floatSuffix = numberLiteral && value.size() && ('f' == value[value.size() - 1] || 'F' == value[value.size() - 1]);
-				if(stringLiteral || keywordLiteral || numberLiteral) {
-					if_fail_fe(output.append({value.begin(), value.size() - floatSuffix}));
-				}
-				else {
-					if_fail_fe(output.push_back('"'));
-					if_fail_fe(output.append(value));
-					if_fail_fe(output.push_back('"'));
-				}
-			}
-			if_fail_fe(output.append(vcst_t{",\"modifiers\":["}));
-			b8_t firstModifier = true;
-			for(u2_t iModifier = member.Modifiers.Offset, modifierStop = member.Modifiers.Offset + member.Modifiers.Count; iModifier < modifierStop;) {
-				while(iModifier < modifierStop && cttiSpace(metadata.SourceText[iModifier]))
-					++iModifier;
-				cnst u2_t modifierOffset = iModifier;
-				while(iModifier < modifierStop && false == cttiSpace(metadata.SourceText[iModifier]))
-					++iModifier;
-				if(modifierOffset == iModifier)
-					break;
-				if(false == firstModifier)
-					if_fail_fe(output.push_back(','));
-				if_fail_fe(output.push_back('"'));
-				if_fail_fe(output.append(vcst_t{&metadata.SourceText[modifierOffset], iModifier - modifierOffset}));
-				if_fail_fe(output.push_back('"'));
-				firstModifier = false;
-			}
-			if_fail_fe(output.push_back(']'));
-			if_fail_fe(output.push_back('}'));
-		}
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size();
-	}
-
-	tplt<size_t NDeclaration>
-	err_t cttiMemberJSON
-		( cnst SCTTIParseResult<NDeclaration> & metadata
-		, string & output
-		) {
-		cnst SCTTIStructDeclaration declaration = {vcst_t{}, 0, metadata, 0, false};
-		rtrn cttiMemberJSON(declaration, output);
-	}
-
 
 	tplt<size_t NDeclaration>
 	inxp SCTTIParseResult<NDeclaration> cttiParseStruct(sc_c (&declaration)[NDeclaration]) nxpt {
@@ -690,8 +242,17 @@ nmsp gpk
 				rtrn result;
 			}
 			u2_t typeOffset = beforeName.Offset + beforeName.Count;
-			while(typeOffset > beforeName.Offset && false == cttiSpace(result.SourceText[typeOffset - 1]))
+			u2_t templateDepth = 0;
+			while(typeOffset > beforeName.Offset) {
+				sc_c character = result.SourceText[typeOffset - 1];
+				if('>' == character)
+					++templateDepth;
+				else if('<' == character && templateDepth)
+					--templateDepth;
+				else if(cttiSpace(character) && 0 == templateDepth)
+					break;
 				--typeOffset;
+			}
 			cnst SCTTISpan typeName = {typeOffset, beforeName.Offset + beforeName.Count - typeOffset};
 			cnst SCTTISpan modifiers = cttiTrim(result.SourceText, beforeName.Offset, typeOffset - beforeName.Offset);
 			for(u2_t iChar = 0; iChar < modifiers.Count; ++iChar) {
@@ -710,18 +271,18 @@ nmsp gpk
 	}
 } // nmsp
 
-#define GPK_CTTI_STCT_REGISTER(type, declaration) \
-	tplt<> stct gpk::SCTTIStructRegistry<type> { \
+#define GPK_CTTI_STCT_STATIC_REGISTER(type, declaration) \
+	stct type##_gpk_ctti_storage { \
 		sinx auto Value = ::gpk::cttiParseStruct(declaration); \
 		sinx ::gpk::vcst_t File = __FILE__; \
 		sinx ::gpk::u2_t Line = __LINE__; \
 		sinx ::gpk::uP_t Size = sizeof(type); \
 		sinx b8_t IsPOD = __is_pod(type); \
 	}; \
-	sttc ::gpk::SCTTIStructDeclaration type##_gpk_ctti_declaration = \
-		{::gpk::SCTTIStructRegistry<type>::File, ::gpk::SCTTIStructRegistry<type>::Line, ::gpk::SCTTIStructRegistry<type>::Value, ::gpk::SCTTIStructRegistry<type>::Size, ::gpk::SCTTIStructRegistry<type>::IsPOD}; \
-	sttc cnst ::gpk::err_t type##_gpk_ctti_registration = \
-		::gpk::cttiStructDeclarationRegister(type##_gpk_ctti_declaration)
+	sinx type##_gpk_ctti_storage cttiStructRegistry(::gpk::SCTTIStructTag<type>) nxpt { rtrn {}; }
+
+#define GPK_CTTI_STCT_REGISTER(type, declaration) \
+	GPK_CTTI_STCT_STATIC_REGISTER(type, declaration)
 
 #define CTTI_STCT_EXISTING(type, ...) \
 	GPK_CTTI_STCT_REGISTER(type, #__VA_ARGS__)

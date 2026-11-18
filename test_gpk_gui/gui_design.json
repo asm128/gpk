@@ -1,0 +1,106 @@
+{
+  "root": [
+    {
+      "menu_bar": {
+        "State": {"Mask": 0},
+        "Placement": {
+          "Area": {"Offset": {"x": 0, "y": 0}, "Size": {"x": 1280, "y": 24}},
+          "Margin": {"Left": 0, "Top": 0, "Right": 0, "Bottom": 0},
+          "Border": {"Left": 0, "Top": 0, "Right": 0, "Bottom": 1},
+          "Align": "TOP_LEFT"
+        },
+        "Draw": {"ColorTheme": 8},
+        "Text": {"Text": ""},
+        "children": [
+          {
+            "application_title": {
+              "Placement": {"Area": {"Offset": {"x": 8, "y": 2}, "Size": {"x": 300, "y": 20}}, "Align": "TOP_LEFT"},
+              "Draw": {"NoBorder": 1, "ColorTheme": 8},
+              "Text": {"Text": "GUI TYPE EXPLORER", "Align": "CENTER_LEFT"}
+            }
+          },
+          {
+            "close_application": {
+              "Placement": {"Area": {"Offset": {"x": 2, "y": 2}, "Size": {"x": 52, "y": 20}}, "Align": "TOP_RIGHT"},
+              "Draw": {"ColorTheme": 12},
+              "Text": {"Text": "EXIT", "Align": "CENTER"}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "workspace": {
+        "State": {"Mask": 0},
+        "Placement": {
+          "Area": {"Offset": {"x": 12, "y": 32}, "Size": {"x": 1256, "y": 676}},
+          "Margin": {"Left": 0, "Top": 0, "Right": 0, "Bottom": 0},
+          "Border": {"Left": 0, "Top": 0, "Right": 0, "Bottom": 0},
+          "Align": "TOP_LEFT"
+        },
+        "Draw": {"NoClient": 1, "NoBorder": 1},
+        "Text": {"Text": ""},
+        "children": [
+          {
+            "structures_panel": {
+              "Placement": {"Area": {"Offset": {"x": 0, "y": 0}, "Size": {"x": 252, "y": 676}}, "Align": "TOP_LEFT"},
+              "Draw": {"ColorTheme": 8},
+              "Text": {"Text": "STRUCTURES", "Align": "CENTER_TOP"},
+              "children": [
+                {"structure_SControlState": {"Placement": {"Area": {"Offset": {"x": 8, "y": 32}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlState", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlPlacement": {"Placement": {"Area": {"Offset": {"x": 8, "y": 62}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlPlacement", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlDraw": {"Placement": {"Area": {"Offset": {"x": 8, "y": 92}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlDraw", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlRectangle": {"Placement": {"Area": {"Offset": {"x": 8, "y": 122}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlRectangle", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlArea": {"Placement": {"Area": {"Offset": {"x": 8, "y": 152}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlArea", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlConstraints": {"Placement": {"Area": {"Offset": {"x": 8, "y": 182}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlConstraints", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlText": {"Placement": {"Area": {"Offset": {"x": 8, "y": 212}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlText", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlTheme": {"Placement": {"Area": {"Offset": {"x": 8, "y": 242}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlTheme", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlImage": {"Placement": {"Area": {"Offset": {"x": 8, "y": 272}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlImage", "Align": "CENTER_LEFT"}}},
+                {"structure_SControlTable": {"Placement": {"Area": {"Offset": {"x": 8, "y": 302}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "SControlTable", "Align": "CENTER_LEFT"}}}
+              ]
+            }
+          },
+          {
+            "enums_panel": {
+              "Placement": {"Area": {"Offset": {"x": 260, "y": 0}, "Size": {"x": 252, "y": 676}}, "Align": "TOP_LEFT"},
+              "Draw": {"ColorTheme": 8},
+              "Text": {"Text": "ENUMS", "Align": "CENTER_TOP"},
+              "children": [
+                {"enum_GUI_CONTROL_FLAG": {"Placement": {"Area": {"Offset": {"x": 8, "y": 32}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_FLAG", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_COLOR_MODE": {"Placement": {"Area": {"Offset": {"x": 8, "y": 62}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_COLOR_MODE", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_CONTROL_LIMIT": {"Placement": {"Area": {"Offset": {"x": 8, "y": 92}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_LIMIT", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_CONTROL_METRICS_FLAG": {"Placement": {"Area": {"Offset": {"x": 8, "y": 122}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_METRICS_FLAG", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_CONTROL_PALETTE": {"Placement": {"Area": {"Offset": {"x": 8, "y": 152}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_PALETTE", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_CONTROL_AREA_OLD": {"Placement": {"Area": {"Offset": {"x": 8, "y": 182}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_AREA_OLD", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_TEXT_FLAG": {"Placement": {"Area": {"Offset": {"x": 8, "y": 212}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_TEXT_FLAG", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_TYPE": {"Placement": {"Area": {"Offset": {"x": 8, "y": 242}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_TYPE", "Align": "CENTER_LEFT"}}},
+                {"enum_GUI_CONTROL_TYPE": {"Placement": {"Area": {"Offset": {"x": 8, "y": 272}, "Size": {"x": 236, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_TYPE", "Align": "CENTER_LEFT"}}}
+              ]
+            }
+          },
+          {
+            "details_panel": {
+              "Placement": {"Area": {"Offset": {"x": 520, "y": 0}, "Size": {"x": 736, "y": 676}}, "Align": "TOP_LEFT"},
+              "Draw": {"ColorTheme": 8},
+              "Text": {"Text": "SControlState", "Align": "CENTER_TOP"},
+              "children": [
+                {"column_type": {"Placement": {"Area": {"Offset": {"x": 8, "y": 32}, "Size": {"x": 180, "y": 28}}}, "Draw": {"ColorTheme": 12}, "Text": {"Text": "TYPE", "Align": "CENTER"}}},
+                {"column_member": {"Placement": {"Area": {"Offset": {"x": 190, "y": 32}, "Size": {"x": 220, "y": 28}}}, "Draw": {"ColorTheme": 12}, "Text": {"Text": "MEMBER", "Align": "CENTER"}}},
+                {"column_value": {"Placement": {"Area": {"Offset": {"x": 412, "y": 32}, "Size": {"x": 316, "y": 28}}}, "Draw": {"ColorTheme": 12}, "Text": {"Text": "VALUE", "Align": "CENTER"}}},
+                {"state_parent_type": {"Placement": {"Area": {"Offset": {"x": 8, "y": 62}, "Size": {"x": 180, "y": 28}}}, "Text": {"Text": "cid_t", "Align": "CENTER_LEFT"}}},
+                {"state_parent_name": {"Placement": {"Area": {"Offset": {"x": 190, "y": 62}, "Size": {"x": 220, "y": 28}}}, "Text": {"Text": "Parent", "Align": "CENTER_LEFT"}}},
+                {"state_parent_value": {"Placement": {"Area": {"Offset": {"x": 412, "y": 62}, "Size": {"x": 316, "y": 28}}}, "Text": {"Text": "-1", "Align": "CENTER_LEFT"}}},
+                {"state_flag_type": {"Placement": {"Area": {"Offset": {"x": 8, "y": 92}, "Size": {"x": 180, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_FLAG", "Align": "CENTER_LEFT"}}},
+                {"state_flag_name": {"Placement": {"Area": {"Offset": {"x": 190, "y": 92}, "Size": {"x": 220, "y": 28}}}, "Text": {"Text": "Flag", "Align": "CENTER_LEFT"}}},
+                {"state_flag_value": {"Placement": {"Area": {"Offset": {"x": 412, "y": 92}, "Size": {"x": 316, "y": 28}}}, "Text": {"Text": "0", "Align": "CENTER_LEFT"}}},
+                {"state_mask_type": {"Placement": {"Area": {"Offset": {"x": 8, "y": 122}, "Size": {"x": 180, "y": 28}}}, "Text": {"Text": "GUI_CONTROL_FLAG", "Align": "CENTER_LEFT"}}},
+                {"state_mask_name": {"Placement": {"Area": {"Offset": {"x": 190, "y": 122}, "Size": {"x": 220, "y": 28}}}, "Text": {"Text": "Mask", "Align": "CENTER_LEFT"}}},
+                {"state_mask_value": {"Placement": {"Area": {"Offset": {"x": 412, "y": 122}, "Size": {"x": 316, "y": 28}}}, "Text": {"Text": "65535", "Align": "CENTER_LEFT"}}}
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
