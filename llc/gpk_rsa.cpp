@@ -212,7 +212,7 @@ gpk::err_t			gpk::gpcDecode		(vcu3_c & encrypted, u3_t n, u3_t key, b8_t salt, a
 	vu0_t								filter_view							({(u0_t*)&decrypted[offset], decrypted.size() - offset});
 	::gpcFilter0Remove(filter_view);
 	au0_t								defiltered2							= {};
-	if_fail_fef(gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2), "Failed to decode Ardell. %s", "Out of memory?");
+	if_fail_fe(gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2));
 	if(false == salt) {
 		if_fail_fe(decrypted.resize(offset + defiltered2.size() + 1));
 		for(u2_t j=0; j < defiltered2.size(); ++j)

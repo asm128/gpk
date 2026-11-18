@@ -227,10 +227,10 @@ gpk::err_t 		gpk::bmpFileLoad	(vcu0_t source, a8bgra & out_Colors, g8bgra & out_
 //		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
 //	u2_t					pixelSize			= infoHeader.Bpp == 1 ? 1 : infoHeader.Bpp / 8;
 //	au0_t				srcBytes			= {};
-//	if_fail_fef(srcBytes.resize(nPixelCount * pixelSize), "Out of memory?");
+//	if_fail_fef(srcBytes.resize(nPixelCount * pixelSize), );
 //	size_t						readResult			= fread(&srcBytes[0], pixelSize, nPixelCount, source);
 //	if_true_vef(-1, readResult != (size_t)nPixelCount, "Failed to read file! File corrupt?");
-//	if_fail_fef(out_Colors.resize(nPixelCount), "Out of memory?");
+//	if_fail_fef(out_Colors.resize(nPixelCount), );
 //	b8_t						b32Bit				= false;
 //	u2_t					colorSize			= 0;
 //	s2_t						x, y, linearIndexSrc;

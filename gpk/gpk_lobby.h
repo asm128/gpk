@@ -181,7 +181,7 @@ nmsp gpk
 			{
 				lock_guard								lockRecv					(Client.Connection.Queue.MutexReceive);
 				for(u2_t iMessage = 0; iMessage < Client.Connection.Queue.Received.size(); ++iMessage) {
-					if_fail_fef(MessagesToProcess.push_back(Client.Connection.Queue.Received[iMessage]), "%s", "Out of memory?");
+					if_fail_fef(MessagesToProcess.push_back(Client.Connection.Queue.Received[iMessage]), );
 				}
 				Client.Connection.Queue.Received.clear();
 			}
