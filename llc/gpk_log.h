@@ -120,7 +120,7 @@ nmsp gpk
 
 	tplt<tpnm... _tArgs>
 	inxp err_t _gpk_log(s0_t severity, cnst sc_t * path, u2_t line, cnst sc_t * function, cnst _tArgs &... args) {
-		rtrn append_log(severity, '|', path, '(', line, "){", function, "}:", args..., '\n');
+		rtrn append_log((s1_t)severity, '|', path, '(', line, "){", function, "}:", args..., '\n');
 	}
 
 #ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER

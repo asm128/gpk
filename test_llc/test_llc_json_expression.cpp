@@ -66,6 +66,12 @@ GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_PARSE         , 53, 
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_RESULT        , 54, "The CTTI value could not be resolved through a JSON expression.");
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_VALUE         , 55, "The CTTI value resolved through a JSON expression was incorrect.");
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_ENUM_REGISTRY , 56, "The queried CTTI enum has no registered values.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, GUI_SCRIPT_RUN            , 57, "The scoped SControlTable script failed.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, GUI_SCRIPT_SAVE           , 58, "The scripted SControlTable could not be saved as JSON.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, GUI_SCRIPT_PARSE          , 59, "The scripted SControlTable JSON could not be parsed.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, GUI_SCRIPT_RESOLVE        , 60, "A scripted SControlTable component could not be resolved.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, GUI_SCRIPT_VALUE          , 61, "A scripted SControlTable component did not match its source.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, GUI_SCRIPT_BOUNDARY       , 62, "The script changed SControlTable data outside the JSON patch boundary.");
 
 GDEFINE_ENUM_TYPE(JSON_EXPRESSION_HISTORICAL_TEST_RESULT, ::gpk::u1_t);
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_HISTORICAL_TEST_RESULT, PARSE        , 0, "jsonParse() rejected the historical JSON-expression fixture.");
@@ -503,6 +509,92 @@ sttc ::gpk::err_t testJSONExpressionCTTITheme(ATestError & errors) {
 	rtrn ::testJSONExpressionCTTIRoundTrip(errors, "SControlTheme", value);
 }
 
+sttc ::gpk::err_t testJSONExpressionGUIControlTable(ATestError & errors) {
+	::gpk::SGUI gui = {};
+	cnst ::gpk::cid_t idPanel = ::gpk::controlCreate(gui);
+	cnst ::gpk::cid_t idBridge = ::gpk::controlCreateChild(gui, idPanel);
+	cnst ::gpk::cid_t idSource = ::gpk::controlCreateChild(gui, idBridge);
+	cnst ::gpk::cid_t idTarget = ::gpk::controlCreateChild(gui, idBridge);
+	cnst ::gpk::cid_t idAction = ::gpk::controlCreateChild(gui, idPanel);
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_CONTROL_REGISTRY, 0 > idPanel || 0 > idBridge || 0 > idSource || 0 > idTarget || 0 > idAction);
+	gui.Controls.Identifier[idPanel] = "panel";
+	gui.Controls.Identifier[idSource] = "0";
+	gui.Controls.Identifier[idTarget] = "field";
+	gui.Controls.Identifier[idAction] = "action";
+
+	gui.Controls.States[idSource].Flag = ::gpk::GUI_CONTROL_FLAG_Selected;
+	::gpk::STextState sourceTextState = {};
+	sourceTextState.Parent = idSource;
+	sourceTextState.Flag = (::gpk::GUI_TEXT_FLAG)(::gpk::GUI_TEXT_Selected | ::gpk::GUI_TEXT_Bold | ::gpk::GUI_TEXT_Italic);
+	if_fail_fe(gui.Controls.TextState[idSource].push_back(sourceTextState));
+	gui.Controls.Constraints[idSource].AttachSizeToControl = {idPanel, idBridge};
+	gui.Controls.Constraints[idSource].AttachSizeToText = {true, false};
+	gui.Controls.Constraints[idSource].DockToControl = {-1, idAction, idTarget, -1};
+	gui.Controls.Constraints[idSource].SizeMinMax = {{11, 13}, {101, 103}};
+	gui.Controls.Placement[idSource].Area = {{17, 19}, {107, 109}};
+	gui.Controls.Placement[idSource].Margin = {2, 3, 5, 7};
+	gui.Controls.Placement[idSource].Border = {11, 13, 17, 19};
+	gui.Controls.Placement[idSource].Align = ::gpk::ALIGN_BOTTOM_RIGHT;
+	gui.Controls.Draw[idSource].ColorMode = ::gpk::GUI_COLOR_MODE_Flat;
+	gui.Controls.Draw[idSource].FrameOut = 1;
+	gui.Controls.Draw[idSource].NoBorder = 1;
+	gui.Controls.Draw[idSource].UseNewPalettes = 1;
+	gui.Controls.Draw[idSource].ColorTheme = 5;
+	gui.Controls.Draw[idSource].Palettes[::gpk::GUI_CONTROL_PALETTE_SELECTED] = 9;
+	gui.Controls.Text[idSource].Text = "Source from numeric identifier";
+	gui.Controls.Text[idSource].Align = ::gpk::ALIGN_CENTER_RIGHT;
+	gui.Controls.Text[idSource].Selection = {3, 11};
+	gui.Controls.Text[idSource].FontSelected = 7;
+	gui.Controls.Script[idSource] = "source script text";
+
+	gui.Controls.Area[idTarget].Total.Local = {{23, 29}, {31, 37}};
+	gui.Controls.Images[idTarget].ImageOffset = {41, 43};
+	gui.Controls.Script[idAction] =
+		"{\"panel\":{\"field\":{"
+			"\"State\":\"{panel.('0').State}\","
+			"\"TextState\":\"{panel.('0').TextState}\","
+			"\"Constraints\":\"{panel.('0').Constraints}\","
+			"\"Placement\":\"{panel.('0').Placement}\","
+			"\"Draw\":\"{panel.('0').Draw}\","
+			"\"Text\":\"{panel.('0').Text}\","
+			"\"Script\":\"{panel.('0').Script}\""
+		"}}}";
+	cnst ::gpk::err_t scriptResult = ::gpk::guiScriptRun(gui, idAction);
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_GUI_SCRIPT_RUN, ::gpk::failed(scriptResult), "Result:%i.", scriptResult);
+
+	::gpk::string guiJSON = {};
+	cnst ::gpk::err_t saveResult = ::gpk::guiJSONSave(guiJSON, gui);
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_GUI_SCRIPT_SAVE, ::gpk::failed(saveResult), "Result:%i.", saveResult);
+	::gpk::SJSONReader reader = {};
+	cnst ::gpk::err_t parseResult = ::gpk::jsonParse(reader, guiJSON);
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_GUI_SCRIPT_PARSE, ::gpk::failed(parseResult), "Result:%i, JSON:'%.*s'.", parseResult, GPK_VIEW_ARGS(guiJSON));
+	stxp ::gpk::vcst_c componentNames[] = {"State", "TextState", "Constraints", "Placement", "Draw", "Text", "Script"};
+	for(::gpk::u2_t iComponent = 0; iComponent < ::gpk::size(componentNames); ++iComponent) {
+		::gpk::string sourceExpression = {};
+		::gpk::string targetExpression = {};
+		if_fail_fe(::gpk::append_strings(sourceExpression, "panel.('0').", componentNames[iComponent]));
+		if_fail_fe(::gpk::append_strings(targetExpression, "panel.field.", componentNames[iComponent]));
+		::gpk::vcst_t sourceValue = {};
+		::gpk::vcst_t targetValue = {};
+		cnst ::gpk::err_t sourceResolve = ::gpk::jsonExpressionResolve(sourceExpression, reader, 0, sourceValue);
+		cnst ::gpk::err_t targetResolve = ::gpk::jsonExpressionResolve(targetExpression, reader, 0, targetValue);
+		GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_GUI_SCRIPT_RESOLVE, ::gpk::failed(sourceResolve) || ::gpk::failed(targetResolve), "Component:'%.*s', source:%i, target:%i.", GPK_VIEW_ARGS(componentNames[iComponent]), sourceResolve, targetResolve);
+		GPK_TEST_CHECKF(errors, JSON_EXPRESSION_TEST_RESULT_GUI_SCRIPT_VALUE, sourceValue != targetValue, "Component:'%.*s', source:'%.*s', target:'%.*s'.", GPK_VIEW_ARGS(componentNames[iComponent]), GPK_VIEW_ARGS(sourceValue), GPK_VIEW_ARGS(targetValue));
+	}
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_GUI_SCRIPT_BOUNDARY
+		, gui.Controls.Identifier[idTarget] != "field"
+		|| gui.Controls.Area[idTarget].Total.Local.Offset.x != 23
+		|| gui.Controls.Area[idTarget].Total.Local.Offset.y != 29
+		|| gui.Controls.Area[idTarget].Total.Local.Size.x != 31
+		|| gui.Controls.Area[idTarget].Total.Local.Size.y != 37
+		|| gui.Controls.Images[idTarget].ImageOffset.x != 41
+		|| gui.Controls.Images[idTarget].ImageOffset.y != 43
+		|| gui.Controls.Children[idBridge].size() != 2
+		|| gui.Controls.EventQueue.size()
+		);
+	rtrn 0;
+}
+
 sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	cnst ::gpk::vcst_t document =
 		  "\n{\t \"name\"           : \"Carlos\""
@@ -584,6 +676,7 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	if_fail_fe(::testJSONExpressionCTTITextState(errors));
 	if_fail_fe(::testJSONExpressionCTTIConstraints(errors));
 	if_fail_fe(::testJSONExpressionCTTITheme(errors));
+	if_fail_fe(::testJSONExpressionGUIControlTable(errors));
 
 	::gpk::SControlText source = {};
 	source.Text			= "Source text";
