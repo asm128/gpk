@@ -39,6 +39,7 @@ GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_SAVE, 28, "The CTTI instance
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INSTANCE_LOAD, 29, "The CTTI instance could not be loaded.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, ENUM_DEFINITION, 30, "The CTTI enum definition bridge exposed incorrect registry metadata.");
 GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, INPUT_CURSOR, 31, "The CTTI input cursor was advanced incorrectly.");
+GDEFINE_ENUM_VALUED(CTTI_JSON_TEST_RESULT, BIT_COUNT, 32, "The CTTI bit-field width or value is incorrect.");
 
 CTTI_STCT(SCTTIJSONTest0,
 	struct SCTTIJSONTest0 {
@@ -102,6 +103,17 @@ CTTI_STCT(SCTTIInstancePacked,
 		SCTTIEnumTest	Mode		= CTTIEnumNone;
 		gpk::b8_t		Enabled		= {};
 		gpk::s2_t		Signed32	= {};
+	};
+	);
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+CTTI_STCT(SCTTIInstanceBits,
+	struct SCTTIInstanceBits {
+		gpk::u0_t		Low		: 2;
+		gpk::u0_t		Middle	: 3;
+		gpk::u0_t		High	: 3;
+		gpk::u1_t		Tail	= {};
 	};
 	);
 #pragma pack(pop)
@@ -185,6 +197,10 @@ static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::File.size() && ::gpk::SC
 static_assert(sizeof(SCTTIPODTest) == ::gpk::SCTTIStructRegistry<SCTTIPODTest>::Size, "Struct size must come from the completed compiler type.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIPODTest>::IsPOD, "The POD struct must be identified without std traits.");
 static_assert(sizeof(SCTTIEnumTest) == SCTTIEnumTest_gpk_ctti_size && SCTTIEnumTest_gpk_ctti_is_pod, "Compiled enum facts must be retained.");
+static_assert(2 == ::gpk::cttiStruct<SCTTIInstanceBits>().Members[0].BitCount, "The first bit-field width must be retained.");
+static_assert(3 == ::gpk::cttiStruct<SCTTIInstanceBits>().Members[1].BitCount, "The second bit-field width must be retained.");
+static_assert(3 == ::gpk::cttiStruct<SCTTIInstanceBits>().Members[2].BitCount, "The third bit-field width must be retained.");
+static_assert(0 == ::gpk::cttiStruct<SCTTIInstanceBits>().Members[3].BitCount, "An ordinary member must not become a bit-field.");
 tplt<size_t NDeclaration>
 sttc ::gpk::vcst_t cttiSpanView
 	( cnst ::gpk::SCTTIParseResult<NDeclaration> & metadata
@@ -329,6 +345,21 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 		|| loadedPacked.Mode != sourcePacked.Mode
 		|| loadedPacked.Enabled != sourcePacked.Enabled
 		|| loadedPacked.Signed32 != sourcePacked.Signed32
+		);
+
+	SCTTIInstanceBits sourceBits = {3, 5, 6, 0x1234};
+	::gpk::string serializedBits = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(::gpk::saveCTTI(serializedBits, sourceBits)));
+	::gpk::vcst_t serializedBitsInput = serializedBits;
+	SCTTIInstanceBits loadedBits = {};
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedBitsInput, loadedBits)));
+	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INPUT_CURSOR, serializedBitsInput.size());
+	GPK_TEST_CHECK
+		( errors, CTTI_JSON_TEST_RESULT_BIT_COUNT
+		, loadedBits.Low != sourceBits.Low
+		|| loadedBits.Middle != sourceBits.Middle
+		|| loadedBits.High != sourceBits.High
+		|| loadedBits.Tail != sourceBits.Tail
 		);
 
 	SCTTIInstanceText sourceText = {};
