@@ -208,10 +208,10 @@ sttc gpk::err_t						setupGauges					(::dry::SApplication & app)	{
 
 	gui.ThemeDefault							= 7 * 16 + 11;
 	//gui.ThemeDefault							= 18 * 16 + 10;
-
-	{ if_fail_fef(::setupScreens(app), "%s", "Failed to initialize screens."); }
-	{ if_fail_fef(::dry::setupPalettes(gui), "%s", "Failed to set up palettes."); }
-	{ if_fail_fef(::setupGauges(app), "%s", "Failed to initialize screens."); }
+	if_null_fe(gui.Colors.create());
+	if_fail_fef(::setupScreens(app), "%s", "Failed to initialize screens.");
+	if_fail_fef(::dry::setupPalettes(*gui.Colors), "%s", "Failed to set up palettes.");
+	if_fail_fef(::setupGauges(app), "%s", "Failed to initialize screens.");
 
 	::gpk::pobj<::gpk::rt<::gpk::bgra, u2_t >>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;

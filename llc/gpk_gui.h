@@ -23,21 +23,12 @@ nmsp gpk
 		inln	b8_t		oper!=				(cnst SGUIZoom & other)		csnx	{ return !oper==(other); }
 	};
 
-	struct SGUIColors {
-		papod<bgra>				Palette					= {};
-		papod<SControlTheme>	ControlThemes			= {};
 
-		asts1_t<GUI_CONTROL_PALETTE_COUNT>	DefaultColors			= {};
-
-		apod<asttc<bgra, UI_CONTROL_AREA_COUNT>>
-											Palettes;
-	};
-	
 	struct SGUI {
 		n2u1_t				LastSize			= {};
 		n2f2_t				CursorPos			= {};
 		SControlTable		Controls			= {};
-		pobj<SGUIColors>	Colors;
+		pobj<SControlColors>	Colors;
 		// Font
 		apobj<SRasterFont>	Fonts				= {};
 		SGUIZoom			LastZoom			= {};

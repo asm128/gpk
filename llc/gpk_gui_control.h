@@ -12,6 +12,7 @@
 #include "gpk_minmax_n2.h"
 
 #include "gpk_axis.h"
+#include "gpk_font.h"
 
 #ifndef GPK_GUI_CONTROL_H_23627
 #define GPK_GUI_CONTROL_H_23627
@@ -108,6 +109,7 @@ nmsp gpk
 			: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
 			: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
 			: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
+			: controlState.IsHidden  () ? ::gpk::GUI_CONTROL_PALETTE_HIDDEN
 			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 			;
 	}
@@ -294,6 +296,17 @@ nmsp gpk
 		if_fail_fe(controlSetParent(controls, iControl, iParent));
 		return 0;
 	}
+	CTTI_STCT(SControlColors,
+	stct SControlColors {
+		papod<bgra>				Palette					= {};
+		papod<SControlTheme>	ControlThemes			= {};
+
+		asts1_t<GUI_CONTROL_PALETTE_COUNT>	DefaultColors			= {};
+
+		apod<asttc<bgra, UI_CONTROL_AREA_COUNT>>
+								Palettes;
+	};
+	);
 	//stin	err_t		withControlState		(SControlTable & controls, cid_t idControl, cnst FError<SControlState		&> & funcWithControl) { rtrn funcWithControl(controls.States		[idControl]); }
 	//stin	err_t		withControlPrevious		(SControlTable & controls, cid_t idControl, cnst FError<SControlState		&> & funcWithControl) { rtrn funcWithControl(controls.Previous		[idControl]); }
 	//stin	err_t		withControlPlacement	(SControlTable & controls, cid_t idControl, cnst FError<SControlPlacement	&> & funcWithControl) { rtrn funcWithControl(controls.Placement		[idControl]); }

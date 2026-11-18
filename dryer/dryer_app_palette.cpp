@@ -1,12 +1,11 @@
 #include "dryer_palette.h"
 
-::gpk::err_t							dry::setupPalettes		(::gpk::SGUI & gui) {
-	::gpk::SGUIColors						& colors				= *gui.Colors;
-	auto									& paletteNormal			= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL	]];
-	auto									& paletteDisabled		= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED]];
-	auto									& palettePressed			= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED	]];
-	auto									& paletteHover			= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER	]];
-	auto									& paletteSelected			= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED]];
+gpk::err_t	dry::setupPalettes		(::gpk::SControlColors	& colors) {
+	auto				& paletteNormal			= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL	]];
+	auto				& paletteDisabled		= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED]];
+	auto				& palettePressed		= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED	]];
+	auto				& paletteHover			= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER	]];
+	auto				& paletteSelected		= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED]];
 
 	::gpk::view<::gpk::bgra>{paletteNormal}.fill(::gpk::WHITE);
 	paletteNormal[::gpk::UI_CONTROL_AREA_BACKGROUND			] = ::gpk::BLACK;

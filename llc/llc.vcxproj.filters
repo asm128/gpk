@@ -882,6 +882,9 @@
     <ClInclude Include="gpk_socket_server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_control_theme.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -1167,6 +1170,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_socket_server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_theme.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

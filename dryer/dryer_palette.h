@@ -55,7 +55,7 @@ namespace dry
 	GDEFINE_ENUM_VALUE(PALETTE, OK_OUTDATED					, PALETTE_OK_NORMAL + (u0_t)::gpk::GUI_CONTROL_PALETTE_OUTDATED					);
 	GDEFINE_ENUM_VALUE(PALETTE, COUNT						, 1 + PALETTE_OK_OUTDATED														);
 
-	::gpk::err_t					setupPalettes	(::gpk::SGUI & gui);
+	::gpk::err_t					setupPalettes	(::gpk::SControlColors & gui);
 } // namespace
 
 #endif // DRYER_PALETTE_H_928347982374

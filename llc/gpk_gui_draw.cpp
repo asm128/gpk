@@ -55,7 +55,7 @@ sttc	gpk::err_t controlTextDraw		(cnst ::gpk::SGUI & gui, s2_t iControl, ::gpk::
 	// Changhing the state from idle to hover however doesn't cause the control metrics to become outdated (and in general it's pointless for other than the effect we're applying here).
 
 	cnst ::gpk::SControlText	& controlText		= gui.Controls.Text		[iControl];
-	apod<::gpk::n2u1_t>	dstCoords;
+	::gpk::apod<::gpk::n2u1_t>	dstCoords;
 	u2_c				iFont				= ::gpk::in_range(controlText.FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	cnst ::gpk::SRasterFont	& selectedFont		= *gui.Fonts[iFont];
 	cnst ::gpk::apod<::gpk::STextState> & textState = gui.Controls.TextState[iControl];

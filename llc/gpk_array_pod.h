@@ -328,7 +328,6 @@ nmsp gpk
 } // nmsp
 
 #define GPK_USING_APOD()						\
-	tplTusng	apod	= ::gpk::array_pod<T>;	\
 	usng	::gpk::ab8_t, ::gpk::ab8_c			\
 		,	::gpk::auc_t, ::gpk::auc_c			\
 		,	::gpk::asc_t, ::gpk::asc_c			\

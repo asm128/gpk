@@ -8,17 +8,17 @@
 nmsp gpk
 {
 	struct SRasterFont {
-		n2u0_t		CharSize;
-		imgmonou3_t	Texture;
+		n2u0_t				CharSize;
+		imgmonou3_t			Texture;
 	};
 
 	struct SRasterFontBase64 {
-		n2u0_t		CharSize;
-		vcst_t		Base64String;
+		n2u0_t				CharSize;
+		vcst_t				Base64String;
 	};
 
 	struct SRasterFontManager {
-		apobj<SRasterFont>	Fonts						= {};
+		apobj<SRasterFont>	Fonts	= {};
 	};
 
 	err_t	rasterFontDefaults	(SRasterFontManager & manager);
@@ -31,13 +31,13 @@ nmsp gpk
 		return 0;
 	}
 	tplt<tpnm _sizeChunk>
-	err_t	rasterFontLoadB64	(imgmono<_sizeChunk> & image, cnst n2u0_t & charSize, vcu0_c base64String) {
+	stin	err_t	rasterFontLoadB64	(imgmono<_sizeChunk> & image, cnst n2u0_t & charSize, vcu0_c base64String) {
 		au0_t		decoded;
-		if_fail_fe(gpk::base64Decode(base64String, decoded));
+		if_fail_fe(base64Decode(base64String, decoded));
 		return rasterFontLoad(image, charSize, decoded);
 	}
 	tplt<tpnm _sizeChunk>
-	err_t	rasterFontLoadB64	(imgmono<_sizeChunk> & image, cnst n2u0_t & charSize, vcst_t base64String) {
+	stin	err_t	rasterFontLoadB64	(imgmono<_sizeChunk> & image, cnst n2u0_t & charSize, vcst_t base64String) {
 		return rasterFontLoadB64(image, charSize, base64String.bytes());
 	}
 };

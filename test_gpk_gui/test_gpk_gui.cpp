@@ -141,9 +141,6 @@ sttc u2_t sampleGUIToneRows(u2_t toneCount, u2_t column) nxpt {
 
 sttc err_t sampleGUIEditorCreate(SSampleGUI & app, SGUI & gui) {
 	pobj<SGUIEditor> editor = {};
-	if_null_fe(editor.create());
-	if_fail_fe(guiSetupDefaultColors(editor->GUI.Colors));
-	if_fail_fe(guiSetupDefaultFonts(editor->GUI));
 	editor->GUI.ColorModeDefault = GUI_COLOR_MODE_3D;
 	if_fail_fe(editor->Target.resize(n2u1_t{752, 440}));
 
@@ -248,18 +245,13 @@ sttc err_t sampleGUIAction(SSampleGUI & app, SGUI & gui, cid_t idControl) {
 	return 0;
 }
 
+	DECLARE A FUCKING ENUM YOU PIECE OF LAMER HUNK sttc vcst_c menuLeft[] = {"PALETTE", "FONTS", "CONTROL STATES", "INSPECTORS", "ALIGN"};
+	DECLARE A FUCKING ENUM YOU PIECE OF LAMER HUNK sttc vcst_c menuRight[] = {"SCREENSHOT", "EXIT"};
 err_t sampleGUISetup(SSampleGUI & app, SGUI & gui) {
-	if_fail_fe(guiSetupDefaultColors(gui.Colors));
-	if_fail_fe(guiSetupDefaultFonts(gui));
 	gui.ColorModeDefault = GUI_COLOR_MODE_3D;
 
-	sttc vcst_c menuLeft[] = {"PALETTE", "FONTS", "CONTROL STATES", "INSPECTORS", "ALIGN"};
-	sttc vcst_c menuRight[] = {"SCREENSHOT", "EXIT"};
-	if_fail_fe(::sampleGUIMenuCreate(gui, menuLeft, ALIGN_TOP_LEFT));
-	if_fail_fe(::sampleGUIMenuCreate(gui, menuRight, ALIGN_TOP_RIGHT));
-
 	cid_t idPaletteClient = CID_INVALID;
-	if_fail_fe(::sampleGUIPanelCreate(gui, "PALETTE", {{20, 28}, {300, 220}}, idPaletteClient));
+	if_fail_fe(::sampleGUIPanelCreate(gui, ::gpk::get_enum_namev(PALETTE), {{20, 28}, {300, 220}}, idPaletteClient));
 	u2_c toneCount = gui.Colors && gui.Colors->ControlThemes ? gui.Colors->ControlThemes->size() / ASCII_COLOR_Count : 0;
 	u2_t toneDefault = gui.ThemeDefault / ASCII_COLOR_Count;
 	if(toneDefault >= toneCount)

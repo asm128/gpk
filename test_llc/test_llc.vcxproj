@@ -177,6 +177,7 @@
     <ClCompile Include="test_llc_deflate.cpp" />
     <ClCompile Include="test_llc_enum.cpp" />
     <ClCompile Include="test_llc_event.cpp" />
+    <ClCompile Include="test_llc_gui_control_corpus.cpp" />
     <ClCompile Include="test_llc_gui_control_serialization.cpp" />
     <ClCompile Include="test_llc_expression.cpp" />
     <ClCompile Include="test_llc_expression_core.cpp" />

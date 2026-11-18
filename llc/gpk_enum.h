@@ -327,19 +327,24 @@ nmsp gpk
 		return get_enum<TEnum>().get_value(camelCased);
 	}
 	tplt<tpnm TEnum>	ndsi	u2_t			get_value_count		()							nxpt	{ return get_enum<TEnum>().Values.size(); }
+	tplt<tpnm TEnum>	ndsi	s2_t			get_value_index		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_index(statusBit); }
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_name		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_desc		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_desc (statusBit); }
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_name		()							nxpt	{ return get_enum<TEnum>().Name;			}
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_name		(cnst TEnum & )				nxpt	{ return get_enum<TEnum>().Name;			}
+	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_names		()							nxpt	{ return get_enum<TEnum>().Names; }
+	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_descs		()							nxpt	{ return get_enum<TEnum>().Names; }
+	// ---- Legacy
 	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_label		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
-	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_namev		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
 	tplt<tpnm TEnum>	ndsi	sc_c*			get_value_namep		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit).begin(); }
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_namev		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_label(statusBit); }
 	tplt<tpnm TEnum>	ndsi	vcst_t			get_value_descv		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_desc (statusBit); }
 	tplt<tpnm TEnum>	ndsi	sc_c*			get_value_descp		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_desc (statusBit).begin(); }
 	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_labels	()							nxpt	{ return get_enum<TEnum>().Names; }
-	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_names		()							nxpt	{ return get_enum<TEnum>().Names; }
-	tplt<tpnm TEnum>	ndsi	view<vcst_c>	get_value_descs		()							nxpt	{ return get_enum<TEnum>().Names; }
-	tplt<tpnm TEnum>	ndsi	s2_t			get_value_index		(cnst TEnum & statusBit)			{ return get_enum<TEnum>().get_value_index(statusBit); }
 	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_namev		()							nxpt	{ return get_enum<TEnum>().Name;			}
-	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_namev		(cnst TEnum & )			nxpt	{ return get_enum<TEnum>().Name;			}
+	tplt<tpnm TEnum>	ndsi	vcst_t			get_enum_namev		(cnst TEnum & )				nxpt	{ return get_enum<TEnum>().Name;			}
 	tplt<tpnm TEnum>	ndsi	sc_c*			get_enum_namep		()							nxpt	{ return get_enum<TEnum>().Name.begin();	}
-	tplt<tpnm TEnum>	ndsi	sc_c*			get_enum_namep		(cnst TEnum & )			nxpt	{ return get_enum<TEnum>().Name.begin();	}
+	tplt<tpnm TEnum>	ndsi	sc_c*			get_enum_namep		(cnst TEnum & )				nxpt	{ return get_enum<TEnum>().Name.begin();	}
 
 	tplTstct genum_value_auto {
 		T		Value				= enum_definition<T>::INVALID_VALUE;

@@ -7,6 +7,7 @@
 #include "gpk_label.h"
 #include "gpk_rect_align.h"
 #include "gpk_framework_module.h"
+#include "gpk_gui_control_theme.h"
 
 usns gpk;
 
@@ -33,10 +34,10 @@ gpk::cid_t		gpk::controlCreateChild	(SGUI & gui, cid_t iParent)						{
 }
 
 gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
-	if_fail_fe(guiSetupDefaultColors(gui.Colors));
+	if_fail_fe(controlColorsDefault(gui.Colors));
 
 	if(0 == gui.Fonts.size())
-		if_fail_fe(guiSetupDefaultFonts(gui));
+		if_fail_fe(controlFontsDefault(gui.Fonts));
 
 	if(gui.Fonts.size() <= gui.SelectedFont)
 		gui.SelectedFont = u1_t(gui.Fonts.size() - 1);
@@ -73,16 +74,16 @@ sttc ::gpk::err_t guiControlChildrenJSONSave(::gpk::string & output, cnst ::gpk:
 	cnst ::gpk::acid & children = gui.Controls.Children[iControl];
 	for(::gpk::u2_t iChild = 0; iChild < children.size(); ++iChild) {
 		cnst ::gpk::cid_t idChild = children[iChild];
-		if(::gpk::controlInvalid(gui, idChild))
-			continue;
-		cnst ::gpk::vcst_t identifier = gui.Controls.Identifier[idChild];
-		if(identifier.size()) {
+		//if(::gpk::controlInvalid(gui, idChild))	WHY IS THIS CHECK NEEDED? IS THE RELATIONSHIP MANAGEMENT BROKEN?
+		//	continue;								WHY IS THIS CHECK NEEDED? IS THE RELATIONSHIP MANAGEMENT BROKEN?
+		::gpk::vcst_c identifier = gui.Controls.Identifier[idChild];
+		if(0 == identifier.size()) {
+			if_fail_fe(::guiControlChildrenJSONSave(output, gui, idChild, separator));
+		} else {
 			if_fail_fe(::gpk::appendOpenKey(output, identifier, separator));
 			if_fail_fe(::guiControlJSONSave(output, gui, idChild));
 			separator = true;
 		}
-		else
-			if_fail_fe(::guiControlChildrenJSONSave(output, gui, idChild, separator));
 	}
 	rtrn 0;
 }

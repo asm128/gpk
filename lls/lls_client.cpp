@@ -21,7 +21,7 @@ sttc	::gpk::err_t	guiSetupCommon		(::gpk::SGUI & gui) {
 	gui.ThemeDefault		= ::gpk::ASCII_COLOR_Dark_red * 16 + 10;
 	gui.SelectedFont		= 7;
 
-	::gpk::pobj<::gpk::SGUIColors>	colors;
+	::gpk::pobj<::gpk::SControlColors>	colors;
 	colors.create(*gui.Colors);
 	gui.Colors				= colors;
 	return 0;

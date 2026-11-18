@@ -1,7 +1,6 @@
 #include "gpk_view.h"
 #include "gpk_safe.h"
 #include "gpk_memory.h"
-#include "gpk_size.h"
 
 #include "gpk_std_initializer_list.h"
 

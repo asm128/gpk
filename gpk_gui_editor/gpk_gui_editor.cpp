@@ -167,8 +167,6 @@ sttc err_t sampleGUIMenuCreate(SGUI & gui, view<vcst_c> labels, ALIGN align) {
 }
 
 err_t sampleGUISetup(SSampleGUI & app, SGUI & gui) {
-	if_fail_fe(guiSetupDefaultColors(gui.Colors));
-	if_fail_fe(guiSetupDefaultFonts(gui));
 	gui.ColorModeDefault = GUI_COLOR_MODE_3D;
 
 	sttc vcst_c menuLeft[] = {"PALETTE", "FONTS", "CONTROL STATES", "INSPECTORS", "ALIGN"};
