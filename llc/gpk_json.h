@@ -65,6 +65,12 @@ nmsp gpk
 	err_t			jsonTreeInvalidate	(SJSONReader & reader);
 	err_t			jsonTreeEnsure		(SJSONReader & reader);
 
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, u2_t iToken, as2_t & indices);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, aobj<vcst_t> & keys);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, aobj<vcst_t> & keys);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys);
+
 	err_t			jsonArrayValueGet	(cnst SJSONNode & node, u2_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
 	err_t			jsonObjectValueGet	(cnst SJSONNode & node, view<vcst_c> views, vcst_t key);
 	err_t			jsonObjectKeyList	(cnst SJSONNode & node, as2_t & indices);
@@ -79,13 +85,13 @@ nmsp gpk
 	err_t			jsonArrayForEach	(cnst SJSONNode & node, FError<cnst SJSONNode &> funcForEach);
 	//err_t			jsonArrayEnumerate	(cnst SJSONNode & node, FError<cnst SJSONNode &, u2_t index> funcEnumerate);
 	// Access functions: Iterate over children looking for keys or values.
-	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)											{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonArraySize(*reader.Tree[iNode]); }
-	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)											{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyCount(*reader.Tree[iNode]); }
-	ndsi	err_t	jsonArrayValueGet	(cnst SJSONReader & reader, u2_t iNode, u2_t indexOfValueToGet)					{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonArrayValueGet(*reader.Tree[iNode], indexOfValueToGet); }
-	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_t key)								{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices)						{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], indices); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, aobj<vcst_t> & keys)					{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, keys); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, aobj<vcst_t> & keys)	{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, indices, keys); }
+	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)											{ rtrn jsonArraySize(reader.Token, iNode); }
+	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)											{ rtrn jsonObjectKeyCount(reader.Token, iNode); }
+	ndsi	err_t	jsonArrayValueGet	(cnst SJSONReader & reader, u2_t iNode, u2_t indexOfValueToGet)					{ rtrn jsonArrayValueGet(reader.Token, iNode, indexOfValueToGet); }
+	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_t key)								{ rtrn jsonObjectValueGet(reader.Token, reader.View, iNode, key); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices)						{ rtrn jsonObjectKeyList(reader.Token, iNode, indices); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, aobj<vcst_t> & keys)					{ rtrn jsonObjectKeyList(reader.Token, reader.View, iNode, keys); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, aobj<vcst_t> & keys)	{ rtrn jsonObjectKeyList(reader.Token, reader.View, iNode, indices, keys); }
 
 	ndsi	err_t	jsonCompareArray	(cnst SJSONNode & node, cnst SJSONNode & other, view<vcst_c> views)	{ rtrn jsonCompareArray		(node, views, other, views); }
 	ndsi	err_t	jsonCompareObject	(cnst SJSONNode & node, cnst SJSONNode & other, view<vcst_c> views)	{ rtrn jsonCompareObject	(node, views, other, views); }
@@ -156,8 +162,6 @@ nmsp gpk
 	err_t			jsonFileRead			(SJSONFile & file, vcst_t filename);
 	err_t			jsonWrite				(cnst SJSONNode * node, view<vcst_c> jsonViews, string & output);
 	err_t			jsonWrite				(view<cnst SJSONToken> tokens, vcst_t source, string & output, u2_t iToken = 0);
-	err_t			jsonObjectValueGet	(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, vcst_t key);
-	err_t			jsonArrayValueGet	(view<cnst SJSONToken> tokens, u2_t iToken, u2_t index);
 	err_t			jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c> jsonViews, u2_c blockSize, aobj<string> & outputJsons);
 
 	stct SJSONFieldBinding {

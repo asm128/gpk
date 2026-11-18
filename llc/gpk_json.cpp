@@ -165,64 +165,8 @@ gpk::err_t			gpk::jsonWrite				(cnst SJSONNode* node, view<vcst_c> jsonViews, st
 	rtrn 0;
 }
 
-sttc gpk::err_t jsonTokenChildGet(gpk::view<cnst gpk::SJSONToken> tokens, gpk::u2_t iParent, gpk::u2_t index) {
-	for(gpk::u2_t iToken = iParent + 1; iToken < tokens.size(); ++iToken)
-		if(tokens[iToken].ParentIndex == (gpk::json_id_t)iParent) {
-			if(0 == index--)
-				rtrn iToken;
-		}
-	rtrn -1;
-}
-
-sttc gpk::err_t jsonTokenValueGet(gpk::view<cnst gpk::SJSONToken> tokens, gpk::u2_t iToken) {
-	if_true_fe(iToken >= tokens.size());
-	if(gpk::JSON_TYPE_KEY == tokens[iToken].Type || gpk::JSON_TYPE_VALUE == tokens[iToken].Type)
-		rtrn ::jsonTokenChildGet(tokens, iToken, 0);
-	rtrn iToken;
-}
-
-sttc gpk::vcst_t jsonTokenView(gpk::vcst_t source, cnst gpk::SJSONToken & token) {
-	if(token.Span.Begin > token.Span.End || token.Span.End > source.size())
-		rtrn {};
-	rtrn {&source[token.Span.Begin], token.Span.End - token.Span.Begin};
-}
-
-gpk::err_t gpk::jsonObjectValueGet(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, vcst_t key) {
-	if_fail_fe(iToken = (u2_t)::jsonTokenValueGet(tokens, iToken));
-	if_true_fe(iToken >= tokens.size() || JSON_TYPE_OBJECT != tokens[iToken].Type);
-	err_t iKey = -1;
-	for(u2_t iChild = 0; ; ++iChild) {
-		cnst err_t iWrapper = ::jsonTokenChildGet(tokens, iToken, iChild);
-		if(0 > iWrapper)
-			break;
-		if(JSON_TYPE_KEY == tokens[iWrapper].Type) {
-			iKey = ::jsonTokenValueGet(tokens, (u2_t)iWrapper);
-			continue;
-		}
-		if(JSON_TYPE_VALUE == tokens[iWrapper].Type && 0 <= iKey) {
-			if(::jsonTokenView(source, tokens[iKey]) == key)
-				rtrn ::jsonTokenValueGet(tokens, (u2_t)iWrapper);
-			iKey = -1;
-		}
-	}
-	rtrn -1;
-}
-
-gpk::err_t gpk::jsonArrayValueGet(view<cnst SJSONToken> tokens, u2_t iToken, u2_t index) {
-	if_fail_fe(iToken = (u2_t)::jsonTokenValueGet(tokens, iToken));
-	if_true_fe(iToken >= tokens.size() || JSON_TYPE_ARRAY != tokens[iToken].Type);
-	for(u2_t iChild = 0; ; ++iChild) {
-		cnst err_t iWrapper = ::jsonTokenChildGet(tokens, iToken, iChild);
-		if(0 > iWrapper)
-			break;
-		if(JSON_TYPE_VALUE == tokens[iWrapper].Type && 0 == index--)
-			rtrn ::jsonTokenValueGet(tokens, (u2_t)iWrapper);
-	}
-	rtrn -1;
-}
-
 gpk::err_t gpk::jsonWrite(view<cnst SJSONToken> tokens, vcst_t source, string & output, u2_t iToken) {
-	if_fail_fe(iToken = (u2_t)::jsonTokenValueGet(tokens, iToken));
+	if_fail_fe(iToken = (u2_t)jsonTokenValueGet(tokens, iToken));
 	if_true_fe(iToken >= tokens.size());
 	cnst SJSONToken & token = tokens[iToken];
 	switch(token.Type) {
@@ -230,21 +174,21 @@ gpk::err_t gpk::jsonWrite(view<cnst SJSONToken> tokens, vcst_t source, string & 
 	case JSON_TYPE_DECIMAL:
 	case JSON_TYPE_BOOLEAN:
 	case JSON_TYPE_NULL:
-		if_fail_fe(output.append(::jsonTokenView(source, token)));
+		if_fail_fe(output.append(jsonTokenView(source, token)));
 		break;
 	case JSON_TYPE_STRING:
-		if_fail_fe(append_strings(output, '"', ::jsonTokenView(source, token), '"'));
+		if_fail_fe(append_strings(output, '"', jsonTokenView(source, token), '"'));
 		break;
 	case JSON_TYPE_OBJECT: {
 		if_fail_fe(output.push_back('{'));
 		err_t iKey = -1;
 		b8_t first = true;
 		for(u2_t iChild = 0; ; ++iChild) {
-			cnst err_t iWrapper = ::jsonTokenChildGet(tokens, iToken, iChild);
+			cnst err_t iWrapper = jsonTokenChildGet(tokens, iToken, iChild);
 			if(0 > iWrapper)
 				break;
 			if(JSON_TYPE_KEY == tokens[iWrapper].Type) {
-				iKey = ::jsonTokenValueGet(tokens, (u2_t)iWrapper);
+				iKey = jsonTokenValueGet(tokens, (u2_t)iWrapper);
 				continue;
 			}
 			if(JSON_TYPE_VALUE == tokens[iWrapper].Type && 0 <= iKey) {
@@ -264,7 +208,7 @@ gpk::err_t gpk::jsonWrite(view<cnst SJSONToken> tokens, vcst_t source, string & 
 		if_fail_fe(output.push_back('['));
 		b8_t first = true;
 		for(u2_t iChild = 0; ; ++iChild) {
-			cnst err_t iWrapper = ::jsonTokenChildGet(tokens, iToken, iChild);
+			cnst err_t iWrapper = jsonTokenChildGet(tokens, iToken, iChild);
 			if(0 > iWrapper)
 				break;
 			if(JSON_TYPE_VALUE != tokens[iWrapper].Type)
@@ -808,6 +752,56 @@ gpk::err_t			gpk::jsonParse				(SJSONReader & reader, vcst_t jsonAsString, SJSON
 		}
 	}	
 	rtrn options.All(JSON_PARSE_OPTION_BUILD_TREE) ? jsonTreeRebuild(reader.Token, reader.Tree) : 0;
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, u2_t iToken, as2_t & indices) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [&indices](u2_t iKey, u2_t) -> err_t { if_fail_fe(indices.push_back(iKey)); rtrn 0; });
+	if(0 > result)
+		rtrn result;
+	rtrn indices.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [tokens, source, &keys](u2_t iKey, u2_t) -> err_t { if_fail_fe(keys.push_back(jsonTokenView(source, tokens[iKey]))); rtrn 0; });
+	if(0 > result)
+		rtrn result;
+	rtrn keys.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [tokens, source, &indices, &keys](u2_t iKey, u2_t) -> err_t {
+		if_fail_fe(indices.push_back(iKey));
+		if_fail_fe(keys.push_back(jsonTokenView(source, tokens[iKey])));
+		rtrn 0;
+		});
+	if(0 > result)
+		rtrn result;
+	rtrn indices.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [views, &keys](u2_t iKey, u2_t) -> err_t {
+		if(iKey >= views.size())
+			rtrn -1;
+		if_fail_fe(keys.push_back(views[iKey]));
+		rtrn 0;
+		});
+	if(0 > result)
+		rtrn result;
+	rtrn keys.size();
+}
+
+gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys) {
+	cnst err_t result = jsonObjectForEach(tokens, iToken, [views, &indices, &keys](u2_t iKey, u2_t) -> err_t {
+		if(iKey >= views.size())
+			rtrn -1;
+		if_fail_fe(indices.push_back(iKey));
+		if_fail_fe(keys.push_back(views[iKey]));
+		rtrn 0;
+		});
+	if(0 > result)
+		rtrn result;
+	rtrn indices.size();
 }
 
 gpk::err_t			gpk::jsonObjectKeyList		(cnst SJSONNode & node_object, view<vcst_c> views, as2_t & indices, aobj<vcst_t> & keys)	{

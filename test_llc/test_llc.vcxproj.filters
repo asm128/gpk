@@ -36,6 +36,9 @@
     <ClCompile Include="test_llc_linear_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="test_llc_packed_int.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

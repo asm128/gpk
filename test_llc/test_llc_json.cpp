@@ -76,6 +76,12 @@ GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_WRITE				, 79, "The token/sou
 GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_ROUND_TRIP		, 80, "The token/source JSON writer produced unexpected text.");
 GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_OBJECT_VALUE		, 81, "The token/source JSON object lookup returned the wrong value.");
 GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_ARRAY_VALUE		, 82, "The token/source JSON array lookup returned the wrong value.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_ARRAY_SIZE		, 83, "The token-only JSON array size is wrong.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_OBJECT_KEY_COUNT	, 84, "The token-only JSON object key count is wrong.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_KEY_LIST			, 85, "The token-only JSON object key list is wrong.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_VIEW_LOOKUP		, 86, "The token/prebuilt-view JSON object lookup returned the wrong value.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_READER_NO_TREE	, 87, "An SJSONReader token accessor still depends on the JSON tree.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_COMPARE			, 88, "Token-only structural JSON comparison returned the wrong result.");
 
 static_assert(szof(::gpk::JSON_PARSE_OPTION) == szof(::gpk::u1_t), "JSON parse options must use one uniform 16-bit field.");
 static_assert(szof(::gpk::SJSONParseOptions) == szof(::gpk::JSON_PARSE_OPTION), "bit_field<> must not add storage overhead.");
@@ -195,10 +201,41 @@ sttc ::gpk::err_t testJSONTokens(::gpk::ATestError & errors) {
 	}
 	cnst ::gpk::err_t iValues = ::gpk::jsonObjectValueGet(tokens, source, 0, "values");
 	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_ARRAY_VALUE, ::gpk::failed(iValues));
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_OBJECT_KEY_COUNT, ::gpk::jsonObjectKeyCount(tokens, 0) != 3);
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_ARRAY_SIZE, 0 <= iValues && ::gpk::jsonArraySize(tokens, (::gpk::u2_t)iValues) != 4);
 	cnst ::gpk::err_t iSecond = 0 <= iValues ? ::gpk::jsonArrayValueGet(tokens, (::gpk::u2_t)iValues, 1) : -1;
 	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_ARRAY_VALUE, ::gpk::failed(iSecond));
 	if(0 <= iSecond)
 		GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_ARRAY_VALUE, tokens[iSecond].Type != ::gpk::JSON_TYPE_BOOLEAN || 0 == tokens[iSecond].Value);
+
+	::gpk::as2_t keyIndices = {};
+	::gpk::aobj<::gpk::vcst_t> keys = {};
+	cnst ::gpk::err_t keyCount = ::gpk::jsonObjectKeyList(tokens, source, 0, keyIndices, keys);
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_KEY_LIST, ::gpk::failed(keyCount));
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_KEY_LIST
+		, keyCount != 3 || keyIndices.size() != 3 || keys.size() != 3 || keys[0] != "name" || keys[1] != "values" || keys[2] != "nested"
+		);
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_VIEW_LOOKUP, ::gpk::jsonObjectValueGet(tokens, reader.View, 0, "name") != iName);
+
+	::gpk::SJSONReader readerNoTree = {};
+	::gpk::SJSONParseOptions tokenOptions = ::gpk::JSON_PARSE_GPK;
+	tokenOptions.Clear(::gpk::JSON_PARSE_OPTION_BUILD_TREE);
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_READER_NO_TREE, ::gpk::failed(::gpk::jsonParse(readerNoTree, source, tokenOptions)));
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_READER_NO_TREE, readerNoTree.Tree.size());
+	cnst ::gpk::err_t iValuesNoTree = ::gpk::jsonObjectValueGet(readerNoTree, 0, "values");
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_READER_NO_TREE, iValuesNoTree != iValues);
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_READER_NO_TREE, 0 <= iValuesNoTree && ::gpk::jsonArraySize(readerNoTree, (::gpk::u2_t)iValuesNoTree) != 4);
+	::gpk::aobj<::gpk::vcst_t> keysNoTree = {};
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_READER_NO_TREE, ::gpk::jsonObjectKeyList(readerNoTree, 0, keysNoTree) != 3 || keysNoTree.size() != 3);
+
+	cnst ::gpk::vcst_t equivalentSource = " { \"name\" : \"gpk\", \"values\" : [ 1, true, null, \"x\" ], \"nested\" : { \"enabled\" : true } } ";
+	::gpk::SJSONReader equivalent = {};
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_COMPARE, ::gpk::failed(::gpk::jsonParse(equivalent, equivalentSource, tokenOptions)));
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_COMPARE, 1 != ::gpk::jsonCompare(tokens, source, 0, equivalent.Token, equivalentSource, 0));
+	cnst ::gpk::vcst_t differentSource = "{\"name\":\"other\",\"values\":[1,true,null,\"x\"],\"nested\":{\"enabled\":true}}";
+	::gpk::SJSONReader different = {};
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_COMPARE, ::gpk::failed(::gpk::jsonParse(different, differentSource, tokenOptions)));
+	GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_COMPARE, 0 != ::gpk::jsonCompare(tokens, source, 0, different.Token, differentSource, 0));
 	rtrn 0;
 }
 
