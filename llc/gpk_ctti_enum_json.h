@@ -1,7 +1,7 @@
 #include "gpk_ctti_enum.h"
+#include "gpk_json.h"
 #include "gpk_append_json.h"
 #include "gpk_array_static.h"
-#include "gpk_json.h"
 
 #ifndef GPK_CTTI_ENUM_JSON_H
 #define GPK_CTTI_ENUM_JSON_H

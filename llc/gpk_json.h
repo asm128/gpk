@@ -1,7 +1,5 @@
-#include "gpk_enum.h"
-#include "gpk_bit.h"
+#include "gpk_json_core.h"
 #include "gpk_array_ptr.h"
-#include "gpk_slice.h"
 #include "gpk_string.h"
 
 #ifndef GPK_JSON_H_23627
@@ -10,52 +8,6 @@
 nmsp gpk
 {
 #pragma pack(push, 1)
-#ifdef GPK_ARDUINO
-	tydf  s1_t json_id_t;
-	GDEFINE_ENUM_TYPE(JSON_TYPE, s0_t);
-#else
-	tydf  s2_t json_id_t;
-	GDEFINE_ENUM_TYPE(JSON_TYPE, s2_t);
-#endif
-	GDEFINE_ENUM_VALUE(JSON_TYPE, NULL		,  0);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, INTEGER	,  1);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, DECIMAL	,  2);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, BOOLEAN	,  3);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, STRING	,  4);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, KEY		,  5);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, VALUE		,  6);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, OBJECT	,  7);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, ARRAY		,  8);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, CODEPOINT	,  9);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, COUNT		, 10);
-	GDEFINE_ENUM_VALUE(JSON_TYPE, UNKNOWN	, -1);
-	GDEFINE_FLAG_TYPE(JSON_PARSE_OPTION, u1_t);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, NONE						, 0x0000U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, BUILD_TREE					, 0x0001U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, BUILD_VIEWS				, 0x0002U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, FINAL_INPUT				, 0x0004U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_LINE_COMMENTS		, 0x0008U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_TRAILING_COMMAS		, 0x0010U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_LEADING_PLUS			, 0x0020U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_LEADING_DECIMAL_POINT	, 0x0040U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_TRAILING_DECIMAL_POINT	, 0x0080U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_LEADING_ZEROES			, 0x0100U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_TRAILING_CONTENT		, 0x0200U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, ALLOW_UNESCAPED_CONTROLS		, 0x0400U);
-	GDEFINE_FLAG_VALUE(JSON_PARSE_OPTION, CONTAINER_ROOT_ONLY			, 0x0800U);
-	tydf bit_field<JSON_PARSE_OPTION> SJSONParseOptions;
-	stxp SJSONParseOptions JSON_PARSE_STRICT		= {JSON_PARSE_OPTION_BUILD_TREE | JSON_PARSE_OPTION_BUILD_VIEWS | JSON_PARSE_OPTION_FINAL_INPUT};
-	stxp SJSONParseOptions JSON_PARSE_LEGACY_ROOT	= {JSON_PARSE_OPTION(JSON_PARSE_STRICT) | JSON_PARSE_OPTION_CONTAINER_ROOT_ONLY};
-	stxp SJSONParseOptions JSON_PARSE_GPK			= {JSON_PARSE_OPTION(JSON_PARSE_STRICT)
-		| JSON_PARSE_OPTION_ALLOW_LINE_COMMENTS | JSON_PARSE_OPTION_ALLOW_TRAILING_COMMAS | JSON_PARSE_OPTION_ALLOW_LEADING_PLUS
-		| JSON_PARSE_OPTION_ALLOW_LEADING_DECIMAL_POINT | JSON_PARSE_OPTION_ALLOW_TRAILING_DECIMAL_POINT | JSON_PARSE_OPTION_ALLOW_LEADING_ZEROES
-		| JSON_PARSE_OPTION_ALLOW_TRAILING_CONTENT | JSON_PARSE_OPTION_ALLOW_UNESCAPED_CONTROLS};
-	stct SJSONToken {
-		json_id_t				ParentIndex;
-		JSON_TYPE				Type;
-		sliceu2_t				Span;
-		u3_t				Value;
-	};
 	stct SJSONNode {
 		cnst SJSONToken			* Token				= 0;
 		SJSONNode				* Parent			= 0;
@@ -109,8 +61,15 @@ nmsp gpk
 	err_t			jsonParseError		(cnst SJSONReaderState & reader, asc_t & errorString);
 	err_t			jsonParseError		(cnst SJSONReader & reader, asc_t & errorString);
 	err_t			jsonTreeRebuild		(view<cnst SJSONToken> in_object, apobj<SJSONNode> & out_nodes);
+	err_t			jsonReaderLoad		(SJSONReader & reader, view<cnst SJSONToken> tokens, vcst_t source);
 	err_t			jsonTreeInvalidate	(SJSONReader & reader);
 	err_t			jsonTreeEnsure		(SJSONReader & reader);
+
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, u2_t iToken, as2_t & indices);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, aobj<vcst_t> & keys);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, vcst_t source, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, aobj<vcst_t> & keys);
+	err_t			jsonObjectKeyList	(view<cnst SJSONToken> tokens, view<vcst_c> views, u2_t iToken, as2_t & indices, aobj<vcst_t> & keys);
 
 	err_t			jsonArrayValueGet	(cnst SJSONNode & node, u2_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
 	err_t			jsonObjectValueGet	(cnst SJSONNode & node, view<vcst_c> views, vcst_t key);
@@ -126,13 +85,13 @@ nmsp gpk
 	err_t			jsonArrayForEach	(cnst SJSONNode & node, FError<cnst SJSONNode &> funcForEach);
 	//err_t			jsonArrayEnumerate	(cnst SJSONNode & node, FError<cnst SJSONNode &, u2_t index> funcEnumerate);
 	// Access functions: Iterate over children looking for keys or values.
-	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)											{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonArraySize(*reader.Tree[iNode]); }
-	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)											{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyCount(*reader.Tree[iNode]); }
-	ndsi	err_t	jsonArrayValueGet	(cnst SJSONReader & reader, u2_t iNode, u2_t indexOfValueToGet)					{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonArrayValueGet(*reader.Tree[iNode], indexOfValueToGet); }
-	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_t key)								{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices)						{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], indices); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, aobj<vcst_t> & keys)					{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, keys); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, aobj<vcst_t> & keys)	{ if_true_fwf(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_fe(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, indices, keys); }
+	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)											{ rtrn jsonArraySize(reader.Token, iNode); }
+	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)											{ rtrn jsonObjectKeyCount(reader.Token, iNode); }
+	ndsi	err_t	jsonArrayValueGet	(cnst SJSONReader & reader, u2_t iNode, u2_t indexOfValueToGet)					{ rtrn jsonArrayValueGet(reader.Token, iNode, indexOfValueToGet); }
+	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_t key)								{ rtrn jsonObjectValueGet(reader.Token, reader.View, iNode, key); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices)						{ rtrn jsonObjectKeyList(reader.Token, iNode, indices); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, aobj<vcst_t> & keys)					{ rtrn jsonObjectKeyList(reader.Token, reader.View, iNode, keys); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, aobj<vcst_t> & keys)	{ rtrn jsonObjectKeyList(reader.Token, reader.View, iNode, indices, keys); }
 
 	ndsi	err_t	jsonCompareArray	(cnst SJSONNode & node, cnst SJSONNode & other, view<vcst_c> views)	{ rtrn jsonCompareArray		(node, views, other, views); }
 	ndsi	err_t	jsonCompareObject	(cnst SJSONNode & node, cnst SJSONNode & other, view<vcst_c> views)	{ rtrn jsonCompareObject	(node, views, other, views); }
@@ -202,6 +161,7 @@ nmsp gpk
 
 	err_t			jsonFileRead			(SJSONFile & file, vcst_t filename);
 	err_t			jsonWrite				(cnst SJSONNode * node, view<vcst_c> jsonViews, string & output);
+	err_t			jsonWrite				(view<cnst SJSONToken> tokens, vcst_t source, string & output, u2_t iToken = 0);
 	err_t			jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c> jsonViews, u2_c blockSize, aobj<string> & outputJsons);
 
 	stct SJSONFieldBinding {

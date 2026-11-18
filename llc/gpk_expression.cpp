@@ -388,6 +388,18 @@ gpk::err_t			gpk::expressionReaderParse			(::gpk::SExpressionReader & reader, ::
 	return 0;
 }
 
+gpk::err_t gpk::expressionReaderLoad(SExpressionReader & reader, view<cnst SExpressionToken> tokens, ::gpk::vcst_t expression) {
+	reader.Token.clear();
+	reader.View.clear();
+	reader.Tree.clear();
+	reader.StateRead = {};
+	if_fail_fe(reader.Token.resize(tokens.size()));
+	for(u2_t iToken = 0; iToken < tokens.size(); ++iToken)
+		reader.Token[iToken] = tokens[iToken];
+	if_fail_fe(::expressionReaderViews(reader.Token, reader.View, expression));
+	rtrn ::expressionTreeRebuild(reader.Token, reader.Tree);
+}
+
 ::gpk::err_t gpk::expressionStringFormat(::gpk::vcst_t format, ::gpk::view<cnst ::gpk::SStripLiteralToken> tokens, cnst ::gpk::FError<::gpk::vcst_c &, ::gpk::vcst_t &> & resolve, ::gpk::asc_t & output) {
 	::gpk::string					formatted;
 	for(::gpk::u2_t iType = 0; iType < tokens.size(); ++iType) {

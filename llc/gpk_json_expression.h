@@ -38,6 +38,7 @@ nmsp gpk
 
 			err_t		jsonExpressionResolve		(vcst_t expression, cnst SJSONReader & inputJSON, u2_t indexNodeJSON, vcst_t & output);
 	stin	err_t		jsonExpressionResolve		(vcst_t expression, cnst SJSONReader & inputJSON, u2_t indexNodeJSON) { vcst_t dead; return jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
+			err_t		jsonExpressionResolve		(view<cnst SExpressionToken> expressionTokens, vcst_t expressionSource, view<cnst SJSONToken> jsonTokens, vcst_t jsonSource, u2_t indexNodeJSON, vcst_t & output);
 
 			err_t		jsonStringFormat			(vcst_t format, cnst SJSONReader & inputJSON, u2_t indexNodeJSON, asc_t & output);
 } // nmsp

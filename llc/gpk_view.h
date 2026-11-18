@@ -43,18 +43,18 @@ nmsp gpk
 
 		// Operators
 		inxp	oper			view<TCnst>		()									csnx	{ rtrn {Data, Count}; }
-		T&						oper[]			(u2_t index)								{
+		inxp T&				oper[]			(u2_t index)								{
 			if_null_te(Data);
 			if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn Data[index];
 		}
-		cnst T&					oper[]			(u2_t index)						cnst	{
+		inxp cnst T&		oper[]			(u2_t index)						cnst	{
 			if_null_te(Data);
 			if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn Data[index];
 		}
-		tplt<tpnm _tIndex> inln T&		oper[]			(_tIndex index)						{ rtrn oper[]((u2_t)index); }
-		tplt<tpnm _tIndex> inln cnst T&	oper[]			(_tIndex index)				cnst	{ rtrn oper[]((u2_t)index); }
+		tplt<tpnm _tIndex> inxp T&		oper[]			(_tIndex index)						{ rtrn oper[]((u2_t)index); }
+		tplt<tpnm _tIndex> inxp cnst T&	oper[]			(_tIndex index)				cnst	{ rtrn oper[]((u2_t)index); }
 		ndxp	b8_t					oper!=			(TCVCs & other)				cnst	{ rtrn  !oper==(other); } // I had to add this for the android build not supporting C++20.
 		ndxp	b8_t					oper==			(TCVCs & other)				cnst	{
 			if(size() != other.size())
