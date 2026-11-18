@@ -162,6 +162,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="test_llc_gui_control_corpus.h" />
+    <ClCompile Include="test_llc_gui_control.cpp" />
     <ClCompile Include="test_llc_adam7.cpp" />
     <ClCompile Include="test_llc.cpp" />
     <ClCompile Include="test_llc_args.cpp" />
@@ -175,6 +177,7 @@
     <ClCompile Include="test_llc_deflate.cpp" />
     <ClCompile Include="test_llc_enum.cpp" />
     <ClCompile Include="test_llc_event.cpp" />
+    <ClCompile Include="test_llc_gui_control_serialization.cpp" />
     <ClCompile Include="test_llc_expression.cpp" />
     <ClCompile Include="test_llc_expression_core.cpp" />
     <ClCompile Include="test_llc_expression_ctti.cpp" />

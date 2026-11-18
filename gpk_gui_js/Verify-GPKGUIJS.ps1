@@ -10,6 +10,7 @@ $scripts = @(
     'gpk_gui_control_flag.js',
     'gpk_gui_text_flag.js',
     'gpk_gui_control.js',
+    'gpk_gui_control_serialize.js',
     'gpk_font.js',
     'gpk_gui_theme.js',
     'gpk_gui.js',
@@ -40,12 +41,16 @@ foreach($script in $scripts) {
 $expressionSource = [IO.File]::ReadAllText((Join-Path $root 'gpk_expression.js'))
 $evaluatorSource = [IO.File]::ReadAllText((Join-Path $root 'gpk_json_expression.js'))
 $coreSource = [IO.File]::ReadAllText((Join-Path $root 'gpk.js'))
+$serializationSource = [IO.File]::ReadAllText((Join-Path $root 'gpk_gui_control_serialize.js'))
 $testSource = [IO.File]::ReadAllText((Join-Path $root 'test.js'))
 if(-not $coreSource.Contains('(value & mask) === mask') -or -not $coreSource.Contains('(value & mask) !== mask')) {
     throw 'Core bit_all/bit_false semantics do not match gpk_bit.h.'
 }
 $behavioralCheckCount = [regex]::Matches($testSource, '\btest\("').Count
-if($behavioralCheckCount -ne 19) { throw "Expected 19 browser checks; found $behavioralCheckCount." }
+if($behavioralCheckCount -ne 21) { throw "Expected 21 browser checks; found $behavioralCheckCount." }
+foreach($required in @('packedU32()', 'this.require(tailWidth)', 'SControlTable.prototype.Save', 'SControlTable.prototype.Load')) {
+    if(-not $serializationSource.Contains($required)) { throw "Control-table serialization is missing $required." }
+}
 if($expressionSource.Contains('eval(') -or $expressionSource.Contains('Function(') -or $evaluatorSource.Contains('eval(') -or $evaluatorSource.Contains('Function(')) {
     throw 'Expression translation contains dynamic JavaScript execution.'
 }
@@ -60,6 +65,8 @@ $index = [IO.File]::ReadAllText((Join-Path $root 'index.html'))
 $test = [IO.File]::ReadAllText((Join-Path $root 'test.html'))
 if($index.IndexOf('src="gpk_expression.js"') -gt $index.IndexOf('src="gpk_json_expression.js"')) { throw 'index.html loads the evaluator before the parser.' }
 if($test.IndexOf('src="gpk_expression.js"') -gt $test.IndexOf('src="gpk_json_expression.js"')) { throw 'test.html loads the evaluator before the parser.' }
+if($index.IndexOf('src="gpk_gui_control.js"') -gt $index.IndexOf('src="gpk_gui_control_serialize.js"')) { throw 'index.html loads control-table serialization before the control types.' }
+if($test.IndexOf('src="gpk_gui_control.js"') -gt $test.IndexOf('src="gpk_gui_control_serialize.js"')) { throw 'test.html loads control-table serialization before the control types.' }
 foreach($script in $scripts) {
     if($script -eq 'test.js') {
         if(-not $test.Contains('src="test.js"')) { throw 'test.html does not load test.js.' }
@@ -85,4 +92,4 @@ if(-not $documentSource.Contains('"menu_bar"') -or -not $documentSource.Contains
     throw 'The supplied GUI document roots are missing.'
 }
 
-Write-Output "PASS: $($scripts.Count) scripts, 19 browser checks registered, bit semantics, parser/evaluator boundaries, 13 raster fonts, index/test load graphs, and GUI document roots verified."
+Write-Output "PASS: $($scripts.Count) scripts, 21 browser checks registered, packed control-table serialization, bit semantics, parser/evaluator boundaries, 13 raster fonts, index/test load graphs, and GUI document roots verified."

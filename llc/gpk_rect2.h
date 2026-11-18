@@ -53,4 +53,17 @@ nmsp gpk
 	}
 } // nmsp
 
+#define GPK_USING_RECT2()					\
+    usng  ::gpk::rect2uc_t, ::gpk::rect2uc_c \
+        , ::gpk::rect2sc_t, ::gpk::rect2sc_c \
+        , ::gpk::rect2u0_t, ::gpk::rect2u0_c \
+        , ::gpk::rect2u1_t, ::gpk::rect2u1_c \
+        , ::gpk::rect2u2_t, ::gpk::rect2u2_c \
+        , ::gpk::rect2u3_t, ::gpk::rect2u3_c \
+        , ::gpk::rect2s0_t, ::gpk::rect2s0_c \
+        , ::gpk::rect2s1_t, ::gpk::rect2s1_c \
+        , ::gpk::rect2s2_t, ::gpk::rect2s2_c \
+        , ::gpk::rect2s3_t, ::gpk::rect2s3_c \
+        , ::gpk::rect2f2_t, ::gpk::rect2f2_c \
+        , ::gpk::rect2f3_t, ::gpk::rect2f3_c 
 #endif // GPK_RECT2_H

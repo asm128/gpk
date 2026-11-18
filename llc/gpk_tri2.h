@@ -84,4 +84,17 @@ nmsp gpk
 	}
 } // nmsp 
 
+#define GPK_USING_TRI2()					\
+    usng  ::gpk::tri2uc_t, ::gpk::tri2uc_c \
+        , ::gpk::tri2sc_t, ::gpk::tri2sc_c \
+        , ::gpk::tri2u0_t, ::gpk::tri2u0_c \
+        , ::gpk::tri2u1_t, ::gpk::tri2u1_c \
+        , ::gpk::tri2u2_t, ::gpk::tri2u2_c \
+        , ::gpk::tri2u3_t, ::gpk::tri2u3_c \
+        , ::gpk::tri2s0_t, ::gpk::tri2s0_c \
+        , ::gpk::tri2s1_t, ::gpk::tri2s1_c \
+        , ::gpk::tri2s2_t, ::gpk::tri2s2_c \
+        , ::gpk::tri2s3_t, ::gpk::tri2s3_c \
+        , ::gpk::tri2f2_t, ::gpk::tri2f2_c \
+        , ::gpk::tri2f3_t, ::gpk::tri2f3_c 
 #endif // GPK_TRI2_H_23627

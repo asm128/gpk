@@ -48,4 +48,17 @@ nmsp gpk
 	tydf rect<f3_t>	rectf3_t;	tdcs rectf3_t	rectf3_c;
 }
 
+#define GPK_USING_RECT()					\
+    usng  ::gpk::rectuc_t, ::gpk::rectuc_c \
+        , ::gpk::rectsc_t, ::gpk::rectsc_c \
+        , ::gpk::rectu0_t, ::gpk::rectu0_c \
+        , ::gpk::rectu1_t, ::gpk::rectu1_c \
+        , ::gpk::rectu2_t, ::gpk::rectu2_c \
+        , ::gpk::rectu3_t, ::gpk::rectu3_c \
+        , ::gpk::rects0_t, ::gpk::rects0_c \
+        , ::gpk::rects1_t, ::gpk::rects1_c \
+        , ::gpk::rects2_t, ::gpk::rects2_c \
+        , ::gpk::rects3_t, ::gpk::rects3_c \
+        , ::gpk::rectf2_t, ::gpk::rectf2_c \
+        , ::gpk::rectf3_t, ::gpk::rectf3_c 
 #endif // GPK_RECT_H_23627

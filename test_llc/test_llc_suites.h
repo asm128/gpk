@@ -19,6 +19,7 @@ usns gpk;
 ::gpk::err_t test_deflate			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_enum				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_event			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_gui_control_serialization(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_expression_core	(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_expression_ctti	(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_expression		(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);

@@ -84,6 +84,9 @@
     <ClCompile Include="test_llc_event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_gui_control_serialization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="test_llc_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,12 +108,21 @@
     <ClCompile Include="test_llc_array_static.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_gui_control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_llc_suites.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="test_llc_index_catalog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test_llc_gui_control_corpus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

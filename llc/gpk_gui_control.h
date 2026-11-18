@@ -241,6 +241,10 @@ nmsp gpk
 		//
 		apobj<SEventSystem		>	EventQueue			= {};
 
+		err_t			Save					(au0_t & output) const;
+		// Identifier and Text views borrow input bytes; keep them alive for this table's lifetime. Images retain their separate storage.
+		err_t			Load					(vcu0_t & input);
+
 		inln	b8_t	SetUnused				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
 	 	inln	b8_t	SetHidden				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
 		inln	b8_t	SetDisabled				(cid_t iControl, b8_t value)	nxpt	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }

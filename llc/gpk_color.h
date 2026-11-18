@@ -119,7 +119,7 @@ nmsp gpk
 	tdcs color_abgr<f2_t>	cabgrf2_t;
 	tdcs color_argb<f2_t>	cargbf2_t;
 
-	cxpr	f2_c			BYTE_SCALE			= 1.0f / 255.0f;
+	stxp	f2_c			BYTE_SCALE			= 1.0f / 255.0f;
 
 	// Stores RGBA color channels
 	stct SColorRGBA : public ::gpk::rgba8 {
@@ -135,14 +135,14 @@ nmsp gpk
 		{}
 
 		COLOR_RGBA_OPERATOR_MEMBERS(SColorRGBA); 
-		cxpr	oper		u2_t		()								csnx	{ return (((u2_t)a) << 24) | (((u2_t)b) << 16) | (((u2_t)g) << 8) | (((u2_t)r) << 0);					}
+		cxpr	oper		u2_t		()								csnx	{ rtrn (((u2_t)a) << 24) | (((u2_t)b) << 16) | (((u2_t)g) << 8) | (((u2_t)r) << 0);					}
 
 
-		cxpr	b8_t			oper ==		(u2_t other)				csnx	{ return other == (oper u2_t());					}
-		cxpr	SColorRGBA		oper *		(cnst SColorRGBA & color)	csnx	{ return {(u0_t)::gpk::clamped(r * (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g * (int)color.g, 0, 255), (u0_t)::gpk::clamped(b * (int)color.b, 0, 255), a};	}
-		cxpr	SColorRGBA		oper +		(cnst SColorRGBA & color)	csnx	{ return {(u0_t)::gpk::clamped(r + (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g + (int)color.g, 0, 255), (u0_t)::gpk::clamped(b + (int)color.b, 0, 255), a};	}
-		cxpr	SColorRGBA		oper *		(f3_t scalar)				csnx	{ return {(u0_t)::gpk::clamped(r * scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g * scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b * scalar, 0.0,   255.0), a};	}
-		cxpr	SColorRGBA		oper /		(f3_t scalar)				cnst	{ return {(u0_t)::gpk::clamped(r / scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g / scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b / scalar, 0.0,   255.0), a};	}
+		cxpr	b8_t			oper ==		(u2_t other)				csnx	{ rtrn other == (oper u2_t());					}
+		cxpr	SColorRGBA		oper *		(cnst SColorRGBA & color)	csnx	{ rtrn {(u0_t)::gpk::clamped(r * (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g * (int)color.g, 0, 255), (u0_t)::gpk::clamped(b * (int)color.b, 0, 255), a};	}
+		cxpr	SColorRGBA		oper +		(cnst SColorRGBA & color)	csnx	{ rtrn {(u0_t)::gpk::clamped(r + (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g + (int)color.g, 0, 255), (u0_t)::gpk::clamped(b + (int)color.b, 0, 255), a};	}
+		cxpr	SColorRGBA		oper *		(f3_t scalar)				csnx	{ rtrn {(u0_t)::gpk::clamped(r * scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g * scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b * scalar, 0.0,   255.0), a};	}
+		cxpr	SColorRGBA		oper /		(f3_t scalar)				cnst	{ rtrn {(u0_t)::gpk::clamped(r / scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g / scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b / scalar, 0.0,   255.0), a};	}
 	};	// struct
 
 	// Stores BGRA color channels
