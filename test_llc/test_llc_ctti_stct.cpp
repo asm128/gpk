@@ -58,6 +58,13 @@ CTTI_STCT(SCTTIStructStaticFields,
 	};
 	);
 
+CTTI_STCT(SCTTIStructStaticNestedTemplate,
+	struct SCTTIStructStaticNestedTemplate {
+		gpk::astatic<gpk::astatic<gpk::u1_t, 2>, 3>
+			Values = {};
+	};
+	);
+
 nmsp ctti_registration_namespace {
 	CTTI_STCT(SCTTIStructNamespaced,
 		struct SCTTIStructNamespaced {
@@ -71,6 +78,7 @@ stxp auto cttiStructStaticBraceValue	= ::gpk::cttiStruct<SCTTIStructStaticBraceV
 stxp auto cttiStructStaticModifier		= ::gpk::cttiStruct<SCTTIStructStaticNumericModifier>();
 usng SCTTIStructStaticFieldIndices = tpnm ::gpk::ctti_index_pack_make<3>::Type;
 usng SCTTIStructStaticFieldTypes = tpnm ::gpk::SCTTIFieldTypes<SCTTIStructStaticFields, SCTTIStructStaticFieldIndices>::Type;
+stxp auto cttiStructStaticNestedTemplate = ::gpk::cttiStruct<SCTTIStructStaticNestedTemplate>();
 
 static_assert(cttiStructStaticMetadata.Success(), "The static CTTI struct declaration must be valid at compile time.");
 static_assert(::gpk::cttiSpanEquals(cttiStructStaticMetadata.SourceText, cttiStructStaticMetadata.StructName, "SCTTIStructStaticMetadata"), "The static CTTI struct name must come from the complete declaration.");
@@ -80,6 +88,8 @@ static_assert(::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::File.size() && :
 static_assert(sizeof(SCTTIStructStaticPOD) == ::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::Size, "Static CTTI struct size must come from the completed compiler type.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::IsPOD, "The POD struct must be identified without dynamic traits.");
 static_assert(::gpk::ctti_type_in_pack<::gpk::u0_t, SCTTIStructStaticFieldTypes>::Value && ::gpk::ctti_type_in_pack<::gpk::s2_t, SCTTIStructStaticFieldTypes>::Value && ::gpk::ctti_type_in_pack<::gpk::u1_t[3], SCTTIStructStaticFieldTypes>::Value, "Static CTTI field types must include fixed arrays.");
+static_assert(cttiStructStaticNestedTemplate.Success(), "Nested template types containing whitespace must remain one CTTI type token.");
+static_assert(::gpk::cttiSpanEquals(cttiStructStaticNestedTemplate.SourceText, cttiStructStaticNestedTemplate.Members[0].TypeName, "gpk::astatic<gpk::astatic<gpk::u1_t, 2>, 3>"), "Nested template type text must be preserved.");
 static_assert(::gpk::ctti_struct<::ctti_registration_namespace::SCTTIStructNamespaced>, "Static CTTI struct registration must work from consumer namespaces.");
 static_assert(::gpk::cttiStruct<::ctti_registration_namespace::SCTTIStructNamespaced>().Success(), "Namespaced struct registration must retain its declaration.");
 
@@ -105,5 +115,7 @@ sttc ::gpk::vcst_t cttiStructStaticSpanView
 	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_NUMERIC_MODIFIER, ::gpk::CTTI_PARSE_ERROR_INVALID_MODIFIER != cttiStructStaticModifier.Error);
 	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_TYPE_FACTS, sizeof(SCTTIStructStaticPOD) != ::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::Size || false == ::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::IsPOD);
 	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_FIELD_TYPES, (false == ::gpk::ctti_type_in_pack<::gpk::u0_t, SCTTIStructStaticFieldTypes>::Value || false == ::gpk::ctti_type_in_pack<::gpk::s2_t, SCTTIStructStaticFieldTypes>::Value || false == ::gpk::ctti_type_in_pack<::gpk::u1_t[3], SCTTIStructStaticFieldTypes>::Value));
+	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_PARSE_RESULT, false == cttiStructStaticNestedTemplate.Success());
+	GPK_TEST_CHECKF(errors, CTTI_STCT_TEST_RESULT_TYPE_NAME, ::cttiStructStaticSpanView(cttiStructStaticNestedTemplate, cttiStructStaticNestedTemplate.Members[0].TypeName) != "gpk::astatic<gpk::astatic<gpk::u1_t, 2>, 3>", "Unexpected nested template type:'%.*s'.", GPK_VIEW_ARGS(::cttiStructStaticSpanView(cttiStructStaticNestedTemplate, cttiStructStaticNestedTemplate.Members[0].TypeName)));
 	rtrn 0;
 }

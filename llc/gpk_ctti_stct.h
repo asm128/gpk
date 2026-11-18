@@ -242,8 +242,17 @@ nmsp gpk
 				rtrn result;
 			}
 			u2_t typeOffset = beforeName.Offset + beforeName.Count;
-			while(typeOffset > beforeName.Offset && false == cttiSpace(result.SourceText[typeOffset - 1]))
+			u2_t templateDepth = 0;
+			while(typeOffset > beforeName.Offset) {
+				sc_c character = result.SourceText[typeOffset - 1];
+				if('>' == character)
+					++templateDepth;
+				else if('<' == character && templateDepth)
+					--templateDepth;
+				else if(cttiSpace(character) && 0 == templateDepth)
+					break;
 				--typeOffset;
+			}
 			cnst SCTTISpan typeName = {typeOffset, beforeName.Offset + beforeName.Count - typeOffset};
 			cnst SCTTISpan modifiers = cttiTrim(result.SourceText, beforeName.Offset, typeOffset - beforeName.Offset);
 			for(u2_t iChar = 0; iChar < modifiers.Count; ++iChar) {
