@@ -109,6 +109,13 @@ CTTI_STCT(SCTTIStructJSONCArray,
 	};
 	);
 
+CTTI_STCT(SCTTIStructJSONWindow,
+	struct SCTTIStructJSONWindow {
+		gpk::apod<gpk::u1_t>	Storage	= {};
+		gpk::view<gpk::u1_t>	Window	= {};
+	};
+	);
+
 CTTI_STCT(SCTTIStructJSONPOD,
 	struct SCTTIStructJSONPOD {
 		gpk::u2_t Value;
@@ -116,6 +123,20 @@ CTTI_STCT(SCTTIStructJSONPOD,
 	);
 
 stxp auto cttiStructJSONMetadata = ::gpk::cttiStruct<SCTTIStructJSONMetadata>();
+
+sttc ::gpk::err_t cttiStructJSONWindowSave(::gpk::string & output, cnst void * instance) {
+	cnst SCTTIStructJSONWindow & input = *(cnst SCTTIStructJSONWindow*)instance;
+	rtrn ::gpk::cttiValueSave(output, input.Storage);
+}
+
+sttc ::gpk::err_t cttiStructJSONWindowLoad(cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode, void * instance) {
+	SCTTIStructJSONWindow & output = *(SCTTIStructJSONWindow*)instance;
+	cnst ::gpk::err_t count = ::gpk::jsonArraySize(input, iNode);
+	if_fail_fe(count);
+	if_fail_fe(output.Storage.resize((::gpk::u2_t)count));
+	output.Window = {output.Storage.begin(), output.Storage.size()};
+	rtrn ::gpk::cttiValueLoad(input, iNode, output.Window);
+}
 
 ::gpk::err_t test_ctti_stct_json(STestRunnerState &, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
 	cnst auto & metadata = ::gpk::cttiStruct<SCTTIStructJSONPOD>();
@@ -241,6 +262,21 @@ stxp auto cttiStructJSONMetadata = ::gpk::cttiStruct<SCTTIStructJSONMetadata>();
 	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedCArrayInput, loadedCArray)));
 	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_INPUT_CURSOR, serializedCArrayInput.size());
 	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_VISIT, loadedCArray.Values[0] != sourceCArray.Values[0] || loadedCArray.Values[1] != sourceCArray.Values[1] || loadedCArray.Values[2] != sourceCArray.Values[2]);
+
+	SCTTIStructJSONWindow sourceWindowCallback = {};
+	sourceWindowCallback.Storage = ::gpk::apod<::gpk::u1_t>{81, 82, 83, 84};
+	::gpk::u1_t sourceWindowOverride[] = {91, 92};
+	sourceWindowCallback.Window = {sourceWindowOverride};
+	cnst ::gpk::SCTTIFieldJSONOverride windowOverrides[] = {{"Window", ::cttiStructJSONWindowSave, ::cttiStructJSONWindowLoad}};
+	::gpk::string serializedWindowCallback = {};
+	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(::gpk::saveCTTI(serializedWindowCallback, sourceWindowCallback, {windowOverrides})));
+	GPK_TEST_CHECKF(errors, CTTI_STCT_JSON_TEST_RESULT_INSTANCE_SAVE, serializedWindowCallback != "{\"Storage\":[81,82,83,84],\"Window\":[81,82,83,84]}", "Serialized:'%.*s'.", GPK_VIEW_ARGS(serializedWindowCallback));
+	::gpk::SJSONReader windowReader = {};
+	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_JSON_PARSE, ::gpk::failed(::gpk::jsonParse(windowReader, serializedWindowCallback)));
+	SCTTIStructJSONWindow loadedWindowCallback = {};
+	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(windowReader, loadedWindowCallback, {windowOverrides})));
+	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_VISIT, loadedWindowCallback.Window.begin() != loadedWindowCallback.Storage.begin() || loadedWindowCallback.Window.size() != loadedWindowCallback.Storage.size());
+	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_VISIT, loadedWindowCallback.Storage != sourceWindowCallback.Storage);
 
 	::gpk::vcst_t partialInput = "{\"Count\":1}";
 	SCTTIStructJSONInstance partialOutput = sourceA;

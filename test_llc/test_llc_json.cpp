@@ -72,6 +72,10 @@ GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TREE_INVALIDATE_RESULT	, 75, "jsonT
 GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TREE_INVALIDATE_STATE	, 76, "jsonTreeInvalidate() left the root token current.");
 GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TREE_ENSURE_RESULT		, 77, "jsonTreeEnsure() rejected an invalidated tree.");
 GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TREE_ENSURE_STATE		, 78, "jsonTreeEnsure() did not restore the invalidated tree.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_WRITE				, 79, "The token/source JSON writer rejected parsed tokens.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_ROUND_TRIP		, 80, "The token/source JSON writer produced unexpected text.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_OBJECT_VALUE		, 81, "The token/source JSON object lookup returned the wrong value.");
+GDEFINE_ENUM_VALUED(JSON_READER_TEST_RESULT, TOKEN_ARRAY_VALUE		, 82, "The token/source JSON array lookup returned the wrong value.");
 
 static_assert(szof(::gpk::JSON_PARSE_OPTION) == szof(::gpk::u1_t), "JSON parse options must use one uniform 16-bit field.");
 static_assert(szof(::gpk::SJSONParseOptions) == szof(::gpk::JSON_PARSE_OPTION), "bit_field<> must not add storage overhead.");
@@ -152,7 +156,7 @@ sttc ::gpk::err_t testJSONDocument
 	GPK_TEST_REQUIREF(errors, JSON_READER_TEST_RESULT_ROOT_TYPE, root->Token->Type != expectedType , "Root type mismatch. actual:%i, expected:%i, tree nodes:%u." , (::gpk::s2_t)root->Token->Type, (::gpk::s2_t)expectedType, reader.Tree.size() );
 	::gpk::string output;
 	cnst ::gpk::err_t writeResult = ::gpk::jsonWrite(reader.Tree[0], reader.View, output);
-	always_printf("JSON write result:%i\nExpected:\n%.*s\nActual:\n%.*s\nText comparison:%.*s.", writeResult, GPK_VIEW_ARGS(expected), (int)output.size(), GPK_VIEW_ARGS(output), jsonTextMismatch(output, expected) ? "FAIL" : "PASS");
+	always_printf("JSON write result:%i\nExpected:\n%.*s\nActual:\n%.*s\nText comparison:%s.", writeResult, GPK_VIEW_ARGS(expected), GPK_VIEW_ARGS(output), jsonTextMismatch(output, expected) ? "FAIL" : "PASS");
 	GPK_TEST_REQUIREF(errors, JSON_READER_TEST_RESULT_WRITE, ::gpk::failed(writeResult) , "JSON write failed. result:%i, root type:%i." , writeResult, (::gpk::s2_t)root->Token->Type );
 	GPK_TEST_CHECKF(errors, JSON_READER_TEST_RESULT_ROUND_TRIP, jsonTextMismatch(output, expected) , "Round-trip mismatch. input:'%.*s', actual:'%.*s', expected:'%.*s'." , (int)input.size(), input.begin(), (int)output.size(), output.begin(), (int)expected.size(), expected.begin() );
 	rtrn 0;
@@ -171,6 +175,31 @@ sttc ::gpk::err_t testJSONValidDocuments(::gpk::ATestError & errors) {
 
 	cnst ::gpk::sc_t countedInput[] = {'t', 'r', 'u', 'e'};
 	rtrn testJSONDocument(errors, {countedInput}, "true", ::gpk::JSON_TYPE_BOOLEAN, JSON_READER_TEST_RESULT_COUNTED_INPUT);
+}
+
+sttc ::gpk::err_t testJSONTokens(::gpk::ATestError & errors) {
+	cnst ::gpk::vcst_t source = "{\"name\":\"gpk\",\"values\":[1,true,null,\"x\"],\"nested\":{\"enabled\":true}}";
+	::gpk::SJSONReader reader = {};
+	if_fail_fe(::gpk::jsonParse(reader, source));
+	cnst ::gpk::view<cnst ::gpk::SJSONToken> tokens = reader.Token;
+	::gpk::string output = {};
+	cnst ::gpk::err_t writeResult = ::gpk::jsonWrite(tokens, source, output);
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_WRITE, ::gpk::failed(writeResult));
+	GPK_TEST_CHECKF(errors, JSON_READER_TEST_RESULT_TOKEN_ROUND_TRIP, jsonTextMismatch(output, source), "Output:'%.*s', expected:'%.*s'.", GPK_VIEW_ARGS(output), GPK_VIEW_ARGS(source));
+	cnst ::gpk::err_t iName = ::gpk::jsonObjectValueGet(tokens, source, 0, "name");
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_OBJECT_VALUE, ::gpk::failed(iName));
+	if(0 <= iName) {
+		cnst ::gpk::SJSONToken & token = tokens[iName];
+		cnst ::gpk::vcst_t value = {&source[token.Span.Begin], token.Span.End - token.Span.Begin};
+		GPK_TEST_CHECKF(errors, JSON_READER_TEST_RESULT_TOKEN_OBJECT_VALUE, value != "gpk", "Value:'%.*s'.", GPK_VIEW_ARGS(value));
+	}
+	cnst ::gpk::err_t iValues = ::gpk::jsonObjectValueGet(tokens, source, 0, "values");
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_ARRAY_VALUE, ::gpk::failed(iValues));
+	cnst ::gpk::err_t iSecond = 0 <= iValues ? ::gpk::jsonArrayValueGet(tokens, (::gpk::u2_t)iValues, 1) : -1;
+	GPK_TEST_REQUIRE(errors, JSON_READER_TEST_RESULT_TOKEN_ARRAY_VALUE, ::gpk::failed(iSecond));
+	if(0 <= iSecond)
+		GPK_TEST_CHECK(errors, JSON_READER_TEST_RESULT_TOKEN_ARRAY_VALUE, tokens[iSecond].Type != ::gpk::JSON_TYPE_BOOLEAN || 0 == tokens[iSecond].Value);
+	rtrn 0;
 }
 
 sttc ::gpk::err_t testJSONReset(::gpk::ATestError & errors) {
@@ -330,9 +359,14 @@ sttc ::gpk::err_t testJSONOptions(::gpk::ATestError & errors) {
 
 ::gpk::err_t testJSONReader(::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
 	if_fail_fe(testJSONOptions(errors));
+	if_fail_fe(testJSONTokens(errors));
 	if_fail_fe(testJSONValidDocuments(errors));
 	if_fail_fe(testJSONSignedInteger(errors));
 	if_fail_fe(testJSONCodePoints(errors));
 	if_fail_fe(testJSONTreeFreshness(errors));
 	rtrn testJSONReset(errors);
+}
+
+::gpk::err_t test_json(STestRunnerState &, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
+	rtrn testJSONReader(errors, outputFolder);
 }

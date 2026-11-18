@@ -21,7 +21,16 @@
     <ClCompile Include="test_llc_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_json_core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_json_ctti.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="test_llc_json_expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_json_expression_ctti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_llc_linear_map.cpp">
@@ -73,6 +82,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_llc_expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_expression_core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_expression_ctti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_llc_index.cpp">

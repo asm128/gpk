@@ -279,6 +279,12 @@
     <ClInclude Include="gpk_expression.h">
       <Filter>script</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_expression_core.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_expression_ctti.h">
+      <Filter>script</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_file.h">
       <Filter>file</Filter>
     </ClInclude>
@@ -363,7 +369,16 @@
     <ClInclude Include="gpk_json.h">
       <Filter>json</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_json_core.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json_ctti.h">
+      <Filter>json</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_json_expression.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json_expression_ctti.h">
       <Filter>json</Filter>
     </ClInclude>
     <ClInclude Include="gpk_keyval.h">

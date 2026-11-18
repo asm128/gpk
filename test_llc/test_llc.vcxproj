@@ -176,11 +176,16 @@
     <ClCompile Include="test_llc_enum.cpp" />
     <ClCompile Include="test_llc_event.cpp" />
     <ClCompile Include="test_llc_expression.cpp" />
+    <ClCompile Include="test_llc_expression_core.cpp" />
+    <ClCompile Include="test_llc_expression_ctti.cpp" />
     <ClCompile Include="test_llc_index.cpp" />
     <ClCompile Include="test_llc_index_catalog.cpp" />
     <ClCompile Include="test_llc_index_path.cpp" />
     <ClCompile Include="test_llc_json.cpp" />
+    <ClCompile Include="test_llc_json_core.cpp" />
+    <ClCompile Include="test_llc_json_ctti.cpp" />
     <ClCompile Include="test_llc_json_expression.cpp" />
+    <ClCompile Include="test_llc_json_expression_ctti.cpp" />
     <ClCompile Include="test_llc_linear_map.cpp" />
     <ClCompile Include="test_llc_packed_int.cpp" />
     <ClCompile Include="test_llc_png.cpp" />

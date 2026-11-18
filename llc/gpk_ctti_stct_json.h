@@ -12,6 +12,21 @@
 
 nmsp gpk
 {
+	tydf err_t (*FCTTIFieldJSONSave)(string & output, cnst void * instance);
+	tydf err_t (*FCTTIFieldJSONLoad)(cnst SJSONReader & input, u2_t iNode, void * instance);
+	stct SCTTIFieldJSONOverride {
+		vcst_t				Name	= {};
+		FCTTIFieldJSONSave	Save	= {};
+		FCTTIFieldJSONLoad	Load	= {};
+	};
+
+	inln cnst SCTTIFieldJSONOverride * cttiFieldJSONOverride(view<cnst SCTTIFieldJSONOverride> overrides, vcst_t name) nxpt {
+		for(u2_t iOverride = 0; iOverride < overrides.size(); ++iOverride)
+			if(overrides[iOverride].Name == name)
+				rtrn &overrides[iOverride];
+		rtrn {};
+	}
+
 	stct SCTTIMemberJSONOpen {
 		vcst_t	MemberName	= {};
 		vcst_t	TypeName	= {};
@@ -62,12 +77,6 @@ nmsp gpk
 			});
 	}
 
-	tplt<tpnm T> struct n2;
-	tplt<tpnm T> struct rect;
-	tplt<tpnm T> struct rect2;
-	tplt<tpnm T> struct tri2;
-	tplt<tpnm T> struct minmax;
-
 	tplt<tpnm TStruct, tpnm TFunc, tpnm... TMembers>
 	err_t cttiVisitMembers(TStruct & instance, u2_c index, TFunc func, type_pack<TMembers...>) {
 		u0_t (&bytes)[sizeof(TStruct)] = reinterpret_cast<u0_t(&)[sizeof(TStruct)]>(instance);
@@ -98,14 +107,6 @@ nmsp gpk
 		}(), ... );
 		rtrn result;
 	}
-
-	tydf err_t (*FCTTIFieldJSONSave)(string & output, cnst void * instance);
-	tydf err_t (*FCTTIFieldJSONLoad)(cnst SJSONReader & input, u2_t iNode, void * instance);
-	stct SCTTIFieldJSONOverride {
-		vcst_t				Name	= {};
-		FCTTIFieldJSONSave	Save	= {};
-		FCTTIFieldJSONLoad	Load	= {};
-	};
 
 	tplt<tpnm T>
 	inln aobj<SCTTIFieldJSONOverride> & cttiFieldJSONOverrides() nxpt {
@@ -145,7 +146,11 @@ nmsp gpk
 	tplt<tpnm T> requires ctti_struct<T>
 	err_t saveCTTI(string & output, cnst T & input);
 	tplt<tpnm T> requires ctti_struct<T>
+	err_t saveCTTI(string & output, cnst T & input, view<cnst SCTTIFieldJSONOverride> overrides);
+	tplt<tpnm T> requires ctti_struct<T>
 	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output);
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output, view<cnst SCTTIFieldJSONOverride> overrides);
 
 	inln err_t cttiValueSave(string & output, b8_c input) {
 		rtrn append_strings(output, str(input));
@@ -168,72 +173,78 @@ nmsp gpk
 	err_t cttiValueSave(string & output, cnst T & input) {
 		rtrn saveCTTI(output, input);
 	}
+	tplt<tpnm T>
+	concept ctti_json_xy = requires(cnst T & value) { value.x; value.y; };
+	tplt<tpnm T>
+	concept ctti_json_rectangle = requires(cnst T & value) { value.Left; value.Top; value.Right; value.Bottom; };
+	tplt<tpnm T>
+	concept ctti_json_area = requires(cnst T & value) { value.Offset; value.Size; };
+	tplt<tpnm T>
+	concept ctti_json_minmax = requires(cnst T & value) { value.Min; value.Max; };
+	tplt<tpnm T>
+	concept ctti_json_triangle = requires(cnst T & value) { value.A; value.B; value.C; };
+
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_xy<T>)
+	err_t cttiValueSave(string & output, cnst T & input) {
+		u2_c offset = output.size();
+		if_fail_fe(append_strings(output, "{\"x\":"));
+		if_fail_fe(cttiValueSave(output, input.x));
+		if_fail_fe(append_strings(output, ",\"y\":"));
+		if_fail_fe(cttiValueSave(output, input.y));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_rectangle<T>)
+	err_t cttiValueSave(string & output, cnst T & input) {
+		u2_c offset = output.size();
+		if_fail_fe(append_strings(output, "{\"Left\":"));
+		if_fail_fe(cttiValueSave(output, input.Left));
+		if_fail_fe(append_strings(output, ",\"Top\":"));
+		if_fail_fe(cttiValueSave(output, input.Top));
+		if_fail_fe(append_strings(output, ",\"Right\":"));
+		if_fail_fe(cttiValueSave(output, input.Right));
+		if_fail_fe(append_strings(output, ",\"Bottom\":"));
+		if_fail_fe(cttiValueSave(output, input.Bottom));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_area<T>)
+	err_t cttiValueSave(string & output, cnst T & input) {
+		u2_c offset = output.size();
+		if_fail_fe(append_strings(output, "{\"Offset\":"));
+		if_fail_fe(cttiValueSave(output, input.Offset));
+		if_fail_fe(append_strings(output, ",\"Size\":"));
+		if_fail_fe(cttiValueSave(output, input.Size));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_minmax<T>)
+	err_t cttiValueSave(string & output, cnst T & input) {
+		u2_c offset = output.size();
+		if_fail_fe(append_strings(output, "{\"Min\":"));
+		if_fail_fe(cttiValueSave(output, input.Min));
+		if_fail_fe(append_strings(output, ",\"Max\":"));
+		if_fail_fe(cttiValueSave(output, input.Max));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_triangle<T>)
+	err_t cttiValueSave(string & output, cnst T & input) {
+		u2_c offset = output.size();
+		if_fail_fe(append_strings(output, "{\"A\":"));
+		if_fail_fe(cttiValueSave(output, input.A));
+		if_fail_fe(append_strings(output, ",\"B\":"));
+		if_fail_fe(cttiValueSave(output, input.B));
+		if_fail_fe(append_strings(output, ",\"C\":"));
+		if_fail_fe(cttiValueSave(output, input.C));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
 	inln err_t cttiValueSave(string & output, cnst string & input) {
 		rtrn appendJSONString(output, input);
 	}
 	inln err_t cttiValueSave(string & output, vcst_t input) {
 		rtrn appendJSONString(output, input);
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst n2<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "x"));
-		if_fail_fe(cttiValueSave(output, input.x));
-		if_fail_fe(appendOpenKey(output, "y", true));
-		if_fail_fe(cttiValueSave(output, input.y));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst rect<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "Left"));
-		if_fail_fe(cttiValueSave(output, input.Left));
-		if_fail_fe(appendOpenKey(output, "Top", true));
-		if_fail_fe(cttiValueSave(output, input.Top));
-		if_fail_fe(appendOpenKey(output, "Right", true));
-		if_fail_fe(cttiValueSave(output, input.Right));
-		if_fail_fe(appendOpenKey(output, "Bottom", true));
-		if_fail_fe(cttiValueSave(output, input.Bottom));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst rect2<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "Offset"));
-		if_fail_fe(cttiValueSave(output, input.Offset));
-		if_fail_fe(appendOpenKey(output, "Size", true));
-		if_fail_fe(cttiValueSave(output, input.Size));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst tri2<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "A"));
-		if_fail_fe(cttiValueSave(output, input.A));
-		if_fail_fe(appendOpenKey(output, "B", true));
-		if_fail_fe(cttiValueSave(output, input.B));
-		if_fail_fe(appendOpenKey(output, "C", true));
-		if_fail_fe(cttiValueSave(output, input.C));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
-	}
-	tplt<tpnm T>
-	err_t cttiValueSave(string & output, cnst minmax<T> & input) {
-		u2_c offset = output.size();
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(appendOpenKey(output, "Min"));
-		if_fail_fe(cttiValueSave(output, input.Min));
-		if_fail_fe(appendOpenKey(output, "Max", true));
-		if_fail_fe(cttiValueSave(output, input.Max));
-		if_fail_fe(output.push_back('}'));
-		rtrn output.size() - offset;
 	}
 	tplt<tpnm T>
 	err_t cttiValueSave(string & output, view<T> input) {
@@ -287,16 +298,8 @@ nmsp gpk
 	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
 		rtrn loadCTTI(input, iNode, output);
 	}
-	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, string & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
-		rtrn jsonObjectGetString(input, iNode, output);
-	}
-	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, vcst_t & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
-		rtrn jsonObjectGetString(input, iNode, output);
-	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, n2<T> & output) {
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_xy<T>)
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
 		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		cnst err_t iX = jsonObjectValueGet(input, iNode, "x");
 		if(0 <= iX) if_fail_fe(cttiValueLoad(input, (u2_t)iX, output.x));
@@ -304,8 +307,8 @@ nmsp gpk
 		if(0 <= iY) if_fail_fe(cttiValueLoad(input, (u2_t)iY, output.y));
 		rtrn iNode;
 	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, rect<T> & output) {
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_rectangle<T>)
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
 		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		cnst err_t iLeft = jsonObjectValueGet(input, iNode, "Left");
 		if(0 <= iLeft) if_fail_fe(cttiValueLoad(input, (u2_t)iLeft, output.Left));
@@ -317,8 +320,8 @@ nmsp gpk
 		if(0 <= iBottom) if_fail_fe(cttiValueLoad(input, (u2_t)iBottom, output.Bottom));
 		rtrn iNode;
 	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, rect2<T> & output) {
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_area<T>)
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
 		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		cnst err_t iOffset = jsonObjectValueGet(input, iNode, "Offset");
 		if(0 <= iOffset) if_fail_fe(cttiValueLoad(input, (u2_t)iOffset, output.Offset));
@@ -326,8 +329,17 @@ nmsp gpk
 		if(0 <= iSize) if_fail_fe(cttiValueLoad(input, (u2_t)iSize, output.Size));
 		rtrn iNode;
 	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, tri2<T> & output) {
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_minmax<T>)
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
+		cnst err_t iMin = jsonObjectValueGet(input, iNode, "Min");
+		if(0 <= iMin) if_fail_fe(cttiValueLoad(input, (u2_t)iMin, output.Min));
+		cnst err_t iMax = jsonObjectValueGet(input, iNode, "Max");
+		if(0 <= iMax) if_fail_fe(cttiValueLoad(input, (u2_t)iMax, output.Max));
+		rtrn iNode;
+	}
+	tplt<tpnm T> requires (false == ctti_struct<T> && ctti_json_triangle<T>)
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, T & output) {
 		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		cnst err_t iA = jsonObjectValueGet(input, iNode, "A");
 		if(0 <= iA) if_fail_fe(cttiValueLoad(input, (u2_t)iA, output.A));
@@ -337,14 +349,13 @@ nmsp gpk
 		if(0 <= iC) if_fail_fe(cttiValueLoad(input, (u2_t)iC, output.C));
 		rtrn iNode;
 	}
-	tplt<tpnm T>
-	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, minmax<T> & output) {
-		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
-		cnst err_t iMin = jsonObjectValueGet(input, iNode, "Min");
-		if(0 <= iMin) if_fail_fe(cttiValueLoad(input, (u2_t)iMin, output.Min));
-		cnst err_t iMax = jsonObjectValueGet(input, iNode, "Max");
-		if(0 <= iMax) if_fail_fe(cttiValueLoad(input, (u2_t)iMax, output.Max));
-		rtrn iNode;
+	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, string & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
+		rtrn jsonObjectGetString(input, iNode, output);
+	}
+	inln err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, vcst_t & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_STRING);
+		rtrn jsonObjectGetString(input, iNode, output);
 	}
 	tplt<tpnm T>
 	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, view<T> output) {
@@ -385,14 +396,16 @@ nmsp gpk
 	}
 
 	tplt<tpnm T> requires ctti_struct<T>
-	err_t saveCTTI(string & output, cnst T & input) {
+	err_t saveCTTI(string & output, cnst T & input, view<cnst SCTTIFieldJSONOverride> overrides) {
 		u2_c offset = output.size();
 		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
 		if_fail_fe(output.push_back('{'));
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
 			cnst vcst_t memberName = metadata.View(metadata.Members[iMember].Name);
 			if_fail_fe(appendOpenKey(output, memberName, 0 != iMember));
-			cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride<T>(memberName);
+			cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride(overrides, memberName);
+			if(0 == fieldOverride)
+				fieldOverride = cttiFieldJSONOverride<T>(memberName);
 			if(fieldOverride && fieldOverride->Save) {
 				if_fail_fe(fieldOverride->Save(output, &input));
 			}
@@ -405,7 +418,12 @@ nmsp gpk
 	}
 
 	tplt<tpnm T> requires ctti_struct<T>
-	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output) {
+	err_t saveCTTI(string & output, cnst T & input) {
+		rtrn saveCTTI(output, input, {});
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output, view<cnst SCTTIFieldJSONOverride> overrides) {
 		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
 		if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
@@ -413,7 +431,9 @@ nmsp gpk
 			cnst err_t iValue = jsonObjectValueGet(input, iNode, memberName);
 			if(0 > iValue)
 				continue;
-			cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride<T>(memberName);
+			cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride(overrides, memberName);
+			if(0 == fieldOverride)
+				fieldOverride = cttiFieldJSONOverride<T>(memberName);
 			if(fieldOverride && fieldOverride->Load) {
 				if_fail_fe(fieldOverride->Load(input, (u2_t)iValue, &output));
 			}
@@ -425,16 +445,31 @@ nmsp gpk
 	}
 
 	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output) {
+		rtrn loadCTTI(input, iNode, output, {});
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(cnst SJSONReader & input, T & output, view<cnst SCTTIFieldJSONOverride> overrides) {
+		rtrn loadCTTI(input, 0, output, overrides);
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
 	err_t loadCTTI(cnst SJSONReader & input, T & output) {
 		rtrn loadCTTI(input, 0, output);
 	}
 
 	tplt<tpnm T> requires ctti_struct<T>
-	err_t loadCTTI(vcst_t & input, T & output) {
+	err_t loadCTTI(vcst_t & input, T & output, view<cnst SCTTIFieldJSONOverride> overrides) {
 		SJSONReader reader = {};
 		if_fail_fe(jsonParse(reader, input));
-		if_fail_fe(loadCTTI(reader, output));
+		if_fail_fe(loadCTTI(reader, output, overrides));
 		rtrn input.slice(input, reader.StateRead.IndexCurrentChar + 1);
+	}
+
+	tplt<tpnm T> requires ctti_struct<T>
+	err_t loadCTTI(vcst_t & input, T & output) {
+		rtrn loadCTTI(input, output, {});
 	}
 
 	tplt<size_t NDeclaration>
