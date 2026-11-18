@@ -54,6 +54,7 @@ CTTI_STCT(SCTTIStructStaticFields,
 	struct SCTTIStructStaticFields {
 		gpk::u0_t First	= {};
 		gpk::s2_t Second	= {};
+		gpk::u1_t Fixed[3]	= {};
 	};
 	);
 
@@ -68,7 +69,7 @@ nmsp ctti_registration_namespace {
 stxp auto cttiStructStaticMetadata		= ::gpk::cttiStruct<SCTTIStructStaticMetadata>();
 stxp auto cttiStructStaticBraceValue	= ::gpk::cttiStruct<SCTTIStructStaticBraceValue>();
 stxp auto cttiStructStaticModifier		= ::gpk::cttiStruct<SCTTIStructStaticNumericModifier>();
-usng SCTTIStructStaticFieldIndices = tpnm ::gpk::ctti_index_pack_make<2>::Type;
+usng SCTTIStructStaticFieldIndices = tpnm ::gpk::ctti_index_pack_make<3>::Type;
 usng SCTTIStructStaticFieldTypes = tpnm ::gpk::SCTTIFieldTypes<SCTTIStructStaticFields, SCTTIStructStaticFieldIndices>::Type;
 
 static_assert(cttiStructStaticMetadata.Success(), "The static CTTI struct declaration must be valid at compile time.");
@@ -78,7 +79,7 @@ static_assert(::gpk::CTTI_PARSE_ERROR_INVALID_MODIFIER == cttiStructStaticModifi
 static_assert(::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::File.size() && ::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::Line, "Static CTTI struct source provenance must be retained.");
 static_assert(sizeof(SCTTIStructStaticPOD) == ::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::Size, "Static CTTI struct size must come from the completed compiler type.");
 static_assert(::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::IsPOD, "The POD struct must be identified without dynamic traits.");
-static_assert(::gpk::ctti_type_in_pack<::gpk::u0_t, SCTTIStructStaticFieldTypes>::Value && ::gpk::ctti_type_in_pack<::gpk::s2_t, SCTTIStructStaticFieldTypes>::Value, "Static CTTI field types must be inferred.");
+static_assert(::gpk::ctti_type_in_pack<::gpk::u0_t, SCTTIStructStaticFieldTypes>::Value && ::gpk::ctti_type_in_pack<::gpk::s2_t, SCTTIStructStaticFieldTypes>::Value && ::gpk::ctti_type_in_pack<::gpk::u1_t[3], SCTTIStructStaticFieldTypes>::Value, "Static CTTI field types must include fixed arrays.");
 static_assert(::gpk::ctti_struct<::ctti_registration_namespace::SCTTIStructNamespaced>, "Static CTTI struct registration must work from consumer namespaces.");
 static_assert(::gpk::cttiStruct<::ctti_registration_namespace::SCTTIStructNamespaced>().Success(), "Namespaced struct registration must retain its declaration.");
 
@@ -103,6 +104,6 @@ sttc ::gpk::vcst_t cttiStructStaticSpanView
 	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_BRACE_VALUE, ::gpk::CTTI_PARSE_ERROR_INVALID_MEMBER_NAME != cttiStructStaticBraceValue.Error);
 	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_NUMERIC_MODIFIER, ::gpk::CTTI_PARSE_ERROR_INVALID_MODIFIER != cttiStructStaticModifier.Error);
 	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_TYPE_FACTS, sizeof(SCTTIStructStaticPOD) != ::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::Size || false == ::gpk::SCTTIStructRegistry<SCTTIStructStaticPOD>::IsPOD);
-	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_FIELD_TYPES, (false == ::gpk::ctti_type_in_pack<::gpk::u0_t, SCTTIStructStaticFieldTypes>::Value || false == ::gpk::ctti_type_in_pack<::gpk::s2_t, SCTTIStructStaticFieldTypes>::Value));
+	GPK_TEST_CHECK(errors, CTTI_STCT_TEST_RESULT_FIELD_TYPES, (false == ::gpk::ctti_type_in_pack<::gpk::u0_t, SCTTIStructStaticFieldTypes>::Value || false == ::gpk::ctti_type_in_pack<::gpk::s2_t, SCTTIStructStaticFieldTypes>::Value || false == ::gpk::ctti_type_in_pack<::gpk::u1_t[3], SCTTIStructStaticFieldTypes>::Value));
 	rtrn 0;
 }

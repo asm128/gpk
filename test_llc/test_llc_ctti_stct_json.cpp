@@ -103,6 +103,12 @@ CTTI_STCT(SCTTIStructJSONArrays,
 	};
 	);
 
+CTTI_STCT(SCTTIStructJSONCArray,
+	struct SCTTIStructJSONCArray {
+		gpk::u1_t Values[3] = {};
+	};
+	);
+
 CTTI_STCT(SCTTIStructJSONPOD,
 	struct SCTTIStructJSONPOD {
 		gpk::u2_t Value;
@@ -226,6 +232,15 @@ stxp auto cttiStructJSONMetadata = ::gpk::cttiStruct<SCTTIStructJSONMetadata>();
 	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Objects[0].Code != sourceArrays.Objects[0].Code || loadedArrays.Objects[0].Offset != sourceArrays.Objects[0].Offset);
 	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_VISIT, loadedArrays.Objects[1].Code != sourceArrays.Objects[1].Code || loadedArrays.Objects[1].Offset != sourceArrays.Objects[1].Offset);
 	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_VISIT, loadedWindow[0] != sourceWindow[0] || loadedWindow[1] != sourceWindow[1]);
+
+	SCTTIStructJSONCArray sourceCArray = {{71, 72, 73}};
+	::gpk::string serializedCArray = {};
+	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(::gpk::saveCTTI(serializedCArray, sourceCArray)));
+	::gpk::vcst_t serializedCArrayInput = serializedCArray;
+	SCTTIStructJSONCArray loadedCArray = {};
+	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_INSTANCE_LOAD, ::gpk::failed(::gpk::loadCTTI(serializedCArrayInput, loadedCArray)));
+	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_INPUT_CURSOR, serializedCArrayInput.size());
+	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_VISIT, loadedCArray.Values[0] != sourceCArray.Values[0] || loadedCArray.Values[1] != sourceCArray.Values[1] || loadedCArray.Values[2] != sourceCArray.Values[2]);
 
 	::gpk::vcst_t partialInput = "{\"Count\":1}";
 	SCTTIStructJSONInstance partialOutput = sourceA;

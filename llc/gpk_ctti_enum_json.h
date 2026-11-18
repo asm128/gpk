@@ -13,8 +13,7 @@ nmsp gpk
 		cnst vcst_t name = cttiEnumName(input);
 		if(name.size())
 			rtrn appendJSONString(output, name);
-		cnst sstring<22> numeric = str((s3_t)input);
-		rtrn output.append((vcst_t)numeric);
+		rtrn append_strings(output, str((s3_t)input));
 	}
 
 	tplt<tpnm T> requires ctti_enum<T>

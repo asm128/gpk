@@ -42,8 +42,10 @@ CTTI_ENUM(SCTTIEnumJSON,
 	GPK_TEST_CHECK(errors, CTTI_ENUM_JSON_TEST_RESULT_VALUE, value != SCTTIEnumJSON_Write);
 
 	reader = {};
-	GPK_TEST_REQUIRE(errors, CTTI_ENUM_JSON_TEST_RESULT_PARSE, ::gpk::failed(::gpk::jsonParse(reader, ::gpk::vcst_t{"19"})));
-	GPK_TEST_REQUIRE(errors, CTTI_ENUM_JSON_TEST_RESULT_LOAD, ::gpk::failed(::gpk::cttiValueLoad(reader, 0, value)));
+	GPK_TEST_REQUIRE(errors, CTTI_ENUM_JSON_TEST_RESULT_PARSE, ::gpk::failed(::gpk::jsonParse(reader, ::gpk::vcst_t{"{\"Value\":19}"})));
+	cnst ::gpk::err_t iNumeric = ::gpk::jsonObjectValueGet(reader, 0, "Value");
+	GPK_TEST_REQUIRE(errors, CTTI_ENUM_JSON_TEST_RESULT_LOAD, ::gpk::failed(iNumeric));
+	GPK_TEST_REQUIRE(errors, CTTI_ENUM_JSON_TEST_RESULT_LOAD, ::gpk::failed(::gpk::cttiValueLoad(reader, iNumeric, value)));
 	GPK_TEST_CHECK(errors, CTTI_ENUM_JSON_TEST_RESULT_VALUE, value != (SCTTIEnumJSON)19);
 	rtrn 0;
 }

@@ -61,6 +61,11 @@ GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_FORMAT_RESULT       , 48, 
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_FORMAT_VALUE        , 49, "The generated SControlText JSON did not match saveCTTI().");
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_LOAD_RESULT         , 50, "The generated SControlText JSON could not be loaded.");
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_LOAD_VALUE          , 51, "The generated SControlText values were not restored.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_SAVE          , 52, "The CTTI query source value could not be saved.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_PARSE         , 53, "The CTTI query source JSON could not be parsed.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_RESULT        , 54, "The CTTI value could not be resolved through a JSON expression.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_VALUE         , 55, "The CTTI value resolved through a JSON expression was incorrect.");
+GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, CTTI_QUERY_ENUM_REGISTRY , 56, "The queried CTTI enum has no registered values.");
 
 GDEFINE_ENUM_TYPE(JSON_EXPRESSION_HISTORICAL_TEST_RESULT, ::gpk::u1_t);
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_HISTORICAL_TEST_RESULT, PARSE        , 0, "jsonParse() rejected the historical JSON-expression fixture.");
@@ -264,6 +269,209 @@ sttc ::gpk::err_t testJSONExpressionResolve(ATestError & errors, const ::gpk::SJ
 	rtrn 0;
 }
 
+sttc ::gpk::err_t testJSONExpressionCTTIQuery(ATestError & errors, cnst ::gpk::SJSONReader & reader, ::gpk::vcst_t typeName, ::gpk::vcst_t expression, ::gpk::vcst_t expected) {
+	::gpk::vcst_t output = "unchanged";
+	cnst ::gpk::err_t result = ::gpk::jsonExpressionResolve(expression, reader, 0, output);
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_RESULT, ::gpk::failed(result), "Type:'%.*s', expression:'%.*s', result:%i.", GPK_VIEW_ARGS(typeName), GPK_VIEW_ARGS(expression), result);
+	GPK_TEST_CHECKF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_VALUE, output != expected, "Type:'%.*s', expression:'%.*s', expected:'%.*s', output:'%.*s'.", GPK_VIEW_ARGS(typeName), GPK_VIEW_ARGS(expression), GPK_VIEW_ARGS(expected), GPK_VIEW_ARGS(output));
+	rtrn 0;
+}
+
+sttc ::gpk::err_t testJSONExpressionCTTILeaves(ATestError & errors, cnst ::gpk::SJSONReader & reader, ::gpk::vcst_t typeName, ::gpk::u2_t iNode, ::gpk::vcst_t expression) {
+	cnst ::gpk::SJSONNode & node = *reader.Tree[iNode];
+	if(node.Token->Type == ::gpk::JSON_TYPE_OBJECT) {
+		for(::gpk::u2_t iChild = 0; iChild < node.Children.size(); iChild += 2) {
+			cnst ::gpk::SJSONNode & keyNode = *node.Children[iChild + 0];
+			cnst ::gpk::SJSONNode & valueNode = *node.Children[iChild + 1];
+			::gpk::string childExpression = expression;
+			if(childExpression.size())
+				if_fail_fe(childExpression.push_back('.'));
+			if_fail_fe(childExpression.append(reader.View[keyNode.ObjectIndex]));
+			if_fail_fe(::testJSONExpressionCTTILeaves(errors, reader, typeName, valueNode.ObjectIndex, childExpression));
+		}
+		rtrn 0;
+	}
+	if(node.Token->Type == ::gpk::JSON_TYPE_ARRAY) {
+		for(::gpk::u2_t iChild = 0; iChild < node.Children.size(); ++iChild) {
+			::gpk::string childExpression = expression;
+			if_fail_fe(::gpk::append_strings(childExpression, "['", ::gpk::str(iChild), "']"));
+			if_fail_fe(::testJSONExpressionCTTILeaves(errors, reader, typeName, node.Children[iChild]->ObjectIndex, childExpression));
+		}
+		rtrn 0;
+	}
+	rtrn ::testJSONExpressionCTTIQuery(errors, reader, typeName, expression, reader.View[iNode]);
+}
+
+tplt<tpnm T>
+sttc ::gpk::err_t testJSONExpressionCTTIEnum(ATestError & errors, ::gpk::vcst_t typeName) {
+	cnst auto & metadata = ::gpk::cttiEnumTyped<T>();
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_ENUM_REGISTRY, 0 == metadata.Count, "Type:'%.*s'.", GPK_VIEW_ARGS(typeName));
+	for(::gpk::u2_t iValue = 0; iValue < metadata.Count; ++iValue) {
+		if(false == metadata.Values[iValue].ValueResolved)
+			continue;
+		::gpk::string valueJSON = {};
+		GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_SAVE, ::gpk::failed(::gpk::cttiValueSave(valueJSON, metadata.Values[iValue].Value)), "Type:'%.*s', value:%u.", GPK_VIEW_ARGS(typeName), iValue);
+		::gpk::string document = "{\"Value\":";
+		if_fail_fe(document.append(valueJSON));
+		if_fail_fe(document.push_back('}'));
+		::gpk::SJSONReader reader = {};
+		GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(reader, document)), "Type:'%.*s', value:%u, JSON:'%.*s'.", GPK_VIEW_ARGS(typeName), iValue, GPK_VIEW_ARGS(document));
+		if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, typeName, "Value", ::gpk::cttiEnumName(metadata.Values[iValue].Value)));
+	}
+	rtrn 0;
+}
+
+sttc ::gpk::err_t testJSONExpressionCTTIPlacement(ATestError & errors) {
+	::gpk::SControlPlacement value = {};
+	value.Area.Offset			= {17, -19};
+	value.Area.Size				= {123, 45};
+	value.Margin					= {1, 2, 3, 4};
+	value.Border					= {5, 6, 7, 8};
+	value.Align					= ::gpk::ALIGN_TOP_RIGHT;
+	value.RelativeBorderSize	= ::gpk::GUI_CONTROL_LIMIT_Right;
+	value.RelativeMarginSize	= ::gpk::GUI_CONTROL_LIMIT_Bottom;
+	value.RelativeMetrics		= ::gpk::GUI_CONTROL_METRICS_FLAG_XOffset;
+
+	::gpk::string document = {};
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_SAVE, ::gpk::failed(::gpk::saveCTTI(document, value)));
+	::gpk::SJSONReader reader = {};
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(reader, document)), "Type:'SControlPlacement', JSON:'%.*s'.", GPK_VIEW_ARGS(document));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Area.Offset.x", "17"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Area.Offset.y", "-19"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Area.Size.x", "123"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Area.Size.y", "45"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Margin.Left", "1"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Margin.Top", "2"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Margin.Right", "3"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Margin.Bottom", "4"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Border.Left", "5"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Border.Top", "6"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Border.Right", "7"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Border.Bottom", "8"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "Align", ::gpk::get_value_label(value.Align)));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "RelativeBorderSize", ::gpk::get_value_label(::gpk::GUI_CONTROL_LIMIT_Right)));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "RelativeMarginSize", ::gpk::get_value_label(::gpk::GUI_CONTROL_LIMIT_Bottom)));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlPlacement", "RelativeMetrics", ::gpk::get_value_label(::gpk::GUI_CONTROL_METRICS_FLAG_XOffset)));
+	rtrn 0;
+}
+
+sttc ::gpk::err_t testJSONExpressionCTTIDraw(ATestError & errors) {
+	::gpk::SControlDraw value = {};
+	value.ColorMode		= ::gpk::GUI_COLOR_MODE_3D;
+	value.FrameOut		= 1;
+	value.NoBorder		= 0;
+	value.NoClient		= 1;
+	value.UseNewPalettes	= 1;
+	value.ColorTheme		= -7;
+	value.Palettes[ 0]	= -14;
+	value.Palettes[ 1]	= -13;
+	value.Palettes[ 2]	= -12;
+	value.Palettes[ 3]	= -11;
+	value.Palettes[ 4]	= -10;
+	value.Palettes[ 5]	=  -9;
+	value.Palettes[ 6]	=  -8;
+	value.Palettes[ 7]	=  -7;
+	value.Palettes[ 8]	=  -6;
+	value.Palettes[ 9]	=  -5;
+	value.Palettes[10]	=  -4;
+	value.Palettes[11]	=  -3;
+	value.Palettes[12]	=  -2;
+
+	::gpk::string document = {};
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_SAVE, ::gpk::failed(::gpk::saveCTTI(document, value)));
+	::gpk::SJSONReader reader = {};
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(reader, document)), "Type:'SControlDraw', JSON:'%.*s'.", GPK_VIEW_ARGS(document));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "ColorMode", "1"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "FrameOut", "1"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "NoBorder", "0"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "NoClient", "1"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "UseNewPalettes", "1"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "ColorTheme", "-7"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['0']", "-14"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['1']", "-13"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['2']", "-12"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['3']", "-11"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['4']", "-10"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['5']", "-9"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['6']", "-8"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['7']", "-7"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['8']", "-6"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['9']", "-5"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['10']", "-4"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['11']", "-3"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlDraw", "Palettes['12']", "-2"));
+	rtrn 0;
+}
+
+sttc ::gpk::err_t testJSONExpressionCTTIRectangle(ATestError & errors) {
+	::gpk::SControlRectangle value = {};
+	value.Local.Offset	= {-31, 32};
+	value.Local.Size	= {33, 34};
+	value.Global.Offset	= {-35, 36};
+	value.Global.Size	= {37, 38};
+
+	::gpk::string document = {};
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_SAVE, ::gpk::failed(::gpk::saveCTTI(document, value)));
+	::gpk::SJSONReader reader = {};
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(reader, document)), "Type:'SControlRectangle', JSON:'%.*s'.", GPK_VIEW_ARGS(document));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Local.Offset.x", "-31"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Local.Offset.y", "32"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Local.Size.x", "33"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Local.Size.y", "34"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Global.Offset.x", "-35"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Global.Offset.y", "36"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Global.Size.x", "37"));
+	if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, "SControlRectangle", "Global.Size.y", "38"));
+	rtrn 0;
+}
+
+sttc ::gpk::err_t testJSONExpressionCTTIArea(ATestError & errors) {
+	::gpk::SControlArea value = {};
+	value.Total.Local		= {{  1,   2}, {  3,   4}};
+	value.Total.Global		= {{  5,   6}, {  7,   8}};
+	value.Client.Local		= {{  9,  10}, { 11,  12}};
+	value.Client.Global		= {{ 13,  14}, { 15,  16}};
+	value.Text				= {{ 17,  18}, { 19,  20}};
+	for(::gpk::u2_t iRectangle = 0; iRectangle < ::gpk::size(value.Rectangles); ++iRectangle) {
+		::gpk::s1_t base = (::gpk::s1_t)(21 + iRectangle * 4);
+		value.Rectangles[iRectangle] = {{base + 0, base + 1}, {base + 2, base + 3}};
+	}
+	for(::gpk::u2_t iTriangle = 0; iTriangle < ::gpk::size(value.Triangles); ++iTriangle) {
+		::gpk::s1_t base = (::gpk::s1_t)(41 + iTriangle * 6);
+		value.Triangles[iTriangle].A = {base + 0, base + 1};
+		value.Triangles[iTriangle].B = {base + 2, base + 3};
+		value.Triangles[iTriangle].C = {base + 4, base + 5};
+	}
+
+	::gpk::string document = {};
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_SAVE, ::gpk::failed(::gpk::saveCTTI(document, value)));
+	::gpk::SJSONReader reader = {};
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(reader, document)), "Type:'SControlArea', JSON:'%.*s'.", GPK_VIEW_ARGS(document));
+	if_fail_fe(::testJSONExpressionCTTILeaves(errors, reader, "SControlArea", 0, {}));
+
+	::gpk::SControlArea loaded = {};
+	::gpk::vcst_t loadInput = document;
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_RESULT, ::gpk::failed(::gpk::loadCTTI(loadInput, loaded)), "Type:'SControlArea', JSON:'%.*s'.", GPK_VIEW_ARGS(document));
+	GPK_TEST_CHECK(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, loadInput.size());
+	::gpk::string loadedDocument = {};
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_SAVE, ::gpk::failed(::gpk::saveCTTI(loadedDocument, loaded)));
+	GPK_TEST_CHECKF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_LOAD_VALUE, loadedDocument != document, "Expected:'%.*s'. Loaded:'%.*s'.", GPK_VIEW_ARGS(document), GPK_VIEW_ARGS(loadedDocument));
+	rtrn 0;
+}
+
+sttc ::gpk::err_t testJSONExpressionCTTIState(ATestError & errors) {
+	::gpk::SControlState value = {};
+	value.Parent	= -23;
+	value.Flag		= (::gpk::GUI_CONTROL_FLAG)0x0109U;
+	value.Mask		= (::gpk::GUI_CONTROL_FLAG)0x0151U;
+
+	::gpk::string document = {};
+	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_SAVE, ::gpk::failed(::gpk::saveCTTI(document, value)));
+	::gpk::SJSONReader reader = {};
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(reader, document)), "Type:'SControlState', JSON:'%.*s'.", GPK_VIEW_ARGS(document));
+	rtrn ::testJSONExpressionCTTILeaves(errors, reader, "SControlState", 0, {});
+}
+
 sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	cnst ::gpk::vcst_t document =
 		  "\n{\t \"name\"           : \"Carlos\""
@@ -327,6 +535,20 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	cnst ::gpk::err_t registeredLabelResult = alignDefinition->Label(alignDefinition->Instance, &registeredAlign, registeredLabel);
 	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_ALIGN_REGISTRY, ::gpk::failed(registeredLabelResult), "Result:%i.", registeredLabelResult);
 	GPK_TEST_CHECKF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_ALIGN_REGISTRY, registeredLabel != "BOTTOM_RIGHT", "Label:'%.*s'.", GPK_VIEW_ARGS(registeredLabel));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::ALIGN>(errors, "ALIGN"));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::GUI_CONTROL_LIMIT>(errors, "GUI_CONTROL_LIMIT"));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::GUI_CONTROL_METRICS_FLAG>(errors, "GUI_CONTROL_METRICS_FLAG"));
+	if_fail_fe(::testJSONExpressionCTTIPlacement(errors));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::GUI_COLOR_MODE>(errors, "GUI_COLOR_MODE"));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::GUI_CONTROL_PALETTE>(errors, "GUI_CONTROL_PALETTE"));
+	if_fail_fe(::testJSONExpressionCTTIDraw(errors));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::CONTROL_AREA_BASE>(errors, "CONTROL_AREA_BASE"));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::GUI_CONTROL_AREA_OLD>(errors, "GUI_CONTROL_AREA_OLD"));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::UI_CONTROL_AREA>(errors, "UI_CONTROL_AREA"));
+	if_fail_fe(::testJSONExpressionCTTIRectangle(errors));
+	if_fail_fe(::testJSONExpressionCTTIArea(errors));
+	if_fail_fe(::testJSONExpressionCTTIEnum<::gpk::GUI_CONTROL_FLAG>(errors, "GUI_CONTROL_FLAG"));
+	if_fail_fe(::testJSONExpressionCTTIState(errors));
 
 	::gpk::SControlText source = {};
 	source.Text			= "Source text";
@@ -346,6 +568,9 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	cnst ::gpk::err_t targetSave = ::gpk::saveCTTI(targetJSON, target);
 	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_SOURCE_SAVE, ::gpk::failed(sourceSave), "Result:%i.", sourceSave);
 	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_TARGET_SAVE, ::gpk::failed(targetSave), "Result:%i.", targetSave);
+	::gpk::SJSONReader sourceReader = {};
+	GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(sourceReader, sourceJSON)), "Type:'SControlText', JSON:'%.*s'.", GPK_VIEW_ARGS(sourceJSON));
+	if_fail_fe(::testJSONExpressionCTTILeaves(errors, sourceReader, "SControlText", 0, {}));
 
 	::gpk::string inputJSON = {};
 	if_fail_fe(inputJSON.push_back('{'));

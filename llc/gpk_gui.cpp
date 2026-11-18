@@ -9,6 +9,22 @@
 
 usns gpk;
 
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, Area);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, Margin);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, Border);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, Align);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, RelativeBorderSize);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, RelativeMarginSize);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, RelativeMetrics);
+
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlDraw, ColorMode);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlDraw, FrameOut);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlDraw, NoBorder);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlDraw, NoClient);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlDraw, UseNewPalettes);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlDraw, ColorTheme);
+GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlDraw, Palettes);
+
 gpk::cid_t		gpk::controlCreateChild	(SGUI & gui, cid_t iParent)						{
 	cid_t				idControl				= controlCreate(gui);
 	controlSetParent(gui.Controls, idControl, iParent);

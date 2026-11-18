@@ -12,6 +12,15 @@
 
 nmsp gpk
 {
+	stct SCTTIMemberJSONOpen {
+		vcst_t	MemberName	= {};
+		vcst_t	TypeName	= {};
+	};
+
+	inln err_t append_string(asc_t & output, cnst SCTTIMemberJSONOpen & member) {
+		rtrn append_strings(output, '"', member.MemberName, "\":{\"type\":\"", member.TypeName, "\",\"value\":");
+	}
+
 	stct SCTTIStructDeclaration {
 		vcst_t	Name	= {};
 		vcst_t	File	= {};
@@ -56,6 +65,7 @@ nmsp gpk
 	tplt<tpnm T> struct n2;
 	tplt<tpnm T> struct rect;
 	tplt<tpnm T> struct rect2;
+	tplt<tpnm T> struct tri2;
 	tplt<tpnm T> struct minmax;
 
 	tplt<tpnm TStruct, tpnm TFunc, tpnm... TMembers>
@@ -89,6 +99,41 @@ nmsp gpk
 		rtrn result;
 	}
 
+	tydf err_t (*FCTTIFieldJSONSave)(string & output, cnst void * instance);
+	tydf err_t (*FCTTIFieldJSONLoad)(cnst SJSONReader & input, u2_t iNode, void * instance);
+	stct SCTTIFieldJSONOverride {
+		vcst_t				Name	= {};
+		FCTTIFieldJSONSave	Save	= {};
+		FCTTIFieldJSONLoad	Load	= {};
+	};
+
+	tplt<tpnm T>
+	inln aobj<SCTTIFieldJSONOverride> & cttiFieldJSONOverrides() nxpt {
+		sttc aobj<SCTTIFieldJSONOverride> overrides = {};
+		rtrn overrides;
+	}
+
+	tplt<tpnm T>
+	err_t cttiFieldJSONOverrideRegister(vcst_t name, FCTTIFieldJSONSave save, FCTTIFieldJSONLoad load) {
+		aobj<SCTTIFieldJSONOverride> & overrides = cttiFieldJSONOverrides<rm_csvl_t<T>>();
+		for(u2_t iOverride = 0; iOverride < overrides.size(); ++iOverride)
+			if(overrides[iOverride].Name == name) {
+				if(save) overrides[iOverride].Save = save;
+				if(load) overrides[iOverride].Load = load;
+				rtrn iOverride;
+			}
+		rtrn overrides.push_back({name, save, load});
+	}
+
+	tplt<tpnm T>
+	inln cnst SCTTIFieldJSONOverride * cttiFieldJSONOverride(vcst_t name) nxpt {
+		cnst aobj<SCTTIFieldJSONOverride> & overrides = cttiFieldJSONOverrides<rm_csvl_t<T>>();
+		for(u2_t iOverride = 0; iOverride < overrides.size(); ++iOverride)
+			if(overrides[iOverride].Name == name)
+				rtrn &overrides[iOverride];
+		rtrn {};
+	}
+
 	tplt<tpnm T, tpnm TFunc>
 	err_t cttiVisit(T & instance, u2_c index, TFunc func) {
 		usng TStruct = rm_csvl_t<T>;
@@ -103,18 +148,14 @@ nmsp gpk
 	err_t loadCTTI(cnst SJSONReader & input, u2_c iNode, T & output);
 
 	inln err_t cttiValueSave(string & output, b8_c input) {
-		rtrn output.append(str(input));
+		rtrn append_strings(output, str(input));
 	}
 	tplt<tpnm T> requires ctti_integer<T>
 	err_t cttiValueSave(string & output, cnst T & input) {
-		sc_t text[64] = {};
-		err_t length = {};
 		if constexpr(ctti_same<rm_csvl_t<T>, s0_t>::Value || ctti_same<rm_csvl_t<T>, s1_t>::Value || ctti_same<rm_csvl_t<T>, s2_t>::Value || ctti_same<rm_csvl_t<T>, s3_t>::Value)
-			length = sprintf_s(text, "%" GPK_FMT_S3, (s3_t)input);
+			rtrn append_strings(output, str((s3_t)input));
 		else
-			length = sprintf_s(text, "%" GPK_FMT_U3, (u3_t)input);
-		if_fail_fe(length);
-		rtrn output.append({text, (u2_t)length});
+			rtrn append_strings(output, str((u3_t)input));
 	}
 	tplt<tpnm T> requires ctti_decimal<T>
 	err_t cttiValueSave(string & output, cnst T & input) {
@@ -167,6 +208,19 @@ nmsp gpk
 		if_fail_fe(cttiValueSave(output, input.Offset));
 		if_fail_fe(appendOpenKey(output, "Size", true));
 		if_fail_fe(cttiValueSave(output, input.Size));
+		if_fail_fe(output.push_back('}'));
+		rtrn output.size() - offset;
+	}
+	tplt<tpnm T>
+	err_t cttiValueSave(string & output, cnst tri2<T> & input) {
+		u2_c offset = output.size();
+		if_fail_fe(output.push_back('{'));
+		if_fail_fe(appendOpenKey(output, "A"));
+		if_fail_fe(cttiValueSave(output, input.A));
+		if_fail_fe(appendOpenKey(output, "B", true));
+		if_fail_fe(cttiValueSave(output, input.B));
+		if_fail_fe(appendOpenKey(output, "C", true));
+		if_fail_fe(cttiValueSave(output, input.C));
 		if_fail_fe(output.push_back('}'));
 		rtrn output.size() - offset;
 	}
@@ -273,6 +327,17 @@ nmsp gpk
 		rtrn iNode;
 	}
 	tplt<tpnm T>
+	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, tri2<T> & output) {
+		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
+		cnst err_t iA = jsonObjectValueGet(input, iNode, "A");
+		if(0 <= iA) if_fail_fe(cttiValueLoad(input, (u2_t)iA, output.A));
+		cnst err_t iB = jsonObjectValueGet(input, iNode, "B");
+		if(0 <= iB) if_fail_fe(cttiValueLoad(input, (u2_t)iB, output.B));
+		cnst err_t iC = jsonObjectValueGet(input, iNode, "C");
+		if(0 <= iC) if_fail_fe(cttiValueLoad(input, (u2_t)iC, output.C));
+		rtrn iNode;
+	}
+	tplt<tpnm T>
 	err_t cttiValueLoad(cnst SJSONReader & input, u2_c iNode, minmax<T> & output) {
 		if_true_fe(input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		cnst err_t iMin = jsonObjectValueGet(input, iNode, "Min");
@@ -325,8 +390,15 @@ nmsp gpk
 		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
 		if_fail_fe(output.push_back('{'));
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-			if_fail_fe(appendOpenKey(output, metadata.View(metadata.Members[iMember].Name), 0 != iMember));
-			if_fail_fe(cttiVisit(input, iMember, [&](cnst auto & member) { rtrn cttiValueSave(output, member); }));
+			cnst vcst_t memberName = metadata.View(metadata.Members[iMember].Name);
+			if_fail_fe(appendOpenKey(output, memberName, 0 != iMember));
+			cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride<T>(memberName);
+			if(fieldOverride && fieldOverride->Save) {
+				if_fail_fe(fieldOverride->Save(output, &input));
+			}
+			else {
+				if_fail_fe(cttiVisit(input, iMember, [&](cnst auto & member) { rtrn cttiValueSave(output, member); }));
+			}
 		}
 		if_fail_fe(output.push_back('}'));
 		rtrn output.size() - offset;
@@ -337,10 +409,17 @@ nmsp gpk
 		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
 		if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-			cnst err_t iValue = jsonObjectValueGet(input, iNode, metadata.View(metadata.Members[iMember].Name));
+			cnst vcst_t memberName = metadata.View(metadata.Members[iMember].Name);
+			cnst err_t iValue = jsonObjectValueGet(input, iNode, memberName);
 			if(0 > iValue)
 				continue;
-			if_fail_fe(cttiVisit(output, iMember, [&](auto & member) { rtrn cttiValueLoad(input, (u2_t)iValue, member); }));
+			cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride<T>(memberName);
+			if(fieldOverride && fieldOverride->Load) {
+				if_fail_fe(fieldOverride->Load(input, (u2_t)iValue, &output));
+			}
+			else {
+				if_fail_fe(cttiVisit(output, iMember, [&](auto & member) { rtrn cttiValueLoad(input, (u2_t)iValue, member); }));
+			}
 		}
 		rtrn 0;
 	}
@@ -371,16 +450,9 @@ nmsp gpk
 			vcst_c typeName = metadata.View(member.TypeName);
 			if(iMember)
 				if_fail_fe(output.push_back(','));
-			if_fail_fe(output.push_back('"'));
-			if_fail_fe(output.append(memberName));
-			if_fail_fe(output.push_back('"'));
-			if_fail_fe(output.push_back(':'));
-			if_fail_fe(output.push_back('{'));
-			if_fail_fe(output.append(vcst_t{"\"type\":\""}));
-			if_fail_fe(output.append(typeName));
-			if_fail_fe(output.append(vcst_t{"\",\"value\":"}));
+			if_fail_fe(append_strings(output, SCTTIMemberJSONOpen{memberName, typeName}));
 			if(member.Value.empty()) {
-				if_fail_fe(output.append(vcst_t{"null"}));
+				if_fail_fe(append_strings(output, "null"));
 			}
 			else {
 				vcst_c value = metadata.View(member.Value);
@@ -392,12 +464,10 @@ nmsp gpk
 					if_fail_fe(output.append({value.begin(), value.size() - floatSuffix}));
 				}
 				else {
-					if_fail_fe(output.push_back('"'));
-					if_fail_fe(output.append(value));
-					if_fail_fe(output.push_back('"'));
+					if_fail_fe(append_strings(output, '"', value, '"'));
 				}
 			}
-			if_fail_fe(output.append(vcst_t{",\"modifiers\":["}));
+			if_fail_fe(append_strings(output, ",\"modifiers\":["));
 			b8_t firstModifier = true;
 			for(u2_t iModifier = member.Modifiers.Offset, modifierStop = member.Modifiers.Offset + member.Modifiers.Count; iModifier < modifierStop;) {
 				while(iModifier < modifierStop && cttiSpace(metadata.SourceText[iModifier]))
@@ -409,13 +479,10 @@ nmsp gpk
 					break;
 				if(false == firstModifier)
 					if_fail_fe(output.push_back(','));
-				if_fail_fe(output.push_back('"'));
-				if_fail_fe(output.append(vcst_t{&metadata.SourceText[modifierOffset], iModifier - modifierOffset}));
-				if_fail_fe(output.push_back('"'));
+				if_fail_fe(append_strings(output, '"', vcst_t{&metadata.SourceText[modifierOffset], iModifier - modifierOffset}, '"'));
 				firstModifier = false;
 			}
-			if_fail_fe(output.push_back(']'));
-			if_fail_fe(output.push_back('}'));
+			if_fail_fe(append_strings(output, "]}"));
 		}
 		if_fail_fe(output.push_back('}'));
 		rtrn output.size();
@@ -433,6 +500,20 @@ nmsp gpk
 #define GPK_STCT_CTTI_JOIN(left, right) GPK_STCT_CTTI_JOIN_2(left, right)
 #define GDEFINE_STCT_CTTI(type) \
 	sttc ::gpk::err_t GPK_STCT_CTTI_JOIN(__sei_stct_ctti_, __COUNTER__) = ::gpk::cttiStructRegister<type>()
+#define GDEFINE_STCT_CTTI_JSON_MEMBER(type, member) \
+	sttc ::gpk::err_t GPK_STCT_CTTI_JOIN(__sei_stct_ctti_json_member_, __COUNTER__) = ::gpk::cttiFieldJSONOverrideRegister<type> \
+		( #member \
+		, [](::gpk::string & output, cnst void * instance) -> ::gpk::err_t { \
+			cnst auto value = ((cnst type *)instance)->member; \
+			rtrn ::gpk::cttiValueSave(output, value); \
+			} \
+		, [](cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode, void * instance) -> ::gpk::err_t { \
+			auto value = ((type *)instance)->member; \
+			if_fail_fe(::gpk::cttiValueLoad(input, iNode, value)); \
+			((type *)instance)->member = value; \
+			rtrn iNode; \
+			} \
+		)
 
 #endif // GPK_CTTI_STCT_JSON_H
 

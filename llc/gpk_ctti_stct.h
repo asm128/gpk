@@ -96,9 +96,18 @@ nmsp gpk
 	stct SCTTIFieldTypeRegister {
 		friend auto cttiFieldType(SCTTIFieldTag<TStruct, Index>) { rtrn SCTTIType<TMember>{}; }
 	};
+	tplt<tpnm TStruct, tpnm TMember, u2_t Index, tpnm = void>
+	stct SCTTIFieldTypeEnsure : SCTTIFieldTypeRegister<TStruct, TMember, Index> {};
+	tplt<tpnm TStruct, tpnm TMember, u2_t Index>
+	stct SCTTIFieldTypeEnsure
+		< TStruct
+		, TMember
+		, Index
+		, decltype(void(sizeof(tpnm decltype(cttiFieldType(SCTTIFieldTag<TStruct, Index>{}))::Type)))
+		> {};
 	tplt<tpnm TStruct, u2_t Index>
 	stct SCTTIFieldProbe {
-		tplt<tpnm TMember, size_t = sizeof(SCTTIFieldTypeRegister<TStruct, TMember, Index>)>
+		tplt<tpnm TMember, size_t = sizeof(SCTTIFieldTypeEnsure<TStruct, TMember, Index>)>
 		inxp operator TMember & () cnst nxpt;
 	};
 	tplt<tpnm TStruct, tpnm TIndices, tpnm = void>
