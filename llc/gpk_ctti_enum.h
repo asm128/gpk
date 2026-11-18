@@ -1,5 +1,5 @@
 #include "gpk_ctti_parse.h"
-#include "gpk_enum.h"
+#include "gpk_enum_operators.h"
 
 #ifndef GPK_CTTI_ENUM_H
 #define GPK_CTTI_ENUM_H
@@ -187,122 +187,74 @@ nmsp gpk
 		rtrn result;
 	}
 
-	stct SCTTIEnumDeclaration;
-	err_t cttiEnumDeclarationRegister(SCTTIEnumDeclaration & declaration) nxpt;
+	tplt<tpnm T>
+	stct SCTTIEnumTag {};
+	tplt<tpnm T>
+	void cttiEnumRegistry(SCTTIEnumTag<T>) = delete;
 
-	stct SCTTIEnumDeclaration {
-		vcst_t					File			= {};
-		u2_t					Line			= {};
-		vcst_t					SourceText		= {};
-		vcst_t					Name			= {};
-		vcst_t					UnderlyingType	= {};
-		cnst SCTTIEnumValue<s3_t> *	Values			= {};
-		vcst_c *				Names			= {};
-		vcst_c *				Initializers	= {};
-		u2_t					Count			= {};
-		SCTTIEnumDeclaration *		Next			= {};
+	tplt<tpnm T>
+	concept ctti_enum = requires { cttiEnumRegistry(SCTTIEnumTag<rm_csvl_t<T>>{}); };
+	tplt<tpnm T> requires ctti_enum<T>
+	usng SCTTIEnumRegistry = decltype(cttiEnumRegistry(SCTTIEnumTag<rm_csvl_t<T>>{}));
 
-		tplt<size_t NDeclaration>
-		SCTTIEnumDeclaration
-			( vcst_c file
-			, u2_c line
-			, cnst SCTTIEnumParseResult<s3_t, NDeclaration> & metadata
-			, cnst SCTTIEnumViews<NDeclaration> & views
-			) nxpt
-			: File			(file)
-			, Line			(line)
-			, SourceText		{metadata.SourceText, NDeclaration - 1}
-			, Name			{&metadata.SourceText[metadata.EnumName.Offset], metadata.EnumName.Count}
-			, UnderlyingType	{&metadata.SourceText[metadata.UnderlyingType.Offset], metadata.UnderlyingType.Count}
-			, Values			(metadata.Values)
-			, Names			(views.Names)
-			, Initializers	(views.Initializers)
-			, Count			(metadata.Count)
-			{ cttiEnumDeclarationRegister(*this); }
-	};
+	tplt<tpnm T> requires ctti_enum<T>
+	sinx cnst auto & cttiEnum() nxpt { rtrn SCTTIEnumRegistry<T>::Value; }
 
-	inln SCTTIEnumDeclaration * & cttiEnumDeclarationRoot() nxpt {
-		sttc SCTTIEnumDeclaration * root = {};
-		rtrn root;
+	tplt<tpnm T> requires ctti_enum<T>
+	sinx cnst auto & cttiEnumTyped() nxpt { rtrn SCTTIEnumRegistry<T>::TypedValue; }
+
+	tplt<tpnm T> requires ctti_enum<T>
+	sinx cnst auto & cttiEnumViews() nxpt { rtrn SCTTIEnumRegistry<T>::Views; }
+
+	tplt<tpnm T> requires ctti_enum<T>
+	inxp vcst_t cttiEnumTypeName() nxpt {
+		usng TEnum = rm_csvl_t<T>;
+		cnst auto & metadata = cttiEnumTyped<TEnum>();
+		rtrn {&metadata.SourceText[metadata.EnumName.Offset], metadata.EnumName.Count};
 	}
 
-	inln err_t cttiEnumDeclarationRegister(SCTTIEnumDeclaration & declaration) nxpt {
-		SCTTIEnumDeclaration * & root = cttiEnumDeclarationRoot();
-		for(SCTTIEnumDeclaration * current = root; current; current = current->Next)
-			if(current->File == declaration.File && current->Line == declaration.Line && current->Name == declaration.Name)
-				rtrn 0;
-		declaration.Next = root;
-		root = &declaration;
-		rtrn 0;
+	tplt<tpnm T> requires ctti_enum<T>
+	inxp vcst_t cttiEnumValueName(u2_c iValue, b8_c scoped = false) nxpt {
+		usng TEnum = rm_csvl_t<T>;
+		cnst auto & metadata = cttiEnumTyped<TEnum>();
+		if(iValue >= metadata.Count)
+			rtrn {};
+		vcst_t name = cttiEnumViews<TEnum>().Names[iValue];
+		if(false == scoped
+		&& name.size() > metadata.EnumName.Count + 1
+		&& name[metadata.EnumName.Count] == '_'
+		)
+			name = {name.begin() + metadata.EnumName.Count + 1, name.size() - metadata.EnumName.Count - 1};
+		rtrn name;
 	}
 
-	inln cnst SCTTIEnumDeclaration * cttiEnum(vcst_c name) nxpt {
-		for(cnst SCTTIEnumDeclaration * current = cttiEnumDeclarationRoot(); current; current = current->Next)
-			if(current->Name == name)
-				rtrn current;
+	tplt<tpnm T> requires ctti_enum<T>
+	inxp vcst_t cttiEnumName(cnst T input, b8_c scoped = false) nxpt {
+		usng TEnum = rm_csvl_t<T>;
+		cnst auto & metadata = cttiEnumTyped<TEnum>();
+		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue)
+			if(metadata.Values[iValue].ValueResolved && input == metadata.Values[iValue].Value)
+				rtrn cttiEnumValueName<TEnum>(iValue, scoped);
 		rtrn {};
 	}
 
-	tplTstct SCTTIEnumRegistry;
-
-	tplTsinx cnst auto & cttiEnum() nxpt { rtrn SCTTIEnumRegistry<T>::Value; }
-
-	tplTsinx cnst auto & cttiEnumViews() nxpt { rtrn SCTTIEnumRegistry<T>::Views; }
-
-	tplt<tpnm TEnum, size_t NDeclaration>
-	err_t enumDefinitionFromCTTI(cnst SCTTIEnumParseResult<TEnum, NDeclaration> & metadata) {
-		if(false == metadata.Success())
-			rtrn -1;
-		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue)
-			if(false == metadata.Values[iValue].ValueResolved)
-				rtrn -1;
-
-		enum_definition<TEnum> & definition = get_enum<TEnum>();
-		if(definition.Names.size()) {
-			if(definition.Names.size() != metadata.Count || definition.Values.size() != metadata.Count)
-				rtrn -1;
-			for(u2_t iValue = 0; iValue < metadata.Count; ++iValue) {
-				cnst SCTTIEnumValue<TEnum> & value = metadata.Values[iValue];
-				vcst_t name = {&metadata.SourceText[value.Name.Offset], value.Name.Count};
-				if(name.size() > metadata.EnumName.Count + 1
-				&& name[metadata.EnumName.Count] == '_')
-					name = {name.begin() + metadata.EnumName.Count + 1, name.size() - metadata.EnumName.Count - 1};
-				if(definition.Values[iValue] != value.Value || definition.Names[iValue] != name)
-					rtrn -1;
-			}
-			rtrn definition.Values.size();
-		}
-		definition.Name = {&metadata.SourceText[metadata.EnumName.Offset], metadata.EnumName.Count};
-		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue) {
-			cnst SCTTIEnumValue<TEnum> & value = metadata.Values[iValue];
-			vcst_t name = {&metadata.SourceText[value.Name.Offset], value.Name.Count};
-			if(name.size() > metadata.EnumName.Count + 1
-			&& name[metadata.EnumName.Count] == '_')
-				name = {name.begin() + metadata.EnumName.Count + 1, name.size() - metadata.EnumName.Count - 1};
-			if_fail_fe(definition.add_value(value.Value, name, name, name));
-		}
-		rtrn definition.Values.size();
-	}
 } // nmsp
 
-#define GPK_CTTI_JOIN_2(left, right)	left##right
-#define GPK_CTTI_JOIN(left, right)	GPK_CTTI_JOIN_2(left, right)
-#define GDEFINE_ENUM_CTTI(cttiObject) \
-	sttc cnst ::gpk::err_t GPK_CTTI_JOIN(gpk_ctti_enum_definition_, __LINE__) = \
-		::gpk::enumDefinitionFromCTTI(cttiObject)
-
-#define CTTI_ENUM(type, ...) \
-	__VA_ARGS__ \
+#define GPK_CTTI_ENUM_STATIC_REGISTER(type, ...) \
 	GDEFINE_ENUM_OPERATORS(type); \
 	stct type##_gpk_ctti_storage { \
 		sinx auto Value = ::gpk::cttiParseEnum<::gpk::s3_t>(#__VA_ARGS__); \
 		sinx auto TypedValue = ::gpk::cttiParseEnum<type>(#__VA_ARGS__); \
-		sinx auto Views = ::gpk::cttiEnumViewsMake(Value); \
+		sinx auto Views = ::gpk::cttiEnumViewsMake(TypedValue); \
 	}; \
-	sttc ::gpk::SCTTIEnumDeclaration type##_gpk_ctti_declaration = \
-		{__FILE__, __LINE__, type##_gpk_ctti_storage::Value, type##_gpk_ctti_storage::Views}; \
-	sttc cnst ::gpk::err_t type##_gpk_enum_definition = \
-		::gpk::enumDefinitionFromCTTI(type##_gpk_ctti_storage::TypedValue)
+	sinx type##_gpk_ctti_storage cttiEnumRegistry(::gpk::SCTTIEnumTag<type>) nxpt { rtrn {}; }
+
+#define GPK_CTTI_ENUM_REGISTER(type, ...) \
+	GPK_CTTI_ENUM_STATIC_REGISTER(type, __VA_ARGS__)
+
+#define CTTI_ENUM(type, ...) \
+	__VA_ARGS__ \
+	GPK_CTTI_ENUM_REGISTER(type, __VA_ARGS__)
 
 #define GPK_CTTI_PARENS ()
 #define GPK_CTTI_EXPAND(...) GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(GPK_CTTI_EXPAND_5(__VA_ARGS__))))
@@ -318,9 +270,16 @@ nmsp gpk
 #define GPK_CTTI_ENUM_VALUE(IntType, entry) []() cxpr { stct SValue { IntType entry; }; rtrn ::gpk::cttiFirstMember(SValue{}); }()
 #define CTTI_ENUM_COMPILED(EnumName, IntType, ...) \
 	enum EnumName : IntType { __VA_ARGS__ }; \
+	GDEFINE_ENUM_OPERATORS(EnumName); \
 	stxp IntType EnumName##_gpk_ctti_values[] = {GPK_CTTI_ENUM_VALUES(GPK_CTTI_ENUM_VALUE, IntType, __VA_ARGS__)}; \
-	stxp auto EnumName##_gpk_ctti = ::gpk::cttiParseEnum<EnumName>(#EnumName " : " #IntType " { " #__VA_ARGS__ " }", EnumName##_gpk_ctti_values); \
-	stxp auto EnumName##_gpk_ctti_views = ::gpk::cttiEnumViewsMake(EnumName##_gpk_ctti); \
+	stct EnumName##_gpk_ctti_storage { \
+		sinx auto Value = ::gpk::cttiParseEnum<::gpk::s3_t>(#EnumName " : " #IntType " { " #__VA_ARGS__ " }"); \
+		sinx auto TypedValue = ::gpk::cttiParseEnum<EnumName>(#EnumName " : " #IntType " { " #__VA_ARGS__ " }", EnumName##_gpk_ctti_values); \
+		sinx auto Views = ::gpk::cttiEnumViewsMake(TypedValue); \
+	}; \
+	sinx EnumName##_gpk_ctti_storage cttiEnumRegistry(::gpk::SCTTIEnumTag<EnumName>) nxpt { rtrn {}; } \
+	stxp cnst auto & EnumName##_gpk_ctti = EnumName##_gpk_ctti_storage::TypedValue; \
+	stxp cnst auto & EnumName##_gpk_ctti_views = EnumName##_gpk_ctti_storage::Views; \
 	stxp ::gpk::vcst_t EnumName##_gpk_ctti_file = __FILE__; \
 	stxp ::gpk::u2_t EnumName##_gpk_ctti_line = __LINE__; \
 	stxp ::gpk::uP_t EnumName##_gpk_ctti_size = sizeof(EnumName); \

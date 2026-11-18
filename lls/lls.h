@@ -34,7 +34,9 @@ namespace lls
 	};
 
 	CTTI_ENUM(SAVE_MODE,
-	enum SAVE_MODE { SAVE_MODE_AUTO, SAVE_MODE_QUICK, SAVE_MODE_STAGE, SAVE_MODE_USER };
+	enum SAVE_MODE {
+		SAVE_MODE_AUTO, SAVE_MODE_QUICK, SAVE_MODE_STAGE, SAVE_MODE_USER
+	};
 	);
 	struct SFileStrings {
 		::gpk::vcst_t				SavegameFolder				= ".";

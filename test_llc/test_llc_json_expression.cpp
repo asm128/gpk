@@ -1,6 +1,12 @@
 #include "test_llc_suites.h"
+#include "gpk_ctti_stct_json.h"
+#include "gpk_enum.h"
 #include "gpk_json_expression.h"
 #include "gpk_gui.h"
+
+GDEFINE_ENUM_CTTI(::gpk::ALIGN);
+GDEFINE_STCT_CTTI(::gpk::SControlText);
+GDEFINE_STCT_CTTI(::gpk::minmaxu1_t);
 
 GDEFINE_ENUM_TYPE(JSON_EXPRESSION_TEST_RESULT, ::gpk::u0_t);
 GDEFINE_ENUM_VALUED(JSON_EXPRESSION_TEST_RESULT, OK                       ,  0, "All JSON-expression tests passed.");

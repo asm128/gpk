@@ -525,8 +525,14 @@
     <ClInclude Include="gpk_ctti_enum.h">
       <Filter>type</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_ctti_enum_json.h">
+      <Filter>json</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_ctti_stct.h">
       <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ctti_stct_json.h">
+      <Filter>json</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view.h">
       <Filter>view</Filter>

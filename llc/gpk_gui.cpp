@@ -1,4 +1,5 @@
 #include "gpk_gui.h"
+#include "gpk_ctti_stct_json.h"
 #include "gpk_gui_theme.h"
 #include "gpk_gui_text.h"
 #include "gpk_base64.h"

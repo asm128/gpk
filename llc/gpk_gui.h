@@ -1,6 +1,7 @@
 #include "gpk_gui_control.h"
 #include "gpk_input.h"
 #include "gpk_font.h"
+#include "gpk_json.h"
 
 #include "gpk_ascii_color.h"
 

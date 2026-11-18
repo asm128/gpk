@@ -2,6 +2,7 @@
 // Ogarnd - Copyright (c) 2016-2024
 #include "gpk_string.h"
 #include "gpk_array_obj.h"
+#include "gpk_ctti_enum.h"
 #include "gpk_enum_operators.h"
 
 #ifndef GPK_ENUM_H_23627
@@ -267,6 +268,28 @@ nmsp gpk
 			});
 	}
 
+	tplt<tpnm T> requires ctti_enum<T>
+	err_t enumDefinitionCTTIRegister() {
+		enum_definition<T> & definition = enum_definition<T>::get();
+		definition.Name = cttiEnumTypeName<T>();
+		if_fail_fe(enumDefinitionRegister(definition));
+		cnst auto & metadata = cttiEnumTyped<T>();
+		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue) {
+			if_zero_fe(metadata.Values[iValue].ValueResolved);
+			cnst vcst_t name = cttiEnumValueName<T>(iValue);
+			b8_t found = false;
+			for(u2_t iRegistered = 0; iRegistered < definition.Names.size(); ++iRegistered)
+				if(definition.Names[iRegistered] == name) {
+					if_true_fe(definition.Values[iRegistered] != metadata.Values[iValue].Value);
+					found = true;
+					break;
+				}
+			if(false == found)
+				if_fail_fe(definition.add_value(metadata.Values[iValue].Value, name, name, name));
+		}
+		rtrn 0;
+	}
+
 	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	()					nxpt	{ return enum_definition<TEnum>::get();	}
 	tplt <tpnm TEnum>	inln	enum_definition<TEnum>&	get_enum	(cnst TEnum & )	nxpt	{ return enum_definition<TEnum>::get();	}
 
@@ -386,6 +409,11 @@ nmsp gpk
 
 #define GDEFINE_FLAG_TYPE		GDEFINE_ENUM_TYPE
 #define GDEFINE_FLAG_VALUE		GDEFINE_ENUM_VALUE
+
+#define GPK_ENUM_CTTI_JOIN_2(left, right) left##right
+#define GPK_ENUM_CTTI_JOIN(left, right) GPK_ENUM_CTTI_JOIN_2(left, right)
+#define GDEFINE_ENUM_CTTI(EnumName) \
+	sttc ::gpk::err_t GPK_ENUM_CTTI_JOIN(__sei_enum_ctti_, __COUNTER__) = ::gpk::enumDefinitionCTTIRegister<EnumName>()
 
 #ifdef GPK_WINDOWS
 #	pragma warning(disable : 4063)	// On Windows, usng enum types like we do cause the compiler to throw a warning when the warning level is set to 4

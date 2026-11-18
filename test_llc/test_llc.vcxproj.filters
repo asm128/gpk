@@ -51,7 +51,16 @@
     <ClCompile Include="test_llc_base64.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_llc_ctti.cpp">
+    <ClCompile Include="test_llc_ctti_enum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_ctti_enum_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_ctti_stct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_ctti_stct_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_llc_deflate.cpp">

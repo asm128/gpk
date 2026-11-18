@@ -92,7 +92,9 @@
     <ClInclude Include="gpk_cstring.h" />
     <ClInclude Include="gpk_ctti_parse.h" />
     <ClInclude Include="gpk_ctti_enum.h" />
+    <ClInclude Include="gpk_ctti_enum_json.h" />
     <ClInclude Include="gpk_ctti_stct.h" />
+    <ClInclude Include="gpk_ctti_stct_json.h" />
     <ClInclude Include="gpk_d3d.h" />
     <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_debug.h" />
