@@ -7,7 +7,6 @@
 
 nmsp gpk
 {
-	tplT	usng	aaobj		= aobj<aobj<T>>; 
 	tplT	usng	aapod		= aobj<apod<T>>;
 
 	tydf	aapod<uc_t>		aauc_t;	tdcs aauc_t aauc_c;
@@ -29,6 +28,7 @@ nmsp gpk
 	GPK_USING_APOD		();					\
 	GPK_USING_AOBJ		();					\
 	GPK_USING_ASTATIC	();					\
+	tplTusng	aapod	= aobj<apod<T>>;	\
 	usng	::gpk::aauc_t, ::gpk::aauc_c 	\
 		,	::gpk::aasc_t, ::gpk::aasc_c 	\
 		,	::gpk::aau0_t, ::gpk::aau0_c 	\

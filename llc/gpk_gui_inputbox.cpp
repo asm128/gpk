@@ -41,7 +41,7 @@ gpk::err_t 		gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboa
 		controlKey.Area.Offset.x= s1_t((iKey % rowWidth) * sizeKey.x);
 		controlKey.Area.Offset.y= s1_t((iKey / rowWidth) * sizeKey.y);
 		controlKey.Border		= {1, 1, 1, 1};
-		//controlKey.ColorTheme			= ::gpk::ASCII_COLOR_DARKGREY * 16 + 8;
+		//controlKey.ColorTheme			= ::gpk::ASCII_COLOR_Dark_grey * 16 + 8;
 		gui.Controls.Text[idKey].Align	= ::gpk::ALIGN_CENTER;
 
 		if_fail_fe(gpk::controlSetParent(gui, idKey, vk.IdRoot));

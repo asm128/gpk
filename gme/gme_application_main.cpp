@@ -16,7 +16,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	if_fail_fe(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 	::gpk::SGUI																& gui						= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
-	gui.ThemeDefault													= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
+	gui.ThemeDefault													= ::gpk::ASCII_COLOR_Dark_green * 16 + 7;
 	app.IdExit															= ::gpk::controlCreate(gui);
 	::gpk::SControlPlacement												& controlExit				= gui.Controls.Placement[app.IdExit];
 	controlExit.Area													= {{0, 0}, {64, 20}};

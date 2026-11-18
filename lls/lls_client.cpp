@@ -18,7 +18,7 @@ stxp	::gpk::astatic<::gpk::bgra, LLS_MAX_PLAYERS>	PLAYER_COLORS	=
 
 sttc	::gpk::err_t	guiSetupCommon		(::gpk::SGUI & gui) {
 	gui.ColorModeDefault	= ::gpk::GUI_COLOR_MODE_3D;
-	gui.ThemeDefault		= ::gpk::ASCII_COLOR_DARKRED * 16 + 10;
+	gui.ThemeDefault		= ::gpk::ASCII_COLOR_Dark_red * 16 + 10;
 	gui.SelectedFont		= 7;
 
 	::gpk::pobj<::gpk::SGUIColors>	colors;
@@ -54,7 +54,7 @@ sttc	::gpk::err_t	uiPlayerSetupHome	(::lls::SUIPlayer & uiPlayer, cnst ::gpk::po
 	::gpk::pobj<::gpk::a8bgra>	palette;
 	palette.create(*playerGUI.Colors->Palette);
 	playerGUI.Colors->Palette	= palette;
-	playerGUI.ThemeDefault		= ::gpk::ASCII_COLOR_DARKGREY * 16 + 12;
+	playerGUI.ThemeDefault		= ::gpk::ASCII_COLOR_Dark_grey * 16 + 12;
 	do { if_fail_fe(::gpk::guiCreateControlList<::lls::UI_PROFILE>(playerGUI, playerDialog.Root, PLAYER_UI_SIZE, playerPosition, playerAlign, ::gpk::ALIGN_CENTER, uiPlayer.ControlsDialogHome)); } while(0);
 	for(uint32_t iButton = 0, iStop = ::gpk::get_value_count<::lls::UI_PROFILE>() - 1, iOffset = playerDialog.Root + 1 + ::lls::UI_PROFILE_Name; iButton < iStop; ++iButton) {
 		playerGUI.Controls.Placement[iOffset + iButton].Margin	= {};

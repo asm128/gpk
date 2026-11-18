@@ -166,7 +166,7 @@ sttc gpk::err_t fileViewerDirectoryControlsCreate(SFileViewer & viewer, SPathLis
 	if_fail_fe(idClose = viewportControl(gui, directory.IdViewport, VIEWPORT_CONTROL_CLOSE));
 	if_fail_fe(idTitle = viewportControl(gui, directory.IdViewport, VIEWPORT_CONTROL_TITLE));
 	cid_t idNewFile = -1;
-	if_fail_fe(idNewFile = controlCreate(gui, [&](SControlState &, STextState &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(idNewFile = controlCreate(gui, [&](SControlState &, apod<STextState> &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {88, gui.Controls.Placement[idClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.AttachSizeToControl = {-1, -1};
@@ -193,7 +193,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	if_fail_fe(idClose = viewportControl(gui, editor.IdViewport, VIEWPORT_CONTROL_CLOSE));
 	if_fail_fe(idClient = viewportControl(gui, editor.IdViewport, VIEWPORT_CONTROL_TARGET));
 	if_fail_fe(idTitle = viewportControl(gui, editor.IdViewport, VIEWPORT_CONTROL_TITLE));
-	if_fail_fe(editor.IdSave = controlCreate(gui, [&](SControlState &, STextState &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdSave = controlCreate(gui, [&](SControlState &, apod<STextState> &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {64, gui.Controls.Placement[idClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.AttachSizeToControl = {-1, -1};
@@ -206,7 +206,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	if_fail_fe(controlSetParent(gui, editor.IdSave, editor.IdViewport));
 	gui.Controls.SetHidden(editor.IdSave, true);
 
-	if_fail_fe(editor.IdKeyboard = controlCreate(gui, [&](SControlState &, STextState &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdKeyboard = controlCreate(gui, [&](SControlState &, apod<STextState> &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {88, gui.Controls.Placement[idClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.DockToControl.Right = editor.IdSave;
@@ -219,7 +219,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	gui.Controls.Constraints[idTitle].DockToControl.Right = editor.IdKeyboard;
 	gui.Controls.SetHidden(editor.IdKeyboard, true);
 
-	if_fail_fe(editor.IdCursor = controlCreate(gui, [](SControlState & state, STextState &, vcst_t &, SControlConstraints &, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdCursor = controlCreate(gui, [](SControlState & state, apod<STextState> &, vcst_t &, SControlConstraints &, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Border = {};
 		placement.Margin = {};
 		draw.NoBorder = true;
@@ -786,7 +786,7 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SFileViewer & viewer, SFileEditor & e
 			if_fail_fe(sourceLine.slice(visibleText, offset, count));
 			if(gui.Controls.Text[idControl].Text != visibleText)
 				if_fail_fe(controlTextSet(gui, idControl, visibleText));
-			STextState & textState = gui.Controls.TextState[idControl];
+			apod<STextState> & textState = gui.Controls.TextState[idControl];
 			SControlText & controlText = gui.Controls.Text[idControl];
 			controlText.Selection = {};
 			u2_c lineOffset = ::fileViewerLineOffset(editor, iLine);
@@ -976,7 +976,7 @@ sttc gpk::err_t fileViewerSelectionUpdate(SFileViewer & viewer, FILE_VIEWER_LAYO
 gpk::err_t fileViewerSetup(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vcst_t rootPath) {
 	SGUI & gui = *viewer.Dialog->GUI;
 	gui.ColorModeDefault = GUI_COLOR_MODE_3D;
-	gui.ThemeDefault = ASCII_COLOR_CYAN * 16 + 8;
+	gui.ThemeDefault = ASCII_COLOR_Cyan * 16 + 8;
 	viewer.RootPath = rootPath.size() ? rootPath : vcst_t{"."};
 	if_fail_fe(::fileViewerMenuCreate(viewer));
 	if_fail_fe(virtualKeyboardSetup437(gui, viewer.VirtualKeyboard));

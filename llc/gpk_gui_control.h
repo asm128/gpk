@@ -227,7 +227,7 @@ nmsp gpk
 	);
 	struct SControlTable {
 		apod<SControlState		>	States				= {};
-		apod<STextState			>	TextState			= {};
+		aobj<apod<STextState>	>	TextState			= {};
 		aobj<vcst_t				>	Identifier			= {};
 		aobj<string				>	Script				= {};
 		apod<SControlConstraints>	Constraints			= {};

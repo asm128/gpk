@@ -45,7 +45,7 @@ sttc gpk::err_t themeSetupDefault	(cnst view<cnst bgra> & palette, s2_t iColor, 
 
 	//cnst s2_t														colorBase												= iColor / iShades;
 	s2_c			colorShade												= iColor % iShades;
-	s2_c			colorText												= (ASCII_COLOR_WHITE * iShades);
+	s2_c			colorText												= (ASCII_COLOR_White * iShades);
 	s2_c			halfShades												= (s2_t)iShades / 2;
 	s2_c			selectedShades										= (s2_t)iShades / 8;
 	s2_c			colorSelected											= iColor + ((colorShade < halfShades) ? selectedShades : -selectedShades);
@@ -125,49 +125,35 @@ sttc	gpk::err_t themeSetupDefault	(cnst a8bgra & palette, apod<SControlTheme>& t
 
 sttc	gpk::err_t initDefaults		(pobj<a8bgra> & palette, pobj<apod<SControlTheme>> & controlThemes) {
 	stxp	u2_t			iShades				= 16;
-	sttc	bgra			paletteColors []	=
-		// 16 Base colors
-		{ SColorRGBA{ASCII_COLOR_INDEX_0	}
-		, SColorRGBA{ASCII_COLOR_INDEX_1	}
-		, SColorRGBA{ASCII_COLOR_INDEX_2	}
-		, SColorRGBA{ASCII_COLOR_INDEX_3	}
-		, SColorRGBA{ASCII_COLOR_INDEX_4	}
-		, SColorRGBA{ASCII_COLOR_INDEX_5	}
-		, SColorRGBA{ASCII_COLOR_INDEX_6	}
-		, SColorRGBA{ASCII_COLOR_INDEX_7	}
-		, SColorRGBA{ASCII_COLOR_INDEX_8	}
-		, SColorRGBA{ASCII_COLOR_INDEX_9	}
-		, SColorRGBA{ASCII_COLOR_INDEX_10	}
-		, SColorRGBA{ASCII_COLOR_INDEX_11	}
-		, SColorRGBA{ASCII_COLOR_INDEX_12	}
-		, SColorRGBA{ASCII_COLOR_INDEX_13	}
-		, SColorRGBA{ASCII_COLOR_INDEX_14	}
-		, SColorRGBA{ASCII_COLOR_INDEX_15	}
-		// 16 Extended colors
-		, SColorRGBA{ASCII_COLOR_INDEX_14	+ ASCII_COLOR_INDEX_1}
-		, SColorRGBA{ASCII_COLOR_INDEX_13	+ ASCII_COLOR_INDEX_2}
-		, SColorRGBA{ASCII_COLOR_INDEX_12	+ ASCII_COLOR_INDEX_3}
-		, SColorRGBA{ASCII_COLOR_INDEX_11	+ ASCII_COLOR_INDEX_4}
-		, SColorRGBA{ASCII_COLOR_INDEX_10	+ ASCII_COLOR_INDEX_5}
-		, SColorRGBA{ASCII_COLOR_INDEX_9 	+ ASCII_COLOR_INDEX_6}
-		, SColorRGBA{ASCII_COLOR_INDEX_8 	+ ASCII_COLOR_INDEX_7}
-		, SColorRGBA{0xFFFFFFFFU & (ASCII_COLOR_INDEX_4 * (u3_t)ASCII_COLOR_INDEX_11)}
-		, SColorRGBA{0xFFFFFFFFU & (ASCII_COLOR_INDEX_5 * (u3_t)ASCII_COLOR_INDEX_10)}
-		, SColorRGBA{0xFFFFFFFFU & (ASCII_COLOR_INDEX_7 * (u3_t)ASCII_COLOR_INDEX_8 )}
-		, SColorRGBA{(u2_t)(ASCII_COLOR_INDEX_1 + ASCII_COLOR_INDEX_4)}
-		, SColorRGBA{(u2_t)(ASCII_COLOR_INDEX_3 + ASCII_COLOR_INDEX_7)}
-		, SColorRGBA{(u2_t)(ASCII_COLOR_INDEX_1 + ASCII_COLOR_INDEX_8)}
-		, SColorRGBA{(u2_t)(ASCII_COLOR_INDEX_4 + ASCII_COLOR_INDEX_7)}
-
-		, BROWN
-		, LIGHTORANGE
-		// Additional UI tones. The common generator produces their 16-shade ranges.
-		, SColorBGRA{248, 208,  72} // Azure
-		, SColorBGRA{ 32, 176, 248} // Amber
-		, SColorBGRA{232, 232, 232} // Mono
+	sttc	rgba			paletteVGA []		=
+		{ {  0,   0,   0} // Black
+		, {  0,   0, 170} // Blue
+		, {  0, 170,   0} // Green
+		, {  0, 170, 170} // Cyan
+		, {170,   0,   0} // Red
+		, {170,   0, 170} // Magenta
+		, {170,  85,   0} // Brown
+		, {170, 170, 170} // Light Grey
+		, { 85,  85,  85} // Dark Grey
+		, { 85,  85, 255} // Light Blue
+		, { 85, 255,  85} // Light Green
+		, { 85, 255, 255} // Light Cyan
+		, {255,  85,  85} // Light Red
+		, {255,  85, 255} // Light Magenta
+		, {255, 255,  85} // Yellow
+		, {255, 255, 255} // White
 	};
-	for(u2_t iColor = 0; iColor < size(paletteColors); ++iColor) 
-		paletteColors[iColor].a = 255;
+	stxp	u2_t			countVGA			= size(paletteVGA);
+	a8bgra				paletteColors		= {};
+	if_fail_fe(paletteColors.resize(countVGA * 2 + 3));
+	for(u2_t iColor = 0; iColor < countVGA; ++iColor) {
+		paletteColors[iColor]			= paletteVGA[iColor];
+		paletteColors[countVGA + iColor]	= paletteVGA[iColor] * 0.75 + rgba{32, 32, 32};
+	}
+	// Additional UI tones. The common generator produces their 16-shade ranges.
+	paletteColors[countVGA * 2 + 0]	= rgba{ 72, 208, 248}; // Azure
+	paletteColors[countVGA * 2 + 1]	= rgba{248, 176,  32}; // Amber
+	paletteColors[countVGA * 2 + 2]	= rgba{232, 232, 232}; // Mono
 
 	if(palette && 0 == palette->size()) {
 		if_fail_fe(::paletteSetupDefault(*palette, paletteColors, iShades));

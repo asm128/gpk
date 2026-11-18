@@ -42,7 +42,7 @@ nmsp gpk
 		SGUIZoom			LastZoom			= {};
 		SGUIZoom			Zoom				= {};
 		u1_t				SelectedFont		= 7;
-		u1_t				ThemeDefault		= ASCII_COLOR_CYAN * 16 + 8;
+		u1_t				ThemeDefault		= ASCII_COLOR_Cyan * 16 + 8;
 		GUI_COLOR_MODE		ColorModeDefault	= GUI_COLOR_MODE_3D;//GUI_COLOR_MODE_DEFAULT;
 		b8_t				InputModeTouch		= true;
 	};
@@ -50,10 +50,11 @@ nmsp gpk
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
 	err_t				guiJSONSave						(string & output, cnst SGUI & gui);
 	err_t				guiJSONLoad						(SGUI & gui, cnst SJSONReader & input, u2_t iNode = 0);
-	err_t				guiScriptRun						(SGUI & gui, cid_t iControl);
-	err_t				guiUpdate						(SGUI & gui, cnst SInput & input, cnst n2u1_t & targetMetrics, vpobj<SEventSystem> in_Events = {});
-	err_t				guiUpdateMetrics				(SGUI & gui, cnst n2u1_t & targetSize, b8_t forceUpdate);
-	err_t				guiDraw							(SGUI & gui, cnst g8bgra & target);
+	err_t				guiScriptRun					(SGUI & gui, cid_t iControl);
+	err_t				controlUpdateHierarchy			(SGUI & guigui, cid_t iControl, n2u1_c & targetMetrics);
+	err_t				guiUpdate						(SGUI & gui, n2u1_c & targetMetrics); //, vpobj<SEventSystem> in_Events = {});
+	err_t				guiUpdateMetrics				(SGUI & gui, n2u1_c & targetSize, b8_t forceUpdate);
+	err_t				guiDraw							(SGUI & gui, g8bgra target);
 	cid_t 				controlCreate					(SGUI & gui);
 	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
@@ -104,7 +105,7 @@ nmsp gpk
 
 	tydf	FError
 		< SControlState			&
-		, STextState			&
+		, apod<STextState>		&
 		, vcst_t				&
 		, SControlConstraints	&
 		, SControlPlacement		&

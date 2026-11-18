@@ -4,36 +4,76 @@
 #ifndef GPK_COLOR_H_23627
 #define GPK_COLOR_H_23627
 
+//#define EQUALITY_OPERATOR_MEMBERS(color_struct_type, condition_to_evaluate) \
+//	cxpr	b8_t		oper==			(cnst color_struct_type & other)	csnx	{ rtrn condition_to_evaluate; } \
+//	cxpr	b8_t		oper!=			(cnst color_struct_type & other)	csnx	{ rtrn oper==(other) == false; }
+//
+//#define EQUALITY_COMPARISON_M(member_M) (member_M == other.member_M)
+//#define EQUALITY_COMPARISON_MN(member_M, member_N) (EQUALITY_COMPARISON_M(member_M) || EQUALITY_COMPARISON_M(member_N))
+//#define EQUALITY_COMPARISON_MNO(member_M, member_N, member_O) (EQUALITY_COMPARISON_MN(member_M, member_N) || EQUALITY_COMPARISON_M(member_O))
+//#define EQUALITY_COMPARISON_MNOP(member_M, member_N, member_O, member_P) (EQUALITY_COMPARISON_MNO(member_M, member_N, member_O) || EQUALITY_COMPARISON_M(member_O))
+//
+//#define COLOR_MN_OPERATOR_MEMBERS(color_struct_type, member_M, member_N)						EQUALITY_OPERATOR_MEMBERS(color_struct_type,  EQUALITY_COMPARISON_MN(member_M, member_N))
+//#define COLOR_MNO_OPERATOR_MEMBERS(color_struct_type, member_M, member_N, member_O)				EQUALITY_OPERATOR_MEMBERS(color_struct_type,  EQUALITY_COMPARISON_MNO(member_M, member_N, member_O))
+//#define COLOR_MNOP_OPERATOR_MEMBERS(color_struct_type, member_M, member_N, member_O, member_P)	EQUALITY_OPERATOR_MEMBERS(color_struct_type,  EQUALITY_COMPARISON_MNOP(member_M, member_N, member_O, member_P))
+//
+//#define COLOR_BG_OPERATOR_MEMBERS(color_struct_type)	COLOR_MN_OPERATOR_MEMBERS(color_struct_type, b, g)
+//#define COLOR_BGR_OPERATOR_MEMBERS(color_struct_type)	COLOR_MNO_OPERATOR_MEMBERS(color_struct_type, b, g, r)
+//#define COLOR_BGRA_OPERATOR_MEMBERS(color_struct_type)	COLOR_MNOP_OPERATOR_MEMBERS(color_struct_type, b, g, r, a)
+//
+//#define COLOR_AB_OPERATOR_MEMBERS(color_struct_type)	COLOR_MN_OPERATOR_MEMBERS(color_struct_type, b, a)
+//#define COLOR_ABG_OPERATOR_MEMBERS(color_struct_type)	COLOR_MNO_OPERATOR_MEMBERS(color_struct_type, b, g, a)
+//#define COLOR_ABGR_OPERATOR_MEMBERS						COLOR_BGRA_OPERATOR_MEMBERS
+
+//#define COLOR_RGB_OPERATOR_MEMBERS COLOR_BGR_OPERATOR_MEMBERS
+
 nmsp gpk
 {
 #pragma pack(push, 1)
 #define COLOR_RGBA_OPERATOR_MEMBERS(color_struct_type) \
 	cxpr	b8_t		oper==			(cnst color_struct_type & other)	csnx	{ return b == other.b && g == other.g && r == other.r && a == other.a; } \
-	cxpr	b8_t		oper!=			(cnst color_struct_type & other)	csnx	{ return b != other.b || g != other.g || r != other.r || a != other.a; } \
+	cxpr	b8_t		oper!=			(cnst color_struct_type & other)	csnx	{ return b != other.b || g != other.g || r != other.r || a != other.a; }
 
 #define COLOR_RGB_OPERATOR_MEMBERS(color_struct_type) \
 	cxpr	b8_t		oper==			(cnst color_struct_type & other)	csnx	{ return b == other.b && g == other.g && r == other.r; } \
-	cxpr	b8_t		oper!=			(cnst color_struct_type & other)	csnx	{ return b != other.b || g != other.g || r != other.r; } \
+	cxpr	b8_t		oper!=			(cnst color_struct_type & other)	csnx	{ return b != other.b || g != other.g || r != other.r; }
 
 	tpl_tstct color_a							{ tdfTTCnst(_t); T a; GPK_DEFAULT_OPERATOR(color_a	, a == other.a); };
 	tpl_tstct color_b							{ tdfTTCnst(_t); T b; GPK_DEFAULT_OPERATOR(color_b	, b == other.b); };
 	tpl_tstct color_r							{ tdfTTCnst(_t); T r; GPK_DEFAULT_OPERATOR(color_r	, r == other.r); };
 
-	tpl_tstct color_ab		: color_a	<_t>	{ tdfTTCnst(_t); T b; GPK_DEFAULT_OPERATOR(color_ab	, color_a	<T>::oper==(other) && b == other.b); };
+	tpl_tstct color_ab		: color_a	<_t>	{ tdfTTCnst(_t); T b; GPK_DEFAULT_OPERATOR(color_ab		, color_a	<T>::oper==(other) && b == other.b); };
 	tpl_tstct color_abg		: color_ab	<_t>	{ tdfTTCnst(_t); T g; GPK_DEFAULT_OPERATOR(color_abg	, color_ab	<T>::oper==(other) && g == other.g); };
 	tpl_tstct color_abgr	: color_abg	<_t>	{ tdfTTCnst(_t); T r; GPK_DEFAULT_OPERATOR(color_abgr	, color_abg	<T>::oper==(other) && r == other.r); };
+	tydf color_ab<u0_t>		u0ab_t;		tdcs u0ab_t		u0ab_c;
+	tydf color_abg<u0_t>	u0abg_t;	tdcs u0abg_t	u0abg_c;
+	tydf color_abgr<u0_t>	u0abgr_t;	tdcs u0abgr_t	u0abgr_c;
 
-	tpl_tstct color_ar		: color_a	<_t>	{ tdfTTCnst(_t); T r; GPK_DEFAULT_OPERATOR(color_ar	, color_a	<T>::oper==(other) && r == other.r); };
+	tpl_tstct color_ar		: color_a	<_t>	{ tdfTTCnst(_t); T r; GPK_DEFAULT_OPERATOR(color_ar		, color_a	<T>::oper==(other) && r == other.r); };
 	tpl_tstct color_arg		: color_ar	<_t>	{ tdfTTCnst(_t); T g; GPK_DEFAULT_OPERATOR(color_arg	, color_ar	<T>::oper==(other) && g == other.g); };
 	tpl_tstct color_argb	: color_arg	<_t>	{ tdfTTCnst(_t); T b; GPK_DEFAULT_OPERATOR(color_argb	, color_arg	<T>::oper==(other) && b == other.b); };
+	tydf color_ar	<u0_t>	u0ar_t;		tdcs u0ar_t		u0ar_c;
+	tydf color_arg	<u0_t>	u0arg_t;	tdcs u0arg_t	u0arg_c;
+	tydf color_argb	<u0_t>	u0argb_t;	tdcs u0argb_t	u0argb_c;
 
-	tpl_tstct color_bg		: color_b	<_t>	{ tdfTTCnst(_t); T g; GPK_DEFAULT_OPERATOR(color_bg	, color_b	<T>::oper==(other) && g == other.g); };
+	tpl_tstct color_bg		: color_b	<_t>	{ tdfTTCnst(_t); T g; GPK_DEFAULT_OPERATOR(color_bg		, color_b	<T>::oper==(other) && g == other.g); };
 	tpl_tstct color_bgr		: color_bg	<_t>	{ tdfTTCnst(_t); T r; GPK_DEFAULT_OPERATOR(color_bgr	, color_bg	<T>::oper==(other) && r == other.r); };
 	tpl_tstct color_bgra	: color_bgr	<_t>	{ tdfTTCnst(_t); T a; GPK_DEFAULT_OPERATOR(color_bgra	, color_bgr	<T>::oper==(other) && a == other.a); };
+	tydf color_bg<u0_t>		u0bg_t;		tdcs u0bg_t		u0bg_c;
+	tydf color_bgr<u0_t>	u0bgr_t;	tdcs u0bgr_t	u0bgr_c;
+	tydf color_bgra<u0_t>	u0bgra_t;	tdcs u0bgra_t	u0bgra_c;
 
 	tpl_tstct color_rg		: color_r	<_t>	{ tdfTTCnst(_t); T g; GPK_DEFAULT_OPERATOR(color_rg	, color_r	<T>::oper==(other) && g == other.g); };
 	tpl_tstct color_rgb		: color_rg	<_t>	{ tdfTTCnst(_t); T b; GPK_DEFAULT_OPERATOR(color_rgb	, color_rg	<T>::oper==(other) && b == other.b); };
 	tpl_tstct color_rgba	: color_rgb	<_t>	{ tdfTTCnst(_t); T a; GPK_DEFAULT_OPERATOR(color_rgba	, color_rgb	<T>::oper==(other) && a == other.a); };
+	tydf color_rg<u0_t>		u0rg_t;		tdcs u0rg_t		u0rg_c;
+	tydf color_rgb<u0_t>	u0rgb_t;	tdcs u0rgb_t	u0rgb_c;
+	tydf color_rgba<u0_t>	u0rgba_t;	tdcs u0rgba_t	u0rgba_c;
+
+	stct	SColorBGR16 { u1_t b : 5; u1_t g : 6; u1_t r : 5; inxp SColorBGR16() = dflt; inxp SColorBGR16(u1_t c) nxpt : b(c & 0x1F), g((c >> 5) & 0x3F), r((c >> 11) & 0x1F) {} inxp oper u1_t() csnx { rtrn u1_t(b | (u1_t(g) << 5) | (u1_t(r) << 11)); } };
+	tydf	SColorBGR16		bgr1_t;		tdcs bgr1_t		bgr1_c;
+	stct	SColorRGB16 { u1_t r : 5; u1_t g : 6; u1_t b : 5; inxp SColorRGB16() = dflt; inxp SColorRGB16(u1_t c) nxpt : r(c & 0x1F), g((c >> 5) & 0x3F), b((c >> 11) & 0x1F) {} inxp oper u1_t() csnx { rtrn u1_t(r | (u1_t(g) << 5) | (u1_t(b) << 11)); } };
+	tydf	SColorBGR16		rgb1_t;		tdcs rgb1_t		rgb1_c;
 
 	tydf	u1_t		SColor16;
 
@@ -102,7 +142,7 @@ nmsp gpk
 		cxpr	SColorRGBA		oper *		(cnst SColorRGBA & color)	csnx	{ return {(u0_t)::gpk::clamped(r * (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g * (int)color.g, 0, 255), (u0_t)::gpk::clamped(b * (int)color.b, 0, 255), a};	}
 		cxpr	SColorRGBA		oper +		(cnst SColorRGBA & color)	csnx	{ return {(u0_t)::gpk::clamped(r + (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g + (int)color.g, 0, 255), (u0_t)::gpk::clamped(b + (int)color.b, 0, 255), a};	}
 		cxpr	SColorRGBA		oper *		(f3_t scalar)				csnx	{ return {(u0_t)::gpk::clamped(r * scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g * scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b * scalar, 0.0,   255.0), a};	}
-		cxpr	SColorRGBA		oper /		(f3_t scalar)				cnst				{ return {(u0_t)::gpk::clamped(r / scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g / scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b / scalar, 0.0,   255.0), a};	}
+		cxpr	SColorRGBA		oper /		(f3_t scalar)				cnst	{ return {(u0_t)::gpk::clamped(r / scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g / scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b / scalar, 0.0,   255.0), a};	}
 	};	// struct
 
 	// Stores BGRA color channels
@@ -113,8 +153,8 @@ nmsp gpk
 		cxpr					SColorBGRA		(u0_t b_, u0_t g_, u0_t r_, u0_t a_=0xff)	nxpt	: color_bgra<u0_t>{{{{b_}, g_}, r_}, a_} {}
 		cxpr					SColorBGRA		(u2_t other)								nxpt	: color_bgra<u0_t>
 			{ {{{u0_t(((other & 0x000000FF) >>  0)) }
-			, u0_t(((other & 0x0000FF00) >>  8))	  }
-			, u0_t(((other & 0x00FF0000) >> 16))	  }
+			, u0_t(((other & 0x0000FF00) >>  8))	}
+			, u0_t(((other & 0x00FF0000) >> 16))	}
 			, u0_t(((other & 0xFF000000) >> 24))
 			}
 		{}
@@ -128,16 +168,16 @@ nmsp gpk
 		cxpr	SColorBGRA		oper+		(cnst SColorBGRA & color)		csnx	{ return {(u0_t)::gpk::min(b + (int)color.b, 255)	, (u0_t)::gpk::min(g + (int)color.g, 255)	,(u0_t)::gpk::min(r + (int)color.r, 255), a};			}
 		cxpr	SColorBGRA		oper-		(cnst SColorBGRA & color)		csnx	{ return {(u0_t)::gpk::clamped(b - (s1_t)color.b, 0, 255), (u0_t)::gpk::clamped(g - (s1_t)color.g, 0, 255),(u0_t)::gpk::clamped(r - (s1_t)color.r, 0, 255), a};	}
 		cxpr	SColorBGRA		oper*		(f2_t scalar)					csnx	{ return {(u0_t)::gpk::clamped(b * scalar, 0.0f, 255.0f)	, (u0_t)::gpk::clamped(g * scalar, 0.0f, 255.0f)	,(u0_t)::gpk::clamped(r * scalar, 0.0f, 255.0f), a};			}
-		cxpr	SColorBGRA		oper/		(f2_t scalar)					cnst		{ return {(u0_t)::gpk::clamped(b / scalar, 0.0f, 255.0f)	, (u0_t)::gpk::clamped(g / scalar, 0.0f, 255.0f)	,(u0_t)::gpk::clamped(r / scalar, 0.0f, 255.0f), a};			}
+		cxpr	SColorBGRA		oper/		(f2_t scalar)					cnst	{ return {(u0_t)::gpk::clamped(b / scalar, 0.0f, 255.0f)	, (u0_t)::gpk::clamped(g / scalar, 0.0f, 255.0f)	,(u0_t)::gpk::clamped(r / scalar, 0.0f, 255.0f), a};			}
 		cxpr	SColorBGRA		oper*		(f3_t scalar)					csnx	{ return {(u0_t)::gpk::clamped(b * scalar, 0.0,  255.0 )	, (u0_t)::gpk::clamped(g * scalar, 0.0 , 255.0 )	,(u0_t)::gpk::clamped(r * scalar, 0.0, 255.0),	a};				}
-		cxpr	SColorBGRA		oper/		(f3_t scalar)					cnst		{ return {(u0_t)::gpk::clamped(b / scalar, 0.0,  255.0 )	, (u0_t)::gpk::clamped(g / scalar, 0.0 , 255.0 )	,(u0_t)::gpk::clamped(r / scalar, 0.0, 255.0),	a};				}
-				SColorBGRA&		oper*=		(f2_t scalar)						nxpt	{ b = (u0_t)::gpk::clamped(b * scalar, 0.0f, 255.0f); g = (u0_t)::gpk::clamped(g * scalar, 0.0f, 255.0f); r = (u0_t)::gpk::clamped(r * scalar, 0.0f, 255.0f);	return *this; }
-				SColorBGRA&		oper/=		(f2_t scalar)								{ b = (u0_t)::gpk::clamped(b / scalar, 0.0f, 255.0f); g = (u0_t)::gpk::clamped(g / scalar, 0.0f, 255.0f); r = (u0_t)::gpk::clamped(r / scalar, 0.0f, 255.0f);	return *this; }
-				SColorBGRA&		oper*=		(f3_t scalar)						nxpt	{ b = (u0_t)::gpk::clamped(b * scalar, 0.0,  255.0 ); g = (u0_t)::gpk::clamped(g * scalar, 0.0 , 255.0 ); r = (u0_t)::gpk::clamped(r * scalar, 0.0, 255.0);		return *this; }
-				SColorBGRA&		oper/=		(f3_t scalar)								{ b = (u0_t)::gpk::clamped(b / scalar, 0.0,  255.0 ); g = (u0_t)::gpk::clamped(g / scalar, 0.0 , 255.0 ); r = (u0_t)::gpk::clamped(r / scalar, 0.0, 255.0);		return *this; }
+		cxpr	SColorBGRA		oper/		(f3_t scalar)					cnst	{ return {(u0_t)::gpk::clamped(b / scalar, 0.0,  255.0 )	, (u0_t)::gpk::clamped(g / scalar, 0.0 , 255.0 )	,(u0_t)::gpk::clamped(r / scalar, 0.0, 255.0),	a};				}
+				SColorBGRA&		oper*=		(f2_t scalar)					nxpt	{ b = (u0_t)::gpk::clamped(b * scalar, 0.0f, 255.0f); g = (u0_t)::gpk::clamped(g * scalar, 0.0f, 255.0f); r = (u0_t)::gpk::clamped(r * scalar, 0.0f, 255.0f);	return *this; }
+				SColorBGRA&		oper/=		(f2_t scalar)							{ b = (u0_t)::gpk::clamped(b / scalar, 0.0f, 255.0f); g = (u0_t)::gpk::clamped(g / scalar, 0.0f, 255.0f); r = (u0_t)::gpk::clamped(r / scalar, 0.0f, 255.0f);	return *this; }
+				SColorBGRA&		oper*=		(f3_t scalar)					nxpt	{ b = (u0_t)::gpk::clamped(b * scalar, 0.0,  255.0 ); g = (u0_t)::gpk::clamped(g * scalar, 0.0 , 255.0 ); r = (u0_t)::gpk::clamped(r * scalar, 0.0, 255.0);		return *this; }
+				SColorBGRA&		oper/=		(f3_t scalar)							{ b = (u0_t)::gpk::clamped(b / scalar, 0.0,  255.0 ); g = (u0_t)::gpk::clamped(g / scalar, 0.0 , 255.0 ); r = (u0_t)::gpk::clamped(r / scalar, 0.0, 255.0);		return *this; }
 
-				SColorBGRA&		FromBGR16		(cnst SColor16 & other)				nxpt	{ b = u0_t((other & 0x1F) / f2_t(0x1F) * 255); g = u0_t(((other & 0x07E0) >> 5) / f2_t(0x3F) * 255); r = u0_t(((other & 0xF800) >> 11) / f2_t(0x1F) * 255);	return *this; }
-				SColorBGRA&		FromRGB16		(cnst SColor16 & other)				nxpt	{ r = u0_t((other & 0x1F) / f2_t(0x1F) * 255); g = u0_t(((other & 0x07E0) >> 5) / f2_t(0x3F) * 255); b = u0_t(((other & 0xF800) >> 11) / f2_t(0x1F) * 255);	return *this; }
+				SColorBGRA&		FromBGR16		(cnst SColor16 & other)		nxpt	{ b = u0_t((other & 0x1F) / f2_t(0x1F) * 255); g = u0_t(((other & 0x07E0) >> 5) / f2_t(0x3F) * 255); r = u0_t(((other & 0xF800) >> 11) / f2_t(0x1F) * 255);	return *this; }
+				SColorBGRA&		FromRGB16		(cnst SColor16 & other)		nxpt	{ r = u0_t((other & 0x1F) / f2_t(0x1F) * 255); g = u0_t(((other & 0x07E0) >> 5) / f2_t(0x3F) * 255); b = u0_t(((other & 0xF800) >> 11) / f2_t(0x1F) * 255);	return *this; }
 	};	// struct
 
 	// Stores RGB color channels
@@ -252,21 +292,21 @@ nmsp gpk
 		cxpr	SColorFloat		oper /		(f3_t scalar)				cnst				{ return {(f2_t)(r / scalar), (f2_t)(g / scalar), (f2_t)(b / scalar), a};						}
 		cxpr	SColorFloat		oper /		(f2_t scalar)				cnst				{ return {r / scalar,	g / scalar,	b / scalar};													}
 
-				SColorFloat&	Clamp			()									nxpt	{ r = ::gpk::clamped(r, 0.0f, 1.0f); g = ::gpk::clamped(g, 0.0f, 1.0f); b = ::gpk::clamped(b, 0.0f, 1.0f); return *this;	}
+				SColorFloat&	Clamp			()						nxpt	{ r = ::gpk::clamped(r, 0.0f, 1.0f); g = ::gpk::clamped(g, 0.0f, 1.0f); b = ::gpk::clamped(b, 0.0f, 1.0f); return *this;	}
 
-		cxpr	::gpk::rgbf2_t	rgb				()							cnst				{ return {{{r}, g}, b}; }
+		cxpr	::gpk::rgbf2_t	rgb				()						cnst	{ return {{{r}, g}, b}; }
 	};	// struct
 
-	tydf ::gpk::SColorFloat					frgba	;
-	tydf ::gpk::SColorBGRA					u8bgra	;
-	tydf ::gpk::SColorBGR					u8bgr	;
-	tydf ::gpk::SColorRGBA					u8rgba	;
-	tydf ::gpk::SColorRGB					u8rgb	;
+	tydf SColorFloat					frgba	;
+	tydf SColorBGRA						u8bgra	;
+	tydf SColorBGR						u8bgr	;
+	tydf SColorRGBA						u8rgba	;
+	tydf SColorRGB						u8rgb	;
 
 	tdcs frgba							cfrgba	;
-	tdcs u8bgra						c8bgra	;
+	tdcs u8bgra							c8bgra	;
 	tdcs u8bgr							c8bgr	;
-	tdcs u8rgba						c8rgba	;
+	tdcs u8rgba							c8rgba	;
 	tdcs u8rgb							c8rgb	;
 
 	tydf frgba								rgbaf	;

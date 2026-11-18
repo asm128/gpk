@@ -29,7 +29,7 @@ gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
 tplt<tpnm T>
 sttc gpk::err_t guiComponentJSONSave(::gpk::string & output, ::gpk::vcst_t name, cnst T & component, b8_t & separator) {
 	if_fail_fe(::gpk::appendOpenKey(output, name, separator));
-	if_fail_fe(::gpk::saveCTTI(output, component));
+	if_fail_fe(::gpk::cttiValueSave(output, component));
 	separator = true;
 	rtrn 0;
 }
@@ -117,7 +117,7 @@ sttc ::gpk::err_t guiComponentJSONLoad(cnst ::gpk::SJSONReader & input, ::gpk::u
 	cnst ::gpk::err_t iComponent = ::gpk::jsonObjectValueGet(input, iNode, name);
 	if(0 > iComponent)
 		rtrn 0;
-	if_fail_fe(::gpk::loadCTTI(input, (::gpk::u2_t)iComponent, component));
+	if_fail_fe(::gpk::cttiValueLoad(input, (::gpk::u2_t)iComponent, component));
 	rtrn 1;
 }
 
@@ -300,22 +300,52 @@ gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 	if_fail_fef(guiJSONLoad(gui, patch), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
 	rtrn 0;
 }
-//err_t			gpk::guiUpdate			(SGUI & gui, cnst SInput & input, cnst n2u1_t & targetMetrics, vpobj<SEventSystem> in_Events) {
+
+sttc	gpk::err_t	actualControlUpdate			(SGUI & gui, cid_t iControl) {
+	SControlImage			& controlImage				= gui.Controls.Images[iControl];
+	n2u2_c					imageMetrics				= controlImage.Image.metrics();
+	if(0 == (imageMetrics.x | imageMetrics.y))
+		rtrn 0;
+	if(0 == controlImage.ImageInvertY)
+		rtrn 0;
+	img8bgra				& inverted					= controlImage.Temp.Color;
+	if_fail_fe(inverted.resize(imageMetrics));
+	rtrn 0;
+}
+gpk::err_t			gpk::controlUpdateHierarchy	(SGUI & gui, cid_t iControl, n2u1_c & targetMetrics) {
+	if_fail_fef(controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
+	if(gui.LastSize != targetMetrics) {
+		for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
+			gui.Controls.SetUpdated((cid_t)iOutdated, false);
+		gui.LastSize			= targetMetrics;
+	}
+	if(false == controlHidden(gui, iControl)) {
+		if_fail_fe(::actualControlUpdate(gui, iControl));
+		vccid				children						= gui.Controls.Children[iControl];
+		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
+			if_fail_fe(gpk::controlUpdateHierarchy(gui, children[iChild], targetMetrics));
+	}
+	rtrn 0;
+}
+gpk::err_t			gpk::guiUpdate				(SGUI & gui, n2u1_c & targetMetrics) {// , vpobj<SEventSystem> in_Events
 //	guiProcessInput(gui, input, in_Events);
-//	if_true_block_logf(info_printf, gui.LastSize != targetMetrics || gui.LastZoom != gui.Zoom, {
-//			info_printf("GUI Render target size or dpi changed changed.");
-//			for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
-//				gui.Controls.SetUpdated((cid_t)iOutdated, false);
-//			gui.LastSize		= targetMetrics;
-//			gui.LastZoom		= gui.Zoom;
-//		}, "%ux%u != %ux%u || %f != %f"
-//		, gui.LastSize.x, gui.LastSize.y
-//		, targetMetrics.x, targetMetrics.y
-//		, gui.LastZoom, gui.Zoom
-//		);
-//	if_fail_fe(guiUpdateMetrics(gui, targetMetrics, false));
-//	rtrn 0;
-//}
+	if_true_block_logf(info_printf, gui.LastSize != targetMetrics || gui.LastZoom != gui.Zoom, {
+			info_printf("GUI Render target size or dpi changed changed.");
+			for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
+				gui.Controls.SetUpdated((cid_t)iOutdated, false);
+			gui.LastSize		= targetMetrics;
+			gui.LastZoom		= gui.Zoom;
+		}, "%ux%u != %ux%u || %f != %f"
+		, gui.LastSize.x, gui.LastSize.y
+		, targetMetrics.x, targetMetrics.y
+		, gui.LastZoom, gui.Zoom
+		);
+	if_fail_fe(guiUpdateMetrics(gui, targetMetrics, false));
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
+		if(false == controlInvalid(gui, (cid_t)iControl) && controlInvalid(gui, gui.Controls.States[iControl].Parent))
+			if_fail_e(controlUpdateHierarchy(gui, (cid_t)iControl, targetMetrics));
+	rtrn 0;
+}
 sttc gpk::err_t	buildControlGeometry	(cnst SControlPlacement & control, cnst SControlArea & controlMetrics, cnst SGUIZoom & zoom, view<rect2s1_t> finalRects, view<tri2s1_t> triangles)					{
 	rects1_t			scaledBorders			= {};
 	n2f3_c				scaleFinal				= zoom.DPI * zoom.ZoomLevel;

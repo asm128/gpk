@@ -111,7 +111,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	pobj<SDialogViewport> viewport = {};
 	if_fail_fe(dialogControlGet(*viewer.Dialog, editor.IdViewport, viewport));
 	SGUI & gui = *viewer.Dialog->GUI;
-	if_fail_fe(editor.IdSave = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdSave = controlCreate(gui, [&](SControlState &, apod<STextState> &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {64, gui.Controls.Placement[viewport->IdClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.AttachSizeToControl = {-1, -1};
@@ -124,7 +124,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	if_fail_fe(controlSetParent(gui, editor.IdSave, viewport->IdGUIControl));
 	gui.Controls.SetHidden(editor.IdSave, true);
 
-	if_fail_fe(editor.IdKeyboard = controlCreate(gui, [&](SControlState &, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints & constraints, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdKeyboard = controlCreate(gui, [&](SControlState &, apod<STextState> &, vcst_t &, SControlConstraints & constraints, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Area.Size = {88, gui.Controls.Placement[viewport->IdClose].Area.Size.y};
 		placement.Align = ALIGN_TOP_RIGHT;
 		constraints.DockToControl.Right = editor.IdSave;
@@ -137,7 +137,7 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 	gui.Controls.Constraints[viewport->IdTitle].DockToControl.Right = editor.IdKeyboard;
 	gui.Controls.SetHidden(editor.IdKeyboard, true);
 
-	if_fail_fe(editor.IdCursor = controlCreate(gui, [](SControlState & state, SControlState &, SControlPlacement & placement, SControlArea &, SControlConstraints &, SControlDraw & draw, SControlText & text, SControlImage &) {
+	if_fail_fe(editor.IdCursor = controlCreate(gui, [](SControlState & state, apod<STextState> &, vcst_t &, SControlConstraints &, SControlPlacement & placement, SControlArea &, SControlDraw & draw, SControlText & text, SControlImage &) {
 		placement.Border = {};
 		placement.Margin = {};
 		draw.NoBorder = true;
@@ -843,7 +843,7 @@ sttc gpk::err_t fileViewerSelectionUpdate(SFileViewer & viewer, FILE_VIEWER_LAYO
 gpk::err_t fileViewerSetup(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vcst_t rootPath) {
 	SGUI & gui = *viewer.Dialog->GUI;
 	gui.ColorModeDefault = GUI_COLOR_MODE_3D;
-	gui.ThemeDefault = ASCII_COLOR_CYAN * 16 + 8;
+	gui.ThemeDefault = ASCII_COLOR_Cyan * 16 + 8;
 	viewer.RootPath = rootPath.size() ? rootPath : vcst_t{"."};
 	if_fail_fe(::fileViewerMenuCreate(viewer));
 	if_fail_fe(virtualKeyboardSetup437(gui, viewer.VirtualKeyboard));

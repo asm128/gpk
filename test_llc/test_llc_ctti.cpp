@@ -225,13 +225,12 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_VALUE            , SCTTIEnumTest_gpk_ctti.Values[2].Value != CTTIEnumWrite);
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_VALUE            , SCTTIEnumTest_gpk_ctti.Values[3].Value != CTTIEnumAlias);
 	GPK_TEST_CHECK   (errors, CTTI_JSON_TEST_RESULT_ENUM_FIND             , SCTTIEnumTest_gpk_ctti.Find("CTTIEnumAlias") != 3);
-	cnst ::gpk::enum_definition<SCTTIEnumTest> & enumDefinition = ::gpk::get_enum<SCTTIEnumTest>();
-	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION       , enumDefinition.Name != "SCTTIEnumTest", "Unexpected enum definition name:'%.*s'.", GPK_VIEW_ARGS(enumDefinition.Name));
-	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION       , enumDefinition.Values.size() != SCTTIEnumTest_gpk_ctti.Count || enumDefinition.Names.size() != SCTTIEnumTest_gpk_ctti.Count);
+	GPK_TEST_CHECKF  (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION       , ::gpk::get_enum<SCTTIEnumTest>().Name != "SCTTIEnumTest", "Unexpected enum definition name:'%.*s'.", GPK_VIEW_ARGS(::gpk::get_enum<SCTTIEnumTest>().Name));
+	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION       , ::gpk::get_enum<SCTTIEnumTest>().Values.size() != SCTTIEnumTest_gpk_ctti.Count || ::gpk::get_enum<SCTTIEnumTest>().Names.size() != SCTTIEnumTest_gpk_ctti.Count);
 	for(::gpk::u2_t iValue = 0; iValue < SCTTIEnumTest_gpk_ctti.Count; ++iValue) {
-		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Values[iValue] != SCTTIEnumTest_gpk_ctti.Values[iValue].Value);
-		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Names[iValue] != SCTTIEnumTest_gpk_ctti_views.Names[iValue]);
-		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, enumDefinition.Titles[iValue] != enumDefinition.Names[iValue] || enumDefinition.Descriptions[iValue] != enumDefinition.Names[iValue]);
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, ::gpk::get_enum<SCTTIEnumTest>().Values[iValue] != SCTTIEnumTest_gpk_ctti.Values[iValue].Value);
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, ::gpk::get_enum<SCTTIEnumTest>().Names[iValue] != SCTTIEnumTest_gpk_ctti_views.Names[iValue]);
+		GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_ENUM_DEFINITION, ::gpk::get_enum<SCTTIEnumTest>().Titles[iValue] != ::gpk::get_enum<SCTTIEnumTest>().Names[iValue] || ::gpk::get_enum<SCTTIEnumTest>().Descriptions[iValue] != ::gpk::get_enum<SCTTIEnumTest>().Names[iValue]);
 	}
 	cnst ::gpk::SCTTIEnumDeclaration * cttiEnumFull = ::gpk::cttiEnum("SCTTIEnumFull");
 	GPK_TEST_REQUIRE (errors, CTTI_JSON_TEST_RESULT_ENUM_FULL_DECLARATION , nullptr == cttiEnumFull);
@@ -264,10 +263,10 @@ sttc ::gpk::vcst_t cttiEnumSpanView
 	SCTTIInstanceTest sourceA = {7, 1.25, CTTIEnumWrite, true};
 	SCTTIInstanceTest sourceB = {9, -2.5, CTTIEnumRead, false};
 	::gpk::string serialized = {};
-	cnst ::gpk::err_t savedA = ::gpk::saveCTTI(serialized, sourceA);
-	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(savedA));
-	cnst ::gpk::err_t savedB = ::gpk::saveCTTI(serialized, sourceB);
-	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(savedB));
+	::gpk::err_t savedA;
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(savedA = ::gpk::saveCTTI(serialized, sourceA)));
+	::gpk::err_t savedB;
+	GPK_TEST_REQUIRE(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, ::gpk::failed(savedB = ::gpk::saveCTTI(serialized, sourceB)));
 	GPK_TEST_CHECK(errors, CTTI_JSON_TEST_RESULT_INSTANCE_SAVE, (::gpk::u2_t)(savedA + savedB) != serialized.size());
 
 	::gpk::vcst_t serializedInput = serialized;

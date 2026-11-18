@@ -121,42 +121,22 @@ sttc cid_t sampleGUIGridCreate
 
 sttc u2_t sampleGUIToneFromCell(cnst n2u2_t & cell, u2_t toneCount) nxpt {
 	stxp u2_t columnCount = 2;
-	u2_c columnSize = ASCII_COLOR_COUNT / columnCount;
-	u2_c completeGroups = toneCount / ASCII_COLOR_COUNT;
+	u2_c columnSize = ASCII_COLOR_Count / columnCount;
+	u2_c completeGroups = toneCount / ASCII_COLOR_Count;
 	u2_c completeGroupRows = completeGroups * columnSize;
 	if(cell.y >= completeGroupRows)
-		return completeGroups * ASCII_COLOR_COUNT + (cell.y - completeGroupRows) * columnCount + cell.x;
+		return completeGroups * ASCII_COLOR_Count + (cell.y - completeGroupRows) * columnCount + cell.x;
 	u2_c toneGroup = cell.y / columnSize;
 	u2_c toneRow = cell.y % columnSize;
-	return toneGroup * ASCII_COLOR_COUNT + toneRow + cell.x * columnSize;
+	return toneGroup * ASCII_COLOR_Count + toneRow + cell.x * columnSize;
 }
 
 sttc u2_t sampleGUIToneRows(u2_t toneCount, u2_t column) nxpt {
 	stxp u2_t columnCount = 2;
-	u2_c columnSize = ASCII_COLOR_COUNT / columnCount;
-	u2_c completeRows = toneCount / ASCII_COLOR_COUNT * columnSize;
-	u2_c remainder = toneCount % ASCII_COLOR_COUNT;
+	u2_c columnSize = ASCII_COLOR_Count / columnCount;
+	u2_c completeRows = toneCount / ASCII_COLOR_Count * columnSize;
+	u2_c remainder = toneCount % ASCII_COLOR_Count;
 	return completeRows + (remainder + columnCount - 1 - column) / columnCount;
-}
-
-sttc err_t sampleGUIMenuCreate(SGUI & gui, view<vcst_c> labels, ALIGN align) {
-	cid_t idRoot = controlCreate(gui);
-	if_fail_fe(idRoot);
-	SControlPlacement & root = gui.Controls.Placement[idRoot];
-	root.Area.Size = {1, 18};
-	root.Align = align;
-	root.Margin = {};
-	root.Border = {};
-	gui.Controls.Draw[idRoot].NoClient = true;
-	gui.Controls.States[idRoot].Mask &= ~(GUI_CONTROL_FLAG_Hovered | GUI_CONTROL_FLAG_Action);
-	s1_t offset = 0;
-	for(u2_t iLabel = 0; iLabel < labels.size(); ++iLabel) {
-		s1_t width = (s1_t)(labels[iLabel].size() * 8 + 8);
-		if_fail_fe(::sampleGUIControlCreate(gui, idRoot, labels[iLabel], {{offset, 0}, {width, 18}}));
-		offset += width;
-	}
-	root.Area.Size.x = offset;
-	return 0;
 }
 
 sttc err_t sampleGUIEditorCreate(SSampleGUI & app, SGUI & gui) {
@@ -212,6 +192,30 @@ sttc err_t sampleGUIAction(SSampleGUI & app, SGUI & gui, cid_t idControl) {
 	}
 
 	cnst cid_t idParent = gui.Controls.States[idControl].Parent;
+	cnst s1_t colorTheme = gui.Controls.Draw[idControl].ColorTheme;
+	if(colorTheme > 0 && gui.Colors && gui.Colors->ControlThemes) {
+		u2_t iTheme = colorTheme - 1;
+		if(false == controlInvalid(gui, idParent) && gui.Controls.Identifier[idParent] == "palette_shades")
+			iTheme = gui.ThemeDefault / ASCII_COLOR_Count * ASCII_COLOR_Count + iTheme % ASCII_COLOR_Count;
+		if(iTheme < gui.Colors->ControlThemes->size()) {
+			gui.ThemeDefault = (u1_t)iTheme;
+			if(false == controlInvalid(gui, idParent)) {
+				cnst cid_t idPaletteClient = gui.Controls.States[idParent].Parent;
+				if(false == controlInvalid(gui, idPaletteClient))
+					for(cid_t idGrid : gui.Controls.Children[idPaletteClient])
+						if(gui.Controls.Identifier[idGrid] == "palette_shades") {
+							vcid shadeCells = gui.Controls.Children[idGrid];
+							for(u2_t iShade = 0; iShade < shadeCells.size(); ++iShade)
+								gui.Controls.Draw[shadeCells[iShade]].ColorTheme = (s1_t)(iTheme / ASCII_COLOR_Count * ASCII_COLOR_Count + iShade + 1);
+							if(iTheme % ASCII_COLOR_Count < shadeCells.size())
+								if_fail_fe(guiSelect(gui, shadeCells[iTheme % ASCII_COLOR_Count]));
+							break;
+						}
+			}
+			return guiSelect(gui, idControl);
+		}
+	}
+
 	if(text == "X" && false == controlInvalid(gui, idParent)) {
 		gui.Controls.SetHidden(idParent, true);
 		return 0;
@@ -256,15 +260,18 @@ err_t sampleGUISetup(SSampleGUI & app, SGUI & gui) {
 
 	cid_t idPaletteClient = CID_INVALID;
 	if_fail_fe(::sampleGUIPanelCreate(gui, "PALETTE", {{20, 28}, {300, 220}}, idPaletteClient));
-	u2_c toneCount = gui.Colors && gui.Colors->ControlThemes ? gui.Colors->ControlThemes->size() / ASCII_COLOR_COUNT : 0;
-	u2_c toneDefault = toneCount >= 3 ? toneCount - 3 : 0;
+	u2_c toneCount = gui.Colors && gui.Colors->ControlThemes ? gui.Colors->ControlThemes->size() / ASCII_COLOR_Count : 0;
+	u2_t toneDefault = gui.ThemeDefault / ASCII_COLOR_Count;
+	if(toneDefault >= toneCount)
+		toneDefault = 0;
 	aobj<vcst_t> shadeLabels = {};
-	if_fail_fe(shadeLabels.resize(ASCII_COLOR_COUNT));
-	cid_t idShades = ::sampleGUIGridCreate(gui, idPaletteClient, view<vcst_c>{shadeLabels}, ASCII_COLOR_COUNT / 2, {16, 16}, {1, 1}, {62, 4});
+	if_fail_fe(shadeLabels.resize(ASCII_COLOR_Count));
+	cid_t idShades = ::sampleGUIGridCreate(gui, idPaletteClient, view<vcst_c>{shadeLabels}, ASCII_COLOR_Count / 2, {16, 16}, {1, 1}, {62, 4});
 	if_fail_fe(idShades);
+	gui.Controls.Identifier[idShades] = "palette_shades";
 	for(u2_t iShade = 0; iShade < gui.Controls.Children[idShades].size(); ++iShade) {
 		cid_t idControl = gui.Controls.Children[idShades][iShade];
-		gui.Controls.Draw[idControl].ColorTheme = (s1_t)(toneDefault * ASCII_COLOR_COUNT + iShade + 1);
+		gui.Controls.Draw[idControl].ColorTheme = (s1_t)(toneDefault * ASCII_COLOR_Count + iShade + 1);
 		gui.Controls.Placement[idControl].Margin = {};
 		gui.Controls.Placement[idControl].Border = {};
 		gui.Controls.Draw[idControl].NoBorder = true;
@@ -272,15 +279,15 @@ err_t sampleGUISetup(SSampleGUI & app, SGUI & gui) {
 	for(u2_t iColumn = 0; iColumn < 2; ++iColumn) {
 		u2_c rowCount = ::sampleGUIToneRows(toneCount, iColumn);
 		aobj<vcst_t> toneLabels = {};
-		if_fail_fe(toneLabels.resize(rowCount * ASCII_COLOR_COUNT));
-		cid_t idTones = ::sampleGUIGridCreate(gui, idPaletteClient, view<vcst_c>{toneLabels}, ASCII_COLOR_COUNT, {8, 5}, {}, {(s1_t)(16 + iColumn * 132), 40});
+		if_fail_fe(toneLabels.resize(rowCount * ASCII_COLOR_Count));
+		cid_t idTones = ::sampleGUIGridCreate(gui, idPaletteClient, view<vcst_c>{toneLabels}, ASCII_COLOR_Count, {8, 5}, {}, {(s1_t)(16 + iColumn * 132), 40});
 		if_fail_fe(idTones);
 		for(u2_t iCell = 0; iCell < gui.Controls.Children[idTones].size(); ++iCell) {
-			u2_c row = iCell / ASCII_COLOR_COUNT;
-			u2_c shade = iCell % ASCII_COLOR_COUNT;
+			u2_c row = iCell / ASCII_COLOR_Count;
+			u2_c shade = iCell % ASCII_COLOR_Count;
 			u2_c tone = ::sampleGUIToneFromCell({iColumn, row}, toneCount);
 			cid_t idControl = gui.Controls.Children[idTones][iCell];
-			gui.Controls.Draw[idControl].ColorTheme = (s1_t)(tone * ASCII_COLOR_COUNT + shade + 1);
+			gui.Controls.Draw[idControl].ColorTheme = (s1_t)(tone * ASCII_COLOR_Count + shade + 1);
 			gui.Controls.Placement[idControl].Margin = {};
 			gui.Controls.Placement[idControl].Border = {};
 			gui.Controls.Draw[idControl].NoBorder = true;

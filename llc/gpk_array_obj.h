@@ -243,10 +243,9 @@ nmsp gpk
 
 	}; // array_obj
 
-	tplT	usng aobj		= array_obj<T>; 
-	tplT	usng aview		= aobj<view<T>>; 
-	//tplT	uing ao			= aobj<T>; 
-	//tplT	uing av			= aview	<T>; 
+	tplTusng	aobj		= array_obj<T>; 
+	tplTusng	aview		= aobj<view<T>>; 
+	tplTusng	aaobj		= aobj<aobj<T>>;									\
 
 	tydf	aview<uc_t>		avuc_t;		tdcs	avuc_t		avuc_c;
 	tydf	aview<sc_t>		avsc_t;		tdcs	avsc_t		avsc_c;
@@ -304,6 +303,9 @@ nmsp gpk
 }
 
 #define GPK_USING_AOBJ()													\
+	tplTusng	aobj		= ::gpk::array_obj<T>;							\
+	tplTusng	aview		= aobj<::gpk::view<T>>;							\
+	tplTusng	aaobj		= aobj<aobj<T>>;								\
 	usng	::gpk::avuc_t, ::gpk::avuc_c, ::gpk::avcuc_t, ::gpk::avcuc_c	\
 		,	::gpk::avsc_t, ::gpk::avsc_c, ::gpk::avcsc_t, ::gpk::avcsc_c	\
 		,	::gpk::avf2_t, ::gpk::avf2_c, ::gpk::avcf2_t, ::gpk::avcf2_c	\

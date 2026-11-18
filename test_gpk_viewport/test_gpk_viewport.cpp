@@ -25,7 +25,7 @@ err_t			setup		(::gme::SApplication & app)						{
 	if_true_e(failed(mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)));
 	SGUI						& gui										= *framework.GUI;
 	gui.ColorModeDefault												= GUI_COLOR_MODE_3D;
-	gui.ThemeDefault													= ASCII_COLOR_DARKGREEN * 16 + 7;
+	gui.ThemeDefault													= ASCII_COLOR_Dark_green * 16 + 7;
 	{
 		app.IdExit															= controlCreate(gui);
 		SControlPlacement															& controlExit								= gui.Controls.Placement[app.IdExit];

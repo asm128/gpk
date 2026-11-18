@@ -19,7 +19,7 @@ nmsp gpk
 		inxp	::gpk::n2u2_t	metrics				()	csnx	{ return Characters.metrics(); }
 	};
 
-	gpk::err_t 		asciiTargetClear	(::gpk::SASCIITarget & target, u0_t character = ' ', u1_t color = ASCII_COLOR_WHITE);
+	gpk::err_t 		asciiTargetClear	(::gpk::SASCIITarget & target, u0_t character = ' ', u1_t color = ASCII_COLOR_White);
 
 	// ------------------------------------------------------
 #pragma pack(push, 1)

@@ -327,19 +327,20 @@ nmsp gpk
 	}
 } // nmsp
 
-#define GPK_USING_APOD()				\
-	usng	::gpk::ab8_t, ::gpk::ab8_c	\
-		,	::gpk::auc_t, ::gpk::auc_c	\
-		,	::gpk::asc_t, ::gpk::asc_c	\
-		,	::gpk::au0_t, ::gpk::au0_c	\
-		,	::gpk::au1_t, ::gpk::au1_c	\
-		,	::gpk::au2_t, ::gpk::au2_c	\
-		,	::gpk::au3_t, ::gpk::au3_c	\
-		,	::gpk::as0_t, ::gpk::as0_c	\
-		,	::gpk::as1_t, ::gpk::as1_c	\
-		,	::gpk::as2_t, ::gpk::as2_c	\
-		,	::gpk::as3_t, ::gpk::as3_c	\
-		,	::gpk::af2_t, ::gpk::af2_c	\
+#define GPK_USING_APOD()						\
+	tplTusng	apod	= ::gpk::array_pod<T>;	\
+	usng	::gpk::ab8_t, ::gpk::ab8_c			\
+		,	::gpk::auc_t, ::gpk::auc_c			\
+		,	::gpk::asc_t, ::gpk::asc_c			\
+		,	::gpk::au0_t, ::gpk::au0_c			\
+		,	::gpk::au1_t, ::gpk::au1_c			\
+		,	::gpk::au2_t, ::gpk::au2_c			\
+		,	::gpk::au3_t, ::gpk::au3_c			\
+		,	::gpk::as0_t, ::gpk::as0_c			\
+		,	::gpk::as1_t, ::gpk::as1_c			\
+		,	::gpk::as2_t, ::gpk::as2_c			\
+		,	::gpk::as3_t, ::gpk::as3_c			\
+		,	::gpk::af2_t, ::gpk::af2_c			\
 		,	::gpk::af3_t, ::gpk::af3_c
 
 #endif // GPK_ARRAY_POD_H_23627

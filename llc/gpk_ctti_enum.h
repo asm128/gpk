@@ -243,14 +243,11 @@ nmsp gpk
 		rtrn {};
 	}
 
-	tplt<tpnm T>
-	stct SCTTIEnumRegistry;
+	tplTstct SCTTIEnumRegistry;
 
-	tplt<tpnm T>
-	inxp cnst auto & cttiEnum() nxpt { rtrn SCTTIEnumRegistry<T>::Value; }
+	tplTsinx cnst auto & cttiEnum() nxpt { rtrn SCTTIEnumRegistry<T>::Value; }
 
-	tplt<tpnm T>
-	inxp cnst auto & cttiEnumViews() nxpt { rtrn SCTTIEnumRegistry<T>::Views; }
+	tplTsinx cnst auto & cttiEnumViews() nxpt { rtrn SCTTIEnumRegistry<T>::Views; }
 
 	tplt<tpnm TEnum, size_t NDeclaration>
 	err_t enumDefinitionFromCTTI(cnst SCTTIEnumParseResult<TEnum, NDeclaration> & metadata) {

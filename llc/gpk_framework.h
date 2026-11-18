@@ -45,31 +45,31 @@ nmsp gpk
 		b8_t						GUIZoom					: 1;
 	};
 
-	struct SFramework : gpk::SFrameTimer {
-		::gpk::SRuntimeValues		& RuntimeValues			;
-		::gpk::vcst_t				FileNameJSONConfig		= "gpk_config.json";
-		::gpk::pobj<::gpk::SGUI>	GUI						= {};
-		::gpk::SFrameworkDetail		PlatformDetail			= {};
-		::gpk::SWindow				RootWindow				= {};
-		::gpk::SFrameworkSettings	Settings				= {};
-		::gpk::SJSONFile			JSONConfig				= {};
+	struct SFramework : SFrameTimer {
+		SRuntimeValues		& RuntimeValues			;
+		vcst_t				FileNameJSONConfig		= "gpk_config.json";
+		pobj<SGUI>			GUI						= {};
+		SFrameworkDetail	PlatformDetail			= {};
+		SWindow				RootWindow				= {};
+		SFrameworkSettings	Settings				= {};
+		SJSONFile			JSONConfig				= {};
 
 #ifndef GPK_ATMEL
 		mutex				LockGUI;
 #endif
 
-		inln						SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcst_t fileNameJSONConfig = "gpk_config.json")
+		inln						SFramework				(SRuntimeValues & runtimeValues, vcst_t fileNameJSONConfig = "gpk_config.json")
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig) {
 			if_null_e(RootWindow.Input.create());
 			if_null_e(GUI.create());
 			if(fileNameJSONConfig.size())	// Attempt to load config file.
-				if_fail_w(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig));
+				if_fail_w(jsonFileRead(JSONConfig, fileNameJSONConfig));
 		}
 	}; // struct
 
-	gpk::err_t 			updateFramework			(::gpk::SFramework & framework);
-	gpk::err_t 			mainWindowCreate		(::gpk::SWindow & mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput> & displayInput);
-	gpk::err_t 			mainWindowDestroy		(::gpk::SWindow & mainWindow);
+	err_t 			updateFramework			(SFramework & framework);
+	err_t 			mainWindowCreate		(SWindow & mainWindow, SRuntimeValuesDetail & runtimeValues, pobj<SInput> & displayInput);
+	err_t 			mainWindowDestroy		(SWindow & mainWindow);
 } // nmsp
 
 #endif // GPK_FRAMEWORK_H_23627

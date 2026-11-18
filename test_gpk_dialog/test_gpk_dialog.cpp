@@ -126,7 +126,7 @@ err_t			setup		(::gme::SApplication & app)						{
 	if_true_e(failed(mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)));
 	SGUI						& gui						= *framework.GUI;
 	gui.ColorModeDefault												= GUI_COLOR_MODE_3D;
-	gui.ThemeDefault													= ASCII_COLOR_DARKGREY * 16 + ASCII_COLOR_LIGHTGREY;
+	gui.ThemeDefault													= ASCII_COLOR_Dark_grey * 16 + ASCII_COLOR_Light_grey;
 	::gpk::ALIGN					playerAlign				= ::gpk::ALIGN_BOTTOM_LEFT;
 	::gpk::n2s1_t				playerPosition				= {};
 	::gpk::guiCreateControlList<::gme::UI_PROFILE>(gui, app.DialogMain.Root, PLAYER_UI_SIZE, playerPosition, playerAlign, ::gpk::ALIGN_CENTER, app.ControlsDialogHome);

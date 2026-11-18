@@ -157,7 +157,7 @@ gpk::err_t 		gpk::controlHandle		(cnst SControlTable & controls, vcid controlsTo
 }
 gpk::err_t gpk::controlInstanceReset	(SControlTable & controlTable, cid_t iControl, vs1_t defaultColors) {
 	controlTable.States			[iControl]	= {};
-	controlTable.TextState		[iControl]	= {};
+	controlTable.TextState		[iControl].clear();
 	controlTable.Identifier		[iControl]	= {};
 	controlTable.Script			[iControl].clear();
 	controlTable.Constraints	[iControl]	= {};
