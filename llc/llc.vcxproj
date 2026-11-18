@@ -194,9 +194,7 @@
     <ClInclude Include="gpk_platform_globals.h" />
     <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_pod_definition.h" />
-    <ClInclude Include="gpk_process.h" />
     <ClInclude Include="gpk_process_broker.h" />
-    <ClInclude Include="gpk_process_internal.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
     <ClInclude Include="gpk_ptr_obj.h" />
     <ClInclude Include="gpk_ptr_pod.h" />
@@ -346,10 +344,7 @@
     <ClCompile Include="gpk_platform_error.cpp" />
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
-    <ClCompile Include="gpk_process.cpp" />
     <ClCompile Include="gpk_process_broker.cpp" />
-    <ClCompile Include="gpk_process_linux.cpp" />
-    <ClCompile Include="gpk_process_win32.cpp" />
     <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_scene.cpp" />

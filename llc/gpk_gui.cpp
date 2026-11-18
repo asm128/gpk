@@ -6,6 +6,7 @@
 #include "gpk_json_expression.h"
 #include "gpk_label.h"
 #include "gpk_rect_align.h"
+#include "gpk_framework_module.h"
 
 usns gpk;
 
@@ -98,6 +99,7 @@ sttc ::gpk::err_t guiControlJSONSave(::gpk::string & output, cnst ::gpk::SGUI & 
 	if_fail_fe(::guiComponentJSONSave(output, "Placement", gui.Controls.Placement[iControl], separator));
 	if_fail_fe(::guiComponentJSONSave(output, "Draw", gui.Controls.Draw[iControl], separator));
 	if_fail_fe(::guiComponentJSONSave(output, "Text", gui.Controls.Text[iControl], separator));
+	if_fail_fe(::guiComponentJSONSave(output, "Script", gui.Controls.Script[iControl], separator));
 	if_fail_fe(::guiControlChildrenJSONSave(output, gui, iControl, separator));
 	rtrn output.push_back('}');
 }
@@ -178,6 +180,8 @@ sttc ::gpk::err_t guiControlJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, c
 	if_fail_fe(result); loaded += result;
 	result = ::guiComponentJSONLoad(input, iNode, "Draw", gui.Controls.Draw[iControl]);
 	if_fail_fe(result); loaded += result;
+	result = ::guiComponentJSONLoad(input, iNode, "Script", gui.Controls.Script[iControl]);
+	if_fail_fe(result); loaded += result;
 	::gpk::SControlText text = gui.Controls.Text[iControl];
 	result = ::guiComponentJSONLoad(input, iNode, "Text", text);
 	if_fail_fe(result);
@@ -204,6 +208,19 @@ gpk::err_t gpk::guiJSONLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input, 
 			if_fail_fe(::guiControlJSONLoad(gui, (cid_t)iControl, input, (u2_t)iControlNode));
 	}
 	rtrn 0;
+}
+
+gpk::err_t gpk::guiLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input) {
+	cnst ::gpk::err_t iGUI = ::gpk::jsonExpressionResolve("GUI", input, 0);
+	if_fail_fe(iGUI);
+	::gpk::aobj<::gpk::vcst_t> identifiers = {};
+	if_fail_fe(::gpk::jsonObjectKeyList(input, (::gpk::u2_t)iGUI, identifiers));
+	for(::gpk::u2_t iIdentifier = 0; iIdentifier < identifiers.size(); ++iIdentifier) {
+		cnst ::gpk::cid_t iControl = ::gpk::controlCreate(gui);
+		if_fail_fe(iControl);
+		gui.Controls.Identifier[iControl] = ::gpk::label(identifiers[iIdentifier]);
+	}
+	rtrn ::gpk::guiJSONLoad(gui, input, (::gpk::u2_t)iGUI);
 }
 
 sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, ::gpk::vcst_t rootIdentifier, ::gpk::b8_t & dynamic, ::gpk::b8_t & scoped) {
@@ -284,6 +301,17 @@ sttc ::gpk::err_t guiJSONTemplateResolveNode(cnst ::gpk::SJSONReader & source, :
 	rtrn ::gpk::jsonWrite(source.Tree[iSource], source.View, output);
 }
 
+sttc ::gpk::err_t guiFrameworkEventPost(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & source) {
+	cnst ::gpk::err_t iType = ::gpk::jsonExpressionResolve("Runtime.Event.Type", source, 0);
+	if(0 > iType)
+		rtrn 0;
+	::gpk::vcst_t type = {};
+	if_fail_fe(::gpk::jsonObjectGetString(source, (::gpk::u2_t)iType, type));
+	::gpk::APPLICATION_STATE state = {};
+	if_fail_fe(::gpk::get_enum<::gpk::APPLICATION_STATE>().get_value(type, state));
+	rtrn ::gpk::eventEnqueueChild(gui.Controls.EventQueue, ::gpk::SYSTEM_EVENT_Framework, state, ::gpk::vcu0_t{});
+}
+
 gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 	if_true_fef(controlInvalid(gui, iControl), "iControl:%i", iControl);
 	cnst vcst_t identifier = gui.Controls.Identifier[iControl];
@@ -298,6 +326,7 @@ gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 	b8_t scoped = true;
 	if_fail_fef(::guiJSONTemplateDynamic(source, 0, rootIdentifier, dynamic, scoped), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 	if(false == dynamic) {
+		if_fail_fef(::guiFrameworkEventPost(gui, source), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 		if_fail_fef(guiJSONLoad(gui, source), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 		rtrn 0;
 	}
@@ -314,6 +343,7 @@ gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 	if_fail_fef(::guiJSONTemplateResolveNode(source, 0, values, 0, patchJSON), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 	SJSONReader patch = {};
 	if_fail_fef(jsonParse(patch, patchJSON), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
+	if_fail_fef(::guiFrameworkEventPost(gui, patch), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
 	if_fail_fef(guiJSONLoad(gui, patch), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
 	rtrn 0;
 }

@@ -429,9 +429,6 @@
     <ClInclude Include="gpk_png.h">
       <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_process.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_ptr_nco.h">
       <Filter>pointer</Filter>
     </ClInclude>
@@ -801,9 +798,6 @@
     <ClInclude Include="gpk_test_core.h">
       <Filter>test</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_process_internal.h">
-      <Filter>module</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_runtime.h">
       <Filter>framework</Filter>
     </ClInclude>
@@ -1007,9 +1001,6 @@
     <ClCompile Include="gpk_png_write.cpp">
       <Filter>image</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_process.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_raster_lh.cpp">
       <Filter>raster</Filter>
     </ClCompile>
@@ -1096,12 +1087,6 @@
     </ClCompile>
     <ClCompile Include="gpk_string_time.cpp">
       <Filter>string</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_process_win32.cpp">
-      <Filter>module</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_process_linux.cpp">
-      <Filter>module</Filter>
     </ClCompile>
     <ClCompile Include="gpk_keyval_view.cpp">
       <Filter>view</Filter>
