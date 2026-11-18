@@ -58,7 +58,7 @@ sttc	gpk::err_t controlTextDraw		(cnst ::gpk::SGUI & gui, s2_t iControl, ::gpk::
 	apod<::gpk::n2u1_t>	dstCoords;
 	u2_c				iFont				= ::gpk::in_range(controlText.FontSelected, (s1_t)0, (s1_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	cnst ::gpk::SRasterFont	& selectedFont		= *gui.Fonts[iFont];
-	cnst apod<::gpk::STextState> & textState = gui.Controls.TextState[iControl];
+	cnst ::gpk::apod<::gpk::STextState> & textState = gui.Controls.TextState[iControl];
 	for(u2_t iCharacter = 0, countCharacter = ::gpk::min(textState.size(), controlText.Text.size()); iCharacter < countCharacter; ++iCharacter) {
 		if(false == textState[iCharacter].IsSelected())
 			continue;

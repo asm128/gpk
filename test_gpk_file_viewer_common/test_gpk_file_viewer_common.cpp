@@ -2,8 +2,17 @@
 
 #include "gpk_file.h"
 #include "gpk_framework_module.h"
+#include "gpk_gui_system.h"
 #include "gpk_label.h"
 #include "gpk_path.h"
+
+stxp u2_c JSON_EXPRESSION_PRESET_LIMIT = 9;
+stxp u2_c JSON_EXPRESSION_SUGGESTION_LIMIT = 12;
+stxp vcst_c JSON_EXPRESSION_TOOL_IDENTIFIER = "json_expression_tool";
+stxp vcst_c JSON_EXPRESSION_COMMAND_IDENTIFIER = "command";
+stxp vcst_c JSON_EXPRESSION_PRESET_IDENTIFIERS[JSON_EXPRESSION_PRESET_LIMIT] = {
+	"preset_0", "preset_1", "preset_2", "preset_3", "preset_4", "preset_5", "preset_6", "preset_7", "preset_8",
+};
 
 sttc gpk::err_t fileViewerViewportCreate(SFileViewer & viewer, cid_t & idViewport, vcst_t title, cnst rect2s1_t & area) {
 	pobj<SDialogViewport> viewport = {};
@@ -158,12 +167,14 @@ sttc gpk::err_t fileViewerEditorCreate(SFileViewer & viewer, SFileEditor & edito
 sttc gpk::err_t fileViewerMenuCreate(SFileViewer & viewer) {
 	SGUI & gui = *viewer.Dialog->GUI;
 	SControlList menuViewports = {};
-	sttc vcst_c viewportText[] = {"FILES"};
+	sttc vcst_c viewportText[] = {"FILES", "JSON"};
 	if_fail_fe(controlListCreate(gui, menuViewports, view<vcst_c>{viewportText}, CID_INVALID, DIRECTION_RIGHT));
 	gui.Controls.Placement[menuViewports.IdControl].Area.Offset = {};
 	gui.Controls.Placement[menuViewports.IdControl].Align = ALIGN_TOP_LEFT;
 	viewer.IdMenuFiles = menuViewports.IdControls[0];
+	viewer.IdMenuJSON = menuViewports.IdControls[1];
 	if_fail_fe(viewer.Dialog->Buttons.push_back(viewer.IdMenuFiles));
+	if_fail_fe(viewer.Dialog->Buttons.push_back(viewer.IdMenuJSON));
 	if_fail_fe(controlListInitialize(gui, viewer.EditorTabs));
 	viewer.EditorTabs.Orientation = DIRECTION_RIGHT;
 	gui.Controls.Placement[viewer.EditorTabs.IdControl].Area.Offset.x = gui.Controls.Placement[menuViewports.IdControl].Area.Size.x;
@@ -287,6 +298,520 @@ sttc gpk::err_t fileViewerTextLoad(SFileViewer & viewer, SFileEditor & editor, v
 	if_fail_fe(dialogControlGet(*viewer.Dialog, viewport->IdScrollBarX, scrollbar));
 	if_fail_fe(sliderSetValue(*scrollbar, 0));
 	gui.Controls.Text[viewport->IdTitle].Text = label(path);
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionLabelCreate(SFileViewer & viewer, cid_t iParent, vcst_t textValue, n2s1_t offset) {
+	SGUI & gui = *viewer.Dialog->GUI;
+	cid_t idLabel = -1;
+	if_fail_fe(idLabel = controlCreate(gui));
+	gui.Controls.Placement[idLabel].Area = {offset, {540, 22}};
+	gui.Controls.Placement[idLabel].Border = {1, 1, 1, 1};
+	gui.Controls.Draw[idLabel].Palettes = viewer.Dialog->Colors->Control;
+	gui.Controls.Text[idLabel].Text = label(textValue);
+	gui.Controls.Text[idLabel].Align = ALIGN_CENTER_LEFT;
+	gui.Controls.States[idLabel].Mask &= ~GUI_CONTROL_FLAG_Hovered;
+	gui.Controls.States[idLabel].Mask &= ~GUI_CONTROL_FLAG_Pressed;
+	gui.Controls.States[idLabel].Mask &= ~GUI_CONTROL_FLAG_Dragging;
+	gui.Controls.States[idLabel].Mask &= ~GUI_CONTROL_FLAG_Action;
+	rtrn controlSetParent(gui, idLabel, iParent);
+}
+
+sttc b8_t fileViewerJSONExpressionIdentifier(vcst_t viewKey) {
+	if(0 == viewKey.size())
+		rtrn false;
+	cnst sc_t first = viewKey[0];
+	if(false == ((first >= 'A' && first <= 'Z') || (first >= 'a' && first <= 'z') || '_' == first))
+		rtrn false;
+	for(u2_t iChar = 1; iChar < viewKey.size(); ++iChar) {
+		cnst sc_t character = viewKey[iChar];
+		if(false == ((character >= 'A' && character <= 'Z') || (character >= 'a' && character <= 'z') || (character >= '0' && character <= '9') || '_' == character))
+			rtrn false;
+	}
+	rtrn true;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionPathKeyAppend(string & expression, vcst_t viewKey) {
+	if(expression.size())
+		if_fail_fe(expression.push_back('.'));
+	rtrn expression.append(viewKey);
+}
+
+sttc gpk::err_t fileViewerJSONExpressionPresetScriptSet(SGUI & gui, cid_t idPreset, u2_t iPreset) {
+	if_true_fe(iPreset >= size(JSON_EXPRESSION_PRESET_IDENTIFIERS));
+	gui.Controls.Identifier[idPreset] = JSON_EXPRESSION_PRESET_IDENTIFIERS[iPreset];
+	string expression = "{";
+	if_fail_fe(expression.append(JSON_EXPRESSION_TOOL_IDENTIFIER));
+	if_fail_fe(expression.push_back('.'));
+	if_fail_fe(expression.append(JSON_EXPRESSION_PRESET_IDENTIFIERS[iPreset]));
+	if_fail_fe(expression.append(".Text.Text}"));
+	string & script = gui.Controls.Script[idPreset];
+	script.clear();
+	if_fail_fe(script.push_back('{'));
+	if_fail_fe(appendOpenKey(script, JSON_EXPRESSION_TOOL_IDENTIFIER));
+	if_fail_fe(script.push_back('{'));
+	if_fail_fe(appendOpenKey(script, JSON_EXPRESSION_COMMAND_IDENTIFIER));
+	if_fail_fe(script.push_back('{'));
+	if_fail_fe(appendOpenKey(script, "Text"));
+	if_fail_fe(script.push_back('{'));
+	if_fail_fe(appendOpenKey(script, "Text"));
+	if_fail_fe(appendJSONString(script, expression));
+	rtrn script.append("}}}}");
+}
+
+sttc gpk::err_t fileViewerJSONExpressionLeafPath(cnst SJSONNode & node, view<vcst_c> views, string & expression) {
+	cnst SJSONNode * current = &node;
+	while(current && current->Token) {
+		if(JSON_TYPE_ARRAY == current->Token->Type) {
+			if(0 == current->Children.size())
+				rtrn 0;
+			if_fail_fe(expression.append("['0']"));
+			current = current->Children[0];
+			continue;
+		}
+		if(JSON_TYPE_OBJECT != current->Token->Type || current->Children.size() < 2)
+			rtrn 0;
+		b8_t found = false;
+		for(u2_t iChild = 0; iChild + 1 < current->Children.size(); iChild += 2) {
+			cnst SJSONNode * key = current->Children[iChild];
+			if(0 == key || key->ObjectIndex < 0 || (u2_t)key->ObjectIndex >= views.size() || false == ::fileViewerJSONExpressionIdentifier(views[key->ObjectIndex]))
+				continue;
+			if_fail_fe(::fileViewerJSONExpressionPathKeyAppend(expression, views[key->ObjectIndex]));
+			current = current->Children[iChild + 1];
+			found = true;
+			break;
+		}
+		if(false == found)
+			rtrn 0;
+	}
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionBranchCollect(cnst SJSONNode & node, view<vcst_c> views, vcst_t basePath, aobj<string> & expressions) {
+	if(JSON_TYPE_OBJECT == node.Token->Type) {
+		for(u2_t iChild = 0; iChild + 1 < node.Children.size(); iChild += 2) {
+			cnst SJSONNode * key = node.Children[iChild];
+			if(0 == key || key->ObjectIndex < 0 || (u2_t)key->ObjectIndex >= views.size() || false == ::fileViewerJSONExpressionIdentifier(views[key->ObjectIndex]))
+				continue;
+			string expression = basePath;
+			if_fail_fe(::fileViewerJSONExpressionPathKeyAppend(expression, views[key->ObjectIndex]));
+			if_fail_fe(::fileViewerJSONExpressionLeafPath(*node.Children[iChild + 1], views, expression));
+			if_fail_fe(expressions.push_back(expression));
+		}
+	}
+	else {
+		string expression = basePath;
+		if_fail_fe(::fileViewerJSONExpressionLeafPath(node, views, expression));
+		if_fail_fe(expressions.push_back(expression));
+	}
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionPresetsBuild(SFileViewer & viewer, cnst SJSONReader & reader) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	tool.PresetExpressions.clear();
+	if(0 == reader.Tree.size() || 0 == reader.Tree[0] || 0 == reader.Tree[0]->Token)
+		rtrn 0;
+	cnst SJSONNode & root = *reader.Tree[0];
+	aobj<aobj<string>> expressionGroups = {};
+	if(JSON_TYPE_OBJECT == root.Token->Type) {
+		for(u2_t iBranch = 0; ; ++iBranch) {
+			b8_t foundBranch = false;
+			for(u2_t iRoot = 0; iRoot + 1 < root.Children.size(); iRoot += 2) {
+				cnst SJSONNode * keyRoot = root.Children[iRoot];
+				cnst SJSONNode * valueRoot = root.Children[iRoot + 1];
+				if(0 == keyRoot || 0 == valueRoot || keyRoot->ObjectIndex < 0 || (u2_t)keyRoot->ObjectIndex >= reader.View.size() || false == ::fileViewerJSONExpressionIdentifier(reader.View[keyRoot->ObjectIndex]))
+					continue;
+				if(JSON_TYPE_OBJECT == valueRoot->Token->Type) {
+					cnst u2_t iChild = iBranch * 2;
+					if(iChild + 1 >= valueRoot->Children.size())
+						continue;
+					cnst SJSONNode * keyBranch = valueRoot->Children[iChild];
+					if(0 == keyBranch || keyBranch->ObjectIndex < 0 || (u2_t)keyBranch->ObjectIndex >= reader.View.size() || false == ::fileViewerJSONExpressionIdentifier(reader.View[keyBranch->ObjectIndex]))
+						continue;
+					string branchPath = reader.View[keyRoot->ObjectIndex];
+					if_fail_fe(::fileViewerJSONExpressionPathKeyAppend(branchPath, reader.View[keyBranch->ObjectIndex]));
+					if_fail_fe(expressionGroups.resize(expressionGroups.size() + 1));
+					if_fail_fe(::fileViewerJSONExpressionBranchCollect(*valueRoot->Children[iChild + 1], reader.View, branchPath, expressionGroups[expressionGroups.size() - 1]));
+					foundBranch = true;
+				}
+				else if(0 == iBranch) {
+					if_fail_fe(expressionGroups.resize(expressionGroups.size() + 1));
+					if_fail_fe(::fileViewerJSONExpressionBranchCollect(*valueRoot, reader.View, reader.View[keyRoot->ObjectIndex], expressionGroups[expressionGroups.size() - 1]));
+					foundBranch = true;
+				}
+			}
+			if(false == foundBranch)
+				break;
+		}
+	}
+	else {
+		if_fail_fe(expressionGroups.resize(1));
+		if_fail_fe(::fileViewerJSONExpressionBranchCollect(root, reader.View, {}, expressionGroups[0]));
+	}
+	for(u2_t iExpression = 0; tool.PresetExpressions.size() < JSON_EXPRESSION_PRESET_LIMIT; ++iExpression) {
+		b8_t foundExpression = false;
+		for(u2_t iGroup = 0; iGroup < expressionGroups.size() && tool.PresetExpressions.size() < JSON_EXPRESSION_PRESET_LIMIT; ++iGroup) {
+			if(iExpression >= expressionGroups[iGroup].size())
+				continue;
+			vcst_t output = {};
+			if(-1 != jsonExpressionResolve(expressionGroups[iGroup][iExpression], reader, 0, output))
+				if_fail_fe(tool.PresetExpressions.push_back(expressionGroups[iGroup][iExpression]));
+			foundExpression = true;
+		}
+		if(false == foundExpression)
+			break;
+	}
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionPresetsRefresh(SFileViewer & viewer) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	tool.PresetExpressions.clear();
+	if(tool.InputJSON.Tree.size() && tool.InputJSON.Tree[0] && tool.InputJSON.Tree[0]->Token)
+		if_fail_fe(::fileViewerJSONExpressionPresetsBuild(viewer, tool.InputJSON));
+	SGUI & gui = *viewer.Dialog->GUI;
+	while(tool.Presets.IdControls.size() < tool.PresetExpressions.size())
+		if_fail_fe(::fileViewerListRowPush(viewer, tool.Presets, {}, true));
+	for(u2_t iPreset = 0; iPreset < tool.Presets.IdControls.size(); ++iPreset) {
+		cnst b8_t visible = iPreset < tool.PresetExpressions.size();
+		gui.Controls.SetHidden(tool.Presets.IdControls[iPreset], false == visible);
+		if(visible) {
+			if_fail_fe(controlTextSet(gui, tool.Presets.IdControls[iPreset], tool.PresetExpressions[iPreset]));
+			if_fail_fe(::fileViewerJSONExpressionPresetScriptSet(gui, tool.Presets.IdControls[iPreset], iPreset));
+		}
+	}
+	if_fail_fe(controlListArrange(gui, tool.Presets));
+	gui.Controls.Placement[tool.Presets.IdControl].Area.Size.x = 540;
+	rtrn 0;
+}
+
+sttc b8_t fileViewerJSONExpressionStartsWith(vcst_t text, vcst_t prefix) {
+	if(prefix.size() > text.size())
+		rtrn false;
+	for(u2_t iCharacter = 0; iCharacter < prefix.size(); ++iCharacter)
+		if(text[iCharacter] != prefix[iCharacter])
+			rtrn false;
+	rtrn true;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionSuggestionsBuild(SFileViewer & viewer, cnst SJSONNode * node, vcst_t baseExpression) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	tool.SuggestionNode = node;
+	tool.SuggestionBase = baseExpression;
+	tool.SuggestionText.clear();
+	tool.SuggestionExpressions.clear();
+	tool.SuggestionChildSlots.clear();
+	if(0 == node || 0 == node->Token)
+		rtrn 0;
+	if(JSON_TYPE_OBJECT == node->Token->Type) {
+		for(u2_t iChild = 0; iChild + 1 < node->Children.size(); iChild += 2) {
+			cnst SJSONNode * key = node->Children[iChild];
+			if(0 == key || key->ObjectIndex < 0 || (u2_t)key->ObjectIndex >= tool.InputJSON.View.size())
+				continue;
+			vcst_c keyText = tool.InputJSON.View[key->ObjectIndex];
+			if(false == ::fileViewerJSONExpressionIdentifier(keyText))
+				continue;
+			string expression = tool.SuggestionBase;
+			if_fail_fe(::fileViewerJSONExpressionPathKeyAppend(expression, keyText));
+			if_fail_fe(tool.SuggestionText.push_back(string{keyText}));
+			if_fail_fe(tool.SuggestionExpressions.push_back(expression));
+			if_fail_fe(tool.SuggestionChildSlots.push_back(iChild + 1));
+		}
+	}
+	else if(JSON_TYPE_ARRAY == node->Token->Type)
+		for(u2_t iChild = 0; iChild < node->Children.size(); ++iChild) {
+			sc_t indexText[32] = {};
+			cnst err_t textLength = ::gpk::sprintf_s(indexText, "['%u']", iChild);
+			if_fail_fe(textLength);
+			string labelText = {};
+			if_fail_fe(labelText.append({indexText, (u2_t)textLength}));
+			string expression = tool.SuggestionBase;
+			if_fail_fe(expression.append({indexText, (u2_t)textLength}));
+			if_fail_fe(tool.SuggestionText.push_back(labelText));
+			if_fail_fe(tool.SuggestionExpressions.push_back(expression));
+			if_fail_fe(tool.SuggestionChildSlots.push_back(iChild));
+		}
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionSuggestionsRefresh(SFileViewer & viewer, b8_t filter) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	tool.SuggestionSource = tool.Command.Text;
+	tool.SuggestionVisible.clear();
+	vcst_t partial = {};
+	if(filter) {
+		u2_t offset = 0;
+		if(tool.SuggestionBase.size() && ::fileViewerJSONExpressionStartsWith(tool.Command.Text, tool.SuggestionBase)) {
+			offset = tool.SuggestionBase.size();
+			if(tool.Command.Text.size() > offset && '.' == tool.Command.Text[offset])
+				++offset;
+		}
+		partial = {tool.Command.Text.begin() + offset, tool.Command.Text.size() - offset};
+	}
+	for(u2_t iSuggestion = 0; iSuggestion < tool.SuggestionText.size() && tool.SuggestionVisible.size() < JSON_EXPRESSION_SUGGESTION_LIMIT; ++iSuggestion)
+		if(false == filter || ::fileViewerJSONExpressionStartsWith(tool.SuggestionText[iSuggestion], partial))
+			if_fail_fe(tool.SuggestionVisible.push_back(iSuggestion));
+	SGUI & gui = *viewer.Dialog->GUI;
+	acid & idOptions = gui.Controls.Children[tool.IdSuggestions];
+	for(u2_t iOption = 0; iOption < idOptions.size(); ++iOption) {
+		cnst b8_t visible = iOption < tool.SuggestionVisible.size();
+		gui.Controls.SetHidden(idOptions[iOption], false == visible);
+		if(visible)
+			if_fail_fe(controlTextSet(gui, idOptions[iOption], tool.SuggestionText[tool.SuggestionVisible[iOption]]));
+	}
+	if_fail_fe(guiControlListArrange(gui, tool.IdSuggestions, DIRECTION_DOWN));
+	if(tool.Command.Editing && tool.SuggestionVisible.size()) {
+		if(gui.Controls.IsHidden(tool.IdSuggestions)) {
+			if_fail_fe(dropdownExpand(gui, tool.IdSuggestions));
+		}
+		else {
+			if_fail_fe(controlMetricsInvalidate(gui, tool.IdSuggestions));
+		}
+	}
+	else if(false == gui.Controls.IsHidden(tool.IdSuggestions))
+		if_fail_fe(dropdownCollapse(gui, tool.IdSuggestions));
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionSuggestionsFocus(SFileViewer & viewer) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	if(0 == tool.InputJSON.Tree.size() || 0 == tool.InputJSON.Tree[0] || 0 == tool.InputJSON.Tree[0]->Token)
+		rtrn ::fileViewerJSONExpressionSuggestionsBuild(viewer, 0, {});
+	cnst SJSONNode * node = tool.InputJSON.Tree[0];
+	string base = {};
+	b8_t filter = tool.Command.Text.size() != 0;
+	if(tool.Command.Text.size()) {
+		vcst_t resolvedText = {};
+		cnst err_t iResolved = jsonExpressionResolve(tool.Command.Text, tool.InputJSON, 0, resolvedText);
+		if(iResolved >= 0 && (u2_t)iResolved < tool.InputJSON.Tree.size() && tool.InputJSON.Tree[iResolved] && tool.InputJSON.Tree[iResolved]->Token) {
+			cnst SJSONNode * resolved = tool.InputJSON.Tree[iResolved];
+			if(JSON_TYPE_OBJECT == resolved->Token->Type || JSON_TYPE_ARRAY == resolved->Token->Type) {
+				node = resolved;
+				base = tool.Command.Text;
+				filter = false;
+			}
+			else
+				filter = false;
+		}
+		u2_t iSeparator = tool.Command.Text.size();
+		while(iSeparator && '.' != tool.Command.Text[iSeparator - 1])
+			--iSeparator;
+		if(iSeparator && node == tool.InputJSON.Tree[0]) {
+			vcst_c parentExpression = {tool.Command.Text.begin(), iSeparator - 1};
+			cnst err_t iParent = jsonExpressionResolve(parentExpression, tool.InputJSON, 0, resolvedText);
+			if(iParent >= 0 && (u2_t)iParent < tool.InputJSON.Tree.size() && tool.InputJSON.Tree[iParent] && tool.InputJSON.Tree[iParent]->Token) {
+				node = tool.InputJSON.Tree[iParent];
+				base = parentExpression;
+			}
+		}
+	}
+	if_fail_fe(::fileViewerJSONExpressionSuggestionsBuild(viewer, node, base));
+	rtrn ::fileViewerJSONExpressionSuggestionsRefresh(viewer, filter);
+}
+
+sttc gpk::err_t fileViewerJSONExpressionCreate(SFileViewer & viewer) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	if_fail_fe(::fileViewerViewportCreate(viewer, tool.IdViewport, "JSON EXPRESSIONS", {{72, 72}, {600, 650}}));
+	pobj<SDialogViewport> viewport = {};
+	if_fail_fe(dialogControlGet(*viewer.Dialog, tool.IdViewport, viewport));
+	SGUI & gui = *viewer.Dialog->GUI;
+	gui.Controls.Identifier[tool.IdViewport] = JSON_EXPRESSION_TOOL_IDENTIFIER;
+	if_fail_fe(::fileViewerJSONExpressionLabelCreate(viewer, viewport->IdClient, "INPUT FILE", {0, 0}));
+	if_fail_fe(::fileViewerListCreate(viewer, tool.Inputs, tool.IdViewport));
+	gui.Controls.Placement[tool.Inputs.IdControl].Area.Offset = {0, 24};
+	gui.Controls.Placement[tool.Inputs.IdControl].Area.Size.x = 540;
+	if_fail_fe(::fileViewerJSONExpressionLabelCreate(viewer, viewport->IdClient, "PREBUILT JSON EXPRESSIONS", {0, 190}));
+	if_fail_fe(::fileViewerListCreate(viewer, tool.Presets, tool.IdViewport));
+	gui.Controls.Placement[tool.Presets.IdControl].Area.Offset = {0, 214};
+	gui.Controls.Placement[tool.Presets.IdControl].Area.Size.x = 540;
+	if_fail_fe(::fileViewerJSONExpressionLabelCreate(viewer, viewport->IdClient, "EXPRESSION", {0, 430}));
+	if_fail_fe(inputBoxCreate(tool.Command, gui, viewport->IdClient));
+	gui.Controls.Identifier[tool.Command.IdText] = JSON_EXPRESSION_COMMAND_IDENTIFIER;
+	tool.Command.MaxLength = 4096;
+	gui.Controls.SetHidden(tool.Command.VirtualKeyboard.IdRoot, true);
+	gui.Controls.Placement[tool.Command.IdRoot].Area = {{0, 454}, {448, 26}};
+	gui.Controls.Placement[tool.Command.IdText].Area = {{0, 0}, {448, 26}};
+	gui.Controls.Text[tool.Command.IdText].Align = ALIGN_CENTER_LEFT;
+	if_fail_fe(tool.GUISystems.resize(GUI_TYPE_COUNT));
+	SControlPlacement suggestionPlacement = {};
+	suggestionPlacement.Area.Size = {448, 24};
+	suggestionPlacement.Border = {1, 1, 1, 1};
+	suggestionPlacement.Margin = {4, 2, 4, 2};
+	sttc vcst_c emptySuggestions[JSON_EXPRESSION_SUGGESTION_LIMIT] = {};
+	if_fail_fe(tool.IdSuggestions = guiCreateDropdown(gui, tool.GUISystems, view<vcst_c>{emptySuggestions}, tool.Command.IdText, suggestionPlacement, ALIGN_CENTER_LEFT));
+	for(u2_t iOption = 0; iOption < gui.Controls.Children[tool.IdSuggestions].size(); ++iOption) {
+		cnst cid_t idOption = gui.Controls.Children[tool.IdSuggestions][iOption];
+		gui.Controls.Draw[idOption].Palettes = viewer.Dialog->Colors->Button;
+		gui.Controls.SetHidden(idOption, true);
+	}
+	if_fail_fe(tool.IdRun = controlCreate(gui));
+	gui.Controls.Placement[tool.IdRun].Area = {{452, 454}, {88, 26}};
+	gui.Controls.Draw[tool.IdRun].Palettes = viewer.Dialog->Colors->Button;
+	gui.Controls.Text[tool.IdRun].Text = "RUN";
+	gui.Controls.Text[tool.IdRun].Align = ALIGN_CENTER;
+	if_fail_fe(controlSetParent(gui, tool.IdRun, viewport->IdClient));
+	if_fail_fe(::fileViewerEditorCreate(viewer, tool.Draft, {{696, 72}, {560, 650}}));
+	tool.Draft.FileText = "[]";
+	if_fail_fe(::fileViewerTextViewsRebuild(tool.Draft));
+	pobj<SDialogViewport> draftViewport = {};
+	if_fail_fe(dialogControlGet(*viewer.Dialog, tool.Draft.IdViewport, draftViewport));
+	gui.Controls.Text[draftViewport->IdTitle].Text = "JSON EXPRESSION OUTPUT";
+	gui.Controls.SetHidden(tool.Draft.IdKeyboard, true);
+	gui.Controls.SetHidden(tool.Draft.IdSave, true);
+	gui.Controls.SetHidden(tool.IdViewport, true);
+	gui.Controls.SetHidden(tool.Draft.IdViewport, true);
+	rtrn 0;
+}
+
+sttc vcst_t fileViewerJSONExpressionInputView(vcst_t input) {
+	if(input.size() >= 3
+	&& 0xEF == (u0_t)input[0]
+	&& 0xBB == (u0_t)input[1]
+	&& 0xBF == (u0_t)input[2])
+		rtrn {input.begin() + 3, input.size() - 3};
+	rtrn input;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionInputSelect(SFileViewer & viewer, cid_t iEditor) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	if(iEditor < 0 || (u2_t)iEditor >= viewer.Editors.size())
+		rtrn 0;
+	tool.InputEditor = iEditor;
+	SGUI & gui = *viewer.Dialog->GUI;
+	tool.InputJSON.Tree.clear();
+	if_fail_fe(tool.InputJSON.Reset());
+	cnst vcst_t input = ::fileViewerJSONExpressionInputView(viewer.Editors[iEditor]->FileText);
+	cnst bool inputParsed = input.size() && succeeded(jsonParse(tool.InputJSON, input));
+	if_fail_fe(::fileViewerJSONExpressionPresetsRefresh(viewer));
+	if(inputParsed && tool.InputJSON.Tree.size() && tool.InputJSON.Tree[0]) {
+		if_fail_fe(::fileViewerJSONExpressionSuggestionsBuild(viewer, tool.InputJSON.Tree[0], {}));
+	}
+	else {
+		if_fail_fe(::fileViewerJSONExpressionSuggestionsBuild(viewer, 0, {}));
+	}
+	if_fail_fe(::fileViewerJSONExpressionSuggestionsRefresh(viewer, false));
+	for(u2_t iInput = 0; iInput < tool.Inputs.IdControls.size(); ++iInput)
+		gui.Controls.SetSelected(tool.Inputs.IdControls[iInput], iInput == (u2_t)iEditor);
+	tool.Draft.FilePath = viewer.Editors[iEditor]->FilePath;
+	if_fail_fe(tool.Draft.FilePath.append(".expressions.json"));
+	gui.Controls.SetHidden(tool.Draft.IdSave, false);
+	pobj<SDialogViewport> viewport = {};
+	if_fail_fe(dialogControlGet(*viewer.Dialog, tool.IdViewport, viewport));
+	gui.Controls.Text[viewport->IdTitle].Text = label(viewer.Editors[iEditor]->FilePath);
+	if_fail_fe(dialogControlGet(*viewer.Dialog, tool.Draft.IdViewport, viewport));
+	gui.Controls.Text[viewport->IdTitle].Text = label(tool.Draft.FilePath);
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionInputsUpdate(SFileViewer & viewer) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	while(tool.Inputs.IdControls.size() < viewer.Editors.size())
+		if_fail_fe(::fileViewerListRowPush(viewer, tool.Inputs, {}, true));
+	SGUI & gui = *viewer.Dialog->GUI;
+	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
+		if(gui.Controls.Text[tool.Inputs.IdControls[iEditor]].Text != viewer.Editors[iEditor]->FilePath)
+			if_fail_fe(controlTextSet(gui, tool.Inputs.IdControls[iEditor], viewer.Editors[iEditor]->FilePath));
+	gui.Controls.Placement[tool.Inputs.IdControl].Area.Size.x = 540;
+	if(tool.InputEditor < 0 && viewer.IdEditorCurrent >= 0)
+		if_fail_fe(::fileViewerJSONExpressionInputSelect(viewer, viewer.IdEditorCurrent));
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionRun(SFileViewer & viewer) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	if(tool.InputEditor < 0 || (u2_t)tool.InputEditor >= viewer.Editors.size() || 0 == tool.Command.Text.size())
+		rtrn 0;
+	SJSONReader inputJSON = {};
+	cnst vcst_t input = ::fileViewerJSONExpressionInputView(viewer.Editors[tool.InputEditor]->FileText);
+	if(0 == input.size() || failed(jsonParse(inputJSON, input)))
+		rtrn 0;
+	vcst_t output = {};
+	cnst err_t iResult = jsonExpressionResolve(tool.Command.Text, inputJSON, 0, output);
+	if(-1 == iResult)
+		rtrn 0;
+	string outputJSON = {};
+	if(iResult >= 0) {
+		if((u2_t)iResult >= inputJSON.Tree.size() || 0 == inputJSON.Tree[iResult])
+			rtrn 0;
+		if_fail_fe(jsonWrite(inputJSON.Tree[iResult], inputJSON.View, outputJSON));
+	}
+	else if(-5 == iResult) {
+		if_fail_fe(outputJSON.append(output));
+	}
+	else {
+		if_fail_fe(appendJSONString(outputJSON, output));
+	}
+	tool.Draft.FileText.clear();
+	if_fail_fe(tool.Draft.FileText.append("[\n"));
+	if_fail_fe(tool.Draft.FileText.push_back('\t'));
+	if_fail_fe(tool.Draft.FileText.append(outputJSON));
+	if_fail_fe(tool.Draft.FileText.append("\n]"));
+	tool.Draft.TextSelections.clear();
+	if_fail_fe(::fileViewerTextViewsRebuild(tool.Draft));
+	tool.Draft.Cursor = {0, (u2_t)-1};
+	SGUI & gui = *viewer.Dialog->GUI;
+	gui.Controls.SetHidden(tool.Draft.IdViewport, false);
+	if_fail_fe(controlToFront(gui, tool.Draft.IdViewport));
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerJSONExpressionUpdate(SFileViewer & viewer, vpobj<SEventSystem> frameEvents) {
+	SJSONExpressionTool & tool = viewer.JSONExpressions;
+	SGUI & gui = *viewer.Dialog->GUI;
+	if(gui.Controls.IsHidden(tool.IdViewport))
+		rtrn 0;
+	if_fail_fe(::fileViewerJSONExpressionInputsUpdate(viewer));
+	for(u2_t iInput = 0; iInput < tool.Inputs.IdControls.size() && iInput < viewer.Editors.size(); ++iInput)
+		if(gui.Controls.IsAction(tool.Inputs.IdControls[iInput]))
+			if_fail_fe(::fileViewerJSONExpressionInputSelect(viewer, (cid_t)iInput));
+	for(u2_t iPreset = 0; iPreset < tool.Presets.IdControls.size() && iPreset < tool.PresetExpressions.size(); ++iPreset)
+		if(gui.Controls.IsAction(tool.Presets.IdControls[iPreset]))
+			if_fail_fe(tool.Command.SetText(gui, tool.PresetExpressions[iPreset]));
+	b8_t suggestionSelected = false;
+	cnst acid & idOptions = gui.Controls.Children[tool.IdSuggestions];
+	for(u2_t iOption = 0; iOption < idOptions.size() && iOption < tool.SuggestionVisible.size(); ++iOption)
+		if(gui.Controls.IsAction(idOptions[iOption])) {
+			cnst u2_t iSuggestion = tool.SuggestionVisible[iOption];
+			if(iSuggestion >= tool.SuggestionExpressions.size() || iSuggestion >= tool.SuggestionChildSlots.size())
+				continue;
+			if_fail_fe(tool.Command.SetText(gui, tool.SuggestionExpressions[iSuggestion]));
+			cnst u2_t iChild = tool.SuggestionChildSlots[iSuggestion];
+			if(tool.SuggestionNode && iChild < tool.SuggestionNode->Children.size()) {
+				cnst SJSONNode * selectedNode = tool.SuggestionNode->Children[iChild];
+				if(selectedNode && selectedNode->Token && (JSON_TYPE_OBJECT == selectedNode->Token->Type || JSON_TYPE_ARRAY == selectedNode->Token->Type))
+					if_fail_fe(::fileViewerJSONExpressionSuggestionsBuild(viewer, selectedNode, tool.SuggestionExpressions[iSuggestion]));
+			}
+			tool.Command.Editing = true;
+			gui.Controls.SetFocused(tool.Command.IdText, true);
+			if_fail_fe(::fileViewerJSONExpressionSuggestionsRefresh(viewer, false));
+			suggestionSelected = true;
+			break;
+		}
+	if(gui.Controls.IsAction(tool.Command.IdText)) {
+		tool.Command.Editing = true;
+		if_fail_fe(::fileViewerJSONExpressionSuggestionsFocus(viewer));
+	}
+	else if(tool.Command.Editing && false == suggestionSelected && false == gui.Controls.IsFocused(tool.Command.IdText))
+		tool.Command.Editing = false;
+	b8_t run = gui.Controls.IsAction(tool.IdRun);
+	if(tool.Command.Editing) {
+		astcid<1> processableControls = {tool.Command.IdText};
+		cnst err_t inputResult = tool.Command.Update(gui, tool.Command.VirtualKeyboard, frameEvents, processableControls);
+		run |= INT_MAX == inputResult;
+	}
+	if(tool.SuggestionSource != tool.Command.Text && false == suggestionSelected) {
+		if_fail_fe(::fileViewerJSONExpressionSuggestionsRefresh(viewer, true));
+	}
+	else if(false == tool.Command.Editing && false == gui.Controls.IsHidden(tool.IdSuggestions)) {
+		if_fail_fe(dropdownCollapse(gui, tool.IdSuggestions));
+	}
+	gui.Controls.SetHidden(tool.Command.IdRoot, false);
+	gui.Controls.SetHidden(tool.Command.VirtualKeyboard.IdRoot, true);
+	if(run)
+		if_fail_fe(::fileViewerJSONExpressionRun(viewer));
+	if(gui.Controls.IsAction(tool.Draft.IdSave) && tool.Draft.FilePath.size())
+		if_fail_fef(fileFromMemory(tool.Draft.FilePath, tool.Draft.FileText), "Failed to save '%.*s'.", GPK_VIEW_ARGS(tool.Draft.FilePath));
 	rtrn 0;
 }
 
@@ -780,6 +1305,16 @@ sttc gpk::err_t fileViewerMenuUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT la
 	SGUI & gui = *viewer.Dialog->GUI;
 	if(gui.Controls.IsAction(viewer.IdMenuFiles))
 		if_fail_fe(::fileViewerDirectoryCreate(viewer, viewer.RootPath, layout));
+	if(gui.Controls.IsAction(viewer.IdMenuJSON)) {
+		b8_c hidden = gui.Controls.IsHidden(viewer.JSONExpressions.IdViewport);
+		gui.Controls.SetHidden(viewer.JSONExpressions.IdViewport, false == hidden);
+		gui.Controls.SetHidden(viewer.JSONExpressions.Draft.IdViewport, false == hidden);
+		if(hidden) {
+			if_fail_fe(controlToFront(gui, viewer.JSONExpressions.IdViewport));
+			if_fail_fe(controlToFront(gui, viewer.JSONExpressions.Draft.IdViewport));
+		}
+	}
+	gui.Controls.SetSelected(viewer.IdMenuJSON, false == gui.Controls.IsHidden(viewer.JSONExpressions.IdViewport));
 	if(gui.Controls.IsAction(viewer.IdMenuExit))
 		rtrn APPLICATION_STATE_EXIT;
 	for(u2_t iEditor = 0; iEditor < viewer.Editors.size() && iEditor < viewer.EditorTabs.IdControls.size(); ++iEditor) {
@@ -849,6 +1384,7 @@ gpk::err_t fileViewerSetup(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vcst
 	if_fail_fe(virtualKeyboardSetup437(gui, viewer.VirtualKeyboard));
 	if_fail_fe(controlSetParent(gui, viewer.VirtualKeyboard.IdRoot, viewer.Dialog->Root));
 	gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
+	if_fail_fe(::fileViewerJSONExpressionCreate(viewer));
 	if_fail_fe(::fileViewerDirectoryCreate(viewer, viewer.RootPath, layout));
 	rtrn ::fileViewerLayoutSet(viewer, layout);
 }
@@ -857,9 +1393,11 @@ gpk::err_t fileViewerUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vpo
 	if(gpk::err_t result = ::fileViewerMenuUpdate(viewer, layout))
 		rtrn result;
 	if_fail_fe(::fileViewerSelectionUpdate(viewer, layout));
+	if_fail_fe(::fileViewerJSONExpressionUpdate(viewer, frameEvents));
 	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
 		if_fail_fe(::fileViewerEditorUpdate(viewer, *viewer.Editors[iEditor], (cid_t)iEditor));
-	if_fail_fe(::fileViewerEditorInputUpdate(viewer, frameEvents));
+	if(false == viewer.JSONExpressions.Command.Editing)
+		if_fail_fe(::fileViewerEditorInputUpdate(viewer, frameEvents));
 	if_fail_fe(viewer.Dialog->Update());
 	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
 		if_fail_fe(::fileViewerEditorSelectionUpdate(viewer, *viewer.Editors[iEditor], (cid_t)iEditor));
@@ -869,6 +1407,8 @@ gpk::err_t fileViewerUpdate(SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vpo
 		if_fail_fe(::fileViewerListWindowUpdate(viewer, viewer.Directories[iDirectory]->Files, viewer.Directories[iDirectory]->PathContents, viewer.Directories[iDirectory]->IdViewport));
 	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor)
 		if_fail_fe(::fileViewerTextWindowUpdate(viewer, *viewer.Editors[iEditor]));
+	if(false == viewer.Dialog->GUI->Controls.IsHidden(viewer.JSONExpressions.Draft.IdViewport))
+		if_fail_fe(::fileViewerTextWindowUpdate(viewer, viewer.JSONExpressions.Draft));
 	rtrn 0;
 }
 

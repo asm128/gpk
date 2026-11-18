@@ -3,6 +3,8 @@
 #include "gpk_dialog_controls.h"
 #include "gpk_gui_control_list.h"
 #include "gpk_gui_inputbox.h"
+#include "gpk_append_json.h"
+#include "gpk_json_expression.h"
 #include "gpk_path.h"
 #include "gpk_range.h"
 
@@ -35,15 +37,37 @@ stct SFileEditor {
 	cid_t				IdKeyboard			= -1;
 	u2_t				FileLineWidthMax	= 0;
 };
+stct SJSONExpressionTool {
+	cid_t				IdViewport			= -1;
+	SControlList		Inputs				= {};
+	SControlList		Presets				= {};
+	aobj<string>		PresetExpressions	= {};
+	aobj<acid>			GUISystems			= {};
+	cid_t				IdSuggestions		= -1;
+	SJSONReader			InputJSON			= {};
+	cnst SJSONNode		* SuggestionNode	= 0;
+	aobj<string>		SuggestionText		= {};
+	aobj<string>		SuggestionExpressions = {};
+	apod<u2_t>			SuggestionChildSlots = {};
+	apod<u2_t>			SuggestionVisible	= {};
+	string				SuggestionBase		= {};
+	string				SuggestionSource	= {};
+	SInputBox			Command				= {};
+	SFileEditor			Draft				= {};
+	cid_t				IdRun				= -1;
+	cid_t				InputEditor			= -1;
+};
 stct SFileViewer {
 	pobj<SDialog>		Dialog				= {};
 	SVirtualKeyboard	VirtualKeyboard		= {};
 	SControlList		EditorTabs			= {};
 	apobj<SFileEditor>	Editors				= {};
 	apobj<SPathList>	Directories			= {};
+	SJSONExpressionTool JSONExpressions		= {};
 	string				RootPath			= {};
 	cid_t				IdEditorCurrent		= -1;
 	cid_t				IdMenuFiles			= -1;
+	cid_t				IdMenuJSON			= -1;
 	cid_t				IdMenuExit			= -1;
 };
 
