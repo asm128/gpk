@@ -1,0 +1,542 @@
+File name: DeviceResources.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Fri Jul  7 02:35:39 2023
+File code lines: 264
+File directive lines: 16
+File comment lines: 40
+File blank lines: 87
+File bytes: 22318
+
+File name: gpk_celestial_body.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Tue Jul  4 05:17:04 2023
+File modification date: Thu Jul 13 20:36:30 2023
+File code lines: 150
+File directive lines: 2
+File comment lines: 0
+File blank lines: 24
+File bytes: 8114
+
+File name: gpk_celestial_body.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sun Jul  9 06:15:09 2023
+File modification date: Thu Jul 13 21:16:41 2023
+File code lines: 64
+File directive lines: 7
+File comment lines: 3
+File blank lines: 14
+File bytes: 3681
+
+File name: gpk_engine.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Thu Jul 20 10:02:27 2023
+File code lines: 241
+File directive lines: 5
+File comment lines: 1
+File blank lines: 90
+File bytes: 14568
+
+File name: gpk_engine.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Thu Jul 20 08:03:15 2023
+File code lines: 166
+File directive lines: 11
+File comment lines: 2
+File blank lines: 52
+File bytes: 12562
+
+File name: gpk_engine_collision.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sat May 20 08:03:38 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 66
+File directive lines: 1
+File comment lines: 15
+File blank lines: 19
+File bytes: 6566
+
+File name: gpk_engine_container.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Thu Jul 20 08:03:15 2023
+File code lines: 47
+File directive lines: 6
+File comment lines: 6
+File blank lines: 25
+File bytes: 2882
+
+File name: gpk_engine_d3d.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Fri Jul  7 02:22:10 2023
+File code lines: 74
+File directive lines: 4
+File comment lines: 3
+File blank lines: 32
+File bytes: 4793
+
+File name: gpk_engine_d3d.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 4
+File directive lines: 11
+File comment lines: 1
+File blank lines: 9
+File bytes: 973
+
+File name: gpk_engine_d3d_app.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Sun Jul 16 06:17:17 2023
+File code lines: 111
+File directive lines: 2
+File comment lines: 5
+File blank lines: 41
+File bytes: 8409
+
+File name: gpk_engine_d3d_app.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Thu Jul 20 08:03:15 2023
+File code lines: 186
+File directive lines: 11
+File comment lines: 10
+File blank lines: 63
+File bytes: 10719
+
+File name: gpk_engine_entity.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Tue Jul 18 07:35:09 2023
+File code lines: 60
+File directive lines: 8
+File comment lines: 1
+File blank lines: 30
+File bytes: 3293
+
+File name: gpk_engine_explorer.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 46
+File directive lines: 3
+File comment lines: 1
+File blank lines: 18
+File bytes: 2451
+
+File name: gpk_engine_explorer.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 25
+File directive lines: 6
+File comment lines: 17
+File blank lines: 17
+File bytes: 2252
+
+File name: gpk_engine_explorer_app_menu.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 34
+File directive lines: 4
+File comment lines: 1
+File blank lines: 10
+File bytes: 1735
+
+File name: gpk_engine_file.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sat May 20 08:03:38 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 26
+File directive lines: 6
+File comment lines: 1
+File blank lines: 15
+File bytes: 1631
+
+File name: gpk_engine_gui.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 39
+File directive lines: 5
+File comment lines: 16
+File blank lines: 16
+File bytes: 2491
+
+File name: gpk_engine_orbit.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Thu Jul 13 03:43:32 2023
+File modification date: Fri Jul 14 00:34:40 2023
+File code lines: 64
+File directive lines: 1
+File comment lines: 0
+File blank lines: 16
+File bytes: 3103
+
+File name: gpk_engine_orbit.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Thu Jul 13 21:16:34 2023
+File modification date: Thu Jul 13 22:48:40 2023
+File code lines: 34
+File directive lines: 5
+File comment lines: 2
+File blank lines: 17
+File bytes: 3567
+
+File name: gpk_engine_planetary_system.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Tue Jul 11 17:19:41 2023
+File modification date: Mon Jul 17 00:33:26 2023
+File code lines: 176
+File directive lines: 6
+File comment lines: 8
+File blank lines: 60
+File bytes: 11636
+
+File name: gpk_engine_planetary_system.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Tue Jul  4 05:29:46 2023
+File modification date: Mon Jul 17 04:53:33 2023
+File code lines: 40
+File directive lines: 7
+File comment lines: 1
+File blank lines: 16
+File bytes: 2348
+
+File name: gpk_engine_renderbuffer.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 61
+File directive lines: 9
+File comment lines: 1
+File blank lines: 20
+File bytes: 3376
+
+File name: gpk_engine_rendercolor.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Fri Jul  7 07:49:55 2023
+File code lines: 5
+File directive lines: 6
+File comment lines: 1
+File blank lines: 5
+File bytes: 358
+
+File name: gpk_engine_rendermesh.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Fri Jul 14 05:22:28 2023
+File code lines: 39
+File directive lines: 8
+File comment lines: 2
+File blank lines: 18
+File bytes: 1822
+
+File name: gpk_engine_rendernode.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Sun Jul 16 05:06:37 2023
+File code lines: 132
+File directive lines: 9
+File comment lines: 3
+File blank lines: 48
+File bytes: 7616
+
+File name: gpk_engine_rendersurface.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Tue Jul 11 18:15:47 2023
+File code lines: 14
+File directive lines: 9
+File comment lines: 1
+File blank lines: 9
+File bytes: 923
+
+File name: gpk_engine_scene.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Thu Jul 20 08:03:15 2023
+File code lines: 216
+File directive lines: 8
+File comment lines: 2
+File blank lines: 65
+File bytes: 13689
+
+File name: gpk_engine_scene.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Sat Jul 15 03:17:56 2023
+File code lines: 114
+File directive lines: 16
+File comment lines: 7
+File blank lines: 51
+File bytes: 5021
+
+File name: gpk_engine_shader.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Thu Jul  6 05:28:58 2023
+File modification date: Mon Jul 10 18:27:24 2023
+File code lines: 184
+File directive lines: 2
+File comment lines: 0
+File blank lines: 63
+File bytes: 10381
+
+File name: gpk_engine_shader.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Thu Jul  6 05:28:58 2023
+File modification date: Thu Jul 20 08:03:15 2023
+File code lines: 17
+File directive lines: 6
+File comment lines: 1
+File blank lines: 10
+File bytes: 2137
+
+File name: gpk_engine_soundbuffer.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sat May 20 08:03:38 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 20
+File directive lines: 8
+File comment lines: 1
+File blank lines: 14
+File bytes: 1057
+
+File name: gpk_game.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sat Jul  8 20:19:37 2023
+File modification date: Tue Jul 18 03:15:24 2023
+File code lines: 36
+File directive lines: 7
+File comment lines: 2
+File blank lines: 21
+File bytes: 1486
+
+File name: gpk_game_stage.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sun Jul  9 14:19:23 2023
+File modification date: Tue Jul 18 05:59:32 2023
+File code lines: 59
+File directive lines: 6
+File comment lines: 1
+File blank lines: 24
+File bytes: 2569
+
+File name: gpk_orbit.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Wed Jul 12 04:49:29 2023
+File modification date: Thu Jul 20 08:03:15 2023
+File code lines: 46
+File directive lines: 7
+File comment lines: 4
+File blank lines: 19
+File bytes: 3095
+
+File name: gpk_planetary_system.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sun Jul  9 06:42:14 2023
+File modification date: Thu Jul 13 19:36:36 2023
+File code lines: 31
+File directive lines: 1
+File comment lines: 1
+File blank lines: 14
+File bytes: 2053
+
+File name: gpk_planetary_system.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Sun Jul  9 06:26:06 2023
+File modification date: Mon Jul 17 05:09:15 2023
+File code lines: 18
+File directive lines: 6
+File comment lines: 18
+File blank lines: 13
+File bytes: 1839
+
+File name: gpk_rigid_body.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Wed Jul 19 06:08:40 2023
+File code lines: 63
+File directive lines: 3
+File comment lines: 5
+File blank lines: 16
+File bytes: 4669
+
+File name: gpk_rigid_body.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:36 2023
+File modification date: Wed Jul 19 06:07:32 2023
+File code lines: 203
+File directive lines: 7
+File comment lines: 3
+File blank lines: 64
+File bytes: 11852
+
+File name: gpk_spaceship.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Thu Jul 13 07:00:27 2023
+File modification date: Thu Jul 20 08:03:15 2023
+File code lines: 153
+File directive lines: 10
+File comment lines: 4
+File blank lines: 43
+File bytes: 7187
+
+File name: gpk_sun.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:50 2023
+File modification date: Thu Jul 20 08:32:56 2023
+File code lines: 11
+File directive lines: 2
+File comment lines: 0
+File blank lines: 6
+File bytes: 749
+
+File name: gpk_sun.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:50 2023
+File modification date: Tue Jul  4 23:11:16 2023
+File code lines: 6
+File directive lines: 4
+File comment lines: 1
+File blank lines: 5
+File bytes: 467
+
+File name: gpk_tile_map.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Wed Jul 12 13:21:29 2023
+File modification date: Sat Jul 15 17:31:04 2023
+File code lines: 48
+File directive lines: 11
+File comment lines: 1
+File blank lines: 23
+File bytes: 2049
+
+File name: gpk_weapon.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Fri Feb 10 04:32:37 2023
+File modification date: Mon Jul 17 05:20:40 2023
+File code lines: 202
+File directive lines: 9
+File comment lines: 5
+File blank lines: 65
+File bytes: 9605
+
+File name: gpk_xaudio2.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 342
+File directive lines: 28
+File comment lines: 48
+File blank lines: 157
+File bytes: 20379
+
+File name: gpk_xaudio2.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 61
+File directive lines: 25
+File comment lines: 5
+File blank lines: 33
+File bytes: 3184
+
+File name: Sample3DSceneRenderer.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul 18 18:59:52 2023
+File code lines: 222
+File directive lines: 5
+File comment lines: 20
+File blank lines: 61
+File bytes: 14035
+
+File name: SampleFpsTextRenderer.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 44
+File directive lines: 5
+File comment lines: 9
+File blank lines: 23
+File bytes: 3482
+
+File name: WaveBankReader.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Mon Jul  3 08:49:49 2023
+File code lines: 598
+File directive lines: 41
+File comment lines: 18
+File blank lines: 352
+File bytes: 28408
+
+File name: WaveBankReader.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Mon Jul  3 08:49:49 2023
+File code lines: 31
+File directive lines: 7
+File comment lines: 8
+File blank lines: 16
+File bytes: 2118
+
+File name: WAVFileReader.cpp
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 264
+File directive lines: 14
+File comment lines: 35
+File blank lines: 140
+File bytes: 15258
+
+File name: WAVFileReader.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Tue Jul  4 23:11:15 2023
+File code lines: 12
+File directive lines: 9
+File comment lines: 3
+File blank lines: 12
+File bytes: 1149
+
+File name: XAudio2Versions.h
+File folder: d:\bundle_galaxy_hell\gpk\gpk_engine\
+File creation date: Mon Jul  3 08:49:49 2023
+File modification date: Mon Jul  3 08:49:49 2023
+File code lines: 0
+File directive lines: 35
+File comment lines: 18
+File blank lines: 6
+File bytes: 2039
+
+
+----------------------------- Total Files: 52
+----------------------------- Total Lines: 8068
+
+Comments: 362
+Code: 5169
+Compiler directives: 450
+Blanks: 2087
+Total bytes: 314144
+
+----------------------------- Stats: 
+
+Average lines per file: 155.15384615384616
+Average lines of comments per file: 6.961538461538462
+Average lines of code per file: 99.40384615384616
+Average lines of compiler directives per file: 8.653846153846153
+Average blank lines per file: 40.13461538461539
+
+Comments: 4.4868616757560735%
+Code: 64.067922657412%
+Compiler directives: 5.577590480912246%
+Blanks: 25.86762518591968%
