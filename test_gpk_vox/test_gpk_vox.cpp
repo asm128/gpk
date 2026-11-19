@@ -147,9 +147,9 @@ namespace gpk
 				, {(int32_t)triangle.C.x, (int32_t)triangle.C.y}
 				};
 			{
-				int32_t																		w0											= ::gpk::orient2d({triangle2D.B, triangle2D.A}, cellCurrent);	// Determine barycentric coordinates
-				int32_t																		w1											= ::gpk::orient2d({triangle2D.C, triangle2D.B}, cellCurrent);
-				int32_t																		w2											= ::gpk::orient2d({triangle2D.A, triangle2D.C}, cellCurrent);
+				int32_t																		w0											= ::gpk::orient2d({triangle2D.B, triangle2D.C}, cellCurrent);	// Determine barycentric coordinates
+				int32_t																		w1											= ::gpk::orient2d({triangle2D.C, triangle2D.A}, cellCurrent);
+				int32_t																		w2											= ::gpk::orient2d({triangle2D.A, triangle2D.B}, cellCurrent);
 				if(w0 <= -1 || w1 <= -1 || w2 <= -1) // ---- If p is on or inside all edges, render pixel.
 					continue;
 			}

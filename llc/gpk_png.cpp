@@ -969,6 +969,8 @@ sttc	gpk::err_t defilterInterlaced			(::gpk::SPNGData & pngData)									{
 		u2_t					widthScanlineCurrent		= ::scanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageSizes[iImage].x);
 		verbose_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
 		cnst ::gpk::n2u2_t			currentImageSize			= imageSizes[iImage];
+		if(0 == currentImageSize.Area())
+			continue;
 		for(u2_t y = 0; y < currentImageSize.y; ++y) {
 			cnst s2_t				currentScanline				= offsetScanline + y;
 			pngData.Filters[currentScanline]	= pngData.Inflated[offsetByte + y * widthScanlineCurrent + y];
