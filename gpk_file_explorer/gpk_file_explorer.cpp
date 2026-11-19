@@ -156,9 +156,7 @@ sttc ::gpk::err_t demoGUISetup(::gfe::SApplication & app) {
 	if_fail_fe(::demoControlListCreate(app, app.IdValuePanel, "value", app.IdValues, 28));
 
 	cnst ::gpk::SJSONReader & config = app.Framework.JSONConfig.Reader;
-	cnst ::gpk::err_t iGUI = ::gpk::jsonExpressionResolve("GUI", config, 0);
-	if_fail_fe(iGUI);
-	if_fail_fe(::gpk::guiJSONLoad(gui, config, (::gpk::u2_t)iGUI));
+	if_fail_fe(::gpk::guiJSONLoad(gui, config, 0));
 	if_fail_fe(::demoStyleChildren(gui, app.IdSourcesPanel, app.IdSources));
 	if_fail_fe(::demoStyleChildren(gui, app.IdTypePanel, app.IdTypes));
 	if_fail_fe(::demoStyleChildren(gui, app.IdNamePanel, app.IdNames));

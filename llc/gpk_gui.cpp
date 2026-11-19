@@ -200,7 +200,18 @@ sttc ::gpk::err_t guiControlJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, c
 }
 
 gpk::err_t gpk::guiJSONLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode) {
-	if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
+	if_true_fe(iNode >= input.Token.size());
+	if(::gpk::JSON_TYPE_ARRAY == input.Token[iNode].Type) {
+		cnst ::gpk::err_t count = ::gpk::jsonArraySize(input, iNode);
+		if_fail_fe(count);
+		for(::gpk::u2_t iElement = 0; iElement < (::gpk::u2_t)count; ++iElement) {
+			cnst ::gpk::err_t iValue = ::gpk::jsonArrayValueGet(input, iNode, iElement);
+			if_fail_fe(iValue);
+			if_fail_fe(::gpk::guiJSONLoad(gui, input, (::gpk::u2_t)iValue));
+		}
+		rtrn 0;
+	}
+	if_true_fe(::gpk::JSON_TYPE_OBJECT != input.Token[iNode].Type);
 	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
 		if(controlInvalid(gui, (cid_t)iControl) || 0 == gui.Controls.Identifier[iControl].size() || ::guiControlHasIdentifiedAncestor(gui, (cid_t)iControl))
 			continue;
