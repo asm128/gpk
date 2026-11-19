@@ -7,7 +7,7 @@ static	::gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSO
 		arg.slice(arg, 2);
 		info_printf("Received reset value: '%.*s'", GPK_VIEW_ARGS(arg));
 		if(arg[0] == '1') {
-			if_fail_be(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<ACK>"}.u8())));
+			if_fail_be(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<ACK>"}.u0_t())));
 			const u0_t							temperature						= app.Dryer.State.Running
 				? (u0_t)app.Dryer.CurrentProgram.Temperature
 				: (u0_t)::dry::DRYER_MIN_TEMPERATURE
@@ -15,10 +15,10 @@ static	::gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSO
 			char									buffer[32]						= {};
 			snprintf(buffer, ::gpk::size(buffer)-2, "<TEMP %u>", temperature);
 			always_printf("Recovering to temperature: %u.", temperature);
-			if_fail_bef(::gpk::failed(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{buffer}.u8())), "Failed to send serial command to set temperature to: %u.", temperature);
+			if_fail_bef(::gpk::failed(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{buffer}.u0_t())), "Failed to send serial command to set temperature to: %u.", temperature);
 			::gpk::vcst_t							command							= app.Dryer.State.Pump ? ::gpk::vcst_t{"<ON>"} : ::gpk::vcst_t{"<OFF>"};
 			always_printf("Recovering to pump state: %.*s.", GPK_VIEW_ARGS(command));
-			if_fail_bef(::gpk::failed(::s3d::serialWrite(app.Serial, command.u8())), "Failed to send serial command to start pump: %.*s.", GPK_VIEW_ARGS(command));
+			if_fail_bef(::gpk::failed(::s3d::serialWrite(app.Serial, command.u0_t())), "Failed to send serial command to start pump: %.*s.", GPK_VIEW_ARGS(command));
 			app.Dryer.State.Dryer				= true;
 		}
 		break;
@@ -31,10 +31,10 @@ static	::gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSO
 		info_printf("Received cycle value: '%.*s'", GPK_VIEW_ARGS(arg));
 		if(arg[0] == '1') {
 			if(false == app.Dryer.State.Pump)
-				::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<OFF>"}.u8());
+				::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<OFF>"}.u0_t());
 		}
 		else if(app.Dryer.State.Pump)
-			::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<ON>"}.u8());
+			::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<ON>"}.u0_t());
 
 		break;
 	case 'D':
@@ -70,7 +70,7 @@ static	::gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSO
 			char									buffer[32]						= {};
 			snprintf(buffer, ::gpk::size(buffer)-2, "<TEMP %u>", app.Dryer.CurrentProgram.Temperature);
 			always_printf("Setting target temperature: %u.", app.Dryer.CurrentProgram.Temperature);
-			if_fail_bef(::gpk::failed(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{buffer}.u8())), "Failed to send serial command to set temperature to: %u.", app.Dryer.CurrentProgram.Temperature);
+			if_fail_bef(::gpk::failed(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{buffer}.u0_t())), "Failed to send serial command to set temperature to: %u.", app.Dryer.CurrentProgram.Temperature);
 		}
 		break;
 	}
@@ -128,7 +128,7 @@ static	::gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSO
 			}
 			::gpk::sleep(5000);
 		}
-		if(::gpk::failed(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<STATUS>"}.u8()))) {
+		if(::gpk::failed(::s3d::serialWrite(app.Serial, ::gpk::vcst_t{"<STATUS>"}.u0_t()))) {
 			error_printf("%s", "Failed to send <STATUS> command.");
 			::s3d::serialClose(app.Serial);
 			continue;

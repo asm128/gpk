@@ -1,0 +1,1 @@
+{"Weight":{"type":"float","value":234.25,"modifiers":["inln","sttc","cnst"]},"Height":{"type":"f3_t","value":234.25,"modifiers":["stxp"]},"Capacity":{"type":"gpk::view<gpk::sc_c>","value":"Factory::Build<Value>(7)","modifiers":["vltl"]},"Enabled":{"type":"b8_c","value":true,"modifiers":["sttc"]},"Count":{"type":"gpk::u2_t","value":null,"modifiers":[]}}

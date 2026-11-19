@@ -12,7 +12,7 @@ static_assert(sizeof(::gpk::SControlDraw) == 29, "The shared wire format require
 
 GDEFINE_ENUM_TYPE(GUI_CONTROL_SERIALIZATION_TEST_RESULT, ::gpk::u0_t);
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, SAVE				, 0, "SControlTable::Save() rejected a valid table.");
-GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, PACKED_COUNT		, 1, "The 64-control count did not use the expected packed-u32 boundary representation.");
+GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, PACKED_COUNT		, 1, "The 64-control count did not use the expected packed-u2_t boundary representation.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, LOAD				, 2, "SControlTable::Load() rejected its own serialized table.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, CONSUMPTION		, 3, "SControlTable::Load() did not consume exactly one table.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, PARALLEL_ARRAYS	, 4, "The loaded control-table arrays do not share the serialized slot count.");
@@ -24,7 +24,7 @@ GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, IMAGE				, 9, "Contro
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, HIERARCHY			, 10, "Control hierarchy or child order did not round-trip.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, TABLE_MEMBERS		, 11, "Area, event queue or exact control flags did not round-trip.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, TRUNCATED_REJECT	, 12, "The loader accepted truncated input.");
-GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, PACKED_BOUNDARIES	, 13, "A packed-u32 boundary value did not round-trip with the expected byte width.");
+GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, PACKED_BOUNDARIES	, 13, "A packed-u2_t boundary value did not round-trip with the expected byte width.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, PACKED_TRUNCATED	, 14, "loadPacked() accepted a count with a missing tail byte.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, CORPUS_SETUP		, 15, "The complete GUI corpus could not be constructed.");
 GDEFINE_ENUM_VALUED(GUI_CONTROL_SERIALIZATION_TEST_RESULT, CORPUS_STRUCTURE	, 16, "The complete GUI corpus did not preserve its authored structure.");

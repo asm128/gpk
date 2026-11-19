@@ -14,10 +14,10 @@ namespace dry
 		s1_t												MaxValue				= 64;
 		::gpk::img<::gpk::bgra>								Image					= {};
 
-		stacxpr	::gpk::rgbaf								COLOR_MIN_DEFAULT		= ::gpk::GREEN;
-		stacxpr	::gpk::rgbaf								COLOR_MID_DEFAULT		= ::gpk::ORANGE;
-		stacxpr	::gpk::rgbaf								COLOR_MAX_DEFAULT		= ::gpk::RED;
-		stacxpr	::gpk::rgbaf								COLOR_BKG_DEFAULT		= ::gpk::BROWN * .5 + ::gpk::DARKBLUE * .5;
+		stxp	::gpk::rgbaf								COLOR_MIN_DEFAULT		= ::gpk::GREEN;
+		stxp	::gpk::rgbaf								COLOR_MID_DEFAULT		= ::gpk::ORANGE;
+		stxp	::gpk::rgbaf								COLOR_MAX_DEFAULT		= ::gpk::RED;
+		stxp	::gpk::rgbaf								COLOR_BKG_DEFAULT		= ::gpk::BROWN * .5 + ::gpk::DARKBLUE * .5;
 
 		inline	s1_t										SetValue				(float weight)							noexcept	{ return CurrentValue = s1_t(weight * MaxValue); }
 				s1_t										SetValue				(float currentValue, u2_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }

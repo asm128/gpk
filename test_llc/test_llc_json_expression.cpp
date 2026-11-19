@@ -3,6 +3,11 @@
 #include "gpk_enum.h"
 #include "gpk_json_expression.h"
 #include "gpk_gui.h"
+#include "gpk_file.h"
+
+sttc ::gpk::err_t testArtifactWrite(::gpk::vcst_t outputFolder, ::gpk::vcst_t fileName, ::gpk::vcst_t contents) {
+	rtrn ::gpk::fileFromMemory(outputFolder, fileName, {(cnst ::gpk::u0_t*)contents.begin(), contents.size()});
+}
 
 GDEFINE_ENUM_CTTI(::gpk::ALIGN);
 GDEFINE_STCT_CTTI(::gpk::SControlText);
@@ -509,7 +514,7 @@ sttc ::gpk::err_t testJSONExpressionCTTITheme(ATestError & errors) {
 	rtrn ::testJSONExpressionCTTIRoundTrip(errors, "SControlTheme", value);
 }
 
-sttc ::gpk::err_t testJSONExpressionGUIControlTable(ATestError & errors) {
+sttc ::gpk::err_t testJSONExpressionGUIControlTable(ATestError & errors, ::gpk::vcst_t outputFolder) {
 	::gpk::SGUI gui = {};
 	cnst ::gpk::cid_t idPanel = ::gpk::controlCreate(gui);
 	cnst ::gpk::cid_t idBridge = ::gpk::controlCreateChild(gui, idPanel);
@@ -592,10 +597,12 @@ sttc ::gpk::err_t testJSONExpressionGUIControlTable(ATestError & errors) {
 		|| gui.Controls.Children[idBridge].size() != 2
 		|| gui.Controls.EventQueue.size()
 		);
+	if_fail_fe(::testArtifactWrite(outputFolder, "gui_control_table_script.json", gui.Controls.Script[idAction]));
+	if_fail_fe(::testArtifactWrite(outputFolder, "gui_control_table.json", guiJSON));
 	rtrn 0;
 }
 
-sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
+sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors, ::gpk::vcst_t outputFolder) {
 	cnst ::gpk::vcst_t document =
 		  "\n{\t \"name\"           : \"Carlos\""
 		  "\n\t, \"height\"         : 1.60"
@@ -639,10 +646,12 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	cnst ::gpk::vcst_t formattedView = {formatted.begin(), formatted.size()};
 	cnst ::gpk::vcst_t expected = "I want to replace this (but not \\{this}): \nBob's color: // this comment should appear here\ngreen.";
 	GPK_TEST_CHECKF(errors, JSON_EXPRESSION_HISTORICAL_TEST_RESULT_FORMAT_VALUE, formattedView != expected, "Output:'%.*s', expected:'%.*s'.", GPK_VIEW_ARGS(formattedView), GPK_VIEW_ARGS(expected));
+	if_fail_fe(::testArtifactWrite(outputFolder, "historical_input.json", document));
+	if_fail_fe(::testArtifactWrite(outputFolder, "historical_output.txt", formattedView));
 	rtrn 0;
 }
 
-::gpk::err_t testJSONExpressionCTTI(ATestError & errors) {
+::gpk::err_t testJSONExpressionCTTI(ATestError & errors, ::gpk::vcst_t outputFolder) {
 	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_CONTROL_REGISTRY, 0 == ::gpk::cttiStruct("SControlText").Name.size());
 	GPK_TEST_REQUIRE(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_SELECTION_REGISTRY, 0 == ::gpk::cttiStruct("minmaxu1_t").Name.size());
 	cnst ::gpk::SEnumDefinition * alignDefinition = ::gpk::enumDefinition("ALIGN");
@@ -676,7 +685,7 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	if_fail_fe(::testJSONExpressionCTTITextState(errors));
 	if_fail_fe(::testJSONExpressionCTTIConstraints(errors));
 	if_fail_fe(::testJSONExpressionCTTITheme(errors));
-	if_fail_fe(::testJSONExpressionGUIControlTable(errors));
+	if_fail_fe(::testJSONExpressionGUIControlTable(errors, outputFolder));
 
 	::gpk::SControlText source = {};
 	source.Text			= "Source text";
@@ -808,12 +817,17 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 		, gui.Controls.Text[idTarget].FontSelected, GPK_VIEW_ARGS(gui.Controls.Text[idTarget].Text), gui.Controls.Text[idTarget].Align, gui.Controls.Text[idTarget].Selection.Min, gui.Controls.Text[idTarget].Selection.Max
 		, 5, GPK_VIEW_ARGS(target.Text), target.Align, target.Selection.Min, target.Selection.Max
 		);
+	if_fail_fe(::testArtifactWrite(outputFolder, "ctti_source.json", sourceJSON));
+	if_fail_fe(::testArtifactWrite(outputFolder, "ctti_target.json", targetJSON));
+	if_fail_fe(::testArtifactWrite(outputFolder, "ctti_expression_input.json", inputJSON));
+	if_fail_fe(::testArtifactWrite(outputFolder, "ctti_expression_expected.json", expectedJSON));
+	if_fail_fe(::testArtifactWrite(outputFolder, "ctti_expression_output.json", formattedView));
 	rtrn 0;
 }
 
-::gpk::err_t testJSONExpression(ATestError & errors) {
-	if_fail_fe(testJSONExpressionHistorical(errors));
-	if_fail_fe(testJSONExpressionCTTI(errors));
+::gpk::err_t testJSONExpression(ATestError & errors, ::gpk::vcst_t outputFolder) {
+	if_fail_fe(testJSONExpressionHistorical(errors, outputFolder));
+	if_fail_fe(testJSONExpressionCTTI(errors, outputFolder));
 	cnst ::gpk::vcst_t document = "{\"application\":{\"blitter\":{\"database\":{\"name\":\"main\",\"enabled\":true,\"disabled\":false,\"negativeZero\":-0.0,\"path\":{\"database\":\"data\"},\"bind\":[\"id\",\"name\"]}}},\"selector\":\"selectorName\",\"selectorName\":\"name\"}";
 	::gpk::SJSONReader reader = {};
 	cnst ::gpk::err_t parseResult = ::gpk::jsonParse(reader, document);
@@ -897,9 +911,12 @@ sttc ::gpk::err_t testJSONExpressionHistorical(ATestError & errors) {
 	GPK_TEST_CHECKF(errors, JSON_EXPRESSION_TEST_RESULT_FORMAT_FAILURE_RESULT, 0 <= failedFormatResult, "Result:%i.", failedFormatResult);
 	cnst ::gpk::vcst_t failedFormatView = {failedFormat.begin(), failedFormat.size()};
 	GPK_TEST_CHECKF(errors, JSON_EXPRESSION_TEST_RESULT_FORMAT_FAILURE_OUTPUT, failedFormatView != "preserved", "Output:'%.*s'.", GPK_VIEW_ARGS(failedFormatView));
+	if_fail_fe(::testArtifactWrite(outputFolder, "expression_input.json", document));
+	if_fail_fe(::testArtifactWrite(outputFolder, "expression_output.txt", formattedView));
+	if_fail_fe(::testArtifactWrite(outputFolder, "expression_adjacent.txt", adjacentView));
 	rtrn 0;
 }
 
-::gpk::err_t test_json_expression(STestRunnerState &, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
-	rtrn testJSONExpression(errors);
+::gpk::err_t test_json_expression(STestRunnerState &, ::gpk::ATestError & errors, ::gpk::vcst_t outputFolder) {
+	rtrn testJSONExpression(errors, outputFolder);
 }
