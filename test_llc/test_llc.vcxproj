@@ -182,6 +182,7 @@
     <ClCompile Include="test_llc_expression.cpp" />
     <ClCompile Include="test_llc_expression_core.cpp" />
     <ClCompile Include="test_llc_expression_ctti.cpp" />
+    <ClCompile Include="test_llc_gui_json.cpp" />
     <ClCompile Include="test_llc_index.cpp" />
     <ClCompile Include="test_llc_index_catalog.cpp" />
     <ClCompile Include="test_llc_index_path.cpp" />

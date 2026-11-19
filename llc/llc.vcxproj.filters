@@ -330,6 +330,12 @@
     <ClInclude Include="gpk_gui_control.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_control_json.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_json_expression.h">
+      <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_gui_control_list.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -1149,6 +1155,12 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_json_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_process_broker.cpp">

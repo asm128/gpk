@@ -96,6 +96,9 @@
     <ClCompile Include="test_llc_expression_ctti.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_gui_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="test_llc_index.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
