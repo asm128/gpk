@@ -1,8 +1,13 @@
 #include "gpk_ctti_stct_json.h"
+#include "gpk_file.h"
 
 #include "test_llc_suites.h"
 
 usns gpk;
+
+sttc ::gpk::err_t testArtifactWrite(::gpk::vcst_t outputFolder, ::gpk::vcst_t fileName, ::gpk::vcst_t contents) {
+	rtrn ::gpk::fileFromMemory(outputFolder, fileName, {(cnst ::gpk::u0_t*)contents.begin(), contents.size()});
+}
 
 GDEFINE_ENUM_TYPE(CTTI_STCT_JSON_TEST_RESULT, ::gpk::u0_t);
 GDEFINE_ENUM_VALUED(CTTI_STCT_JSON_TEST_RESULT, METADATA		, 0, "The JSON extension did not use the static CTTI struct registry.");
@@ -138,7 +143,7 @@ sttc ::gpk::err_t cttiStructJSONWindowLoad(cnst ::gpk::SJSONReader & input, ::gp
 	rtrn ::gpk::cttiValueLoad(input, iNode, output.Window);
 }
 
-::gpk::err_t test_ctti_stct_json(STestRunnerState &, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
+::gpk::err_t test_ctti_stct_json(STestRunnerState &, ::gpk::ATestError & errors, ::gpk::vcst_t outputFolder) {
 	cnst auto & metadata = ::gpk::cttiStruct<SCTTIStructJSONPOD>();
 	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_METADATA, false == metadata.Success());
 	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_METADATA, metadata.View(metadata.StructName) != "SCTTIStructJSONPOD");
@@ -306,5 +311,14 @@ sttc ::gpk::err_t cttiStructJSONWindowLoad(cnst ::gpk::SJSONReader & input, ::gp
 		rtrn 0;
 	cnst ::gpk::err_t keyCount = ::gpk::jsonObjectKeyCount(reader, 0);
 	GPK_TEST_CHECKF(errors, CTTI_STCT_JSON_TEST_RESULT_JSON_KEY_COUNT, keyCount != 5, "Key count:%i, expected:5.", keyCount);
+	if_fail_fe(::testArtifactWrite(outputFolder, "instance_a.json", {serialized.begin(), (::gpk::u2_t)savedA}));
+	if_fail_fe(::testArtifactWrite(outputFolder, "instance_b.json", {serialized.begin() + savedA, (::gpk::u2_t)savedB}));
+	if_fail_fe(::testArtifactWrite(outputFolder, "many.json", serializedMany));
+	if_fail_fe(::testArtifactWrite(outputFolder, "packed.json", serializedPacked));
+	if_fail_fe(::testArtifactWrite(outputFolder, "text.json", serializedText));
+	if_fail_fe(::testArtifactWrite(outputFolder, "arrays.json", serializedArrays));
+	if_fail_fe(::testArtifactWrite(outputFolder, "c_array.json", serializedCArray));
+	if_fail_fe(::testArtifactWrite(outputFolder, "window_callback.json", serializedWindowCallback));
+	if_fail_fe(::testArtifactWrite(outputFolder, "metadata.json", output));
 	rtrn 0;
 }

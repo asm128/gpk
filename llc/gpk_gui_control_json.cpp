@@ -1,5 +1,4 @@
 #include "gpk_gui_control_json.h"
-#include "gpk_gui.h"
 #include "gpk_ctti_stct_json.h"
 
 #include "gpk_array.h"
@@ -366,11 +365,6 @@ sttc ::gpk::err_t controlCTTJSONLoad(::gpk::SControlTable & controls, ::gpk::vs1
 	rtrn iControl;
 }
 
-gpk::err_t gpk::controlTableJSONLoad(SGUI & gui, cnst SJSONReader & input, u2_t iNode) {
-	if_fail_fe(guiSetupDefaults(gui));
-	rtrn controlTableJSONLoad(gui.Controls, gui.Colors->DefaultColors, input, iNode);
-}
-
 gpk::err_t gpk::controlTableJSONLoad(SControlTable & controls, vs1_t defaultColors, cnst SJSONReader & input, u2_t iNode) {
 	if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
 	SControlTable loaded = {};
@@ -418,4 +412,3 @@ gpk::err_t gpk::controlTableJSONLoad(SControlTable & controls, cnst SJSONReader 
 	if_fail_fe(::controlEventQueueJSONLoad(input, iNode, controls.EventQueue));
 	rtrn 0;
 }
-

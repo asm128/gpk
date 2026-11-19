@@ -327,10 +327,16 @@
     <ClInclude Include="gpk_gui.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_json.h">
+      <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_gui_control.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_control_json.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_json_expression.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_control_list.h">
@@ -1136,6 +1142,9 @@
     <ClCompile Include="gpk_gui_theme.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_gui_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="gpk_event_device.h">
       <Filter>system</Filter>
     </ClCompile>
@@ -1143,6 +1152,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_control_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_json_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_process_broker.cpp">

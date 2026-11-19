@@ -1,0 +1,29 @@
+{
+	"Files": [
+		{"Label":"Metadata", "Path":"data/metadata.json"},
+		{"Label":"Packed", "Path":"data/packed.json"},
+		{"Label":"Results", "Path":"data/results.json"},
+		{"Label":"Text", "Path":"data/text.json"},
+		{"Label":"Window callback", "Path":"data/window_callback.json"},
+		{"Label":"Arrays", "Path":"data/arrays.json"},
+		{"Label":"C array", "Path":"data/c_array.json"},
+		{"Label":"Instance A", "Path":"data/instance_a.json"},
+		{"Label":"Instance B", "Path":"data/instance_b.json"},
+		{"Label":"Many", "Path":"data/many.json"}
+	],
+	"GUI": {
+		"file_explorer": {
+			"Placement":{"Area":{"Offset":{"x":0,"y":0},"Size":{"x":1280,"y":720}},"Margin":{"Left":0,"Top":0,"Right":0,"Bottom":0},"Border":{"Left":0,"Top":0,"Right":0,"Bottom":0}},
+			"Draw":{"ColorMode":2,"ColorTheme":0},
+			"title":{"Placement":{"Area":{"Offset":{"x":18,"y":16},"Size":{"x":1244,"y":44}}},"Draw":{"ColorMode":2,"FrameOut":1,"ColorTheme":3},"Text":{"Text":"CTTI JSON WORKBENCH","Align":"CENTER","FontSelected":3}},
+			"sources":{"Placement":{"Area":{"Offset":{"x":18,"y":76},"Size":{"x":222,"y":562}}},"Draw":{"ColorMode":2,"ColorTheme":5},"Text":{"Text":"DATASETS","Align":"TOP_LEFT","FontSelected":7}},
+			"types":{"Placement":{"Area":{"Offset":{"x":256,"y":76},"Size":{"x":150,"y":562}}},"Draw":{"ColorMode":2,"ColorTheme":2},"Text":{"Text":"TYPE","Align":"TOP_LEFT","FontSelected":7}},
+			"names":{"Placement":{"Area":{"Offset":{"x":414,"y":76},"Size":{"x":310,"y":562}}},"Draw":{"ColorMode":2,"ColorTheme":4},"Text":{"Text":"MEMBER","Align":"TOP_LEFT","FontSelected":7}},
+			"values":{"Placement":{"Area":{"Offset":{"x":732,"y":76},"Size":{"x":530,"y":562}}},"Draw":{"ColorMode":2,"ColorTheme":6},"Text":{"Text":"VALUE","Align":"TOP_LEFT","FontSelected":7}},
+			"status":{"Placement":{"Area":{"Offset":{"x":18,"y":652},"Size":{"x":900,"y":38}}},"Draw":{"ColorMode":2,"ColorTheme":1},"Text":{"Align":"CENTER_LEFT","FontSelected":7}},
+			"previous":{"Placement":{"Area":{"Offset":{"x":936,"y":652},"Size":{"x":96,"y":38}}},"Draw":{"ColorMode":1,"ColorTheme":2},"Text":{"Text":"PREVIOUS","Align":"CENTER","FontSelected":7}},
+			"next":{"Placement":{"Area":{"Offset":{"x":1038,"y":652},"Size":{"x":96,"y":38}}},"Draw":{"ColorMode":1,"ColorTheme":2},"Text":{"Text":"NEXT","Align":"CENTER","FontSelected":7}},
+			"exit":{"Placement":{"Area":{"Offset":{"x":1140,"y":652},"Size":{"x":122,"y":38}}},"Draw":{"ColorMode":1,"ColorTheme":3},"Text":{"Text":"EXIT","Align":"CENTER","FontSelected":7}}
+		}
+	}
+}

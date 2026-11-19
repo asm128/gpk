@@ -6,8 +6,6 @@
 
 nmsp gpk
 {
-	struct SGUI;
-	err_t	controlTableJSONLoad	(SGUI & gui, cnst SJSONReader & input, u2_t iNode = 0);
 	err_t	controlTableJSONLoad	(SControlTable & controls, cnst SJSONReader & input, u2_t iNode = 0);
 	err_t	controlTableJSONLoad	(SControlTable & controls, vs1_t defaultColors, cnst SJSONReader & input, u2_t iNode = 0);
 	err_t	controlTableJSONLoad	(SControlTable & controls, vcst_t & inputJsonString_NOT_FILENAME);
@@ -20,4 +18,3 @@ nmsp gpk
 } // nmsp
 
 #endif // GPK_GUI_CONTROL_JSON_H_261118
-

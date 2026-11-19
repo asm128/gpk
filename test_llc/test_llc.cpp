@@ -1,7 +1,5 @@
 #include "test_llc_suites.h"
 
-using ::gpk::testReporting;
-
 sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues);
 GPK_OS_ENTRY_POINT(::test_llc_entry_point);
 
@@ -32,6 +30,7 @@ sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues) {
 		, GPK_TEST_SUITE(expression_core)
 		, GPK_TEST_SUITE(expression_ctti)
 		, GPK_TEST_SUITE(expression)
+		, GPK_TEST_SUITE(gui_json)
 		, GPK_TEST_SUITE(index)
 		, GPK_TEST_SUITE(index_catalog)
 		, GPK_TEST_SUITE(index_path)

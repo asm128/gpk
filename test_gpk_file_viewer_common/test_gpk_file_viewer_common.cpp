@@ -1243,7 +1243,7 @@ gpk::err_t fileViewerSetup(SGUI & gui, SFileViewer & viewer, FILE_VIEWER_LAYOUT 
 	(void)layout;
 	gui.ColorModeDefault = GUI_COLOR_MODE_3D;
 	if_fail_fef(jsonFileRead(viewer.GUIJSON, "../gpk/test_gpk_file_viewer_common/file_viewer_gui.json"), "%s", "Failed to load the file viewer GUI JSON.");
-	if_fail_fe(controlTableJSONLoad(gui, viewer.GUIJSON.Reader));
+	if_fail_fe(guiControlTableJSONLoad(gui, viewer.GUIJSON.Reader));
 
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "menu_files", viewer.IdMenuFiles));
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "menu_json", viewer.IdMenuJSON));
