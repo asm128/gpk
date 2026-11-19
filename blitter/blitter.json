@@ -1,0 +1,45 @@
+{	"application"		:
+	{	"blitter": 
+		{	"path"	: 
+			{	"database"	: "../blitdb"	
+			,	"cache"		: "../blitdb/cache"	
+			},
+			"database"		  : 
+			[	{ "public": true, "source" : "local"  , "name": "website"		, "bind" : ["website"		, "user.website"		, ]} // , "block": 2560
+			,	{ "public": true, "source" : "local"  , "name": "user"			, "bind" : ["referral"		, "user.referral"		, ], "block": 128, "file_blocks": 64, "deflate": true, "key": "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u"} // 
+			,	{ "public": true, "source" : "local"  , "name": "publisher"		, "bind" : ["publisher"		, "website.publisher"	, ], "block": 128, "file_blocks": 64, "deflate": true, "key": "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u"}
+			,	{ "public": true, "source" : "local"  , "name": "company"		, "bind" : ["company"		, "owner"				, ], "block": 128, "file_blocks": 64, "deflate": true, "key": "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u"
+				, "fields" : 
+					{ "name": ""
+					}
+			 	}
+			,	{ "public": true, "source" : "local"  , "name": "vehicle"		, "bind" : ["vehicle"			, ], "block": 128, "file_blocks": 64, "deflate": true, "key": "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u"
+				, "fields" : 
+					{ "name"			: ""
+					, "vehicle_type"	: {"table": "vehicle_type"	, "display": "select"}
+					, "vehicle_make"	: {"table": "vehicle_make"	, "display": "select"}
+					, "vehicle_model"	: {"table": "vehicle_model"	, "display": "select"}
+					}
+			 	}
+			,	{ "public": true, "source" : "local"  , "name": "vehicle_type"	, "bind" : ["vehicle_type"		, ], "block": 128, "file_blocks": 64, "deflate": true, "key": "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u"
+				, "fields" : 
+					{ "name": ""
+					}
+			 	}
+			,	{ "public": true, "source" : "local"  , "name": "vehicle_make"	, "bind" : ["vehicle_make"		, ], "block": 128, "file_blocks": 64, "deflate": true, "key": "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u"
+				, "fields" : 
+					{ "name": ""
+					}
+			 	}
+			,	{ "public": true, "source" : "local"  , "name": "vehicle_model"	, "bind" : ["vehicle_model"		, ], "block": 128, "file_blocks": 64, "deflate": true, "key": "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u"
+				, "fields" : 
+					{ "name": ""
+					}
+			 	}
+			//,	{ "source" : "remote" , "name": "departments"	, "bind" : ["department"		, "superdepartment"] }
+			//,	{ "source" : "remote" , "name": "offices"		, "bind" : ["office"			, ] }
+			//,	{ "source" : "remote" , "name": "users"			, "bind" : ["manager"			, ], "source_domain" : "https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com" }
+			]
+		}
+	}
+}
