@@ -8,8 +8,83 @@
 #include "gpk_rect_align.h"
 #include "gpk_framework_module.h"
 #include "gpk_gui_control_theme.h"
+#include "gpk_event_input.h"
 
 usns gpk;
+
+sttc ::gpk::err_t guiEventChildType(::gpk::SYSTEM_EVENT parent, ::gpk::vcst_t name, ::gpk::u0_t & child) {
+	switch(parent) {
+	default: rtrn 0;
+	case ::gpk::SYSTEM_EVENT_Framework	: { ::gpk::APPLICATION_STATE value = {}; if_fail_fe(::gpk::get_enum<::gpk::APPLICATION_STATE>().get_value(name, value)); child = (::gpk::u0_t)value; rtrn 1; }
+	case ::gpk::SYSTEM_EVENT_GUI		: { ::gpk::EVENT_GUI_CONTROL value = {}; if_fail_fe(::gpk::get_enum<::gpk::EVENT_GUI_CONTROL>().get_value(name, value)); child = (::gpk::u0_t)value; rtrn 1; }
+	case ::gpk::SYSTEM_EVENT_Text		: { ::gpk::EVENT_TEXT value = {}; if_fail_fe(::gpk::get_enum<::gpk::EVENT_TEXT>().get_value(name, value)); child = (::gpk::u0_t)value; rtrn 1; }
+	case ::gpk::SYSTEM_EVENT_Keyboard	: { ::gpk::EVENT_KEYBOARD value = {}; if_fail_fe(::gpk::get_enum<::gpk::EVENT_KEYBOARD>().get_value(name, value)); child = (::gpk::u0_t)value; rtrn 1; }
+	case ::gpk::SYSTEM_EVENT_Mouse		: { ::gpk::EVENT_MOUSE value = {}; if_fail_fe(::gpk::get_enum<::gpk::EVENT_MOUSE>().get_value(name, value)); child = (::gpk::u0_t)value; rtrn 1; }
+	case ::gpk::SYSTEM_EVENT_Touch		: { ::gpk::EVENT_TOUCH value = {}; if_fail_fe(::gpk::get_enum<::gpk::EVENT_TOUCH>().get_value(name, value)); child = (::gpk::u0_t)value; rtrn 1; }
+	case ::gpk::SYSTEM_EVENT_Joypad		: { ::gpk::EVENT_JOYPAD value = {}; if_fail_fe(::gpk::get_enum<::gpk::EVENT_JOYPAD>().get_value(name, value)); child = (::gpk::u0_t)value; rtrn 1; }
+	}
+}
+
+sttc ::gpk::vcst_t guiEventChildName(::gpk::SYSTEM_EVENT parent, ::gpk::u0_t child) {
+	switch(parent) {
+	default: rtrn {};
+	case ::gpk::SYSTEM_EVENT_Framework	: rtrn ::gpk::get_value_name((::gpk::APPLICATION_STATE)child);
+	case ::gpk::SYSTEM_EVENT_GUI		: rtrn ::gpk::get_value_name((::gpk::EVENT_GUI_CONTROL)child);
+	case ::gpk::SYSTEM_EVENT_Text		: rtrn ::gpk::get_value_name((::gpk::EVENT_TEXT)child);
+	case ::gpk::SYSTEM_EVENT_Keyboard	: rtrn ::gpk::get_value_name((::gpk::EVENT_KEYBOARD)child);
+	case ::gpk::SYSTEM_EVENT_Mouse		: rtrn ::gpk::get_value_name((::gpk::EVENT_MOUSE)child);
+	case ::gpk::SYSTEM_EVENT_Touch		: rtrn ::gpk::get_value_name((::gpk::EVENT_TOUCH)child);
+	case ::gpk::SYSTEM_EVENT_Joypad		: rtrn ::gpk::get_value_name((::gpk::EVENT_JOYPAD)child);
+	}
+}
+
+sttc ::gpk::err_t guiControlFlag(::gpk::vcst_t name, ::gpk::GUI_CONTROL_FLAG & flag) {
+	stxp ::gpk::GUI_CONTROL_FLAG flags[] =
+		{ ::gpk::GUI_CONTROL_FLAG_Hidden, ::gpk::GUI_CONTROL_FLAG_Disabled, ::gpk::GUI_CONTROL_FLAG_Hovered
+		, ::gpk::GUI_CONTROL_FLAG_Focused, ::gpk::GUI_CONTROL_FLAG_Pressed, ::gpk::GUI_CONTROL_FLAG_Dragging
+		, ::gpk::GUI_CONTROL_FLAG_Selected, ::gpk::GUI_CONTROL_FLAG_Updated, ::gpk::GUI_CONTROL_FLAG_Action
+		};
+	for(::gpk::u2_t iFlag = 0; iFlag < szof(flags) / szof(flags[0]); ++iFlag)
+		if(name == ::gpk::cttiEnumName(flags[iFlag])) {
+			flag = flags[iFlag];
+			rtrn 1;
+		}
+	rtrn 0;
+}
+
+sttc ::gpk::err_t guiScriptEventPattern(::gpk::vcst_t key, ::gpk::cid_t iControl, ::gpk::SEventSystem & pattern) {
+	::gpk::u2_t dot0 = key.size(), dot1 = key.size();
+	for(::gpk::u2_t iCharacter = 0; iCharacter < key.size(); ++iCharacter)
+		if('.' == key[iCharacter]) {
+			if(dot0 == key.size()) dot0 = iCharacter;
+			else { dot1 = iCharacter; break; }
+		}
+	::gpk::vcst_t part0 = {key.begin(), dot0};
+	::gpk::vcst_t part1 = dot0 < key.size() ? ::gpk::vcst_t{key.begin() + dot0 + 1, dot1 - dot0 - 1} : ::gpk::vcst_t{};
+	::gpk::vcst_t part2 = dot1 < key.size() ? ::gpk::vcst_t{key.begin() + dot1 + 1, key.size() - dot1 - 1} : ::gpk::vcst_t{};
+	::gpk::SYSTEM_EVENT parent = {};
+	if(0 <= ::gpk::get_enum<::gpk::SYSTEM_EVENT>().get_value(part0, parent)) {
+		if(::gpk::SYSTEM_EVENT_GUI != parent) {
+			pattern.Type = parent;
+			if(0 == part1.size()) rtrn 0;
+			::gpk::u0_t child = {};
+			if(0 >= ::guiEventChildType(parent, part1, child)) rtrn 0;
+			if_fail_fe(::gpk::eventWrapChild(pattern, child, ::gpk::vcu0_t{}));
+			rtrn 1;
+		}
+		part0 = part1;
+		part1 = part2;
+	}
+	::gpk::GUI_CONTROL_FLAG flag = {};
+	if(0 >= ::guiControlFlag(part0, flag)) rtrn 0;
+	::gpk::SChangeControlState change = {iControl};
+	if(part1 == "Clear") change.Clear = flag;
+	else if(0 == part1.size() || part1 == "Set") change.Set = flag;
+	else rtrn 0;
+	pattern.Type = ::gpk::SYSTEM_EVENT_GUI;
+	if_fail_fe(::gpk::eventWrapChild(pattern, ::gpk::EVENT_GUI_CONTROL_StateChange, ::gpk::vcu0_t{(cnst ::gpk::u0_t*)&change, szof(change)}));
+	rtrn 1;
+}
 
 GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, Area);
 GDEFINE_STCT_CTTI_JSON_MEMBER(::gpk::SControlPlacement, Margin);
@@ -64,6 +139,27 @@ sttc b8_t guiControlHasIdentifiedAncestor(cnst ::gpk::SGUI & gui, ::gpk::cid_t i
 	rtrn false;
 }
 
+sttc ::gpk::err_t guiControlScriptJSONSave(::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::b8_t & separator) {
+	if_fail_fe(::gpk::appendOpenKey(output, "Script", separator));
+	cnst ::gpk::vcst_t script = gui.Controls.Script[iControl];
+	::gpk::SJSONReader scriptJSON = {};
+	if(script.size() && 0 <= ::gpk::jsonParse(scriptJSON, script) && ::gpk::JSON_TYPE_OBJECT == scriptJSON.Token[0].Type) {
+		::gpk::aobj<::gpk::vcst_t> keys = {};
+		if_fail_fe(::gpk::jsonObjectKeyList(scriptJSON, 0, keys));
+		for(::gpk::u2_t iKey = 0; iKey < keys.size(); ++iKey) {
+			::gpk::SEventSystem pattern = {};
+			if(0 < ::guiScriptEventPattern(keys[iKey], iControl, pattern)) {
+				if_fail_fe(output.append(script));
+				separator = true;
+				rtrn 1;
+			}
+		}
+	}
+	if_fail_fe(::gpk::cttiValueSave(output, gui.Controls.Script[iControl]));
+	separator = true;
+	rtrn 0;
+}
+
 sttc ::gpk::cid_t guiControlIdentifiedRoot(cnst ::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 	::gpk::cid_t iRoot = gui.Controls.Identifier[iControl].size() ? iControl : ::gpk::CID_INVALID;
 	for(::gpk::cid_t iParent = gui.Controls.States[iControl].Parent; false == ::gpk::controlInvalid(gui, iParent); iParent = gui.Controls.States[iParent].Parent)
@@ -104,7 +200,7 @@ sttc ::gpk::err_t guiControlJSONSave(::gpk::string & output, cnst ::gpk::SGUI & 
 	if_fail_fe(::guiComponentJSONSave(output, "Placement", gui.Controls.Placement[iControl], separator));
 	if_fail_fe(::guiComponentJSONSave(output, "Draw", gui.Controls.Draw[iControl], separator));
 	if_fail_fe(::guiComponentJSONSave(output, "Text", gui.Controls.Text[iControl], separator));
-	if_fail_fe(::guiComponentJSONSave(output, "Script", gui.Controls.Script[iControl], separator));
+	if_fail_fe(::guiControlScriptJSONSave(output, gui, iControl, separator));
 	if_fail_fe(::guiControlChildrenJSONSave(output, gui, iControl, separator));
 	rtrn output.push_back('}');
 }
@@ -147,6 +243,20 @@ sttc ::gpk::err_t guiComponentJSONLoad(cnst ::gpk::SJSONReader & input, ::gpk::u
 
 sttc ::gpk::err_t guiControlJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode);
 
+sttc ::gpk::err_t guiControlScriptJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode) {
+	cnst ::gpk::err_t iScript = ::gpk::jsonObjectValueGet(input, iNode, "Script");
+	if(0 > iScript)
+		rtrn 0;
+	if(::gpk::JSON_TYPE_STRING == input.Token[iScript].Type) {
+		if_fail_fe(::gpk::cttiValueLoad(input, (::gpk::u2_t)iScript, gui.Controls.Script[iControl]));
+		rtrn 1;
+	}
+	if_true_fe(::gpk::JSON_TYPE_OBJECT != input.Token[iScript].Type);
+	gui.Controls.Script[iControl].clear();
+	if_fail_fe(::gpk::jsonWrite(input.Tree[iScript], input.View, gui.Controls.Script[iControl]));
+	rtrn 1;
+}
+
 sttc ::gpk::err_t guiControlChildrenJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode) {
 	cnst ::gpk::acid & children = gui.Controls.Children[iControl];
 	for(::gpk::u2_t iChild = 0; iChild < children.size(); ++iChild) {
@@ -185,7 +295,7 @@ sttc ::gpk::err_t guiControlJSONLoad(::gpk::SGUI & gui, ::gpk::cid_t iControl, c
 	if_fail_fe(result); loaded += result;
 	result = ::guiComponentJSONLoad(input, iNode, "Draw", gui.Controls.Draw[iControl]);
 	if_fail_fe(result); loaded += result;
-	result = ::guiComponentJSONLoad(input, iNode, "Script", gui.Controls.Script[iControl]);
+	result = ::guiControlScriptJSONLoad(gui, iControl, input, iNode);
 	if_fail_fe(result); loaded += result;
 	::gpk::SControlText text = gui.Controls.Text[iControl];
 	result = ::guiComponentJSONLoad(input, iNode, "Text", text);
@@ -232,6 +342,8 @@ gpk::err_t gpk::guiLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input) {
 	::gpk::aobj<::gpk::vcst_t> identifiers = {};
 	if_fail_fe(::gpk::jsonObjectKeyList(input, (::gpk::u2_t)iGUI, identifiers));
 	for(::gpk::u2_t iIdentifier = 0; iIdentifier < identifiers.size(); ++iIdentifier) {
+		if(identifiers[iIdentifier] == "Events")
+			continue;
 		cnst ::gpk::cid_t iControl = ::gpk::controlCreate(gui);
 		if_fail_fe(iControl);
 		gui.Controls.Identifier[iControl] = ::gpk::label(identifiers[iIdentifier]);
@@ -317,21 +429,173 @@ sttc ::gpk::err_t guiJSONTemplateResolveNode(cnst ::gpk::SJSONReader & source, :
 	rtrn ::gpk::jsonWrite(source.Tree[iSource], source.View, output);
 }
 
-sttc ::gpk::err_t guiFrameworkEventPost(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & source) {
-	cnst ::gpk::err_t iType = ::gpk::jsonExpressionResolve("Runtime.Event.Type", source, 0);
-	if(0 > iType)
-		rtrn 0;
-	::gpk::vcst_t type = {};
-	if_fail_fe(::gpk::jsonObjectGetString(source, (::gpk::u2_t)iType, type));
-	::gpk::APPLICATION_STATE state = {};
-	if_fail_fe(::gpk::get_enum<::gpk::APPLICATION_STATE>().get_value(type, state));
-	rtrn ::gpk::eventEnqueueChild(gui.Controls.EventQueue, ::gpk::SYSTEM_EVENT_Framework, state, ::gpk::vcu0_t{});
+sttc ::gpk::err_t guiEventJSONSave(::gpk::string & output, cnst ::gpk::SEventSystem & event) {
+	if_fail_fe(output.push_back('{'));
+	if_fail_fe(::gpk::appendOpenKey(output, "Type"));
+	if_fail_fe(::gpk::appendJSONString(output, ::gpk::get_value_name(event.Type)));
+	if(event.Data.size()) {
+		::gpk::vcu0_t childInput = event.Data;
+		::gpk::SEView<::gpk::u0_t> child = {};
+		if_fail_fe(child.Load(childInput));
+		if_fail_fe(::gpk::appendOpenKey(output, "Data", true));
+		if_fail_fe(output.push_back('{'));
+		if_fail_fe(::gpk::appendOpenKey(output, "Type"));
+		cnst ::gpk::vcst_t childName = ::guiEventChildName(event.Type, child.Type);
+		if(childName.size()) {
+			if_fail_fe(::gpk::appendJSONString(output, childName));
+		}
+		else {
+			if_fail_fe(::gpk::cttiValueSave(output, child.Type));
+		}
+		if(child.Data.size()) {
+			if_fail_fe(::gpk::appendOpenKey(output, "Data", true));
+			if(::gpk::SYSTEM_EVENT_GUI == event.Type && ::gpk::EVENT_GUI_CONTROL_StateChange == child.Type) {
+				::gpk::vcu0_t data = child.Data;
+				::gpk::SChangeControlState change = {};
+				if_fail_fe(::gpk::loadPOD(data, change));
+				if_fail_fe(::gpk::cttiValueSave(output, change));
+			}
+			else if(::gpk::SYSTEM_EVENT_Text == event.Type && ::gpk::EVENT_TEXT_Char == child.Type) {
+				::gpk::vcu0_t data = child.Data;
+				::gpk::u2_t codePoint = {};
+				if_fail_fe(::gpk::loadPOD(data, codePoint));
+				if(codePoint <= 0x7F) {
+					cnst ::gpk::sc_t character = (::gpk::sc_t)codePoint;
+					if_fail_fe(::gpk::appendJSONString(output, ::gpk::vcst_t{&character, 1}));
+				}
+				else if_fail_fe(::gpk::cttiValueSave(output, codePoint));
+			}
+			else if(1 == child.Data.size()) {
+				::gpk::vcu0_t data = child.Data;
+				::gpk::u0_t value = {};
+				if_fail_fe(::gpk::loadPOD(data, value));
+				if_fail_fe(::gpk::cttiValueSave(output, value));
+			}
+			else if_fail_fe(::gpk::cttiValueSave(output, child.Data.size()));
+		}
+		if_fail_fe(output.push_back('}'));
+	}
+	rtrn output.push_back('}');
 }
 
-gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
+sttc ::gpk::err_t guiEventPostNode(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & source, ::gpk::u2_t iEvent) {
+	if(::gpk::JSON_TYPE_ARRAY == source.Token[iEvent].Type) {
+		cnst ::gpk::err_t count = ::gpk::jsonArraySize(source, iEvent);
+		if_fail_fe(count);
+		for(::gpk::u2_t iElement = 0; iElement < (::gpk::u2_t)count; ++iElement) {
+			cnst ::gpk::err_t iValue = ::gpk::jsonArrayValueGet(source, iEvent, iElement);
+			if_fail_fe(iValue);
+			if_fail_fe(::guiEventPostNode(gui, source, (::gpk::u2_t)iValue));
+		}
+		rtrn count;
+	}
+	if_true_fe(::gpk::JSON_TYPE_OBJECT != source.Token[iEvent].Type);
+	cnst ::gpk::err_t iType = ::gpk::jsonObjectValueGet(source, iEvent, "Type");
+	if_fail_fe(iType);
+	::gpk::vcst_t typeName = {};
+	if_fail_fe(::gpk::jsonObjectGetString(source, (::gpk::u2_t)iType, typeName));
+	::gpk::SYSTEM_EVENT parent = {};
+	if_fail_fe(::gpk::get_enum<::gpk::SYSTEM_EVENT>().get_value(typeName, parent));
+	cnst ::gpk::err_t iData = ::gpk::jsonObjectValueGet(source, iEvent, "Data");
+	if(0 > iData) {
+		::gpk::pobj<::gpk::SEventSystem> event = {};
+		event->Type = parent;
+		rtrn gui.Controls.EventQueue.push_back(event);
+	}
+	cnst ::gpk::err_t iChildType = ::gpk::jsonObjectValueGet(source, (::gpk::u2_t)iData, "Type");
+	if_fail_fe(iChildType);
+	::gpk::vcst_t childName = {};
+	if_fail_fe(::gpk::jsonObjectGetString(source, (::gpk::u2_t)iChildType, childName));
+	::gpk::u0_t child = {};
+	if_true_fe(0 >= ::guiEventChildType(parent, childName, child));
+	cnst ::gpk::err_t iChildData = ::gpk::jsonObjectValueGet(source, (::gpk::u2_t)iData, "Data");
+	if(::gpk::SYSTEM_EVENT_Text == parent && ::gpk::EVENT_TEXT_Char == child) {
+		if_fail_fe(iChildData);
+		::gpk::vcst_t text = {};
+		if_fail_fe(::gpk::jsonObjectGetString(source, (::gpk::u2_t)iChildData, text));
+		if_true_fe(0 == text.size());
+		rtrn ::gpk::eventEnqueueTextChar(gui.Controls.EventQueue, (::gpk::u0_t)text[0]);
+	}
+	if(::gpk::SYSTEM_EVENT_GUI == parent && ::gpk::EVENT_GUI_CONTROL_StateChange == child) {
+		if_fail_fe(iChildData);
+		::gpk::SChangeControlState change = {};
+		if_fail_fe(::gpk::cttiValueLoad(source, (::gpk::u2_t)iChildData, change));
+		rtrn ::gpk::eventEnqueueChild(gui.Controls.EventQueue, parent, (::gpk::EVENT_GUI_CONTROL)child, change);
+	}
+	if(0 > iChildData)
+		rtrn ::gpk::eventEnqueueChild(gui.Controls.EventQueue, parent, child, ::gpk::vcu0_t{});
+	::gpk::u0_t value = {};
+	if_fail_fe(::gpk::cttiValueLoad(source, (::gpk::u2_t)iChildData, value));
+	rtrn ::gpk::eventEnqueueChild(gui.Controls.EventQueue, parent, child, value);
+}
+
+sttc ::gpk::err_t guiEventsPost(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & source) {
+	::gpk::err_t posted = 0;
+	cnst ::gpk::vcst_t eventPaths[] = {"Runtime.Events", "GUI.Events"};
+	for(::gpk::u2_t iPath = 0; iPath < szof(eventPaths) / szof(eventPaths[0]); ++iPath) {
+		cnst ::gpk::err_t iEvents = ::gpk::jsonExpressionResolve(eventPaths[iPath], source, 0);
+		if(0 <= iEvents) {
+			if_fail_fe(::guiEventPostNode(gui, source, (::gpk::u2_t)iEvents));
+			++posted;
+		}
+	}
+	cnst ::gpk::err_t iLegacyType = ::gpk::jsonExpressionResolve("Runtime.Event.Type", source, 0);
+	if(0 <= iLegacyType) {
+		::gpk::vcst_t type = {};
+		if_fail_fe(::gpk::jsonObjectGetString(source, (::gpk::u2_t)iLegacyType, type));
+		::gpk::APPLICATION_STATE state = {};
+		if_fail_fe(::gpk::get_enum<::gpk::APPLICATION_STATE>().get_value(type, state));
+		if_fail_fe(::gpk::eventEnqueueChild(gui.Controls.EventQueue, ::gpk::SYSTEM_EVENT_Framework, state, ::gpk::vcu0_t{}));
+		++posted;
+	}
+	rtrn posted;
+}
+
+sttc ::gpk::err_t guiScriptValuesJSONSave
+	( ::gpk::string & output, cnst ::gpk::SGUI & gui, ::gpk::cid_t iRoot, ::gpk::b8_t scoped
+	, cnst ::gpk::SEventSystem * runtimeEvent, cnst ::gpk::SEventSystem * guiEvent
+	) {
+	::gpk::string controls = {};
+	if(scoped) {
+		if_fail_fe(::guiControlTreeJSONSave(controls, gui, iRoot));
+	}
+	else {
+		if_fail_fe(::gpk::guiJSONSave(controls, gui));
+	}
+	if_fail_fe(output.push_back('{'));
+	if_fail_fe(::gpk::appendOpenKey(output, "Runtime"));
+	if_fail_fe(output.push_back('{'));
+	if_fail_fe(::gpk::appendOpenKey(output, "Events"));
+	if(runtimeEvent) {
+		if_fail_fe(::guiEventJSONSave(output, *runtimeEvent));
+	}
+	else {
+		if_fail_fe(output.append("null"));
+	}
+	if_fail_fe(output.push_back('}'));
+	if_fail_fe(::gpk::appendOpenKey(output, "GUI", true));
+	if_fail_fe(output.push_back('{'));
+	if_fail_fe(::gpk::appendOpenKey(output, "Events"));
+	if(guiEvent) {
+		if_fail_fe(::guiEventJSONSave(output, *guiEvent));
+	}
+	else {
+		if_fail_fe(output.append("null"));
+	}
+	if_fail_fe(output.push_back('}'));
+	if(controls.size() > 2) {
+		if_fail_fe(output.push_back(','));
+		if_fail_fe(output.append(::gpk::vcst_t{controls.begin() + 1, controls.size() - 2}));
+	}
+	rtrn output.push_back('}');
+}
+
+sttc ::gpk::err_t guiScriptRunSource
+	( ::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::vcst_t script
+	, cnst ::gpk::SEventSystem * runtimeEvent, cnst ::gpk::SEventSystem * guiEvent
+	) {
 	if_true_fef(controlInvalid(gui, iControl), "iControl:%i", iControl);
 	cnst vcst_t identifier = gui.Controls.Identifier[iControl];
-	cnst vcst_t script = gui.Controls.Script[iControl];
 	if(0 == script.size())
 		rtrn 0;
 	SJSONReader source = {};
@@ -342,26 +606,25 @@ gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
 	b8_t scoped = true;
 	if_fail_fef(::guiJSONTemplateDynamic(source, 0, rootIdentifier, dynamic, scoped), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 	if(false == dynamic) {
-		if_fail_fef(::guiFrameworkEventPost(gui, source), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
+		if_fail_fef(::guiEventsPost(gui, source), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 		if_fail_fef(guiJSONLoad(gui, source), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 		rtrn 0;
 	}
 	string valuesJSON = {};
-	if(scoped) {
-		if_fail_fef(::guiControlTreeJSONSave(valuesJSON, gui, iRoot), "iControl:%i, Identifier:%.*s, iRoot:%i, RootIdentifier:%.*s", iControl, GPK_VIEW_ARGS(identifier), iRoot, GPK_VIEW_ARGS(rootIdentifier));
-	}
-	else {
-		if_fail_fef(guiJSONSave(valuesJSON, gui), "iControl:%i, Identifier:%.*s", iControl, GPK_VIEW_ARGS(identifier));
-	}
+	if_fail_fef(::guiScriptValuesJSONSave(valuesJSON, gui, iRoot, scoped, runtimeEvent, guiEvent), "iControl:%i, Identifier:%.*s", iControl, GPK_VIEW_ARGS(identifier));
 	SJSONReader values = {};
 	if_fail_fef(jsonParse(values, valuesJSON), "iControl:%i, Identifier:%.*s, ValuesSize:%u", iControl, GPK_VIEW_ARGS(identifier), valuesJSON.size());
 	string patchJSON = {};
 	if_fail_fef(::guiJSONTemplateResolveNode(source, 0, values, 0, patchJSON), "iControl:%i, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
 	SJSONReader patch = {};
 	if_fail_fef(jsonParse(patch, patchJSON), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
-	if_fail_fef(::guiFrameworkEventPost(gui, patch), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
+	if_fail_fef(::guiEventsPost(gui, patch), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
 	if_fail_fef(guiJSONLoad(gui, patch), "iControl:%i, Identifier:%.*s, Patch:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(patchJSON));
 	rtrn 0;
+}
+
+gpk::err_t gpk::guiScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl) {
+	rtrn ::guiScriptRunSource(gui, iControl, gui.Controls.Script[iControl], {}, {});
 }
 
 sttc	gpk::err_t	actualControlUpdate			(SGUI & gui, cid_t iControl) {
@@ -681,6 +944,97 @@ sttc	cid_t	controlProcessInput		(SGUI & gui, cnst SInput & input, cid_t iControl
 	return controlHovered;
 }
 
+sttc ::gpk::b8_t guiEventMatches(cnst ::gpk::SEventSystem & pattern, cnst ::gpk::SEventSystem & event) {
+	if(pattern.Type != event.Type)
+		rtrn false;
+	if(0 == pattern.Data.size())
+		rtrn true;
+	::gpk::vcu0_t patternInput = pattern.Data, eventInput = event.Data;
+	::gpk::SEView<::gpk::u0_t> patternChild = {}, eventChild = {};
+	if(0 > patternChild.Load(patternInput) || 0 > eventChild.Load(eventInput) || patternChild.Type != eventChild.Type)
+		rtrn false;
+	if(::gpk::SYSTEM_EVENT_GUI != event.Type || ::gpk::EVENT_GUI_CONTROL_StateChange != eventChild.Type)
+		rtrn true;
+	::gpk::SChangeControlState patternChange = {}, eventChange = {};
+	::gpk::vcu0_t patternData = patternChild.Data, eventData = eventChild.Data;
+	if(0 > ::gpk::loadPOD(patternData, patternChange) || 0 > ::gpk::loadPOD(eventData, eventChange))
+		rtrn false;
+	if(patternChange.Id != ::gpk::CID_INVALID && patternChange.Id != eventChange.Id)
+		rtrn false;
+	if(patternChange.Set && 0 == (patternChange.Set & eventChange.Set))
+		rtrn false;
+	if(patternChange.Clear && 0 == (patternChange.Clear & eventChange.Clear))
+		rtrn false;
+	rtrn true;
+}
+
+sttc ::gpk::err_t guiControlEventScriptRun(::gpk::SGUI & gui, ::gpk::cid_t iControl, cnst ::gpk::SEventSystem & event) {
+	cnst ::gpk::vcst_t script = gui.Controls.Script[iControl];
+	if(0 == script.size())
+		rtrn 0;
+	::gpk::SJSONReader table = {};
+	if(0 > ::gpk::jsonParse(table, script) || ::gpk::JSON_TYPE_OBJECT != table.Token[0].Type)
+		rtrn 0;
+	::gpk::aobj<::gpk::vcst_t> keys = {};
+	if_fail_fe(::gpk::jsonObjectKeyList(table, 0, keys));
+	::gpk::b8_t isEventTable = false;
+	::gpk::err_t executed = 0;
+	for(::gpk::u2_t iKey = 0; iKey < keys.size(); ++iKey) {
+		::gpk::SEventSystem pattern = {};
+		cnst ::gpk::err_t recognized = ::guiScriptEventPattern(keys[iKey], iControl, pattern);
+		if_fail_fe(recognized);
+		if(0 == recognized)
+			continue;
+		isEventTable = true;
+		if(false == ::guiEventMatches(pattern, event))
+			continue;
+		cnst ::gpk::err_t iSource = ::gpk::jsonObjectValueGet(table, 0, keys[iKey]);
+		if_fail_fe(iSource);
+		::gpk::string source = {};
+		if(::gpk::JSON_TYPE_STRING == table.Token[iSource].Type) {
+			::gpk::vcst_t sourceView = {};
+			if_fail_fe(::gpk::jsonObjectGetString(table, (::gpk::u2_t)iSource, sourceView));
+			source = sourceView;
+		}
+		else
+			if_fail_fe(::gpk::jsonWrite(table.Tree[iSource], table.View, source));
+		cnst ::gpk::SEventSystem * runtimeEvent = ::gpk::SYSTEM_EVENT_GUI == event.Type ? 0 : &event;
+		cnst ::gpk::SEventSystem * guiEvent = ::gpk::SYSTEM_EVENT_GUI == event.Type ? &event : 0;
+		if_fail_fef(::guiScriptRunSource(gui, iControl, source, runtimeEvent, guiEvent), "iControl:%i, Event:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(keys[iKey]), GPK_VIEW_ARGS(source));
+		++executed;
+	}
+	if(isEventTable)
+		rtrn executed;
+	::gpk::SEventSystem actionPattern = {};
+	if_fail_fe(::guiScriptEventPattern("Action", iControl, actionPattern));
+	if(false == ::guiEventMatches(actionPattern, event))
+		rtrn 0;
+	if_fail_fef(::guiScriptRunSource(gui, iControl, script, {}, &event), "iControl:%i, Script:%.*s", iControl, GPK_VIEW_ARGS(script));
+	rtrn 1;
+}
+
+sttc ::gpk::err_t guiEventScriptsRun(::gpk::SGUI & gui, cnst ::gpk::SEventSystem & event) {
+	if(::gpk::SYSTEM_EVENT_GUI == event.Type) {
+		::gpk::vcu0_t eventInput = event.Data;
+		::gpk::SEView<::gpk::u0_t> eventChild = {};
+		if(0 <= eventChild.Load(eventInput) && ::gpk::EVENT_GUI_CONTROL_StateChange == eventChild.Type) {
+			::gpk::SChangeControlState change = {};
+			::gpk::vcu0_t eventData = eventChild.Data;
+			if(0 <= ::gpk::loadPOD(eventData, change) && false == ::gpk::controlInvalid(gui, change.Id))
+				rtrn ::guiControlEventScriptRun(gui, change.Id, event);
+		}
+	}
+	::gpk::err_t executed = 0;
+	for(::gpk::u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
+		if(::gpk::controlInvalid(gui, (::gpk::cid_t)iControl))
+			continue;
+		cnst ::gpk::err_t result = ::guiControlEventScriptRun(gui, (::gpk::cid_t)iControl, event);
+		if_fail_fe(result);
+		executed += result;
+	}
+	rtrn executed;
+}
+
 gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> sysEvents)	{
 	if(0 == gui.LastSize.LengthSquared()) 
 		return 0;
@@ -691,7 +1045,6 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 	cid_t				controlHovered			= -1;
 	acid					rootControlsToProcess	= {};
 	rootControlsToProcess.reserve(1000);
-	(void)sysEvents;
 	for(u2_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		cnst SControlState	& controlState			= gui.Controls.States[iControl];
 		if(controlState.IsUnused())
@@ -750,14 +1103,12 @@ gpk::err_t 		gpk::guiProcessInput	(SGUI & gui, cnst SInput & input, vpobj<SEvent
 	//	if(statePrevious != stateCurrent)
 	//		if_fail_fe(eventEnqueueGuiControlStateChange(gui.Controls.EventQueue, (cid_t)iControl, statePrevious, stateCurrent));
 	//}
-	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
-		if(false == gui.Controls.States[iControl].IsAction())
-			continue;
-		cnst vcst_t identifier = gui.Controls.Identifier[iControl];
-		cnst vcst_t script = gui.Controls.Script[iControl];
-		if(script.size())
-			if_fail_fef(guiScriptRun(gui, (cid_t)iControl), "iControl:%u, Identifier:%.*s, Script:%.*s", iControl, GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(script));
-	}
+	for(u2_t iEvent = 0; iEvent < sysEvents.size(); ++iEvent)
+		if(sysEvents[iEvent])
+			if_fail_fef(::guiEventScriptsRun(gui, *sysEvents[iEvent]), "Runtime event:%u", iEvent);
+	for(u2_t iEvent = 0; iEvent < gui.Controls.EventQueue.size(); ++iEvent)
+		if(gui.Controls.EventQueue[iEvent])
+			if_fail_fef(::guiEventScriptsRun(gui, *gui.Controls.EventQueue[iEvent]), "GUI event:%u", iEvent);
 	return controlHovered;
 }
 
