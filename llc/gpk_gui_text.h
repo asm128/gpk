@@ -61,7 +61,7 @@ nmsp gpk
 	}
 
 	tplt<tpnm _tColor>
-	sttc	err_t	textLineRaster					(cnst n2u2_t & targetMetrics, cnst n2u0_t & fontCharSize, cnst rect2<s1_t> & targetRect, cnst imgmono<_tColor> & fontTexture, vcst_c & textToRaster, apod<n2u1_t> & dstCoords)		{
+	sttc	err_t	textLineRaster					(cnst n2u2_t & targetMetrics, cnst n2u0_t & fontCharSize, cnst rect2s1_t & targetRect, cnst imgmono<_tColor> & fontTexture, vcst_c & textToRaster, apod<n2u1_t> & dstCoords)		{
 		cnst s2_t				charsPerRow						= fontTexture.Pitch / fontCharSize.x;
 		for(u2_t iChar = 0, countChars = textToRaster.size(); iChar < countChars; ++iChar) {
 			cnst uc_t					charToDraw						= (uc_t)textToRaster[iChar];

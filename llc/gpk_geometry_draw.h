@@ -23,7 +23,7 @@ nmsp gpk
 		, gc8bgra					textureImage
 		, apod<SLight3>				& lightPoints
 		, apod<rgbaf>				& lightColors
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		);
 }
 

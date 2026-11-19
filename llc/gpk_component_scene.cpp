@@ -113,8 +113,7 @@ sttc	gpk::err_t createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 		if(command == "newmtl") {
 				 if(countMaterials) {
 					materialPath = filename;
-					materialPath.push_back('/');
-					materialPath.append(materialName);
+					if_fail_fe(::gpk::append_strings(materialPath, '/', materialName));
 					if_fail_fe(indices.push_back(materialName, (s1_t)scene.Renderer.Materials.push_back(::gpk::label(materialPath), newMaterial)));
 				 }
 				 materialName = lineValues[1];
@@ -147,8 +146,7 @@ sttc	gpk::err_t createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 	}
 	if(countMaterials) {
 		materialPath = filename;
-		materialPath.push_back('/');
-		materialPath.append(materialName);
+		if_fail_fe(::gpk::append_strings(materialPath, '/', materialName));
 		indices.push_back(::gpk::label(materialName), (s1_t)scene.Renderer.Materials.push_back(::gpk::label(::gpk::vcst_t{materialPath}), newMaterial));
 	}
 	return 0;
@@ -186,8 +184,7 @@ sttc	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 
 		for(u2_t iValue = 0; iValue < lineValues.size(); ++iValue) {
 			::gpk::vcst_t						& value					= lineValues[iValue];
-			::gpk::ltrim(value, value);
-			::gpk::rtrim(value, value);
+			::gpk::trim(value, value);
 			if(0 == value.size())
 				lineValues.remove(iValue--);
 		}
@@ -196,15 +193,12 @@ sttc	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 			::gpk::string					matFilename				= {};
 			s2_t										pathStop				= ::gpk::rfind('/', filename);
 			if(pathStop == -1) {
-				::gpk::append_strings(matFilename, "./");
-				::gpk::append_strings(matFilename, lineValues[1]);
+				if_fail_fe(::gpk::append_strings(matFilename, "./", lineValues[1]));
 			}
 			else {
 				::gpk::vcst_t						filepath				= {};
 				if_fail_fe(filename.slice(filepath, 0, pathStop));
-				matFilename.append(filepath);
-				matFilename.push_back('/');
-				matFilename.append(lineValues[1]);
+				if_fail_fe(::gpk::append_strings(matFilename, filepath, '/', lineValues[1]));
 			}
 			if_fail_ef(::createFromMTL(scene, matFilename, materialIndices), "Failed to load material file '.*s'.", GPK_VIEW_ARGS(matFilename));
 		}
@@ -222,8 +216,7 @@ sttc	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 		::gpk::split(line, ::gpk::vcst_t{" \t"}, lineValues);
 		for(u2_t iValue = 0; iValue < lineValues.size(); ++iValue) {
 			::gpk::vcst_t						& value					= lineValues[iValue];
-			::gpk::ltrim(value, value);
-			::gpk::rtrim(value, value);
+			::gpk::trim(value, value);
 			if(0 == value.size())
 				lineValues.remove(iValue--);
 		}
@@ -231,8 +224,7 @@ sttc	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 		if(command == "o") {
 			if(countObjects) {
 				objectPath								= filename;
-				objectPath.push_back('/');
-				objectPath.append(objectName);
+				if_fail_fe(::gpk::append_strings(objectPath, '/', objectName));
 				objectIndices.push_back((s1_t)scene.Components.push_back(::gpk::label(objectPath), newObject));
 			}
 			objectName								= lineValues[1];
@@ -242,8 +234,7 @@ sttc	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 		else if(command == "g") {
 			if(countGroups) {
 				groupPath								= filename;
-				groupPath.push_back('/');
-				groupPath.append(groupName);
+				if_fail_fe(::gpk::append_strings(groupPath, '/', groupName));
 				objectIndices.push_back((s1_t)scene.Components.push_back(::gpk::label(::gpk::vcst_t{groupPath}), newGroup));
 			}
 			groupName								= lineValues[1];
@@ -254,12 +245,11 @@ sttc	gpk::err_t createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcst_t f
 		else if(command == "usemtl") {
 			::gpk::vcst_t									materialName	= lineValues[1];
 			info_printf("Setting material: %.*s", GPK_VIEW_ARGS(materialName));
-			for(u2_t iMaterial = 0; iMaterial < materialIndices.size(); ++iMaterial)
-				if(materialIndices.Names[iMaterial] == materialName) {
-					info_printf("Setting material: %.*s", GPK_VIEW_ARGS(materialName));
-					scene.Renderer.Nodes[newGroup.RenderNodes[0]].Material = materialIndices.Values[iMaterial];
-					break;
-				}
+			cnst ::gpk::err_t iMaterial = materialIndices.Names.find(materialName);
+			if(0 <= iMaterial) {
+				info_printf("Setting material: %.*s", GPK_VIEW_ARGS(materialName));
+				scene.Renderer.Nodes[newGroup.RenderNodes[0]].Material = materialIndices.Values[iMaterial];
+			}
 		}
 		else if(command == "v") {
 			::gpk::n3f2_t						vertex			= {};

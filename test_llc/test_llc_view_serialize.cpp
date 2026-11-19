@@ -15,7 +15,7 @@ GDEFINE_ENUM_VALUED(VIEW_SERIALIZE_TEST_RESULT, POD_VALUE	, 3, "loadPOD() did no
 	cnst ::gpk::u1_t values[] = {0x1122, 0x3344, 0x5566};
 	::memcpy(bytes, &count, szof(count));
 	::memcpy(bytes + szof(count), values, szof(values));
-	::gpk::view<cnst ::gpk::u1_t> restored;
+	::gpk::vcu1_t restored;
 	cnst ::gpk::err_t result = ::gpk::viewPascal(restored, ::gpk::vcu0_t{bytes});
 	GPK_TEST_REQUIRE(errors, VIEW_SERIALIZE_TEST_RESULT_READ_RESULT, result != (::gpk::err_t)::gpk::size(bytes));
 	GPK_TEST_CHECK(errors, VIEW_SERIALIZE_TEST_RESULT_ELEMENTS, restored.size() != 3 || restored[0] != values[0] || restored[1] != values[1] || restored[2] != values[2]);

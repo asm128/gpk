@@ -35,13 +35,13 @@ nmsp gpk
 	int				drawLine			(g8bgra pixels, line2s1_t  line		, bgra color);
 	int				drawLine			(n2u1_c offscreenMetrics, line2s1_t line, apod<n2s1_t> & pixelCoords);
 	int				drawLine
-		( cnst n2<u1_t>	offscreenMetrics
+		( cnst n2u1_t	offscreenMetrics
 		, cnst line3f2_t		& lineFloat
 		, apod<n3f2_t>	& pixelCoords
-		, grid<u2_t>	depthBuffer
+		, gu2_t		depthBuffer
 		);
 	int				drawTriangle		(g8bgra pixels, cnst tri2s1_t & triangle, bgra color);
-	int				drawTriangle		(n2u2_t targetSize, cnst tri3f2_t & triangle, apod<n2s1_t> & pixelCoords, apod<trif2_t> & proportions, grid<u2_t> depthBuffer);
+	int				drawTriangle		(n2u2_t targetSize, cnst tri3f2_t & triangle, apod<n2s1_t> & pixelCoords, apod<trif2_t> & proportions, gu2_t depthBuffer);
 	int				drawTriangle		(n2u2_t targetSize, cnst tri2f2_t & triangle, apod<n2s1_t> & pixelCoords, apod<trif2_t> & proportions);
 	int				drawQuadTriangle
 		( g8bgra					targetPixels
@@ -53,7 +53,7 @@ nmsp gpk
 		, cnst bgra				color
 		, apod<n2s1_t>	& pixelCoords
 		, apod<trif2_t>	& pixelVertexWeights
-		, grid<u2_t>			depthBuffer
+		, gu2_t				depthBuffer
 		);
 	int				drawQuadTriangle
 		( g8bgra						targetPixels
@@ -67,7 +67,7 @@ nmsp gpk
 		, gc8bgra					textureImage
 		, apod<n3f2_t>		& lightPoints
 		, a8bgra						& lightColors
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		);
 
 	int				drawQuadTriangle
@@ -82,7 +82,7 @@ nmsp gpk
 		, gc8bgra					textureImage
 		, apod<n3f2_t>		& lightPoints
 		, a8bgra						& lightColors
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		, cnst function<err_t(g8bgra targetPixels, n2s1_c & pixelCoord, cnst bgra & color)> & funcSetPixel
 		);
 
@@ -92,14 +92,14 @@ nmsp gpk
 		, cnst m4f2_t				& matrixTransformView
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		);
 	int				drawQuadTriangle
 		( n2u2_c						& targetSize
 		, cnst tri3f2_t				& triangleScreen
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		);
 	int				drawTriangle
 		( g8bgra						targetPixels
@@ -111,7 +111,7 @@ nmsp gpk
 		, bgra						color
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		);
 	int				drawTriangle
 		( g8bgra						targetPixels
@@ -123,7 +123,7 @@ nmsp gpk
 		, apod<n2s1_t>		& pixelCoords
 		, apod<trif2_t>		& pixelVertexWeights
 		, gc8bgra					textureImage
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		);
 	int				drawTriangle
 		( g8bgra						targetPixels
@@ -138,7 +138,7 @@ nmsp gpk
 		, gc8bgra					textureImage
 		, apod<SLight3>		& lightPoints
 		, a8bgra						& lightColors
-		, grid<u2_t>				depthBuffer
+		, gu2_t					depthBuffer
 		);
 
 	int				drawPixels

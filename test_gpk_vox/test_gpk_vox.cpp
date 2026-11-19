@@ -106,13 +106,13 @@ static	::gpk::err_t	processSystemEvent	(::SApplication & app, const ::gpk::SEven
 }
 
 ::gpk::err_t			update		(::SApplication& app, bool systemRequestedExit)					{
-	if_true_vif(1, systemRequestedExit, "Exiting because the runtime asked for close. We could also ignore this value and just continue execution if we don't want to exit.");
+	if_true_vif(1, systemRequestedExit, "%s", "Exiting because the runtime asked for close. We could also ignore this value and just continue execution if we don't want to exit.");
 	::gpk::SWindow					& mainWindow								= app.Framework.RootWindow;
 	do { if_fail_fe(mainWindow.EventQueue.for_each([&app](const ::gpk::pobj<::gpk::SEventSystem> & sysEvent) { return ::processSystemEvent(app, *sysEvent); })); } while(0);
 
 	::gpk::err_t																frameworkResult								= {};
 	if_fail_fe(frameworkResult = ::gpk::updateFramework(app.Framework));
-	if_true_vif(1, frameworkResult == 1, "Framework requested close. Terminating execution.");
+	if_true_vif(1, frameworkResult == 1, "%s", "Framework requested close. Terminating execution.");
 	//-----------------------------
 	::gpk::STimer																& timer										= app.Framework.Timer;
 	char																		buffer		[256]							= {};

@@ -103,12 +103,11 @@ gpk::err_t		gpk::controlSetParent	(SControlTable & controls, cid_t iControl, cid
     control.Parent		= iParent;
     if((u2_t)oldParent < controls.States.size() && false == controls.IsUnused(oldParent)) {
         acid					& children				= controls.Children[oldParent];
-        for(s2_t iChild = 0; iChild < (s2_t)children.size(); ++iChild)
-            if(children[iChild] == iControl) {
-                controls.SetUpdated(oldParent, false);
-                if_fail_fef(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
-                break;
-            }
+        cnst err_t              iChild                 = children.find(iControl);
+        if(0 <= iChild) {
+            controls.SetUpdated(oldParent, false);
+            if_fail_fef(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
+        }
     }
     if(controlInvalid(controls, iParent)) {
         if_true_vef(-1, -1 != iParent, "Invalid parent control id: %u.", iParent);
@@ -117,9 +116,8 @@ gpk::err_t		gpk::controlSetParent	(SControlTable & controls, cid_t iControl, cid
 
     // Set iControl to parent's children array.
     acid					& children				= controls.Children[iParent];
-    for(s2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-        if(children[iChild] == iControl)
-            return 0;
+    if(0 <= children.find(iControl))
+        return 0;
 
     controls.SetUpdated(iParent , false);
     controls.SetUpdated(iControl, false);
@@ -237,7 +235,7 @@ gpk::err_t			gpk::SControlTable::Save		(au0_t & output) const {
     }
     for(u2_t iControl = 0; iControl < controlCount; ++iControl)
         if_fail_fef(::gpk::saveView(output, Children[iControl]), "iControl: %u", iControl);
-    if_fail_fe(::gpk::savePacked(output, ::gpk::packedu2_t{EventQueue.size()}));
+    if_fail_fe(::gpk::savePacked(output, EventQueue.size()));
     for(u2_t iEvent = 0; iEvent < EventQueue.size(); ++iEvent) {
         cnst SEventSystem * event = EventQueue[iEvent];
         if(event) {

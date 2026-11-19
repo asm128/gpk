@@ -28,7 +28,7 @@ nmsp gpk
 		cxpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();
 
-		virtual	err_t Resize				(cnst n2<u1_t> & newSize)				{ (void)newSize; return 0; }
+		virtual	err_t Resize				(cnst n2u1_t & newSize)					{ (void)newSize; return 0; }
 		virtual	err_t Update				(view<cnst pobj<SEventSystem>> eventsIn)	= 0;
 	};
 	//tplt<tpnm _TDialogControl>

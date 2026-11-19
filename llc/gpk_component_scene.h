@@ -149,7 +149,7 @@ nmsp gpk {
 		n3f2_t			Position						= {};
 		n3f2_t			Target							= {};
 		n3f2_t			Up								= {};
-		minmax<f2_t>	ClipPlanes						= {};
+		minmaxf2_t		ClipPlanes						= {};
 		f3_t					Angle							= {};
 	};
 
@@ -237,8 +237,12 @@ nmsp gpk {
 
 		u2_c &		size						()				csnx	{ return Names.size(); }
 		err_t				push_back					(vcst_t name, cnst _tValue & value) {
-			if_fail_fe(Names.push_back(name));
-			return Values.push_back(value);
+			if_true_fef(Names.size() != Values.size(), "Key/value array size mismatch: %u != %u.", Names.size(), Values.size());
+			u2_c				index						= Names.size();
+			if_fail_fe(::gpk::resize_obj(index + 1, Names, Values));
+			Names [index]		= name;
+			Values[index]		= value;
+			return index;
 		}
 	};
 
@@ -280,14 +284,14 @@ nmsp gpk {
 		, cnst m4f2_t			& projection
 		, cnst m4f2_t			& viewProjection
 		, g8bgra					target_image
-		, grid<u2_t>			target_depth
+		, gu2_t				target_depth
 		);
 
 	err_t					nodeRendererDraw
 		( SNodeRenderer			& renderer
 		, s2_t						iCamera
 		, g8bgra					target_image
-		, grid<u2_t>			target_depth
+		, gu2_t				target_depth
 		, b8_t							drawHidden			= false
 		);
 

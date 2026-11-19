@@ -53,7 +53,7 @@ gpk::err_t			gpk::httpRequestInit			(SHTTPAPIRequest & requestReceived, cnst SCG
 		}
 	}
 	if(requestReceived.Path.size() && requestReceived.Path[0] == '/')
-		requestReceived.Path							= {requestReceived.Path.begin() + 1, requestReceived.Path.size() - 1};
+		if_fail_fe(requestReceived.Path.slice(requestReceived.Path, 1));
 	return isCGIEnviron ? 1 : 0;
 }
 

@@ -12,11 +12,11 @@ sttc	gpk::err_t drawOrderedVertices
 	, cnst ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::m4f2_t				matrixWVP
 	, ::gpk::g8bgra	target_image
-	, ::gpk::grid<u2_t>			target_depth
+	, ::gpk::gu2_t				target_depth
 	) {
 
 	::gpk::tri3f2_t							triangleTransformed		= {};
-	::gpk::tri2<s1_t>					triangleFinal			= {};
+	::gpk::tri2s1_t					triangleFinal			= {};
 	::gpk::bgra							nodeColor				= (nodeToDraw.Color >= 0) ? renderer.Colors[nodeToDraw.Color] : ::gpk::bgra{0xFFFF00FF};
 	if(nodeToDraw.PerFaceNormal) {
 		if(nodeToDraw.VertexColor < 0) {
@@ -37,8 +37,7 @@ sttc	gpk::err_t drawOrderedVertices
 				matrixViewport.ViewportLH(target_image.metrics().u1());
 				::gpk::transform(triangleTransformed, matrixViewport);
 
-				renderer.RenderCache.PixelCoordBuffer.clear();
-				renderer.RenderCache.TriangleWeightBuffer.clear();
+				::gpk::clear(renderer.RenderCache.PixelCoordBuffer, renderer.RenderCache.TriangleWeightBuffer);
 				if_true_vef(-1, ::gpk::drawTriangle(target_image.metrics(), triangleTransformed, renderer.RenderCache.PixelCoordBuffer, renderer.RenderCache.TriangleWeightBuffer, target_depth), "%s", "Maybe the pixel caches weren't cleared properly");
 				triangleColor							= triangleColor * nodeNormals[iTriangle].Dot(renderer.Lights[0].Direction);
 				for(u2_t iPixelCoord = 0; iPixelCoord < renderer.RenderCache.PixelCoordBuffer.size(); ++iPixelCoord) {
@@ -65,7 +64,7 @@ gpk::err_t 		gpk::nodeRendererDrawNode
 	, cnst ::gpk::m4f2_t			& projection
 	, cnst ::gpk::m4f2_t			& viewProjection
 	, ::gpk::g8bgra	target_image
-	, ::gpk::grid<u2_t>			target_depth
+	, ::gpk::gu2_t				target_depth
 	) {
 	if(0 == target_image.size())
 		return 1;
@@ -94,12 +93,12 @@ gpk::err_t 		gpk::nodeRendererDraw
 	( ::gpk::SNodeRenderer					& renderer
 	, s2_t								iCamera
 	, ::gpk::g8bgra	target_image
-	, ::gpk::grid<u2_t>			target_depth
+	, ::gpk::gu2_t				target_depth
 	, b8_t									drawHidden
 	) {
 	if(0 == target_image.size())
 		return 1;
-	memset(target_depth.begin(), 0xFFFFFFFFU, sizeof(u2_t) * target_depth.size());
+	target_depth.fill(0xFFFFFFFFU);
 	::gpk::m4f2_t						matrixView				= ::gpk::m4f2_t::GetIdentity();
 	::gpk::m4f2_t						matrixProjection		= ::gpk::m4f2_t::GetIdentity();
 	::gpk::m4f2_t						matrixVP				= ::gpk::m4f2_t::GetIdentity();

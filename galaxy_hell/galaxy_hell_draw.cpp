@@ -47,7 +47,7 @@ static	gpk::err_t	drawDebris
 	( ::gpk::g8bgra			targetPixels
 	, const ::ghg::SDebris					& debris
 	, const ::gpk::m4f2_t					& matrixVPV
-	, ::gpk::grid<u2_t>				depthBuffer
+	, ::gpk::gu2_t					depthBuffer
 	, const ::gpk::view<const ::gpk::bgra>	& debrisColors
 	)	{
 
@@ -102,7 +102,7 @@ static	gpk::err_t	drawScoreParticles
 	( ::gpk::g8bgra	targetPixels
 	, const ::ghg::SScoreParticles	& debris
 	, const ::gpk::m4f2_t			& matrixVPV
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	, const ::gpk::SRasterFont		& font
 	)	{
 
@@ -232,7 +232,7 @@ static	gpk::err_t	drawShots			(::gpk::g8bgra targetPixels
 	, float							animationTime
 	, const ::gpk::SSpaceshipCore		& shipCore
 	, const ::gpk::SWeapon			& weapon
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	, ::gpk::apod<::gpk::n3f2_t>		pixelCoordsCache
 	, ::ghg::SGalaxyHellDrawCache	& drawCache
 	) {
@@ -306,7 +306,7 @@ static	gpk::err_t	drawShots			(::gpk::g8bgra targetPixels
 				::gpk::n2f2_t			brightPos			= {(float)x, (float)y};
 				const double			brightDistance		= brightPos.LengthSquared();
 				if(brightDistance <= brightRadiusSquared) {
-					::gpk::n2s2_t			blendPos			= ::gpk::n2<s2_t>{(s2_t)pixelCoord.x, (s2_t)pixelCoord.y} + (brightPos).s2();
+					::gpk::n2s2_t			blendPos			= ::gpk::n2s2_t{(s2_t)pixelCoord.x, (s2_t)pixelCoord.y} + (brightPos).s2();
 					if( blendPos.y < 0 || blendPos.y >= targetMetrics.y
 					 || blendPos.x < 0 || blendPos.x >= targetMetrics.x
 					)
@@ -490,7 +490,7 @@ static	gpk::err_t	drawShip
 	starPos							= matrixVP.Transform(starPos);
 	starPos.x = ::gpk::clamped(starPos.x, 20.0f, targetPixels.metrics().x - 20.0f);
 	starPos.y = ::gpk::clamped(starPos.y, 20.0f, targetPixels.metrics().y - 20.0f);
-	const ::gpk::n2<s2_t>			pixelCoord			= {(s2_t)starPos.x, (s2_t)starPos.y};
+	const ::gpk::n2s2_t				pixelCoord			= {(s2_t)starPos.x, (s2_t)starPos.y};
 
 	const ::gpk::vcst_t					finalText			= solarSystem.Pilots[iShip].Name;
 	::gpk::rect2s1_t						rectText			= {{}, {s1_t(font.CharSize.x * finalText.size()), font.CharSize.y}};
@@ -562,7 +562,7 @@ gpk::err_t			ghg::solarSystemDraw		(const ::ghg::SGalaxyHell & solarSystem, ::gh
 	drawCache.RenderTarget->resize(drawCache.RenderTargetMetrics);
 	::gpk::pobj<::ghg::TRenderTarget>	renderTarget				= drawCache.RenderTarget;
 	::gpk::g8bgra			targetPixels				= renderTarget->Color			; 
-	::gpk::grid<u2_t>				depthBuffer					= renderTarget->DepthStencil	;
+	::gpk::gu2_t					depthBuffer					= renderTarget->DepthStencil	;
 
 	// ------------------------------------------- Transform and Draw
 	if(0 == targetPixels.size())

@@ -54,11 +54,11 @@ nmsp gpk
 	err_t			processConnectionEvents
 		( vcpobj<SServer>	servers
 		, _tState					& state
-		, cnst ::std::function<err_t(u2_t iServer, u2_t iClient, _tState &, cnst _tEvent &)>	
+		, cnst ::gpk::function<err_t(u2_t iServer, u2_t iClient, _tState &, cnst _tEvent &)>
 										& funcProcessServerRequest
 		) {
 		for(u2_t iServer = 0; iServer < servers.size(); ++iServer) {
-			cnst ::std::function<err_t(u2_t iClient, _tState &, cnst _tEvent &)>	
+			cnst ::gpk::function<err_t(u2_t iClient, _tState &, cnst _tEvent &)>
 										funcProcessRequest		= [iServer, funcProcessServerRequest](u2_t iClient, _tState & customState, cnst _tEvent & customEvent) {
 				return funcProcessServerRequest(iServer, iClient, customState, customEvent);
 			};

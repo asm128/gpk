@@ -22,40 +22,27 @@ gpk::err_t			gpk::skipToNextCharacter		(u2_t & indexCurrentChar, vcst_t expressi
 	return 0;
 }
 gpk::err_t			gpk::parseArbitraryBaseInteger	(u2_t base, vcst_t symbolList, vcst_t sourceChars, u3_t * number_)	{
-	u2_t					totalCharsProcessed							= 0;
-	string					stringToParse								= {};
+	cnst vcst_t			symbols				= {symbolList.begin(), base};
+	u2_t					totalCharsProcessed	= 0;
+	string					stringToParse			= {};
 	for(u2_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
-		cnst sc_t				sourceChar									= (sc_t)::tolower(sourceChars[iChar]);
-		b8_t					bSymbolProcessed							= false;
-		for(u2_t iSymbol = 0; iSymbol < base; ++iSymbol) {
-			if(symbolList[iSymbol] == sourceChar) {
-				bSymbolProcessed							= true;
-				if_fail_fe(stringToParse.push_back(sourceChar));
-				++iChar;
-				++totalCharsProcessed;
-				break;
-			}
-		}
-
-		if(!bSymbolProcessed)
+		cnst sc_t				sourceChar				= (sc_t)::tolower(sourceChars[iChar]);
+		if(0 > symbols.find(sourceChar))
 			break;	// number ends with any character that is not a symbol
+		if_fail_fe(stringToParse.push_back(sourceChar));
+		++iChar;
+		++totalCharsProcessed;
 	}
 	if_fail_fe(reverse(stringToParse));		// we assigned the digits backwards so we need to reverse the string.
-	u3_t					number										= 0;
+	u3_t					number					= 0;
 	totalCharsProcessed	= 0;
 	for(u2_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
-		b8_t											bSymbolProcessed							= false;
-		for( u2_t iSymbol = 0; iSymbol < base; ++iSymbol )
-			if(symbolList[iSymbol] == stringToParse[iChar]) {
-				number										+= iSymbol * powui(base, totalCharsProcessed);
-				bSymbolProcessed							= true;
-				++iChar;
-				++totalCharsProcessed;
-				break;
-			}
-
-		if(!bSymbolProcessed)
+		cnst err_t				iSymbol				= symbols.find(stringToParse[iChar]);
+		if(0 > iSymbol)
 			break;	// number ends with any character that is not a symbol
+		number						+= iSymbol * powui(base, totalCharsProcessed);
+		++iChar;
+		++totalCharsProcessed;
 	}
 	safe_assign(number_, number);
 	return totalCharsProcessed;

@@ -223,8 +223,7 @@ gpk::err_t			gpk::sliderUpdate			(SDialogSlider	& slider)								{
 			n2f3_t				currentValue				= input.MouseCurrent.Position.f3();
 			cnst n2f3_t			valueUnit					= {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
 			currentValue			-= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f3() / 2.0;
-			currentValue.x			*= valueUnit.x;
-			currentValue.y			*= valueUnit.y;
+			currentValue.InPlaceScale(valueUnit);
 
 			if_fail_fe(gpk::sliderSetValue(slider, (s3_t)((slider.Vertical ? currentValue.y : currentValue.x) * valueRange + slider.ValueLimits.Min)));
 		}
@@ -233,7 +232,7 @@ gpk::err_t			gpk::sliderUpdate			(SDialogSlider	& slider)								{
 		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].IsPressed()) {	//
 			SInput				& input						= *dialog.Input;
 			cnst s3_t				valuePage					= max((s3_t)1LL, (valueRange > 10) ? (s3_t)(valueRange * .1) : valueRange / 2);
-			cnst n2<s1_t>	& controlButtonPosition		= controlTable.Area[slider.IdButton].Total.Global.Offset;
+			cnst n2s1_t	& controlButtonPosition		= controlTable.Area[slider.IdButton].Total.Global.Offset;
 			if(slider.Vertical) {
 				cnst s3_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
 				if_fail_fe(gpk::sliderSetValue(slider, finalValue));
@@ -331,10 +330,8 @@ gpk::cid_t			gpk::viewportCreate		(SDialog & dialog) {
 	return index;
 }
 
-gpk::err_t			gpk::viewportAdjustSize	(n2<s1_t> & sizeViewport, cnst n2<s1_t> & sizeClient)		{
-	sizeViewport			= sizeClient;
-	sizeViewport.x			+= 4;
-	sizeViewport.y			+= 4 + 1 + heightOfField;
+gpk::err_t			gpk::viewportAdjustSize	(n2s1_t & sizeViewport, cnst n2s1_t & sizeClient)		{
+	sizeViewport			= sizeClient + n2s1_t{4, 5 + heightOfField};
 	return 0;
 }
 
@@ -366,7 +363,7 @@ gpk::err_t			gpk::viewportFold		(SDialogViewport	& control, b8_t fold)										
 	return one_if(false == control.Settings.Unfolded);
 }
 
-sttc gpk::err_t viewportDrag		(SDialogViewport	& control, SControlPlacement & controlMain, SDialog & dialog, n2<b8_t> locked, n2s1_t mouseDeltas) {
+sttc gpk::err_t viewportDrag		(SDialogViewport	& control, SControlPlacement & controlMain, SDialog & dialog, n2b8_t locked, n2s1_t mouseDeltas) {
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
 	control.Settings.Dragging	= true;

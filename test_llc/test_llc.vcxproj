@@ -193,11 +193,15 @@
     <ClCompile Include="test_llc_json_expression_ctti.cpp" />
     <ClCompile Include="test_llc_linear_map.cpp" />
     <ClCompile Include="test_llc_log.cpp" />
+    <ClCompile Include="test_llc_pack_filter.cpp" />
+    <ClCompile Include="test_llc_particle.cpp" />
+    <ClCompile Include="test_llc_parse.cpp" />
     <ClCompile Include="test_llc_packed_int.cpp" />
     <ClCompile Include="test_llc_png.cpp" />
     <ClCompile Include="test_llc_string.cpp" />
     <ClCompile Include="test_llc_array_static.cpp" />
     <ClCompile Include="test_llc_view_serialize.cpp" />
+    <ClCompile Include="test_llc_vox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_llc_index_catalog.h" />

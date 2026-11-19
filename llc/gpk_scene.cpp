@@ -5,7 +5,7 @@ GPK_USING_VIEW();
 GPK_USING_APOD();
 
 // Vertex coordinates for cube faces
-stxp	cnst ::gpk::tri3<f2_t>					geometryCubePositions			[12]						=
+stxp	cnst ::gpk::tri3f2_t					geometryCubePositions			[12]						=
 	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first
 	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second
 	, {{0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}	// Back		- first
@@ -41,7 +41,7 @@ stxp	cnst ::gpk::n3f2_t						geometryCubeNormalsTriangle		[12]						=
 	};
 
 // -----------------------------------------------------
-stxp	cnst ::gpk::tri3<f2_t>					geometryCubeNormalsVertex		[12]						=
+stxp	cnst ::gpk::tri3f2_t					geometryCubeNormalsVertex		[12]						=
 	{ { {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	} // Right	- first
 	, { {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	} // Right	- second
 
@@ -62,7 +62,7 @@ stxp	cnst ::gpk::tri3<f2_t>					geometryCubeNormalsVertex		[12]						=
 	};
 
 // Vertex coordinates for cube faces
-stxp	cnst ::gpk::tri2<f2_t>					geometryCubeUV					[12]						=
+stxp	cnst ::gpk::tri2f2_t					geometryCubeUV					[12]						=
 	{ {{1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f}}	// Right	- first			?? I have no idea if this is correct lol
 	, {{1.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}}	// Right	- second
 

@@ -211,14 +211,14 @@ nmsp gpk
 		}
 		TCoord	TransformInverseDirection(cnst TCoord & value) csnx	{ rtrn GetTranspose().TransformDirection(value); }
 
-		void	ViewportRH(cnst n2<u1_t> & metrics) nxpt {
+		void	ViewportRH(cnst n2u1_t & metrics) nxpt {
 			Identity();
 			MathElement(0, 0) = (T)(metrics.x * .5);
 			MathElement(1, 1) = (T)(metrics.y * .5);
 			MathElement(3, 0) = (T)(metrics.x * .5);
 			MathElement(3, 1) = (T)(metrics.y * .5);
 		}
-		void	ViewportLH(cnst n2<u1_t> & metrics) nxpt {
+		void	ViewportLH(cnst n2u1_t & metrics) nxpt {
 			Identity();
 			MathElement(0, 0) = (T)(metrics.x * .5);
 			MathElement(1, 1) = (T)(metrics.y * -.5);

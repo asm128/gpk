@@ -233,7 +233,7 @@ static	gpk::err_t	guiSetupHome		(::ghg::SGalaxyHellApp & app, ::gpk::SDialog & d
 	if_fail_fe(::gpk::tunerCreate(dialog, app.TunerPlayerCount));
 	app.TunerPlayerCount->ValueLimits.Min	= 1;
 	app.TunerPlayerCount->ValueLimits.Max	= ::ghg::MAX_PLAYERS;
-	app.TunerPlayerCount->FuncValueFormat	= [](::gpk::vcsc_t & string, u0_t value, const ::gpk::minmax<u0_t> & /*limits*/) { 
+	app.TunerPlayerCount->FuncValueFormat	= [](::gpk::vcsc_t & string, u0_t value, const ::gpk::minmaxu0_t & /*limits*/) {
 		string = (value == 1) ? ::gpk::vcst_t("%lli Player") : ::gpk::vcst_t("%lli Players"); 
 		return 0; 
 	};
@@ -540,7 +540,7 @@ static	gpk::err_t	uiPlayerUpdatePlay	(::ghg::SUIPlayer & uiPlayer, u2_t iPlayer,
 
 			::ghg::TRenderTarget		& renderTarget	= viewport.RenderTargetOrbiter;
 			::gpk::g8bgra	targetPixels	= renderTarget.Color		; 
-			::gpk::grid<u2_t>		depthBuffer		= renderTarget.DepthStencil	;
+			::gpk::gu2_t			depthBuffer		= renderTarget.DepthStencil	;
 			//targetPixels.fill(tone);
 			::std::lock_guard			lock			(lockGame);
 			memset(targetPixels.begin(), 0, targetPixels.byte_count());
@@ -558,7 +558,7 @@ static	gpk::err_t	uiPlayerUpdatePlay	(::ghg::SUIPlayer & uiPlayer, u2_t iPlayer,
 		{ // Update weapon load bar
 			::ghg::TRenderTarget		& renderTarget	= viewport.RenderTargetWeaponLoad;
 			::gpk::g8bgra	targetPixels	= renderTarget.Color		; 
-			::gpk::grid<u2_t>		depthBuffer		= renderTarget.DepthStencil	;
+			::gpk::gu2_t			depthBuffer		= renderTarget.DepthStencil	;
 			::std::lock_guard			lock			(lockGame);
 			memset(targetPixels.begin(), 0, targetPixels.byte_count());
 			memset(depthBuffer.begin(), -1, depthBuffer.byte_count());
@@ -581,7 +581,7 @@ static	gpk::err_t	uiPlayerUpdatePlay	(::ghg::SUIPlayer & uiPlayer, u2_t iPlayer,
 			::std::lock_guard			lock			(lockGame);
 			::ghg::TRenderTarget		& renderTarget	= viewport.RenderTargetWeaponType;
 			::gpk::g8bgra	targetPixels	= renderTarget.Color		; 
-			::gpk::grid<u2_t>		depthBuffer		= renderTarget.DepthStencil	;
+			::gpk::gu2_t			depthBuffer		= renderTarget.DepthStencil	;
 			memset(targetPixels.begin(), 0, targetPixels.byte_count());
 			memset(depthBuffer.begin(), -1, depthBuffer.byte_count());
 			if(ratioOverheat) {

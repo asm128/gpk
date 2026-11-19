@@ -1,5 +1,6 @@
 #include "gpk_args.h"
 #include "gpk_keyval_view.h"
+#include "gpk_string_compose.h"
 
 GPK_USING_TYPEINT();
 
@@ -10,10 +11,7 @@ gpk::err_t		gpk::environmentBlock		(as0_t & output)	{
 }
 gpk::err_t		gpk::environmentBlock		(as0_t & output, view<cnst kv<vcst_t>> inputEnvp)	{
 	for(cnst kv<vcst_t> & venvValue : inputEnvp) {
-		if_fail_fe(output.append(venvValue.Key));
-		if_fail_fe(output.push_back('='));
-		if_fail_fe(output.append(venvValue.Val));
-		if_fail_fe(output.push_back(0));
+		if_fail_fe(append_strings(output, venvValue.Key, '=', venvValue.Val, '\0'));
 	}
 	if_fail_fe(output.push_back(0));
 	return 0;

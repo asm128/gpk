@@ -68,8 +68,7 @@ nmsp gpk
 			return 0;
 		u2_c	deviceIndex	= (u2_t)deviceId;
 		if(input.StateKeyboard.size() <= deviceIndex) {
-			if_fail_fe(input.StateKeyboard.resize(deviceIndex + 1));
-			if_fail_fe(input.TimeStampKeyboard.resize(deviceIndex + 1));
+			if_fail_fe(::gpk::resize(deviceIndex + 1, input.StateKeyboard, input.TimeStampKeyboard));
 		}
 		::gpk::inputKeyboardStateSet(input.StateKeyboard[deviceIndex], keyCode, pressed);
 		input.TimeStampKeyboard[deviceIndex] = timeStamp;

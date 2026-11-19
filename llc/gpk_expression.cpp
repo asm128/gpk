@@ -389,9 +389,7 @@ gpk::err_t			gpk::expressionReaderParse			(::gpk::SExpressionReader & reader, ::
 }
 
 gpk::err_t gpk::expressionReaderLoad(SExpressionReader & reader, view<cnst SExpressionToken> tokens, ::gpk::vcst_t expression) {
-	reader.Token.clear();
-	reader.View.clear();
-	reader.Tree.clear();
+	::gpk::clear(reader.Token, reader.View, reader.Tree);
 	reader.StateRead = {};
 	if_fail_fe(reader.Token.resize(tokens.size()));
 	for(u2_t iToken = 0; iToken < tokens.size(); ++iToken)

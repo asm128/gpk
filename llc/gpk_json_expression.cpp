@@ -291,9 +291,7 @@ gpk::err_t 		gpk::jsonExpressionResolve				(cnst ::gpk::SExpressionReader & read
 	if(evaluated.size()) {
 		gpk_jexpr_info_printf("Result of expression evaluation: %s.", ::gpk::string(evaluated).begin());
 	}
-	if_fail_fe(results.Results.reserve(results.Results.size() + pendingResults.Results.size()));
-	for(::gpk::u2_t iResult = 0; iResult < pendingResults.Results.size(); ++iResult)
-		if_fail_fe(results.Results.push_back(pendingResults.Results[iResult]));
+	if_fail_fe(results.Results.append(pendingResults.Results));
 	output												= evaluated;
 	return jsonNodeResultOfEvaluation;
 }

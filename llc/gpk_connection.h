@@ -108,7 +108,7 @@ nmsp gpk
 		( u2_t							iClient
 		, vcpobj<SMessage>	clientQueue
 		, _tState							& state
-		, cnst ::std::function<err_t (u2_t iClient, _tState &, cnst _tWithLoad &)>	& funcProcessRequest
+		, cnst ::gpk::function<err_t (u2_t iClient, _tState &, cnst _tWithLoad &)>	& funcProcessRequest
 		) {
 		_tWithLoad								eventCache					= {};
 		return processUDPClientQueueEvents(eventCache, iClient, clientQueue, state, funcProcessRequest);
@@ -118,7 +118,7 @@ nmsp gpk
 	err_t						processEvents
 		( view<apobj<SMessage>>	queueReceived
 		, _tState										& state
-		, cnst ::std::function<err_t (u2_t iClient, _tState &, cnst _tEvent &)>	& funcProcessRequest
+		, cnst ::gpk::function<err_t (u2_t iClient, _tState &, cnst _tEvent &)>	& funcProcessRequest
 		) {
 		_tEvent									eventReceived				= {};
 		for(u2_t iClient = 0; iClient < queueReceived.size(); ++iClient) {

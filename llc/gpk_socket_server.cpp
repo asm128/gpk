@@ -321,8 +321,7 @@ sttc	void			threadServer			(void* pServerInstance)				{
 	serverInstance.Socket.close();
 	{
 		::gpk::lock_guard			lock					(serverInstance.Mutex);
-		serverInstance.Clients.clear();
-		serverInstance.Sockets.clear();
+		::gpk::clear(serverInstance.Clients, serverInstance.Sockets);
 	}
 }
 

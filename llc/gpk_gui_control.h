@@ -196,7 +196,7 @@ nmsp gpk
 	CTTI_STCT(SControlConstraints,
 	struct SControlConstraints {
 		n2cid				AttachSizeToControl	= {-1, -1};
-		n2<b8_t>			AttachSizeToText	= {};
+		n2b8_t				AttachSizeToText	= {};
 		rectcid				DockToControl		= {-1, -1, -1, -1};
 		minmax2s1_t			SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};

@@ -101,23 +101,10 @@ nmsp gpk
 					ParticleNext	[iBody]													= particleData;
 					return iBody;
 				}
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-			ParticleState		.push_back(initialParticleState);
-			Particle			.push_back(particleData);
-			ParticleNext		.push_back(particleData);
-#else
-			try {	// Later on we're going to add a way to avoid usng ::std::vector which require these ugly try/catch blocks.
-				ParticleState		.push_back(initialParticleState);
-				Particle			.push_back(particleData);
-				ParticleNext		.push_back(particleData);
-			}
-			catch(...) { // Restore the previous size to all the containers and return an error.
-				ParticleState		.resize(particleCount);
-				Particle			.resize(particleCount);
-				ParticleNext		.resize(particleCount);
-				return -1;
-			}
-#endif
+			if_fail_fe(gpk::resize(particleCount + 1, ParticleState, Particle, ParticleNext));
+			ParticleState	[particleCount]										= initialParticleState;
+			Particle		[particleCount]										=
+			ParticleNext	[particleCount]										= particleData;
 			return particleCount;
 		}
 	};

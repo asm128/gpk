@@ -39,6 +39,15 @@
     <ClCompile Include="test_llc_log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_llc_pack_filter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_parse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="test_llc_packed_int.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -118,6 +127,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_llc_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_llc_vox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

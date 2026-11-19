@@ -11,7 +11,7 @@ nmsp gpk
 	protected:
 		// Properties / Member Variables
 		_tElement			* Data			= 0;
-		::gpk::n3<u2_t>	Size			= {0, 0, 0};
+		::gpk::n3u2_t		Size			= {0, 0, 0};
 		u2_t			LayerSize		= 0;
 	public:
 		// Constructors
@@ -20,7 +20,7 @@ nmsp gpk
 			if_true_tef(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "{%" GPK_FMT_U32 ", %" GPK_FMT_U32 ", %" GPK_FMT_U32 "}", Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
-		inln				view_layered	(_tElement * dataElements, cnst ::gpk::n3<u2_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
+		inln				view_layered	(_tElement * dataElements, cnst ::gpk::n3u2_t viewSize)								: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
 			if_true_tef(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "{%" GPK_FMT_U32 ", %" GPK_FMT_U32 ", %" GPK_FMT_U32 "}", Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
@@ -43,7 +43,7 @@ nmsp gpk
 		inxp	_tElement*								begin			()			nxpt	{ return Data;						}
 		inxp	_tElement*								end				()			nxpt	{ return Data + size();				}
 
-		inxp	cnst ::gpk::n3<u2_t>&			metrics			()																		csnx	{ return Size;						}
+		inxp	cnst ::gpk::n3u2_t&				metrics			()																		csnx	{ return Size;						}
 		inxp	u2_t								size			()																		csnx	{ return Size.x * Size.y * Size.z;	}
 };
 #pragma pack(pop)

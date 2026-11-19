@@ -3,6 +3,7 @@
 #include "gpk_stdstring.h"
 #include "gpk_enum.h"
 #include "gpk_keyval_view.h"
+#include "gpk_string_compose.h"
 
 #ifndef GPK_ATMEL		
 
@@ -73,26 +74,21 @@ sttc	gpk::err_t httpClientRequestConstruct
 	) {
 	vcst_t						strMethod				= ::gpk::get_value_label(method);
 	out_request					= strMethod;
-	out_request.push_back(' ');
-	out_request.append(path);
-	out_request.append(::gpk::vcst_t{
+	if_fail_fe(::gpk::append_strings(out_request, ' ', path, ::gpk::vcst_t{
 		" HTTP/1.1"
 		//"\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)"
 		"\r\nHost: "
-		});
-	out_request.append(hostName);
+		}, hostName));
 	if((method != ::gpk::HTTP_METHOD_GET) && contentType.size()) {
-		out_request.append("\r\nContent-Type: ");
-		out_request.append(contentType);// 		application/x-www-form-urlencoded
+		if_fail_fe(::gpk::append_strings(out_request, "\r\nContent-Type: ", contentType));// 		application/x-www-form-urlencoded
 	}
-	out_request.append(::gpk::vcst_t{
+	if_fail_fe(::gpk::append_strings(out_request, ::gpk::vcst_t{
 		"\r\nAccept-Language: en-us"
 		//"\r\nAccept-Encoding: gzip, deflate"
 		//"\r\nConnection: Keep-Alive"
 		"\r\n"
 		"\r\n"
-		});
-	out_request.append(body);
+		}, body));
 	return 0;
 }
 

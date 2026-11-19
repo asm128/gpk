@@ -288,8 +288,7 @@ gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			cnst xcb_motion_notify_event_t & motion = *(xcb_motion_notify_event_t*)event;
 			cnst s2_t x = motion.same_screen ? motion.event_x : motion.root_x;
 			cnst s2_t y = motion.same_screen ? motion.event_y : motion.root_y;
-			input.MouseCurrent.Position.x = clamped(x, 0, (s2_t)displayInstance.Size.x);
-			input.MouseCurrent.Position.y = clamped(y, 0, (s2_t)displayInstance.Size.y);
+			input.MouseCurrent.Position = n2s2_t{x, y}.Clamp({}, displayInstance.Size.s2()).s1();
 			input.MouseCurrent.Deltas.x = input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 			input.MouseCurrent.Deltas.y = input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 			displayInstance.Repaint = true;
@@ -412,7 +411,7 @@ gpk::err_t 		gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, cnst
 	if(false == displayInstance.Repaint)
 		return 0;
 	xcb_screen_t				* screen							= xcb_setup_roots_iterator(xcb_get_setup(displayInstance.PlatformDetail.Connection)).data;
-	cnst ::gpk::n2<u2_t>	& metrics						= targetToPresent.metrics();
+	cnst ::gpk::n2u2_t		& metrics						= targetToPresent.metrics();
 	xcb_image_t				* image							= xcb_image_create_native
 		( displayInstance.PlatformDetail.Connection
 		, metrics.x

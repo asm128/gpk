@@ -13,7 +13,7 @@ gpk::err_t 		gpk::drawTriangle
 	, gc8bgra					textureImage
 	, apod<SLight3>		& lightPoints
 	, apod<rgbaf>			& lightColors
-	, grid<u2_t>			depthBuffer
+	, gu2_t				depthBuffer
 	) {
 	triu2_t				triangleIndices		= *(cnst tri<u2_t>*)&geometry.PositionIndices[iTriangle * 3];
 	tri3f2_t				triangleWorld		= {geometry.Positions[triangleIndices.A], geometry.Positions[triangleIndices.B], geometry.Positions[triangleIndices.C]};

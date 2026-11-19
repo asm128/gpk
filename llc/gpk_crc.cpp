@@ -1,4 +1,5 @@
 #include "gpk_crc.h"
+#include "gpk_apod_serialize.h"
 #include "gpk_noise.h"
 #include "gpk_string.h"
 
@@ -19,7 +20,7 @@ gpk::err_t			gpk::crcGenerate			(vcu0_t bytes, u3_t & crc)	{
 gpk::err_t			gpk::crcGenerateAndAppend	(au0_t & bytes)	{
 	u3_t					crcToStore					= 0;
 	crcGenerate(bytes, crcToStore);
-	if_fail_fe(bytes.append((cnst u0_t*)&crcToStore, szof(u3_t)));;
+	if_fail_fe(savePOD(bytes, crcToStore));
 	return 0;
 }
 gpk::err_t			gpk::crcVerifyAndRemove		(au0_t & bytes)	{

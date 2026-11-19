@@ -99,7 +99,7 @@ nmsp gpk
 	}
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, view<cnst _tPOD> eventData) {
-		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(cnst u0_t*)eventData.begin(), eventData.byte_count()});
+		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, eventData.bytes());
 	}
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, cnst _tPOD & childEventDataType) {

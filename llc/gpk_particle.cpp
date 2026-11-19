@@ -18,9 +18,12 @@ gpk::err_t 		gpk::SParticles3::Remove				(s2_t iParticle)	{
 }
 
 gpk::err_t 		gpk::SParticles3::Create				(n3f2_c & position, n3f2_c & direction, f2_t speed)	{
-	Position	.push_back(position);
-	Direction	.push_back(direction);
-	return Speed.push_back(speed);
+	u2_c						newIndex			= Position.size();
+	if_fail_fe(gpk::resize(newIndex + 1, Position, Direction, Speed));
+	Position	[newIndex]		= position;
+	Direction	[newIndex]		= direction;
+	Speed		[newIndex]		= speed;
+	return newIndex;
 }
 
 gpk::err_t 		gpk::SParticles3::Save(::gpk::au0_t & output) cnst { 

@@ -9,6 +9,7 @@ usns gpk;
 // The folder view remains valid for the duration of the suite call.
 
 ::gpk::err_t test_adam7				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_args				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_array_obj			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_array_pod			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_base64			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
@@ -33,9 +34,13 @@ usns gpk;
 ::gpk::err_t test_json_expression	(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_json_expression_ctti(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_log				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_pack_filter		(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_particle			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_parse				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_png				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_string			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_array_static		(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_view_serialize	(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_vox				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 
 #endif //TEST_GPK_CORE_SUITES_H

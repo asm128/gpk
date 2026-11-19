@@ -26,7 +26,7 @@ gpk::err_t	gpk::keyValConstStringSerialize	(view<cnst kv<vcst_t>> keyVals, view<
 				keyValsToSave.push_back(kvToCheck);
 		}
 	}
-	output.append((cnst u0_t*)&keyValsToSave.size(), szof(u2_t));
+	if_fail_fe(savePOD(output, keyValsToSave.size()));
 	u2_t					iOffset								= 0;
 	for(u2_t iKey = 0; iKey < keyValsToSave.size(); ++iKey) {
 		iOffset					+= saveView(output, keyValsToSave[iKey].Key);
@@ -36,13 +36,15 @@ gpk::err_t	gpk::keyValConstStringSerialize	(view<cnst kv<vcst_t>> keyVals, view<
 }
 
 gpk::err_t			gpk::keyValConstStringDeserialize	(vcu0_c input, ::gpk::aobj<kv<vcst_t>> & output)	{
-	u2_t				offset								= 0;
-	u2_c					keysToRead							= *(u2_c*)input.begin();
-	offset				+= (u2_t)szof(u2_t);
-	output.resize(keysToRead);
+	vcu0_t				cursor								= input;
+	u2_t					keysToRead							= 0;
+	if_fail_fe(loadPOD(cursor, keysToRead));
+	if_fail_fe(output.resize(keysToRead));
 	for(u2_t iKey = 0; iKey < keysToRead; ++iKey) {
-		offset					+= ::gpk::viewRead(output[iKey].Key, {&input[offset], input.size() - offset});
-		offset					+= ::gpk::viewRead(output[iKey].Val, {&input[offset], input.size() - offset});
+		vcsc_t					key, val;
+		if_fail_fe(loadView(cursor, key));
+		if_fail_fe(loadView(cursor, val));
+		output[iKey]			= {key, val};
 	}
 	return 0;
 }
@@ -88,7 +90,7 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(view<cnst kv<vcst_t>> environViews)	{
 			return 1;
 
 		fileToMemory({tempName}, temp);
-		temp.append((cnst u0_t*)&curTime, sizeof(u3_t));
+		if_fail_fe(savePOD(temp, curTime));
 		temp.append(environmentBlockToSave);
 		temp.push_back('\r');
 		temp.push_back('\n');
