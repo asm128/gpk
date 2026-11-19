@@ -10,6 +10,89 @@
 
  GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
+stxp	::gpk::vcst_c		JSON_GUI					= R"json(
+{
+	"GUI": {
+		"Exit": {
+			"Script": "{\"Runtime\":{\"Event\":{\"Type\":\"EXIT\"}}}",
+			"State": {
+				"Parent": -1
+			},
+			"Constraints": {
+				"AttachSizeToText": {"x": false, "y": false}
+			},
+			"Placement": {
+				"Area": {"Offset": {"x": 0, "y": 0}, "Size": {"x": 64, "y": 20}},
+				"Margin": {"Left": 1, "Top": 1, "Right": 1, "Bottom": 1},
+				"Border": {"Left": 1, "Top": 1, "Right": 1, "Bottom": 1},
+				"Align": "BOTTOM_RIGHT"
+			},
+			"Text": {
+				"Text": "Exit",
+				"Align": "CENTER"
+			}
+		},
+		"CommandLine": {
+			"Placement": {
+				"Area": {"Offset": {"x": 0, "y": 0}, "Size": {"x": 1024, "y": 24}}
+			},
+			"Text": {
+				"Text": "",
+				"Align": "CENTER_LEFT"
+			}
+		},
+		"Key_0": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_0.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":0,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"0","Align":"CENTER"}},
+		"Key_1": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_1.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":30,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"1","Align":"CENTER"}},
+		"Key_2": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_2.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":60,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"2","Align":"CENTER"}},
+		"Key_3": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_3.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":90,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"3","Align":"CENTER"}},
+		"Key_4": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_4.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":120,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"4","Align":"CENTER"}},
+		"Key_5": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_5.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":150,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"5","Align":"CENTER"}},
+		"Key_6": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_6.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":180,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"6","Align":"CENTER"}},
+		"Key_7": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_7.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":210,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"7","Align":"CENTER"}},
+		"Key_8": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_8.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":240,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"8","Align":"CENTER"}},
+		"Key_9": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_9.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":270,"y":26},"Size":{"x":28,"y":24}}},"Text":{"Text":"9","Align":"CENTER"}},
+		"Key_a": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_a.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":0,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"a","Align":"CENTER"}},
+		"Key_b": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_b.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":30,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"b","Align":"CENTER"}},
+		"Key_c": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_c.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":60,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"c","Align":"CENTER"}},
+		"Key_d": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_d.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":90,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"d","Align":"CENTER"}},
+		"Key_e": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_e.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":120,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"e","Align":"CENTER"}},
+		"Key_f": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_f.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":150,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"f","Align":"CENTER"}},
+		"Key_g": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_g.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":180,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"g","Align":"CENTER"}},
+		"Key_h": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_h.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":210,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"h","Align":"CENTER"}},
+		"Key_i": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_i.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":240,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"i","Align":"CENTER"}},
+		"Key_j": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_j.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":270,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"j","Align":"CENTER"}},
+		"Key_k": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_k.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":300,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"k","Align":"CENTER"}},
+		"Key_l": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_l.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":330,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"l","Align":"CENTER"}},
+		"Key_m": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_m.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":360,"y":52},"Size":{"x":28,"y":24}}},"Text":{"Text":"m","Align":"CENTER"}},
+		"Key_n": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_n.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":0,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"n","Align":"CENTER"}},
+		"Key_o": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_o.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":30,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"o","Align":"CENTER"}},
+		"Key_p": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_p.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":60,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"p","Align":"CENTER"}},
+		"Key_q": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_q.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":90,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"q","Align":"CENTER"}},
+		"Key_r": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_r.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":120,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"r","Align":"CENTER"}},
+		"Key_s": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_s.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":150,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"s","Align":"CENTER"}},
+		"Key_t": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_t.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":180,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"t","Align":"CENTER"}},
+		"Key_u": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_u.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":210,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"u","Align":"CENTER"}},
+		"Key_v": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_v.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":240,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"v","Align":"CENTER"}},
+		"Key_w": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_w.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":270,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"w","Align":"CENTER"}},
+		"Key_x": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_x.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":300,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"x","Align":"CENTER"}},
+		"Key_y": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_y.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":330,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"y","Align":"CENTER"}},
+		"Key_z": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}{Key_z.Text.Text}\"}}}","Placement":{"Area":{"Offset":{"x":360,"y":78},"Size":{"x":28,"y":24}}},"Text":{"Text":"z","Align":"CENTER"}},
+		"Key_space": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text} \"}}}","Placement":{"Area":{"Offset":{"x":390,"y":78},"Size":{"x":120,"y":24}}},"Text":{"Text":"Space","Align":"CENTER"}},
+		"Key_enter": {"Script":"{\"LastCommand\":{\"Text\":{\"Text\":\"{CommandLine.Text.Text}\"}},\"CommandLine\":{\"Text\":{\"Text\":\"\"}}}","Placement":{"Area":{"Offset":{"x":512,"y":78},"Size":{"x":72,"y":24}}},"Text":{"Text":"Enter","Align":"CENTER"}},
+		"Key_clear": {"Script":"{\"CommandLine\":{\"Text\":{\"Text\":\"\"}}}","Placement":{"Area":{"Offset":{"x":586,"y":78},"Size":{"x":72,"y":24}}},"Text":{"Text":"Clear","Align":"CENTER"}},
+		"LastCommand": {
+			"Placement": {
+				"Area": {"Offset": {"x": 0, "y": 104}, "Size": {"x": 1024, "y": 20}}
+			},
+			"Text": {
+				"Text": "",
+				"Align": "CENTER_LEFT"
+			}
+		}
+	}
+}
+)json";
+
 ::gpk::err_t			cleanup		(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
 ::gpk::err_t			setup		(::gme::SApplication & app)						{
 	::gpk::SFramework				& framework					= app.Framework;
@@ -22,19 +105,9 @@
 	::gpk::SGUI						& gui						= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_Dark_green * 16 + 7;
-	{
-		app.IdExit															= ::gpk::controlCreate(gui);
-		::gpk::SControlPlacement															& controlExit								= gui.Controls.Placement[app.IdExit];
-		controlExit.Area													= {{}, {64, 20}};
-		controlExit.Border													= {10, 10, 10, 10};
-		controlExit.Margin													= {1, 1, 1, 1};
-		controlExit.Align													= ::gpk::ALIGN_CENTER_BOTTOM;
-		::gpk::SControlText														& controlText								= gui.Controls.Text[app.IdExit];
-		controlText.Text													= "Exit";
-		controlText.Align													= ::gpk::ALIGN_CENTER;
-		::gpk::controlSetParent(gui, app.IdExit, -1);
-	}
-
+	::gpk::SJSONReader				jsonGUIReader				= {};
+	if_fail_fe(::gpk::jsonParse(jsonGUIReader, JSON_GUI));
+	if_fail_fe(::gpk::guiLoad(gui, jsonGUIReader));
 	{
 		app.IdFrameRateUpdate												= ::gpk::controlCreate(gui);
 		::gpk::SControlPlacement															& controlExit								= gui.Controls.Placement[app.IdFrameRateUpdate];
@@ -83,7 +156,7 @@
 
 	//---------------------------
 
-	stxp char													ragnaPath	[]								= "\\data_2005\\data\\";
+	stxp char													ragnaPath	[]								= "..\\gpk_data\\ragnarok_2005_06_21\\data\\";
 
 	char																		temp		[512]							= {};
 	::gpk::SRSWFileContents														& rswData									= app.RSWData;
@@ -236,9 +309,6 @@
 	if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
 
 	::gpk::SGUI					& gui			= *framework.GUI;
-	::gpk::acid					toProcess		= {};
-	if(1 == ::gpk::guiProcessControls(gui, [&app](::gpk::cid_t iControl) { return iControl == app.IdExit ? 1 : 0; }))
-		return 1;
 
 	app.DialogMain.Update();
 

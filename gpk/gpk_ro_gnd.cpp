@@ -50,17 +50,17 @@ gpk::err_t 		gpk::gndFileLoad										(SGNDFileContents & loaded, cnst vu0_t & 
 	if_fail_fe(gnd_stream.read_pod(loaded.LightmapSize.y	));
 	if_fail_fe(gnd_stream.read_pod(loaded.LightmapTiles		));
 	loaded.lstTileBrightnessData.resize(tileCountBrightness);
-	if_fail_fe(gnd_stream.read_pod(loaded.lstTileBrightnessData));
+	if_fail_fe(gnd_stream.read_pod(view<STileBrightnessGND>(loaded.lstTileBrightnessData)));
 
 	u2_t						tileCountSkin									= 0;
 	gnd_stream.read_pod(tileCountSkin);
 	loaded.lstTileTextureData	.resize(tileCountSkin);
-	if_fail_fe(gnd_stream.read_pod(loaded.lstTileTextureData));
+	if_fail_fe(gnd_stream.read_pod(view<STileSkinGND>(loaded.lstTileTextureData)));
 
 	u2_t						tileCountGeometry								= loaded.Metrics.Size.x * loaded.Metrics.Size.y;
 	loaded.lstTileGeometryData.resize(tileCountGeometry);
 	if( gndHeader.nVersionMajor > 1 || ( gndHeader.nVersionMajor == 1 && gndHeader.nVersionMinor >= 7 ) ) {
-		if_fail_fe(gnd_stream.read_pod(loaded.lstTileGeometryData));
+		if_fail_fe(gnd_stream.read_pod(view<STileGeometryGND>(loaded.lstTileGeometryData)));
 	}
 	else if( gndHeader.nVersionMajor < 1 || ( gndHeader.nVersionMajor == 1 && gndHeader.nVersionMinor <= 5 ) ) {// it seems old 1.5 format used 16 bit integers
 		for(u2_t iTile = 0; iTile < tileCountGeometry; ++iTile) {
@@ -132,7 +132,7 @@ sttc	gpk::err_t gndGenerateFaceGeometryRight							(u2_t baseX, u2_t baseZ, f2_t
 		generated.UVs.append(faceUVs);
 	}
 	{
-		cnst tri<u2_t>	faceIndices[6]										=
+		cnst tri<u2_t>	faceIndices[2]										=
 			{	{ baseVertexIndex + 0 // + 0//+ 0 // 0
 				, baseVertexIndex + 1 // + 1//+ 2 // 1
 				, baseVertexIndex + 2 // + 2//+ 1 // 2
@@ -178,7 +178,7 @@ sttc	gpk::err_t gndGenerateFaceGeometryFront							(u2_t baseX, u2_t baseZ, f2_t
 		for(u2_t i = 0; i < 4; ++i)
 			faceUVs[i]													= {skinTile.u[i], skinTile.v[i]};
 		generated.UVs.append(faceUVs);
-		cnst tri<u2_t>							faceIndices[6]										=
+		cnst tri<u2_t>							faceIndices[2]										=
 			{	{ baseVertexIndex + 0 // + 0//+ 0 // 0
 				, baseVertexIndex + 1 // + 1//+ 2 // 1
 				, baseVertexIndex + 2 // + 2//+ 1 // 2
@@ -241,7 +241,7 @@ sttc	gpk::err_t gndGenerateFaceGeometryTop								(u2_t baseX, u2_t baseZ, f2_t 
 		generated.UVs.append(faceUVs);
 	}
 	{
-		cnst tri<u2_t>							faceIndices[6]										=
+		cnst tri<u2_t>							faceIndices[2]										=
 			{	{ baseVertexIndex + 0 // + 0//+ 0 // 0
 				, baseVertexIndex + 1 // + 1//+ 2 // 1
 				, baseVertexIndex + 2 // + 2//+ 1 // 2

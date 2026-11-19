@@ -11,8 +11,7 @@
 		{"Label":"Instance B", "Path":"data/instance_b.json"},
 		{"Label":"Many", "Path":"data/many.json"}
 	],
-	"GUI": {
-		"file_explorer": {
+	"file_explorer": {
 			"Placement":{"Area":{"Offset":{"x":0,"y":0},"Size":{"x":1280,"y":720}},"Margin":{"Left":0,"Top":0,"Right":0,"Bottom":0},"Border":{"Left":0,"Top":0,"Right":0,"Bottom":0}},
 			"Draw":{"ColorMode":2,"ColorTheme":0},
 			"title":{"Placement":{"Area":{"Offset":{"x":18,"y":16},"Size":{"x":1244,"y":44}}},"Draw":{"ColorMode":2,"FrameOut":1,"ColorTheme":3},"Text":{"Text":"CTTI JSON WORKBENCH","Align":"CENTER","FontSelected":3}},
@@ -24,6 +23,5 @@
 			"previous":{"Placement":{"Area":{"Offset":{"x":936,"y":652},"Size":{"x":96,"y":38}}},"Draw":{"ColorMode":1,"ColorTheme":2},"Text":{"Text":"PREVIOUS","Align":"CENTER","FontSelected":7}},
 			"next":{"Placement":{"Area":{"Offset":{"x":1038,"y":652},"Size":{"x":96,"y":38}}},"Draw":{"ColorMode":1,"ColorTheme":2},"Text":{"Text":"NEXT","Align":"CENTER","FontSelected":7}},
 			"exit":{"Placement":{"Area":{"Offset":{"x":1140,"y":652},"Size":{"x":122,"y":38}}},"Draw":{"ColorMode":1,"ColorTheme":3},"Text":{"Text":"EXIT","Align":"CENTER","FontSelected":7}}
-		}
 	}
 }
