@@ -6,12 +6,100 @@
 #include "gpk_string_compose.h"
 #include "gpk_string_time.h"
 
+#include <cstdio>
+
+#if defined(GPK_WINDOWS)
+#	include <io.h>
+#elif defined(GPK_LINUX)
+#	include <unistd.h>
+#endif
+
 GPK_USING_TYPEINT();
 GPK_USING_VIEW();
 GPK_USING_APOD();
 GPK_USING_ASTATIC();
 
 usng gpk::err_t, gpk::SRuntimeValues, gpk::STestRunReport, gpk::aobj;
+
+#if defined(GPK_WINDOWS)
+#	define gpk_test_dup		_dup
+#	define gpk_test_dup2		_dup2
+#	define gpk_test_close	_close
+#	define gpk_test_fileno	_fileno
+#elif defined(GPK_LINUX)
+#	define gpk_test_dup		dup
+#	define gpk_test_dup2		dup2
+#	define gpk_test_close	close
+#	define gpk_test_fileno	fileno
+#endif
+
+gpk::STestLogCapture::~STestLogCapture() {
+	close();
+}
+
+gpk::err_t gpk::STestLogCapture::open(vcst_t fileName) {
+	if_true_fe(Active);
+	if_true_fe(0 == fileName.size());
+	if(0 != ::fflush(stdout) || 0 != ::fflush(stderr))
+		rtrn -1;
+
+	cnst int stdOut = gpk_test_fileno(stdout);
+	cnst int stdErr = gpk_test_fileno(stderr);
+	if(0 > stdOut || 0 > stdErr)
+		rtrn -1;
+	SavedStdOut = (s2_t)gpk_test_dup(stdOut);
+	SavedStdErr = (s2_t)gpk_test_dup(stdErr);
+	if(0 > SavedStdOut || 0 > SavedStdErr) {
+		if(0 <= SavedStdOut) gpk_test_close(SavedStdOut);
+		if(0 <= SavedStdErr) gpk_test_close(SavedStdErr);
+		SavedStdOut = SavedStdErr = -1;
+		rtrn -1;
+	}
+	FILE * outputFile = {};
+#if defined(GPK_WINDOWS)
+	cnst int openResult = ::fopen_s(&outputFile, fileName.begin(), "wb");
+#elif defined(GPK_LINUX)
+	outputFile = ::fopen(fileName.begin(), "wb");
+	cnst int openResult = outputFile ? 0 : -1;
+#endif
+	if(0 != openResult || 0 == outputFile) {
+		gpk_test_close(SavedStdOut);
+		gpk_test_close(SavedStdErr);
+		SavedStdOut = SavedStdErr = -1;
+		rtrn -1;
+	}
+	cnst int output = gpk_test_fileno(outputFile);
+	cnst int stdoutResult = gpk_test_dup2(output, stdOut);
+	cnst int stderrResult = gpk_test_dup2(output, stdErr);
+	::fclose(outputFile);
+	if(0 > stdoutResult || 0 > stderrResult) {
+		gpk_test_dup2(SavedStdOut, stdOut);
+		gpk_test_dup2(SavedStdErr, stdErr);
+		gpk_test_close(SavedStdOut);
+		gpk_test_close(SavedStdErr);
+		SavedStdOut = SavedStdErr = -1;
+		rtrn -1;
+	}
+	Active = true;
+	rtrn 0;
+}
+
+gpk::err_t gpk::STestLogCapture::close() {
+	if(false == Active)
+		rtrn 0;
+	err_t result = 0;
+	if(0 != ::fflush(stdout) || 0 != ::fflush(stderr))
+		result = -1;
+	cnst int stdOut = gpk_test_fileno(stdout);
+	cnst int stdErr = gpk_test_fileno(stderr);
+	if(0 > gpk_test_dup2(SavedStdOut, stdOut)) result = -1;
+	if(0 > gpk_test_dup2(SavedStdErr, stdErr)) result = -1;
+	if(0 != gpk_test_close(SavedStdOut)) result = -1;
+	if(0 != gpk_test_close(SavedStdErr)) result = -1;
+	SavedStdOut = SavedStdErr = -1;
+	Active = false;
+	rtrn result;
+}
 
 sttc gpk::err_t	testReportWrite		(::gpk::vcst_t folder, ::gpk::vcst_t filename, ::gpk::vcst_t contents) {
 	::gpk::string path;
@@ -33,7 +121,7 @@ sttc gpk::err_t	testSummaryJSON		(cnst gpk::STestSuiteReport & report, ::gpk::st
 		, ",\"failed\":"		, ::gpk::str(report.Failures)
 		, ",\"result_groups\":"	, ::gpk::str(report.Groups));
 }
-gpk::err_t	gpk::testSuiteReportWrite		(vcst_t folder, cnst gpk::STestSuiteReport & report, cnst gpk::ATestError & results, cnst gpk::STestLogBuffer & log) {
+gpk::err_t	gpk::testSuiteReportWrite		(vcst_t folder, cnst gpk::STestSuiteReport & report, cnst gpk::ATestError & results) {
 	string		json;
 	if_fail_fe(testSummaryJSON(report, json));
 	if_fail_fe(append_strings(json, ",\"schema_version\":1,\"results\":["));
@@ -54,9 +142,7 @@ gpk::err_t	gpk::testSuiteReportWrite		(vcst_t folder, cnst gpk::STestSuiteReport
 			, ",\"failed\":", str(item.Count), '}'));
 	}
 	if_fail_fe(append_strings(json, "]}\n"));
-	cnst gpk::err_t logResult = testReportWrite(folder, "console.log", log.Text);
-	cnst gpk::err_t jsonResult = testReportWrite(folder, "results.json", json);
-	rtrn min(logResult, jsonResult);
+	rtrn testReportWrite(folder, "results.json", json);
 }
 
 sttc gpk::err_t	testRunFolder			(::gpk::vcst_t parent, ::gpk::string & folder) {
@@ -104,18 +190,6 @@ sttc gpk::err_t	testRunReportWrite		(cnst gpk::STestRunReport & run, gpk::err_t 
 	rtrn testReportWrite(run.Folder, "results.json", json);
 }
 
-sttc gpk::err_t testRootLogWrite(::gpk::vcst_t folder, cnst ::gpk::STestLogBuffer & log) {
-	// File diagnostics append to the active log; write from separate storage.
-	::gpk::string snapshot;
-	if_fail_fe(snapshot.append(log.Text));
-	if(folder.size() && !::gpk::failed(testReportWrite(folder, "console.log", snapshot)))
-		rtrn 0;
-	snapshot.clear();
-	if_fail_fe(snapshot.append(log.Text));
-	if_fail_fe(testReportWrite(".", "gpk_test_core.log", snapshot));
-	rtrn -1;
-}
-
 gpk::err_t	gpk::testRunPrepare		(STestRunnerState & runner, SRuntimeValues & runtimeValues, STestRunReport & run, aobj<vcst_t> & selectedSuites) {
 	runner.SeedOverride			= {};
 	runner.SeedOverrideEnabled	= false;
@@ -152,21 +226,23 @@ gpk::err_t	gpk::testRunPrepare		(STestRunnerState & runner, SRuntimeValues & run
 
 	rtrn 0;
 }
-gpk::err_t	gpk::testRunSummary	(cnst ATestError & results, view<err_c> /*returnValues*/, u3_t microseconds) {
+gpk::err_t	gpk::testRunSummary	(cnst ATestError & results, view<err_c> returnValues, u3_t microseconds) {
 	u2_c		successCount		= testSuccessCount(results);
 	u2_c		failureCount		= testErrorCount(results);
+	b8_t		suiteFailed			= false;
+	for(err_c returnValue : returnValues)
+		if(failed(returnValue))
+			suiteFailed			= true;
 
-	//if_fail_ef(returnValues, "Test run has suite execution or reporting failures. Result:%i.", returnValues);
-	if_true_ef(failureCount, "Test run completed in %" GPK_FMT_U3 " us: %u/%u checks passed, %u failed across %u result groups.", microseconds, successCount, successCount + failureCount, failureCount, results.size())
+	if(failureCount || suiteFailed)
+		error_printf("Test run completed in %" GPK_FMT_U3 " us: %u/%u checks passed, %u failed across %u result groups; suite status:%s.", microseconds, successCount, successCount + failureCount, failureCount, results.size(), suiteFailed ? "failed" : "successful");
 	else {
 		always_printf("Test run completed in %" GPK_FMT_U3 " us: all %u checks passed across %u result groups.", microseconds, successCount, results.size());
 	}
-	rtrn failureCount; //(0 > returnValues.count([](err_c & returnValue) { return returnValue < 0; })) ? "" : failureCount ? ::gpk::((err_t)-1) : 0;
+	rtrn (failureCount || suiteFailed) ? -1 : 0;
 }
 
-gpk::err_t	gpk::testRunFinish		(STestRunnerState & runner, cnst STestRunReport & run, cnst STestLogBuffer & log, err_t status, u3_t microseconds) {
-	if(log.Failed)
-		status = -1;
+gpk::err_t	gpk::testRunFinish		(STestRunnerState & runner, cnst STestRunReport & run, err_t status, u3_t microseconds) {
 	if(run.Folder.size()) {
 		try {
 			if_fail_e(status = ::gpk::min(status, testRunReportWrite(run, status, microseconds, runner.SeedOverrideEnabled, runner.SeedOverride)));
@@ -176,53 +252,5 @@ gpk::err_t	gpk::testRunFinish		(STestRunnerState & runner, cnst STestRunReport &
 			error_printf("%s", "Cannot write run reports.");
 		}
 	}
-	try {
-		if_fail_fe(status = ::gpk::min(status, testRootLogWrite(run.Folder, log)));
-	}
-	catch(...) {
-		status = -1;
-	}
-	rtrn log.Failed ? -1 : status;
-}
-
-gpk::err_t	gpk::testReporting		(STestRunnerState & runner, ATestError & errors, vcst_t outputFolder) {
-	STestLogBuffer		captured			= {};
-	b8_c			previousConsole		= runner.Console;
-	sttc u2_t			forwarded			= 0;
-	forwarded	= 0;
-	u2_t				quietForwarded		= 0;
-	err_t				captureResult		= 0;
-	{
-		STestLogCapture		capture				(runner, captured, false);
-		captureResult	= log_print("quiet");
-		captureResult	= min(captureResult, log_write(":raw", 4));
-		quietForwarded	= forwarded;
-		runner.Console	= true;
-		captureResult	= min(captureResult, log_print("echo"));
-		captureResult	= min(captureResult, log_write(":raw", 4));
-	}
-	runner.Console	= previousConsole;
-	GPK_TEST_CHECK(errors, TEST_REPORT_RESULT_QUIET, quietForwarded != 0);
-	GPK_TEST_CHECK(errors, TEST_REPORT_RESULT_CONSOLE, forwarded != 8);
-
-	STestRunReport		failedRun;
-	string				blockedFile;
-	if_fail_fe(pathNameCompose(outputFolder, "report_write_failure", failedRun.Folder));
-	if_fail_fe(pathCreate(failedRun.Folder));
-	if_fail_fe(pathNameCompose(failedRun.Folder, "results.json", blockedFile));
-	if_fail_fe(pathCreate(blockedFile)); // A directory cannot be replaced with the JSON file.
-	STestLogBuffer		failureLog;
-	string				expected;
-	err_t				reportResult;
-	err_t				logResult;
-	{
-		STestLogCapture		capture		(runner, failureLog, true);
-		reportResult	= testRunReportWrite(failedRun, -1, 0, false, 0);
-		if_fail_fe(expected.append(failureLog.Text));
-		logResult		= testRootLogWrite(failedRun.Folder, failureLog);
-	}
-	au0_t				saved;
-	if_fail_fe(fileToMemory(failedRun.Folder, "console.log", saved));
-	GPK_TEST_CHECK(errors, TEST_REPORT_RESULT_ROOT_ERROR, 0 <= reportResult || failed(logResult) || failureLog.Failed || !expected.size() || saved != vcu0_c((u0_c*)expected.begin(), expected.size()));
-	rtrn 0;
+	rtrn status;
 }

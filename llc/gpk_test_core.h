@@ -1,5 +1,4 @@
 #include "gpk_enum.h"
-#include "gpk_mutex.h"
 #include "gpk_path.h"
 #include "gpk_runtime.h"
 #include "gpk_timer.h"
@@ -101,39 +100,25 @@ nmsp gpk
 		}
 		always_printf("%.*s: %u bytes; showing %u%s\n%s", GPK_VIEW_ARGS(label), bytes.size(), count, count < bytes.size() ? " (prefix only)" : "", text);
 	}
-	struct STestLogBuffer {
-		mutex				Mutex				= {};
-		string				Text				= {};
-		b8_t				Failed				= {};
-	};
 	struct STestRunnerState {
 		u3_t				SeedOverride		= {};
 		b8_t				SeedOverrideEnabled = {};
 
-		b8_t				Console				= {};
-
 		u3_t				testSeed			(u3_t fallback)		{ rtrn SeedOverrideEnabled ? SeedOverride : fallback; }
 	};
-	err_t				testCaptureWrite	(sc_c * text, u2_t length);
-	err_t				testCapturePrint	(sc_c * text);
 
 	struct STestLogCapture {
-		STestRunnerState	& Runner;	
-		STestLogBuffer		* PreviousBuffer	= {};
+		s2_t				SavedStdOut		= -1;
+		s2_t				SavedStdErr		= -1;
+		b8_t				Active				= {};
 
+							STestLogCapture		() = default;
 							STestLogCapture		(cnst STestLogCapture &)	= delete;
 		STestLogCapture		& oper=				(cnst STestLogCapture &)	= delete;
 
-							~STestLogCapture	()							{
-		}
-							STestLogCapture		(STestRunnerState & runner, STestLogBuffer & buffer, b8_t console)
-			: Runner			(runner)
-			, PreviousBuffer	(&buffer)									{
-			if(0 == PreviousBuffer) {
-				Runner.Console		= console;
-			}
-		}
-
+							~STestLogCapture	();
+		err_t				open				(vcst_t fileName);
+		err_t				close				();
 	};
 	struct STestSuiteReport {
 		vcst_t				Name			= {};
@@ -162,9 +147,8 @@ nmsp gpk
 					testSuite				(TFunction & function, vcst_t name, vcst_t folder)	nxpt	{ rtrn {function, name, folder}; }
 	err_t			testRunSummary			(cnst ATestError & results, view<err_c> returnValues, u3_t microseconds);
 	err_t			testRunPrepare			(STestRunnerState & runner, SRuntimeValues & runtimeValues, STestRunReport & run, aobj<vcst_t> & selectedSuites);
-	err_t			testRunFinish			(STestRunnerState & runner, cnst STestRunReport & run, cnst STestLogBuffer & log, err_t status, u3_t microseconds);
-	err_t			testReporting			(STestRunnerState & runner, ATestError & errors, vcst_t outputFolder);
-	err_t			testSuiteReportWrite	(vcst_t folder, cnst STestSuiteReport & report, cnst ATestError & results, cnst STestLogBuffer & log);
+	err_t			testRunFinish			(STestRunnerState & runner, cnst STestRunReport & run, err_t status, u3_t microseconds);
+	err_t			testSuiteReportWrite	(vcst_t folder, cnst STestSuiteReport & report, cnst ATestError & results);
 
 	tplt<tpnm TFunction>
 	sttc	err_t	testSuiteRun			(STestRunnerState & runner, ATestError & results, STestRunReport & run, view<vcst_c> selectedSuites, cnst STestSuite<TFunction> & suite) {
@@ -180,9 +164,12 @@ nmsp gpk
 			rtrn -1;
 		}
 		ATestError			suiteResults;
-		STestLogBuffer		log;
+		string				logPath;
+		err_t				captureStatus	= pathNameCompose(folder, "console.log", logPath);
+		STestLogCapture		capture;
+		if(0 <= captureStatus)
+			captureStatus	= capture.open(logPath);
 		{
-			STestLogCapture		capture		(runner,  log, false);
 			STimer				timer;
 			try {
 				report.Status = suite.Function(runner, suiteResults, folder);
@@ -207,11 +194,10 @@ nmsp gpk
 			else
 				always_printf("%.*s() result OK in %" GPK_FMT_U3 " us: %u checks passed.", GPK_VIEW_ARGS(suite.Name), report.Microseconds, report.Checks);
 		}
-		if(log.Failed) {
-			report.ReportStatus = -1;
-		}
+		captureStatus		= min(captureStatus, capture.close());
+		report.ReportStatus = min(report.ReportStatus, captureStatus);
 		try {
-			report.ReportStatus = min(report.ReportStatus, testSuiteReportWrite(folder, report, suiteResults, log));
+			report.ReportStatus = min(report.ReportStatus, testSuiteReportWrite(folder, report, suiteResults));
 		}
 		catch(...) {
 			report.ReportStatus = -1; error_printf("Could not serialize suite '%.*s'.", GPK_VIEW_ARGS(suite.Name));
@@ -223,40 +209,51 @@ nmsp gpk
 		always_printf("Suite %.*s: %u checks, %u failures, status:%i, reporting:%i.", GPK_VIEW_ARGS(suite.Name), report.Checks, report.Failures, report.Status, report.ReportStatus);
 		rtrn (failed(report.Status) || failed(report.ReportStatus) || report.Failures) ? -1 : 0;
 	}
+	tplt<tpnm TFunction>
+	sttc	err_t	testSuiteRunSafe		(STestRunnerState & runner, ATestError & results, STestRunReport & run, view<vcst_c> selectedSuites, cnst STestSuite<TFunction> & suite) {
+		try {
+			rtrn testSuiteRun(runner, results, run, selectedSuites, suite);
+		}
+		catch(...) {
+			error_printf("Suite %.*s aborted by an unhandled runner exception; continuing with the remaining suites.", GPK_VIEW_ARGS(suite.Name));
+			rtrn -1;
+		}
+	}
 
 
 	tplt<tpnm... TSuites>
 	err_t			runSuites		(STestRunnerState & runner, SRuntimeValues & runtimeValues, cnst TSuites &... suites) {
-		STestLogBuffer		log;
-		//(log, 0 <= argsOptionIndex(runtimeValues.EntryPointArgs, "console"));
 		STestRunReport		run;
 		err_t				status			= 0;
+		err_t				captureStatus	= 0;
+		STestLogCapture		capture;
 		STimer				timer;
 		try {
 			status = [&]() -> err_t {
 				aobj<vcst_t>		selectedSuites;
 				if_fail_fe(testRunPrepare(runner, runtimeValues, run, selectedSuites));
+				string				logPath;
+				captureStatus	= pathNameCompose(run.Folder, "console.log", logPath);
+				if(0 <= captureStatus)
+					captureStatus = capture.open(logPath);
 				for(vcst_c & selectedSuite : selectedSuites) {
 					b8_c			found				= ((suites.Name == selectedSuite) || ...);
 					if_zero_fef(found, "Unknown test suite:'%.*s'.", GPK_VIEW_ARGS(selectedSuite));
 				}
 				ATestError			results;
 				STimer				testTimer;
-				err_t				returnValues[] = {testSuiteRun(runner, results, run, selectedSuites, suites)...};
+				err_t				returnValues[] = {testSuiteRunSafe(runner, results, run, selectedSuites, suites)...};
 				testTimer.Frame();
 				rtrn testRunSummary(results, returnValues, testTimer.LastTimeMicroseconds);
 			}();
 		}
 		catch(...) { status = -1; error_printf("%s", "Runner setup or execution exception."); }
 		timer.Frame();
-		rtrn testRunFinish(runner, run, log, status, timer.LastTimeMicroseconds);
+		status				= min(status, captureStatus);
+		status				= min(status, testRunFinish(runner, run, status, timer.LastTimeMicroseconds));
+		captureStatus		= capture.close();
+		rtrn min(status, captureStatus);
 	}
-
-	GDEFINE_ENUM_TYPE(TEST_REPORT_RESULT, u0_t);
-	GDEFINE_ENUM_VALUED(TEST_REPORT_RESULT, CAPTURE, 0, "Log capture must preserve print/write bytes and restore the enclosing buffer.");
-	GDEFINE_ENUM_VALUED(TEST_REPORT_RESULT, QUIET, 1, "File-only capture must not forward to the console writer.");
-	GDEFINE_ENUM_VALUED(TEST_REPORT_RESULT, CONSOLE, 2, "Opt-in console capture must forward each byte once.");
-	GDEFINE_ENUM_VALUED(TEST_REPORT_RESULT, ROOT_ERROR, 3, "Report-writing errors must survive in the root log.");
 
 } // nmsp
 

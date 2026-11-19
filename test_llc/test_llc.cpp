@@ -1,7 +1,5 @@
 #include "test_llc_suites.h"
 
-using ::gpk::testReporting;
-
 sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues);
 GPK_OS_ENTRY_POINT(::test_llc_entry_point);
 
