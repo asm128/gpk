@@ -1,4 +1,6 @@
 #include "gpk_ctti_stct_json.h"
+#include "gpk_framework_module.h"
+#include "gpk_gui.h"
 #include "gpk_gui_control.h"
 #include "gpk_gui_control_json.h"
 #include "gpk_gui_control_json_expression.h"
@@ -28,6 +30,8 @@ GDEFINE_ENUM_VALUED(GUI_JSON_TEST_RESULT, SCRIPT_EXPRESSION, 16, "A JSON express
 GDEFINE_ENUM_VALUED(GUI_JSON_TEST_RESULT, SCRIPT_STORED	, 17, "The script stored by control id did not execute.");
 GDEFINE_ENUM_VALUED(GUI_JSON_TEST_RESULT, SCRIPT_ACTION	, 18, "Action-driven script execution did not update the target control.");
 GDEFINE_ENUM_VALUED(GUI_JSON_TEST_RESULT, SCRIPT_EVENT	, 19, "The framework event binding did not enqueue the requested child event.");
+GDEFINE_ENUM_VALUED(GUI_JSON_TEST_RESULT, GUI_SCRIPT_LOAD	, 20, "The GUI Exit control could not be constructed from JSON.");
+GDEFINE_ENUM_VALUED(GUI_JSON_TEST_RESULT, GUI_SCRIPT_EVENT	, 21, "The GUI Runtime.Event script did not enqueue APPLICATION_STATE_EXIT.");
 
 sttc ::gpk::b8_t bytesEqual(::gpk::vcu0_t left, ::gpk::vcu0_t right) {
 	if(left.size() != right.size())
@@ -195,6 +199,24 @@ sttc ::gpk::err_t testControlTableJSONScript(::gpk::ATestError & errors) {
 	rtrn 0;
 }
 
+sttc ::gpk::err_t testGUIJSONExitScript(::gpk::ATestError & errors) {
+	::gpk::SGUI gui = {};
+	::gpk::vcst_t document = R"({"exit":{"Placement":{"Area":{"Offset":{"x":2,"y":2},"Size":{"x":52,"y":20}},"Align":"TOP_RIGHT"},"Text":{"Text":"EXIT","Align":"CENTER"},"Script":"{\"Runtime\":{\"Event\":{\"Type\":\"EXIT\"}}}"}})";
+	::gpk::SJSONReader reader = {};
+	GPK_TEST_REQUIRE(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_LOAD, ::gpk::failed(::gpk::jsonParse(reader, document)));
+	GPK_TEST_REQUIRE(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_LOAD, 1 != ::gpk::controlTableJSONLoad(gui.Controls, ::gpk::vs1_t{}, reader));
+	GPK_TEST_REQUIRE(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_LOAD, 1 != gui.Controls.States.size());
+	GPK_TEST_CHECK(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_LOAD, gui.Controls.Identifier[0] != "exit" || gui.Controls.Text[0].Text != "EXIT");
+
+	GPK_TEST_REQUIRE(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_EVENT, ::gpk::failed(::gpk::guiScriptRun(gui, 0)));
+	GPK_TEST_REQUIRE(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_EVENT, 1 != gui.Controls.EventQueue.size());
+	GPK_TEST_CHECK(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_EVENT, gui.Controls.EventQueue[0]->Type != ::gpk::SYSTEM_EVENT_Framework);
+	::gpk::SEvent<::gpk::u0_t> childEvent = {};
+	GPK_TEST_REQUIRE(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_EVENT, ::gpk::failed(gui.Controls.EventQueue[0]->ExtractChild(childEvent)));
+	GPK_TEST_CHECK(errors, GUI_JSON_TEST_RESULT_GUI_SCRIPT_EVENT, childEvent.Type != ::gpk::APPLICATION_STATE_EXIT || childEvent.Data.size());
+	rtrn 0;
+}
+
 sttc ::gpk::err_t testControlStateJSONRoundTrip(::gpk::ATestError & errors) {
 	::gpk::SControlTable controls = {};
 	cnst ::gpk::cid_t idSource = ::gpk::controlCreate(controls, {});
@@ -269,5 +291,6 @@ sttc ::gpk::err_t testControlTextJSONRoundTrip(::gpk::ATestError & errors) {
 	if_fail_fe(::testControlTextJSONRoundTrip(errors));
 	if_fail_fe(::testControlTableJSONBinaryParity(errors));
 	if_fail_fe(::testControlTableJSONScript(errors));
+	if_fail_fe(::testGUIJSONExitScript(errors));
 	rtrn 0;
 }
