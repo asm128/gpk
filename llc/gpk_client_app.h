@@ -1,5 +1,5 @@
 #include "gpk_socket_client.h"
-#include "gpk_gui_inputbox.h"
+#include "gpk_gui.h"
 #include "gpk_json.h"
 
 #ifndef GPK_CLIENT_APP_H_23701
@@ -25,7 +25,6 @@ nmsp gpk
 		string		TextDateTime		= {};
 		string		TextConnected		= {};
 		string		TextConnectedSince	= {};
-		SInputBox	InputBox;
 	};
 
 	struct SClient {

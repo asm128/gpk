@@ -33,7 +33,7 @@ gpk::cid_t		gpk::controlCreateChild	(SGUI & gui, cid_t iParent)						{
 	return idControl;
 }
 
-gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
+gpk::err_t		gpk::guiSetupDefaults	(SGUI & gui)							{
 	if_fail_fe(controlColorsDefault(gui.Colors));
 
 	if(0 == gui.Fonts.size())
@@ -41,7 +41,11 @@ gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
 
 	if(gui.Fonts.size() <= gui.SelectedFont)
 		gui.SelectedFont = u1_t(gui.Fonts.size() - 1);
+	return 0;
+}
 
+gpk::cid_t		gpk::controlCreate		(SGUI & gui)							{
+	if_fail_fe(guiSetupDefaults(gui));
 	return controlCreate(gui.Controls, gui.Colors->DefaultColors);
 }
 

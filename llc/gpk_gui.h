@@ -48,6 +48,7 @@ nmsp gpk
 	err_t				guiUpdate						(SGUI & gui, n2u1_c & targetMetrics); //, vpobj<SEventSystem> in_Events = {});
 	err_t				guiUpdateMetrics				(SGUI & gui, n2u1_c & targetSize, b8_t forceUpdate);
 	err_t				guiDraw							(SGUI & gui, g8bgra target);
+	err_t				guiSetupDefaults				(SGUI & gui);
 	cid_t 				controlCreate					(SGUI & gui);
 	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);

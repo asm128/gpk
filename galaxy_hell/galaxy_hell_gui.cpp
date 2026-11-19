@@ -214,7 +214,7 @@ static	gpk::err_t	uiPlayerSetupPlay	(::ghg::SUIPlayer & uiPlayer, ::gpk::pobj<::
 
 //static gpk::err_t	guiSetupInit		(::gpk::SDialog & dialog) { return guiSetupButtonList<::ghg::UI_LOAD>(*dialog.GUI,  60, 0, ::gpk::ALIGN_BOTTOM_RIGHT); }
 static	gpk::err_t	guiSetupLoad		(::gpk::SDialog & /*dialog*/) { 
-	//::gpk::ai32					temp;
+	//::gpk::as2_t					temp;
 	//temp.resize();
 	//if_fail_fe(::gpk::guiSetupButtonList<::ghg::UI_LOAD>(*dialog.GUI, dialog.Root, 60, 0, ::gpk::ALIGN_CENTER, ::gpk::ALIGN_CENTER, {})); 
 	return 0;

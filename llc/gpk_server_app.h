@@ -1,5 +1,5 @@
 #include "gpk_socket_server.h"
-#include "gpk_gui_inputbox.h"
+#include "gpk_gui.h"
 #include "gpk_json.h"
 
 #ifndef GPK_SERVER_APP_H_23701

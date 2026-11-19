@@ -330,6 +330,9 @@
     <ClInclude Include="gpk_gui_control.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_control_json.h">
+      <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_gui_control_list.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -337,9 +340,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_text_flag.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_gui_inputbox.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_system.h">
@@ -584,9 +584,6 @@
     </ClInclude>
     <ClInclude Include="gpk_view_tri3.h">
       <Filter>aliases</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_virtual_keyboard.h">
-      <Filter>dialog</Filter>
     </ClInclude>
     <ClInclude Include="gpk_voxel.h">
       <Filter>voxel</Filter>
@@ -971,9 +968,6 @@
     <ClCompile Include="gpk_gui_draw.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_gui_inputbox.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_gui_system.cpp">
       <Filter>gui</Filter>
     </ClCompile>
@@ -1036,9 +1030,6 @@
     </ClCompile>
     <ClCompile Include="gpk_view.cpp">
       <Filter>view</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_virtual_keyboard.cpp">
-      <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="gpk_voxel_geometry.cpp">
       <Filter>voxel</Filter>
@@ -1149,6 +1140,9 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_process_broker.cpp">
