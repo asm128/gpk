@@ -88,7 +88,7 @@ nmsp gpk
 	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)											{ rtrn jsonArraySize(reader.Token, iNode); }
 	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)											{ rtrn jsonObjectKeyCount(reader.Token, iNode); }
 	ndsi	err_t	jsonArrayValueGet	(cnst SJSONReader & reader, u2_t iNode, u2_t indexOfValueToGet)					{ rtrn jsonArrayValueGet(reader.Token, iNode, indexOfValueToGet); }
-	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_t key)								{ rtrn jsonObjectValueGet(reader.Token, reader.View, iNode, key); }
+	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_t key)								{ rtrn iNode < reader.Tree.size() && reader.Tree[iNode] ? jsonObjectValueGet(*reader.Tree[iNode], reader.View, key) : jsonObjectValueGet(reader.Token, reader.View, iNode, key); }
 	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices)						{ rtrn jsonObjectKeyList(reader.Token, iNode, indices); }
 	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, aobj<vcst_t> & keys)					{ rtrn jsonObjectKeyList(reader.Token, reader.View, iNode, keys); }
 	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, aobj<vcst_t> & keys)	{ rtrn jsonObjectKeyList(reader.Token, reader.View, iNode, indices, keys); }
@@ -159,7 +159,7 @@ nmsp gpk
 
 	tydf keyval<vcst_t, SJSONFile>	TKeyValJSONFile;
 
-	err_t			jsonFileRead			(SJSONFile & file, vcst_t filename);
+	err_t			jsonFileRead			(SJSONFile & file, vcst_t filename, b8_t buildTree = true);
 	err_t			jsonWrite				(cnst SJSONNode * node, view<vcst_c> jsonViews, string & output);
 	err_t			jsonWrite				(view<cnst SJSONToken> tokens, vcst_t source, string & output, u2_t iToken = 0);
 	err_t			jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c> jsonViews, u2_c blockSize, aobj<string> & outputJsons);

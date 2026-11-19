@@ -12,12 +12,7 @@ usns gpk;
 sttc ::gpk::err_t controlJSONSave(::gpk::string & output, cnst ::gpk::SControlTable & controls, ::gpk::cid_t iControl);
 
 sttc ::gpk::err_t controlEventJSONSave(::gpk::string & output, cnst ::gpk::SEventSystem & event) {
-	if_fail_fe(output.push_back('{'));
-	if_fail_fe(::gpk::appendOpenKey(output, "Type"));
-	if_fail_fe(::gpk::cttiValueSave(output, (::gpk::u0_t)event.Type));
-	if_fail_fe(::gpk::appendOpenKey(output, "Data", true));
-	if_fail_fe(::gpk::cttiValueSave(output, event.Data));
-	rtrn output.push_back('}');
+	rtrn ::gpk::cttiValueSave(output, event);
 }
 
 sttc ::gpk::err_t controlEventQueueJSONSave(::gpk::string & output, cnst ::gpk::apobj<::gpk::SEventSystem> & events, ::gpk::b8_t & separator) {
@@ -62,46 +57,13 @@ sttc gpk::err_t guiComponentJSONSave(::gpk::string & output, ::gpk::vcst_t name,
 
 tplt<tpnm T>
 sttc gpk::err_t guiComponentJSONSaveDelta(::gpk::string & output, ::gpk::vcst_t name, cnst T & component, cnst T & defaults, b8_t & separator) {
-	if constexpr(::gpk::ctti_struct<T>) {
-		::gpk::string members = {};
-		::gpk::b8_t memberSeparator = false;
-		cnst auto & metadata = ::gpk::cttiStruct<T>();
-		for(::gpk::u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-			cnst ::gpk::vcst_t memberName = metadata.View(metadata.Members[iMember].Name);
-			::gpk::string valueJSON = {};
-			::gpk::string defaultJSON = {};
-			cnst ::gpk::SCTTIFieldJSONOverride * fieldOverride = ::gpk::cttiFieldJSONOverride<T>(memberName);
-			if(fieldOverride && fieldOverride->Save) {
-				if_fail_fe(fieldOverride->Save(valueJSON, &component));
-				if_fail_fe(fieldOverride->Save(defaultJSON, &defaults));
-			}
-			else {
-				if_fail_fe(::gpk::cttiVisit(component, iMember, [&](cnst auto & member) { rtrn ::gpk::cttiValueSave(valueJSON, member); }));
-				if_fail_fe(::gpk::cttiVisit(defaults, iMember, [&](cnst auto & member) { rtrn ::gpk::cttiValueSave(defaultJSON, member); }));
-			}
-			if(valueJSON == defaultJSON)
-				continue;
-			if_fail_fe(::gpk::appendOpenKey(members, memberName, memberSeparator));
-			if_fail_fe(members.append(valueJSON));
-			memberSeparator = true;
-		}
-		if(false == memberSeparator)
-			rtrn 0;
-		if_fail_fe(::gpk::appendOpenKey(output, name, separator));
-		if_fail_fe(output.push_back('{'));
-		if_fail_fe(output.append(members));
-		if_fail_fe(output.push_back('}'));
-	}
-	else {
-		::gpk::string valueJSON = {};
-		::gpk::string defaultJSON = {};
-		if_fail_fe(::gpk::cttiValueSave(valueJSON, component));
-		if_fail_fe(::gpk::cttiValueSave(defaultJSON, defaults));
-		if(valueJSON == defaultJSON)
-			rtrn 0;
-		if_fail_fe(::gpk::appendOpenKey(output, name, separator));
-		if_fail_fe(output.append(valueJSON));
-	}
+	::gpk::string valueJSON = {};
+	cnst ::gpk::err_t delta = ::gpk::cttiValueSaveDelta(valueJSON, component, defaults);
+	if_fail_fe(delta);
+	if(0 == delta)
+		rtrn 0;
+	if_fail_fe(::gpk::appendOpenKey(output, name, separator));
+	if_fail_fe(output.append(valueJSON));
 	separator = true;
 	rtrn 1;
 }
@@ -175,11 +137,14 @@ sttc ::gpk::err_t controlEventQueueJSONLoad(cnst ::gpk::SJSONReader & input, ::g
 	if_fail_fe(events.resize(node.Children.size()));
 	for(::gpk::u2_t iEvent = 0; iEvent < events.size(); ++iEvent) {
 		cnst ::gpk::u2_t iEventNode = (::gpk::u2_t)node.Children[iEvent]->ObjectIndex;
-		if_true_fe(input.Token[iEventNode].Type != ::gpk::JSON_TYPE_OBJECT);
-		::gpk::u0_t eventType = {};
-		if_fail_fe(::guiComponentJSONLoad(input, iEventNode, "Type", eventType));
-		events[iEvent]->Type = (::gpk::SYSTEM_EVENT)eventType;
-		if_fail_fe(::guiComponentJSONLoad(input, iEventNode, "Data", events[iEvent]->Data));
+		cnst ::gpk::err_t iType = ::gpk::jsonObjectValueGet(input, iEventNode, "Type");
+		if_fail_fe(iType);
+		if_fail_fe(::gpk::cttiVisit(*events[iEvent], 0, [&](auto & member) { cnst err_t result = ::gpk::cttiValueLoad(input, (::gpk::u2_t)iType, member); info_printf("Event:%u, Member:Type, Result:%i", iEvent, result); rtrn result; }));
+		info_printf("Event:%u, Member:Type, Stage:end", iEvent);
+		cnst ::gpk::err_t iData = ::gpk::jsonObjectValueGet(input, iEventNode, "Data");
+		if_fail_fe(iData);
+		if_fail_fe(::gpk::cttiVisit(*events[iEvent], 1, [&](auto & member) { info_printf("Event:%u, Member:Data", iEvent); rtrn ::gpk::cttiValueLoad(input, (::gpk::u2_t)iData, member); }));
+		info_printf("Event:%u, Member:Data, Stage:end", iEvent);
 	}
 	rtrn 1;
 }
@@ -243,14 +208,15 @@ sttc ::gpk::err_t controlJSONLoad(::gpk::SControlTable & controls, ::gpk::cid_t 
 	rtrn loaded;
 }
 
-sttc ::gpk::err_t controlCTTKey(::gpk::string & key, cnst ::gpk::SControlTable & controls, ::gpk::cid_t iControl) {
-	cnst ::gpk::vcst_t identifier = controls.Identifier[iControl];
-	rtrn identifier.size() ? ::gpk::append_string(key, identifier) : ::gpk::append_strings(key, "control_", ::gpk::str(iControl));
-}
-
 sttc ::gpk::err_t controlCTTJSONSave(::gpk::string & output, cnst ::gpk::SControlTable & controls, ::gpk::cid_t iControl, cnst ::gpk::SControlTable & defaults, ::gpk::cid_t iDefault) {
 	if_fail_fe(output.push_back('{'));
 	::gpk::b8_t separator = false;
+	cnst ::gpk::vcst_t identifier = controls.Identifier[iControl];
+	if(identifier.size()) {
+		if_fail_fe(::gpk::appendOpenKey(output, "Identifier", separator));
+		if_fail_fe(::gpk::appendJSONString(output, identifier));
+		separator = true;
+	}
 	::gpk::SControlState state = controls.States[iControl];
 	state.Parent = ::gpk::CID_INVALID;
 	if_fail_fe(::guiComponentJSONSaveDelta(output, "State", state, defaults.States[iDefault], separator));
@@ -262,16 +228,22 @@ sttc ::gpk::err_t controlCTTJSONSave(::gpk::string & output, cnst ::gpk::SContro
 	if_fail_fe(::guiComponentJSONSaveDelta(output, "Text", controls.Text[iControl], defaults.Text[iDefault], separator));
 	if_fail_fe(::guiComponentJSONSaveDelta(output, "Script", controls.Script[iControl], defaults.Script[iDefault], separator));
 	cnst ::gpk::acid & children = controls.Children[iControl];
+	::gpk::b8_t childSeparator = false;
 	for(::gpk::u2_t iChild = 0; iChild < children.size(); ++iChild) {
 		cnst ::gpk::cid_t idChild = children[iChild];
 		if(::gpk::controlInvalid(controls, idChild))
 			continue;
-		::gpk::string key = {};
-		if_fail_fe(::controlCTTKey(key, controls, idChild));
-		if_fail_fe(::gpk::appendOpenKey(output, key, separator));
+		if(false == childSeparator) {
+			if_fail_fe(::gpk::appendOpenKey(output, "Children", separator));
+			if_fail_fe(output.push_back('['));
+		}
+		else
+			if_fail_fe(output.push_back(','));
 		if_fail_fe(::controlCTTJSONSave(output, controls, idChild, defaults, iDefault));
-		separator = true;
+		childSeparator = true;
 	}
+	if(childSeparator)
+		if_fail_fe(output.push_back(']'));
 	rtrn output.push_back('}');
 }
 
@@ -279,23 +251,21 @@ gpk::err_t gpk::controlTableJSONSave(string & output, cnst SControlTable & contr
 	SControlTable defaults = {};
 	cnst cid_t iDefault = controlCreate(defaults, defaultColors);
 	if_fail_fe(iDefault);
-	if_fail_fe(output.push_back('{'));
+	if_fail_fe(output.push_back('['));
 	b8_t separator = false;
-	if_fail_fe(::controlEventQueueJSONSave(output, controls.EventQueue, separator));
 	for(u2_t iControl = 0; iControl < controls.States.size(); ++iControl) {
 		if(controlInvalid(controls, (cid_t)iControl) || false == controlInvalid(controls, controls.States[iControl].Parent))
 			continue;
-		string key = {};
-		if_fail_fe(::controlCTTKey(key, controls, (cid_t)iControl));
-		if_fail_fe(appendOpenKey(output, key, separator));
+		if(separator)
+			if_fail_fe(output.push_back(','));
 		if_fail_fe(::controlCTTJSONSave(output, controls, (cid_t)iControl, defaults, iDefault));
 		separator = true;
 	}
-	rtrn output.push_back('}');
+	rtrn output.push_back(']');
 }
 
 sttc ::gpk::b8_t controlCTTComponent(::gpk::vcst_t name) {
-	rtrn name == "State" || name == "TextState" || name == "Constraints" || name == "Placement" || name == "Area" || name == "Draw" || name == "Text" || name == "Script";
+	rtrn name == "Identifier" || name == "Children" || name == "State" || name == "TextState" || name == "Constraints" || name == "Placement" || name == "Area" || name == "Draw" || name == "Text" || name == "Script";
 }
 
 sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, ::gpk::vcst_t rootIdentifier, ::gpk::b8_t & dynamic, ::gpk::b8_t & scoped) {
@@ -335,8 +305,11 @@ sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk
 }
 
 sttc ::gpk::err_t controlCTTJSONLoad(::gpk::SControlTable & controls, ::gpk::vs1_t defaultColors, cnst ::gpk::SJSONReader & input, ::gpk::u2_t iNode, ::gpk::vcst_t identifier, ::gpk::cid_t iParent) {
-	cnst ::gpk::cid_t iControl = ::gpk::controlCreate(controls, defaultColors);
-	if_fail_fe(iControl);
+	::gpk::cid_t iControl;
+	if_fail_fe(iControl = ::gpk::controlCreate(controls, defaultColors));
+	cnst ::gpk::err_t iIdentifier = ::gpk::jsonObjectValueGet(input, iNode, "Identifier");
+	if(0 <= iIdentifier)
+		if_fail_fe(::gpk::jsonObjectGetString(input, (::gpk::u2_t)iIdentifier, identifier));
 	controls.Identifier[iControl] = identifier;
 	if_fail_fe(::gpk::controlSetParent(controls, iControl, iParent));
 	::gpk::SControlState state = controls.States[iControl];
@@ -352,33 +325,55 @@ sttc ::gpk::err_t controlCTTJSONLoad(::gpk::SControlTable & controls, ::gpk::vs1
 	if_fail_fe(::guiComponentJSONLoad(input, iNode, "Text", text));
 	controls.Text[iControl] = text;
 	if_fail_fe(::guiComponentJSONLoad(input, iNode, "Script", controls.Script[iControl]));
-	cnst ::gpk::SJSONNode & node = *input.Tree[iNode];
-	for(::gpk::u2_t iChild = 0; iChild + 1 < node.Children.size(); iChild += 2) {
-		::gpk::vcst_t key = {};
-		if_fail_fe(::gpk::jsonObjectGetString(input, (::gpk::u2_t)node.Children[iChild]->ObjectIndex, key));
+	cnst ::gpk::err_t iChildren = ::gpk::jsonObjectValueGet(input, iNode, "Children");
+	if(0 <= iChildren) {
+		if_true_fef(input.Token[iChildren].Type != ::gpk::JSON_TYPE_ARRAY, "Control '%.*s' Children is not an array.", GPK_VIEW_ARGS(identifier));
+		cnst ::gpk::err_t result = ::gpk::jsonArrayForEach(input.Token, (::gpk::u2_t)iChildren, [&](::gpk::u2_t iChildNode) -> ::gpk::err_t {
+			if_true_fef(input.Token[iChildNode].Type != ::gpk::JSON_TYPE_OBJECT, "Control '%.*s' child is not an object.", GPK_VIEW_ARGS(identifier));
+			if_fail_fe(::controlCTTJSONLoad(controls, defaultColors, input, iChildNode, {}, iControl));
+			rtrn 0;
+		});
+		if_fail_fe(result);
+	}
+	cnst ::gpk::err_t result = ::gpk::jsonObjectForEach(input.Token, iNode, [&](::gpk::u2_t iKey, ::gpk::u2_t iChildNode) -> ::gpk::err_t {
+		if_true_fe(iKey >= input.View.size());
+		cnst ::gpk::vcst_t key = input.View[iKey];
 		if(::controlCTTComponent(key))
-			continue;
-		cnst ::gpk::u2_t iChildNode = (::gpk::u2_t)node.Children[iChild + 1]->ObjectIndex;
+			rtrn 0;
 		if_true_fef(input.Token[iChildNode].Type != ::gpk::JSON_TYPE_OBJECT, "Control '%.*s' child '%.*s' is not an object.", GPK_VIEW_ARGS(identifier), GPK_VIEW_ARGS(key));
 		if_fail_fe(::controlCTTJSONLoad(controls, defaultColors, input, iChildNode, key, iControl));
-	}
+		rtrn 0;
+	});
+	if_fail_fe(result);
 	rtrn iControl;
 }
 
 gpk::err_t gpk::controlTableJSONLoad(SControlTable & controls, vs1_t defaultColors, cnst SJSONReader & input, u2_t iNode) {
-	if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
+	if_true_fe(iNode >= input.Token.size());
+	cnst JSON_TYPE rootType = input.Token[iNode].Type;
+	if_true_fe(rootType != JSON_TYPE_ARRAY && rootType != JSON_TYPE_OBJECT);
 	SControlTable loaded = {};
 	loaded.EventQueue = controls.EventQueue;
-	cnst SJSONNode & node = *input.Tree[iNode];
-	for(u2_t iChild = 0; iChild + 1 < node.Children.size(); iChild += 2) {
-		vcst_t identifier = {};
-		if_fail_fe(jsonObjectGetString(input, (u2_t)node.Children[iChild]->ObjectIndex, identifier));
+	if(JSON_TYPE_ARRAY == rootType) {
+		cnst err_t result = jsonArrayForEach(input.Token, iNode, [&](u2_t iControlNode) -> err_t {
+			if_true_fe(input.Token[iControlNode].Type != JSON_TYPE_OBJECT);
+			if_fail_fe(::controlCTTJSONLoad(loaded, defaultColors, input, iControlNode, {}, CID_INVALID));
+			rtrn 0;
+		});
+		if_fail_fe(result);
+		controls = loaded;
+		rtrn controls.States.size();
+	}
+	cnst err_t result = jsonObjectForEach(input.Token, iNode, [&](u2_t iKey, u2_t iControlNode) -> err_t {
+		if_true_fe(iKey >= input.View.size());
+		cnst vcst_t identifier = input.View[iKey];
 		if(identifier == "EventQueue")
-			continue;
-		cnst u2_t iControlNode = (u2_t)node.Children[iChild + 1]->ObjectIndex;
+			rtrn 0;
 		if_true_fef(input.Token[iControlNode].Type != JSON_TYPE_OBJECT, "Root control '%.*s' is not an object.", GPK_VIEW_ARGS(identifier));
 		if_fail_fe(::controlCTTJSONLoad(loaded, defaultColors, input, iControlNode, identifier, CID_INVALID));
-	}
+		rtrn 0;
+	});
+	if_fail_fe(result);
 	if_fail_fe(::controlEventQueueJSONLoad(input, iNode, loaded.EventQueue));
 	controls = loaded;
 	rtrn controls.States.size();

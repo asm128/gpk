@@ -32,6 +32,7 @@ nmsp gpk
 		inxp	rect<f2_t>	f2			()							csnx	{ return Cast<f2_t>(); }
 		inxp	rect<f3_t>	f3			()							csnx	{ return Cast<f3_t>(); }
 	};
+	CTTI_STCT_TEMPLATE_EXISTING(rect, T, struct rect { T Left; T Top; T Right; T Bottom; };, T, T, T, T);
 #pragma pack(pop)
 
 	tydf rect<uc_t>	rectuc_t;	tdcs rectuc_t	rectuc_c;

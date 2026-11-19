@@ -205,6 +205,8 @@ nmsp gpk
 
 	tplt<tpnm T> requires ctti_enum<T>
 	sinx cnst auto & cttiEnumViews() nxpt { rtrn SCTTIEnumRegistry<T>::Views; }
+	tplt<tpnm T> requires ctti_enum<T>
+	sinx view<vcst_c> cttiEnumValueNames() nxpt { cnst auto & views = cttiEnumViews<T>(); rtrn {views.Names, views.Count}; }
 
 	tplt<tpnm T> requires ctti_enum<T>
 	inxp vcst_t cttiEnumTypeName() nxpt {

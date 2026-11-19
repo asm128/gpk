@@ -1,6 +1,7 @@
 #include "gpk_math.h"
 
 #include "gpk_functional.h"
+#include "gpk_ctti_stct.h"
 
 #ifndef GPK_N2_H_23627
 #define GPK_N2_H_23627
@@ -154,6 +155,7 @@ nmsp gpk
 		}
 
 	};	// struct n2
+	CTTI_STCT_TEMPLATE_EXISTING(n2, _t, struct n2 { _t x; _t y; };, _t, _t);
 	tydf	n2<b8_t>	n2b8_t;	tdcs	n2b8_t	n2b8_c;
 	tydf	n2<uc_t>	n2uc_t;	tdcs	n2uc_t	n2uc_c;
 	tydf	n2<sc_t>	n2sc_t;	tdcs	n2sc_t	n2sc_c;

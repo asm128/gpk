@@ -203,7 +203,7 @@ nmsp gpk
 	);
 	CTTI_STCT(SControlText,
 	struct SControlText {
-		vcst_t				Text				= "$";
+		vcst_t				Text				= "";
 		ALIGN				Align				= ALIGN_CENTER;
 		minmaxu1_t			Selection			= {0, 1};
 		s1_t				FontSelected		= -1;

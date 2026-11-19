@@ -120,6 +120,14 @@ nmsp gpk
 		> {
 		usng Type = type_pack<tpnm decltype(cttiFieldType(SCTTIFieldTag<TStruct, Indices>{}))::Type...>;
 	};
+	tplt<tpnm TStruct>
+	concept ctti_struct_member_types = requires { tpnm SCTTIStructRegistry<TStruct>::MemberTypes; };
+	tplt<tpnm TStruct, tpnm TIndices, b8_t = ctti_struct_member_types<TStruct>>
+	stct SCTTIMemberTypes { usng Type = tpnm SCTTIFieldTypes<TStruct, TIndices>::Type; };
+	tplt<tpnm TStruct, tpnm TIndices>
+	stct SCTTIMemberTypes<TStruct, TIndices, true> {
+		usng Type = tpnm SCTTIStructRegistry<TStruct>::MemberTypes;
+	};
 
 	tplt<tpnm TStruct, tpnm TMember>
 	inxp uP_t cttiMemberAlignment() nxpt {
@@ -290,5 +298,19 @@ nmsp gpk
 #define CTTI_STCT(type, ...) \
 	__VA_ARGS__ \
 	GPK_CTTI_STCT_REGISTER(type, #__VA_ARGS__)
+
+#define GPK_CTTI_STCT_TEMPLATE_REGISTER(type, type_parameter, declaration, ...) \
+	tplt<tpnm type_parameter> stct type##_gpk_ctti_storage { \
+		usng MemberTypes = ::gpk::type_pack<__VA_ARGS__>; \
+		sinx auto Value = ::gpk::cttiParseStruct(#declaration); \
+		sinx ::gpk::vcst_t File = __FILE__; \
+		sinx ::gpk::u2_t Line = __LINE__; \
+		sinx ::gpk::uP_t Size = sizeof(type<type_parameter>); \
+		sinx b8_t IsPOD = __is_pod(type<type_parameter>); \
+	}; \
+	tplt<tpnm type_parameter> sinx type##_gpk_ctti_storage<type_parameter> cttiStructRegistry(::gpk::SCTTIStructTag<type<type_parameter>>) nxpt { rtrn {}; }
+
+#define CTTI_STCT_TEMPLATE_EXISTING(type, type_parameter, declaration, ...) \
+	GPK_CTTI_STCT_TEMPLATE_REGISTER(type, type_parameter, declaration, __VA_ARGS__)
 
 #endif // GPK_CTTI_STCT_H

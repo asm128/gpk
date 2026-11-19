@@ -888,6 +888,12 @@
     <ClInclude Include="gpk_gui_control_theme.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_inputbox.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_virtual_keyboard.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -973,6 +979,12 @@
     </ClCompile>
     <ClCompile Include="gpk_gui_draw.cpp">
       <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_inputbox.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_virtual_keyboard.cpp">
+      <Filter>dialog</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_system.cpp">
       <Filter>gui</Filter>

@@ -48,6 +48,7 @@ nmsp gpk
 				;
 		}
 	};
+	CTTI_STCT_TEMPLATE_EXISTING(tri2, _t, struct tri2 { n2<_t> A; n2<_t> B; n2<_t> C; };, n2<_t>, n2<_t>, n2<_t>);
 	tydf	tri2<uc_t>	tri2uc_t;	tdcs tri2uc_t	tri2uc_c;
 	tydf	tri2<sc_t>	tri2sc_t;	tdcs tri2sc_t	tri2sc_c;
 	tydf	tri2<u0_t>	tri2u0_t;	tdcs tri2u0_t	tri2u0_c;

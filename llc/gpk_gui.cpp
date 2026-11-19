@@ -1130,7 +1130,7 @@ gpk::cid_t			gpk::createScreenLayout(SGUI & gui, cid_t parent) {
 
 gpk::cid_t			gpk::guiCreateControlList	(SGUI & gui, DIRECTION direction, view<vcst_c> buttonText, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, vcid out_ids) {
 	cid_t					result						= -1;
-	for(u1_t iButton = 0; iButton < buttonText.size(); ++iButton) {
+	for(u2_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		cid_t				idControl					= {};
 		if_fail_fe(idControl = controlCreate(gui));
 		if(out_ids.size() > iButton)

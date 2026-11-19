@@ -1,6 +1,7 @@
 #include "gpk_apod_serialize.h"
 #include "gpk_array_ptr.h"
 #include "gpk_enum.h"
+#include "gpk_ctti_stct.h"
 
 #ifndef GPK_EVENT_H_23627
 #define GPK_EVENT_H_23627
@@ -78,6 +79,9 @@ nmsp gpk
 			rtrn 0; 
 		}
 	};
+	CTTI_STCT_TEMPLATE_EXISTING(SEvent, _tEventType, struct SEvent { _tEventType Type; au0_t Data; };, _tEventType, au0_t);
+	static_assert(ctti_struct_member_types<SEvent<u0_t>>);
+	static_assert(ctti_same<tpnm SCTTIMemberTypes<SEvent<u0_t>, ctti_index_pack<0, 1>>::Type, type_pack<u0_t, au0_t>>::Value);
 
 	tplt<tpnm T> usng FEventHandler			= function<err_t(      SEvent<T>&)>;
 	tplt<tpnm T> usng FEventHandlerConst	= function<err_t(cnst SEvent<T>&)>;

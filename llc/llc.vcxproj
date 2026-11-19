@@ -142,6 +142,7 @@
     <ClInclude Include="gpk_gui_control_flag.h" />
     <ClInclude Include="gpk_gui_control_list.h" />
     <ClInclude Include="gpk_gui_control_theme.h" />
+    <ClInclude Include="gpk_gui_inputbox.h" />
     <ClInclude Include="gpk_gui_keyboard.h" />
     <ClInclude Include="gpk_gui_system.h" />
     <ClInclude Include="gpk_gui_text.h" />
@@ -270,6 +271,7 @@
     <ClInclude Include="gpk_view_tri.h" />
     <ClInclude Include="gpk_view_tri2.h" />
     <ClInclude Include="gpk_view_tri3.h" />
+    <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
     <ClInclude Include="gpk_voxel.h" />
     <ClInclude Include="gpk_voxel_geometry.h" />
@@ -332,6 +334,7 @@
     <ClCompile Include="gpk_gui_control_list.cpp" />
     <ClCompile Include="gpk_gui_control_theme.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
+    <ClCompile Include="gpk_gui_inputbox.cpp" />
     <ClCompile Include="gpk_gui_system.cpp" />
     <ClCompile Include="gpk_gui_theme.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
@@ -372,6 +375,7 @@
     <ClCompile Include="gpk_test_core.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_view.cpp" />
+    <ClCompile Include="gpk_virtual_keyboard.cpp" />
     <ClCompile Include="gpk_voxel_geometry.cpp" />
     <ClCompile Include="gpk_window.cpp" />
     <ClCompile Include="gpk_windows.cpp" />

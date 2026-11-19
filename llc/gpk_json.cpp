@@ -83,10 +83,10 @@ gpk::err_t			gpk::jsonFieldsToMap
 	rtrn indicesOfMaps.size();
 }
 
-gpk::err_t			gpk::jsonFileRead			(SJSONFile & file, vcst_t filename) {
+gpk::err_t			gpk::jsonFileRead			(SJSONFile & file, vcst_t filename, b8_t buildTree) {
 	json_info_printf("Loading json file: %.*s.", (int)filename.size(), filename.begin());
 	if_fail_fef(fileToMemory(filename, file.Bytes), "Failed to load file: '%.*s'", (int)filename.size(), filename.begin());
-	rtrn jsonParse(file.Reader, file.Bytes);
+	rtrn jsonParse(file.Reader, file.Bytes, buildTree);
 }
 
 gpk::err_t			gpk::jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c> jsonViews, u2_c blockSize, aobj<string> & outputJsons)		{
@@ -750,8 +750,10 @@ gpk::err_t			gpk::jsonParse				(SJSONReader & reader, vcst_t jsonAsString, SJSON
 			cnst SJSONToken		& currentElement									= reader.Token[iView];
 			if_fail_fe(jsonAsString.slice(reader.View[iView], currentElement.Span.Begin, currentElement.Span.End - currentElement.Span.Begin));
 		}
-	}	
-	rtrn options.All(JSON_PARSE_OPTION_BUILD_TREE) ? jsonTreeRebuild(reader.Token, reader.Tree) : 0;
+	}
+	if(false == options.All(JSON_PARSE_OPTION_BUILD_TREE))
+		rtrn 0;
+	rtrn jsonTreeRebuild(reader.Token, reader.Tree);
 }
 
 gpk::err_t gpk::jsonObjectKeyList(view<cnst SJSONToken> tokens, u2_t iToken, as2_t & indices) {

@@ -1,4 +1,5 @@
 #include "gpk_typeint.h"
+#include "gpk_ctti_stct.h"
 
 #ifndef GPK_TRI_H_23627
 #define GPK_TRI_H_23627
@@ -16,6 +17,7 @@ nmsp gpk
 
 		GPK_DEFAULT_OPERATOR(tri<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};
+	CTTI_STCT_TEMPLATE_EXISTING(tri, _tVertex, struct tri { _tVertex A; _tVertex B; _tVertex C; };, _tVertex, _tVertex, _tVertex);
 	tydf	tri<uc_t>	triuc_t;	tdcs triuc_t	triuc_c;
 	tydf	tri<sc_t>	trisc_t;	tdcs trisc_t	trisc_c;
 	tydf	tri<u0_t>	triu0_t;	tdcs triu0_t	triu0_c;

@@ -30,6 +30,7 @@ nmsp gpk
 
 		inln	n2<T>		Limit		()	csnx	{ return Offset + Size; }
 	};
+	CTTI_STCT_TEMPLATE_EXISTING(rect2, T, struct rect2 { n2<T> Offset; n2<T> Size; };, n2<T>, n2<T>);
 	tydf rect2<uc_t>	rect2uc_t;	tydf	cnst rect2uc_t	rect2uc_c;	
 	tydf rect2<sc_t>	rect2sc_t;	tydf	cnst rect2sc_t	rect2sc_c;	
 	tydf rect2<u0_t>	rect2u0_t;	tydf	cnst rect2u0_t	rect2u0_c;	

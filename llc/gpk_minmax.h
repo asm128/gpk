@@ -1,4 +1,5 @@
 #include "gpk_typeint.h"
+#include "gpk_ctti_stct.h"
 
 #ifndef GPK_MINMAX_H
 #define GPK_MINMAX_H
@@ -39,6 +40,7 @@ nmsp gpk
 		inln	TMinMax&		Set			(T value)		nxpt	{ Min = Max = value; return *this; }
 		inln	TMinMax&		From		(T value)		nxpt	{ Min = Max = value; return *this; }
 	};
+	CTTI_STCT_TEMPLATE_EXISTING(minmax, _t, struct minmax { _t Min; _t Max; };, _t, _t);
 #pragma pack(pop)
 	tydf	minmax<uc_t>	minmaxuc_t;	tdcs	minmaxuc_t	minmaxuc_c;
 	tydf	minmax<sc_t>	minmaxsc_t;	tdcs	minmaxsc_t	minmaxsc_c;

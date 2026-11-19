@@ -7,41 +7,10 @@
 #include "gpk_gui_theme.h"
 #include "gpk_label.h"
 #include "gpk_path.h"
+#include "gpk_raster_lh.h"
 
 stxp u2_c JSON_EXPRESSION_PRESET_LIMIT = 9;
 stxp u2_c JSON_EXPRESSION_SUGGESTION_LIMIT = 12;
-
-stxp cnst astu2_t<128> CP437_UNICODE_HIGH =
-	{ 0x00C7, 0x00FC, 0x00E9, 0x00E2, 0x00E4, 0x00E0, 0x00E5, 0x00E7
-	, 0x00EA, 0x00EB, 0x00E8, 0x00EF, 0x00EE, 0x00EC, 0x00C4, 0x00C5
-	, 0x00C9, 0x00E6, 0x00C6, 0x00F4, 0x00F6, 0x00F2, 0x00FB, 0x00F9
-	, 0x00FF, 0x00D6, 0x00DC, 0x00A2, 0x00A3, 0x00A5, 0x20A7, 0x0192
-	, 0x00E1, 0x00ED, 0x00F3, 0x00FA, 0x00F1, 0x00D1, 0x00AA, 0x00BA
-	, 0x00BF, 0x2310, 0x00AC, 0x00BD, 0x00BC, 0x00A1, 0x00AB, 0x00BB
-	, 0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x2561, 0x2562, 0x2556
-	, 0x2555, 0x2563, 0x2551, 0x2557, 0x255D, 0x255C, 0x255B, 0x2510
-	, 0x2514, 0x2534, 0x252C, 0x251C, 0x2500, 0x253C, 0x255E, 0x255F
-	, 0x255A, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550, 0x256C, 0x2567
-	, 0x2568, 0x2564, 0x2565, 0x2559, 0x2558, 0x2552, 0x2553, 0x256B
-	, 0x256A, 0x2518, 0x250C, 0x2588, 0x2584, 0x258C, 0x2590, 0x2580
-	, 0x03B1, 0x00DF, 0x0393, 0x03C0, 0x03A3, 0x03C3, 0x00B5, 0x03C4
-	, 0x03A6, 0x0398, 0x03A9, 0x03B4, 0x221E, 0x03C6, 0x03B5, 0x2229
-	, 0x2261, 0x00B1, 0x2265, 0x2264, 0x2320, 0x2321, 0x00F7, 0x2248
-	, 0x00B0, 0x2219, 0x00B7, 0x221A, 0x207F, 0x00B2, 0x25A0, 0x00A0
-	};
-
-sttc gpk::err_t unicodeToCP437(u2_t codePoint, u0_t & output) {
-	if(codePoint < 0x80) {
-		output = (u0_t)codePoint;
-		rtrn 0;
-	}
-	for(u2_t iCode = 0; iCode < CP437_UNICODE_HIGH.size(); ++iCode)
-		if(CP437_UNICODE_HIGH[iCode] == codePoint) {
-			output = (u0_t)(0x80 + iCode);
-			rtrn 0;
-		}
-	rtrn -1;
-}
 
 sttc gpk::cid_t controlIdentifierFind(cnst SControlTable & controls, vcst_t identifier) {
 	for(u2_t iControl = 0; iControl < controls.Identifier.size(); ++iControl)
@@ -73,7 +42,21 @@ sttc gpk::err_t fileViewerListBind(cnst SControlTable & controls, vcst_t identif
 	rtrn output.IdControls.size();
 }
 
-sttc gpk::err_t fileViewerScrollBind(cnst SControlTable & controls, vcst_t prefix, SFileScroll & output) {
+sttc gpk::err_t fileViewerScrollArrowSetup(SControlTable & controls, cid_t idControl, b8_t vertical, b8_t increase) {
+	SControlImage		& controlImage		= controls.Images[idControl];
+	if_fail_fe(controlImage.Temp.Color.resize(n2u2_t{9, 9}, bgra{}));
+	cnst tri2s1_t		triangle			=
+		vertical
+		? (increase ? tri2s1_t{{1, 2}, {7, 2}, {4, 7}} : tri2s1_t{{1, 7}, {4, 2}, {7, 7}})
+		: (increase ? tri2s1_t{{1, 1}, {7, 4}, {1, 7}} : tri2s1_t{{7, 1}, {7, 7}, {1, 4}})
+		;
+	if_fail_fe(::gpk::drawTriangle(controlImage.Temp.Color, triangle, bgra{0xE8, 0xE8, 0xE8, 0xFF}));
+	controlImage.Image = controlImage.Temp.Color.View;
+	controls.Text[idControl].Text = {};
+	rtrn 0;
+}
+
+sttc gpk::err_t fileViewerScrollBind(SControlTable & controls, vcst_t prefix, SFileScroll & output, b8_t vertical) {
 	string identifier = {};
 	if_fail_fe(::controlIdentifierRequire(controls, prefix, output.IdRoot));
 	if_fail_fe(::identifierCompose(identifier, prefix, "_decrease"));
@@ -82,10 +65,12 @@ sttc gpk::err_t fileViewerScrollBind(cnst SControlTable & controls, vcst_t prefi
 	if_fail_fe(::controlIdentifierRequire(controls, identifier, output.IdIncrease));
 	if_fail_fe(::identifierCompose(identifier, prefix, "_thumb"));
 	if_fail_fe(::controlIdentifierRequire(controls, identifier, output.IdThumb));
+	if_fail_fe(::fileViewerScrollArrowSetup(controls, output.IdDecrease, vertical, false));
+	if_fail_fe(::fileViewerScrollArrowSetup(controls, output.IdIncrease, vertical, true));
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerViewportBind(cnst SControlTable & controls, vcst_t prefix, SFileViewport & output) {
+sttc gpk::err_t fileViewerViewportBind(SControlTable & controls, vcst_t prefix, SFileViewport & output) {
 	string identifier = {};
 	if_fail_fe(::controlIdentifierRequire(controls, prefix, output.IdRoot));
 	if_fail_fe(::identifierCompose(identifier, prefix, "_title"));
@@ -95,20 +80,20 @@ sttc gpk::err_t fileViewerViewportBind(cnst SControlTable & controls, vcst_t pre
 	if_fail_fe(::identifierCompose(identifier, prefix, "_close"));
 	if_fail_fe(::controlIdentifierRequire(controls, identifier, output.IdClose));
 	if_fail_fe(::identifierCompose(identifier, prefix, "_scroll_x"));
-	if_fail_fe(::fileViewerScrollBind(controls, identifier, output.ScrollX));
+	if_fail_fe(::fileViewerScrollBind(controls, identifier, output.ScrollX, false));
 	if_fail_fe(::identifierCompose(identifier, prefix, "_scroll_y"));
-	if_fail_fe(::fileViewerScrollBind(controls, identifier, output.ScrollY));
+	if_fail_fe(::fileViewerScrollBind(controls, identifier, output.ScrollY, true));
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerDirectoryBind(cnst SControlTable & controls, vcst_t prefix, SPathList & output) {
+sttc gpk::err_t fileViewerDirectoryBind(SControlTable & controls, vcst_t prefix, SPathList & output) {
 	string identifier = {};
 	if_fail_fe(::fileViewerViewportBind(controls, prefix, output.Viewport));
 	if_fail_fe(::identifierCompose(identifier, prefix, "_rows"));
 	rtrn ::fileViewerListBind(controls, identifier, output.Files);
 }
 
-sttc gpk::err_t fileViewerEditorBind(cnst SControlTable & controls, vcst_t prefix, SFileEditor & output, b8_t toolbar) {
+sttc gpk::err_t fileViewerEditorBind(SControlTable & controls, vcst_t prefix, SFileEditor & output, b8_t toolbar) {
 	string identifier = {};
 	if_fail_fe(::fileViewerViewportBind(controls, prefix, output.Viewport));
 	if_fail_fe(::identifierCompose(identifier, prefix, "_rows"));
@@ -121,19 +106,6 @@ sttc gpk::err_t fileViewerEditorBind(cnst SControlTable & controls, vcst_t prefi
 		if_fail_fe(::identifierCompose(identifier, prefix, "_keyboard"));
 		if_fail_fe(::controlIdentifierRequire(controls, identifier, output.IdKeyboard));
 	}
-	rtrn 0;
-}
-
-sttc gpk::err_t fileViewerKeyboardBind(cnst SControlTable & controls, SFileKeyboard & output) {
-	if_fail_fe(::controlIdentifierRequire(controls, "virtual_keyboard", output.IdRoot));
-	cid_t idCharacters = -1;
-	cid_t idActions = -1;
-	if_fail_fe(::controlIdentifierRequire(controls, "virtual_keyboard_characters", idCharacters));
-	if_fail_fe(::controlIdentifierRequire(controls, "virtual_keyboard_actions", idActions));
-	output.IdCharacters = controls.Children[idCharacters];
-	output.IdActions = controls.Children[idActions];
-	if_true_fef(output.IdCharacters.size() != GUI_KEYBOARD_Default_keys.size(), "Keyboard character controls:%u, expected:%u.", output.IdCharacters.size(), GUI_KEYBOARD_Default_keys.size());
-	if_true_fef(output.IdActions.size() < get_value_count<VK_SCANCODE>(), "Keyboard action controls:%u, expected:%u.", output.IdActions.size(), get_value_count<VK_SCANCODE>());
 	rtrn 0;
 }
 
@@ -332,7 +304,7 @@ sttc gpk::err_t fileViewerEditorHandle(SGUI & gui, SFileViewer & viewer, SFileEd
 	switch(eventToProcess.ScanCode) {
 	default: break;
 	case VK_SCANCODE_Escape:
-		gui.Controls.SetHidden(viewer.Keyboard.IdRoot, true);
+		gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
 		break;
 	case VK_SCANCODE_Delete		: if_fail_fe(::fileViewerTextDelete(gui, editor)); break;
 	case VK_SCANCODE_Enter		: if_fail_fe(::fileViewerTextInsert(gui, editor, '\n')); break;
@@ -400,7 +372,7 @@ sttc gpk::err_t fileViewerEditorPhysicalInput(SGUI & gui, SFileViewer & viewer, 
 				u2_t codePoint = {};
 				memcpy(&codePoint, eventText.Data.begin(), sizeof(codePoint));
 				u0_t character = {};
-				if(0 <= ::unicodeToCP437(codePoint, character))
+				if(0 <= ::gpk::unicodeToCP437(codePoint, character))
 					if_fail_fe(::fileViewerTextInsert(gui, editor, (sc_t)character));
 				rtrn 0;
 			}));
@@ -459,7 +431,7 @@ sttc gpk::err_t fileViewerTextLoad(SGUI & gui, SFileViewer & viewer, SFileEditor
 	editor.Cursor = {0, 0};
 	editor.Viewport.ScrollX.Value = 0;
 	editor.Viewport.ScrollY.Value = 0;
-	gui.Controls.SetHidden(viewer.Keyboard.IdRoot, true);
+	gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
 	gui.Controls.SetHidden(editor.IdSave, false);
 	gui.Controls.SetHidden(editor.IdKeyboard, false);
 	if_fail_fe(controlTextSet(gui, editor.Viewport.IdTitle, label(path)));
@@ -541,7 +513,7 @@ sttc gpk::err_t fileViewerTextWindowUpdate(SGUI & gui, cnst SInput & input, SFil
 			if(gui.Controls.Text[idControl].Text != visibleText)
 				if_fail_fe(controlTextSet(gui, idControl, visibleText));
 			apod<STextState> & textState = gui.Controls.TextState[idControl];
-			if_fail_fe(textState.resize(visibleText.size()));
+			if_fail_fe(textState.resize(visibleText.size(), STextState{}));
 			u2_c lineOffset = ::fileViewerLineOffset(editor, iLine);
 			for(u2_t iCharacter = 0; iCharacter < textState.size(); ++iCharacter) {
 				u2_c characterOffset = lineOffset + offset + iCharacter;
@@ -585,7 +557,7 @@ sttc gpk::err_t fileViewerEditorMousePosition(SGUI & gui, cnst SInput & input, S
 	u0_c characterWidth = max((u0_t)1, gui.Fonts[gui.SelectedFont]->CharSize.x);
 	for(u2_t iControl = 0; iControl < editor.Lines.IdControls.size(); ++iControl) {
 		cnst cid_t idControl = editor.Lines.IdControls[iControl];
-		if(gui.Controls.IsHidden(idControl) || false == gui.Controls.IsHovered(idControl))
+		if(gui.Controls.IsHidden(idControl) || false == in_range(gui.CursorPos.s1(), gui.Controls.Area[idControl].Total.Global))
 			continue;
 		u2_c iLine = firstVisible + iControl;
 		if(iLine >= editor.FileLines.size())
@@ -634,14 +606,17 @@ sttc gpk::err_t fileViewerEditorSelectionUpdate(SGUI & gui, cnst SInput & input,
 }
 
 sttc gpk::err_t fileViewerKeyboardUpdate(SGUI & gui, SFileViewer & viewer, SFileEditor & editor) {
-	for(u2_t iKey = 0; iKey < viewer.Keyboard.IdCharacters.size(); ++iKey)
-		if(gui.Controls.IsAction(viewer.Keyboard.IdCharacters[iKey]))
-			if_fail_fe(::fileViewerTextInsert(gui, editor, (sc_t)GUI_KEYBOARD_Default_keys[iKey]));
-	for(u2_t iKey = 0; iKey < viewer.Keyboard.IdActions.size() && iKey < get_value_count<VK_SCANCODE>(); ++iKey)
-		if(gui.Controls.IsAction(viewer.Keyboard.IdActions[iKey])) {
-			cnst SGUIKeyboardEvent event = {VK_EVENT_Edit, (VK_SCANCODE)iKey};
-			if_fail_fe(::fileViewerEditorHandle(gui, viewer, editor, event));
-		}
+	apod<SVirtualKeyboardEvent> keyboardEvents = {};
+	cnst cid_t idCharacterBegin = viewer.VirtualKeyboard.IdRoot + 1;
+	cnst cid_t idCharacterEnd = idCharacterBegin + (cid_t)viewer.VirtualKeyboard.Keys.size();
+	for(cid_t idKey = idCharacterBegin; idKey < idCharacterEnd; ++idKey)
+		if(gui.Controls.IsAction(idKey))
+			if_fail_fe(virtualKeyboardHandleEvent(viewer.VirtualKeyboard, idKey, keyboardEvents));
+	for(u2_t iKey = 0; iKey < viewer.VirtualKeyboard.IdKeys.size(); ++iKey)
+		if(gui.Controls.IsAction(viewer.VirtualKeyboard.IdKeys[iKey]))
+			if_fail_fe(virtualKeyboardHandleEvent(viewer.VirtualKeyboard, viewer.VirtualKeyboard.IdKeys[iKey], keyboardEvents));
+	for(u2_t iEvent = 0; iEvent < keyboardEvents.size(); ++iEvent)
+		if_fail_fe(::fileViewerEditorHandle(gui, viewer, editor, keyboardEvents[iEvent]));
 	rtrn 0;
 }
 
@@ -892,58 +867,8 @@ sttc gpk::err_t fileViewerJSONExpressionSuggestionsFocus(SGUI & gui, SJSONExpres
 	rtrn ::fileViewerJSONExpressionSuggestionsRefresh(gui, tool, filter);
 }
 
-sttc gpk::err_t fileViewerCommandSetText(SGUI & gui, SFileCommand & command, vcst_t text) {
-	command.Text.clear();
-	if_fail_fe(command.Text.append(text));
-	command.Cursor = command.Text.size();
-	rtrn controlTextSet(gui, command.IdText, label(command.Text));
-}
-
-sttc gpk::err_t fileViewerCommandInput(SGUI & gui, SFileCommand & command, vpobj<SEventSystem> frameEvents, b8_t & run) {
-	for(u2_t iEvent = 0; iEvent < frameEvents.size(); ++iEvent) {
-		cnst pobj<SEventSystem> & systemEvent = frameEvents[iEvent];
-		if(systemEvent->Type == SYSTEM_EVENT_Text) {
-			if_fail_fe(eventExtractAndHandle<EVENT_TEXT>(*systemEvent, [&command](cnst SEventView<EVENT_TEXT> & eventText) {
-				if(eventText.Type != EVENT_TEXT_Char || eventText.Data.size() < sizeof(u2_t) || command.Text.size() >= command.MaxLength)
-					rtrn 0;
-				u2_t codePoint = {};
-				memcpy(&codePoint, eventText.Data.begin(), sizeof(codePoint));
-				u0_t character = {};
-				if(0 <= ::unicodeToCP437(codePoint, character)) {
-					if_fail_fe(command.Text.insert(command.Cursor, (sc_t)character));
-					++command.Cursor;
-				}
-				rtrn 0;
-			}));
-		}
-		else if(systemEvent->Type == SYSTEM_EVENT_Keyboard) {
-			if_fail_fe(eventExtractAndHandle<EVENT_KEYBOARD>(*systemEvent, [&command, &run](cnst SEventView<EVENT_KEYBOARD> & eventKeyboard) {
-				if(eventKeyboard.Type != EVENT_KEYBOARD_Down || 0 == eventKeyboard.Data.size())
-					rtrn 0;
-				switch(eventKeyboard.Data[0]) {
-				default: break;
-				case SYSTEM_KEY_Escape: command.Editing = false; break;
-				case SYSTEM_KEY_Enter: run = true; break;
-				case SYSTEM_KEY_Left: if(command.Cursor) --command.Cursor; break;
-				case SYSTEM_KEY_Right: if(command.Cursor < command.Text.size()) ++command.Cursor; break;
-				case SYSTEM_KEY_Home: command.Cursor = 0; break;
-				case SYSTEM_KEY_End: command.Cursor = command.Text.size(); break;
-				case SYSTEM_KEY_Backspace:
-					if(command.Cursor) {
-						if_fail_fe(command.Text.remove(command.Cursor - 1));
-						--command.Cursor;
-					}
-					break;
-				case SYSTEM_KEY_Delete:
-					if(command.Cursor < command.Text.size())
-						if_fail_fe(command.Text.remove(command.Cursor));
-					break;
-				}
-				rtrn 0;
-			}));
-		}
-	}
-	rtrn controlTextSet(gui, command.IdText, label(command.Text));
+sttc gpk::err_t fileViewerCommandSetText(SGUI & gui, SInputBox & command, vcst_t text) {
+	rtrn command.SetText(gui, text);
 }
 
 sttc vcst_t fileViewerJSONExpressionInputView(vcst_t input) {
@@ -1065,8 +990,19 @@ sttc gpk::err_t fileViewerJSONExpressionUpdate(SGUI & gui, SFileViewer & viewer,
 	else if(tool.Command.Editing && false == suggestionSelected && false == gui.Controls.IsFocused(tool.Command.IdText))
 		tool.Command.Editing = false;
 	b8_t run = gui.Controls.IsAction(tool.IdRun);
-	if(tool.Command.Editing)
-		if_fail_fe(::fileViewerCommandInput(gui, tool.Command, frameEvents, run));
+	if(tool.Command.Editing) {
+		acid processableControls = {};
+		if_fail_fe(processableControls.push_back(tool.Command.IdText));
+		cnst cid_t idCharacterBegin = tool.Command.VirtualKeyboard.IdRoot + 1;
+		cnst cid_t idCharacterEnd = idCharacterBegin + (cid_t)tool.Command.VirtualKeyboard.Keys.size();
+		for(cid_t idKey = idCharacterBegin; idKey < idCharacterEnd; ++idKey)
+			if_fail_fe(processableControls.push_back(idKey));
+		for(u2_t iKey = 0; iKey < tool.Command.VirtualKeyboard.IdKeys.size(); ++iKey)
+			if_fail_fe(processableControls.push_back(tool.Command.VirtualKeyboard.IdKeys[iKey]));
+		cnst err_t inputResult = tool.Command.Update(gui, tool.Command.VirtualKeyboard, frameEvents, processableControls);
+		if_fail_fe(inputResult);
+		run |= INT_MAX == inputResult;
+	}
 	if(tool.SuggestionSource != tool.Command.Text && false == suggestionSelected) {
 		if_fail_fe(::fileViewerJSONExpressionSuggestionsFocus(gui, tool));
 	}
@@ -1084,9 +1020,9 @@ sttc gpk::err_t fileViewerEditorUpdate(SGUI & gui, SFileViewer & viewer, SFileEd
 		rtrn 0;
 	if(gui.Controls.IsAction(editor.IdKeyboard)) {
 		viewer.IdEditorCurrent = iEditor;
-		gui.Controls.SetHidden(viewer.Keyboard.IdRoot, false == gui.Controls.IsHidden(viewer.Keyboard.IdRoot));
-		if(false == gui.Controls.IsHidden(viewer.Keyboard.IdRoot))
-			if_fail_fe(controlToFront(gui, viewer.Keyboard.IdRoot));
+		gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, false == gui.Controls.IsHidden(viewer.VirtualKeyboard.IdRoot));
+		if(false == gui.Controls.IsHidden(viewer.VirtualKeyboard.IdRoot))
+			if_fail_fe(controlToFront(gui, viewer.VirtualKeyboard.IdRoot));
 	}
 	for(u2_t iControl = 0; iControl < editor.Lines.IdControls.size(); ++iControl)
 		if(gui.Controls.IsAction(editor.Lines.IdControls[iControl])) {
@@ -1104,21 +1040,22 @@ sttc gpk::err_t fileViewerEditorInputUpdate(SGUI & gui, SFileViewer & viewer, vp
 		rtrn 0;
 	SFileEditor & editor = *viewer.Editors[viewer.IdEditorCurrent];
 	if(gui.Controls.IsHidden(editor.Viewport.IdRoot)) {
-		gui.Controls.SetHidden(viewer.Keyboard.IdRoot, true);
+		gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
 		rtrn 0;
 	}
-	if(false == gui.Controls.IsHidden(viewer.Keyboard.IdRoot))
+	if(false == gui.Controls.IsHidden(viewer.VirtualKeyboard.IdRoot))
 		if_fail_fe(::fileViewerKeyboardUpdate(gui, viewer, editor));
 	rtrn ::fileViewerEditorPhysicalInput(gui, viewer, editor, frameEvents);
 }
 
-sttc gpk::err_t fileViewerEditorOpen(SGUI & gui, SFileViewer & viewer, vcst_t path) {
+sttc gpk::err_t fileViewerEditorOpen(SGUI & gui, SFileViewer & viewer, vcst_t path, b8_t duplicate) {
 	cid_t iEditor = -1;
-	for(u2_t i = 0; i < viewer.Editors.size(); ++i)
-		if(viewer.Editors[i].get_ref() && viewer.Editors[i]->FilePath == path) {
-			iEditor = (cid_t)i;
-			break;
-		}
+	if(false == duplicate)
+		for(u2_t i = 0; i < viewer.Editors.size(); ++i)
+			if(viewer.Editors[i].get_ref() && viewer.Editors[i]->FilePath == path) {
+				iEditor = (cid_t)i;
+				break;
+			}
 	if(iEditor < 0)
 		for(u2_t i = 0; i < viewer.Editors.size(); ++i)
 			if(viewer.Editors[i].get_ref() && 0 == viewer.Editors[i]->FilePath.size()) {
@@ -1181,7 +1118,7 @@ sttc gpk::err_t fileViewerMenuUpdate(SGUI & gui, SFileViewer & viewer) {
 			}
 			else if(viewer.IdEditorCurrent == (cid_t)iEditor) {
 				viewer.IdEditorCurrent = -1;
-				gui.Controls.SetHidden(viewer.Keyboard.IdRoot, true);
+				gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
 			}
 		}
 		gui.Controls.SetSelected(editor.IdTab, false == hidden);
@@ -1189,7 +1126,7 @@ sttc gpk::err_t fileViewerMenuUpdate(SGUI & gui, SFileViewer & viewer) {
 	rtrn 0;
 }
 
-sttc gpk::err_t fileViewerSelectionUpdate(SGUI & gui, SFileViewer & viewer) {
+sttc gpk::err_t fileViewerSelectionUpdate(SGUI & gui, cnst SInput & input, SFileViewer & viewer) {
 	for(u2_t iDirectory = 0; iDirectory < viewer.Directories.size(); ++iDirectory) {
 		SPathList & directory = *viewer.Directories[iDirectory];
 		if(gui.Controls.IsHidden(directory.Viewport.IdRoot))
@@ -1215,7 +1152,7 @@ sttc gpk::err_t fileViewerSelectionUpdate(SGUI & gui, SFileViewer & viewer) {
 			if_fail_fe(pathNameCompose(directory.PathContents.Root, directory.PathContents.Name[iPath], path));
 			if(directory.PathContents.Info[iPath].Folder)
 				rtrn ::fileViewerFolderLoad(gui, directory, path);
-			rtrn ::fileViewerEditorOpen(gui, viewer, path);
+			rtrn ::fileViewerEditorOpen(gui, viewer, path, 0 != input.KeyboardCurrent.KeyState[SYSTEM_KEY_Control]);
 		}
 	}
 	rtrn 0;
@@ -1230,6 +1167,8 @@ sttc gpk::err_t fileViewerJSONExpressionBind(SGUI & gui, SFileViewer & viewer) {
 	tool.IdSuggestionOptions = gui.Controls.Children[tool.IdSuggestions];
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "command_input", tool.Command.IdRoot));
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "command", tool.Command.IdText));
+	tool.Command.VirtualKeyboard = viewer.VirtualKeyboard;
+	tool.Command.MaxLength = 4096;
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "json_expression_tool_run", tool.IdRun));
 	if_fail_fe(::fileViewerEditorBind(gui.Controls, "json_expression_output", tool.Draft, true));
 	if_fail_fe(tool.Draft.FileText.append("[]"));
@@ -1241,15 +1180,16 @@ sttc gpk::err_t fileViewerJSONExpressionBind(SGUI & gui, SFileViewer & viewer) {
 
 gpk::err_t fileViewerSetup(SGUI & gui, SFileViewer & viewer, FILE_VIEWER_LAYOUT layout, vcst_t rootPath) {
 	(void)layout;
-	gui.ColorModeDefault = GUI_COLOR_MODE_3D;
-	if_fail_fef(jsonFileRead(viewer.GUIJSON, "../gpk/test_gpk_file_viewer_common/file_viewer_gui.json"), "%s", "Failed to load the file viewer GUI JSON.");
+	gui.ColorModeDefault = GUI_COLOR_MODE_Flat;
+	gui.ThemeDefault = ASCII_COLOR_Dark_grey * 16 + 12;
+	if_fail_fef(jsonFileRead(viewer.GUIJSON, "../gpk/test_gpk_file_viewer_common/file_viewer_gui.json", false), "%s", "Failed to load the file viewer GUI JSON.");
 	if_fail_fe(guiControlTableJSONLoad(gui, viewer.GUIJSON.Reader));
 
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "menu_files", viewer.IdMenuFiles));
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "menu_json", viewer.IdMenuJSON));
 	if_fail_fe(::controlIdentifierRequire(gui.Controls, "menu_exit", viewer.IdMenuExit));
 	if_fail_fe(::fileViewerListBind(gui.Controls, "editor_tabs", viewer.EditorTabs));
-	if_fail_fe(::fileViewerKeyboardBind(gui.Controls, viewer.Keyboard));
+	if_fail_fe(virtualKeyboardSetup437(gui, viewer.VirtualKeyboard));
 
 	if_fail_fe(viewer.Directories.resize(4));
 	for(u2_t iDirectory = 0; iDirectory < viewer.Directories.size(); ++iDirectory) {
@@ -1274,7 +1214,7 @@ gpk::err_t fileViewerSetup(SGUI & gui, SFileViewer & viewer, FILE_VIEWER_LAYOUT 
 	if_fail_fe(viewer.RootPath.append(rootPath.size() ? rootPath : vcst_t{"."}));
 	if_fail_fe(::fileViewerFolderLoad(gui, *viewer.Directories[0], viewer.RootPath));
 	gui.Controls.SetHidden(viewer.Directories[0]->Viewport.IdRoot, false);
-	gui.Controls.SetHidden(viewer.Keyboard.IdRoot, true);
+	gui.Controls.SetHidden(viewer.VirtualKeyboard.IdRoot, true);
 	if_fail_fe(guiUpdateMetrics(gui, gui.LastSize, true));
 	rtrn 0;
 }
@@ -1288,7 +1228,7 @@ gpk::err_t fileViewerUpdate(SGUI & gui, cnst SInput & input, SFileViewer & viewe
 	for(u2_t iDirectory = 0; iDirectory < viewer.Directories.size(); ++iDirectory)
 		if(viewer.Directories[iDirectory].get_ref() && false == gui.Controls.IsHidden(viewer.Directories[iDirectory]->Viewport.IdRoot))
 			if_fail_fe(::fileViewerListWindowUpdate(gui, input, *viewer.Directories[iDirectory]));
-	if_fail_fe(::fileViewerSelectionUpdate(gui, viewer));
+	if_fail_fe(::fileViewerSelectionUpdate(gui, input, viewer));
 	if_fail_fe(::fileViewerJSONExpressionUpdate(gui, viewer, frameEvents));
 
 	for(u2_t iEditor = 0; iEditor < viewer.Editors.size(); ++iEditor) {

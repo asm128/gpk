@@ -1,6 +1,6 @@
 #include "gpk_framework.h"
 #include "gpk_gui_json.h"
-#include "gpk_gui_keyboard.h"
+#include "gpk_gui_inputbox.h"
 #include "gpk_append_json.h"
 #include "gpk_json_expression.h"
 #include "gpk_path.h"
@@ -38,21 +38,6 @@ stct SFileViewport {
 stct SFileControlList {
 	cid_t				IdRoot				= -1;
 	acid				IdControls			= {};
-};
-
-stct SFileKeyboard {
-	cid_t				IdRoot				= -1;
-	acid				IdCharacters			= {};
-	acid				IdActions			= {};
-};
-
-stct SFileCommand {
-	cid_t				IdRoot				= -1;
-	cid_t				IdText				= -1;
-	string				Text				= {};
-	u2_t				Cursor				= 0;
-	u2_t				MaxLength			= 4096;
-	b8_t				Editing				= false;
 };
 
 stct SPathList {
@@ -93,7 +78,7 @@ stct SJSONExpressionTool {
 	apod<u2_t>			SuggestionVisible	= {};
 	string				SuggestionBase		= {};
 	string				SuggestionSource	= {};
-	SFileCommand		Command				= {};
+	SInputBox			Command				= {};
 	SFileEditor		Draft				= {};
 	cid_t				IdRun				= -1;
 	cid_t				InputEditor			= -1;
@@ -101,7 +86,7 @@ stct SJSONExpressionTool {
 
 stct SFileViewer {
 	SJSONFile			GUIJSON				= {};
-	SFileKeyboard		Keyboard			= {};
+	SVirtualKeyboard	VirtualKeyboard		= {};
 	SFileControlList	EditorTabs			= {};
 	apobj<SFileEditor>	Editors				= {};
 	apobj<SPathList>	Directories			= {};

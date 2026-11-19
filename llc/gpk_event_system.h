@@ -7,24 +7,29 @@
 
 nmsp gpk
 {
-	GDEFINE_ENUM_TYPE(SYSTEM_EVENT, u0_t);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Runtime	, 0);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Framework	, 1);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Screen		, 2);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Keyboard	, 3);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Mouse		, 4);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Touch		, 5);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Joypad		, 6);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Text		, 7);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, GUI		, 8);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Audio		, 9);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Camera		,10);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Raster		,11);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Device		,12);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Wire		,13);
-	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Bus		,14);
+	CTTI_ENUM(SYSTEM_EVENT,
+	enum SYSTEM_EVENT : u0_t
+		{ SYSTEM_EVENT_Runtime		=  0
+		, SYSTEM_EVENT_Framework	=  1
+		, SYSTEM_EVENT_Screen		=  2
+		, SYSTEM_EVENT_Keyboard		=  3
+		, SYSTEM_EVENT_Mouse		=  4
+		, SYSTEM_EVENT_Touch		=  5
+		, SYSTEM_EVENT_Joypad		=  6
+		, SYSTEM_EVENT_Text			=  7
+		, SYSTEM_EVENT_GUI			=  8
+		, SYSTEM_EVENT_Audio		=  9
+		, SYSTEM_EVENT_Camera		= 10
+		, SYSTEM_EVENT_Raster		= 11
+		, SYSTEM_EVENT_Device		= 12
+		, SYSTEM_EVENT_Wire			= 13
+		, SYSTEM_EVENT_Bus			= 14
+		};
+	);
+	GDEFINE_ENUM_CTTI(SYSTEM_EVENT);
 
 	tydf SEvent            <SYSTEM_EVENT>	SEventSystem;
+	static_assert(ctti_same<tpnm SCTTIMemberTypes<SEventSystem, ctti_index_pack<0, 1>>::Type, type_pack<SYSTEM_EVENT, au0_t>>::Value);
 	tydf SEView            <SYSTEM_EVENT>	SEViewSystem;
 	tydf FEventHandler     <SYSTEM_EVENT>	FEventSystem;
 	tydf FEventHandlerConst<SYSTEM_EVENT>	FEventSystemConst;
