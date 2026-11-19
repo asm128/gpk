@@ -19,8 +19,6 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::SFramework				Framework						;
 		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen						;
 
-		::gpk::cid_t					IdExit							= -1;
-
 		::std::mutex					LockRender						;
 
 		::gpk::SDialog					DialogMain						;
