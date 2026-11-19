@@ -1,35 +1,35 @@
 #include "blitter.h"
 
-#include "llc_cgi_app_impl_v2.h"
+#include "gpk_cgi_runtime.h"
 
-#include "llc_process.h"
+GPK_USING_TYPEINT();
 
-LLC_CGI_JSON_APP_IMPL();
+GPK_OS_ENTRY_POINT(::gpk::cgiMain);
 
-::llc::err_t			jsonFail						(::llc::string & output, ::llc::vcst_t textToLog, ::llc::vcst_t status)	{
+::gpk::err_t			jsonFail						(::gpk::string & output, ::gpk::vcst_t textToLog, ::gpk::vcst_t status)	{
 	error_printf("%.*s", GPK_VIEW_ARGS(textToLog));
-	output											= ::llc::vcst_t{"Status: "};
+	output											= ::gpk::vcst_t{"Status: "};
 	if_fail_fef(output.append(status)						, "%s", "Failed to generate output message.");
-	if_fail_fef(output.append_string("\r\nContent-Type: application/json\r\n\r\n"), "%s", "Failed to generate output message.");
-	if_fail_fef(output.append_string("{ \"status\":")		, "%s", "Failed to generate output message.");
+	if_fail_fef(output.append(::gpk::vcst_t{"\r\nContent-Type: application/json\r\n\r\n"}), "%s", "Failed to generate output message.");
+	if_fail_fef(output.append(::gpk::vcst_t{"{ \"status\":"})		, "%s", "Failed to generate output message.");
 	if_fail_fef(output.append(status)						, "%s", "Failed to generate output message.");
-	if_fail_fef(output.append_string(", \"description\" :\""), "%s", "Failed to generate output message.");
+	if_fail_fef(output.append(::gpk::vcst_t{", \"description\" :\""}), "%s", "Failed to generate output message.");
 	if_fail_fef(output.append(textToLog)						, "%s", "Failed to generate output message.");
-	if_fail_fef(output.append_string("\" }\r\n")				, "%s", "Failed to generate output message.");
+	if_fail_fef(output.append(::gpk::vcst_t{"\" }\r\n"})				, "%s", "Failed to generate output message.");
 	return 0;
 }
 
-::llc::err_t			llc_cgi_generate_output			(::llc::SCGIRuntimeValues & runtimeValues, ::llc::string & output)	{
-	::llc::SHTTPAPIRequest								requestReceived					= {};
-	bool												isCGIEnviron					= ::llc::httpRequestInit(requestReceived, runtimeValues, true);
-	::llc::array_obj<::llc::TKeyValConstString>			environViews;
-	if_fail_fef(::llc::environmentBlockViews(runtimeValues.EntryPointArgs.EnvironmentBlock, environViews), "%s", "If this breaks, we better know ASAP.");
+::gpk::err_t			gpk_cgi_generate_output			(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output)	{
+	::gpk::SHTTPAPIRequest								requestReceived					= {};
+	bool												isCGIEnviron					= ::gpk::httpRequestInit(requestReceived, runtimeValues, true);
+	::gpk::array_obj<::gpk::keyval<::gpk::vcst_t>>			environViews;
+	if_fail_fef(environViews.append(runtimeValues.RuntimeValues.EntryPointArgs.Environment), "%s", "If this breaks, we better know ASAP.");
 	if (isCGIEnviron) {
-		if_fail_fe(output.append_string("Content-type: application/json\r\n"));
-		if_fail_fe(output.append_string("\r\n"));
+		if_fail_fe(output.append(::gpk::vcst_t{"Content-type: application/json\r\n"}));
+		if_fail_fe(output.append(::gpk::vcst_t{"\r\n"}));
 	}
 
-	const ::llc::vcst_t						configFileName					= "itwapi.json";
+	const ::gpk::vcst_t						configFileName					= "itwapi.json";
 	::blt::SBlitter										app								= {};
 	if_fail_fef(::blt::requestProcess(app.ExpressionReader, app.Query, requestReceived, app.ExpansionKeyStorage), "%s", "Failed to process request.");
 	if_fail_fef(::blt::loadConfig(app, "./blitter.json"), "%s", "Failed to load blitter configuration.");

@@ -18,5 +18,19 @@
     <ClCompile Include="test_blitter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_blitter_blitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_blitter_reason.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_blitter_season.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test_blitter_suites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

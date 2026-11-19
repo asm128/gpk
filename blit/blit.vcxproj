@@ -95,7 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)../llc/llc; $(SolutionDir)../blitter/blitter;  </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../llc; ../blitter;  </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -115,7 +115,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)../llc/llc; $(SolutionDir)../blitter/blitter;  </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../llc; ../blitter;  </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,7 +137,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)../llc/llc; $(SolutionDir)../blitter/blitter;  </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../llc; ../blitter;  </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,7 +161,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)../llc/llc; $(SolutionDir)../blitter/blitter;  </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../llc; ../blitter;  </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
