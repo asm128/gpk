@@ -87,12 +87,12 @@ namespace gpk
 #ifndef logf_error
 #	if defined (GPK_ERROR_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define error_printf(format, ...)					do { gpk_debug_printf(1, format, ##__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { gpk_debug_printf(1, format, ##__VA_ARGS__); ::gpk::debugBreak(); } while(0)
 #else
-#		define error_printf(format, ...)					do { gpk_debug_printf(1, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { gpk_debug_printf(1, format, __VA_ARGS__); ::gpk::debugBreak(); } while(0)
 #endif
 #	else
-#		define error_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); ::gpk::debugBreak(); } while(0)
 #	endif
 #endif
 #endif

@@ -50,7 +50,7 @@ static	gpk::err_t	rsmReadRotationKeyframes									(::gpk::view_stream<const uin
 static	gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
 	uint32_t					positionFrameCount											= 0;
 	rsm_stream.read_pod(positionFrameCount);
-	GPK_PLATFORM_CRT_BREAKPOINT();
+	::gpk::debugBreak();
 	if(positionFrameCount) {
 		modelKeyframes.resize(positionFrameCount);
 		rsm_stream.read_pod(modelKeyframes.begin(), positionFrameCount);
