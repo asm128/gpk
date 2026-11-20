@@ -1,9 +1,9 @@
-﻿#define GPK_STDOUT_LOG_ENABLED
+#define GPK_STDOUT_LOG_ENABLED
 
 #include "gpk_base64.h"
 #include "gpk_file.h"
 
-stacxpr	const char	sign	[]	= "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u";
+stxp	const char	sign	[]	= "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u";
 
 int main(int argc, char** argv) {
 	ree_if(2 > argc, "usage: %s [filename]", argv[0]);

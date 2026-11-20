@@ -85,8 +85,8 @@ static	gpk::err_t	createChildProcess
 	::gpk::vcst_t				szCmdlineApp			= appPath;
 	::gpk::vstr_t				szCmdlineFinal			= commandLine;
 	bool						bSuccess				= false;
-	stacxpr	bool				isUnicodeEnv			= false;
-	stacxpr	uint32_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stxp	bool				isUnicodeEnv			= false;
+	stxp	uint32_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 	
 	if(INVALID_HANDLE_VALUE != process.ProcessInfo.hProcess	){ CloseHandle(process.ProcessInfo.hProcess	); }
 	bSuccess				= CreateProcessA(szCmdlineApp	// Create the child process.
@@ -123,7 +123,7 @@ static	gpk::err_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk:
 
 static	gpk::err_t	readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	static	::gpk::au0_t		chBuf;
-	stacxpr	uint32_t			BUFSIZE					= 1024 * 1024 * 50;
+	stxp	uint32_t			BUFSIZE					= 1024 * 1024 * 50;
 	chBuf.resize(BUFSIZE);
 	for (;;) {
 		uint32_t					dwRead					= 0;
@@ -274,7 +274,7 @@ gpk::err_t				draw					(::brt::SApplication & app)						{
 // Example 1
 // By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
 static int					REM_tmain0							()		{
-	stacxpr	uint32_t	BUFSIZE					= 4096;
+	stxp	uint32_t	BUFSIZE					= 4096;
 	char							environmentBlock2Set	[BUFSIZE]	= {};
 	int32_t							charsWritten						= 0;
 	DWORD							dwFlags								= 0;
@@ -284,7 +284,7 @@ static int					REM_tmain0							()		{
 	gpk_necall(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
 	// Create the child process, specifying a new environment block.
 	STARTUPINFOA						si									= {sizeof(STARTUPINFOA)};
-	stacxpr	bool		isUnicodeEnv						= false;
+	stxp	bool		isUnicodeEnv						= false;
 	dwFlags						= dwFlags | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 	ree_if(FALSE == CreateProcessA(szAppName, NULL, NULL, NULL, TRUE, dwFlags, (void*)environmentBlock2Set, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError());
 	WaitForSingleObject(pi.hProcess, INFINITE);
@@ -297,7 +297,7 @@ static int					REM_tmain0							()		{
 #define VARNAME "MyVariable"
 
 static int					REM_tmain1			() {
-	stacxpr	const uint32_t			BUFSIZE					= 4096;
+	stxp	const uint32_t			BUFSIZE					= 4096;
 	stxp	::gpk::vcst_c			szAppName			= GPK_CXS("ex3.exe");
 	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
 	PROCESS_INFORMATION				pi					= {};
@@ -328,7 +328,7 @@ static int					REM_tmain1			() {
 	ree_if(FALSE == SetEnvironmentVariableA(VARNAME, "Test"), "SetEnvironmentVariable failed (%d)\n", GetLastError());		// Set a value for the child process to inherit.
 	// ---- Create a child process.
 	si							= {sizeof(STARTUPINFOA)};
-	stacxpr	bool		isUnicodeEnv			= false;
+	stxp	bool		isUnicodeEnv			= false;
 	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
 	::gpk::apod<char>				bufferAppName			= ::gpk::toString(szAppName);
 	ree_if(FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment

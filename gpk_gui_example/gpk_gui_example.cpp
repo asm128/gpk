@@ -16,7 +16,7 @@
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 // Vertex coordinates for cube faces
-stacxpr	const ::gpk::tri3<float>					modelPositionsVertices	[12]						=
+stxp	const ::gpk::tri3<float>					modelPositionsVertices	[12]						=
 	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first			?? I have no idea if this is correct lol
 	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second		?? I have no idea if this is correct lol
 
@@ -36,7 +36,7 @@ stacxpr	const ::gpk::tri3<float>					modelPositionsVertices	[12]						=
 	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}	// Top		- second
 	};
 
-stacxpr	const ::gpk::tri3<float>						modelNormalVectors		[12]						=
+stxp	const ::gpk::tri3<float>						modelNormalVectors		[12]						=
 	{ {{0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}}	// Right	- first			?? I have no idea if this is correct lol
 	, {{0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}}	// Right	- second		?? I have no idea if this is correct lol
 //		{					, , 										}
@@ -277,7 +277,7 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 	controlTable.Placement	[viewport->IdGUIControl	].Area.Size				= {640, 480};
 	controlTable.Images		[viewport->IdClient		].ImageInvertY			= true;
 
-	stacxpr const ::gpk::n3f2_t							cubeCenter									= {0.5f, 0.5f, 0.5f};
+	stxp const ::gpk::n3f2_t							cubeCenter									= {0.5f, 0.5f, 0.5f};
 	::gpk::array_pod<uint8_t>												& remap										= app.ModelGeometry.PositionRemap;
 	::indexValues({&modelPositionsVertices[0].A, ::gpk::size(modelPositionsVertices) * 3}, app.ModelGeometry.Positions.Indices, app.ModelGeometry.Positions.Values, remap);
 	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {

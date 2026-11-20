@@ -49,7 +49,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 	};
 
 	struct SViewportScene {
-		stacxpr	const ::gpk::n3f2_t		CameraUp						= {0, 1, 0};	// ? cam't remember what is this. Radians? Eulers?
+		stxp	const ::gpk::n3f2_t		CameraUp						= {0, 1, 0};	// ? cam't remember what is this. Radians? Eulers?
 		::gme::SCamera					Camera							= {{10, 5, 0}, {}};
 
 		::gpk::n3f2_t					LightPos						= {10, 5, 0};
@@ -65,10 +65,10 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		int16_t							MaxValue				= 64;
 		::gpk::img<::gpk::bgra>			Image					= {};
 
-		stacxpr	::gpk::rgbaf			COLOR_MIN_DEFAULT		= ::gpk::GREEN;
-		stacxpr	::gpk::rgbaf			COLOR_MID_DEFAULT		= ::gpk::ORANGE;
-		stacxpr	::gpk::rgbaf			COLOR_MAX_DEFAULT		= ::gpk::RED;
-		stacxpr	::gpk::rgbaf			COLOR_BKG_DEFAULT		= ::gpk::BROWN * .5 + ::gpk::DARKBLUE * .5;
+		stxp	::gpk::rgbaf			COLOR_MIN_DEFAULT		= ::gpk::GREEN;
+		stxp	::gpk::rgbaf			COLOR_MID_DEFAULT		= ::gpk::ORANGE;
+		stxp	::gpk::rgbaf			COLOR_MAX_DEFAULT		= ::gpk::RED;
+		stxp	::gpk::rgbaf			COLOR_BKG_DEFAULT		= ::gpk::BROWN * .5 + ::gpk::DARKBLUE * .5;
 
 		inline	int16_t				SetValue				(float weight)							noexcept	{ return CurrentValue = int16_t(weight * MaxValue); }
 				int16_t				SetValue				(float currentValue, uint32_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }

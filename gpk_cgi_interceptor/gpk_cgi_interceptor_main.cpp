@@ -31,8 +31,8 @@ static	gpk::err_t								createChildProcess
 	,	::gpk::vcsc_t						commandLine
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	bool													bSuccess				= false;
-	stacxpr	bool								isUnicodeEnv			= false;
-	stacxpr	uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stxp	bool								isUnicodeEnv			= false;
+	stxp	uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
 	gpk_safe_closehandle(process.ProcessInfo.hProcess);
 	bSuccess											= CreateProcessA
@@ -51,7 +51,7 @@ static	gpk::err_t								createChildProcess
 
 	::gpk::au0_t						popupTitle						= {};
 	{
-		stacxpr	const ::gpk::vcsc_t		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
+		stxp	const ::gpk::vcsc_t		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
 		char							ensure[encodedSignature.size()]	= {};
 		(void)ensure;
 		ree_if(encodedSignature.size() != 73, "%s", "");
@@ -146,7 +146,7 @@ static	gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read ou
 
 	//char									chBuf	[BUFSIZE]		= {};
 	static	::gpk::au0_t						chBuf;
-	stacxpr	const uint32_t					BUFSIZE					= 1024 * 1024;
+	stxp	const uint32_t					BUFSIZE					= 1024 * 1024;
 	chBuf.resize(BUFSIZE);
 	bool									bSuccess				= FALSE;
 	while(true) {

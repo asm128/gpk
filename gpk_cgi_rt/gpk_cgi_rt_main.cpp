@@ -45,7 +45,7 @@ gpk::err_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::
 	return 0;
 }
 
-stacxpr	const char						html_script	[]			=
+stxp	const char						html_script	[]			=
 	"\n<script>"
 	"\nfunction bootstrap() {"
     "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"
