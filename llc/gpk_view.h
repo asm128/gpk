@@ -571,7 +571,12 @@ namespace gpk
 	tplT		T&	min		(view<T> elements)		{ T * rmin	{}; if_fail_e(min(elements, &rmin));	rtrn *rmin; }
 	tplT		T	sum		(view<cnst T> elements)	{ T result	{}; for(T element : elements) result += element; rtrn result; }
 	tplTstin	T&	be2le	(T & number)			{ reverse<i0u_t>({(i0u_t*)&number, sizeof(T)}); rtrn number; }
+
+
+
 } // namespace
+
+
 
 #define GPK_USING_VIEW()												\
 	usng	::gpk::vb8_t, ::gpk::vb8_c, ::gpk::vcb8_t, ::gpk::vcb8_c	\

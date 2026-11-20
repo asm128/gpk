@@ -69,7 +69,7 @@ namespace gpk
 				T						* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;
-				::gpk::gpk_free(oldData);
+				gpk_free(oldData);
 			}
 			rtrn Size;
 		}
@@ -187,7 +187,7 @@ namespace gpk
 				T				* oldData			= Data;
 				Data		= newData;
 				Size		= newSize;
-				::gpk::gpk_free(oldData);
+				gpk_free(oldData);
 			}
 			else {
 				for(s2_t i = (int)Count - 1; i >= (int)index; --i) {
@@ -222,7 +222,7 @@ namespace gpk
 				T					* oldData			= Data;
 				Data			= newData;
 				Size			= newSize;
-				::gpk::gpk_free(oldData);
+				gpk_free(oldData);
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
 				for(s2_t i = (int)Count - 1; i >= (int)index; --i) {
@@ -238,11 +238,11 @@ namespace gpk
 
 	}; // array_obj
 
-	tplT	using aobj		= ::gpk::array_obj<T>; 
-	tplT	using ao		= ::gpk::aobj<T>; 
+	tplT	using aobj		= array_obj<T>; 
+	tplT	using ao		= aobj<T>; 
 
-	tplT	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
-	tplT	using av		= ::gpk::aview	<T>; 
+	tplT	using aview		= aobj	<view<T>>; 
+	tplT	using av		= aview	<T>; 
 
 	tydf	aview<uc_t>	avuc_t;
 	tydf	aview<sc_t>	avsc_t;
@@ -295,11 +295,11 @@ namespace gpk
 	tdcs	avcs3_t	avcs3_c;
 
 
-	tplT	err_t							split					(cnst ::gpk::view<cnst T> & target, cnst T & separator, ::gpk::aobj<::gpk::view<cnst T>> & split)	{
+	tplT	err_t							split					(cnst view<cnst T> & target, cnst T & separator, aobj<view<cnst T>> & split)	{
 		u2_t									lastOffset				= 0;
 		for(u2_t iChar = 0; iChar < target.size(); ++iChar) {
 			if(target[iChar] == separator) {
-				cnst ::gpk::view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
+				cnst view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
 				++iChar;
 				gpk_necs(split.push_back(newView));
 				lastOffset								= iChar;
@@ -310,12 +310,12 @@ namespace gpk
 		rtrn (s2_t)split.size();
 	}
 
-	tplT	err_t							split					(cnst ::gpk::view<cnst T> & target, cnst ::gpk::view<cnst T>& separators, ::gpk::aobj<::gpk::view<cnst T>> & split)	{
+	tplT	err_t							split					(cnst view<cnst T> & target, cnst view<cnst T>& separators, aobj<view<cnst T>> & split)	{
 		u2_t									lastOffset				= 0;
 		for(u2_t iChar = 0; iChar < target.size(); ++iChar) {
 			for(u2_t iSeparator = 0; iSeparator < separators.size(); ++iSeparator) {
 				if(target[iChar] == separators[iSeparator]) {
-					cnst ::gpk::view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
+					cnst view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
 					++iChar;
 					gpk_necs(split.push_back(newView));
 					lastOffset								= iChar;
@@ -327,11 +327,11 @@ namespace gpk
 		rtrn (s2_t)split.size();
 	}
 
-	tplT	err_t							split					(cnst ::gpk::vcst_t & target, cnst T & separator, ::gpk::aobj<::gpk::vcst_t> & split)	{
+	tplT	err_t							split					(cnst vcst_t & target, cnst T & separator, aobj<vcst_t> & split)	{
 		s2_t										lastOffset				= 0;
 		for(s2_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
 			if(target[iChar] == separator) {
-				cnst ::gpk::vcst_t							newView					= {&target[lastOffset], (u2_t)::gpk::max((s2_t)0, s2_t(iChar - lastOffset))};
+				cnst vcst_t							newView					= {&target[lastOffset], (u2_t)max((s2_t)0, s2_t(iChar - lastOffset))};
 				++iChar;
 				gpk_necs(split.push_back(newView));
 				lastOffset								= iChar;
@@ -344,13 +344,14 @@ namespace gpk
 		rtrn (s2_t)split.size();
 	}
 
-
-
-	tydf ::gpk::SKeyVal<::gpk::vcst_t, ::gpk::aobj<::gpk::vcst_t>>	TKeyValConstStringArray;
+	tydf SKeyVal<vcst_t, aobj<vcst_t>>	TKeyValConstStringArray;
 	//------------------------------------------------------------------------------------------------------------
-	err_t							keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>> & output);
+	err_t							keyValConstStringDeserialize	(vcu0_c & input, aobj<kv<vcsc_t, vcsc_t>> & output);
 
-	err_t							filterPrefix					(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c prefix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded = false);
-	err_t							filterPostfix					(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c prefix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded = false);
+	err_t							filterPrefix					(view<vcu0_c> input, vcu0_c prefix, aobj<vcu0_t> & filtered, bool nullIncluded = false);
+	err_t							filterPostfix					(view<vcu0_c> input, vcu0_c prefix, aobj<vcu0_t> & filtered, bool nullIncluded = false);
+	err_t							filterPrefix					(view<vcst_c> input, vcst_c prefix, aobj<vcst_t> & filtered, bool nullIncluded = false);
+	err_t							filterPostfix					(view<vcst_c> input, vcst_c prefix, aobj<vcst_t> & filtered, bool nullIncluded = false);
+
 }
 #endif // GPK_ARRAY_OBJ_H_23627
