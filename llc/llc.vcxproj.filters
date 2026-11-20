@@ -438,6 +438,15 @@
     <ClInclude Include="gpk_parse.h">
       <Filter>script</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_parse_core.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_reader.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_reader_core.h">
+      <Filter>base</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_particle.h">
       <Filter>physics</Filter>
     </ClInclude>

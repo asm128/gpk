@@ -118,7 +118,7 @@ gpk::err_t		gpk::SInputBox::Update	(SGUI & gui, cnst SVirtualKeyboard & virtualK
 		else if(SYSTEM_EVENT_Keyboard == systemEvent->Type) {
 			if_fail_fe(eventExtractAndHandle<EVENT_KEYBOARD>(*systemEvent, [&handleEdit](cnst SEventView<EVENT_KEYBOARD> & eventKeyboard) {
 				if(EVENT_KEYBOARD_Down != eventKeyboard.Type || 0 == eventKeyboard.Data.size())
-					return 0;
+	return 0;
 				switch(eventKeyboard.Data[0]) {
 				default: return 0;
 				case SYSTEM_KEY_Escape		: return handleEdit(VK_SCANCODE_Escape);
@@ -143,6 +143,7 @@ gpk::err_t 		gpk::inputBoxCreate		(SInputBox & inputBox, SGUI & gui, cid_t iPare
 	gui.Controls.States		[inputBox.IdRoot].Mask		&= ~GUI_CONTROL_FLAG_Hovered;
 	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};
 	gui.Controls.Placement	[inputBox.IdRoot].Margin	= {};
+	//gui.Controls.Draw		[inputBox.IdRoot].NoBorder	= true;
 	gui.Controls.Draw		[inputBox.IdRoot].NoClient	= true;
 
 	if_fail_fe(inputBox.IdText = controlCreate(gui));

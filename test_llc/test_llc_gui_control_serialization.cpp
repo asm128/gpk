@@ -37,8 +37,7 @@ sttc ::gpk::err_t testPackedCounts(::gpk::ATestError & errors) {
 	cnst ::gpk::u0_t widths[] = {1, 1, 2, 2, 3, 3, 4, 4};
 	for(::gpk::u2_t iValue = 0; iValue < ::gpk::size(values); ++iValue) {
 		::gpk::au0_t encoded = {};
-		cnst ::gpk::packedu2_t packed = values[iValue];
-		cnst ::gpk::err_t saveResult = ::gpk::savePacked(encoded, packed);
+		cnst ::gpk::err_t saveResult = ::gpk::savePacked(encoded, values[iValue]);
 		GPK_TEST_CHECKF(errors, GUI_CONTROL_SERIALIZATION_TEST_RESULT_PACKED_BOUNDARIES
 			, ::gpk::failed(saveResult) || encoded.size() != widths[iValue]
 			, "Value: %u, save result: %i, encoded width: %u, expected width: %u."

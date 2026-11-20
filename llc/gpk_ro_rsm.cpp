@@ -15,7 +15,7 @@ struct SRSMHeader {	// Represents the byte layout fou
 #pragma pack(pop)
 
 
-			gpk::err_t 							analyzeArray								(cnst ::gpk::view<u0_t>& input) {
+			gpk::err_t 							analyzeArray								(cnst ::gpk::vu0_t& input) {
 	info_printf("%s", "---- Analyzing bytes     :");			for(u2_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (u2_t)input[iChar], (s2_t)((s0_t*)input.begin())[iChar], input[iChar]);
 
 	info_printf("%s", "---- Analyzing shorts    :");			for(u2_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((u1_t	*)&input[0])[iChar], (s2_t)((s1_t	*)input.begin())[iChar], ((u1_t	*)input.begin())[iChar]);
@@ -57,7 +57,7 @@ sttc	gpk::err_t rsmReadPositionKeyframes									(::gpk::view_stream<cnst u0_t>&
 	return 0;
 }
 
-gpk::err_t 		gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, cnst ::gpk::view<u0_t>	& input)							{
+gpk::err_t 		gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, cnst ::gpk::vu0_t	& input)							{
 	::gpk::view_stream<cnst u0_t>							rsm_stream													= {input.begin(), input.size()};
 	SRSMHeader													header														= {};
 	rsm_stream.read_pod(header);

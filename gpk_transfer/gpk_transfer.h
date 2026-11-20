@@ -45,11 +45,11 @@ namespace gpk
 	using PEventTransfer			= pobj<EventTransfer>;
 	using TTransferQueue			= apobj<EventTransfer>;
 
-	using FTransferResolve		= ::std::function<err_t(cnst STransferManifest &)>;
-	using FTransferRead			= ::std::function<err_t(cnst STransferManifest &, cnst STransferRange &, au0_t &)>;
-	using FTransferWrite			= ::std::function<err_t(cnst STransferManifest &, cnst STransferRange &, vcu0_t)>;
-	using FTransferQuery			= ::std::function<err_t(cnst STransferManifest &, apod<STransferRange> &)>;
-	using FTransferFinalize		= ::std::function<err_t(cnst STransferManifest &)>;
+	using FTransferResolve		= ::gpk::function<err_t(cnst STransferManifest &)>;
+	using FTransferRead			= ::gpk::function<err_t(cnst STransferManifest &, cnst STransferRange &, au0_t &)>;
+	using FTransferWrite			= ::gpk::function<err_t(cnst STransferManifest &, cnst STransferRange &, vcu0_t)>;
+	using FTransferQuery			= ::gpk::function<err_t(cnst STransferManifest &, apod<STransferRange> &)>;
+	using FTransferFinalize		= ::gpk::function<err_t(cnst STransferManifest &)>;
 
 	struct STransferConsumer {
 		FTransferResolve		ResolveCommitted		= {};

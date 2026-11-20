@@ -29,7 +29,7 @@ nmsp gpk
 	};
 #pragma pack(pop)
 
-	stin	gpk::err_t drawRectangle		(::gpk::SASCIITarget & asciiTarget, cnst ::gpk::SASCIICell & value, cnst ::gpk::rect2<s2_t>& rectangle)	{
+	stin	gpk::err_t drawRectangle		(::gpk::SASCIITarget & asciiTarget, cnst ::gpk::SASCIICell & value, cnst ::gpk::rect2s2_t& rectangle)	{
 		for(s2_t y = ::gpk::max((s2_t)0, (s2_t)rectangle.Offset.y), yStop = ::gpk::min((s2_t)(rectangle.Offset.y + rectangle.Size.y), (s2_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(s2_t x = ::gpk::max((s2_t)0, (s2_t)rectangle.Offset.x), xStop = ::gpk::min((s2_t)(rectangle.Offset.x + rectangle.Size.x), (s2_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			asciiTarget.Characters	[y][x]											= value.Character;

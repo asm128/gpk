@@ -100,7 +100,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -125,7 +125,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -154,7 +154,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -183,7 +183,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>

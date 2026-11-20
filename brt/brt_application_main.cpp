@@ -390,8 +390,7 @@ sttc ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 		}
 	}
 
-	app.ClientIOHandles.resize(receivedPerClient.size());
-	app.ClientProcesses.resize(receivedPerClient.size());
+	if_fail_ce(::gpk::resize_obj(receivedPerClient.size(), app.ClientIOHandles, app.ClientProcesses));
 	{	// Exectue processes
 		for(u2_t  iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			::brt::SProcessHandles		& iohandles				= app.ClientIOHandles[iClient];

@@ -80,8 +80,6 @@ nmsp gpk
 		}
 	};
 	CTTI_STCT_TEMPLATE_EXISTING(SEvent, _tEventType, struct SEvent { _tEventType Type; au0_t Data; };, _tEventType, au0_t);
-	static_assert(ctti_struct_member_types<SEvent<u0_t>>);
-	static_assert(ctti_same<tpnm SCTTIMemberTypes<SEvent<u0_t>, ctti_index_pack<0, 1>>::Type, type_pack<u0_t, au0_t>>::Value);
 
 	tplt<tpnm T> usng FEventHandler			= function<err_t(      SEvent<T>&)>;
 	tplt<tpnm T> usng FEventHandlerConst	= function<err_t(cnst SEvent<T>&)>;
@@ -103,7 +101,7 @@ nmsp gpk
 	}
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, view<cnst _tPOD> eventData) {
-		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(cnst u0_t*)eventData.begin(), eventData.byte_count()});
+		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, eventData.bytes());
 	}
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	sttc	err_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, cnst _tPOD & childEventDataType) {

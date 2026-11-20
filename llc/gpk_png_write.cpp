@@ -1,4 +1,5 @@
 #include "gpk_png.h"
+#include "gpk_apod_serialize.h"
 #include "gpk_img_color.h"
 #include "gpk_deflate.h"
 
@@ -50,13 +51,13 @@ gpk::err_t 		gpk::pngFileWrite		(gc8bgra in_imageView, au0_t & out_Bytes)		{
 	be2le(imageHeader.Size.x);
 	be2le(imageHeader.Size.y);
 	be2le(chunkSize);
-	safe_Bytes.append((cnst u0_t*)&chunkSize, 4);
+	if_fail_fe(savePOD(safe_Bytes, chunkSize));
 	u2_t					crcDataStart			= safe_Bytes.size();
 	safe_Bytes.append(typeIHDR);
-	safe_Bytes.append((cnst u0_t*)&imageHeader, sizeof(SPNGIHDR));
+	if_fail_fe(savePOD(safe_Bytes, imageHeader));
 	crc						= pngCRCGet({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le(crc);
-	safe_Bytes.append((cnst u0_t*)&crc, 4);
+	if_fail_fe(savePOD(safe_Bytes, crc));
 
 	// Reverse RGB byte order
 	img8rgba				convertedScanlines		= {};
@@ -83,7 +84,7 @@ gpk::err_t 		gpk::pngFileWrite		(gc8bgra in_imageView, au0_t & out_Bytes)		{
 
 	chunkSize					= deflated.size();
 	be2le(chunkSize);
-	safe_Bytes.append((cnst u0_t*)&chunkSize, 4);
+	if_fail_fe(savePOD(safe_Bytes, chunkSize));
 	crcDataStart				= safe_Bytes.size();
 
 	stxp	cnst u0_t			typeIDAT	[4]			= {'I', 'D', 'A', 'T'};
@@ -91,21 +92,19 @@ gpk::err_t 		gpk::pngFileWrite		(gc8bgra in_imageView, au0_t & out_Bytes)		{
 	safe_Bytes.append(deflated);
 	crc							= pngCRCGet({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le(crc);
-	safe_Bytes.append((cnst u0_t*)&crc, 4);
+	if_fail_fe(savePOD(safe_Bytes, crc));
 
 	chunkSize					= 0;
 	crc							= 0;
 	stxp	cnst u0_t			typeIEND	[4]			= {'I', 'E', 'N', 'D'};
 	be2le(chunkSize);
-	safe_Bytes.append((cnst u0_t*)&chunkSize, 4);
+	if_fail_fe(savePOD(safe_Bytes, chunkSize));
 	crcDataStart				= safe_Bytes.size();
 	safe_Bytes.append(typeIEND);
 	crc							= pngCRCGet({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le(crc);
-	safe_Bytes.append((cnst u0_t*)&crc, 4);
+	if_fail_fe(savePOD(safe_Bytes, crc));
 
-	s2_t							oldSize					= out_Bytes.size();
-	if_fail_fe(out_Bytes.resize(oldSize + safe_Bytes.size()));
-	memcpy(&out_Bytes[oldSize], safe_Bytes.begin(), safe_Bytes.size());
+	if_fail_fe(out_Bytes.append(safe_Bytes));
 	return 0;
 }

@@ -161,7 +161,7 @@ nmsp gpk
 				if_true_fe(0 == input.Remaining.size());
 				input.Pending.Value		|= (u3_t)input.Remaining[0] << input.Pending.Width;
 				input.Pending.Width		+= 8;
-				input.Remaining			= {input.Remaining.begin() + 1, input.Remaining.size() - 1};
+				if_fail_fe(input.Remaining.slice(input.Remaining, 1));
 			}
 			value					= (u2_t)(input.Pending.Value & ((1ULL << width) - 1));
 			input.Pending.Value		>>= width;
@@ -328,11 +328,12 @@ nmsp gpk
 		sttc err_t		fixedTables				(SHuffmanTable & literals, SHuffmanTable & distances) {
 			u0_t literalWidths[288]	= {};
 			u0_t distanceWidths[32]	= {};
-			for(u2_t i =   0; i <= 143; ++i) literalWidths[i] = 8;
-			for(u2_t i = 144; i <= 255; ++i) literalWidths[i] = 9;
-			for(u2_t i = 256; i <= 279; ++i) literalWidths[i] = 7;
-			for(u2_t i = 280; i <= 287; ++i) literalWidths[i] = 8;
-			for(u2_t i =   0; i < ::gpk::size(distanceWidths); ++i) distanceWidths[i] = 5;
+			::gpk::vu0_t literalWidthView = literalWidths;
+			literalWidthView.fill(8,   0, 144);
+			literalWidthView.fill(9, 144, 256);
+			literalWidthView.fill(7, 256, 280);
+			literalWidthView.fill(8, 280, 288);
+			::gpk::vu0_t{distanceWidths}.fill(5);
 			if_fail_fe(huffmanBuild(literals, literalWidths, 15));
 			if_fail_fe(huffmanBuild(distances, distanceWidths, 15));
 			rtrn 0;
@@ -511,9 +512,7 @@ gpk::err_t			gpk::deflateInit			(SZipStream & output, vcu0_t input, SDeflateSett
 	output.Stream				= input;
 	output.Settings				= settings;
 	output.Status				= LIFECYCLE_STATE_FAILED;
-	output.Window.clear();
-	output.Previous.clear();
-	output.Head.clear();
+	::gpk::clear(output.Window, output.Previous, output.Head);
 	if_fail_fe(::gpk::deflateSettingsValidate(settings));
 	u2_c windowSize			= ::gpk::bit_make<u2_t>(settings.WindowBits);
 	u2_c hashSize				= ::gpk::bit_make<u2_t>(settings.HashBits);
@@ -531,8 +530,7 @@ gpk::err_t			gpk::inflateInit			(SZipStream & output, vcu0_t input) {
 	if_fail_fe(::gpk::zlibHeaderRead(header, input));
 	output.Window.clear();
 	if_fail_fe(output.Window.resize(::gpk::bit_make<u2_t>(header.WindowBits()), {}));
-	output.Previous.clear();
-	output.Head.clear();
+	::gpk::clear(output.Previous, output.Head);
 	output.Status				= LIFECYCLE_STATE_READY;
 	rtrn 0;
 }

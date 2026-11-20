@@ -105,23 +105,21 @@ nmsp gpk
 		}
 
 		s2_t 							Clone							(u2_t iBody)	{
-			Frames					.push_back(::gpk::SBodyFrame		{Frames				[iBody]});
-			Flags					.push_back(::gpk::SBodyFlags		{Flags				[iBody]});
-			Forces					.push_back(::gpk::SBodyForces		{Forces				[iBody]});
-			Masses					.push_back(::gpk::SBodyMass			{Masses				[iBody]});
-			Centers					.push_back(::gpk::SBodyCenter		{Centers			[iBody]});
-			BoundingVolumes			.push_back(::gpk::SBodyVolume		{BoundingVolumes	[iBody]});
-			return TransformsLocal	.push_back(::gpk::m4f2_t				{TransformsLocal	[iBody]});
+			if_true_vef(-1, iBody >= Centers.size(), "Invalid body index: %u.", iBody);
+			u2_c							indexNew						= Centers.size();
+			if_fail_fe(::gpk::resize_obj(indexNew + 1, Frames, Flags, Forces, Masses, Centers, BoundingVolumes, TransformsLocal));
+			Frames			[indexNew]	= Frames			[iBody];
+			Flags			[indexNew]	= Flags				[iBody];
+			Forces			[indexNew]	= Forces			[iBody];
+			Masses			[indexNew]	= Masses			[iBody];
+			Centers			[indexNew]	= Centers			[iBody];
+			BoundingVolumes[indexNew]	= BoundingVolumes	[iBody];
+			TransformsLocal[indexNew]	= TransformsLocal	[iBody];
+			return indexNew;
 		}
 
 		s2_t 							Create							()	{
-			Frames					.push_back({});
-			Flags					.push_back({});
-			Forces					.push_back({});
-			Masses					.push_back({});
-			Centers					.push_back({});
-			BoundingVolumes			.push_back({});
-			return TransformsLocal	.push_back(MatrixIdentity4);
+			return Create(1);
 		}
 
 		s2_t 							Delete							(u2_t iBody)	{
@@ -137,13 +135,8 @@ nmsp gpk
 		s2_t 							Create							(u2_t bodyCount)	{
 			u2_c							indexFirstBody					= Centers.size();
 			u2_c							newSize							= indexFirstBody + bodyCount;
-			if_fail_fe(Frames				.resize(newSize, {}));				
-			if_fail_fe(Flags				.resize(newSize, {}));
-			if_fail_fe(Forces				.resize(newSize, {}));
-			if_fail_fe(Masses				.resize(newSize, {}));
-			if_fail_fe(Centers			.resize(newSize, {}));
-			if_fail_fe(BoundingVolumes	.resize(newSize, {}));		
-			if_fail_fe(TransformsLocal	.resize(newSize, MatrixIdentity4));
+			if_fail_fe(::gpk::resize_obj(newSize, Frames, Flags, Forces, Masses, Centers, BoundingVolumes, TransformsLocal));
+			TransformsLocal.fill(MatrixIdentity4, indexFirstBody, newSize);
 			return indexFirstBody;
 		}
 

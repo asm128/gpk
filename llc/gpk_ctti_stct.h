@@ -1,4 +1,5 @@
 #include "gpk_ctti_parse.h"
+#include "gpk_array_static.h"
 
 #ifndef GPK_CTTI_STCT_H
 #define GPK_CTTI_STCT_H
@@ -10,47 +11,30 @@ nmsp gpk
 		, CTTI_PARSE_STATE_MODIFIERS		= 1
 		, CTTI_PARSE_STATE_TYPE			= 2
 		, CTTI_PARSE_STATE_MEMBER_NAME	= 3
-		, CTTI_PARSE_STATE_MEMBER_VALUE	= 4
-		, CTTI_PARSE_STATE_COMPLETE		= 5
+		, CTTI_PARSE_STATE_COMPLETE		= 4
 		};
 
-	enum CTTI_PARSE_ERROR : u0_t
-		{ CTTI_PARSE_ERROR_NONE						= 0
-		, CTTI_PARSE_ERROR_INVALID_STRUCT_NAME		= 1
-		, CTTI_PARSE_ERROR_EXPECTED_OPEN_BRACE		= 2
-		, CTTI_PARSE_ERROR_EXPECTED_CLOSE_BRACE		= 3
-		, CTTI_PARSE_ERROR_INVALID_MODIFIER			= 4
-		, CTTI_PARSE_ERROR_EXPECTED_TYPE			= 5
-		, CTTI_PARSE_ERROR_EXPECTED_MEMBER_NAME		= 6
-		, CTTI_PARSE_ERROR_INVALID_MEMBER_NAME		= 7
-		, CTTI_PARSE_ERROR_EXPECTED_SEMICOLON		= 8
-		};
+	stct SCTTIReaderState {
+		u2_t              IndexCurrentChar = {};
+		CTTI_PARSE_STATE  State            = CTTI_PARSE_STATE_STRUCT_NAME;
+	};
 
 	stct SCTTIMember {
-		SCTTISpan	Modifiers	= {};
-		SCTTISpan	TypeName	= {};
-		SCTTISpan	Name		= {};
-		SCTTISpan	Value		= {};
+		rangeu2_t	Modifiers	= {};
+		rangeu2_t	TypeName	= {};
+		rangeu2_t	Name		= {};
+		rangeu2_t	Value		= {};
 	};
 
 	tplt<size_t NDeclaration>
 	stct SCTTIParseResult {
-		sc_t				SourceText	[NDeclaration]	= {};
-		SCTTISpan			StructName					= {};
-		SCTTIMember			Members		[NDeclaration]	= {};
+		sstring<NDeclaration>	SourceText					= {};
+		rangeu2_t			StructName					= {};
+		astatic<SCTTIMember, NDeclaration>	Members		= {};
 		u2_t				Count						= {};
-		u2_t				ErrorOffset					= {};
-		CTTI_PARSE_STATE	State						= CTTI_PARSE_STATE_STRUCT_NAME;
-		CTTI_PARSE_ERROR	Error						= CTTI_PARSE_ERROR_NONE;
+		SCTTIReaderState StateRead                   = {};
 
-		inxp b8_t			Success		() cnst nxpt { rtrn CTTI_PARSE_ERROR_NONE == Error && CTTI_PARSE_STATE_COMPLETE == State; }
-		inxp vcst_t			View		(cnst SCTTISpan span) cnst nxpt { rtrn {&SourceText[span.Offset], span.Count}; }
-		inxp err_t			Find		(vcst_c name) cnst nxpt {
-			for(u2_t iMember = 0; iMember < Count; ++iMember)
-				if(View(Members[iMember].Name) == name)
-					rtrn iMember;
-			rtrn -1;
-		}
+		inxp b8_t			Success		() cnst nxpt { rtrn CTTI_PARSE_STATE_COMPLETE == StateRead.State; }
 	};
 
 	tplt<tpnm T>
@@ -75,7 +59,7 @@ nmsp gpk
 		stxp b8_t Value = true;
 	};
 	tplt<tpnm T, tpnm TPack>
-	stct ctti_type_in_pack;
+	stct ctti_type_in_pack { stxp b8_t Value = false; };
 	tplt<tpnm T, tpnm... TArgs>
 	stct ctti_type_in_pack<T, type_pack<TArgs...>> {
 		stxp b8_t Value = (ctti_same<T, TArgs>::Value || ...);
@@ -111,7 +95,7 @@ nmsp gpk
 		inxp operator TMember & () cnst nxpt;
 	};
 	tplt<tpnm TStruct, tpnm TIndices, tpnm = void>
-	stct SCTTIFieldTypes;
+	stct SCTTIFieldTypes {};
 	tplt<tpnm TStruct, u2_t... Indices>
 	stct SCTTIFieldTypes
 		< TStruct
@@ -143,68 +127,72 @@ nmsp gpk
 	inxp SCTTIParseResult<NDeclaration> cttiParseStruct(sc_c (&declaration)[NDeclaration]) nxpt {
 		static_assert(NDeclaration <= 0xFFFFFFFFULL, "CTTI source text exceeds the supported size.");
 		SCTTIParseResult<NDeclaration> result = {};
+		SCTTIReaderState & state = result.StateRead;
 		for(u2_t iChar = 0; iChar < NDeclaration; ++iChar)
 			result.SourceText[iChar] = declaration[iChar];
+		cnst vcst_t sourceText = {result.SourceText.Storage, (u2_t)NDeclaration - 1};
 
-		SCTTISpan sourceSpan = cttiTrim(result.SourceText, 0, (u2_t)NDeclaration - 1);
+		rangeu2_t sourceSpan = trim(sourceText, {0, (u2_t)NDeclaration - 1}, TRIM_CHARACTERS);
 		if(sourceSpan.Count && ';' == result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1])
-			sourceSpan = cttiTrim(result.SourceText, sourceSpan.Offset, sourceSpan.Count - 1);
-		u2_c openBrace = cttiFind(result.SourceText, sourceSpan, '{');
-		if(openBrace == sourceSpan.Offset + sourceSpan.Count) {
-			result.Error		= CTTI_PARSE_ERROR_EXPECTED_OPEN_BRACE;
-			result.State		= CTTI_PARSE_STATE_STRUCT_NAME;
-			result.ErrorOffset	= openBrace;
+			sourceSpan = trim(sourceText, {sourceSpan.Offset, sourceSpan.Count - 1}, TRIM_CHARACTERS);
+		vcsc_t sourceView = {};
+		sourceText.slice(sourceView, sourceSpan);
+		cnst err_t iOpenBrace = ::gpk::find('{', sourceView);
+		u2_c openBrace = 0 > iOpenBrace ? sourceSpan.Offset + sourceSpan.Count : sourceSpan.Offset + iOpenBrace;
+		state.IndexCurrentChar = openBrace;
+		if(openBrace == sourceSpan.Offset + sourceSpan.Count)
 			rtrn result;
-		}
 		if(0 == sourceSpan.Count || '}' != result.SourceText[sourceSpan.Offset + sourceSpan.Count - 1]) {
-			result.Error		= CTTI_PARSE_ERROR_EXPECTED_CLOSE_BRACE;
-			result.State		= CTTI_PARSE_STATE_MEMBER_NAME;
-			result.ErrorOffset	= sourceSpan.Offset + sourceSpan.Count;
+			state.State = CTTI_PARSE_STATE_MEMBER_NAME;
+			state.IndexCurrentChar = sourceSpan.Offset + sourceSpan.Count;
 			rtrn result;
 		}
 
-		result.StructName = cttiTrim(result.SourceText, sourceSpan.Offset, openBrace - sourceSpan.Offset);
+		result.StructName = trim(sourceText, {sourceSpan.Offset, openBrace - sourceSpan.Offset}, TRIM_CHARACTERS);
 		if(result.StructName.Count > 6
-		&& cttiSpanEquals(result.SourceText, {result.StructName.Offset, 6}, "struct")
-		&& cttiSpace(result.SourceText[result.StructName.Offset + 6])
+		&& vcst_t{&result.SourceText[result.StructName.Offset], 6} == "struct"
+		&& is_space_character(result.SourceText[result.StructName.Offset + 6])
 		)
-			result.StructName = cttiTrim(result.SourceText, result.StructName.Offset + 6, result.StructName.Count - 6);
-		if(false == cttiIdentifier(result.SourceText, result.StructName)) {
-			result.Error		= CTTI_PARSE_ERROR_INVALID_STRUCT_NAME;
-			result.State		= CTTI_PARSE_STATE_STRUCT_NAME;
-			result.ErrorOffset	= cttiIdentifierError(result.SourceText, result.StructName);
+			result.StructName = trim(sourceText, {result.StructName.Offset + 6, result.StructName.Count - 6}, TRIM_CHARACTERS);
+		cnst err_t structNameError = cttiIdentifierError(result.SourceText, result.StructName);
+		if(0 <= structNameError) {
+			state.IndexCurrentChar = (u2_t)structNameError;
 			rtrn result;
 		}
 
-		result.State = CTTI_PARSE_STATE_MODIFIERS;
-		u2_t		cursor			= openBrace + 1;
+		state.State = CTTI_PARSE_STATE_MODIFIERS;
+		state.IndexCurrentChar = openBrace + 1;
+		u2_t		& cursor		= state.IndexCurrentChar;
 		u2_c	textLength		= sourceSpan.Offset + sourceSpan.Count - 1;
 		while(true) {
-			while(cursor < textLength && cttiSpace(result.SourceText[cursor]))
+			while(cursor < textLength && is_space_character(result.SourceText[cursor]))
 				++cursor;
 			if(cursor == textLength) {
-				result.State = CTTI_PARSE_STATE_COMPLETE;
+				state.State = CTTI_PARSE_STATE_COMPLETE;
 				rtrn result;
 			}
+			state.State = CTTI_PARSE_STATE_MODIFIERS;
 
 			u2_c declarationOffset = cursor;
-			cursor = cttiFind(result.SourceText, {cursor, textLength - cursor}, ';');
+			sourceText.slice(sourceView, rangeu2_t{cursor, textLength - cursor});
+			cnst err_t iSemicolon = ::gpk::find(';', sourceView);
+			cursor = 0 > iSemicolon ? textLength : cursor + iSemicolon;
 			if(cursor == textLength) {
-				result.Error		= CTTI_PARSE_ERROR_EXPECTED_SEMICOLON;
-				result.State		= CTTI_PARSE_STATE_MEMBER_NAME;
-				result.ErrorOffset	= cursor;
+				state.State = CTTI_PARSE_STATE_MEMBER_NAME;
 				rtrn result;
 			}
 
-			cnst SCTTISpan segment = cttiTrim(result.SourceText, declarationOffset, cursor - declarationOffset);
-			u2_c equalOffset = cttiFind(result.SourceText, segment, '=');
-			cnst SCTTISpan declarationSpan = cttiTrim(result.SourceText, segment.Offset, equalOffset - segment.Offset);
-			cnst SCTTISpan memberValue = (equalOffset < segment.Offset + segment.Count)
-				? cttiTrim(result.SourceText, equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1)
-				: SCTTISpan{};
+			cnst rangeu2_t segment = trim(sourceText, {declarationOffset, cursor - declarationOffset}, TRIM_CHARACTERS);
+			sourceText.slice(sourceView, segment);
+			cnst err_t iEqual = ::gpk::find('=', sourceView);
+			u2_c equalOffset = 0 > iEqual ? segment.Offset + segment.Count : segment.Offset + iEqual;
+			cnst rangeu2_t declarationSpan = trim(sourceText, {segment.Offset, equalOffset - segment.Offset}, TRIM_CHARACTERS);
+			cnst rangeu2_t memberValue = (equalOffset < segment.Offset + segment.Count)
+				? trim(sourceText, {equalOffset + 1, segment.Offset + segment.Count - equalOffset - 1}, TRIM_CHARACTERS)
+				: rangeu2_t{};
 
 			u2_t declaratorEnd = declarationSpan.Offset + declarationSpan.Count;
-			while(declaratorEnd > declarationSpan.Offset && cttiSpace(result.SourceText[declaratorEnd - 1]))
+			while(declaratorEnd > declarationSpan.Offset && is_space_character(result.SourceText[declaratorEnd - 1]))
 				--declaratorEnd;
 			while(declaratorEnd > declarationSpan.Offset && ']' == result.SourceText[declaratorEnd - 1]) {
 				u2_t depth = 1;
@@ -217,7 +205,7 @@ nmsp gpk
 				if(depth)
 					break;
 				declaratorEnd = iSuffix;
-				while(declaratorEnd > declarationSpan.Offset && cttiSpace(result.SourceText[declaratorEnd - 1]))
+				while(declaratorEnd > declarationSpan.Offset && is_space_character(result.SourceText[declaratorEnd - 1]))
 					--declaratorEnd;
 			}
 			for(u2_t iColon = declaratorEnd; iColon-- > declarationSpan.Offset; )
@@ -226,7 +214,7 @@ nmsp gpk
 				&& (iColon + 1 == declaratorEnd || ':' != result.SourceText[iColon + 1])
 				) {
 					declaratorEnd = iColon;
-					while(declaratorEnd > declarationSpan.Offset && cttiSpace(result.SourceText[declaratorEnd - 1]))
+					while(declaratorEnd > declarationSpan.Offset && is_space_character(result.SourceText[declaratorEnd - 1]))
 						--declaratorEnd;
 					break;
 				}
@@ -234,19 +222,18 @@ nmsp gpk
 			u2_t nameOffset = declaratorEnd;
 			while(nameOffset > declarationSpan.Offset && cttiNamePart(result.SourceText[nameOffset - 1]))
 				--nameOffset;
-			cnst SCTTISpan memberName = {nameOffset, declaratorEnd - nameOffset};
-			if(false == cttiIdentifier(result.SourceText, memberName)) {
-				result.Error		= CTTI_PARSE_ERROR_INVALID_MEMBER_NAME;
-				result.State		= CTTI_PARSE_STATE_MEMBER_NAME;
-				result.ErrorOffset	= cttiIdentifierError(result.SourceText, memberName);
+			cnst rangeu2_t memberName = {nameOffset, declaratorEnd - nameOffset};
+			cnst err_t memberNameError = cttiIdentifierError(result.SourceText, memberName);
+			if(0 <= memberNameError) {
+				state.State = CTTI_PARSE_STATE_MEMBER_NAME;
+				cursor = (u2_t)memberNameError;
 				rtrn result;
 			}
 
-			cnst SCTTISpan beforeName = cttiTrim(result.SourceText, declarationSpan.Offset, nameOffset - declarationSpan.Offset);
+			cnst rangeu2_t beforeName = trim(sourceText, {declarationSpan.Offset, nameOffset - declarationSpan.Offset}, TRIM_CHARACTERS);
 			if(beforeName.empty()) {
-				result.Error		= CTTI_PARSE_ERROR_EXPECTED_TYPE;
-				result.State		= CTTI_PARSE_STATE_TYPE;
-				result.ErrorOffset	= declarationSpan.Offset;
+				state.State = CTTI_PARSE_STATE_TYPE;
+				cursor = declarationSpan.Offset;
 				rtrn result;
 			}
 			u2_t typeOffset = beforeName.Offset + beforeName.Count;
@@ -257,18 +244,16 @@ nmsp gpk
 					++templateDepth;
 				else if('<' == character && templateDepth)
 					--templateDepth;
-				else if(cttiSpace(character) && 0 == templateDepth)
+				else if(is_space_character(character) && 0 == templateDepth)
 					break;
 				--typeOffset;
 			}
-			cnst SCTTISpan typeName = {typeOffset, beforeName.Offset + beforeName.Count - typeOffset};
-			cnst SCTTISpan modifiers = cttiTrim(result.SourceText, beforeName.Offset, typeOffset - beforeName.Offset);
+			cnst rangeu2_t typeName = {typeOffset, beforeName.Offset + beforeName.Count - typeOffset};
+			cnst rangeu2_t modifiers = trim(sourceText, {beforeName.Offset, typeOffset - beforeName.Offset}, TRIM_CHARACTERS);
 			for(u2_t iChar = 0; iChar < modifiers.Count; ++iChar) {
 				sc_c character = result.SourceText[modifiers.Offset + iChar];
-				if(false == cttiSpace(character) && false == cttiNameStart(character)) {
-					result.Error		= CTTI_PARSE_ERROR_INVALID_MODIFIER;
-					result.State		= CTTI_PARSE_STATE_MODIFIERS;
-					result.ErrorOffset	= modifiers.Offset + iChar;
+				if(false == is_space_character(character) && false == cttiNameStart(character)) {
+					cursor = modifiers.Offset + iChar;
 					rtrn result;
 				}
 			}

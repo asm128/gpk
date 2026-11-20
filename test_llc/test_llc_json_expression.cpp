@@ -353,7 +353,7 @@ sttc ::gpk::err_t testJSONExpressionCTTIEnum(ATestError & errors, ::gpk::vcst_t 
 		if_fail_fe(document.push_back('}'));
 		::gpk::SJSONReader reader = {};
 		GPK_TEST_REQUIREF(errors, JSON_EXPRESSION_TEST_RESULT_CTTI_QUERY_PARSE, ::gpk::failed(::gpk::jsonParse(reader, document)), "Type:'%.*s', value:%u, JSON:'%.*s'.", GPK_VIEW_ARGS(typeName), iValue, GPK_VIEW_ARGS(document));
-		if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, typeName, "Value", ::gpk::cttiEnumName(metadata.Values[iValue].Value)));
+		if_fail_fe(::testJSONExpressionCTTIQuery(errors, reader, typeName, "Value", ::gpk::cttiValueName(metadata.Values[iValue].Value)));
 	}
 	rtrn 0;
 }

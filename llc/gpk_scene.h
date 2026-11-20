@@ -144,7 +144,7 @@ nmsp gpk
 	struct SSceneCamera {
 		SCameraPoints		Points								;
 		SCameraVectors		Vectors								;
-		minmax<f2_t>		NearFar								;
+		minmaxf2_t			NearFar								;
 		f3_t						Angle;
 	};
 
@@ -190,7 +190,7 @@ nmsp gpk
 				, {0, 1, 0}
 				, {0, 0, 1}
 				}
-			, minmax<f2_t>
+			, minmaxf2_t
 				{ 0.001f
 				, 100.0f
 				}

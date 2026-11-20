@@ -6,10 +6,11 @@
 nmsp gpk
 {
 #pragma pack(push, 1)
-	tpl_t struct range {	
+	tpl_t	stct range {	
 		tydf		_t	T;
 		T							Offset, Count;	
 		GPK_DEFAULT_OPERATOR(range <T>, Offset == other.Offset && Count == other.Count); 
+		inxp b8_t					empty		()	cnst nxpt { rtrn 0 == Count; }
 
 		tpl_t2
 		inxp	range<_t2>			Cast		()		csnx	{ return{(_t2)Offset, (_t2)Count}; } 

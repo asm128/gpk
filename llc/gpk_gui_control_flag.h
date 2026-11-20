@@ -85,8 +85,8 @@ nmsp gpk
 		gpk_gui_printf("Control state change: %i", iControl);
 		for(u2_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
 			cnst GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((u0_t)i);
-			if(bit & stateChange.Set  ) { cnst vcst_t name = cttiEnumName(bit); gpk_gui_printf("State set  : (0x%X) %.*s", (u2_t)bit, GPK_VIEW_ARGS(name)); }
-			if(bit & stateChange.Clear) { cnst vcst_t name = cttiEnumName(bit); gpk_gui_printf("State clear: (0x%X) %.*s", (u2_t)bit, GPK_VIEW_ARGS(name)); }
+			if(bit & stateChange.Set  ) { cnst vcst_t name = cttiValueName(bit); gpk_gui_printf("State set  : (0x%X) %.*s", (u2_t)bit, GPK_VIEW_ARGS(name)); }
+			if(bit & stateChange.Clear) { cnst vcst_t name = cttiValueName(bit); gpk_gui_printf("State clear: (0x%X) %.*s", (u2_t)bit, GPK_VIEW_ARGS(name)); }
 		}
 		return eventEnqueueChild(queue, SYSTEM_EVENT_GUI, EVENT_GUI_CONTROL_StateChange, stateChange); 
 	}

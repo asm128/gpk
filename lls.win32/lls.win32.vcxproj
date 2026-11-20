@@ -79,7 +79,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>../../gpk/llc; ../../gpk/gpk_engine; ../../gpk/gpk; ../lls; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ../lls; </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -89,7 +89,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; gpk.lib;  lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -101,7 +101,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>../../gpk/llc; ../../gpk/gpk_engine; ../../gpk/gpk; ../lls; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ../lls; </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -113,7 +113,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; gpk.lib;  lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,7 +123,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>../../gpk/llc; ../../gpk/gpk_engine; ../../gpk/gpk; ../lls; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ../lls; </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; gpk.lib;  lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,7 +145,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>../../gpk/llc; ../../gpk/gpk_engine; ../../gpk/gpk; ../lls; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ../lls; </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
@@ -157,7 +157,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; gpk.lib;  lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; lls.lib; ws2_32.lib; gdi32.lib; user32.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

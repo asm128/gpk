@@ -1,4 +1,5 @@
 #include "gpk_expression_core.h"
+#include "gpk_reader.h"
 #include "gpk_array_ptr.h"
 #include "gpk_parse.h"
 #include "gpk_functional.h"
@@ -8,20 +9,6 @@
 
 nmsp gpk
 {
-#pragma pack(push, 1)
-	struct SExpressionReaderState {
-		u2_t					IndexCurrentChar				= 0;
-		s2_t					IndexCurrentElement				= -1;
-		SExpressionToken		* CurrentElement				= 0;
-		s2_t					NestLevel						= 0;
-		sc_t					CharCurrent						= 0;
-		b8_t					Escaping						= false;
-		b8_t					ExpectsSeparator				= false;
-		b8_t					InsideString					= false;
-		sc_t					ClosingQuotes					= '0';
-	};
-#pragma pack(pop)
-
 	struct SExpressionNode {
 		SExpressionToken		* Token							= 0;
 		SExpressionNode			* Parent						= 0;
@@ -29,9 +16,7 @@ nmsp gpk
 		s2_t					ObjectIndex						= -1;
 	};
 
-	struct SExpressionReader {
-		apod<SExpressionToken>	Token;
-		aobj<vcst_t>			View;
+	struct SExpressionReader : SReader<SExpressionToken> {
 		apobj<SExpressionNode>	Tree;
 		SExpressionReaderState	StateRead;
 		pobj<SExpressionReader>	SubExpressionCache;

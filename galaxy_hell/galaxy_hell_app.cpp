@@ -21,7 +21,7 @@ static	gpk::err_t	processScreenEvent		(::ghg::SGalaxyHellApp & app, const ::gpk:
 		break;
 	case ::gpk::EVENT_SCREEN_Create:
 	case ::gpk::EVENT_SCREEN_Resize: {
-		::gpk::n2<u1_t>			newMetrics				= *(const ::gpk::n2<u1_t>*)screenEvent.Data.begin();
+		::gpk::n2u1_t				newMetrics				= *(const ::gpk::n2u1_t*)screenEvent.Data.begin();
 		::gpk::guiUpdateMetrics(*app.DialogDesktop.GUI, newMetrics, true);
 		for(u2_t iPlayer = 0; iPlayer < app.UIPlay.PlayerUI.size(); ++iPlayer) {
 			if(app.UIPlay.PlayerUI[iPlayer].DialogHome.GUI) ::gpk::guiUpdateMetrics(*app.UIPlay.PlayerUI[iPlayer].DialogHome.GUI, newMetrics, true);
@@ -228,7 +228,7 @@ gpk::err_t					ghg::galaxyHellDraw				(::ghg::SGalaxyHellApp & app, ::gpk::n2u1_
 	target->resize(renderTargetSize.u2(), {0, 0, 0, 1}, 0xFFFFFFFFU);
 
 	::gpk::g8bgra							targetPixels			= target->Color.View;
-	::gpk::grid<u2_t>									depthBuffer				= target->DepthStencil.View;
+	::gpk::gu2_t										depthBuffer				= target->DepthStencil.View;
 	switch(app.ActiveState) {
 	default					: 
 	case APP_STATE_Play		: 
@@ -240,7 +240,7 @@ gpk::err_t					ghg::galaxyHellDraw				(::ghg::SGalaxyHellApp & app, ::gpk::n2u1_
 
 		::gpk::g8bgra			cameraView			= sourceRT->Color.View;
 		::gpk::n2s1_t						cameraViewMetrics	= cameraView.metrics().s1();
-		::gpk::grid_copy(targetPixels, cameraView, ::gpk::n2<u2_t>
+		::gpk::grid_copy(targetPixels, cameraView, ::gpk::n2u2_t
 				{ (targetPixels.metrics().x >> 1) - (cameraView.metrics().x >> 1)
 				, (targetPixels.metrics().y >> 1) - (cameraView.metrics().y >> 1)
 				}

@@ -169,8 +169,8 @@ sttc ::gpk::err_t testLinearMapInvalidSerialization(::gpk::ATestError & errors) 
 	cnst ::gpk::u2_t keys[] = {1, 2};
 	cnst ::gpk::u3_t oneValue[] = {10};
 	::gpk::au0_t mismatched = {};
-	if_fail_fe(::gpk::saveView(mismatched, ::gpk::view<cnst ::gpk::u2_t>{keys}));
-	if_fail_fe(::gpk::saveView(mismatched, ::gpk::view<cnst ::gpk::u3_t>{oneValue}));
+	if_fail_fe(::gpk::saveView(mismatched, ::gpk::vcu2_t{keys}));
+	if_fail_fe(::gpk::saveView(mismatched, ::gpk::vcu3_t{oneValue}));
 	::gpk::vcu0_t mismatchInput = mismatched;
 	cnst ::gpk::vcu0_t originalMismatchInput = mismatchInput;
 	TLinearMap mismatchOutput = {};
@@ -184,8 +184,8 @@ sttc ::gpk::err_t testLinearMapInvalidSerialization(::gpk::ATestError & errors) 
 	cnst ::gpk::u2_t duplicateKeys[] = {7, 7};
 	cnst ::gpk::u3_t duplicateValues[] = {70, 71};
 	::gpk::au0_t duplicate = {};
-	if_fail_fe(::gpk::saveView(duplicate, ::gpk::view<cnst ::gpk::u2_t>{duplicateKeys}));
-	if_fail_fe(::gpk::saveView(duplicate, ::gpk::view<cnst ::gpk::u3_t>{duplicateValues}));
+	if_fail_fe(::gpk::saveView(duplicate, ::gpk::vcu2_t{duplicateKeys}));
+	if_fail_fe(::gpk::saveView(duplicate, ::gpk::vcu3_t{duplicateValues}));
 	::gpk::vcu0_t duplicateInput = duplicate;
 	TLinearMap duplicateOutput = {};
 	if_fail_fe(prepareMapSentinel(duplicateOutput));

@@ -123,8 +123,7 @@ gpk::err_t	gpk::wordDictResolve	(view<cnst SWordIndices> wordSet, vcst_t input, 
 	if_fail_fe(split(input, ' ', inputWords));
 	if_fail_fe(wordListNormalize(normalizedWords, inputWords, exceptions));
 	if_fail_fe(matchedItems.resize(itemCount));
-	for(u2_t iItem = 0; iItem < matchedItems.size(); ++iItem)
-		matchedItems[iItem] = 0;
+	matchedItems.fill(0);
 	for(u2_t iInputWord = 0; iInputWord < normalizedWords.size(); ++iInputWord) {
 		vcst_c		inputWord						= normalizedWords[iInputWord];
 		if(0 == inputWord.size())

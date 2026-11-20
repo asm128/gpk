@@ -18,7 +18,7 @@ nmsp gpk
 		sc_t				uf0				[4];
 		sc_t				somePath		[16];
 		sc_t				unkstr			[12];
-		n3<s0_t>	unkchars		;
+		n3s0_t		unkchars		;
 		u2_t			minusone		;
 		sc_t				somevals		[8];
 		f2_t				part3			;

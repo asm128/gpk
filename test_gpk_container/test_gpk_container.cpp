@@ -20,7 +20,7 @@ int test_array_pod() {
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());
 	OutputDebugString("\n\n");
 
-	view<cnst sc_t>			vtest_0(aconst_0), vtest_1{atest_1};
+	vcsc_t					vtest_0(aconst_0), vtest_1{atest_1};
 	atest_0						= vtest_0;
 	atest_1						= aconst_1;
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());
@@ -109,7 +109,7 @@ int test_array_obj() {
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());
 	OutputDebugString("\n\n");
 
-	view<cnst sc_t>			vtest_0(aconst_0), vtest_1{atest_1};
+	vcsc_t					vtest_0(aconst_0), vtest_1{atest_1};
 	atest_1						= aconst_1;
 	atest_0						= vtest_0;
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());

@@ -103,12 +103,11 @@ gpk::err_t		gpk::controlSetParent	(SControlTable & controls, cid_t iControl, cid
     control.Parent		= iParent;
     if((u2_t)oldParent < controls.States.size() && false == controls.IsUnused(oldParent)) {
         acid					& children				= controls.Children[oldParent];
-        for(s2_t iChild = 0; iChild < (s2_t)children.size(); ++iChild)
-            if(children[iChild] == iControl) {
-                controls.SetUpdated(oldParent, false);
-                if_fail_fef(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
-                break;
-            }
+        cnst err_t              iChild                 = children.find(iControl);
+        if(0 <= iChild) {
+            if_true_i(controls.SetUpdated(oldParent, false));
+            if_fail_fef(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
+        }
     }
     if(controlInvalid(controls, iParent)) {
         if_true_vef(-1, -1 != iParent, "Invalid parent control id: %u.", iParent);
@@ -117,12 +116,11 @@ gpk::err_t		gpk::controlSetParent	(SControlTable & controls, cid_t iControl, cid
 
     // Set iControl to parent's children array.
     acid					& children				= controls.Children[iParent];
-    for(s2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-        if(children[iChild] == iControl)
+    if(0 <= children.find(iControl))
             return 0;
 
-    controls.SetUpdated(iParent , false);
-    controls.SetUpdated(iControl, false);
+    if_true_i(controls.SetUpdated(iParent , false));
+    if_true_i(controls.SetUpdated(iControl, false));
     if_fail_fe(children.push_back(iControl));
     return 0;
 }
@@ -237,7 +235,7 @@ gpk::err_t			gpk::SControlTable::Save		(au0_t & output) const {
     }
     for(u2_t iControl = 0; iControl < controlCount; ++iControl)
         if_fail_fef(::gpk::saveView(output, Children[iControl]), "iControl: %u", iControl);
-    if_fail_fe(::gpk::savePacked(output, ::gpk::packedu2_t{EventQueue.size()}));
+    if_fail_fe(::gpk::savePacked(output, EventQueue.size()));
     for(u2_t iEvent = 0; iEvent < EventQueue.size(); ++iEvent) {
         cnst SEventSystem * event = EventQueue[iEvent];
         if(event) {
@@ -251,44 +249,44 @@ gpk::err_t			gpk::SControlTable::Save		(au0_t & output) const {
 }
 
 gpk::err_t			gpk::SControlTable::Load		(vcu0_t & input) {
-	if_fail_fe(::gpk::loadView(input, States));
-	u2_c				controlCount			= States.size();
+    if_fail_fe(::gpk::loadView(input, States));
+    u2_c				controlCount			= States.size();
     if_fail_fe(::gpk::resize
         ( controlCount
-		, TextState, Identifier, Script, Constraints, Placement
-		, Area, Draw, Text, Images, Children
+        , TextState, Identifier, Script, Constraints, Placement
+        , Area, Draw, Text, Images, Children
         ));
     for(u2_t iControl = 0; iControl < controlCount; ++iControl)
-		if_fail_fef(::gpk::loadView(input, TextState[iControl]), "iControl: %u", iControl);
+        if_fail_fef(::gpk::loadView(input, TextState[iControl]), "iControl: %u", iControl);
     for(u2_t iControl = 0; iControl < controlCount; ++iControl)
-		if_fail_fef(::gpk::loadView(input, Identifier[iControl]), "iControl: %u", iControl);
+        if_fail_fef(::gpk::loadView(input, Identifier[iControl]), "iControl: %u", iControl);
     for(u2_t iControl = 0; iControl < controlCount; ++iControl)
-		if_fail_fef(::gpk::loadView(input, (::gpk::asc_t&)Script[iControl]), "iControl: %u", iControl);
-	if_fail_fe(::gpk::loadView(input, Constraints));
-	if_fail_fe(::gpk::loadView(input, Placement));
-	if_fail_fe(::gpk::loadView(input, Area));
-	if_fail_fe(::gpk::loadView(input, Draw));
-	if_true_fef(controlCount != Constraints.size(), "Constraints.size():%u, controlCount:%u.", Constraints.size(), controlCount);
-	if_true_fef(controlCount != Placement  .size(), "Placement.size():%u, controlCount:%u.", Placement  .size(), controlCount);
-	if_true_fef(controlCount != Area       .size(), "Area.size():%u, controlCount:%u.", Area       .size(), controlCount);
-	if_true_fef(controlCount != Draw       .size(), "Draw.size():%u, controlCount:%u.", Draw       .size(), controlCount);
+        if_fail_fef(::gpk::loadView(input, (::gpk::asc_t&)Script[iControl]), "iControl: %u", iControl);
+    if_fail_fe(::gpk::loadView(input, Constraints));
+    if_fail_fe(::gpk::loadView(input, Placement));
+    if_fail_fe(::gpk::loadView(input, Area));
+    if_fail_fe(::gpk::loadView(input, Draw));
+    if_true_fef(controlCount != Constraints.size(), "Constraints.size():%u, controlCount:%u.", Constraints.size(), controlCount);
+    if_true_fef(controlCount != Placement  .size(), "Placement.size():%u, controlCount:%u.", Placement  .size(), controlCount);
+    if_true_fef(controlCount != Area       .size(), "Area.size():%u, controlCount:%u.", Area       .size(), controlCount);
+    if_true_fef(controlCount != Draw       .size(), "Draw.size():%u, controlCount:%u.", Draw       .size(), controlCount);
     for(u2_t iControl = 0; iControl < controlCount; ++iControl) {
-		SControlText & text = Text[iControl];
-		if_fail_fef(::gpk::loadView(input, text.Text), "iControl: %u", iControl);
-		if_fail_fef(::gpk::loadPOD(input, text.Align), "iControl: %u", iControl);
-		if_fail_fef(::gpk::loadPOD(input, text.Selection), "iControl: %u", iControl);
-		if_fail_fef(::gpk::loadPOD(input, text.FontSelected), "iControl: %u", iControl);
+        SControlText & text = Text[iControl];
+        if_fail_fef(::gpk::loadView(input, text.Text), "iControl: %u", iControl);
+        if_fail_fef(::gpk::loadPOD(input, text.Align), "iControl: %u", iControl);
+        if_fail_fef(::gpk::loadPOD(input, text.Selection), "iControl: %u", iControl);
+        if_fail_fef(::gpk::loadPOD(input, text.FontSelected), "iControl: %u", iControl);
     }
     for(u2_t iControl = 0; iControl < controlCount; ++iControl) {
         n2u2_t imageMetrics = {};
-		if_fail_fef(::gpk::loadPOD(input, imageMetrics), "iControl: %u", iControl);
+        if_fail_fef(::gpk::loadPOD(input, imageMetrics), "iControl: %u", iControl);
     }
     for(u2_t iControl = 0; iControl < controlCount; ++iControl)
-		if_fail_fef(::gpk::loadView(input, Children[iControl]), "iControl: %u", iControl);
-	u2_t eventCount = {};
-	if_fail_fe(::gpk::loadPacked(input, eventCount));
-	if_fail_fe(EventQueue.resize(eventCount));
-	for(u2_t iEvent = 0; iEvent < eventCount; ++iEvent)
-		if_fail_fef(EventQueue[iEvent]->Load(input), "iEvent: %u", iEvent);
+        if_fail_fef(::gpk::loadView(input, Children[iControl]), "iControl: %u", iControl);
+    u2_t eventCount = {};
+    if_fail_fe(::gpk::loadPacked(input, eventCount));
+    if_fail_fe(EventQueue.resize(eventCount));
+    for(u2_t iEvent = 0; iEvent < eventCount; ++iEvent)
+        if_fail_fef(EventQueue[iEvent]->Load(input), "iEvent: %u", iEvent);
     return 0;
 }

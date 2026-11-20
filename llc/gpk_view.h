@@ -1,6 +1,8 @@
 #include "gpk_keyval.h"
 #include "gpk_functional.h"
 #include "gpk_log.h"
+#include "gpk_range.h"
+#include "gpk_slice.h"
 
 
 #if defined(GPK_ATMEL)
@@ -39,7 +41,7 @@ nmsp gpk
 
 		tplN2u	inxp			view			(T (&elements)[N])					nxpt	: Data(elements), Count(N)								{}
 		tplN2u	inxp			view			(u2_t elementCount, T (&elements)[N])		: Data(elements), Count(::gpk::min(N, elementCount))	{}
-		inln					view			(T * elements, u2_t elementCount)			: Data(elements), Count(elementCount)					{ if_true_tef(0 == elements && 0 != elementCount, "%" GPK_FMT_U2 " -> 0.", elementCount);	}
+		inxp					view			(T * elements, u2_t elementCount)			: Data(elements), Count(elementCount)					{ if_true_tef(0 == elements && 0 != elementCount, "%" GPK_FMT_U2 " -> 0.", elementCount);	}
 
 		// Operators
 		inxp	oper			view<TCnst>		()									csnx	{ rtrn {Data, Count}; }
@@ -70,9 +72,9 @@ nmsp gpk
 		inxp	u2_c&			size			()									csnx	{ rtrn Count;				}
 		inxp	TCnst*			begin			()									csnx	{ rtrn Data;				}
 		inxp	TCnst*			end				()									csnx	{ rtrn begin() + Count;	}
-		inln	T*				begin			()									nxpt	{ rtrn Data;				}
-		inln	T*				end				()									nxpt	{ rtrn begin() + Count;	}
-		err_t					slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
+		inxp	T*				begin			()									nxpt	{ rtrn Data;				}
+		inxp	T*				end				()									nxpt	{ rtrn begin() + Count;	}
+		inxp err_t			slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
 			if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
 			u2_c					newSize			= Count - offset;
 			if(count != (u2_t)-1)
@@ -80,7 +82,7 @@ nmsp gpk
 			out						= {Data ? &Data[offset] : 0, ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
-		err_t					slice			(TCstV & out, u2_t offset, u2_t count = (u2_t)-1)		cnst	{
+		inxp err_t			slice			(TCstV & out, u2_t offset, u2_t count = (u2_t)-1)		cnst	{
 			if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
 			u2_c					newSize			= Count - offset;
 			if(count != (u2_t)-1)
@@ -88,6 +90,10 @@ nmsp gpk
 			out						= {Data ? &Data[offset] : 0, ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
+		inxp err_t			slice			(TV & out, rangeu2_t rangeToSlice)							{ rtrn slice(out, rangeToSlice.Offset, rangeToSlice.Count); }
+		inxp err_t			slice			(TCstV & out, rangeu2_t rangeToSlice)					cnst	{ rtrn slice(out, rangeToSlice.Offset, rangeToSlice.Count); }
+		inxp err_t			slice			(TV & out, sliceu2_t sliceToSlice)							{ rtrn slice(out, sliceToSlice.Begin, sliceToSlice.End - sliceToSlice.Begin); }
+		inxp err_t			slice			(TCstV & out, sliceu2_t sliceToSlice)					cnst	{ rtrn slice(out, sliceToSlice.Begin, sliceToSlice.End - sliceToSlice.Begin); }
 		err_t					revert			()																{
 			u2_c					lastElement		= Count - 1;
 			for(u2_t i = 0, swapCount = Count / 2; i < swapCount; ++i) {
@@ -112,7 +118,7 @@ nmsp gpk
 
 		err_t					find			(cnst FBool<T&>		& funcForEach	, u2_t offset = 0)											{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
 		err_t					find			(cnst FBool<TCnst&>	& funcForEach	, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
-		err_t					find			(cnst T				& value			, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(Data[offset] == value) rtrn (err_t)offset; rtrn -1; }
+		inxp	err_t					find			(cnst T				& value			, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(Data[offset] == value) rtrn (err_t)offset; rtrn -1; }
 		err_t					find			(TCstV sequence, u2_t offset = 0)										cnst	{
 			if(sequence.size() > Count || offset > Count - sequence.size())
 				rtrn -1;
@@ -191,6 +197,8 @@ nmsp gpk
 
 	tplTnsix	u2_t		size			(cnst view<T> & viewToTest)														nxpt	{ rtrn viewToTest.size();		}
 	tplTnsix	u2_t		byte_count		(cnst view<T> & viewToTest)														nxpt	{ rtrn viewToTest.byte_count();	}
+	tplt<tpnm T>
+	inxp	b8_t		is_any_of		(cnst T & valueToTest, view<cnst T> collection)						nxpt	{ rtrn 0 <= collection.find(valueToTest); }
 
 #pragma pack(pop)
 
@@ -247,11 +255,38 @@ nmsp gpk
 	tydf	view<vf2_c>	vcvf2_t;	tdcs	vcvf2_t	vcvf2_c;
 	tydf	view<vf3_c>	vcvf3_t;	tdcs	vcvf3_t	vcvf3_c;
 	//
-	stxp	vcsc_t		TRIM_CHARACTERS		= " \t\b\n\r";
+	stxp	vcsc_t		SPACE_CHARACTERS	= " \t\b\f\n\r";
+	stxp	vcsc_t		TRIM_CHARACTERS		= SPACE_CHARACTERS;
+	tplt<tpnm T>
+	inxp	b8_t	is_space_character	(cnst T & character, view<cnst T> spaceCharacters = SPACE_CHARACTERS)	nxpt	{ rtrn is_any_of(character, spaceCharacters); }
 
-	err_t			rtrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
-	err_t			ltrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
-	err_t			trim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS);
+	sinx	err_t	rtrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS) {
+		u2_t count = 0;
+		while(count < original.size() && 0 <= characters.find(original[original.size() - 1 - count]))
+			++count;
+		trimmed = {original.begin(), original.size() - count};
+		rtrn count;
+	}
+	sinx	err_t	ltrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS) {
+		u2_t count = 0;
+		while(count < original.size() && 0 <= characters.find(original[count]))
+			++count;
+		trimmed = {original.begin() + count, original.size() - count};
+		rtrn count;
+	}
+	sinx	err_t	trim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS) {
+		cnst err_t countLeft = ltrim(trimmed, original, characters);
+		rtrn countLeft + rtrim(trimmed, trimmed, characters);
+	}
+	sinx	rangeu2_t trim			(vcsc_t original, rangeu2_t span, vcsc_t characters = TRIM_CHARACTERS) {
+		if(span.empty())
+			rtrn span;
+		vcsc_t trimmed = {original.begin() + span.Offset, span.Count};
+		ltrim(trimmed, trimmed, characters);
+		cnst u2_t offset = span.Offset + span.Count - trimmed.size();
+		rtrim(trimmed, trimmed, characters);
+		rtrn {offset, trimmed.size()};
+	}
 	stin	err_t	rtrim				(vcsc_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
 	stin	err_t	ltrim				(vcsc_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
 	stin	err_t	trim				(vcsc_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
@@ -432,6 +467,12 @@ nmsp gpk
 	tdcs		vcst_t					vcst_c;
 	tydf		view<vcst_t>			vvcst_t;
 	tydf		view<vcst_c>			vcvcst_t;
+	sinx		err_t	trim			(vcst_t & text, vcsc_t trimCharacters = TRIM_CHARACTERS) {
+		vcsc_t trimmed = text;
+		cnst err_t count = trim(trimmed, trimmed, trimCharacters);
+		text = {trimmed.begin(), trimmed.size()};
+		rtrn count;
+	}
 
 	ndsi		err_t	find_string		(vcst_c & toFind, vcst_c & target, u2_t offset = 0) { rtrn target.find(toFind, offset); }
 	ndsi		err_t	rfind_string	(vcst_c & toFind, vcst_c & target, u2_t offset = 0) { rtrn target.rfind(toFind, offset); }

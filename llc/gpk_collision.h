@@ -31,12 +31,10 @@ nmsp gpk
 		f3_t					ynom			= ::gpk::determinant(detL1, y1my2, detL2, y3my4);
 		f3_t					denom			= ::gpk::determinant(x1mx2, y1my2, x3mx4, y3my4);
 		if(denom == 0.0) { // Lines don't seem to cross
-			out_intersect_point.x	= NAN;
-			out_intersect_point.y	= NAN;
+			out_intersect_point.Set(NAN);
 			return 0;
 		}
-		out_intersect_point.x	= (TAxis)(xnom / denom);
-		out_intersect_point.y	= (TAxis)(ynom / denom);
+		out_intersect_point		= {(TAxis)(xnom / denom), (TAxis)(ynom / denom)};
 		if_true_vef(-1, !isfinite(out_intersect_point.x)
 			|| !isfinite(out_intersect_point.y)
 			, "%s", "Probably a numerical issue.");

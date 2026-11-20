@@ -54,7 +54,7 @@ nmsp gpk
 		gpk::err_t 		Read			(::gpk::au0_t & dataReceived)	cnst {
 			u2_t					sizeRead		= (u2_t)-1;
 			if_fail_fe(dataReceived.resize(1024));
-			memset(&dataReceived[0], 0, dataReceived.size());
+			dataReceived.fill(0);
 #ifdef GPK_WINDOWS
 			if_true_vef(-1, 0 == ReadFile(PlatformDetail.Handle, &dataReceived[0], (u2_t)dataReceived.size(), (DWORD*)&sizeRead, 0), "Failed to read from serial port %.*s.", GPK_VIEW_ARGS(Port));
 #endif

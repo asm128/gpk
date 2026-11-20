@@ -29,7 +29,6 @@ nmsp gpk
 	GDEFINE_ENUM_CTTI(SYSTEM_EVENT);
 
 	tydf SEvent            <SYSTEM_EVENT>	SEventSystem;
-	static_assert(ctti_same<tpnm SCTTIMemberTypes<SEventSystem, ctti_index_pack<0, 1>>::Type, type_pack<SYSTEM_EVENT, au0_t>>::Value);
 	tydf SEView            <SYSTEM_EVENT>	SEViewSystem;
 	tydf FEventHandler     <SYSTEM_EVENT>	FEventSystem;
 	tydf FEventHandlerConst<SYSTEM_EVENT>	FEventSystemConst;

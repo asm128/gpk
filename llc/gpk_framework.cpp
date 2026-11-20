@@ -27,7 +27,7 @@ sttc	gpk::err_t updateDPI									(SFramework & framework)													{
 		RECT			rcWindow									= {};
 		::GetWindowRect(framework.RootWindow.PlatformDetail.WindowHandle, &rcWindow);
 		POINT			point										= {rcWindow.left + 8, rcWindow.top};
-		n2<u2_t>																	dpi											= {96, 96};
+		n2u2_t																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
 #if defined(GPK_WINDOWS7_COMPAT)
 		if((framework.GUI->Zoom.DPI * 96).u2() != dpi) {
@@ -263,8 +263,8 @@ sttc	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	case WM_MOUSEWHEEL		: verbose_printf("WM_MOUSEWHEEL    '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseWheel			(mainDisplay.EventQueue, input.MouseCurrent.Deltas.z = GET_WHEEL_DELTA_WPARAM(wParam))); mainDisplay.Repaint = true; break;
 	case WM_MOUSEMOVE		: {
 		n2s1_t						mousePos		= {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
-		input.MouseCurrent.Position.x	= (s1_t)clamped(mousePos.x, (s1_t)0, (s1_t)(mainDisplay.Size.x - 1));
-		input.MouseCurrent.Position.y	= (s1_t)clamped(mousePos.y, (s1_t)0, (s1_t)(mainDisplay.Size.y - 1));
+		mousePos.InPlaceClamp({}, {(s1_t)(mainDisplay.Size.x - 1), (s1_t)(mainDisplay.Size.y - 1)});
+		input.MouseCurrent.Position		= mousePos;
 		input.MouseCurrent.Deltas.x		= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 		input.MouseCurrent.Deltas.y		= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
@@ -294,7 +294,7 @@ sttc	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 			break;
 		}
 		if(lParam) {
-			n2<u1_t>					newMetrics					= n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.u1();
+			n2u1_t						newMetrics					= n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.u1();
 			RECT								windowrect					= {};
 			GetClientRect(hWnd, &windowrect);
 			newMetrics = {u1_t(windowrect.right - windowrect.left), u1_t(windowrect.bottom - windowrect.top)};

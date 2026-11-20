@@ -24,7 +24,7 @@ namespace dry
 		::gpk::ALIGN			IconAlign		;
 		::gpk::vcst_t			IconPathOff		;
 		::gpk::vcst_t			IconPathOn		;
-		::gpk::n2<b8_t>			AdjustToText	;
+		::gpk::n2b8_t				AdjustToText	;
 	};
 #pragma pack(pop)
 

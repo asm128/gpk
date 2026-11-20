@@ -108,7 +108,9 @@ stxp	::gpk::vcst_c		JSON_GUI					= R"json(
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_Dark_green * 16 + 7;
 	::gpk::SJSONReader				jsonGUIReader				= {};
 	if_fail_fe(::gpk::jsonParse(jsonGUIReader, JSON_GUI));
-	if_fail_fe(::gpk::guiLoad(gui, jsonGUIReader));
+	::gpk::err_t					iGUI						= -1;
+	if_fail_fe(iGUI = ::gpk::jsonObjectValueGet(jsonGUIReader, 0, "GUI"));
+	if_fail_fe(::gpk::guiLoad(gui, jsonGUIReader, (::gpk::u2_t)iGUI));
 	{
 		app.IdFrameRateUpdate												= ::gpk::controlCreate(gui);
 		::gpk::SControlPlacement															& controlExit								= gui.Controls.Placement[app.IdFrameRateUpdate];

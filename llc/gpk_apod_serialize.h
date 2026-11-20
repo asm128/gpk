@@ -6,8 +6,9 @@
 
 nmsp gpk
 {
-	tplt<tpnm TOutput, tpnm T, u0_t widthField>
-	err_t					savePacked					(TOutput & output, cnst packed_uint<T, widthField> & packedInput) {
+	tplt<tpnm TOutput, tpnm T, u0_t widthField = uint_width_field_size<T>()>
+	err_t					savePacked					(TOutput & output, cnst T & input) {
+		cnst packed_uint<T, widthField>	packedInput					= input;
 		u2_c						offset						= output.size();
 		if_fail_fe(output.resize(offset + packedInput.ValueWidth()));
 		memcpy(&output[offset], &packedInput, packedInput.ValueWidth());
@@ -15,10 +16,10 @@ nmsp gpk
 	}
 
 	tplT			err_t	saveView					(au0_t & output, cnst view<T> & viewToSerialize)	{
-		cnst packedu2_t				counterValue				= viewToSerialize.size();
-		if_fail_fe(savePacked(output, counterValue));
-		if_fail_fe(output.append({(u0_c*)viewToSerialize.begin(), viewToSerialize.byte_count()}));
-		return counterValue.ValueWidth() + viewToSerialize.byte_count();
+		err_t						counterWidth				= 0;
+		if_fail_fe(counterWidth = savePacked(output, viewToSerialize.size()));
+		if_fail_fe(output.append(viewToSerialize.bytes()));
+		return counterWidth + viewToSerialize.byte_count();
 	}
 	//tplT			err_t	saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
 	//	u2_c						offset				= output.size();
@@ -45,10 +46,6 @@ nmsp gpk
 		for(u2_t index = 0; index < count; ++index)
 			if_fail_fe(save(output, index, map[index]));
 		return 0;
-	}
-	tplT			err_t	saveUInt					(au0_t & output, cnst T & input)				{ 
-		cnst packed_uint<T>			packedInput					= input; 
-		return savePacked(output, packedInput); 
 	}
 	tplT			err_t	loadView					(vcu0_t & input, apod<T> & output) { 
 		view<cnst T>				readView					= {}; 

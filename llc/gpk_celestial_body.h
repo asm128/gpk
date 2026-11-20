@@ -1,5 +1,6 @@
 #include "gpk_json.h"
 #include "gpk_orbit.h"
+#include "gpk_ctti_enum.h"
 
 #ifndef GPK_CELESTIAL_BODY_2379
 #define GPK_CELESTIAL_BODY_2379
@@ -7,22 +8,27 @@
 nmsp gpk
 {
 #pragma pack(push, 1)
-	GDEFINE_ENUM_TYPE(CELESTIAL_BODY, u0_t);
-	GDEFINE_ENUM_VALUE(CELESTIAL_BODY, System	, 0);
-	GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Orbit	, 1);
-	GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Star		, 2);
-	GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Planet	, 3);
-	GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Moon		, 4);
-	//GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Asteroid	, 5);
-	//GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Comet		, 6);
+	CTTI_ENUM(CELESTIAL_BODY,
+	enum CELESTIAL_BODY : u0_t
+		{ CELESTIAL_BODY_System 
+		, CELESTIAL_BODY_Orbit  
+		, CELESTIAL_BODY_Star   
+		, CELESTIAL_BODY_Planet 
+		, CELESTIAL_BODY_Moon   
+	//CELESTIAL_BODY_Asteroid	
+	//CELESTIAL_BODY_Comet		
+		};
+	);
 
-	GDEFINE_ENUM_TYPE (PLANET_TYPE, u0_t);
-	GDEFINE_ENUM_VALUE(PLANET_TYPE, Dwarf		, 0);
-	GDEFINE_ENUM_VALUE(PLANET_TYPE, Terrestrial	, 1);
-	GDEFINE_ENUM_VALUE(PLANET_TYPE, GasGiant	, 2);
-	GDEFINE_ENUM_VALUE(PLANET_TYPE, IceGiant	, 3);
-	GDEFINE_ENUM_VALUE(PLANET_TYPE, MassiveSolid, 4);
-
+	CTTI_ENUM(PLANET_TYPE,
+	enum PLANET_TYPE : u0_t
+		{ PLANET_TYPE_Dwarf		
+		, PLANET_TYPE_Terrestrial	
+		, PLANET_TYPE_GasGiant	
+		, PLANET_TYPE_IceGiant	
+		, PLANET_TYPE_MassiveSolid
+		};
+	);
 	struct SDetailStar {
 		f2_t			SurfaceGravity			= {};	// 274.0		// (eq.) (m/s2)		// 5
 		f2_t			CentralPressure			= {};	// 2.477		// x 1011	bar		// 15

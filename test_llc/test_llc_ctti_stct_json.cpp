@@ -146,9 +146,11 @@ sttc ::gpk::err_t cttiStructJSONWindowLoad(cnst ::gpk::SJSONReader & input, ::gp
 ::gpk::err_t test_ctti_stct_json(STestRunnerState &, ::gpk::ATestError & errors, ::gpk::vcst_t outputFolder) {
 	cnst auto & metadata = ::gpk::cttiStruct<SCTTIStructJSONPOD>();
 	GPK_TEST_REQUIRE(errors, CTTI_STCT_JSON_TEST_RESULT_METADATA, false == metadata.Success());
-	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_METADATA, metadata.View(metadata.StructName) != "SCTTIStructJSONPOD");
+	cnst ::gpk::vcst_t structName = {&metadata.SourceText[metadata.StructName.Offset], metadata.StructName.Count};
+	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_METADATA, structName != "SCTTIStructJSONPOD");
 	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_COUNT, 1 != metadata.Count);
-	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_NAME, metadata.View(metadata.Members[0].Name) != "Value");
+	cnst ::gpk::vcst_t memberName = {&metadata.SourceText[metadata.Members[0].Name.Offset], metadata.Members[0].Name.Count};
+	GPK_TEST_CHECK(errors, CTTI_STCT_JSON_TEST_RESULT_MEMBER_NAME, memberName != "Value");
 
 	SCTTIStructJSONInstance sourceA = {7, 1.25, SCTTIStructJSONModeWrite, true};
 	SCTTIStructJSONInstance sourceB = {9, -2.5, SCTTIStructJSONModeRead, false};

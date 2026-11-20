@@ -11,7 +11,6 @@ nmsp gpk
 	err_t	controlTableJSONLoad	(SControlTable & controls, vcst_t & inputJsonString_NOT_FILENAME);
 	err_t	controlTableJSONSave	(cnst SControlTable & controls, string & outputJsonString);
 	err_t	controlTableJSONSave	(string & outputJsonString, cnst SControlTable & controls, vs1_t defaultColors);
-	err_t	controlTableScriptRun	(SControlTable & controls, cid_t iControl, vcst_t jsonExpression);
 	err_t	controlTableScriptRun	(SControlTable & controls, vcst_t jsonExpression);
 	err_t	controlTableScriptRun	(SControlTable & controls, cid_t iControl);
 

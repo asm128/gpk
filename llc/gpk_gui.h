@@ -40,7 +40,7 @@ nmsp gpk
 	};
 
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
-	err_t				guiLoad							(SGUI & gui, cnst SJSONReader & input);
+	err_t				guiLoad							(SGUI & gui, cnst SJSONReader & input, u2_t iNode = 0);
 	err_t				guiJSONSave						(string & output, cnst SGUI & gui);
 	err_t				guiJSONLoad						(SGUI & gui, cnst SJSONReader & input, u2_t iNode = 0);
 	err_t				guiScriptRun					(SGUI & gui, cid_t iControl);
@@ -64,11 +64,11 @@ nmsp gpk
 	}
 	tplt<tpnm _tUIEnum>
 	stin	cid_t		guiCreateControlList			(SGUI & gui, DIRECTION direction, cid_t iParent, cnst SControlPlacement & args, ALIGN textAlign, acid & out_ids) {
-		return guiCreateControlList(gui, direction, cttiEnumValueNames<_tUIEnum>(), iParent, args, textAlign, out_ids);
+		return guiCreateControlList(gui, direction, cttiValueNames<_tUIEnum>(), iParent, args, textAlign, out_ids);
 	}
 	tplt<tpnm _tUIEnum>
 	stin	cid_t		guiCreateControlList			(SGUI & gui, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, vcid out_ids) {
-		return guiCreateControlList(gui, cttiEnumValueNames<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
+		return guiCreateControlList(gui, cttiValueNames<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	}
 	stin	cid_t		guiCreateControlList			(SGUI & gui, view<vcst_c> buttonText, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids)	{ 
 		u2_c offsetId = out_ids.size();
@@ -77,15 +77,15 @@ nmsp gpk
 	}
 	tplt<tpnm _tUIEnum>
 	stin	cid_t		guiCreateControlList			(SGUI & gui, cid_t iParent, u1_t buttonWidth, s1_t yOffset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids) {
-		return guiCreateControlList(gui, cttiEnumValueNames<_tUIEnum>(), iParent, {buttonWidth, 20}, {0, yOffset}, controlAlign, textAlign, out_ids);
+		return guiCreateControlList(gui, cttiValueNames<_tUIEnum>(), iParent, {buttonWidth, 20}, {0, yOffset}, controlAlign, textAlign, out_ids);
 	}
 	tplt<tpnm _tUIEnum>
 	stin	cid_t		guiCreateControlList			(SGUI & gui, cid_t iParent, u1_t buttonWidth, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids) {
-		return guiCreateControlList(gui, cttiEnumValueNames<_tUIEnum>(), iParent, {buttonWidth, 20}, offset, controlAlign, textAlign, out_ids);
+		return guiCreateControlList(gui, cttiValueNames<_tUIEnum>(), iParent, {buttonWidth, 20}, offset, controlAlign, textAlign, out_ids);
 	}
 	tplt<tpnm _tUIEnum>
 	stin	cid_t		guiCreateControlList			(SGUI & gui, cid_t iParent, cnst n2u1_t & buttonSize, n2s1_c & offset, ALIGN controlAlign, ALIGN textAlign, acid & out_ids) {
-		return guiCreateControlList(gui, cttiEnumValueNames<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
+		return guiCreateControlList(gui, cttiValueNames<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	} 
 
 	cid_t				createScreenLayout				(SGUI & gui, cid_t parent = -1);

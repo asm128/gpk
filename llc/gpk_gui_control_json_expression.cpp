@@ -51,17 +51,12 @@ gpk::err_t gpk::controlTableScriptRun(SControlTable & controls, vcst_t jsonExpre
 	rtrn 0;
 }
 
-gpk::err_t gpk::controlTableScriptRun(SControlTable & controls, cid_t iControl, vcst_t jsonExpression) {
-	if_true_fef(controlInvalid(controls, iControl), "iControl:%i", iControl);
-	rtrn controlTableScriptRun(controls, jsonExpression);
-}
-
 gpk::err_t gpk::controlTableScriptRun(SControlTable & controls, cid_t iControl) {
 	if_true_fef(controlInvalid(controls, iControl), "iControl:%i", iControl);
 	cnst vcst_t script = controls.Script[iControl];
 	if(0 == script.size())
 		rtrn 0;
-	rtrn controlTableScriptRun(controls, iControl, script);
+	rtrn controlTableScriptRun(controls, script);
 }
 
 sttc ::gpk::err_t controlTableScriptResolveNode(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, cnst ::gpk::SJSONReader & values, ::gpk::u2_t iValues, ::gpk::string & output) {

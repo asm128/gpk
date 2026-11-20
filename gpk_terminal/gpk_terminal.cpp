@@ -55,7 +55,9 @@ stxp	::gpk::vcst_c		JSON_GUI					= R"json(
 	::gpk::SGUI					& gui						= *framework.GUI;
 	::gpk::SJSONReader			jsonGUIReader				= {};
 	jsonParse(jsonGUIReader, JSON_GUI);
-	guiLoad(gui, jsonGUIReader);
+	cnst ::gpk::err_t			iGUI						= ::gpk::jsonObjectValueGet(jsonGUIReader, 0, "GUI");
+	if(0 <= iGUI)
+		guiLoad(gui, jsonGUIReader, (::gpk::u2_t)iGUI);
 	::gpk::tcpipInitialize();
 	u3_t 					port						= 9998;
 	u3_t 					adapter						= 0;
@@ -114,8 +116,7 @@ stxp	::gpk::vcst_c		JSON_GUI					= R"json(
 		}
 	}
 
-	app.ClientIOHandles.resize(receivedPerClient.size());
-	app.ClientProcesses.resize(receivedPerClient.size());
+	if_fail_ce(::gpk::resize_obj(receivedPerClient.size(), app.ClientIOHandles, app.ClientProcesses));
 	{	// Exectue processes
 		for(u2_t  iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			::gpk::SProcessHandles		& iohandles				= app.ClientIOHandles[iClient];

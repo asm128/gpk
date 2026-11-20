@@ -23,7 +23,7 @@ sttc ::gpk::err_t xmlNameEnd(::gpk::vcst_t xmlDoc, ::gpk::u2_t offset, ::gpk::u2
 	end						= offset;
 	while(end < xmlDoc.size()) {
 		cnst ::gpk::sc_t current	= xmlDoc[end];
-		if(::gpk::isSpaceCharacter(current) || current == '/' || current == '>' || current == '?' || current == '=')
+		if(::gpk::is_space_character(current) || current == '/' || current == '>' || current == '?' || current == '=')
 			break;
 		++end;
 	}
@@ -32,7 +32,7 @@ sttc ::gpk::err_t xmlNameEnd(::gpk::vcst_t xmlDoc, ::gpk::u2_t offset, ::gpk::u2
 }
 
 sttc ::gpk::err_t xmlSkipSpaces(::gpk::vcst_t xmlDoc, ::gpk::u2_t & offset) {
-	while(offset < xmlDoc.size() && ::gpk::isSpaceCharacter(xmlDoc[offset]))
+	while(offset < xmlDoc.size() && ::gpk::is_space_character(xmlDoc[offset]))
 		++offset;
 	rtrn offset;
 }
@@ -186,6 +186,7 @@ gpk::err_t gpk::xmlFileRead(::gpk::SXMLFile & file, ::gpk::vcst_t filename) {
 
 gpk::err_t gpk::xmlParse(::gpk::SXMLReader & reader, ::gpk::vcst_t xmlDoc) {
 	if_fail_fe(reader.Reset());
+	reader.Source = xmlDoc;
 	cnst ::gpk::err_t iDocument	= ::xmlTokenAdd(reader, ::gpk::XML_TOKEN_DOCUMENT, 0, xmlDoc.size(), -1);
 	if_fail_fe(iDocument);
 	::gpk::u2_t iCurrentNode		= (::gpk::u2_t)iDocument;

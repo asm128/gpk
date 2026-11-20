@@ -27,7 +27,7 @@ sttc ::gpk::err_t connectionReceive(::gpk::SSocketConnection & client, cnst ::gp
 		return 0;
 	}
 	if_fail_fe(packet.resize((::gpk::u2_t)sizeof(header) + header.Size));
-	::memset(packet.begin(), 0, packet.size());
+	packet.fill(0);
 	remoteSize = (socklen_t)sizeof(remote);
 	cnst int received = ::recvfrom(client.Socket.Handle, (::gpk::sc_t*)packet.begin(), (int)packet.size(), MSG_PEEK, (sockaddr*)&remote, &remoteSize);
 	if(received < 0) {

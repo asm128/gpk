@@ -59,8 +59,7 @@ gpk::err_t			gpk::folderPack				(SFolderPackage & output, vcst_c nameFolderSrc) 
 }
 gpk::err_t			gpk::folderUnpack			(SFolderInMemory & output, vcu0_t rawFileInMemory)		{
 	cnst SPackHeader	& header					= *(SPackHeader*)&rawFileInMemory[0];
-	output.Names	.resize(header.TotalFileCount);
-	output.Contents	.resize(header.TotalFileCount);
+	if_fail_fe(resize_obj(header.TotalFileCount, output.Names, output.Contents));
 	output.DataInfo		.clear();
 	output.DataContents	.clear();
 	if_fail_fe(arrayInflate({&rawFileInMemory[0] + szof(SPackHeader)									, header.SizeCompressedTableFiles		}, output.DataInfo	, ::INFLATE_CHUNK_SIZE));

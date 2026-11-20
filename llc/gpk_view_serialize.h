@@ -25,13 +25,10 @@ nmsp gpk
 		rtrn valueWidth;
 	}
 	//
-	tplT		err_t	loadUInt		(vcu0_t & input, T & output)	{ rtrn loadPacked(input, output); }
-	tplTstin	err_t	loadUInt		(vcs0_t  & input, T & output)	{ rtrn loadUInt (*(vcu0_t*)& input, output); }
-	//
 	tplt<tpnm T, tpnm TByte>
 	err_t				viewRead		(view<T> & headerToRead, view<TByte> input)	{
 		if_zero_fe(input.size());
-		vcu0_t					byteInput		= {(u0_c*)input.begin(), input.byte_count()};
+		vcu0_t					byteInput		= input.bytes();
 		u2_t					elementCount	= 0;
 		err_t					counterWidth	= 0;
 		if_fail_fe(counterWidth	= loadPacked(byteInput, elementCount));

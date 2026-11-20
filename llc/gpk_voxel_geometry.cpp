@@ -7,7 +7,7 @@ sttc	gpk::err_t geometryVoxelFace
 	( ::gpk::SGeometryBuffers						& geometry
 	, cnst ::gpk::n3f2_t							& voxelPos
 	, cnst ::gpk::view<cnst ::gpk::n3f2_t>	& rawVertices
-	, cnst ::gpk::view<cnst u0_t>				& rawIndices
+	, cnst ::gpk::vcu0_t						& rawIndices
 	) {
 	::gpk::n3f2_t				vertices [4]				= {}; 
 	u2_t					indices  [6]				= {}; 
@@ -24,7 +24,7 @@ sttc	gpk::err_t geometryVoxelFace
 }
 
 gpk::err_t 		gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, cnst ::gpk::SVoxelMap<u0_t> & voxelMap) {
-	cnst ::gpk::n3<u0_t>	dimensions				= voxelMap.Dimensions;
+	cnst ::gpk::n3u0_t		dimensions				= voxelMap.Dimensions;
 
 	::gpk::SGeometryBuffers	& geometry				= output.Geometry;
 	::gpk::apod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;

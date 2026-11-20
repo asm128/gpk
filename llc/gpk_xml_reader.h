@@ -1,4 +1,5 @@
 #include "gpk_enum.h"
+#include "gpk_reader.h"
 #include "gpk_range.h"
 #include "gpk_string.h"
 
@@ -30,20 +31,15 @@ nmsp gpk
 		s2_t				Parent;
 	};
 
-	stct SXMLReaderState {
-		u2_t				IndexCurrentChar	= 0;
-		s2_t				IndexCurrentElement	= -1;
-		SXMLToken			* CurrentElement	= 0;
-		u2_t				NestLevel			= 0;
-		sc_t				CharCurrent			= 0;
-	};
+	tydf SReaderState<SXMLToken, s2_t, u2_t> SXMLReaderState;
+	tydf SReaderView<SXMLToken> SXMLReaderView;
 
-	stct SXMLReader {
+	stct SXMLReader : SReader<SXMLToken> {
 		SXMLReaderState		StateRead;
-		apod<SXMLToken>		Token;
 
 		err_t				Reset				() {
-			Token.clear();
+			::gpk::clear(Token, View);
+			Source				= {};
 			StateRead				= {};
 			rtrn 0;
 		}

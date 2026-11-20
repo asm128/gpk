@@ -78,7 +78,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir); </AdditionalLibraryDirectories>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; shcore.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; user32.lib; gdi32.lib; shcore.lib; </AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <ModuleDefinitionFile>..\..\gpk\llc\gpk_module_exports.def</ModuleDefinitionFile>
     </Link>

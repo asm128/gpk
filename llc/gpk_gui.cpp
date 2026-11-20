@@ -45,7 +45,7 @@ sttc ::gpk::err_t guiControlFlag(::gpk::vcst_t name, ::gpk::GUI_CONTROL_FLAG & f
 		, ::gpk::GUI_CONTROL_FLAG_Selected, ::gpk::GUI_CONTROL_FLAG_Updated, ::gpk::GUI_CONTROL_FLAG_Action
 		};
 	for(::gpk::u2_t iFlag = 0; iFlag < szof(flags) / szof(flags[0]); ++iFlag)
-		if(name == ::gpk::cttiEnumName(flags[iFlag])) {
+		if(name == ::gpk::cttiValueName(flags[iFlag], false)) {
 			flag = flags[iFlag];
 			rtrn 1;
 		}
@@ -334,21 +334,6 @@ gpk::err_t gpk::guiJSONLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input, 
 			if_fail_fe(::guiControlJSONLoad(gui, (cid_t)iControl, input, (u2_t)iControlNode));
 	}
 	rtrn 0;
-}
-
-gpk::err_t gpk::guiLoad(::gpk::SGUI & gui, cnst ::gpk::SJSONReader & input) {
-	cnst ::gpk::err_t iGUI = ::gpk::jsonExpressionResolve("GUI", input, 0);
-	if_fail_fe(iGUI);
-	::gpk::aobj<::gpk::vcst_t> identifiers = {};
-	if_fail_fe(::gpk::jsonObjectKeyList(input, (::gpk::u2_t)iGUI, identifiers));
-	for(::gpk::u2_t iIdentifier = 0; iIdentifier < identifiers.size(); ++iIdentifier) {
-		if(identifiers[iIdentifier] == "Events")
-			continue;
-		cnst ::gpk::cid_t iControl = ::gpk::controlCreate(gui);
-		if_fail_fe(iControl);
-		gui.Controls.Identifier[iControl] = ::gpk::label(identifiers[iIdentifier]);
-	}
-	rtrn ::gpk::guiJSONLoad(gui, input, (::gpk::u2_t)iGUI);
 }
 
 sttc ::gpk::err_t guiJSONTemplateDynamic(cnst ::gpk::SJSONReader & source, ::gpk::u2_t iSource, ::gpk::vcst_t rootIdentifier, ::gpk::b8_t & dynamic, ::gpk::b8_t & scoped) {
@@ -732,7 +717,7 @@ sttc gpk::cid_t	controlDockTarget	(cnst SGUI & gui, cid_t idTarget, GUI_CONTROL_
 	return CID_INVALID;
 }
 
-sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> & _targetSize)					{
+sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2u1_t & _targetSize)					{
 	if_fail_fef(gpk::controlInvalid(gui.Controls, iControl), "Invalid control id: %u.", iControl);
 
 	SControlState		& controlState			= gui.Controls.States[iControl];
@@ -770,9 +755,8 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 	controlMetrics.Client.Local	= {{(s1_t)ncSizesScaled.Left, (s1_t)ncSizesScaled.Top}, (scaledSize - ncTotalSizeScaled).s1()};
 	n2f3_t				minSizeScaled			= (controlConstraints.SizeMinMax.Min.f3().InPlaceScale(scale.x, scale.y));
 	n2f3_t				maxSizeScaled			= (controlConstraints.SizeMinMax.Max.f3().InPlaceScale(scale.x, scale.y));
-	scaledSize.x			= max(minSizeScaled.x, min(maxSizeScaled.x, scaledSize.x));
-	scaledSize.y			= max(minSizeScaled.y, min(maxSizeScaled.y, scaledSize.y));
-	realignRectangle(targetSize.u2(), rect2<s1_t>{scaledPosition.s1(), scaledSize.s1()}, controlMetrics.Total.Local, controlPlacement.Align);
+	scaledSize.InPlaceClamp(minSizeScaled, maxSizeScaled);
+	realignRectangle(targetSize.u2(), rect2s1_t{scaledPosition.s1(), scaledSize.s1()}, controlMetrics.Total.Local, controlPlacement.Align);
 	controlMetrics.Total .Global	= controlMetrics.Total	.Local;
 	controlMetrics.Client.Global	= controlMetrics.Client	.Local;
 	controlMetrics.Client.Global.Offset	+= controlMetrics.Total	.Local.Offset;
@@ -868,7 +852,7 @@ sttc	gpk::err_t controlUpdateMetrics	(SGUI & gui, cid_t iControl, cnst n2<u1_t> 
 	return 0;
 }
 
-gpk::err_t 		gpk::controlUpdateMetricsTopToDown							(SGUI & gui, cid_t iControl, cnst n2<u1_t> & targetSize, b8_t forceUpdate)				{
+gpk::err_t 		gpk::controlUpdateMetricsTopToDown							(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, b8_t forceUpdate)				{
 	if(false == gui.Controls.IsUpdated(iControl) || forceUpdate)
 		if_fail_fef(::controlUpdateMetrics(gui, iControl, targetSize), "Failed to update metrics for control %i", iControl);
 
@@ -878,7 +862,7 @@ gpk::err_t 		gpk::controlUpdateMetricsTopToDown							(SGUI & gui, cid_t iContro
 	return 0;
 }
 
-gpk::err_t 		gpk::guiUpdateMetrics									(SGUI & gui, cnst n2<u1_t> & targetSize, b8_t forceUpdate)								{
+gpk::err_t 		gpk::guiUpdateMetrics									(SGUI & gui, cnst n2u1_t & targetSize, b8_t forceUpdate)								{
 	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
 		if(controlInvalid(gui.Controls, gui.Controls.States[iControl].Parent) && false == controlInvalid(gui.Controls, (cid_t)iControl))
 			if_fail_fef(gpk::controlUpdateMetricsTopToDown(gui, (cid_t)iControl, targetSize, forceUpdate), "Failed to update metrics for control %i", iControl);

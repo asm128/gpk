@@ -34,7 +34,7 @@ using namespace gpk;
 			}
 		}
 	}
-	cnst ::gpk::n2<u2_t >								& textureFontMetrics	= verticalAtlas.View.metrics();
+	cnst ::gpk::n2u2_t									& textureFontMetrics	= verticalAtlas.View.metrics();
 	if_fail_fef(fontTexture.resize(textureFontMetrics), "%s", "");
 	for(u2_t  y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(u2_t  x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {

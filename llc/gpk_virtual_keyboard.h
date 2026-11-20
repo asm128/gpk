@@ -10,13 +10,15 @@ nmsp gpk
 	tydf SGUIKeyboardEvent SVirtualKeyboardEvent;
 
 	struct SVirtualKeyboard {
-		cid_t						IdRoot				= -1;
-		acid						IdKeys				= {};
-		au0_t						Keys				= {};
+		cid_t						IdRoot		= -1;
+		acid						IdKeys		= {};
+		au0_t						Keys		= {};
 
-		apod<SVirtualKeyboardEvent>	Events				= {};
+		apod<SVirtualKeyboardEvent>	Events		= {};
 	};
 	err_t 		virtualKeyboardHandleEvent	(cnst SVirtualKeyboard & vk, cid_t iControl, apod<SVirtualKeyboardEvent> & events);
+
+	//stin	gpk::err_t virtualKeyboardHandleEvent	(SVirtualKeyboard & vk, cid_t iControl) { return virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
 } // nmsp 
 
 #endif // GPK_VIRTUAL_KEYBOARD_H_23627

@@ -130,8 +130,7 @@ sttc	void												threadUpdateClient							(void* pClient)						{
 	client.Connection.State												= ::gpk::CONNECTION_STATE_HANDSHAKE;
 	{
 		lock_guard												lock										(client.Connection.Queue.MutexSend);
-		client.Connection.Queue.Send.clear();
-		client.Connection.Queue.Sent.clear();
+		::gpk::clear(client.Connection.Queue.Send, client.Connection.Queue.Sent);
 	}
 	{
 		lock_guard												lock										(client.Connection.Queue.MutexReceive);

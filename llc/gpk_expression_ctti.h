@@ -20,21 +20,12 @@ nmsp gpk
 	stct SCTTIExpressionReader {
 		astatic<SExpressionToken, N>	Token		= {};
 		u2_t						Count		= {};
+		SExpressionReaderState		StateRead	= {};
 		u2_t						ErrorOffset	= {};
 		CTTI_EXPRESSION_PARSE_ERROR	Error		= CTTI_EXPRESSION_PARSE_ERROR_NONE;
 
 		inxp b8_t Success() cnst nxpt { rtrn CTTI_EXPRESSION_PARSE_ERROR_NONE == Error; }
 		inxp view<cnst SExpressionToken> Tokens() cnst nxpt { rtrn {Token.begin(), Count}; }
-	};
-
-	stct SCTTIExpressionState {
-		u2_t	IndexCurrentChar	= {};
-		s2_t	IndexCurrentElement	= -1;
-		s2_t	NestLevel			= {};
-		b8_t	Escaping			= false;
-		b8_t	ExpectsSeparator	= false;
-		b8_t	InsideString		= false;
-		sc_t	ClosingQuotes		= '0';
 	};
 
 	tplt<size_t N>
@@ -46,7 +37,7 @@ nmsp gpk
 	}
 
 	tplt<size_t N>
-	inxp s2_t cttiExpressionOpen(SCTTIExpressionReader<N> & result, SCTTIExpressionState & state, EXPRESSION_READER_TYPE type, u2_t begin) nxpt {
+	inxp s2_t cttiExpressionOpen(SCTTIExpressionReader<N> & result, SExpressionReaderState & state, EXPRESSION_READER_TYPE type, u2_t begin) nxpt {
 		if(result.Count >= N) {
 			cttiExpressionError(result, CTTI_EXPRESSION_PARSE_ERROR_TOKEN_COUNT, begin);
 			rtrn -1;
@@ -59,7 +50,7 @@ nmsp gpk
 	}
 
 	tplt<size_t N>
-	inxp b8_t cttiExpressionClose(SCTTIExpressionReader<N> & result, SCTTIExpressionState & state, EXPRESSION_READER_TYPE type, u2_t end) nxpt {
+	inxp b8_t cttiExpressionClose(SCTTIExpressionReader<N> & result, SExpressionReaderState & state, EXPRESSION_READER_TYPE type, u2_t end) nxpt {
 		if(0 > state.IndexCurrentElement || result.Token.Storage[state.IndexCurrentElement].Type != type) {
 			cttiExpressionError(result, CTTI_EXPRESSION_PARSE_ERROR_INVALID_NESTING, state.IndexCurrentChar);
 			rtrn false;
@@ -72,14 +63,14 @@ nmsp gpk
 	}
 
 	tplt<size_t N>
-	inxp b8_t cttiExpressionCloseIf(SCTTIExpressionReader<N> & result, SCTTIExpressionState & state, EXPRESSION_READER_TYPE type, u2_t end) nxpt {
+	inxp b8_t cttiExpressionCloseIf(SCTTIExpressionReader<N> & result, SExpressionReaderState & state, EXPRESSION_READER_TYPE type, u2_t end) nxpt {
 		if(0 <= state.IndexCurrentElement && result.Token.Storage[state.IndexCurrentElement].Type == type)
 			rtrn cttiExpressionClose(result, state, type, end);
 		rtrn true;
 	}
 
 	tplt<size_t N>
-	inxp b8_t cttiExpressionCloseTerm(SCTTIExpressionReader<N> & result, SCTTIExpressionState & state, u2_t end) nxpt {
+	inxp b8_t cttiExpressionCloseTerm(SCTTIExpressionReader<N> & result, SExpressionReaderState & state, u2_t end) nxpt {
 		if(false == cttiExpressionCloseIf(result, state, EXPRESSION_READER_TYPE_KEY, end))
 			rtrn false;
 		while(0 <= state.IndexCurrentElement && EXPRESSION_READER_TYPE_UNARY_NOT == result.Token.Storage[state.IndexCurrentElement].Type)
@@ -107,7 +98,7 @@ nmsp gpk
 	tplt<size_t N>
 	inxp SCTTIExpressionReader<N> expressionParseCTTI(sc_c (&source)[N]) nxpt {
 		SCTTIExpressionReader<N> result = {};
-		SCTTIExpressionState state = {};
+		SExpressionReaderState & state = result.StateRead;
 		u2_c length = N && 0 == source[N - 1] ? (u2_t)N - 1 : (u2_t)N;
 		if(0 == length) {
 			cttiExpressionError(result, CTTI_EXPRESSION_PARSE_ERROR_UNEXPECTED_END, 0);

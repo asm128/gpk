@@ -1,4 +1,5 @@
 #include "gpk_connection.h"
+#include "gpk_apod_serialize.h"
 #include "gpk_chrono.h"
 #include "gpk_view_stream.h"
 #include "gpk_noise.h"
@@ -93,14 +94,14 @@ stxp	u2_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		}
 		if_true_vif(0, 0 == payloadSizes.size(), "No packets to optimize. Total packets searched: %u.", payloadsToSend.size());
 		info_printf("%u packets optimized.", payloadSizes.size());
-		u2_c				sizeRequired						= serialized.size() + sizeof(u1_t) * payloadSizes.size() + sizeof(u1_t);	// payloads + sizes + packet count
+		u2_c				sizeRequired						= serialized.size() + payloadSizes.byte_count() + sizeof(u1_t);	// payloads + sizes + packet count
 		u1_t					packetCount							= (u1_t)payloadSizes.size();
 		::gpk::au0_t				& optimizedPayloadBuffer			= optimizedMsg->Payload;
 		if_fail_fef(optimizedPayloadBuffer.resize(sizeRequired), "Out of memory? Size required: %u.", sizeRequired);
 		optimizedPayloadBuffer.clear();
-		optimizedPayloadBuffer.append((cnst u0_t*)&packetCount, sizeof(u1_t));
-		optimizedPayloadBuffer.append((cnst u0_t*)payloadSizes.begin(), sizeof(u1_t) * payloadSizes.size());
-		optimizedPayloadBuffer.append(serialized.begin(), serialized.size());
+		if_fail_fe(savePOD(optimizedPayloadBuffer, packetCount));
+		if_fail_fe(optimizedPayloadBuffer.append(payloadSizes.bytes()));
+		if_fail_fe(optimizedPayloadBuffer.append(serialized));
 		if_true_fef(sizeRequired != optimizedPayloadBuffer.size(), "Invalid sizes! Size required: %u. Actual size: %u.", sizeRequired, optimizedPayloadBuffer.size());
 		optimizedMsg->Command.Compressed	= 1;
 		optimizedMsg->Command.Encrypted		= 1;
@@ -223,8 +224,7 @@ stxp	u2_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 
 	// Send non-payload commands and
 	::gpk::apobj<::gpk::SMessage>					& payloadsToSend						= messageCacheSend;
-	payloadsToSend.clear();
-	messageCacheSent.clear();
+	::gpk::clear(payloadsToSend, messageCacheSent);
 	for(u2_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
 		::gpk::pobj<::gpk::SMessage>					 pMessageToSend						= queueToSend[iSend];
 		if(0 == pMessageToSend.get_ref())
@@ -423,8 +423,7 @@ sttc	::gpk::err_t	handlePAYLOADRequest				(cnst ::gpk::SPayloadHeader & header, 
 		}
 		{
 			lock_guard					lock								(client.Queue.MutexReceive);
-			for(u2_t iMessage = 0; iMessage < tempQueue.size(); ++iMessage)
-				if_fail_fef(client.Queue.Received.push_back(tempQueue[iMessage]), "Out of memory? Queue size: %u.", client.Queue.Received.size());
+			if_fail_fef(client.Queue.Received.append(tempQueue), "Out of memory? Queue size: %u.", client.Queue.Received.size());
 		}
 		::postConfirmationResponse(client.Queue, header.Command, header.MessageId);
 	}

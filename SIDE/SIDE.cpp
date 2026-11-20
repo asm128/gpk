@@ -134,7 +134,7 @@ sttc gpk::err_t fileViewerScrollCreate(SFileViewer & viewer, cid_t idViewport, b
 	pobj<SDialogSlider> scrollbar = {};
 	if_fail_fe(sliderCreate(*viewer.Dialog, scrollbar));
 	scrollbar->Vertical = vertical;
-	scrollbar->FuncValueFormat = [](vcst_t & format, s3_t, cnst minmax<s3_t> &) { format = ""; rtrn 0; };
+	scrollbar->FuncValueFormat = [](vcst_t & format, s3_t, cnst minmaxs3_t &) { format = ""; rtrn 0; };
 	scrollbar->ValueLimits = {0, 1};
 	if_fail_fe(sliderSetValue(*scrollbar, 0));
 	SGUI & gui = *viewer.Dialog->GUI;

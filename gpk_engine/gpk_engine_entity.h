@@ -38,9 +38,9 @@ nmsp gpk
 		u2_t					clear			()					{ ::gpk::clear(Entities, Names, Children); return 0; }
 
 		err_t 					Create			() {
-			Children.push_back({});
-			Names.push_back({});
-			return Entities.push_back({});
+			u2_c					index			= size();
+			if_fail_fe(::gpk::resize_obj(index + 1, Entities, Names, Children));
+			return index;
 		}
 
 		err_t 					Delete			(eid_t id) {
@@ -84,8 +84,7 @@ nmsp gpk
 
 		err_t 					Load			(vcu0_t & input) {
 			if_fail_fe(loadView(input, Entities));
-			if_fail_fe(Children	.resize(Entities.size()));
-			if_fail_fe(Names		.resize(Entities.size()));
+			if_fail_fe(::gpk::resize_obj(Entities.size(), Children, Names));
 			for(u2_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				if(!Children[iEntity])
 					Children[iEntity].create();

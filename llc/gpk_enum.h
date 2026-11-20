@@ -75,11 +75,11 @@ nmsp gpk
 			return INVALID_VALUE;
 		}
 		err_t				get_value				(vcst_t name, T & value)		cnst	{
-			for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i)
-				if(name == Names[i]) {
-					value				= Values[i];
-					return 0;
-				}
+			cnst err_t iValue = Names.find(name);
+			if(0 <= iValue) {
+				value				= Values[iValue];
+				return 0;
+			}
 			enum_printf("Enumeration value not found! Name: %.*s.", (int)name.size(), name.begin());
 			value				= INVALID_VALUE;
 			return -1;
@@ -95,10 +95,9 @@ nmsp gpk
 		//	return -1;
 		//}
 		T					get_value				(vcst_t name)					cnst			{
-			for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i) {
-				if(name == Names[i])
-					return Values[i];
-			}
+			cnst err_t iValue = Names.find(name);
+			if(0 <= iValue)
+				return Values[iValue];
 			enum_printf("Enumeration value not found! Name: %.*s.", (int)name.size(), name.begin());
 			return INVALID_VALUE;
 		}
@@ -131,88 +130,81 @@ nmsp gpk
 			return UNDEFINED_ENUM_VALUE_STR;
 		}
 		err_t				get_value_index			(vcst_t name, s2_t & index)	cnst			{
-			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
-				if(name == Names[i]) {
-					index				= (s2_t)i;
-					return index;
-				}
+			index = (s2_t)Names.find(name);
+			if(0 <= index)
+				return index;
 			enum_printf("Enumeration value not found! Name: %.*s.", (int)name.size(), name.begin());
 			return index				= -1;
 		}
 		s2_t				get_value_index			(vcst_t name)					cnst			{
-			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
-				if(name == Names[i])
-					return (s2_t)i;
-			}
+			cnst s2_t index = (s2_t)Names.find(name);
+			if(0 <= index)
+				return index;
 			enum_printf("Enumeration value not found! Name: %.*s.", (int)name.size(), name.begin());
 			return -1;
 		}
 		err_t				get_value_index			(cnst T & value, s2_t & index)		cnst			{
-			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
-				if(value == Values[i]) {
-					index					= (s2_t)i;
-					return 0;
-				}
+			index = (s2_t)Values.find(value);
+			if(0 <= index)
+				return 0;
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return index					= -1;
 		}
 		s2_t				get_value_index			(cnst T & value)				cnst			{
-			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
-				if(value == Values[i])
-					return (s2_t)i;
-			}
+			cnst s2_t index = (s2_t)Values.find(value);
+			if(0 <= index)
+				return index;
 			enum_printf("Enumeration value not found! Value: %llX.", (u3_t)value);
 			return -1;
 		}
 		err_t				get_value_label			(cnst T & value, vcst_t & name)	cnst			{
-			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i)
-				if(value == Values[i]) {
-					name				= Names[i];
-					return 0;
-				}
+			cnst err_t iValue = Values.find(value);
+			if(0 <= iValue) {
+				name				= Names[iValue];
+				return 0;
+			}
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			name				= UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
 		err_t				get_value_desc			(cnst T & value, vcst_t & name)	cnst			{
-			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i)
-				if(value == Values[i]) {
-					name				= Descriptions[i];
-					return 0;
-				}
+			cnst err_t iValue = Values.find(value);
+			if(0 <= iValue) {
+				name				= Descriptions[iValue];
+				return 0;
+			}
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			name				= UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
 		vcst_t	get_value_label			(cnst T & value)				cnst			{
-			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i) {
-				if(value == Values[i])
-					return Names[i];
-			}
+			cnst err_t iValue = Values.find(value);
+			if(0 <= iValue)
+				return Names[iValue];
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return UNRESOLVED_ENUM_LABEL_STR;
 		}
 		vcst_t	get_value_desc			(cnst T & value)				cnst			{
-			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i) {
-				if(value == Values[i])
-					return Descriptions[i];
-			}
+			cnst err_t iValue = Values.find(value);
+			if(0 <= iValue)
+				return Descriptions[iValue];
 			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return UNRESOLVED_ENUM_LABEL_STR;
 		}
 		err_t				add_value				(cnst T & value, vcst_t name, vcst_t title, vcst_t description)	{
-			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
-				if(Names[i] == name) {
-					if_true_fef(Values[i] != value, "Enumeration name already has another value! Type:'%.*s'. Name:'%.*s'. Previous:0x%llX. New:0x%llX."
-						, (int)Name.size(), Name.begin(), (int)name.size(), name.begin(), (u3_t)Values[i], (u3_t)value
-						);
-					return -1;
-				}
-			::gpk::u2_t				newIndex				= Values.push_back(value);
-			if_fail_fe(newIndex);
-			if_fail_fe(Names.push_back(name));
-			if_fail_fe(Titles.push_back(title));
-			if_fail_fe(Descriptions.push_back(description));
+			cnst err_t iValue = Names.find(name);
+			if(0 <= iValue) {
+				if_true_fef(Values[iValue] != value, "Enumeration name already has another value! Type:'%.*s'. Name:'%.*s'. Previous:0x%llX. New:0x%llX."
+					, (int)Name.size(), Name.begin(), (int)name.size(), name.begin(), (u3_t)Values[iValue], (u3_t)value
+					);
+				return -1;
+			}
+			::gpk::u2_t				newIndex				= Values.size();
+			if_fail_fe(::gpk::resize_obj(newIndex + 1, Values, Names, Titles, Descriptions));
+			Values		[newIndex]	= value;
+			Names		[newIndex]	= name;
+			Titles		[newIndex]	= title;
+			Descriptions[newIndex]	= description;
 			verbose_printf("Added new value to enumeration definition. Enum name: %.*s. Index: %.02u, Value: 0x%llX. Value name: %.*s."
 				, (int)Name.size(), Name.begin()
 				, (::gpk::u2_t)newIndex
@@ -222,11 +214,12 @@ nmsp gpk
 			return newIndex;
 		}
 		err_t				add_value_auto			(vcst_t name, vcst_t title, vcst_t description)	{
-			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
-				if_true_fef(name == Names[i], "Enumeration value already defined! Type: '%.*s'. Value: 0x%llX. Previous name: %.*s. New name: %.*s. Second definition ignored..."
+			cnst err_t iValue = Names.find(name);
+			if(0 <= iValue) {
+				if_true_fef(true, "Enumeration value already defined! Type: '%.*s'. Value: 0x%llX. Previous name: %.*s. New name: %.*s. Second definition ignored..."
 					, (int)Name		.size(), Name		.begin()
-					, (u3_t)Values[i]
-					, (int)Names[i]	.size(), Names[i]	.begin()
+					, (u3_t)Values[iValue]
+					, (int)Names[iValue]	.size(), Names[iValue]	.begin()
 					, (int)name		.size(), name		.begin()
 					);
 			}
@@ -234,11 +227,12 @@ nmsp gpk
 			for(::gpk::u2_t i=0; i < Values.size(); ++i)
 				valueCount += get_value_index(Values[i]) == (s2_t)i;
 			cnst T					value					= (T)valueCount;
-			::gpk::u2_t				newIndex				= Values.push_back(value);
-			if_fail_fe(newIndex);
-			if_fail_fe(Names.push_back(name));
-			if_fail_fe(Titles.push_back(title));
-			if_fail_fe(Descriptions.push_back(description));
+			::gpk::u2_t				newIndex				= Values.size();
+			if_fail_fe(::gpk::resize_obj(newIndex + 1, Values, Names, Titles, Descriptions));
+			Values		[newIndex]	= value;
+			Names		[newIndex]	= name;
+			Titles		[newIndex]	= title;
+			Descriptions[newIndex]	= description;
 			verbose_printf("Added new value to enumeration definition. Enum name: %.*s. Index: %.02u, Value: 0x%llX. Value name: %.*s.", (int)Name.size(), Name.begin(), (::gpk::u2_t)newIndex, (u3_t)value, (int)name.size(), name.begin());
 			return newIndex;
 		}
@@ -271,12 +265,12 @@ nmsp gpk
 	tplt<tpnm T> requires ctti_enum<T>
 	err_t enumDefinitionCTTIRegister() {
 		enum_definition<T> & definition = enum_definition<T>::get();
-		definition.Name = cttiEnumTypeName<T>();
+		definition.Name = cttiEnumName<T>();
 		if_fail_fe(enumDefinitionRegister(definition));
 		cnst auto & metadata = cttiEnumTyped<T>();
 		for(u2_t iValue = 0; iValue < metadata.Count; ++iValue) {
 			if_zero_fe(metadata.Values[iValue].ValueResolved);
-			cnst vcst_t name = cttiEnumValueName<T>(iValue);
+			cnst vcst_t name = cttiValueNameByIndex<T>(iValue, false);
 			b8_t found = false;
 			for(u2_t iRegistered = 0; iRegistered < definition.Names.size(); ++iRegistered)
 				if(definition.Names[iRegistered] == name) {

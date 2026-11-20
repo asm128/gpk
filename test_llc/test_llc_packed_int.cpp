@@ -18,9 +18,9 @@ GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, MULTIPLIER		, 4, "The first-byte mu
 GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, TAIL_BASE			, 5, "The tail helper did not contain the value's low bytes.");
 GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, VALUE_ROUND_TRIP	, 6, "The packed integer did not reconstruct its source value.");
 GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, BYTE_VIEW			, 7, "The serialization byte view reported the wrong address or width.");
-GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, LOAD_RESULT		, 8, "loadUInt() did not report the packed byte width.");
-GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, LOAD_VALUE			, 9, "loadUInt() did not reconstruct the packed source value.");
-GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, LOAD_CONSUMPTION	, 10, "loadUInt() did not consume exactly one packed integer.");
+GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, LOAD_RESULT		, 8, "loadPacked() did not report the packed byte width.");
+GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, LOAD_VALUE			, 9, "loadPacked() did not reconstruct the packed source value.");
+GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, LOAD_CONSUMPTION	, 10, "loadPacked() did not consume exactly one packed integer.");
 GDEFINE_ENUM_VALUED(PACKED_UINT_TEST_RESULT, INVALID_VALUE		, 11, "packed_uint<> accepted a value outside its representable range.");
 
 stxp ::gpk::u3_t PACKED_RANDOM_SEED	= 0x5041434B45445549ULL;
@@ -74,7 +74,7 @@ sttc ::gpk::err_t testValue(::gpk::ATestError & errors, ::gpk::u3_c source, ::gp
 
 	::gpk::vcu0_t input = bytes;
 	T loaded = {};
-	cnst ::gpk::err_t loadResult = ::gpk::loadUInt(input, loaded);
+	cnst ::gpk::err_t loadResult = ::gpk::loadPacked(input, loaded);
 	if(trace) {
 		always_printf("PACKED %u-bit input:%" GPK_FMT_U3 "; tail width actual:%u expected:%u; multiplier actual:%" GPK_FMT_U3 " expected:%" GPK_FMT_U3 "; bytes:%u expected:%u; restored:%" GPK_FMT_U3 "; load:%i; remaining:%u expected:0.", typeBits, source, (::gpk::u2_t)packed.TailWidth, (::gpk::u2_t)expectedTailWidth, (::gpk::u3_t)packed.Multiplier, expectedMultiplier, bytes.size(), (::gpk::u2_t)expectedValueWidth, (::gpk::u3_t)loaded, loadResult, input.size());
 		::gpk::testTraceBytes("Packed representation", bytes);

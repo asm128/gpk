@@ -1,3 +1,4 @@
+#include "gpk_parse_core.h"
 #include "gpk_enum.h"
 #include "gpk_slice.h"
 
@@ -6,27 +7,6 @@
 
 nmsp gpk
 {
-	stxp	vcst_t	DIGITS_HEX						= "0123456789abcdef";
-	stxp	vcst_t	DIGITS_DECIMAL					= "0123456789";
-	err_t			parseArbitraryBaseInteger		(u2_t base, vcst_t symbolList, vcst_t sourceChars, u3_t * number_);
-	tplt<tpnm _tInt>	
-	inln	err_t	parseIntegerDecimal				(vcst_t sourceChars, _tInt & number_)	{
-		u3_t				number							= 0; 
-		err_t				countDigits; 
-		if_fail_fe(countDigits = parseArbitraryBaseInteger(10, vcst_t{"0123456789"}, sourceChars, &number)); 
-		number_ = (_tInt)number; 
-		return countDigits; 
-	}
-
-	tplt<tpnm _tInt>	
-	inln	err_t	parseIntegerHexadecimal			(vcst_t sourceChars, _tInt & number_)	{
-		u3_t				number							= 0; 
-		err_t countDigits;
-		if_fail_fe(countDigits = parseArbitraryBaseInteger(16, vcst_t{"0123456789abcdef"}, sourceChars, &number)); 
-		number_ = (_tInt)number; 
-		return countDigits; 
-	}
-
 	GDEFINE_ENUM_TYPE(STRIP_LITERAL_TYPE, s0_t);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, LITERAL	, 0);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, TOKEN	, 1);
@@ -54,7 +34,6 @@ nmsp gpk
 	err_t				stripLiteralParseStep			(SStripLiteralState	& work_state	, apod<SStripLiteralToken> & out_types, vcst_t in_format);
 	err_t				stripLiteralGetViews			(aobj<vcst_t>	& out_views, cnst view<cnst SStripLiteralToken> & in_resultOfParser, vcst_t in_format);
 
-	b8_t				isSpaceCharacter				(cnst sc_t characterToTest);
 	err_t				skipToNextCharacter				(u2_t & indexCurrentChar, vcst_t expression);
 
 } // nmsp

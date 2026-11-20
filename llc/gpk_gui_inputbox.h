@@ -11,8 +11,8 @@ nmsp gpk
 	err_t 		virtualKeyboardSetup437	(SGUI & gui, SVirtualKeyboard & vk);
 
 	struct SInputBox {
-		cid_t				IdRoot				= -1;
-		cid_t				IdText				= -1;
+		cid_t				IdRoot				= {};
+		cid_t				IdText				= {};
 		SVirtualKeyboard	VirtualKeyboard		= {};
 		string				Text				= {};
 		u2_t				Cursor				= 0;

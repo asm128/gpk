@@ -30,7 +30,7 @@ gpk::err_t 		gpk::setPixel			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gp
 	return 0;
 }
 
-gpk::err_t 		gpk::drawRectangle		(::gpk::g8bgra pixels, ::gpk::rect2<s1_t> rectangle, ::gpk::bgra color)	{
+gpk::err_t 		gpk::drawRectangle		(::gpk::g8bgra pixels, ::gpk::rect2s1_t rectangle, ::gpk::bgra color)	{
 	s2_t						countPixels				= 0;
 	for(s1_t y = 0; y < (s1_t)rectangle.Size.y; ++y)
 	for(s1_t x = 0; x < (s1_t)rectangle.Size.x; ++x)
@@ -117,7 +117,7 @@ gpk::err_t 		gpk::drawLine
 	( cnst ::gpk::n2u1_t		offscreenMetrics
 	, cnst ::gpk::line3f2_t		& lineFloat
 	, ::gpk::apod<::gpk::n3f2_t>	& pixelCoords
-	, ::gpk::grid<u2_t>	depthBuffer
+	, ::gpk::gu2_t		depthBuffer
 	) {
 	::gpk::line2s2_t				line					= {{(s2_t)lineFloat.A.x, (s2_t)lineFloat.A.y}, {(s2_t)lineFloat.B.x, (s2_t)lineFloat.B.y}};
 	s2_t						xDiff					= (s2_t)fabs(line.B.x - line.A.x);
@@ -204,10 +204,10 @@ sttc	f3_t		orient2d		(cnst ::gpk::line2s1_t & segment, cnst ::gpk::n2s1_t & poin
 sttc	f3_t		orient2d		(cnst ::gpk::line2f2_t & segment, cnst ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (f3_t)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (f3_t)segment.A.x); }
 sttc	f3_t		orient2d		(cnst ::gpk::n3f2_t & start, cnst ::gpk::n2f2_t & edge, cnst ::gpk::n2s1_t & point)	{ return edge.x * (point.y - (f3_t)start.y) - edge.y * (point.x - (f3_t)start.x); }
 
-tplt <tpnm _tValue>	_tValue	max3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
-tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
+tplt <tpnm _tValue>	_tValue	max3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::gpk::max(::gpk::max(a, b), c); }
+tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::gpk::min(::gpk::min(a, b), c); }
 
-gpk::err_t 		gpk::drawTriangle		(::gpk::g8bgra pixels, cnst ::gpk::tri2<s1_t> & triangle, ::gpk::bgra color){
+gpk::err_t 		gpk::drawTriangle		(::gpk::g8bgra pixels, cnst ::gpk::tri2s1_t & triangle, ::gpk::bgra color){
 	// Compute triangle bounding box
 	s1_t						minX					= ::min3(triangle.A.x, triangle.B.x, triangle.C.x);
 	s1_t						minY					= ::min3(triangle.A.y, triangle.B.y, triangle.C.y);
@@ -215,10 +215,10 @@ gpk::err_t 		gpk::drawTriangle		(::gpk::g8bgra pixels, cnst ::gpk::tri2<s1_t> & 
 	s1_t						maxY					= ::max3(triangle.A.y, triangle.B.y, triangle.C.y);
 
 	// Clip against screen bounds
-	minX							= ::std::max(minX, (s1_t)0);
-	minY							= ::std::max(minY, (s1_t)0);
-	maxX							= ::std::min(maxX, s1_t(s1_t(pixels.metrics().x)	- 1));
-	maxY							= ::std::min(maxY, s1_t(s1_t(pixels.metrics().y)	- 1));
+	minX							= ::gpk::max(minX, (s1_t)0);
+	minY							= ::gpk::max(minY, (s1_t)0);
+	maxX							= ::gpk::min(maxX, s1_t(s1_t(pixels.metrics().x)	- 1));
+	maxY							= ::gpk::min(maxY, s1_t(s1_t(pixels.metrics().y)	- 1));
 
 	// Rasterize
 	s2_t						countPixels				= 0;
@@ -242,7 +242,7 @@ gpk::err_t 		gpk::drawTriangle
 	, cnst ::gpk::tri3f2_t			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& proportions
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	)	{
 	// Compute triangle bounding box
 	s1_t						minX					= (s1_t)::min3(triangle.A.x, triangle.B.x, triangle.C.x);
@@ -251,10 +251,10 @@ gpk::err_t 		gpk::drawTriangle
 	s1_t						maxY					= (s1_t)::max3(triangle.A.y, triangle.B.y, triangle.C.y);
 
 	// Clip against screen bounds
-	minX					= ::std::max(minX, (s1_t)0);
-	minY					= ::std::max(minY, (s1_t)0);
-	maxX					= ::std::min(maxX, (s1_t)((s2_t)targetSize.x - 1));
-	maxY					= ::std::min(maxY, (s1_t)((s2_t)targetSize.y - 1));
+	minX					= ::gpk::max(minX, (s1_t)0);
+	minY					= ::gpk::max(minY, (s1_t)0);
+	maxX					= ::gpk::min(maxX, (s1_t)((s2_t)targetSize.x - 1));
+	maxY					= ::gpk::min(maxY, (s1_t)((s2_t)targetSize.y - 1));
 
 	// Rasterize
 	cnst ::gpk::n2f2_t			edgeBC					= {triangle.C.x - triangle.B.x, triangle.C.y - triangle.B.y};
@@ -311,10 +311,10 @@ gpk::err_t 		gpk::drawTriangle
 	s1_t						maxY					= (s1_t)::max3(triangle.A.y, triangle.B.y, triangle.C.y);
 
 	// Clip against screen bounds
-	minX					= ::std::max(minX, (s1_t)0);
-	minY					= ::std::max(minY, (s1_t)0);
-	maxX					= ::std::min(maxX, (s1_t)((s2_t)targetSize.x - 1));
-	maxY					= ::std::min(maxY, (s1_t)((s2_t)targetSize.y - 1));
+	minX					= ::gpk::max(minX, (s1_t)0);
+	minY					= ::gpk::max(minY, (s1_t)0);
+	maxX					= ::gpk::min(maxX, (s1_t)((s2_t)targetSize.x - 1));
+	maxY					= ::gpk::min(maxY, (s1_t)((s2_t)targetSize.y - 1));
 
 	// Rasterize
 	::gpk::n2s1_t p;
@@ -380,7 +380,7 @@ gpk::err_t 		gpk::drawPixels
 			cnst f3_t				lightFactor				= lightToPoint.Dot(normal);
 			if(lightFactor <= 0)
 				continue;
-			cnst f3_t				invAttenuation			= ::std::max(0.0, 1.0 - (distanceToLight * rangeUnit));
+			cnst f3_t				invAttenuation			= ::gpk::max(0.0, 1.0 - (distanceToLight * rangeUnit));
 			fragmentColor			+= (texelColor * lightColors[iLight]) * (invAttenuation);
 		}
 		countPixels += funcSetPixel(targetPixels, pixelCoord, (texelColor * .2 + (texelColor * lightFactorDirectional).Clamp() + fragmentColor.Clamp()).Clamp());
@@ -409,7 +409,7 @@ gpk::err_t 		gpk::drawQuadTriangle
 	, cnst ::gpk::tri3f2_t		& triangleScreen
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	) {
 	return ::gpk::drawTriangle(targetSize, triangleScreen, pixelCoords, pixelVertexWeights, depthBuffer);
 }
@@ -420,7 +420,7 @@ gpk::err_t 		gpk::drawQuadTriangle
 	, cnst ::gpk::m4f2_t			& matrixTransformVP
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	) {
 	::gpk::transform(triangle, matrixTransformVP);
 	if( triangle.A.z <= 0 || triangle.A.z >= 1
@@ -443,7 +443,7 @@ gpk::err_t 		gpk::drawQuadTriangle
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	) {
 	return ::gpk::drawQuadTriangle(targetPixels, geometry, iTriangle, matrixTransform, matrixTransformVP, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, depthBuffer, setPixel);
 }
@@ -460,7 +460,7 @@ gpk::err_t 		gpk::drawQuadTriangle
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	, cnst ::gpk::function<::gpk::err_t(::gpk::g8bgra targetPixels, cnst ::gpk::n2s1_t & pixelCoord, cnst ::gpk::bgra & color)> & funcSetPixel
 	) {
 	cnst ::gpk::tri3f2_t		& triangle			= geometry.Triangles	[iTriangle];;
@@ -483,7 +483,7 @@ gpk::err_t 		gpk::drawQuadTriangle
 	, cnst ::gpk::bgra				color
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	) {
 	::gpk::tri3f2_t				triangle			= geometry.Triangles	[iTriangle];
 	::gpk::n3f2_t				normal				= geometry.Normals		[iTriangle / 2];
@@ -516,7 +516,7 @@ gpk::err_t 		gpk::drawTriangle
 	, cnst ::gpk::bgra				color
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<u2_t>		depthBuffer
+	, ::gpk::gu2_t			depthBuffer
 	) {
 	::gpk::tri3f2_t				triangle			= geometry.Triangles	[iTriangle];
 	cnst ::gpk::tri3f2_t		& triangleNormals	= geometry.Normals		[iTriangle];
@@ -550,7 +550,7 @@ gpk::err_t 		gpk::drawTriangle
 	, ::gpk::apod<::gpk::n2s1_t>			& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 	, ::gpk::gc8bgra	textureImage
-	, ::gpk::grid<u2_t>			depthBuffer
+	, ::gpk::gu2_t				depthBuffer
 	) {
 	::gpk::tri3f2_t				triangle			= geometry.Triangles		[iTriangle];
 	cnst ::gpk::tri3f2_t		& triangleNormals	= geometry.Normals			[iTriangle];
@@ -595,7 +595,7 @@ gpk::err_t 		gpk::drawTriangle
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::SLight3>		& lightPoints
 	, ::gpk::a8bgra			& lightColors
-	, ::gpk::grid<u2_t>			depthBuffer
+	, ::gpk::gu2_t				depthBuffer
 	) {
 	::gpk::tri3f2_t				triangleWorld			= geometry.Triangles		[iTriangle];
 	::gpk::tri3f2_t				triangle				= triangleWorld;
@@ -634,7 +634,7 @@ gpk::err_t 		gpk::drawTriangle
 			f3_t						lightFactorPoint		= vectorToLight.Dot(normal);
 			if(lightToPoint.Length() > light.Range || lightFactorPoint <= 0)
 				continue;
-			f3_t						invAttenuation			= ::std::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
+			f3_t						invAttenuation			= ::gpk::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
 			fragmentColor			+= ::gpk::rgbaf{texelColor * lightColors[iLight] * invAttenuation * .5}.Clamp();
 		}
 		 (void)lightColor;

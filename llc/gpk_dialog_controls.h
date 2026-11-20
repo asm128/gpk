@@ -22,7 +22,7 @@ nmsp gpk
 	cid_t			viewportCreate		(SDialog			& dialog);
 	err_t			viewportUpdate		(SDialogViewport	& control);
 	err_t			viewportFold		(SDialogViewport	& control, b8_t fold);
-	err_t			viewportAdjustSize	(n2<s1_t>			& sizeViewport, cnst n2<s1_t> & sizeClient);
+	err_t			viewportAdjustSize	(n2s1_t				& sizeViewport, cnst n2s1_t & sizeClient);
 
 	stin	cid_t	sliderCreate		(SDialog			& dialog, pnco<SDialogSlider	>	& createdControl)	 { cid_t index = -1; if_fail_fe(index = sliderCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
 	stin	cid_t	checkBoxCreate		(SDialog			& dialog, pnco<SDialogCheckBox	>	& createdControl)	 { cid_t index = -1; if_fail_fe(index = checkBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
@@ -56,7 +56,7 @@ nmsp gpk
 #pragma pack(pop)
 
 	struct SDialogEditBox : public IDialogControl {
-		minmax<u2_t>	Selection			= {};
+		minmaxu2_t		Selection			= {};
 		string			String				= {};
 
 		virtual	err_t	Update				(view<cnst pobj<SEventSystem>> )	{ return editBoxUpdate(*this); }
@@ -69,17 +69,17 @@ nmsp gpk
 	};
 
 	struct SDialogSlider : public IDialogControl {
-		tydf	function<err_t(vcst_t & format, s3_t value, cnst minmax<s3_t> & limits)>	
+		tydf	function<err_t(vcst_t & format, s3_t value, cnst minmaxs3_t & limits)>
 						TCallback;
 
 		cid_t			IdButton			= (cid_t)-1;
 		b8_t			Vertical			= false;
-		minmax<s3_t>	ValueLimits			= {0, 100};// 0x7fFFffFF};
+		minmaxs3_t		ValueLimits			= {0, 100};// 0x7fFFffFF};
 		s3_t			ValueCurrent		= -1;
 		astsc_t<64>		ValueString			= {};
 
-		TCallback		FuncValueFormat		= []	(vcst_t & format, s3_t, cnst minmax<s3_t> &)		mutable	{ format = "%lli"; return 0; };
-		TCallback		FuncGetString		= [this](vcst_t & inouts, s3_t value, cnst minmax<s3_t> &)			{ 
+		TCallback		FuncValueFormat		= []	(vcst_t & format, s3_t, cnst minmaxs3_t &)		mutable	{ format = "%lli"; return 0; };
+		TCallback		FuncGetString		= [this](vcst_t & inouts, s3_t value, cnst minmaxs3_t &)			{
 			inouts	= {ValueString.Storage, (u2_t)sprintf_s(ValueString.Storage, inouts, value)}; 
 			return 0; 
 		};

@@ -38,6 +38,27 @@
 //		GPK_TEST_CHECKF(errors, ARGS_TEST_RESULT_POSITIONALS, args.Positionals[iPositional] != expectedPositionals[iPositional] , "Positional:%u is '%.*s', expected '%.*s'." , iPositional, (int)args.Positionals[iPositional].size(), args.Positionals[iPositional].begin(), (int)expectedPositionals[iPositional].size(), expectedPositionals[iPositional].begin() );
 //	rtrn 0;
 //}
+
+GDEFINE_ENUM_TYPE(ARGS_TEST_RESULT, ::gpk::u0_t);
+GDEFINE_ENUM_VALUED(ARGS_TEST_RESULT, ENVIRONMENT_BYTES	, 0, "environmentBlock() did not preserve key/value separators and record terminators.");
+GDEFINE_ENUM_VALUED(ARGS_TEST_RESULT, ENVIRONMENT_VIEWS	, 1, "environmentBlockViews() did not recover the composed environment records.");
+
+::gpk::err_t test_args(STestRunnerState &, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder) {
+	cnst ::gpk::kv<::gpk::vcst_t>	values[]	= {{"A", "B"}, {"EMPTY", {}}};
+	::gpk::as0_t					encoded		= {};
+	if_fail_fe(::gpk::environmentBlock(encoded, values));
+	cnst ::gpk::s0_t				expected[]	= {'A', '=', 'B', 0, 'E', 'M', 'P', 'T', 'Y', '=', 0, 0};
+	GPK_TEST_CHECK(errors, ARGS_TEST_RESULT_ENVIRONMENT_BYTES, encoded.size() != ::gpk::size(expected) || 0 != ::memcmp(encoded.begin(), expected, szof(expected)));
+
+	::gpk::aobj<::gpk::kv<::gpk::vcst_t>> decoded = {};
+	if_fail_fe(::gpk::environmentBlockViews(encoded, decoded));
+	GPK_TEST_CHECK(errors, ARGS_TEST_RESULT_ENVIRONMENT_VIEWS
+		, decoded.size() != 2
+		|| decoded[0].Key != "A" || decoded[0].Val != "B"
+		|| decoded[1].Key != "EMPTY" || decoded[1].Val.size()
+		);
+	return 0;
+}
 //
 //sttc ::gpk::err_t testArgsAccessors(::gpk::ATestError & errors, cnst ::gpk::SCommandLineArgs & args) {
 //	cnst ::gpk::err_t firstInclude	= ::gpk::argsOptionIndex(args, "include");

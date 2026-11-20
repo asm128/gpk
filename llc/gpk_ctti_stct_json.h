@@ -61,7 +61,7 @@ nmsp gpk
 	tplt<tpnm T> requires ctti_struct<T>
 	err_t cttiStructRegister() {
 		cnst auto & metadata = cttiStruct<T>();
-		cnst vcst_t name = metadata.View(metadata.StructName);
+		cnst vcst_t name = {&metadata.SourceText[metadata.StructName.Offset], metadata.StructName.Count};
 		aobj<SCTTIStructDeclaration> & declarations = cttiStructDeclarations();
 		for(u2_t iDeclaration = 0; iDeclaration < declarations.size(); ++iDeclaration)
 			if(declarations[iDeclaration].Name == name) {
@@ -128,11 +128,7 @@ nmsp gpk
 
 	tplt<tpnm T>
 	inln cnst SCTTIFieldJSONOverride * cttiFieldJSONOverride(vcst_t name) nxpt {
-		cnst aobj<SCTTIFieldJSONOverride> & overrides = cttiFieldJSONOverrides<rm_csvl_t<T>>();
-		for(u2_t iOverride = 0; iOverride < overrides.size(); ++iOverride)
-			if(overrides[iOverride].Name == name)
-				rtrn &overrides[iOverride];
-		rtrn {};
+		rtrn cttiFieldJSONOverride(cttiFieldJSONOverrides<rm_csvl_t<T>>(), name);
 	}
 
 	tplt<tpnm T, tpnm TFunc>
@@ -219,7 +215,8 @@ nmsp gpk
 			b8_t separator = false;
 			cnst auto & metadata = cttiStruct<T>();
 			for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-				cnst vcst_t memberName = metadata.View(metadata.Members[iMember].Name);
+				cnst rangeu2_t memberNameSpan = metadata.Members[iMember].Name;
+				cnst vcst_t memberName = {&metadata.SourceText[memberNameSpan.Offset], memberNameSpan.Count};
 				string memberJSON = {};
 				cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride<T>(memberName);
 				if(fieldOverride && fieldOverride->Save) {
@@ -329,7 +326,8 @@ nmsp gpk
 		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
 		if_fail_fe(output.push_back('{'));
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-			cnst vcst_t memberName = metadata.View(metadata.Members[iMember].Name);
+			cnst rangeu2_t memberNameSpan = metadata.Members[iMember].Name;
+			cnst vcst_t memberName = {&metadata.SourceText[memberNameSpan.Offset], memberNameSpan.Count};
 			if_fail_fe(appendOpenKey(output, memberName, 0 != iMember));
 			cnst SCTTIFieldJSONOverride * fieldOverride = cttiFieldJSONOverride(overrides, memberName);
 			if(0 == fieldOverride)
@@ -355,7 +353,8 @@ nmsp gpk
 		cnst auto & metadata = cttiStruct<rm_csvl_t<T>>();
 		if_true_fe(iNode >= input.Token.size() || input.Token[iNode].Type != JSON_TYPE_OBJECT);
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
-			cnst vcst_t memberName = metadata.View(metadata.Members[iMember].Name);
+			cnst rangeu2_t memberNameSpan = metadata.Members[iMember].Name;
+			cnst vcst_t memberName = {&metadata.SourceText[memberNameSpan.Offset], memberNameSpan.Count};
 			cnst err_t iValue = jsonObjectValueGet(input, iNode, memberName);
 			if(0 > iValue)
 				continue;
@@ -409,8 +408,8 @@ nmsp gpk
 		if_fail_fe(output.push_back('{'));
 		for(u2_t iMember = 0; iMember < metadata.Count; ++iMember) {
 			cnst SCTTIMember & member = metadata.Members[iMember];
-			vcst_c memberName = metadata.View(member.Name);
-			vcst_c typeName = metadata.View(member.TypeName);
+			vcst_c memberName = {&metadata.SourceText[member.Name.Offset], member.Name.Count};
+			vcst_c typeName = {&metadata.SourceText[member.TypeName.Offset], member.TypeName.Count};
 			if(iMember)
 				if_fail_fe(output.push_back(','));
 			if_fail_fe(append_strings(output, SCTTIMemberJSONOpen{memberName, typeName}));
@@ -418,7 +417,7 @@ nmsp gpk
 				if_fail_fe(append_strings(output, "null"));
 			}
 			else {
-				vcst_c value = metadata.View(member.Value);
+				vcst_c value = {&metadata.SourceText[member.Value.Offset], member.Value.Count};
 				b8_c stringLiteral = value.size() > 1 && '"' == value[0] && '"' == value[value.size() - 1];
 				b8_c keywordLiteral = value == "true" || value == "false" || value == "null" || value == "{}" || value == "[]";
 				b8_c numberLiteral = value.size() && (('-' == value[0]) || ('+' == value[0]) || (value[0] >= '0' && value[0] <= '9'));
@@ -433,10 +432,10 @@ nmsp gpk
 			if_fail_fe(append_strings(output, ",\"modifiers\":["));
 			b8_t firstModifier = true;
 			for(u2_t iModifier = member.Modifiers.Offset, modifierStop = member.Modifiers.Offset + member.Modifiers.Count; iModifier < modifierStop;) {
-				while(iModifier < modifierStop && cttiSpace(metadata.SourceText[iModifier]))
+				while(iModifier < modifierStop && is_space_character(metadata.SourceText[iModifier]))
 					++iModifier;
 				cnst u2_t modifierOffset = iModifier;
-				while(iModifier < modifierStop && false == cttiSpace(metadata.SourceText[iModifier]))
+				while(iModifier < modifierStop && false == is_space_character(metadata.SourceText[iModifier]))
 					++iModifier;
 				if(modifierOffset == iModifier)
 					break;

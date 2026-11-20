@@ -61,7 +61,7 @@ stct SArrayObjTestValue {
 ::gpk::u2_t SArrayObjTestValue::CopyCount			= {};
 ::gpk::u2_t SArrayObjTestValue::DestructorCount		= {};
 
-sttc ::gpk::err_t arrayObjCheck(::gpk::ATestError & errors, ARRAY_OBJ_TEST_RESULT result, cnst ::gpk::aobj<SArrayObjTestValue> & actual, ::gpk::view<cnst ::gpk::u2_t> expected) {
+sttc ::gpk::err_t arrayObjCheck(::gpk::ATestError & errors, ARRAY_OBJ_TEST_RESULT result, cnst ::gpk::aobj<SArrayObjTestValue> & actual, ::gpk::vcu2_t expected) {
 	GPK_TEST_CHECKF(errors, result, actual.size() != expected.size() , "Count:%u, expected:%u." , actual.size(), expected.size() );
 	for(::gpk::u2_t iValue = 0; iValue < actual.size() && iValue < expected.size(); ++iValue) {
 		GPK_TEST_CHECKF(errors, result, actual[iValue].Index != expected[iValue] , "Element:%u index:%u, expected:%u." , iValue, actual[iValue].Index, expected[iValue] );

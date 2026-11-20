@@ -590,6 +590,7 @@ sttc	gpk::err_t	jsonParseDocumentCharacter	(gpk::SJSONReaderState & stateReader,
 
 gpk::err_t			gpk::jsonParseStep			(SJSONReader & reader, vcst_t jsonAsString, SJSONParseOptions options)	{
 	(void)options;
+	reader.Source				= jsonAsString;
 	reader.StateRead.CharCurrent	= jsonAsString[reader.StateRead.IndexCurrentChar];
 	if_true_block_log(error_printf, failed(reader.StateRead.InsideString
 		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, jsonAsString)
@@ -697,9 +698,9 @@ sttc gpk::err_t jsonTokenNumberLoad(gpk::SJSONToken & token, gpk::vcst_t source)
 
 gpk::err_t gpk::jsonReaderLoad(gpk::SJSONReader & reader, gpk::view<cnst gpk::SJSONToken> tokens, gpk::vcst_t source) {
 	reader.Reset();
+	reader.Source = source;
 	reader.Tree.clear();
-	if_fail_fe(reader.Token.resize(tokens.size()));
-	if_fail_fe(reader.View.resize(tokens.size()));
+	if_fail_fe(gpk::resize(tokens.size(), reader.Token, reader.View));
 	for(gpk::u2_t iToken = 0; iToken < tokens.size(); ++iToken) {
 		reader.Token[iToken] = tokens[iToken];
 		gpk::SJSONToken & token = reader.Token[iToken];

@@ -10,7 +10,7 @@ nmsp gpk
 {
 	tplt<tpnm T> requires ctti_enum<T>
 	err_t cttiValueSave(string & output, cnst T & input) {
-		cnst vcst_t name = cttiEnumName(input);
+		cnst vcst_t name = cttiValueName(input, false);
 		if(name.size())
 			rtrn appendJSONString(output, name);
 		rtrn append_strings(output, str((s3_t)input));
@@ -25,7 +25,7 @@ nmsp gpk
 			if_fail_fe(jsonObjectGetString(input, iNode, name));
 			for(u2_t iValue = 0; iValue < metadata.Count; ++iValue)
 				if(metadata.Values[iValue].ValueResolved
-				&& (name == cttiEnumValueName<TEnum>(iValue) || name == cttiEnumValueName<TEnum>(iValue, true))
+				&& (name == cttiValueNameByIndex<TEnum>(iValue, false) || name == cttiValueNameByIndex<TEnum>(iValue))
 				) {
 					output = metadata.Values[iValue].Value;
 					rtrn iNode;

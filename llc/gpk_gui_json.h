@@ -5,7 +5,6 @@
 
 nmsp gpk
 {
-	err_t	guiControlTableJSONLoad	(SGUI & gui, cnst SJSONReader & input, u2_t iNode = 0);
 } // nmsp
 
 #endif // GPK_GUI_JSON_H_261118

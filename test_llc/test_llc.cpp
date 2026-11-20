@@ -16,6 +16,7 @@ sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues) {
 	STestRunnerState runnerState	= {};
 	rtrn ::gpk::runSuites(runnerState, runtimeValues
 		, GPK_TEST_SUITE(adam7)
+		, GPK_TEST_SUITE(args)
 		, GPK_TEST_SUITE(array_obj)
 		, GPK_TEST_SUITE(array_pod)
 		, GPK_TEST_SUITE(base64)
@@ -43,5 +44,6 @@ sttc ::gpk::err_t test_llc_entry_point(::gpk::SRuntimeValues & runtimeValues) {
 		, GPK_TEST_SUITE(png)
 		, GPK_TEST_SUITE(array_static)
 		, GPK_TEST_SUITE(string)
+		, GPK_TEST_SUITE(view_serialize)
 		);
 }

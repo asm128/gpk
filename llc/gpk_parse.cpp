@@ -1,64 +1,13 @@
 #include "gpk_parse.h"
 #include "gpk_array_pod.h"
-#include "gpk_safe.h"
-#include "gpk_math.h"
-#include <ctype.h>
-
-gpk::b8_t			gpk::isSpaceCharacter			(cnst sc_t characterToTest)		{
-	switch(characterToTest) {
-	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
-		return true;
-	default:
-		return false;
-	}
-}
 gpk::err_t			gpk::skipToNextCharacter		(u2_t & indexCurrentChar, vcst_t expression)		{
 	while(indexCurrentChar < expression.size()) {
-		if(isSpaceCharacter(expression[indexCurrentChar]))
+		if(is_space_character(expression[indexCurrentChar]))
 			++indexCurrentChar;
 		else
 			break;
 	}
 	return 0;
-}
-gpk::err_t			gpk::parseArbitraryBaseInteger	(u2_t base, vcst_t symbolList, vcst_t sourceChars, u3_t * number_)	{
-	u2_t					totalCharsProcessed							= 0;
-	string					stringToParse								= {};
-	for(u2_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
-		cnst sc_t				sourceChar									= (sc_t)::tolower(sourceChars[iChar]);
-		b8_t					bSymbolProcessed							= false;
-		for(u2_t iSymbol = 0; iSymbol < base; ++iSymbol) {
-			if(symbolList[iSymbol] == sourceChar) {
-				bSymbolProcessed							= true;
-				if_fail_fe(stringToParse.push_back(sourceChar));
-				++iChar;
-				++totalCharsProcessed;
-				break;
-			}
-		}
-
-		if(!bSymbolProcessed)
-			break;	// number ends with any character that is not a symbol
-	}
-	if_fail_fe(reverse(stringToParse));		// we assigned the digits backwards so we need to reverse the string.
-	u3_t					number										= 0;
-	totalCharsProcessed	= 0;
-	for(u2_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
-		b8_t											bSymbolProcessed							= false;
-		for( u2_t iSymbol = 0; iSymbol < base; ++iSymbol )
-			if(symbolList[iSymbol] == stringToParse[iChar]) {
-				number										+= iSymbol * powui(base, totalCharsProcessed);
-				bSymbolProcessed							= true;
-				++iChar;
-				++totalCharsProcessed;
-				break;
-			}
-
-		if(!bSymbolProcessed)
-			break;	// number ends with any character that is not a symbol
-	}
-	safe_assign(number_, number);
-	return totalCharsProcessed;
 }
 gpk::err_t			stripLiteralsParseToken			(gpk::SStripLiteralState & work_state, gpk::apod<gpk::SStripLiteralToken> & out_types, gpk::vcst_t in_format)		{
 	(void)in_format;

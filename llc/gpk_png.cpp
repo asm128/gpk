@@ -423,7 +423,7 @@ sttc	gpk::err_t pngScanlineDecode_4_16	(::gpk::g8bgra & out_View, cnst ::gpk::vi
 		cnst ::gpk::au0_t												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		::gpk::view<u2_t>													viewPixels										= {(u2_t*)scanline.begin(), scanline.size() / 4};
+		::gpk::vu2_t														viewPixels										= {(u2_t*)scanline.begin(), scanline.size() / 4};
 		::gpk::view<::gpk::bgra>										scanlineOut										= out_View[iScanline];
 		for(u2_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			u2_c						packedValues									= viewPixels[iPixel];
@@ -445,7 +445,7 @@ sttc	gpk::err_t pngScanlineDecode_4_16	(::gpk::gu1_t & out_View, cnst ::gpk::vie
 		cnst ::gpk::au0_t												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		::gpk::view<u2_t>													viewPixels										= {(u2_t*)scanline.begin(), scanline.size() / 4};
+		::gpk::vu2_t														viewPixels										= {(u2_t*)scanline.begin(), scanline.size() / 4};
 		::gpk::vu1_t													scanlineOut										= out_View[iScanline];
 		for(u2_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			u2_c						packedValues									= viewPixels[iPixel];
@@ -466,7 +466,7 @@ sttc	gpk::err_t pngScanlineDecode_4_16	(::gpk::gu0_t & out_View, cnst ::gpk::vie
 		cnst ::gpk::au0_t												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		::gpk::view<u2_t>													viewPixels										= {(u2_t*)scanline.begin(), scanline.size() / 4};
+		::gpk::vu2_t														viewPixels										= {(u2_t*)scanline.begin(), scanline.size() / 4};
 		::gpk::vu0_t													scanlineOut										= out_View[iScanline];
 		for(u2_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			u2_c						packedValues									= viewPixels[iPixel];
@@ -700,46 +700,7 @@ sttc	gpk::err_t pngDecodeInterlaced
 		if(0 == adam7[iImage].Texels.size())
 			continue;
 		cnst ::gpk::view<cnst::gpk::au0_t>	currentScanlineSet	= {&scanlines[offsetScanline], currentImageSize.y};
-		switch(colorType) {
-		case 0: // grayscale
-			 if(bitDepth == 8) {
-				 if_fail_fe(::pngScanlineDecode_0_8(adam7[iImage].View, currentScanlineSet));
-			}
-			else if(bitDepth == 16) {
-				if_fail_fe(::pngScanlineDecode_0_16(adam7[iImage].View, currentScanlineSet));
-			}
-			else  if(bitDepth == 4 || bitDepth == 2 || bitDepth == 1)
-				if_fail_fe(::pngScanlineDecode_0_bits(adam7[iImage].View, currentScanlineSet, bitDepth));
-			break;
-		case 2: // RGB
-			if(bitDepth == 8) {
-				if_fail_fe(::pngScanlineDecode_2_8(adam7[iImage].View, currentScanlineSet));
-			}
-			else if(bitDepth == 16)
-				if_fail_fe(::pngScanlineDecode_2_16(adam7[iImage].View, currentScanlineSet));
-			break;
-		case 3: // Palette
-			if(bitDepth == 8) {
-				if_fail_fe(::pngScanlineDecode_3_8(adam7[iImage].View, currentScanlineSet, palette));
-			}
-			else if(bitDepth == 4 || bitDepth == 2 || bitDepth == 1)
-				if_fail_fe(::pngScanlineDecode_3_bits(adam7[iImage].View, currentScanlineSet, palette, bitDepth));
-			break;
-		case 4: // Grayscale + Alpha
-			if(bitDepth == 8) {
-				if_fail_fe(::pngScanlineDecode_4_8(adam7[iImage].View, currentScanlineSet));
-			}
-			else if(bitDepth == 16)
-				if_fail_fe(::pngScanlineDecode_4_16(adam7[iImage].View, currentScanlineSet));
-			break;
-		case 6: // RGBA
-			if(bitDepth == 8) {
-				if_fail_fe(::pngScanlineDecode_6_8(adam7[iImage].View, currentScanlineSet));
-			}
-			else if(bitDepth == 16)
-				if_fail_fe(::pngScanlineDecode_6_16(adam7[iImage].View, currentScanlineSet));
-			break;
-		} // switch(colorType)
+		if_fail_fe(::pngDecode(bitDepth, colorType, currentScanlineSet, palette, adam7[iImage].View));
 		offsetScanline			+= currentImageSize.y;
 	}
 	return ::gpk::adam7Interlace(::gpk::view<::gpk::img<_tPixel>>{adam7}, out_View);

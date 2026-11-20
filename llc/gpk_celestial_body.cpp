@@ -1,5 +1,9 @@
 #include "gpk_celestial_body.h"
 #include "gpk_stdstring.h"
+#include "gpk_enum.h"
+
+GDEFINE_ENUM_CTTI(::gpk::CELESTIAL_BODY);
+GDEFINE_ENUM_CTTI(::gpk::PLANET_TYPE);
 
 gpk::err_t 		gpk::printStar		(cnst ::gpk::SDetailStar & body) {
 	info_printf(

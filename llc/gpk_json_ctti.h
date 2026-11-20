@@ -6,43 +6,24 @@
 
 nmsp gpk
 {
-	enum CTTI_JSON_PARSE_ERROR : u0_t
-		{ CTTI_JSON_PARSE_ERROR_NONE				= 0
-		, CTTI_JSON_PARSE_ERROR_UNEXPECTED_END		= 1
-		, CTTI_JSON_PARSE_ERROR_UNEXPECTED_CHARACTER	= 2
-		, CTTI_JSON_PARSE_ERROR_EXPECTED_COLON		= 3
-		, CTTI_JSON_PARSE_ERROR_EXPECTED_SEPARATOR	= 4
-		, CTTI_JSON_PARSE_ERROR_INVALID_LITERAL		= 5
-		, CTTI_JSON_PARSE_ERROR_INVALID_NUMBER		= 6
-		, CTTI_JSON_PARSE_ERROR_TOKEN_COUNT			= 7
-		};
-
 	tplt<size_t N>
 	stct SCTTIJSONReader {
 		astatic<SJSONToken, N>	Token		= {};
 		u2_t				Count		= {};
-		u2_t				ErrorOffset	= {};
-		CTTI_JSON_PARSE_ERROR	Error		= CTTI_JSON_PARSE_ERROR_NONE;
+		SJSONReaderState		StateRead	= {};
 
-		inxp b8_t			Success		() cnst nxpt { rtrn CTTI_JSON_PARSE_ERROR_NONE == Error; }
+		inxp b8_t			Success		() cnst nxpt { rtrn this->StateRead.DoneReading; }
 		inxp view<cnst SJSONToken> Tokens	() cnst nxpt { rtrn {Token.begin(), Count}; }
 	};
 
 	tplt<size_t N>
-	inxp void cttiJSONError(SCTTIJSONReader<N> & result, CTTI_JSON_PARSE_ERROR error, u2_t offset) nxpt {
-		if(CTTI_JSON_PARSE_ERROR_NONE == result.Error) {
-			result.Error = error;
-			result.ErrorOffset = offset;
-		}
-	}
-
-	tplt<size_t N>
 	inxp json_id_t cttiJSONTokenPush(SCTTIJSONReader<N> & result, json_id_t parent, JSON_TYPE type, u2_t begin) nxpt {
 		if(result.Count >= N) {
-			cttiJSONError(result, CTTI_JSON_PARSE_ERROR_TOKEN_COUNT, begin);
+			result.StateRead.IndexCurrentChar = begin;
 			rtrn -1;
 		}
 		result.Token.Storage[result.Count] = {parent, type, {begin, begin}, {}};
+		result.StateRead.IndexCurrentElement = (json_id_t)result.Count;
 		rtrn (json_id_t)result.Count++;
 	}
 
@@ -80,13 +61,11 @@ nmsp gpk
 			sc_c character = source[cursor];
 			if(escaping) {
 				if('u' == character) {
-					if(cursor + 4 >= length) {
-						cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_END, cursor);
+					if(cursor + 4 >= length)
 						rtrn -1;
-					}
 					for(u2_t iDigit = 1; iDigit <= 4; ++iDigit)
 						if(false == cttiJSONHex(source[cursor + iDigit])) {
-							cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_CHARACTER, cursor + iDigit);
+							cursor += iDigit;
 							rtrn -1;
 						}
 					cursor += 5;
@@ -108,7 +87,7 @@ nmsp gpk
 			}
 			++cursor;
 		}
-		cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_END, quoteOffset);
+		(void)quoteOffset;
 		rtrn -1;
 	}
 
@@ -137,19 +116,15 @@ nmsp gpk
 			rtrn object;
 		}
 		while(cursor < length) {
-			if('"' != source[cursor]) {
-				cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_CHARACTER, cursor);
+			if('"' != source[cursor])
 				rtrn -1;
-			}
 			u2_c keyBegin = cursor;
 			json_id_t key = cttiJSONTokenPush(result, object, JSON_TYPE_KEY, keyBegin);
 			if(0 > key || 0 > cttiJSONParseString(result, source, cursor, length, key))
 				rtrn -1;
 			cttiJSONSpace(source, cursor, length);
-			if(cursor >= length || ':' != source[cursor]) {
-				cttiJSONError(result, CTTI_JSON_PARSE_ERROR_EXPECTED_COLON, cursor);
+			if(cursor >= length || ':' != source[cursor])
 				rtrn -1;
-			}
 			result.Token.Storage[key].Span.End = cursor++;
 			cttiJSONSpace(source, cursor, length);
 			json_id_t value = cttiJSONTokenPush(result, object, JSON_TYPE_VALUE, cursor);
@@ -161,10 +136,8 @@ nmsp gpk
 				result.Token.Storage[object].Span.End = ++cursor;
 				rtrn object;
 			}
-			if(cursor >= length || ',' != source[cursor]) {
-				cttiJSONError(result, CTTI_JSON_PARSE_ERROR_EXPECTED_SEPARATOR, cursor);
+			if(cursor >= length || ',' != source[cursor])
 				rtrn -1;
-			}
 			++cursor;
 			cttiJSONSpace(source, cursor, length);
 			if(cursor < length && '}' == source[cursor]) {
@@ -172,7 +145,6 @@ nmsp gpk
 				rtrn object;
 			}
 		}
-		cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_END, cursor);
 		rtrn -1;
 	}
 
@@ -197,10 +169,8 @@ nmsp gpk
 				result.Token.Storage[array].Span.End = ++cursor;
 				rtrn array;
 			}
-			if(cursor >= length || ',' != source[cursor]) {
-				cttiJSONError(result, CTTI_JSON_PARSE_ERROR_EXPECTED_SEPARATOR, cursor);
+			if(cursor >= length || ',' != source[cursor])
 				rtrn -1;
-			}
 			++cursor;
 			cttiJSONSpace(source, cursor, length);
 			if(cursor < length && ']' == source[cursor]) {
@@ -208,7 +178,6 @@ nmsp gpk
 				rtrn array;
 			}
 		}
-		cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_END, cursor);
 		rtrn -1;
 	}
 
@@ -236,10 +205,8 @@ nmsp gpk
 			}
 			break;
 		}
-		if(0 == digits) {
-			cttiJSONError(result, CTTI_JSON_PARSE_ERROR_INVALID_NUMBER, begin);
+		if(0 == digits)
 			rtrn -1;
-		}
 		json_id_t number = cttiJSONTokenPush(result, parent, decimal ? JSON_TYPE_DECIMAL : JSON_TYPE_INTEGER, begin);
 		if(0 > number)
 			rtrn number;
@@ -256,37 +223,29 @@ nmsp gpk
 	tplt<size_t N>
 	inxp json_id_t cttiJSONParseValue(SCTTIJSONReader<N> & result, sc_c (&source)[N], u2_t & cursor, u2_t length, json_id_t parent) nxpt {
 		cttiJSONSpace(source, cursor, length);
-		if(cursor >= length) {
-			cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_END, cursor);
+		if(cursor >= length)
 			rtrn -1;
-		}
 		switch(source[cursor]) {
 		case '{': rtrn cttiJSONParseObject(result, source, cursor, length, parent);
 		case '[': rtrn cttiJSONParseArray(result, source, cursor, length, parent);
 		case '"': rtrn cttiJSONParseString(result, source, cursor, length, parent);
 		case 't': {
-			if(false == cttiJSONLiteral(source, cursor, length, "true")) {
-				cttiJSONError(result, CTTI_JSON_PARSE_ERROR_INVALID_LITERAL, cursor);
+			if(false == cttiJSONLiteral(source, cursor, length, "true"))
 				rtrn -1;
-			}
 			json_id_t token = cttiJSONTokenPush(result, parent, JSON_TYPE_BOOLEAN, cursor);
 			if(0 <= token) result.Token.Storage[token].Span.End = cursor += 4, result.Token.Storage[token].Value = 1;
 			rtrn token;
 		}
 		case 'f': {
-			if(false == cttiJSONLiteral(source, cursor, length, "false")) {
-				cttiJSONError(result, CTTI_JSON_PARSE_ERROR_INVALID_LITERAL, cursor);
+			if(false == cttiJSONLiteral(source, cursor, length, "false"))
 				rtrn -1;
-			}
 			json_id_t token = cttiJSONTokenPush(result, parent, JSON_TYPE_BOOLEAN, cursor);
 			if(0 <= token) result.Token.Storage[token].Span.End = cursor += 5;
 			rtrn token;
 		}
 		case 'n': {
-			if(false == cttiJSONLiteral(source, cursor, length, "null")) {
-				cttiJSONError(result, CTTI_JSON_PARSE_ERROR_INVALID_LITERAL, cursor);
+			if(false == cttiJSONLiteral(source, cursor, length, "null"))
 				rtrn -1;
-			}
 			json_id_t token = cttiJSONTokenPush(result, parent, JSON_TYPE_NULL, cursor);
 			if(0 <= token) result.Token.Storage[token].Span.End = cursor += 4;
 			rtrn token;
@@ -299,20 +258,21 @@ nmsp gpk
 	tplt<size_t N>
 	inxp SCTTIJSONReader<N> jsonParseCTTI(sc_c (&source)[N]) nxpt {
 		SCTTIJSONReader<N> result = {};
-		u2_t cursor = 0;
+		u2_t & cursor = result.StateRead.IndexCurrentChar;
 		u2_c length = N && 0 == source[N - 1] ? (u2_t)N - 1 : (u2_t)N;
 		cttiJSONSpace(source, cursor, length);
-		if(cursor >= length) {
-			cttiJSONError(result, CTTI_JSON_PARSE_ERROR_UNEXPECTED_END, cursor);
+		if(cursor >= length)
 			rtrn result;
-		}
+		json_id_t parsed = -1;
 		if('{' == source[cursor] || '[' == source[cursor])
-			cttiJSONParseValue(result, source, cursor, length, -1);
+			parsed = cttiJSONParseValue(result, source, cursor, length, -1);
 		else {
 			json_id_t value = cttiJSONTokenPush(result, -1, JSON_TYPE_VALUE, cursor);
-			if(0 <= value && 0 <= cttiJSONParseValue(result, source, cursor, length, value))
+			if(0 <= value && 0 <= (parsed = cttiJSONParseValue(result, source, cursor, length, value)))
 				result.Token.Storage[value].Span.End = cursor;
 		}
+		result.StateRead.CharCurrent = cursor < length ? source[cursor] : 0;
+		result.StateRead.DoneReading = 0 <= parsed;
 		rtrn result;
 	}
 

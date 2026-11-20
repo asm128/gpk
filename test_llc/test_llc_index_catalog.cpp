@@ -19,8 +19,7 @@ GDEFINE_ENUM_VALUED(INDEX_CATALOG_TEST_RESULT, SCRIPT_DATA		, 9, "outputSearchSc
 stxp ::gpk::vcst_c INDEX_CATALOG_FILE = "D:/enterprise/programming_sciences/codebases/Callsite/old_web_resu/demo/obelisco/ads.json";
 
 ::gpk::err_t SIndexCatalog::Load(::gpk::vcst_t fileName, ::gpk::AD_SHOP_CATEGORY category, ::gpk::vcst_t language) {
-	if_fail_fe(Item.clear());
-	if_fail_fe(Word.clear());
+	if_fail_fe(::gpk::clear(Item, Word));
 	if_fail_fe(::gpk::jsonFileRead(Source, fileName));
 	if_fail_fe(::gpk::getItemViews(Source.Reader, category, language, Item));
 	rtrn ::gpk::getWordDict(WordData, Word, Item);

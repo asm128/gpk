@@ -1,4 +1,5 @@
 #include "gpk_json_core.h"
+#include "gpk_reader.h"
 #include "gpk_array_ptr.h"
 #include "gpk_string.h"
 
@@ -14,28 +15,9 @@ nmsp gpk
 		apobj<SJSONNode>		Children			= {};
 		json_id_t				ObjectIndex			= -1;
 	};
-	stct SJSONReaderState {
-		u2_t					IndexCurrentChar	= 0;
-		json_id_t				IndexCurrentElement	= -1;
-		SJSONToken				* CurrentElement	= 0;
-		s1_t					NestLevel			= 0;
-		sc_t					CharCurrent			= 0;
-		b8_t					Escaping			: 1;
-		b8_t					InsideString		: 1;
-		b8_t					ExpectingSeparator	: 1;
-		b8_t					DoneReading			: 1;
-								SJSONReaderState	()
-		: Escaping			(false)
-		, InsideString		(false)
-		, ExpectingSeparator(false)
-		, DoneReading		(false)
-		{}
-	};
 #pragma pack(pop)
 
-	stct SJSONReader {
-		apod<SJSONToken>		Token;
-		aobj<vcst_t>			View;
+	stct SJSONReader : SReader<SJSONToken> {
 		apobj<SJSONNode>		Tree;
 		SJSONReaderState		StateRead;
 		
@@ -44,6 +26,7 @@ nmsp gpk
 		cnst pobj<SJSONNode>*	end		()				cnst	{ rtrn Tree.end(); }
 		err_t					Reset	()						{
 			::gpk::clear(Token, View);
+			Source				= {};
 			StateRead				= {};
 			rtrn 0;
 		}

@@ -9,6 +9,7 @@ usns gpk;
 // The folder view remains valid for the duration of the suite call.
 
 ::gpk::err_t test_adam7				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
+::gpk::err_t test_args				(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_array_obj			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_array_pod			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);
 ::gpk::err_t test_base64			(STestRunnerState & runner, ::gpk::ATestError & errors, [[maybe_unused]] ::gpk::vcst_t outputFolder);

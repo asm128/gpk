@@ -18,8 +18,8 @@ nmsp gpk
 		inln	oper		view<T>			()								{ rtrn Storage; }
 		inxp	oper		view<TCnst>		()						csnx	{ rtrn Storage; }
 
-		inln	TCnst&		oper[]			(u2_t index)			cnst	{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
-		inln	T&			oper[]			(u2_t index)					{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
+		inxp	TCnst&		oper[]			(u2_t index)			cnst	{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
+		inxp	T&			oper[]			(u2_t index)					{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
 		GPK_DEFAULT_OPERATOR(TAStatic
 			, (this->size() != other.size()) ? false
 			: (this->begin() == other.begin()) ? true
@@ -98,8 +98,8 @@ nmsp gpk
 		inxp					static_string	(astsc_c<N> & other)		: astsc_t<N>(other), Count(vcst_t(other.Storage).size()) {}
 
 		inln	static_string&	oper=			(astsc_c<N> & other)		{ Count = vcst_t(other.Storage).size(); return astsc_t<N>::oper=(other); }
-		inln	sc_c&			oper[]			(u2_t index)		cnst	{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
-		inln	sc_t&			oper[]			(u2_t index)				{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
+		inxp	sc_c&			oper[]			(u2_t index)		cnst	{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
+		inxp	sc_t&			oper[]			(u2_t index)				{ if_true_tef(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
 		inxp	sc_t&			oper==			(vcst_c & other)	cnst	{ rtrn other == Storage; }
 		inxp	sc_t&			oper!=			(vcst_c & other)	cnst	{ rtrn other != Storage; }
 
