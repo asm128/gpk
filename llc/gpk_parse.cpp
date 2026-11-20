@@ -1,5 +1,6 @@
 #include "gpk_parse.h"
 #include "gpk_array_pod.h"
+
 gpk::err_t			gpk::skipToNextCharacter		(u2_t & indexCurrentChar, vcst_t expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(is_space_character(expression[indexCurrentChar]))

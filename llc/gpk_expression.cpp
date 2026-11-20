@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #include "gpk_expression.h"
 
 GPK_USING_TYPEINT();
@@ -405,3 +406,5 @@ gpk::err_t gpk::expressionReaderLoad(SExpressionReader & reader, view<cnst SExpr
 	if_fail_fef(::gpk::stripLiteralParse(state, tokens, format), "%.*s", GPK_VIEW_ARGS(format));
 	rtrn ::gpk::expressionStringFormat(format, tokens, resolve, output);
 }
+=======
+>>>>>>> Stashed changes
