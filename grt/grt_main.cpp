@@ -38,9 +38,9 @@ static	int				threadRenderStart	(::SRuntimeState& runtimeState)										{
 
 static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
 #if defined(GPK_WINDOWS)
-	::gpk::error_t				updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
+	gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 #else
-	::gpk::error_t				updateResult		= mainModule.Update(mainModule.Application, false);
+	gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, false);
 #endif
 	if(1 == updateResult || ::gpk::failed(updateResult)) {
 		is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);

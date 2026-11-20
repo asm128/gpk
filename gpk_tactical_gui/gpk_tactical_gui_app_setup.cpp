@@ -65,12 +65,12 @@ static const ::dry::SControlParams			control_list_config			[]	=
 	{	{::gpk::GUI_COLOR_MODE_Flat, ::dry::SCREEN_CONTROL_CONFIG_DIALOG, -1,  true, true}
 	};
 
-static	::gpk::error_t						setupScreenHUD				(::dry::SApplication & app)	{
+static	gpk::err_t						setupScreenHUD				(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.HUD , ::control_list_hud);
 	return ::dry::handleResizeScreenHUD (app, app.Framework.RootWindow.Size.s1_t());
 }
 
-static	::gpk::error_t						setupScreenMenu				(::dry::SApplication & app)	{
+static	gpk::err_t						setupScreenMenu				(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Menu, ::control_list_menu);
 	const ::gpk::cid_t								indexControlMenuItem		= app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_HOME];
 	if(-1 == indexControlMenuItem)
@@ -78,7 +78,7 @@ static	::gpk::error_t						setupScreenMenu				(::dry::SApplication & app)	{
 	app.Framework.GUI->Controls.SetSelected(indexControlMenuItem, true);
 	return ::dry::handleResizeScreenMenu(app, app.Framework.RootWindow.Size.s1_t());
 }
-static	::gpk::error_t						setupScreenSpoolInfo		(::dry::SApplication & app)	{
+static	gpk::err_t						setupScreenSpoolInfo		(::dry::SApplication & app)	{
 	::gpk::SGUI								& gui						= *app.Framework.GUI;
 	::dry::SScreenSpoolInfo					& screen					= app.Screens.SpoolInfo;
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, screen, ::control_list_spool_info);
@@ -87,7 +87,7 @@ static	::gpk::error_t						setupScreenSpoolInfo		(::dry::SApplication & app)	{
 	return ::dry::handleResizeScreenSpoolInfo(app, app.Framework.RootWindow.Size.s1_t());
 }
 
-static	::gpk::error_t						setupScreenModal			(::dry::SApplication & app)	{
+static	gpk::err_t						setupScreenModal			(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Modal, ::control_list_modal);
 	const ::dry::SCREEN_CONTROL_MODAL				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_MODAL_DIALOG
@@ -104,7 +104,7 @@ static	::gpk::error_t						setupScreenModal			(::dry::SApplication & app)	{
 	return ::dry::handleResizeScreenModal(app, app.Framework.RootWindow.Size.s1_t());
 }
 
-::gpk::error_t								dry::setupScreenLoadFilament		(::dry::SApplication & app)	{
+gpk::err_t								dry::setupScreenLoadFilament		(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.LoadFilament, ::control_list_load_filament);
 	const ::dry::SCREEN_CONTROL_LOAD_FILAMENT		controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_LOAD_FILAMENT_DIALOG
@@ -118,7 +118,7 @@ static	::gpk::error_t						setupScreenModal			(::dry::SApplication & app)	{
 	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
 }
 
-::gpk::error_t								dry::setupScreenInfo		(::dry::SApplication & app)	{
+gpk::err_t								dry::setupScreenInfo		(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Info, ::control_list_info);
 	const ::dry::SCREEN_CONTROL_INFO				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_INFO_DIALOG
@@ -132,7 +132,7 @@ static	::gpk::error_t						setupScreenModal			(::dry::SApplication & app)	{
 	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
 }
 
-::gpk::error_t								dry::setupScreenConfig		(::dry::SApplication & app)	{
+gpk::err_t								dry::setupScreenConfig		(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Config, ::control_list_config);
 	const ::dry::SCREEN_CONTROL_CONFIG				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_CONFIG_DIALOG
@@ -146,7 +146,7 @@ static	::gpk::error_t						setupScreenModal			(::dry::SApplication & app)	{
 	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
 }
 
-static	::gpk::error_t						setupScreens				(::dry::SApplication & app)	{
+static	gpk::err_t						setupScreens				(::dry::SApplication & app)	{
 	::gpk::SGUI										& gui						= *app.Framework.GUI;
 	app.Screens.RootControlIndex				= ::gpk::controlCreate(gui);
 	info_printf("Created root control with index %i.", app.Screens.RootControlIndex);
@@ -170,7 +170,7 @@ static	::gpk::error_t						setupScreens				(::dry::SApplication & app)	{
 }
 
 
-static	::gpk::error_t						setupGauge					(::dry::SGaugeFeeder	& feeder, const ::gpk::n2s1_t feederControlSize)	{
+static	gpk::err_t						setupGauge					(::dry::SGaugeFeeder	& feeder, const ::gpk::n2s1_t feederControlSize)	{
 	const ::gpk::circlef32							gaugeMetrics				= {feederControlSize.x / 2.0f - 4, feederControlSize.f2_t() / 2.0f};
 //#define GAUGE_LOW_RES
 #if defined(GAUGE_LOW_RES)
@@ -184,7 +184,7 @@ static	::gpk::error_t						setupGauge					(::dry::SGaugeFeeder	& feeder, const :
 	return 0;
 }
 
-static	::gpk::error_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SGaugeFeeder & feeder, int32_t feederControlId)	{
+static	gpk::err_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SGaugeFeeder & feeder, int32_t feederControlId)	{
 	::gpk::SGUI										& gui						= *app.Framework.GUI;
 	const int32_t									indexControlFeeder			= app.Screens.Home.ControlIds[feederControlId];
 	::gpk::SControlPlacement						& control					= gui.Controls.Placement[indexControlFeeder];
@@ -194,7 +194,7 @@ static	::gpk::error_t						setupGaugeControl			(::dry::SApplication & app, ::dry
 	return 0;
 }
 
-static	::gpk::error_t						setupGauges					(::dry::SApplication & app)	{
+static	gpk::err_t						setupGauges					(::dry::SApplication & app)	{
 	for(uint32_t iFeeder = 0; iFeeder < ::gpk::size(app.Screens.Home.GaugeFeederSmall); ++iFeeder)
 		::setupGaugeControl(app, app.Screens.Home.GaugeFeederSmall[iFeeder], ::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL + iFeeder);
 
@@ -202,7 +202,7 @@ static	::gpk::error_t						setupGauges					(::dry::SApplication & app)	{
 	return 0;
 }
 
-::gpk::error_t								dry::setupGUI				(::dry::SApplication & app)	{
+gpk::err_t								dry::setupGUI				(::dry::SApplication & app)	{
 	auto											& framework					= app.Framework;
 	::gpk::SGUI										& gui						= *framework.GUI;
 	gui.ColorModeDefault						= ::gpk::GUI_COLOR_MODE_Flat;

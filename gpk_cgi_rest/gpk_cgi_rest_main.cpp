@@ -8,7 +8,7 @@
 
 #include "gpk_udp_client.h"
 
-static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										{
+static	gpk::err_t	initClient						(::gpk::SUDPClient & bestClient)										{
 	bestClient.AddressConnect	= {};
 	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);	// If loading the remote IP from the json fails, we fall back to the local address.
 	::gpk::apod<char>			fileJSONConfig					= {};

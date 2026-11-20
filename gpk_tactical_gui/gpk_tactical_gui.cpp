@@ -1,6 +1,6 @@
 #include "gpk_tactical_gui.h"
 
-static	::gpk::error_t				addDefaultProgram					(::dry::SDryer & dryer) {
+static	gpk::err_t				addDefaultProgram					(::dry::SDryer & dryer) {
 	::dry::SDryerProgram					loadedProgram						= {};
 	loadedProgram.Name					= "default";
 	loadedProgram.Pressure				= ::dry::DRYER_DEFAULT_PRESSURE			;
@@ -12,13 +12,13 @@ static	::gpk::error_t				addDefaultProgram					(::dry::SDryer & dryer) {
 	return 0;
 }
 
-static	::gpk::error_t				dryerProgramListLoad				(::dry::SDryer & dryer, ::gpk::vcst_t programsFilename) {
+static	gpk::err_t				dryerProgramListLoad				(::dry::SDryer & dryer, ::gpk::vcst_t programsFilename) {
 	if_fail_ef(::gpk::jsonFileRead(dryer.ProgramFile, programsFilename), "Failed to load programs file: '%.*s'", (int)programsFilename.size(), programsFilename.begin())
 	else {
 		if_zero_ef(dryer.ProgramFile.Reader.Token.size(), "%.*s", (int)programsFilename.size(), programsFilename.begin())
 		else {
 			::gpk::pnco<::gpk::SJSONNode>		rootArray							= dryer.ProgramFile.Reader[0];
-			::gpk::err_t						programCount						;
+			gpk::err_t						programCount						;
 			if_fail_ef(programCount = ::gpk::jsonArraySize(*rootArray), "Invalid root json type: '%s'", ::gpk::get_value_namep(rootArray->Token->Type))
 			for(gpk::s2_t iProgram = 0; iProgram < programCount; ++iProgram) {
 				::dry::SDryerProgram					loadedProgram						= {};
@@ -69,7 +69,7 @@ static	::gpk::error_t				dryerProgramListLoad				(::dry::SDryer & dryer, ::gpk::
 	return 0;
 }
 
-::gpk::error_t						dry::dryerSetup				(::dry::SDryer & dryer) {
+gpk::err_t						dry::dryerSetup				(::dry::SDryer & dryer) {
 	::gpk::vcs								programsFilename			= "./program.json";
 	gpk_necall(::dryerProgramListLoad(dryer, programsFilename), "%s", "");
 	return 0;
@@ -80,7 +80,7 @@ static	constexpr	int64_t			totalCycleTimeInMillisec	(const ::dry::SDryerProgram	
 static	constexpr	int64_t			preheatingTimeInMillisec	(const ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.PreHeatingTime); }
 static	constexpr	int64_t			cycleTimeInMillisec			(const ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.SubcycleDuration); }
 
-::gpk::error_t						dry::dryerUpdate			(::dry::SDryer & dryer, uint64_t lastTimeMilliseconds) {
+gpk::err_t						dry::dryerUpdate			(::dry::SDryer & dryer, uint64_t lastTimeMilliseconds) {
 	dryer.EventList.clear();
 	::dry::SDryerState						& dryerState				= dryer.State;
 	if(dryerState.Running) {

@@ -60,7 +60,7 @@ static const ::dry::SControlParams	control_list_home[]				=
 	,	{DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_NEXT						, ::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLBAR, false, false, false, false, ::gpk::ALIGN_CENTER_BOTTOM, {{0, 0}, {24, 24}}, {2, 2, 2, 2}, {}, "\x1f", ::gpk::ALIGN_CENTER}
 };
 
-::gpk::error_t						dry::setupScreenHome			(::dry::SApplication & app)	{
+gpk::err_t						dry::setupScreenHome			(::dry::SApplication & app)	{
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.Home, ::control_list_home);
 	const ::dry::SCREEN_CONTROL_HOME				controlsToHide	[]		=

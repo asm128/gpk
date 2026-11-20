@@ -34,11 +34,11 @@ namespace s3d
 
 	};
 
-	::gpk::error_t	serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud);
-	::gpk::error_t	serialClose			(::s3d::SSerial & serial);
-	::gpk::error_t	serialWrite			(::s3d::SSerial & serial, ::gpk::vcu0_t data);
-	::gpk::error_t	serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, uint32_t count, uint32_t timeout);
-	::gpk::error_t	serialReadUntil		(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, uint32_t maxCount, uint32_t timeout);
+	gpk::err_t	serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud);
+	gpk::err_t	serialClose			(::s3d::SSerial & serial);
+	gpk::err_t	serialWrite			(::s3d::SSerial & serial, ::gpk::vcu0_t data);
+	gpk::err_t	serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, uint32_t count, uint32_t timeout);
+	gpk::err_t	serialReadUntil		(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, uint32_t maxCount, uint32_t timeout);
 } // namespace
 
 #endif // S3D_SERIAL_H_239846293487

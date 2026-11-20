@@ -57,7 +57,7 @@ stacxpr	const ::gpk::tri3<float>						modelNormalVectors		[12]						=
 	};
 
 template<typename _tIndex, typename _tValue>
-					::gpk::error_t									indexValues									(const ::gpk::view<const _tValue> & in_values, ::gpk::array_pod<_tIndex> & out_indices, ::gpk::array_pod<_tValue> & out_values, ::gpk::array_pod<_tIndex> & out_remap){
+					gpk::err_t									indexValues									(const ::gpk::view<const _tValue> & in_values, ::gpk::array_pod<_tIndex> & out_indices, ::gpk::array_pod<_tValue> & out_values, ::gpk::array_pod<_tIndex> & out_remap){
 	for(uint32_t iValue = 0; iValue < in_values.size(); ++iValue) {
 		bool																	bFound										= false;
 		const _tValue															& in_value									= in_values[iValue];
@@ -80,7 +80,7 @@ template<typename _tIndex, typename _tValue>
 	return 0;
 }
 
-static ::gpk::error_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gpk::circlef32 & gaugeMetrics, int16_t resolution, int16_t width) {
+static gpk::err_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gpk::circlef32 & gaugeMetrics, int16_t resolution, int16_t width) {
 	const double				stepUnit						= (1.0 / resolution) * ::gpk::math_2pi;
 	const ::gpk::spheref32		sphereMetrics					= {gaugeMetrics.Radius, {gaugeMetrics.Center.x, gaugeMetrics.Center.y, .5f}};
 	const double				finalRadius						= gaugeMetrics.Radius;
@@ -104,7 +104,7 @@ static ::gpk::error_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gp
 	return 0;
 }
 
-static ::gpk::error_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra target, ::gpk::rgbaf colorMin, ::gpk::rgbaf colorMid, ::gpk::rgbaf colorMax, ::gpk::bgra colorEmpty, bool radialColor) {
+static gpk::err_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra target, ::gpk::rgbaf colorMin, ::gpk::rgbaf colorMid, ::gpk::rgbaf colorMax, ::gpk::bgra colorEmpty, bool radialColor) {
 	static ::gpk::imgu32		dummyDepth;
 	const ::gpk::n3f2_t			center3							= (gauge.Vertices[1] - gauge.Vertices[gauge.Vertices.size() / 2 + 1]) / 2 + gauge.Vertices[gauge.Vertices.size() / 2 + 1];
 	const ::gpk::n2f2_t			center2							= {center3.x, center3.y};
@@ -194,7 +194,7 @@ static const SControlParams<::gme::GUI_EXAMPLE_CONTROL> controlList[] =
 	};
 
 template<typename _tId>
-static ::gpk::error_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::view<const SControlParams<_tId>> params, uint32_t idCount) {
+static gpk::err_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::view<const SControlParams<_tId>> params, uint32_t idCount) {
 	gpk_necs(ids.resize(idCount));
 	for(uint32_t iControl = 0; iControl < params.size(); ++iControl) {
 		const SControlParams<_tId>	& param	= params[iControl];
@@ -215,7 +215,7 @@ static ::gpk::error_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::g
 }
 
 template<typename _tValue>
-static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const SMenuItem<_tValue>> items, ::gpk::cid_t parent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN align, ::gpk::acid & ids) {
+static gpk::err_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const SMenuItem<_tValue>> items, ::gpk::cid_t parent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN align, ::gpk::acid & ids) {
 	::gpk::aobj<::gpk::vcsc_t>	labels;
 	gpk_necs(labels.resize(items.size()));
 	for(uint32_t iItem = 0; iItem < labels.size(); ++iItem)
@@ -223,8 +223,8 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	return ::gpk::guiCreateControlList(gui, labels, parent, buttonSize, offset, align, ::gpk::ALIGN_CENTER, ids);
 }
 
-::gpk::error_t			cleanup		(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
-::gpk::error_t			setup		(::gme::SApplication & app)						{
+gpk::err_t			cleanup		(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
+gpk::err_t			setup		(::gme::SApplication & app)						{
 	app.Buffer3D.create();
 	::gpk::SFramework				& framework									= app.Framework;
 	::gpk::SWindow					& mainWindow								= framework.RootWindow;
@@ -288,7 +288,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	return 0;
 }
 
-::gpk::error_t			update				(::gme::SApplication & app, bool exitSignal)	{
+gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	static ::gpk::STimer		timer;
 	rvis_if(::gpk::APPLICATION_STATE_EXIT, exitSignal);
 	{
@@ -301,7 +301,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	::gpk::SGUI					& gui			= *framework.GUI;
 	::gpk::acid					toProcess		= {};
 	gpk_necs(::gpk::guiGetProcessableControls(gui, toProcess));
-	const ::gpk::error_t		inputBoxResult	= app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, toProcess);
+	const gpk::err_t		inputBoxResult	= app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, toProcess);
 	gpk_necs(inputBoxResult);
 	if(INT_MAX == inputBoxResult) {
 		::gpk::pobj<::gpk::SDialogViewport>	viewport;
@@ -378,7 +378,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 }
 
 
-::gpk::error_t			draw			(::gme::SApplication & app)							{
+gpk::err_t			draw			(::gme::SApplication & app)							{
 	static ::gpk::STimer		timer;
 	::gpk::SFramework			& framework		= app.Framework;
 	::gpk::SGUI					& gui			= *framework.GUI;

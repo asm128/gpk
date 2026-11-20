@@ -1,6 +1,6 @@
 #include "gpk_tactical_gui_palette.h"
 
-::gpk::error_t							dry::setupPalettes		(::gpk::SGUI & gui) {
+gpk::err_t							dry::setupPalettes		(::gpk::SGUI & gui) {
 	::gpk::SGUIColors						& colors				= *gui.Colors;
 	auto									& paletteNormal			= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL	]];
 	auto									& paletteDisabled		= colors.Palettes[colors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED]];

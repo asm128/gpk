@@ -207,15 +207,15 @@ namespace gpk
 	}
 
 	tplt<tpnm TColor>
-	stin	::gpk::err_t	updateSizeDependentTarget	(::gpk::img<TColor> & out_texture, ::gpk::n2u1_c & newSize) {
+	stin	gpk::err_t	updateSizeDependentTarget	(::gpk::img<TColor> & out_texture, ::gpk::n2u1_c & newSize) {
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	tplt<tpnm TColor>
-	stin	::gpk::err_t	updateSizeDependentTarget	(::gpk::img<TColor> & out_texture, ::gpk::n2u1_c & newSize, const TColor & newValue) {
+	stin	gpk::err_t	updateSizeDependentTarget	(::gpk::img<TColor> & out_texture, ::gpk::n2u1_c & newSize, const TColor & newValue) {
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize, newValue);
 	}
 	tplt<tpnm TColor>
-	stin	::gpk::err_t	updateSizeDependentImage	(::gpk::img<TColor> & out_texture, const ::gpk::grid<TColor> & in_view, ::gpk::n2u1_c & newSize) {
+	stin	gpk::err_t	updateSizeDependentImage	(::gpk::img<TColor> & out_texture, const ::gpk::grid<TColor> & in_view, ::gpk::n2u1_c & newSize) {
 		return updateSizeDependentImage(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 

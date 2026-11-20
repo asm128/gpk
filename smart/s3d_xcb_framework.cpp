@@ -1,7 +1,7 @@
 #include "s3d_xcb_framework.h"
 
 #if !defined(GPK_WINDOWS)
-static ::gpk::error_t		create_window	(xcb_connection_t * connection, xcb_screen_t * screen, ::gpk::SDisplay & window) {
+static gpk::err_t		create_window	(xcb_connection_t * connection, xcb_screen_t * screen, ::gpk::SDisplay & window) {
 	::std::shared_ptr<xcb_get_geometry_reply_t>
 		geometry	(xcb_get_geometry_reply(connection, xcb_get_geometry(connection, screen->root), nullptr), free);
 	window.Size									= {geometry->width, geometry->height};
@@ -48,7 +48,7 @@ static ::gpk::error_t		create_window	(xcb_connection_t * connection, xcb_screen_
 	}
 	return 0;
 }
-::gpk::error_t				s3d::mainWindowCreate				(::s3d::SXCBFramework & framework) {
+gpk::err_t				s3d::mainWindowCreate				(::s3d::SXCBFramework & framework) {
 	if(0 == framework.PlatformDetail.XCBConnection) {
 		framework.PlatformDetail.XCBConnection	= xcb_connect(NULL, NULL);
 		framework.PlatformDetail.XCBScreen		= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;
@@ -56,10 +56,10 @@ static ::gpk::error_t		create_window	(xcb_connection_t * connection, xcb_screen_
 	return ::create_window(framework.PlatformDetail.XCBConnection, framework.PlatformDetail.XCBScreen, framework.MainDisplay);
 }
 #else
-::gpk::error_t				s3d::mainWindowCreate				(::s3d::SXCBFramework & framework) { (void)framework; return 0; }
+gpk::err_t				s3d::mainWindowCreate				(::s3d::SXCBFramework & framework) { (void)framework; return 0; }
 #endif
 
-::gpk::error_t				s3d::frameworkUpdate				(::s3d::SXCBFramework & framework) {
+gpk::err_t				s3d::frameworkUpdate				(::s3d::SXCBFramework & framework) {
 #ifndef GPK_WINDOWS
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
 										& guiRenderTarget			= framework.MainDisplayOffscreen;

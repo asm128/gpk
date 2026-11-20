@@ -14,7 +14,7 @@ int								main							(int argc, char ** argv)						{
 		namePathDst						= ::gpk::toString({argv[2], (uint32_t)-1});
 	else if(2 == argc) {
 		namePathDst						= ::gpk::toString({argv[1], (uint32_t)-1});
-		::gpk::error_t						indexSequence					= ::gpk::rfind('.', nameFileSrc);
+		gpk::err_t						indexSequence					= ::gpk::rfind('.', nameFileSrc);
 		if(-1 != indexSequence) {
 			namePathDst[indexSequence]		= '\\';
 			namePathDst[indexSequence + 1]	= 0;

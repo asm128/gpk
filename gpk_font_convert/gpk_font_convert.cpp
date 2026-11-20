@@ -13,7 +13,7 @@
 #include "gpk_file.h"
 #include "gpk_string.h"
 
-::gpk::error_t				pngToFont
+gpk::err_t				pngToFont
 	( ::gpk::img8bgra			& imageCache
 	, ::gpk::img8bgra			& verticalAtlas
 	, ::gpk::imgmonou64			& fontTexture

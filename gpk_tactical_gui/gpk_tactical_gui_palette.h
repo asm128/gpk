@@ -49,7 +49,7 @@ namespace dry
 		, PALETTE_COUNT
 		};
 
-	::gpk::error_t					setupPalettes	(::gpk::SGUI & gui);
+	gpk::err_t					setupPalettes	(::gpk::SGUI & gui);
 } // namespace
 
 #endif // GPK_TACTICAL_GUI_PALETTE_H_928347982374

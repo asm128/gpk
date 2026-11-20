@@ -41,7 +41,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(ARGS_STATE, POSITIONAL	, 2);
 } // namespace
 
-sttc ::gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::gpk::vcst_t> & option) {
+sttc gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::gpk::vcst_t> & option) {
 	if_zero_fw(argument.size());
 	::gpk::b8_c				isDoubleDash		= argument.size() > 1 && '-' == argument[1];
 	::gpk::u0_c				prefixLen			= isDoubleDash ? 2U : 1U;
@@ -60,7 +60,7 @@ sttc ::gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::
 }
 
 
-::gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp) {
+gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp) {
 	gpk::aobj<gpk::vcst_t> arguments, envvars;											
 	if_fail_fe(viewsFromArgv(arguments, argc, argv));
 	if(envp)
@@ -68,7 +68,7 @@ sttc ::gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::
 	return argsParse(output, arguments, envvars);
 }
 
-::gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_t> argv, ::gpk::view<vcst_t> envp) {
+gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_t> argv, ::gpk::view<vcst_t> envp) {
 	output.Environment	= envp;
 	if_zero_vw(0, argv.size()); // Exit early if no argv: nothing to do
 

@@ -59,10 +59,10 @@ namespace dry
 		}
 	};
 
-	::gpk::error_t						catalogSave		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename);
-	::gpk::error_t						catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename);
-	::gpk::error_t						catalogRemove	(::dry::SSpoolCatalog & catalog, ::gpk::s2_t index);
-	::gpk::error_t						catalogAdd
+	gpk::err_t						catalogSave		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename);
+	gpk::err_t						catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename);
+	gpk::err_t						catalogRemove	(::dry::SSpoolCatalog & catalog, ::gpk::s2_t index);
+	gpk::err_t						catalogAdd
 		( ::dry::SSpoolCatalog	& catalog
 		, const SSpoolData		& spoolToAdd
 		, int64_t				timeLoaded

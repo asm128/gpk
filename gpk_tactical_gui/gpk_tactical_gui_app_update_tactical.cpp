@@ -10,7 +10,7 @@ static const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> tacticalMenuItems
 	, {::dry::TACTICAL_SECTION_MEMORIAL			, ::gpk::vcs{"Memorial"}}
 	};
 
-static ::gpk::error_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vcsc_t (&lines)[5]) {
+static gpk::err_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vcsc_t (&lines)[5]) {
 	switch(section) {
 	default:
 	case ::dry::TACTICAL_SECTION_START_MISSION:
@@ -66,7 +66,7 @@ static ::gpk::error_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vc
 	return 0;
 }
 
-::gpk::error_t dry::updateScreenTactical(::dry::SApplication & app) {
+gpk::err_t dry::updateScreenTactical(::dry::SApplication & app) {
 	::gpk::SGUI & gui = *app.Framework.GUI;
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
 	const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> & selected = ::tacticalMenuItems[(uint32_t)screen.SectionSelected];
@@ -84,7 +84,7 @@ static ::gpk::error_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vc
 	return 0;
 }
 
-::gpk::error_t dry::handleControlTactical(::dry::SApplication & app, int32_t idControl) {
+gpk::err_t dry::handleControlTactical(::dry::SApplication & app, int32_t idControl) {
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
 	for(uint32_t iItem = 0; iItem < ::gpk::size(::tacticalMenuItems); ++iItem)
 		if(screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_START_MISSION + iItem] == idControl) {
@@ -104,7 +104,7 @@ static ::gpk::error_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vc
 	return ::dry::updateScreenTactical(app);
 }
 
-::gpk::error_t dry::handleResizeScreenTactical(::dry::SApplication & app, ::gpk::n2s1_t newSize) {
+gpk::err_t dry::handleResizeScreenTactical(::dry::SApplication & app, ::gpk::n2s1_t newSize) {
 	::gpk::SControlTable & controls = app.Framework.GUI->Controls;
 	const ::dry::SScreenTactical & screen = app.Screens.Tactical;
 	const int16_t heightMenu = (-1 == app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]) ? 0 : controls.Placement[app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]].Area.Size.y;

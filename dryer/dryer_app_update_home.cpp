@@ -1,6 +1,6 @@
 #include "dryer_app.h"
 
-::gpk::error_t						dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
+gpk::err_t						dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	::gpk::SControlTable						& controls						= app.Framework.GUI->Controls;
 	const ::dry::SScreenHome				& screen						= app.Screens.Home;
 	::gpk::guiUpdateMetrics(*app.Framework.GUI, newSize.u1_t(), false);
@@ -50,7 +50,7 @@
 	return 0;
 }
 
-::gpk::error_t						updateGaugesFromState			(::dry::SApplication & app, bool forceUpdate) {
+gpk::err_t						updateGaugesFromState			(::dry::SApplication & app, bool forceUpdate) {
 	::dry::SDryerState						& dryerState					= app.Dryer.State;
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	screenHome.GaugeDryerSmall.Gauges[::dry::GAUGE_TEMPERATURE	].SetValue(dryerState.Temperature	, 100);	//::dry::DRYER_MAX_TEMPERATURE);
@@ -85,7 +85,7 @@
 }
 
 template<size_t _nSize>
-static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::gpk::sc_t (&bufferTemp)[_nSize], ::gpk::array_static<::gpk::sc_t, _nSize> & storage, ::dry::SCREEN_CONTROL_HOME idControl) {
+static	gpk::err_t				updateControlIfNeeded			(::dry::SApplication & app, ::gpk::sc_t (&bufferTemp)[_nSize], ::gpk::array_static<::gpk::sc_t, _nSize> & storage, ::dry::SCREEN_CONTROL_HOME idControl) {
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	if(::gpk::vcs{bufferTemp} != ::gpk::vcs{storage.Storage}) {
@@ -96,7 +96,7 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 	return 0;
 }
 
-::gpk::error_t						dry::updateProgramDisplay		(::dry::SApplication & app) {
+gpk::err_t						dry::updateProgramDisplay		(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	const ::dry::SDryerProgram				& dryerProgram					= app.Dryer.ProgramList[app.Dryer.ProgramSelected];
@@ -120,7 +120,7 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 	return 0;
 }
 
-::gpk::error_t						dry::updateCatalogDisplay		(::dry::SApplication & app) {
+gpk::err_t						dry::updateCatalogDisplay		(::dry::SApplication & app) {
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	::gpk::cid_t							indexSpoolList					= screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE];
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
@@ -149,7 +149,7 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 		controlText.Text					= ::gpk::label(bufferFormat);
 	}
 	for(uint32_t iSpool = app.Catalog.FilamentLoaded.size(), countSpools = menuItemControls.size(); iSpool < countSpools; ++iSpool) {
-		const ::gpk::error_t					indexControl					= menuItemControls[iSpool];
+		const gpk::err_t					indexControl					= menuItemControls[iSpool];
 		::gpk::SControlPlacement				& controlFilament				= gui.Controls.Placement[indexControl];
 		::gpk::SControlText						& controlText					= gui.Controls.Text[indexControl];
 		controlFilament.Border				= {};
@@ -160,7 +160,7 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 	return 0;
 }
 
-static	::gpk::error_t				formatTimerString				(int64_t timeInMilliseconds, ::gpk::vc target) {
+static	gpk::err_t				formatTimerString				(int64_t timeInMilliseconds, ::gpk::vc target) {
 	const int64_t							timeInSeconds					= timeInMilliseconds / 1000;
 	const int64_t							timeInMinutes					= timeInSeconds / 60;
 	const uint32_t							hours							= (uint32_t)(timeInMinutes / 60);
@@ -175,7 +175,7 @@ static	::gpk::error_t				formatTimerString				(int64_t timeInMilliseconds, ::gpk
 	return 0;
 }
 
-static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
+static	gpk::err_t				updateSessionDisplay			(::dry::SApplication & app)	{
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	::dry::SDryerState						& dryerState					= app.Dryer.State;
 	::gpk::sc_t								bufferTemp	[32]				= {};
@@ -189,7 +189,7 @@ static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
 	return 0;
 }
 
-::gpk::error_t						dry::updateScreenHome			(::dry::SApplication & app) {
+gpk::err_t						dry::updateScreenHome			(::dry::SApplication & app) {
 	for(uint32_t iDryerEvent = 0; iDryerEvent < app.Dryer.EventList.size(); ++iDryerEvent) {
 		::dry::DRYER_EVENT						dryerEvent						= app.Dryer.EventList[iDryerEvent];
 		::dry::SScreenHome						& screenHome					= app.Screens.Home;
@@ -257,7 +257,7 @@ static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
 	return 0;
 }
 
-::gpk::error_t						dry::handleControlHome			(::dry::SApplication & app, int32_t idControl)	{
+gpk::err_t						dry::handleControlHome			(::dry::SApplication & app, int32_t idControl)	{
 	switch((uint32_t)idControl) {
 	case dry::SCREEN_CONTROL_HOME_SPOOL_LIST_PREV:
 		if (app.Catalog.FilamentLoaded.size()) {

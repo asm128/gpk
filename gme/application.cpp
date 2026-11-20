@@ -6,8 +6,8 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
-			::gpk::error_t											cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
-			::gpk::error_t											setup						(::gme::SApplication & app)						{
+			gpk::err_t											cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
+			gpk::err_t											setup						(::gme::SApplication & app)						{
 	::gpk::STimer															timer;
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SWindow															& mainWindow				= framework.RootWindow;
@@ -32,7 +32,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-::gpk::error_t				draw			(::gme::SApplication & app)						{
+gpk::err_t				draw			(::gme::SApplication & app)						{
 	//::gpk::STimer															timer;
 	app;
 	::gpk::pobj<::gpk::rtbgra8d32>	target;
@@ -51,7 +51,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-::gpk::error_t				update						(::gme::SApplication & app, bool exitSignal)	{
+gpk::err_t				update						(::gme::SApplication & app, bool exitSignal)	{
 	//::gpk::STimer					timer;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{

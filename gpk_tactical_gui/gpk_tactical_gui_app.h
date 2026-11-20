@@ -165,49 +165,49 @@ namespace dry
 	};
 
 	// ----
-	::gpk::error_t						setupGUI					(::dry::SApplication & app);
-	::gpk::error_t						setupScreenHome				(::dry::SApplication & app);
-	::gpk::error_t						setupScreenTactical			(::dry::SApplication & app);
+	gpk::err_t						setupGUI					(::dry::SApplication & app);
+	gpk::err_t						setupScreenHome				(::dry::SApplication & app);
+	gpk::err_t						setupScreenTactical			(::dry::SApplication & app);
 	// TODO:
-	::gpk::error_t						setupScreenLoadFilament		(::dry::SApplication & app);
-	::gpk::error_t						setupScreenInfo				(::dry::SApplication & app);
-	::gpk::error_t						setupScreenConfig			(::dry::SApplication & app);
+	gpk::err_t						setupScreenLoadFilament		(::dry::SApplication & app);
+	gpk::err_t						setupScreenInfo				(::dry::SApplication & app);
+	gpk::err_t						setupScreenConfig			(::dry::SApplication & app);
 
-	::gpk::error_t						updateApp					(::dry::SApplication & app);
-	::gpk::error_t						updateSerial				(::dry::SApplication & app);
+	gpk::err_t						updateApp					(::dry::SApplication & app);
+	gpk::err_t						updateSerial				(::dry::SApplication & app);
 
 	// ----
-	::gpk::error_t						updateScreenHUD				(::dry::SApplication & app);
-	::gpk::error_t						updateScreenHome			(::dry::SApplication & app);
-	::gpk::error_t						updateScreenTactical		(::dry::SApplication & app);
+	gpk::err_t						updateScreenHUD				(::dry::SApplication & app);
+	gpk::err_t						updateScreenHome			(::dry::SApplication & app);
+	gpk::err_t						updateScreenTactical		(::dry::SApplication & app);
 	// TODO:
-	static inline ::gpk::error_t		updateScreenInfo			(::dry::SApplication & /*app*/) { return 0; }
-	static inline ::gpk::error_t		updateScreenLoadFilament	(::dry::SApplication & /*app*/) { return 0; }
-	static inline ::gpk::error_t		updateScreenConfig			(::dry::SApplication & /*app*/) { return 0; }
+	static inline gpk::err_t		updateScreenInfo			(::dry::SApplication & /*app*/) { return 0; }
+	static inline gpk::err_t		updateScreenLoadFilament	(::dry::SApplication & /*app*/) { return 0; }
+	static inline gpk::err_t		updateScreenConfig			(::dry::SApplication & /*app*/) { return 0; }
 
 	// ----
-	::gpk::error_t						handleControlHome			(::dry::SApplication & app, int32_t idControl);
-	::gpk::error_t						handleControlTactical		(::dry::SApplication & app, int32_t idControl);
+	gpk::err_t						handleControlHome			(::dry::SApplication & app, int32_t idControl);
+	gpk::err_t						handleControlTactical		(::dry::SApplication & app, int32_t idControl);
 	// TODO: Nothing to do here yet
-	static inline ::gpk::error_t		handleControlInfo			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
-	static inline ::gpk::error_t		handleControlLoadFilament	(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
-	static inline ::gpk::error_t		handleControlConfig			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
+	static inline gpk::err_t		handleControlInfo			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
+	static inline gpk::err_t		handleControlLoadFilament	(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
+	static inline gpk::err_t		handleControlConfig			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
 
 	// ---- Resize handlers
-	::gpk::error_t						handleResizeScreenHUD		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
-	::gpk::error_t						handleResizeScreenMenu		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
-	::gpk::error_t						handleResizeScreenModal		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
-	::gpk::error_t						handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
-	::gpk::error_t						handleResizeScreenTactical	(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
-	::gpk::error_t						handleResizeScreenSpoolInfo	(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
-	::gpk::error_t						handleResize				(::dry::SApplication & app);
+	gpk::err_t						handleResizeScreenHUD		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	gpk::err_t						handleResizeScreenMenu		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	gpk::err_t						handleResizeScreenModal		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	gpk::err_t						handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	gpk::err_t						handleResizeScreenTactical	(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	gpk::err_t						handleResizeScreenSpoolInfo	(::dry::SApplication & app, ::gpk::n2s1_t newSIze);
+	gpk::err_t						handleResize				(::dry::SApplication & app);
 
 	// ---- Modals
-	::gpk::error_t						modalClose					(::dry::SApplication & app);
-	::gpk::error_t						modalDisplay				(::dry::SApplication & app, MODAL modal);
+	gpk::err_t						modalClose					(::dry::SApplication & app);
+	gpk::err_t						modalDisplay				(::dry::SApplication & app, MODAL modal);
 
-	::gpk::error_t						updateProgramDisplay		(::dry::SApplication & app);
-	::gpk::error_t						updateCatalogDisplay		(::dry::SApplication & app);
+	gpk::err_t						updateProgramDisplay		(::dry::SApplication & app);
+	gpk::err_t						updateCatalogDisplay		(::dry::SApplication & app);
 
 #define USE_3D_CONTROLS
 

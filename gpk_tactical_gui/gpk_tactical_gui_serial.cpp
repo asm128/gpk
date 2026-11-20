@@ -1,6 +1,6 @@
 #include "gpk_tactical_gui_app.h"
 
-static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSONReader & jsonReader, ::gpk::vcsc_t arg) {
+static	gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSONReader & jsonReader, ::gpk::vcsc_t arg) {
 	ree_if(arg.size() <= 2, "Invalid string received: %.*s.", GPK_VIEW_ARGS(arg));
 	switch(arg[0]) {
 	case 'R':
@@ -105,7 +105,7 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 	return 0;
 }
 
-::gpk::error_t						dry::updateSerial		(::dry::SApplication & app) {
+gpk::err_t						dry::updateSerial		(::dry::SApplication & app) {
 	::gpk::apod<::gpk::u0_t>				bufferRead;
 #if defined(GPK_WINDOWS)
 	const ::gpk::vcs						portName				= "COM6";

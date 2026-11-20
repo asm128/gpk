@@ -28,8 +28,8 @@ namespace s3d
 		}
 	};
 
-	::gpk::error_t				mainWindowCreate			(::s3d::SXCBFramework & framework);
-	::gpk::error_t				frameworkUpdate				(::s3d::SXCBFramework & framework);
+	gpk::err_t				mainWindowCreate			(::s3d::SXCBFramework & framework);
+	gpk::err_t				frameworkUpdate				(::s3d::SXCBFramework & framework);
 
 } // namespace
 

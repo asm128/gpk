@@ -8,7 +8,7 @@
 
 #include <ctime>
 
-::gpk::error_t						dry::catalogAdd
+gpk::err_t						dry::catalogAdd
 		( ::dry::SSpoolCatalog		& catalog
 		, const ::dry::SSpoolData	& spoolData
 		, int64_t					timeLoaded
@@ -43,14 +43,14 @@
 		;
 }
 
-::gpk::error_t						dry::catalogRemove		(::dry::SSpoolCatalog & catalog, int32_t index) {
+gpk::err_t						dry::catalogRemove		(::dry::SSpoolCatalog & catalog, int32_t index) {
 	::dry::SSpool							oldFilament			= catalog.FilamentLoaded[index];
 	oldFilament.TimestampUnloaded		= time(0);
 	catalog.FilamentHistory.push_back(oldFilament);
 	return catalog.FilamentLoaded.remove(index);
 }
 
-static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catalog, ::gpk::view<const ::dry::SSpool> filaments, ::gpk::string & output) {
+static	gpk::err_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catalog, ::gpk::view<const ::dry::SSpool> filaments, ::gpk::string & output) {
 	output.push_back('[');
 	::gpk::string				bufferFormat				= {};
 	for(uint32_t iFilament = 0; iFilament < filaments.size(); ++iFilament) {
@@ -94,7 +94,7 @@ static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catal
 	return 0;
 }
 
-::gpk::error_t						dry::catalogSave		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename) {
+gpk::err_t						dry::catalogSave		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename) {
 	::gpk::string							jsonString				= {};
 	jsonString.append_string("{ \"loaded\" : ");
 	::jsonArrayFromFilamentView(catalog, catalog.FilamentLoaded, jsonString);
@@ -106,7 +106,7 @@ static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catal
 	return ::gpk::fileFromMemory(filename, jsonString);
 }
 
-::gpk::error_t						dry::catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename) {
+gpk::err_t						dry::catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename) {
 	gpk_necall(::gpk::jsonFileRead(catalog.JSONData, filename), "Failed to load filament catalog file: '%.*s'.", GPK_VIEW_ARGS(filename));
 	const ::gpk::SJSONReader				& reader				= catalog.JSONData.Reader;
 	const int32_t							indexHistory			= ::gpk::jsonObjectValueGet(reader, 0, "history");

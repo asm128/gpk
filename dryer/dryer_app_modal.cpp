@@ -1,6 +1,6 @@
 #include "dryer_app.h"
 
-::gpk::error_t						dry::handleResizeScreenModal	(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
+gpk::err_t						dry::handleResizeScreenModal	(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	(void)newSize;
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::gpk::cid_t						indexDialog						= app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG];
@@ -13,7 +13,7 @@
 	return 0;
 }
 
-static	::gpk::error_t				modalDisplayScanSpool			(::dry::SApplication & app, ::gpk::view_array<const ::dry::SSpoolData> scanned) {
+static	gpk::err_t				modalDisplayScanSpool			(::dry::SApplication & app, ::gpk::view_array<const ::dry::SSpoolData> scanned) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	gui.Controls.SetUpdated(screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], false);
@@ -41,7 +41,7 @@ static	::gpk::error_t				modalDisplayScanSpool			(::dry::SApplication & app, ::g
 	return 0;
 }
 
-static	::gpk::error_t				modalDisplayDryingStop			(::dry::SApplication & app) {
+static	gpk::err_t				modalDisplayDryingStop			(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Stop Drying?");
@@ -57,7 +57,7 @@ static	::gpk::error_t				modalDisplayDryingStop			(::dry::SApplication & app) {
 	}
 	return 0;
 }
-static	::gpk::error_t				modalDisplayDryingCompleted		(::dry::SApplication & app) {
+static	gpk::err_t				modalDisplayDryingCompleted		(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Drying completed successfully!");
@@ -71,7 +71,7 @@ static	::gpk::error_t				modalDisplayDryingCompleted		(::dry::SApplication & app
 	}
 	return 0;
 }
-static	::gpk::error_t				modalDisplayCloseDoor			(::dry::SApplication & app) {
+static	gpk::err_t				modalDisplayCloseDoor			(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Close the door correctly to start drying");
@@ -86,7 +86,7 @@ static	::gpk::error_t				modalDisplayCloseDoor			(::dry::SApplication & app) {
 	}
 	return 0;
 }
-::gpk::error_t						dry::modalDisplay				(::dry::SApplication & app, ::dry::MODAL modal) {
+gpk::err_t						dry::modalDisplay				(::dry::SApplication & app, ::dry::MODAL modal) {
 	::dry::modalClose(app);
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::gpk::vcid							children						= gui.Controls.Children[app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]];

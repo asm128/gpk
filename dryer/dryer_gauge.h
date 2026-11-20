@@ -35,9 +35,9 @@ namespace dry
 		::gpk::img8bgra			Image					= {};
 	};
 
-	::gpk::error_t			gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef32 & gaugeMetrics, int16_t resolution, int16_t width);
-	::gpk::error_t										gaugeImageUpdate		(::dry::SGaugeFeeder & gauge, ::gpk::grid<::gpk::bgra> target, ::gpk::rgbaf colorMin = ::dry::SGaugeFeeder::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::dry::SGaugeFeeder::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::dry::SGaugeFeeder::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::dry::SGaugeFeeder::COLOR_BKG_DEFAULT, bool radialColor = true);
-	inline	::gpk::error_t								gaugeImageUpdate		(::dry::SGaugeFeeder & gauge, ::gpk::rgbaf colorMin = ::dry::SGaugeFeeder::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::dry::SGaugeFeeder::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::dry::SGaugeFeeder::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::dry::SGaugeFeeder::COLOR_BKG_DEFAULT, bool radialColor = true) {
+	gpk::err_t			gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef32 & gaugeMetrics, int16_t resolution, int16_t width);
+	gpk::err_t										gaugeImageUpdate		(::dry::SGaugeFeeder & gauge, ::gpk::grid<::gpk::bgra> target, ::gpk::rgbaf colorMin = ::dry::SGaugeFeeder::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::dry::SGaugeFeeder::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::dry::SGaugeFeeder::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::dry::SGaugeFeeder::COLOR_BKG_DEFAULT, bool radialColor = true);
+	inline	gpk::err_t								gaugeImageUpdate		(::dry::SGaugeFeeder & gauge, ::gpk::rgbaf colorMin = ::dry::SGaugeFeeder::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::dry::SGaugeFeeder::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::dry::SGaugeFeeder::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::dry::SGaugeFeeder::COLOR_BKG_DEFAULT, bool radialColor = true) {
 		gauge.Image.Texels.fill({0, 0, 0, 0});
 		return ::dry::gaugeImageUpdate(gauge, gauge.Image, colorMin, colorMid, colorMax, colorEmpty, radialColor);
 	}

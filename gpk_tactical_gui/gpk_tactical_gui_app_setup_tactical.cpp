@@ -25,7 +25,7 @@ static const ::dry::SControlParams control_list_tactical[] =
 	, {DRY_MENU_COLOR_MODE, ::dry::SCREEN_CONTROL_TACTICAL_STATUS			, ::dry::SCREEN_CONTROL_TACTICAL_BALANCE_GROUP		,  true, true ,  true, false, ::gpk::ALIGN_BOTTOM_RIGHT, {{0, 4}, {80, 24}}, {0, 0, 0, 0}, {4, 2, 4, 2}, "READY", ::gpk::ALIGN_CENTER}
 	};
 
-::gpk::error_t dry::setupScreenTactical(::dry::SApplication & app) {
+gpk::err_t dry::setupScreenTactical(::dry::SApplication & app) {
 	::gpk::SGUI & gui = *app.Framework.GUI;
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
 	::dry::setupScreenFromControlParams(gui, app.Screens.RootControlIndex, screen, ::control_list_tactical);

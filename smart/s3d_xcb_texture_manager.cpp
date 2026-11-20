@@ -13,7 +13,7 @@
 //#define NANOSVGRAST_IMPLEMENTATION
 //#include "nanosvgrast.h"
 
-::gpk::error_t					s3d::SXCBTextureManager::Create(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::view_grid<const ::gpk::SColorBGRA> pixels) {
+gpk::err_t					s3d::SXCBTextureManager::Create(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::view_grid<const ::gpk::SColorBGRA> pixels) {
 	::gpk::ptr_obj<::s3d::SXCBPixmap>	newPixmap		= {};
 	::gpk::SImage<::gpk::SColorBGRA>	& loadedImage	= newPixmap->Image;
 	gpk_necall(loadedImage.Texels.append({pixels.begin(), pixels.size()}), "%s", "");
@@ -42,7 +42,7 @@
 	return XCBPixmap.push_back(newPixmap);
 }
 
-::gpk::error_t					s3d::SXCBTextureManager::CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::view_const_char filename) {
+gpk::err_t					s3d::SXCBTextureManager::CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::view_const_char filename) {
 	::gpk::view_const_char				extension		= {};
 	::gpk::array_pod<char_t>			ext_lwr			= {};
 	gpk_necall(filename.slice(extension, filename.size() - 3, 3), "File extension not supported for file '%s'", filename.begin());

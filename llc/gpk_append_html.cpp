@@ -2,7 +2,7 @@
 
 #ifndef GPK_ATMEL
 gpk::err_t	gpk::appendHtmlScripts	(::gpk::asc_t & output, gpk::view<vcst_c> filenames) { 
-	::gpk::err_t 		result 				= 0;
+	gpk::err_t 		result 				= 0;
 	stxp	const char	FMT_ATTR_SRC_JS	[]	= "type=\"text/javascript\" src=\"/%s.js\"";
 	for(uint32_t iFile = 0; iFile < filenames.size(); ++iFile) {
 		char 				cooked	[128] 		= {};
@@ -12,7 +12,7 @@ gpk::err_t	gpk::appendHtmlScripts	(::gpk::asc_t & output, gpk::view<vcst_c> file
 	return result;
 }
 gpk::err_t	gpk::appendHtmlStyles	(::gpk::asc_t & output, gpk::view<vcst_c> filenames) { 
-	::gpk::err_t 		result 				= 0;
+	gpk::err_t 		result 				= 0;
 	stxp	const char	FMT_ATTR_HREF_CSS	[]	= "rel=\"stylesheet\" href=\"/%s.css\"";
 	for(uint32_t iFile = 0; iFile < filenames.size(); ++iFile) {
 		char 				cooked	[128] 		= {};

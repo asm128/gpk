@@ -42,7 +42,7 @@ namespace dry
 	};
 
 	template<typename _tScreen, size_t _countControls>
-	static	::gpk::error_t						setupScreenFromControlParams	(::gpk::SGUI & gui, ::gpk::cid_t rootControlIndex, _tScreen & screen, const ::dry::SControlParams (&controlSetupList)[_countControls])	{
+	static	gpk::err_t						setupScreenFromControlParams	(::gpk::SGUI & gui, ::gpk::cid_t rootControlIndex, _tScreen & screen, const ::dry::SControlParams (&controlSetupList)[_countControls])	{
 		::gpk::SPNGData									pngCache				= {};
 		for(uint32_t iControl = 0; iControl < _countControls; ++iControl) {
 			const SControlParams							& controlSetup			= controlSetupList[iControl];

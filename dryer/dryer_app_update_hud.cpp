@@ -15,7 +15,7 @@ static void							timeFormat				(::gpk::vc output)		{
 }
 
 template <typename _tScreen>
-static	::gpk::error_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, int32_t idControl, bool isOn) {
+static	gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, int32_t idControl, bool isOn) {
 	const ::gpk::cid_t						controlIndex			= screen.ControlIds[idControl];
 	::dry::SControlImages					& icons					= screen.ControlIcons[idControl];
 	if(-1 != controlIndex)
@@ -23,7 +23,7 @@ static	::gpk::error_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, in
 	return 0;
 }
 
-::gpk::error_t						dry::updateScreenHUD	(::dry::SApplication & app) {
+gpk::err_t						dry::updateScreenHUD	(::dry::SApplication & app) {
 	::gpk::SGUI								& gui					= *app.Framework.GUI;
 	char									bufferTime	[64]		= {};
 	::timeFormat(bufferTime);

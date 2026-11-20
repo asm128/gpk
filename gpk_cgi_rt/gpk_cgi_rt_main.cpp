@@ -6,7 +6,7 @@
 
 #include <Windows.h>
 //
-//static ::gpk::error_t								metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::n2<int32_t>& output_metrics)												{
+//static gpk::err_t								metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::n2<int32_t>& output_metrics)												{
 //	uint32_t												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 //		if('x' == input_string[iChar]) {
@@ -28,7 +28,7 @@
 //	return 0;
 //}
 
-::gpk::error_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output){
+gpk::err_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output){
 	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
 	//char													buffer[4096]					= {};
 	::gpk::SCGIModule										module;
@@ -54,7 +54,7 @@ stacxpr	const char						html_script	[]			=
 	"\n</script>"
 	;
 
-::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
+gpk::err_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
 	if(0 == keyVal.Key.size())
 		return -1;
 

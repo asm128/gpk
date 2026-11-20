@@ -3,7 +3,7 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "GPK Tactical GUI v0.1");
 
-::gpk::error_t					cleanup						(::dry::SApplication & app) {
+gpk::err_t					cleanup						(::dry::SApplication & app) {
 #if defined(GPK_WINDOWS)
 	::gpk::mainWindowDestroy(app.Framework.RootWindow);
 #else
@@ -36,7 +36,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "GPK Tactical GUI v0.1")
 	return 0;
 }
 
-::gpk::error_t					setup						(::dry::SApplication & app) {
+gpk::err_t					setup						(::dry::SApplication & app) {
 	auto								& framework					= app.Framework;
 #if defined(GPK_WINDOWS)
 	framework.RootWindow.Size		= {640, 480};//{720, 576};
@@ -59,7 +59,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "GPK Tactical GUI v0.1")
 	return 0;
 }
 
-::gpk::error_t					update						(::dry::SApplication & app, bool requestedExit) {
+gpk::err_t					update						(::dry::SApplication & app, bool requestedExit) {
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, requestedExit, "%s", "Exit requested by system.");
 #if defined(GPK_WINDOWS)
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
@@ -83,7 +83,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "GPK Tactical GUI v0.1")
 	return running ? 0 : 1;
 }
 
-::gpk::error_t					draw						(::dry::SApplication & app) {
+gpk::err_t					draw						(::dry::SApplication & app) {
 	auto								& framework					= app.Framework;
 	if(framework.RootWindow.Repaint) {
 		verbose_printf("%s", "Repainting...");

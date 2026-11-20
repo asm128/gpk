@@ -160,11 +160,11 @@ namespace gpk
 #define gpk_hrcall(hr_call)				do { gpk_rv_hrcall (-1, hr_call)				; } while(0)		// HRESULT call.
 #define gpk_hrecall(hr_call, ...)		do { gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	; } while(0)		// HRESULT call.
 
-#define gpk_necs(gpkl_call)					do { cnst auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 "", #gpkl_call, _grr_rslt_val); return -1; } } while(0) // Non-		propagable error call string.
+#define gpk_necs(gpkl_call)					do { cnst auto _grr_rslt_val = gpkl_call; if(0 > gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 "", #gpkl_call, _grr_rslt_val); return -1; } } while(0) // Non-		propagable error call string.
 #ifdef GPK_WINDOWS
-#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, __VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
+#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, __VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
 #else
-#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, ##__VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
+#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, ##__VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
 #endif
 
 #ifndef gthrow_if

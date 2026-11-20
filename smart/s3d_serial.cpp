@@ -13,7 +13,7 @@
 #	define INVALID_HANDLE_VALUE -1
 #endif
 
-::gpk::error_t			s3d::serialClose		(::s3d::SSerial & serial) {
+gpk::err_t			s3d::serialClose		(::s3d::SSerial & serial) {
 #if defined(GPK_WINDOWS)
 	gpk_safe_closehandle(serial.Handle);
 #else
@@ -23,7 +23,7 @@
 	return 0;
 }
 
-::gpk::error_t			s3d::serialWrite		(::s3d::SSerial & serial, ::gpk::vcu0_t data) {
+gpk::err_t			s3d::serialWrite		(::s3d::SSerial & serial, ::gpk::vcu0_t data) {
 	rnw_if(data.size() == 0, "%s", "Zero bytes specified to be written");
 	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
 	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
@@ -62,7 +62,7 @@
 	return sentBytes;
 }
 
-::gpk::error_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, uint32_t count, uint32_t timeout) {
+gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, uint32_t count, uint32_t timeout) {
 	rnw_if(count == 0, "%s", "Zero bytes specified to be read");
 	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
 	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
@@ -102,7 +102,7 @@
 	return totalBytesRead;
 }
 
-::gpk::error_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, uint32_t maxCount, uint32_t timeout) {
+gpk::err_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, uint32_t maxCount, uint32_t timeout) {
 	rnw_if(maxCount == 0, "%s", "Zero bytes specified to be read");
 	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
 	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
@@ -138,7 +138,7 @@
 	return totalBytesRead;
 }
 
-::gpk::error_t			s3d::serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud) {
+gpk::err_t			s3d::serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud) {
 	info_printf("Opening port '%s' at %d bps\n", portName.begin(), baud);
 	serial.Connected		= false;
 #if !defined(GPK_WINDOWS)
