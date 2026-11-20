@@ -60,7 +60,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 	struct SUIRadialGauge {
 		::gpk::apod<::gpk::n3f2_t>		Vertices				= {};
-		::gpk::apod<::gpk::trii16>		Indices					= {};
+		::gpk::apod<::gpk::tris1_t>		Indices					= {};
 		int16_t							CurrentValue			= 0;
 		int16_t							MaxValue				= 64;
 		::gpk::img<::gpk::bgra>			Image					= {};
