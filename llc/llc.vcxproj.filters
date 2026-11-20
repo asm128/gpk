@@ -783,6 +783,12 @@
     <ClInclude Include="gpk_block_container.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_crc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_file_pack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -1011,6 +1017,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval_view.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_crc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_file_pack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "dryer_app.h"
-
+#include "gpk_label.h"
 gpk::err_t						dry::handleResizeScreenModal	(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	(void)newSize;
 	::gpk::SGUI								& gui							= *app.Framework.GUI;

@@ -1,5 +1,4 @@
 #include "gpk_array_pod.h"
-#include "gpk_std_cstring.h"
 #ifdef GPK_ARDUINO
 #   include <IPAddress.h>
 #endif // GPK_ARDUINO
@@ -7,47 +6,48 @@
 #ifndef GPK_STRING_H
 #define GPK_STRING_H
 
-namespace gpk
+nmsp gpk
 {
 
     struct string : asc_t {
-        using   asc_t  ::Data;
-        using   asc_t  ::Count;
-        using   asc_t  ::Size;
-        using   asc_t  ::operator=;
-        using   asc_t  ::asc_t;
+        usng    asc_t       ::Data;
+        usng    asc_t       ::Count;
 
-        tplt<size_t buflen>
-        inline  string      (sc_c (&other)[buflen])         : asc_t(vcst_t{other})                                  { initialize(); }
-        inline  string      (vsc_c & other)                 : asc_t(other)                                          { initialize(); }
-        inline  string      (asc_c & other)                 : asc_t(other)                                          { initialize(); }
-        inline  string      (vcst_t other)                  : asc_t(other)                                          { initialize(); }
-        inline  string      (sc_c * unsafe)                 : asc_t(tovcc(unsafe))                                  { initialize(); }
+        inln                string      ()                      nxpt    = dflt;
+        inln                string      (vcst_c & other)           : asc_t(other)                                          {}
+        tplN2uinln          string      (sc_c (&other)[N])              : asc_t(vcst_t(other))                                  {}
 #ifdef GPK_ARDUINO
-        inline  string      (const String & other)          : asc_t(vcst_t{other.begin(), (u2_t)other.length()})    { initialize(); }
-        inline  string      (const IPAddress & other)       : string(other.toString())                              { initialize(); }
-
+        inln                string      (cnst String & other)           : asc_t(vcst_t{other.begin(), (u2_t)other.length()})    {}
+        inln                string      (cnst IPAddress & other)        : string(other.GPK_VIEW_ARGS())                         {}
 #   ifdef GPK_ESP8266
-        ndin operator   String      ()  const   { return String(Data); }
+        ndin        oper    String      ()                      cnst    { return String(Data); }
 #   else
-        ndin operator   String      ()  const   { return String(Data, Count); }
+        ndin        oper    String      ()                      cnst    { return String(Data, Count); }
 #   endif
 #endif
-        ndin operator   vcst_t      ()  const   { return {Data, Count}; }
-        ndin operator   const char* ()  const   { return vcst_t{Data, Count}; }
+        inln        b8_t    oper==      (vcst_c & other)   cnst    { rtrn asc_t::oper==(other); }
+        inln        b8_t    oper!=      (vcst_c & other)   cnst    { rtrn asc_t::oper!=(other); }
+        tplN2uinln  b8_t    oper==      (sc_c (&other)[N])      cnst    { rtrn oper==(vcst_t{other}); }
+        tplN2uinln  b8_t    oper!=      (sc_c (&other)[N])      cnst    { rtrn oper!=(vcst_t{other}); }
 
-        const char*     begin       ()  const   { return vcst_t{Data, Count}.begin(); }
-        const char*     end         ()  const   { return vcst_t{Data, Count}.end  (); }
+        ndin        oper    vstr_t      ()                              { return {Data, Count}; }
+        ndin        oper    vcst_t      ()                      cnst    { return {Data, Count}; }
+		ndin	    oper	sc_c* 		()			        	csnx	{ rtrn begin(); }
 
-        int32_t         initialize  ()          {
-            if_true_block_logf(error_printf, (0 == Data) && (Count || Size), Count = Size = 0, "error|Count:%i, Size:%i.", Count, Size);
-            return Count;
-        }
+        ndin        sc_c*   begin       ()                      cnst    { return vcst_t{Data, Count}.begin(); }
+        ndin        sc_c*   end         ()                      cnst    { return vcst_t{Data, Count}.end  (); }
+        ndin        sc_t*   begin       ()                              { return vstr_t{Data, Count}.begin(); }
+        ndin        sc_t*   end         ()                              { return vstr_t{Data, Count}.end  (); }
+
     }; // struct
 
 #ifdef GPK_ARDUINO
-    ndsi string  str (const IPAddress & s)   { return s.toString(); }
+    ndsi        string  str         (cnst IPAddress & s)            { return s.toString(); }
 #endif
-} // namespace
+                err_t   camelCase   (vcst_t input, asc_t & camelCased);
+
+} // nmsp
+
+#define GPK_USING_STRING()  usng ::gpk::string
 
 #endif // GPK_STRING_H

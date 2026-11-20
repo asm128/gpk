@@ -66,6 +66,7 @@ namespace gpk
 		inln	view<u0_t>		u8				()														nxpt	{ rtrn {(u0_t*)Data, byte_count()}; }
 		inxp	view<sc_c>		cc				()														csnx	{ rtrn {(sc_c*)Data, byte_count()}; }
 		inxp	view<u0_c>		u8				()														csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
+		inxp	view<u0_c>		bytes			()														csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
 		inxp	view<u0_c>		cu8				()														csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
 		inxp	u2_c&			size			()														csnx	{ rtrn Count;				}
 		inxp	TCnst*			begin			()														csnx	{ rtrn Data;				}

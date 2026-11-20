@@ -62,8 +62,8 @@ gpk::err_t				pngToFont
 }
 
 int						main					() {
-	::gpk::aobj<::gpk::asc_t>	fontFiles				= {};
-	::gpk::vcs					pathToSearch			= {"../gpk_data/fonts/cp437"};
+	::gpk::aobj<::gpk::string>	fontFiles				= {};
+	::gpk::vcst_t				pathToSearch			= {"../gpk_data/fonts/cp437"};
 	gpk_necall(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
 	::gpk::SPNGData				pngCache				= {};
 	::gpk::img8bgra				imageCache				= {};
@@ -71,18 +71,18 @@ int						main					() {
 	::gpk::img8bgra				verticalAtlas			= {};
 	::gpk::imgmonou64			fontTexture				= {};
 	::gpk::string				filenameOutput			= {};
-	::gpk::vcsc_t				extension				= {};
+	::gpk::vcst_t				extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
-		::gpk::vcsc_t				filenameInput			= fontFiles[iFile];
+		::gpk::vcst_t				filenameInput			= fontFiles[iFile];
 		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%.*s'", GPK_VIEW_ARGS(filenameInput));
-		::gpk::apod<char>			lowercaseExtension		= ::gpk::toString(extension);
+		::gpk::string			lowercaseExtension		= extension;
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcs{".png"})
 			continue;
 		cef_if(::gpk::failed(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
 		filenameOutput			= filenameInput;
 		filenameOutput.append_string("fix.png");
-		::gpk::aobj<::gpk::vcsc_t>		splitFileName;
+		::gpk::aobj<::gpk::vcst_t>		splitFileName;
 		::gpk::split(filenameInput, '_', splitFileName);
 		::gpk::aobj<::gpk::vcsc_t>		splitFontMetrics;
 		::gpk::split(splitFileName[3], 'x', splitFontMetrics);

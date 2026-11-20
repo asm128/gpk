@@ -18,15 +18,7 @@ namespace gpk
 		const _tBit		bitsThatMatch		= (state & bitsToTest);
 		return _tBit((bitsThatMatch == bitsToTest) ? 0 : (state | bitsToTest) ? state | bitsToTest : -1);
 	}
-
-#ifdef GPK_DEBUG_ENABLED
-	tplt<tpnm _tBit> 			_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
-		rve_if((_tBit)-1LL, bitIndex >= (sizeof(_tBit) * BYTE_SIZE), "Invalid bit index: %i", bitIndex);
-#else
-	tplt<tpnm _tBit> ndxp	_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
-#endif
-		return (_tBit)(((_tBit)1) << bitIndex);
-	}
+	tplt<tpnm _tBit> nsix	_tBit	bit_make		(uint8_t bitIndex)	noexcept	{ return (_tBit)(((_tBit)1) << bitIndex); }
 
 //#ifdef GPK_BIGENDIAN
 //	sinx	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF000000 >> (byteIndex * 8)) & bytes) >> ((sizeof(bytes) - byteIndex) * 8); }

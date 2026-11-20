@@ -63,17 +63,17 @@ gpk::err_t			gpk::pathCreate				(::gpk::vcst_c & pathName, sc_c separator) {
 	return 0;
 }
 
-gpk::err_t			gpk::findLastSlash			(::gpk::vcsc_c & path)		{
-	int32_t						indexOfStartOfFileName0		= ::gpk::rfind('\\', path);
-	int32_t						indexOfStartOfFileName1		= ::gpk::rfind('/', path);
+gpk::err_t			gpk::findLastSlash			(::gpk::vcst_c & path)		{
+	int32_t					indexOfStartOfFileName0		= ::gpk::rfind('\\', path);
+	int32_t					indexOfStartOfFileName1		= ::gpk::rfind('/', path);
 	return
 		(-1 == indexOfStartOfFileName1) ? indexOfStartOfFileName0 :
 		(-1 == indexOfStartOfFileName0) ? indexOfStartOfFileName1 :
 		::gpk::max(indexOfStartOfFileName0, indexOfStartOfFileName1)
 		;
 }
-gpk::err_t			gpk::pathStem				(::gpk::vcsc_t path, ::gpk::vcsc_t & stem) {
-	::gpk::vcsc_t filename = {};
+gpk::err_t			gpk::pathStem				(::gpk::vcst_t path, ::gpk::vcst_t & stem) {
+	::gpk::vcst_t filename = {};
 	if_fail_fe(::gpk::pathFilename(path, filename));
 	if_zero_fef(filename.size(), "Path has no filename:'%.*s'.", (int)path.size(), path.begin());
 	::gpk::u2_t iEnd = filename.size();
@@ -86,7 +86,7 @@ gpk::err_t			gpk::pathStem				(::gpk::vcsc_t path, ::gpk::vcsc_t & stem) {
 stxp	bool				pathSeparator			(::gpk::sc_c value) { rtrn '/' == value || '\\' == value; }
 stxp	bool				pathDriveLetter			(::gpk::sc_c value) { rtrn ('A' <= value && value <= 'Z') || ('a' <= value && value <= 'z'); }
 
-gpk::err_t			gpk::pathBegin				(::gpk::vcsc_c & path, ::gpk::vcsc_t & output) {
+gpk::err_t			gpk::pathBegin				(::gpk::vcst_c & path, ::gpk::vcst_t & output) {
 	::gpk::u2_t				prefixSize				= 0;
 	if(path.size() && ::pathSeparator(path[0])) {
 		prefixSize							= 1;
@@ -124,7 +124,7 @@ sttc	gpk::err_t	validatePathSeparators	(::gpk::vcsc_c & path, bool allowUNC) {
 	rtrn 0;
 }
 
-sttc	gpk::err_t 	appendPathNormalized		(::gpk::vcsc_c & path, ::gpk::asc_t & output) {
+sttc	gpk::err_t 	appendPathNormalized		(::gpk::vcst_c & path, ::gpk::asc_t & output) {
 	::gpk::u2_t			written				= 0;
 	for(::gpk::u2_t iChar = 0; iChar < path.size(); ++iChar) {
 		::gpk::sc_t			curChar				= path[iChar];
@@ -136,7 +136,7 @@ sttc	gpk::err_t 	appendPathNormalized		(::gpk::vcsc_c & path, ::gpk::asc_t & out
 	rtrn written;
 }
 
-gpk::err_t			gpk::pathNormalize			(::gpk::vcsc_c & path, ::gpk::asc_t & output, sc_c separator) {
+gpk::err_t			gpk::pathNormalize			(::gpk::vcst_c & path, ::gpk::asc_t & output, sc_c separator) {
 	if_true_fef(false == ::pathSeparator(separator), "Invalid separator: '%c'.", separator);
 	if_fail_fe(::validatePathSeparators(path, true));
 	if(0 == path.size())
@@ -197,7 +197,7 @@ gpk::err_t			gpk::pathNormalize			(::gpk::vcsc_c & path, ::gpk::asc_t & output, 
 	rtrn output.size();
 }
 
-gpk::err_t			gpk::pathAbsolute			(::gpk::vcsc_c & path, ::gpk::asc_t & output, sc_c separator) {
+gpk::err_t			gpk::pathAbsolute			(::gpk::vcst_c & path, ::gpk::asc_t & output, sc_c separator) {
 	if_zero_fef(path.size(), "%s", "Empty path.");
 	if_true_fef(false == ::pathSeparator(separator), "Invalid separator: '%c'.", separator);
 	if_fail_fe(::validatePathSeparators(path, true));
@@ -220,7 +220,7 @@ gpk::err_t			gpk::pathAbsolute			(::gpk::vcsc_c & path, ::gpk::asc_t & output, s
 #endif
 }
 //
-gpk::err_t			gpk::pathNameCompose		(::gpk::vcsc_c & path, ::gpk::vcsc_c & fileName, ::gpk::asc_t & out_composed)		{
+gpk::err_t			gpk::pathNameCompose		(::gpk::vcst_c & path, ::gpk::vcst_c & fileName, ::gpk::asc_t & out_composed)		{
 	if_fail_fe(::validatePathSeparators(path, true));
 	if_fail_fe(::validatePathSeparators(fileName, 0 == path.size()));
 	::gpk::u2_t				pathLength				= 0;
@@ -240,7 +240,7 @@ gpk::err_t			gpk::pathNameCompose		(::gpk::vcsc_c & path, ::gpk::vcsc_c & fileNa
 	rtrn out_composed.size();
 }
 
-gpk::err_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::avcsc_t & output, ::gpk::vcst_c extension)					{
+gpk::err_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::aobj<vcst_t> & output, ::gpk::vcst_c extension)					{
 	gpk_path_debug("extension=\"%s\"", extension.begin());
 	for(uint32_t iFile = 0; iFile < input.Files.size(); ++iFile) {
 		::gpk::vcsc_c			& fileName					= input.Files[iFile];
@@ -255,10 +255,10 @@ gpk::err_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::avcsc_
 	return 0;
 }
 
-gpk::err_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::aasc_t & output, ::gpk::vcst_c extension)					{
+gpk::err_t			gpk::pathList				(const ::gpk::SPathContents & input, aobj<string> & output, ::gpk::vcst_c extension)					{
 	gpk_path_debug("extension=\"%s\"", extension.begin());
 	for(uint32_t iFile = 0; iFile < input.Files.size(); ++iFile) {
-		::gpk::vcsc_c			& fileName					= input.Files[iFile];
+		::gpk::vcst_c			& fileName					= input.Files[iFile];
 		gpk_path_debug("fileName=\"%s\"", fileName.begin());
 		b8_t 					extensionMatch 				= 0 == strncmp(fileName.end() - extension.size(), extension.begin(), ::gpk::min(extension.size(), fileName.size()));
 		if(0 == extension.size() || (extension.size() < fileName.size() && extensionMatch)) {
@@ -352,7 +352,7 @@ sttc gpk::err_t		pathListNative			(::gpk::vcst_c & pathToList, ::gpk::SPathConte
 	rtrn 0;
 }
 
-gpk::err_t			gpk::pathList				(const ::gpk::vcst_t & pathToList, ::gpk::aasc_t & output, bool listFolders, ::gpk::vcst_c extension)	{
+gpk::err_t			gpk::pathList				(const ::gpk::vcst_t & pathToList, ::gpk::aobj<string> & output, bool listFolders, ::gpk::vcst_c extension)	{
 	::gpk::asc_t				withoutTrailingSlash		= (pathToList.size() - 1 > (uint32_t)::gpk::findLastSlash(pathToList)) ? pathToList : ::gpk::vcst_t{pathToList.begin(), pathToList.size() - 1};
 	char						bufferFormat[16]			=  {};
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%" GPK_FMT_U2 "s/*.*", withoutTrailingSlash.size());
@@ -405,7 +405,7 @@ gpk::err_t			gpk::pathList				(::gpk::vcst_c & pathToList, ::gpk::SPathContents 
 }
 
 gpk::err_t			gpk::pathList				(::gpk::vcst_c & pathToList, ::gpk::SPathContents & pathContents, ::gpk::function<err_t(bool, vcst_c&)> onItem, ::gpk::vcst_c extension)						{
-	::gpk::vcsc_t				pathBegin;
+	::gpk::vcst_t				pathBegin;
 	if_fail_fe(::gpk::pathBegin(pathToList, pathBegin));
 	cnst bool					removeTrailingSlash		= pathToList.size() > pathBegin.size() && ::pathSeparator(pathToList[pathToList.size() - 1]);
 	::gpk::string				withoutTrailingSlash		= removeTrailingSlash ? ::gpk::vcst_t{pathToList.begin(), pathToList.size() - 1} : pathToList;

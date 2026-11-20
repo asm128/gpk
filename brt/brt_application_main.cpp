@@ -62,8 +62,8 @@ gpk::err_t			setup	(::brt::SApplication & app)	{
 			}
 		}
 	}
-	::gpk::apod<char>			& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
-	::gpk::apod<char>			& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
+	::gpk::string			& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
+	::gpk::string			& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
 	if(app.ProcessParams.size()) {
 		szCmdlineFinal.push_back(' ');
 		szCmdlineFinal.append(app.ProcessParams);

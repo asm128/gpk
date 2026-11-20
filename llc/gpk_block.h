@@ -1,5 +1,5 @@
 #include "gpk_json.h"
-#include "gpk_file.h"
+#include "gpk_file_pack.h"
 #include "gpk_deflate.h"
 #include "gpk_aes.h"
 #include "gpk_parse.h"

@@ -1,0 +1,21 @@
+#include "gpk_string.h"
+#include "gpk_stdstring.h"
+
+gpk::err_t	gpk::camelCase		(vcst_t input, asc_t & camelCased) {
+	b8_t						capsNext			= true;
+	for(::gpk::u2_t i = 0; i < input.size(); ++i) {
+		sc_t						current				= input[i];
+		if(current == '_' || current == '-')
+			capsNext	= true;
+		else {
+			if(capsNext) {
+				::gpk::toupper(current);
+				capsNext	= false;
+			}
+			//else
+			//	tolower(vsf_t{&camelCased[1], camelCased.size() - 1});
+			if_fail_fe(camelCased.push_back(current));
+		}
+	}
+	return 0;
+}

@@ -1,4 +1,5 @@
 #include "dryer_app.h"
+#include "gpk_label.h"
 
 gpk::err_t						dry::handleResizeScreenHome		(::dry::SApplication & app, ::gpk::n2s1_t newSize)	{
 	::gpk::SControlTable						& controls						= app.Framework.GUI->Controls;

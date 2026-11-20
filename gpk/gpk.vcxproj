@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\llc\gpk_crc.h" />
     <ClInclude Include="gpk_connection.h" />
     <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_lobby.h" />

@@ -1,0 +1,225 @@
+#include "gpk_file_pack.h"
+#include "gpk_deflate.h"
+#include "gpk_path.h"
+#include "gpk_file.h"
+#include "gpk_aes.h"
+#include "gpk_apod_serialize.h"
+#include "gpk_string_compose.h"
+//#include "gpk_cstdio.h"
+
+
+GPK_USING_TYPEINT();
+
+gpk::err_t			gpk::folderUnpack			(SFolderInMemory & out_loaded, vcst_t nameFileSrc)					{
+	au0_t				rawFileInMemory				= {};
+	if_fail_fef(fileToMemory(nameFileSrc, rawFileInMemory), "Failed to load pak file: %.*s." , GPK_VIEW_ARGS(nameFileSrc));
+	if_fail_fef(folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %.*s.", GPK_VIEW_ARGS(nameFileSrc));
+	return 0;
+}
+gpk::err_t			gpk::folderToDisk			(cnst SFolderPackage & folderPackage, vcst_c nameFileDst)			{
+	cnst SPackHeader 	& fileHeader				= folderPackage.PackageInfo;
+	vcu0_c				compressedTableFiles		= folderPackage.CompressedTableFiles		;
+	vcu0_c				compressedContentsPacked	= folderPackage.CompressedContentsPacked	;
+	{
+		FILE						* fp						= 0;
+		if_fail_fef(fopen_s(fp, nameFileDst, "wb"), "\"%.*s\"", (int)nameFileDst.size(), nameFileDst.begin());
+		if_null_fef(fp, "Failed to create file: \"%.*s\"", (int)nameFileDst.size(), nameFileDst.begin());
+
+		fwrite(&fileHeader							, 1, szof(SPackHeader)			, fp);
+		fwrite(compressedTableFiles		.begin	()	, 1, compressedTableFiles		.size()	, fp);
+		fwrite(compressedContentsPacked	.begin	()	, 1, compressedContentsPacked	.size()	, fp);
+		fclose(fp);
+	}
+	return 0;
+}
+
+stxp u2_t			DEFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
+stxp u2_t			INFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
+gpk::err_t			gpk::folderPack				(SFolderPackage & output, vcst_c nameFolderSrc) {
+	SPackHeader 			& fileHeader			= output.PackageInfo = {};
+	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
+	au0_t					tableFiles				;
+	au0_t					contentsPacked			;
+
+	err_t					totalFileCount			= 0;
+	if_fail_fe(totalFileCount = gpk::folderLoad(nameFolderSrc, tableFiles, contentsPacked));
+	fileHeader.TotalFileCount					= (u2_t)totalFileCount;
+
+	fileHeader.SizeUncompressedTableFiles		= tableFiles		.size();
+	fileHeader.SizeUncompressedContentsPacked	= contentsPacked	.size();
+	au0_t					& compressedTableFiles		= output.CompressedTableFiles		;
+	au0_t					& compressedContentsPacked	= output.CompressedContentsPacked	;
+	{	// compress
+		if_fail_fef(arrayDeflate(tableFiles		, compressedTableFiles		, ::DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
+		if_fail_fef(arrayDeflate(contentsPacked	, compressedContentsPacked	, ::DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
+		fileHeader.SizeCompressedTableFiles		= compressedTableFiles		.size();
+		fileHeader.SizeCompressedContentsPacked	= compressedContentsPacked	.size();
+	}
+	return 0;
+}
+gpk::err_t			gpk::folderUnpack			(SFolderInMemory & output, vcu0_t rawFileInMemory)		{
+	cnst SPackHeader	& header					= *(SPackHeader*)&rawFileInMemory[0];
+	if_fail_fe(resize_obj(header.TotalFileCount, output.Names, output.Contents));
+	output.DataInfo		.clear();
+	output.DataContents	.clear();
+	if_fail_fe(arrayInflate({&rawFileInMemory[0] + szof(SPackHeader)									, header.SizeCompressedTableFiles		}, output.DataInfo	, ::INFLATE_CHUNK_SIZE));
+	if_fail_fe(arrayInflate({&rawFileInMemory[0] + szof(SPackHeader) + header.SizeCompressedTableFiles, header.SizeCompressedContentsPacked	}, output.DataContents	, ::INFLATE_CHUNK_SIZE));
+	{ // Build access tables.
+		vcu0_t					tableFiles					= output.DataInfo;
+		for(u2_t iFile = 0; iFile < output.Names.size(); ++iFile) {
+			rangeu2_t		fileLocation				= {};
+			vcst_t			fileName					= {};
+			if_fail_fe(loadPOD(tableFiles, fileLocation));
+			if_fail_fe(loadView(tableFiles, fileName));
+			output.Names[iFile]		= {fileName.begin(), fileName.size()};
+			output.Contents[iFile]	= {fileLocation.Count ? &output.DataContents[fileLocation.Offset] : 0, fileLocation.Count};
+		}
+	}
+	return 0;
+}
+gpk::err_t			gpk::folderLoad				(vcst_t nameFolderSrc, au0_t & tableFiles, au0_t & contentsPacked) {
+	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
+	u2_t					totalFileCount			= 0;
+	{
+		aobj<string>	listFiles				= {};
+		if_fail_fef(gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %.*s.", (int)nameFolderSrc.size(), nameFolderSrc.begin());
+
+		au0_t				contentsTemp			= {};
+		rangeu2_t			fileLocation			= {0, 0};
+		for(u2_t iFile = 0; iFile < listFiles.size(); ++iFile) {
+			fileLocation.Offset		= contentsPacked.size();
+			vcst_c			pathToLoad				= {listFiles[iFile].begin(), listFiles[iFile].size()};
+			if(0 == pathToLoad.size())
+				continue;
+
+			info_printf("pathToLoad (%u): '%.*s'.", iFile, (int)pathToLoad.size(), pathToLoad.begin());
+			if_fail_fef(fileToMemory(pathToLoad, contentsTemp), "Failed to load file: %.*s.", (int)pathToLoad.size(), pathToLoad.begin());
+
+			fileLocation.Count		= contentsTemp.size();
+			if_fail_fe(savePOD(tableFiles, fileLocation));
+			if_fail_fe(saveView(tableFiles, pathToLoad));
+			if_fail_fef(contentsPacked.append(contentsTemp.begin(), contentsTemp.size())	, "Failed to append data bytes. Buffer sizes:\ntableFiles     : %u.\ncontentsPacked : %u.", tableFiles.size(), contentsPacked.size());
+			contentsTemp.clear();
+
+			++totalFileCount;
+		}
+	}
+	return totalFileCount;
+}
+gpk::err_t			gpk::folderToDisk			(cnst SFolderInMemory & virtualFolder, vcst_t destinationPath)				{
+	string				finalPathName				= {};
+	FILE						* fp						= 0;
+	for(u2_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
+		gpk::safe_fclose(fp);
+		vcst_c			& fileName					= virtualFolder.Names		[iFile];
+		vcu0_c			& fileContent				= virtualFolder.Contents	[iFile];
+		finalPathName.clear();
+		if_fail_fe(pathNameCompose(destinationPath, fileName, finalPathName));
+		info_printf("File found (%u):'%.*s'. Size: %u.", iFile, GPK_VIEW_ARGS(finalPathName), fileContent.size());
+		err_t				indexSlash					= findLastSlash(finalPathName);
+		if(-1 != indexSlash) { // Create path if any specified.
+			vcst_t				folderName					= {};
+			if_fail_fe(finalPathName.slice(folderName, 0, (u2_t)indexSlash));
+			if_fail_cef(pathCreate(folderName), "Failed to create folder: %.*s.", (int)folderName.size(), folderName.begin());
+		}
+		if_fail_fef(fopen_s(fp, finalPathName, "wb"), "%.*s", GPK_VIEW_ARGS(finalPathName));
+		if_null_cef(fp, "Failed to create file: %.*s.", GPK_VIEW_ARGS(finalPathName));
+		if_true_cef(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp), "Failed to write file: %.*s. Disk full?", GPK_VIEW_ARGS(finalPathName));
+	}
+	gpk::safe_fclose(fp);
+	return 0;
+}
+gpk::err_t			gpk::folderPackToDisk		(vcst_t nameFileDst	 , vcst_t nameFolderSrc)		{
+	SFolderPackage		folderPackage;
+	if_fail_fef(folderPack(folderPackage, nameFolderSrc), "Failed to pack folder: %.*s.", (int)nameFolderSrc.size(), nameFolderSrc.begin());
+	if_fail_fef(folderToDisk(folderPackage, nameFileDst), "Failed to pack folder: %.*s.", (int)nameFolderSrc.size(), nameFolderSrc.begin());
+	return 0;
+}
+gpk::err_t			gpk::folderUnpackToDisk		(vcst_t namePathDst	 , vcst_t nameFileSrc)		{
+	SFolderInMemory		virtualFolder				= {};
+	if_fail_fef(folderUnpack(virtualFolder, nameFileSrc), "Failed to unpack file: %.*s.", (int)nameFileSrc.size(), nameFileSrc.begin());
+	if_fail_fef(folderToDisk(virtualFolder, namePathDst), "Failed to write folder to disk. Disk full or insufficient permissions. File name: %.*s. Destination path: %.*s.", (int)nameFileSrc.size(), nameFileSrc.begin(), (int)namePathDst.size(), namePathDst.begin());
+	return 0;
+}
+gpk::err_t			gpk::inflateToMemory  		(au0_t & tempCache	 , vcst_t fileName, au0_t & output) {
+	if_fail_fe(fileToMemory(fileName, tempCache));
+	info_printf("File size: %u.", tempCache.size());
+
+	if_fail_fe(arrayInflate(tempCache, output));
+	info_printf("Inflated size: %u.", output.size());
+	return 0;
+}
+gpk::err_t			gpk::deflateFromMemory		(au0_t & tempCache	 , vcst_t fileName, vcu0_t input) {
+	info_printf("Input size: %u.", input.size());
+	if_fail_fe(arrayDeflate(input, tempCache));
+
+	info_printf("Deflated size: %u.", tempCache.size());
+	return fileFromMemory(fileName, tempCache);
+}
+gpk::err_t			gpk::fileFromMemorySecure	(SLoadCache & recycle, vcst_t fileName, vcu0_t key, b8_t deflate, vcu0_t blockBytes) {
+	if(false == deflate && 0 == key.size())
+		recycle.Encrypted		= blockBytes;
+	else {
+		if(false == deflate) {
+			if_fail_fef(aesEncode(blockBytes, key, AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %.*s.", (int)fileName.size(), fileName.begin());
+		}
+		else if(0 == key.size()) {
+			if_fail_fef(arrayDeflate(blockBytes, recycle.Encrypted), "Failed to deflate file: %.*s.", (int)fileName.size(), fileName.begin());
+		}
+		else {
+			if_fail_fef(arrayDeflate(blockBytes, recycle.Deflated), "Failed to deflate file: %.*s.", (int)fileName.size(), fileName.begin());
+			if_fail_fef(aesEncode(recycle.Deflated, key, AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %.*s.", (int)fileName.size(), fileName.begin());
+		}
+	}
+	if_fail_fe(crcGenerateAndAppend(recycle.Encrypted));
+	if_fail_fef(fileFromMemory(fileName, recycle.Encrypted), "Failed to save file: %.*s.", (int)fileName.size(), fileName.begin());
+	return 0;
+}
+gpk::err_t			gpk::fileToMemorySecure		(SLoadCache & recycle, vcst_t fileName, vcu0_t key, b8_c deflate, au0_t & loadedBytes)								{
+	if(false == deflate && 0 == key.size()) {
+		if_fail_fef(fileToMemory(fileName, loadedBytes), "Failed to read file: %.*s.", (int)fileName.size(), fileName.begin());
+		if_fail_fe(crcVerifyAndRemove(loadedBytes));
+	}
+	else {
+		if_fail_fef(gpk::fileToMemory(fileName, recycle.Encrypted), "Failed to read file: %.*s.", (int)fileName.size(), fileName.begin());
+		if_fail_fe(crcVerifyAndRemove(recycle.Encrypted));
+		if(false == deflate) {
+			if_fail_fef(aesDecode(recycle.Encrypted, key, AES_LEVEL_256, loadedBytes), "Failed to decrypt file: %.*s.", (int)fileName.size(), fileName.begin());
+		}
+		else if(0 == key.size()) {
+			if_fail_fef(arrayInflate(recycle.Encrypted, loadedBytes), "Failed to inflate file: %.*s.", (int)fileName.size(), fileName.begin());
+		}
+		else {
+			if_fail_fef(aesDecode(recycle.Encrypted, key, AES_LEVEL_256, recycle.Deflated), "Failed to decrypt file: %.*s.", (int)fileName.size(), fileName.begin());
+			if_fail_fef(arrayInflate(recycle.Deflated, loadedBytes), "Failed to inflate file: %.*s.", (int)fileName.size(), fileName.begin());
+		}
+	}
+	return 0;
+}
+
+gpk::err_t		gpk::unpak			(vcst_t sourceFilename, vcst_t targetFolder) {
+	string				namePathDst;
+	if(0 == targetFolder.size()) {
+		if_fail_fe(append_strings(namePathDst, sourceFilename));
+		err_t				indexSequence;
+		if_fail_fef(indexSequence = rfind('.', sourceFilename), "Target path should be provided for filenames without filename extension. sourceFilename=\"%.ss\"", GPK_VIEW_ARGS(sourceFilename));
+		if(-1 != indexSequence) {
+			namePathDst[indexSequence]			= '\\';
+			namePathDst[indexSequence + 1]		= 0;
+		}
+		targetFolder	= namePathDst;
+	}
+	if_fail_fef(folderUnpackToDisk(targetFolder, sourceFilename), "sourceFilename=\"%.*s\" targetFolder=\"%.*s\".", GPK_VIEW_ARGS(sourceFilename), GPK_VIEW_ARGS(targetFolder));
+	always_printf("Successfully unpaked '%.*s'.", GPK_VIEW_ARGS(sourceFilename));
+	return 0;
+}
+gpk::err_t		gpk::pak			(vcst_t sourceFolder, vcst_t targetFilename) {
+	string				nameFileDst;
+	if(0 == targetFilename.size()) {	// compose filename from folder name or just use the second argument.
+		if_fail_fe(append_strings(nameFileDst, sourceFolder, ".gpk"));
+		targetFilename = nameFileDst;
+	}
+	if_fail_fef(folderPackToDisk(targetFilename, sourceFolder), "sourceFolder=\"%.*s\" targetFilename=\"%.*s\"", GPK_VIEW_ARGS(sourceFolder), GPK_VIEW_ARGS(targetFilename));
+	always_printf("Successfully written '%.*s'.", GPK_VIEW_ARGS(targetFilename));
+	return 0;
+}
