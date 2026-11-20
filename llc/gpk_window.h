@@ -12,6 +12,8 @@
 #	include <Windows.h>
 #elif defined(GPK_XCB)
 #	include <xcb/xcb.h>
+#	include <xkbcommon/xkbcommon.h>
+#	include <xkbcommon/xkbcommon-compose.h>
 #endif
 
 #ifndef GPK_WINDOW_H_23627
@@ -44,9 +46,16 @@ namespace gpk
 		xcb_gcontext_t						GC							= {};
 		xcb_drawable_t						IdDrawable					= {};
 		xcb_drawable_t						IdDrawableBackPixmap		= {};
+		xcb_atom_t							WMDelete				= {};
+		::xkb_context						* XKBContext			= {};
+		::xkb_keymap						* XKBKeymap			= {};
+		::xkb_state						* XKBState			= {};
+		::xkb_compose_table				* XKBComposeTable	= {};
+		::xkb_compose_state				* XKBComposeState	= {};
+		int32_t							XKBDeviceId			= -1;
 
 											~SWindowPlatformDetail		()	{
-			if(uint32_t(-1) != GC) {
+			if(GC && Connection) {
 				xcb_free_gc(Connection, GC);
 				info_printf("%s.", "Window graphics context freed");
 			}
