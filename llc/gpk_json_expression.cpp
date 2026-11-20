@@ -96,10 +96,10 @@ static	gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results
 		else {
 			if(::gpk::EXPRESSION_READER_TYPE_KEY == expressionType) {
 				::gpk::vcsc_t				strKey							= currentExpressionView;
-				ree_if(currentJSON && currentType != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s. Key to solve: %.*s.", ::gpk::get_value_label(currentType).begin(), GPK_VIEW_ARGS(currentExpressionView));
+				ree_if(currentJSON && currentType != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %.*s. Key to solve: %s.", ::gpk::get_value_label(currentType).begin(), GPK_VIEW_ARGS(currentExpressionView));
 				if(1 == childToSolve.Children.size()
 					&& (::gpk::EXPRESSION_READER_TYPE_TERM_KEY == childToSolve.Children[0]->Token->Type || ::gpk::EXPRESSION_READER_TYPE_TERM_ANY == childToSolve.Children[0]->Token->Type)) {
-					const int32_t			indexOfResolvedSubExpression	= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, (0 > lastResult.IndexJSONResult)? lastResult.IndexJSONResult : lastResult.IndexRootJSONNode, strKey);
+					const int32_t			indexOfResolvedSubExpression	= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, (0 >= lastResult.IndexJSONResult)? lastResult.IndexJSONResult : lastResult.IndexRootJSONNode, strKey);
 					(void)indexOfResolvedSubExpression;
 				}
 				if_fail_fef(lastResult.IndexJSONResult = ::gpk::jsonObjectValueGet(*inputJSON.Tree[indexNodeJSON], inputJSON.View, {strKey.begin(), strKey.size()}), "Key not found: %.*s.", GPK_VIEW_ARGS(strKey));
@@ -109,13 +109,8 @@ static	gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results
 				::gpk::vcsc_t				viewOfExpressionResult			= {};
 				if(::gpk::EXPRESSION_READER_TYPE_TERM_INDEX == expressionType) {
 					ree_if(currentJSON && currentType != ::gpk::JSON_TYPE_ARRAY && currentType != ::gpk::JSON_TYPE_STRING, "Only arrays can be accessed by index. JSON type: %s.", ::gpk::get_value_label(currentType).begin());
-					uint64_t				literalIndex					= 0;
-					const gpk::err_t		countDigits					= gpk::parseIntegerDecimal(currentExpressionView, literalIndex);
-					const bool				isLiteralIndex					= countDigits > 0 && (gpk::u2_t)countDigits == currentExpressionView.size();
-					const int32_t			indexOfResolvedSubExpression	= isLiteralIndex ? -0xF : ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode, viewOfExpressionResult);
-					if(isLiteralIndex)
-						viewOfExpressionResult = currentExpressionView;
-					ree_if(-1 == indexOfResolvedSubExpression, "Failed to solve expression: %.*s.", GPK_VIEW_ARGS(currentExpressionView));
+					int32_t			indexOfResolvedSubExpression;
+					ree_if(-1 == (indexOfResolvedSubExpression	= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode, viewOfExpressionResult)), "Failed to solve expression: %.*s.", GPK_VIEW_ARGS(currentExpressionView));
 					ree_if(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_INTEGER, "Arrays can only be accessed by index with a json integer. Type found: %s.",::gpk::get_value_label(inputJSON.Token[indexOfResolvedSubExpression].Type).begin());
 					uint64_t				numberRead						= 0;
 					gpk_necs(gpk::parseIntegerDecimal(viewOfExpressionResult, numberRead));
@@ -128,15 +123,11 @@ static	gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results
 				}
 				else if(::gpk::EXPRESSION_READER_TYPE_TERM_KEY == expressionType) {
 					ree_if(currentJSON && currentType != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentType).begin());
-					int32_t						indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, (0 > lastResult.IndexJSONResult)? lastResult.IndexJSONResult : lastResult.IndexRootJSONNode, viewOfExpressionResult);
+					int32_t						indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, (0 >= lastResult.IndexJSONResult)? lastResult.IndexJSONResult : lastResult.IndexRootJSONNode, viewOfExpressionResult);
 					ree_if(-1 == (lastResult.IndexJSONResult = indexOfResolvedSubExpression), "Failed to solve expression: %.*s.", GPK_VIEW_ARGS(currentExpressionView));
-					if(viewOfExpressionResult.find('.') < 0 && viewOfExpressionResult.find('[') < 0)
-						output = viewOfExpressionResult;
-					else {
-						::gpk::SExpressionReader	reader;
-						gpk_necall(gpk::expressionReaderParse(reader, viewOfExpressionResult), "Failed to read JSONeN expression: '%.*s'.", GPK_VIEW_ARGS(viewOfExpressionResult));
-						indexOfResolvedSubExpression	= ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, results, output);
-					}
+					::gpk::SExpressionReader	reader;
+					gpk_necall(gpk::expressionReaderParse(reader, viewOfExpressionResult), "Failed to read JSONeN expression: '%.*s'.", GPK_VIEW_ARGS(viewOfExpressionResult));
+					indexOfResolvedSubExpression	= ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, results, output);
 					lastResult.Output		= output;
 					ree_if(-1 == (lastResult.IndexJSONResult = indexOfResolvedSubExpression), "Failed to evaluate child expression: %s.", ::gpk::toString(viewOfExpressionResult).size());
 				}
