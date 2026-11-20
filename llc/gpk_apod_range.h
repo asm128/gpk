@@ -16,7 +16,7 @@ namespace gpk
 	typedef	::gpk::arange<uint8_t	>	arangeu8	;
 	typedef	::gpk::arange<uint16_t	>	arangeu16	;
 	typedef	::gpk::arange<uint32_t	>	arangeu32	;
-	typedef	::gpk::arange<uint64_t	>	arangeu64	;
+	typedef	::gpk::arange<u3_t	>	arangeu64	;
 	typedef	::gpk::arange<int8_t	>	arangei8	;
 	typedef	::gpk::arange<int16_t	>	arangei16	;
 	typedef	::gpk::arange<int32_t	>	arangei32	;

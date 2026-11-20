@@ -27,7 +27,7 @@ namespace gpk
 		inxp	rect<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
 		inxp	rect<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
 		inxp	rect<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
-		inxp	rect<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
+		inxp	rect<u3_t>	u3_t			()	const	noexcept	{ return Cast<u3_t	>(); }
 		inxp	rect<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
 		inxp	rect<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
 		inxp	rect<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
@@ -40,7 +40,7 @@ namespace gpk
 	typedef rect<uint8_t>	rectu8;
 	typedef rect<uint16_t>	rectu16;
 	typedef rect<uint32_t>	rectu32;
-	typedef rect<uint64_t>	rectu64;
+	typedef rect<u3_t>	rectu64;
 	typedef rect<int8_t>	recti8;
 	typedef rect<int16_t>	recti16;
 	typedef rect<int32_t>	recti32;

@@ -129,7 +129,7 @@ namespace gpk
 		}
 	}; // struct
 
-	tydf	imgmono<uint64_t>	imgmonou64;
+	tydf	imgmono<u3_t>	imgmonou64;
 
 	tplt<tpnm _tColor, tpnm _tDepthStencil>
 	struct rt {

@@ -280,7 +280,7 @@ namespace
 					}
 					return 0;
 				default:
-					return uint32_t((uint64_t(length) * 8) / (uint64_t(data.CompactFormat.BitsPerSample()) * uint64_t(data.CompactFormat.nChannels)));
+					return uint32_t((u3_t(length) * 8) / (u3_t(data.CompactFormat.BitsPerSample()) * u3_t(data.CompactFormat.nChannels)));
 			}
 		}
 	};
@@ -815,7 +815,7 @@ HRESULT WaveBankReader::WaveBankReaderImpl::GetWaveData(uint32_t index, const ui
 		DWORD dwOffset, dwLength;
 		entry.ComputeLocations(dwOffset, dwLength, index, m_header, m_data, reinterpret_cast<const ENTRYCOMPACT*>(m_entries.get()));
 
-		if ((uint64_t(dwOffset) + uint64_t(dwLength)) > uint64_t(m_header.Segments[HEADER::SEGIDX_ENTRYWAVEDATA].dwLength))
+		if ((u3_t(dwOffset) + u3_t(dwLength)) > u3_t(m_header.Segments[HEADER::SEGIDX_ENTRYWAVEDATA].dwLength))
 		{
 			return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 		}
@@ -827,7 +827,7 @@ HRESULT WaveBankReader::WaveBankReaderImpl::GetWaveData(uint32_t index, const ui
 	{
 		auto& entry = reinterpret_cast<const ENTRY*>(m_entries.get())[index];
 
-		if ((uint64_t(entry.PlayRegion.dwOffset) + uint64_t(entry.PlayRegion.dwLength)) > uint64_t(m_header.Segments[HEADER::SEGIDX_ENTRYWAVEDATA].dwLength))
+		if ((u3_t(entry.PlayRegion.dwOffset) + u3_t(entry.PlayRegion.dwLength)) > u3_t(m_header.Segments[HEADER::SEGIDX_ENTRYWAVEDATA].dwLength))
 		{
 			return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 		}
@@ -919,7 +919,7 @@ HRESULT WaveBankReader::WaveBankReaderImpl::GetMetadata(uint32_t index, Metadata
 
 	if (m_data.dwFlags & BANKDATA::TYPE_STREAMING)
 	{
-		const uint64_t offset = uint64_t(metadata.OffsetBytes) + uint64_t(m_header.Segments[HEADER::SEGIDX_ENTRYWAVEDATA].dwOffset);
+		const u3_t offset = u3_t(metadata.OffsetBytes) + u3_t(m_header.Segments[HEADER::SEGIDX_ENTRYWAVEDATA].dwOffset);
 		if (offset > UINT32_MAX)
 			return HRESULT_FROM_WIN32(ERROR_ARITHMETIC_OVERFLOW);
 

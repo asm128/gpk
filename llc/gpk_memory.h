@@ -111,9 +111,9 @@ namespace gpk
 		stxp	const uint32_t													dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
 		stxp	const uint32_t													typeAlign					= (uint32_t)get_type_align<_tBase>();
 		switch (typeAlign) {
-		case 32: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 4);	break;
-		case 16: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier * 2);	break;
-		case  8: chkcpy((uint64_t*)dest, (const uint64_t*)source, dataMultiplier);		break;
+		case 32: chkcpy((u3_t*)dest, (const u3_t*)source, dataMultiplier * 4);	break;
+		case 16: chkcpy((u3_t*)dest, (const u3_t*)source, dataMultiplier * 2);	break;
+		case  8: chkcpy((u3_t*)dest, (const u3_t*)source, dataMultiplier);		break;
 		case  4: chkcpy((uint32_t*)dest, (const uint32_t*)source, dataMultiplier);		break;
 		case  2: chkcpy((uint16_t*)dest, (const uint16_t*)source, dataMultiplier);		break;
 		default:

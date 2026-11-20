@@ -16,14 +16,14 @@ namespace gpk
 #endif
 #pragma pack(push, 1)
 	struct STimestamps {	
-		uint64_t				Created				= 0;
-		uint64_t				Loaded				= 0;
-		uint64_t				Modified			= 0;
-		uint64_t				Saved				= 0;
+		u3_t				Created				= 0;
+		u3_t				Loaded				= 0;
+		u3_t				Modified			= 0;
+		u3_t				Saved				= 0;
 	};
 
 	struct SDaylight {
-		uint64_t				TimeOffset		= {};
+		u3_t				TimeOffset		= {};
 		uint32_t				OffsetMinutes	= 90;
 		float					ExtraRatio		= .5;
 	};

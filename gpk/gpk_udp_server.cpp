@@ -148,7 +148,7 @@ static	gpk::err_t	serverAcceptClient		(::gpk::SUDPServer& serverInstance, ::gpk:
 		::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
 		command.Type			= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
 		::gpk::pobj<::gpk::SUDPMessage>	connectResponse		= {};
-		connectResponse.create(::gpk::SUDPMessage{{}, (uint64_t)::gpk::timeCurrentInUs(), command});
+		connectResponse.create(::gpk::SUDPMessage{{}, (u3_t)::gpk::timeCurrentInUs(), command});
 		gpk_necs(pClient->Queue.Send.push_back(connectResponse));
 		pClient->LastPing		=
 		pClient->FirstPing		= ::gpk::timeCurrentInUs();

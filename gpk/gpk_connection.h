@@ -37,13 +37,13 @@ namespace gpk
 	struct SUDPPayloadHeader {
 		::gpk::SUDPCommand					Command		;
 		uint32_t							Size		;
-		uint64_t							MessageId	;
+		u3_t							MessageId	;
 	};
 #pragma pack(pop)
 
 	struct SUDPMessage {
 		::gpk::au0_t						Payload		;
-		uint64_t							Time		;
+		u3_t							Time		;
 		::gpk::SUDPCommand					Command		;
 		uint8_t								RetryCount	;
 		::gpk::au3_t						Hashes		;
@@ -66,9 +66,9 @@ namespace gpk
 		::gpk::auto_socket_close			Socket						;
 		::gpk::SUDPClientQueue				Queue						= {};
 		::gpk::SIPv4End						Address						= {};	// Local for servers, remote for clients
-		uint64_t							LastPing					= 0;
-		uint64_t							FirstPing					= 0;
-		uint64_t							KeyPing						= 0;
+		u3_t							LastPing					= 0;
+		u3_t							FirstPing					= 0;
+		u3_t							KeyPing						= 0;
 		::gpk::UDP_CONNECTION_STATE			State						= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
@@ -76,9 +76,9 @@ namespace gpk
 		::gpk::auto_socket_close			Socket						;
 		::gpk::SUDPClientQueue				Queue						= {};
 		::gpk::SIPv4End						Address						= {};
-		uint64_t							LastPing					= 0;
-		uint64_t							FirstPing					= 0;
-		uint64_t							KeyPing						= 0;
+		u3_t							LastPing					= 0;
+		u3_t							FirstPing					= 0;
+		u3_t							KeyPing						= 0;
 		::gpk::UDP_CONNECTION_STATE			State						= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 

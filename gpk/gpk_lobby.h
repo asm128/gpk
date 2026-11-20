@@ -16,8 +16,8 @@ namespace gpk
 {
 
 	struct SLobbyRoomStats {
-		uint64_t			UsersConnected;
-		uint64_t			UsersEverJoined;
+		u3_t			UsersConnected;
+		u3_t			UsersEverJoined;
 	};
 
 	struct SLobbyRoom {
@@ -77,8 +77,8 @@ namespace gpk
 		::gpk::SInputBox					InputBox			= {};
 		UI_LOBBY_USER						Field				= UI_LOBBY_USER_Offline;
 
-		uint64_t							IdRoom				= 0;
-		uint64_t							IdUser				= 0;
+		u3_t							IdRoom				= 0;
+		u3_t							IdUser				= 0;
 
 		::gpk::SLobbyUser					Credentials			= {};
 		::gpk::SLobbyUserInfo				InfoUser			= {};

@@ -183,7 +183,7 @@ gpk::err_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, FILE * input)	
 gpk::err_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, ::gpk::vcst_c	& input)	{
 	::gpk::au0_t					fileInMemory				= {};
 	gpk_necall(gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
-	uint64_t					unk							= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
+	u3_t					unk							= *(u3_t*)&fileInMemory[fileInMemory.size() - 8];
 	(void)unk;
 	info_printf("Unk64: 0x%llX.", unk);
 	info_printf("Parsing RSW file: %s.", input.begin());

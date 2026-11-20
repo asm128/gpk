@@ -28,7 +28,7 @@ namespace gpk
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	tplt<tpnm _tColor>
-	static	gpk::err_t	textLineDrawFixedSizeLit		(::gpk::grid<_tColor> & target, const ::gpk::view_bit<uint64_t> & viewTextureFont, const ::gpk::n2u2_t & viewMetrics, uint16_t characterCellsX, int16_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const ::gpk::n2s1_t dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static	gpk::err_t	textLineDrawFixedSizeLit		(::gpk::grid<_tColor> & target, const ::gpk::view_bit<u3_t> & viewTextureFont, const ::gpk::n2u2_t & viewMetrics, uint16_t characterCellsX, int16_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const ::gpk::n2s1_t dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		::gpk::apod<::gpk::n2u1_t>	dstCoords;
 		for(int32_t iChar = 0, charCount = (int32_t)text0.size(); iChar < charCount; ++iChar) {
 			const uc_t					charToDraw						= (uc_t)text0[iChar];
@@ -54,7 +54,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tColor>
-	static	gpk::err_t	textLineDrawAlignedFixedSizeLit	(::gpk::grid<_tColor> & targetView, const ::gpk::view_bit<uint64_t> & fontAtlas, const ::gpk::n2u2_t & viewMetrics, uint16_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static	gpk::err_t	textLineDrawAlignedFixedSizeLit	(::gpk::grid<_tColor> & targetView, const ::gpk::view_bit<u3_t> & fontAtlas, const ::gpk::n2u2_t & viewMetrics, uint16_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcs & text0, const _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		const ::gpk::n2s1_t			dstTextOffset					= {int16_t((targetSize.x >> 1) - (::gpk::textLineCalcWidth(sizeCharCell, text0) >> 1)), };
 		uint16_t					dstOffsetY						= int16_t(lineOffset * sizeCharCell.y);
 		return ::gpk::textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);

@@ -146,9 +146,9 @@ static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catal
 			spoolData.Color						= (-1 == jsonIndexColour	) ? ::gpk::vcst_t{}	: reader.View[jsonIndexColour	];
 			spoolData.Notes						= (-1 == jsonIndexNotes		) ? ::gpk::vcst_t{}	: reader.View[jsonIndexNotes	];
 			if(-1 != jsonIndexDensity	)
-				memcpy(&spoolData.Density, &reader.Token[jsonIndexDensity	].Value, sizeof(uint64_t));
+				memcpy(&spoolData.Density, &reader.Token[jsonIndexDensity	].Value, sizeof(u3_t));
 			if(-1 != jsonIndexDiameter	)
-				memcpy(&spoolData.Diameter, &reader.Token[jsonIndexDiameter	].Value, sizeof(uint64_t));
+				memcpy(&spoolData.Diameter, &reader.Token[jsonIndexDiameter	].Value, sizeof(u3_t));
 			spoolData.UniqueId					= (-1 == jsonIndexUniqueId			) ? 0 : (int32_t)reader.Token[jsonIndexUniqueId		].Value;
 			spoolData.SpoolSize					= (-1 == jsonIndexSpoolSize			) ? 0 : (int32_t)reader.Token[jsonIndexSpoolSize	].Value;
 			spoolData.MaxDryingTemperature		= (-1 == jsonIndexMaxDryingTemp		) ? 0 : (int8_t	)reader.Token[jsonIndexMaxDryingTemp].Value;

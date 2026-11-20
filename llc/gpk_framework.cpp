@@ -73,7 +73,7 @@ gpk::err_t			gpk::updateFramework						(::gpk::SFramework& framework)											
 	::gpk::SFrameInfo							& frameInfo									= framework.FrameInfo;
 	::gpk::STimer								& timer										= framework.Timer;
 	timer		.Frame();
-	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, (uint64_t)200000));
+	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, (u3_t)200000));
 #if defined(GPK_XCB)
 	::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;

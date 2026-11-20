@@ -32,7 +32,7 @@ static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										
 			::gpk::vcs					jsonPort							= {};
 			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_port"}, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
-				uint64_t					port								= 0;
+				u3_t					port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, port);
 				bestClient.AddressConnect.Port	= (uint16_t)port;
 				info_printf("Remote port: %u.", (uint32_t)port);

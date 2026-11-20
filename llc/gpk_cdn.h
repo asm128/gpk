@@ -19,7 +19,7 @@ namespace gpk
 		uint32_t					System				: 12;
 	};
 
-	// Should fit in an uint64_t
+	// Should fit in an u3_t
 	struct SContentId {
 		::gpk::SContentIdLocals		Locals;
 		::gpk::SContentIdSystem		System;

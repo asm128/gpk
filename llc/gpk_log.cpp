@@ -133,7 +133,7 @@ gpk::err_t			gpk::setupLogCallbacks
 
 #ifndef GPK_ARDUINO
 
-static	gpk::err_t	getSystemErrorAsString			(const uint64_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
+static	gpk::err_t	getSystemErrorAsString			(const u3_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
 #ifdef GPK_WINDOWS
 	rees_if(0 == buffer);
 	return lastError
@@ -156,7 +156,7 @@ void					gpk::_gpk_print_system_errors	(const char* prefix, uint32_t prefixLen)	
 #endif
 	if(lastSystemError) {
 		base_log_write("\n", 1);
-		gpk::err_t						stringLength					= ::getSystemErrorAsString((uint64_t)lastSystemError, bufferError, ::gpk::size(bufferError));
+		gpk::err_t						stringLength					= ::getSystemErrorAsString((u3_t)lastSystemError, bufferError, ::gpk::size(bufferError));
 		base_log_write(prefix, prefixLen);
 		base_log_write(bufferError, (uint32_t)stringLength);
 		base_log_write("\n", 1);

@@ -9,7 +9,7 @@ namespace gpk
 
 	tplt <tpnm _tElement>
 	struct SRecyclableElementContainer {
-		::gpk::view_bit<uint64_t>	Unused;
+		::gpk::view_bit<u3_t>	Unused;
 		::gpk::aobj<_tElement>		Elements;
 		::gpk::au3_t				UnusedData;
 
@@ -20,7 +20,7 @@ namespace gpk
 		gpk::err_t				push_back					(const _tElement & toPush)						{
 			const ::gpk::cid_t				elemIndex					= (::gpk::cid_t)Elements.push_back(toPush);
 			ree_if(failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");
-			stxp	uint32_t				boolContainerElementSize	= sizeof(uint64_t) * ::gpk::BYTE_SIZE;
+			stxp	uint32_t				boolContainerElementSize	= sizeof(u3_t) * ::gpk::BYTE_SIZE;
 			gpk_necs(UnusedData.resize((elemIndex + 1) / boolContainerElementSize + 1));
 			Unused						= {UnusedData.begin(), (uint32_t)(elemIndex + 1)};
 			Unused[elemIndex]			= false;

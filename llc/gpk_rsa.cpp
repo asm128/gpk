@@ -5,21 +5,21 @@
 
 #define RSA_ARDELL_KEY	1079150697//117515017//1054987632
 
-static	gpk::err_t	primalityTest	(uint64_t number)						{
-	uint64_t				j				= (uint64_t)::gpk::sqrt((double)number);
+static	gpk::err_t	primalityTest	(u3_t number)						{
+	u3_t				j				= (u3_t)::gpk::sqrt((double)number);
 	if(0 == (number & 1))
 		return 0;
 	if(number > 1 && number < 9)
 		return 1;
-	for(uint64_t i = 3; i <= j; ++i) {
+	for(u3_t i = 3; i <= j; ++i) {
 		if(0 == (number % i))
 			return 0;
 	}
 	return 1;
 }
 
-static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
-	uint64_t				k				= 1;
+static	u3_t	commonDivisor	(const u3_t t, const u3_t a)				{
+	u3_t				k				= 1;
 	while(1) {
 		k					= k + t;
 		if(k % a == 0)
@@ -28,16 +28,16 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 }
 
 // function to generate encryption keys
-gpk::err_t			gpk::rsaKeys	(uint32_t prime1, uint32_t prime2, uint32_t offset, uint64_t limit, ::gpk::apod<SRSAKeyPair>& keys)			{
+gpk::err_t			gpk::rsaKeys	(uint32_t prime1, uint32_t prime2, uint32_t offset, u3_t limit, ::gpk::apod<SRSAKeyPair>& keys)			{
 	ree_if(0 == ::primalityTest(prime1), "Cannot generate RSA keys with a number that is not prime: %u.", prime1);
 	ree_if(0 == ::primalityTest(prime2), "Cannot generate RSA keys with a number that is not prime: %u.", prime2);
 	uint32_t				k				= 0;
-	uint64_t				j				= 0;
-	uint64_t				t				= (prime1 - 1) * (prime2 - 1);
-	for(uint64_t i = offset; i < t; ++i) {
+	u3_t				j				= 0;
+	u3_t				t				= (prime1 - 1) * (prime2 - 1);
+	for(u3_t i = offset; i < t; ++i) {
 		if(t % i == 0)
 			continue;
-		j					= (uint64_t)::gpk::sqrt((double)i);
+		j					= (u3_t)::gpk::sqrt((double)i);
 		uint32_t				isPrime			= ::primalityTest(i);
 		if(isPrime == 1 && i != prime1 && i != prime2) {
 			if(keys.size() > k)
@@ -45,7 +45,7 @@ gpk::err_t			gpk::rsaKeys	(uint32_t prime1, uint32_t prime2, uint32_t offset, ui
 			else
 				gpk_necs(keys.push_back({i}));
 
-			uint64_t				cd				= ::commonDivisor(t, keys[(uint32_t)k].Public);
+			u3_t				cd				= ::commonDivisor(t, keys[(uint32_t)k].Public);
 			if(cd > 0) {
 				keys[k].Private		= cd;
 				//break;
@@ -59,16 +59,16 @@ gpk::err_t			gpk::rsaKeys	(uint32_t prime1, uint32_t prime2, uint32_t offset, ui
 }
 
 //function to encrypt the message
-gpk::err_t			gpk::rsaEncode	(const ::gpk::vcu0_t & decrypted, uint64_t n, uint64_t key, uint64_t testkey, ::gpk::au3_t & encrypted) {
+gpk::err_t			gpk::rsaEncode	(const ::gpk::vcu0_t & decrypted, u3_t n, u3_t key, u3_t testkey, ::gpk::au3_t & encrypted) {
 	uint32_t				offset			= encrypted.size();
 	uint32_t				i				= 0;
 	gpk_necs(encrypted.resize(offset + decrypted.size()));
 	const uint8_t			* pDec	= decrypted.begin();
-	uint64_t				* pEnc	= &encrypted[offset];
+	u3_t				* pEnc	= &encrypted[offset];
 	while(i < decrypted.size()) {
-		uint64_t				pt				= (uint8_t)pDec[i];
-		uint64_t				k				= 1;
-		for(uint64_t j = 0; j < key; ++j) {
+		u3_t				pt				= (uint8_t)pDec[i];
+		u3_t				k				= 1;
+		for(u3_t j = 0; j < key; ++j) {
 			k					= k * pt;
 			k					= k % n;
 		}
@@ -88,16 +88,16 @@ gpk::err_t			gpk::rsaEncode	(const ::gpk::vcu0_t & decrypted, uint64_t n, uint64
 }
 
 // function to decrypt the message
-gpk::err_t			gpk::rsaDecode	(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, ::gpk::au0_t & decrypted) {
+gpk::err_t			gpk::rsaDecode	(const ::gpk::vcu64 & encrypted, u3_t n, u3_t key, ::gpk::au0_t & decrypted) {
 	uint32_t				offset			= decrypted.size();
 	uint32_t				i				= 0;
 	gpk_necs(decrypted.resize(offset + encrypted.size() + 1));
 	uint8_t					* pDecrypted	= &decrypted[offset];
-	const uint64_t			* pEncrypted	= encrypted.begin();
+	const u3_t			* pEncrypted	= encrypted.begin();
 	while(i < encrypted.size()) {
-		uint64_t				ct				= pEncrypted[i];
-		uint64_t				k				= 1;
-		for(uint64_t j = 0; j < key; ++j) {
+		u3_t				ct				= pEncrypted[i];
+		u3_t				k				= 1;
+		for(u3_t j = 0; j < key; ++j) {
 			k					= k * ct;
 			k					= k % n;
 		}
@@ -166,7 +166,7 @@ static	gpk::err_t	gpcFilter1Apply						(::gpk::vu8 & scanline) { gpk_necs(::gpcF
 static	gpk::err_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::gpcDefilterSub		(scanline, 4)); return ::gpcDefilterSub2	(scanline, 2);		}
 
 //function to encrypt the message
-gpk::err_t			gpk::gpcEncode		(const ::gpk::vcu0_t & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::au3_t & encrypted) {
+gpk::err_t			gpk::gpcEncode		(const ::gpk::vcu0_t & decrypted, u3_t n, u3_t key, u3_t testkey, bool salt, ::gpk::au3_t & encrypted) {
 	uint32_t								offset								= encrypted.size();
 	uint32_t								i									= 0;
 
@@ -191,17 +191,17 @@ gpk::err_t			gpk::gpcEncode		(const ::gpk::vcu0_t & decrypted, uint64_t n, uint6
 			ef_if(decryptTest[iTest] != (int8_t)filter_view[iTest], "%s", "Error!");
 		}
 	}
-	filter_view									= {(uint8_t*)&encrypted[offset], (encrypted.size() - offset) * (uint32_t)sizeof(uint64_t)};
+	filter_view									= {(uint8_t*)&encrypted[offset], (encrypted.size() - offset) * (uint32_t)sizeof(u3_t)};
 	::gpcFilter1Apply(filter_view);
 	return (gpk::err_t)i;
 }
 
 // function to decrypt the message
-gpk::err_t			gpk::gpcDecode		(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, bool salt, ::gpk::au0_t & decrypted) {
+gpk::err_t			gpk::gpcDecode		(const ::gpk::vcu64 & encrypted, u3_t n, u3_t key, bool salt, ::gpk::au0_t & decrypted) {
 	uint32_t								offset								= decrypted.size();
 	uint32_t								i									= 0;
 	::gpk::au3_t								defiltered							(encrypted);
-	::gpk::vu8								defilter_view						= {(uint8_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(uint64_t)};
+	::gpk::vu8								defilter_view						= {(uint8_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(u3_t)};
 	::gpcFilter1Remove(defilter_view);
 	gpk_necs(gpk::rsaDecode(defiltered, n, key, decrypted));
 	::gpk::vu8								filter_view							({(uint8_t*)&decrypted[offset], decrypted.size() - offset});
@@ -225,10 +225,10 @@ gpk::err_t			gpk::gpcDecode		(const ::gpk::vcu64 & encrypted, uint64_t n, uint64
 	return (gpk::err_t)i;
 }
 
-gpk::err_t			gpk::gpcDecodeWithHash				(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, bool salt, ::gpk::au0_t & decrypted)	{
+gpk::err_t			gpk::gpcDecodeWithHash				(const ::gpk::vcu64 & encrypted, u3_t n, u3_t key, bool salt, ::gpk::au0_t & decrypted)	{
 	const uint32_t							actualSize							= encrypted.size() - 1;
-	const uint64_t							posthash							= encrypted[actualSize];
-	uint64_t								checkposthash						= 0;
+	const u3_t							posthash							= encrypted[actualSize];
+	u3_t								checkposthash						= 0;
 	for(uint32_t i = 0, maxEncrypted = encrypted.size() - 2; i < maxEncrypted; ++i)
 		checkposthash						+= ::gpk::noise1DBase(i * encrypted[i] + ::gpk::noise1DBase(encrypted[i + 1]), ::gpk::NOISE_SEED);
 	ree_if(posthash != checkposthash, "%s", "Failed to check post hash. posthash: %llx == checkposthash: %llx", posthash, checkposthash);
@@ -236,13 +236,13 @@ gpk::err_t			gpk::gpcDecodeWithHash				(const ::gpk::vcu64 & encrypted, uint64_t
 	const uint32_t							decryptedStart						= decrypted.size();
 	gpk_necs(gpk::gpcDecode({encrypted.begin(), actualSize}, n, key, salt, decrypted));
 
-	const uint64_t							hash								= *(uint64_t*)&decrypted[decrypted.size() - sizeof(uint64_t)];
-	verbose_printf("prehash found: %llx. Size of decrypted data: %u. Size of data without hash appended: %u.", hash, decrypted.size(), decrypted.size() - sizeof(uint64_t));
+	const u3_t							hash								= *(u3_t*)&decrypted[decrypted.size() - sizeof(u3_t)];
+	verbose_printf("prehash found: %llx. Size of decrypted data: %u. Size of data without hash appended: %u.", hash, decrypted.size(), decrypted.size() - sizeof(u3_t));
 
-	uint64_t								checkhash							= 0;
-	gpk_necs(decrypted.resize(decrypted.size() - sizeof(uint64_t)));
+	u3_t								checkhash							= 0;
+	gpk_necs(decrypted.resize(decrypted.size() - sizeof(u3_t)));
 	for(uint32_t i = decryptedStart; i < decrypted.size() - 1; ++i) {
-		const uint64_t							hashedChar							= ::gpk::noise1DBase((i - (uint64_t)decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
+		const u3_t							hashedChar							= ::gpk::noise1DBase((i - (u3_t)decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		checkhash							+= hashedChar;
 		//info_printf("Check Hashing sc_t #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
@@ -250,21 +250,21 @@ gpk::err_t			gpk::gpcDecodeWithHash				(const ::gpk::vcu64 & encrypted, uint64_t
 	return 0;
 }
 
-gpk::err_t			gpk::gpcEncodeWithHash				(const ::gpk::vcu0_t & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::au3_t & encrypted)	{
+gpk::err_t			gpk::gpcEncodeWithHash				(const ::gpk::vcu0_t & decrypted, u3_t n, u3_t key, u3_t testkey, bool salt, ::gpk::au3_t & encrypted)	{
 	::gpk::au0_t								prehashed, posthashed;
-	prehashed.resize(decrypted.size() + sizeof(uint64_t));
+	prehashed.resize(decrypted.size() + sizeof(u3_t));
 	// -- Calculate the hash
-	uint64_t								& hash								= *(uint64_t*)&prehashed[decrypted.size()];
+	u3_t								& hash								= *(u3_t*)&prehashed[decrypted.size()];
 	hash								= 0;
 	for(uint32_t i = 0; i < decrypted.size(); ++i)
 		prehashed[i]								= decrypted[i];
 
 	for(uint32_t i = 0; i < decrypted.size() - 1; ++i) {
-		const uint64_t									hashedChar							= ::gpk::noise1DBase(i * (uint64_t)decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
+		const u3_t									hashedChar							= ::gpk::noise1DBase(i * (u3_t)decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		hash										+= hashedChar;
 		//info_printf("Hashing sc_t #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
-	verbose_printf("prehash: %llx (%llx). Size of original data: %u.Size of data with hash appended: %u.", *((uint64_t*)&prehashed[prehashed.size() - sizeof(uint64_t)]), *((uint64_t*)&prehashed[decrypted.size()]), decrypted.size(), prehashed.size());
+	verbose_printf("prehash: %llx (%llx). Size of original data: %u.Size of data with hash appended: %u.", *((u3_t*)&prehashed[prehashed.size() - sizeof(u3_t)]), *((u3_t*)&prehashed[decrypted.size()]), decrypted.size(), prehashed.size());
 
 	const uint32_t									encryptedStart						= encrypted.size();
 	gpk_necs(gpk::gpcEncode(prehashed, n, key, testkey, salt, encrypted));
@@ -277,7 +277,7 @@ gpk::err_t			gpk::gpcEncodeWithHash				(const ::gpk::vcu0_t & decrypted, uint64_
 		}
 	}
 
-	uint64_t										posthash							= 0;
+	u3_t										posthash							= 0;
 	for(uint32_t i = encryptedStart, maxEncrypted = encrypted.size() - 1; i < maxEncrypted; ++i)
 		posthash									+= ::gpk::noise1DBase((i - encryptedStart) * encrypted[i] + ::gpk::noise1DBase(encrypted[i + 1]), ::gpk::NOISE_SEED);
 

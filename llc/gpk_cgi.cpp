@@ -40,7 +40,7 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::kv<vcsc_t, vc
 	if(environmentBlockToSave.size()) {
 		::gpk::au0_t					temp;
 		::gpk::apod<sc_t>				tempName						= {};
-		uint64_t						curTime							= time(0);
+		u3_t						curTime							= time(0);
 		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)
 			if(environViews[iKey].Key == ::gpk::vcs{"REMOTE_ADDR"}) {
 				tempName							= environViews[iKey].Val;
@@ -52,7 +52,7 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::kv<vcsc_t, vc
 			return 1;
 
 		::gpk::fileToMemory({tempName}, temp);
-		temp.append((const uint8_t*)&curTime, sizeof(uint64_t));
+		temp.append((const uint8_t*)&curTime, sizeof(u3_t));
 		temp.append(environmentBlockToSave);
 		temp.push_back('\r');
 		temp.push_back('\n');

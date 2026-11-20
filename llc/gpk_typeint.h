@@ -33,7 +33,7 @@ namespace gpk
 	tydf		uint8_t		u0_t, i0u_t;
 	tydf		uint16_t	u1_t, i1u_t;
 	tydf		uint32_t	u2_t, i2u_t;
-	tydf		uint64_t	u3_t, i3u_t;
+	tydf		u3_t	u3_t, i3u_t;
 	tydf		float		f2_t, f2s_t;
 	tydf		double		f3_t, f3s_t;
 	tydf		size_t		uP_t, iPu_t;

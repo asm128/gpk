@@ -35,10 +35,10 @@ namespace gpk
 
 				err_t							find			(const vcs & keyToFind, const view<const kv<vcsc_t, vcsc_t>> & keyvals, vcsc_t & out_val);
 				err_t							keyValVerify					(const view<kv<vcsc_t, vcsc_t>> & environViews, vcsc_c & keyToVerify, vcsc_c & valueToVerify);
-				err_t							keyvalNumeric					(const vcs & key, const view<const kv<vcsc_t, vcsc_t>> keyVals, uint64_t * outputNumber);
+				err_t							keyvalNumeric					(const vcs & key, const view<const kv<vcsc_t, vcsc_t>> keyVals, u3_t * outputNumber);
 	tplt <tpnm _tNumeric>
 				err_t							keyvalNumeric					(const vcs & key, const view<const kv<vcsc_t, vcsc_t>> keyVals, _tNumeric & outputNumber)	{
-		uint64_t												value							= 0;
+		u3_t												value							= 0;
 		err_t					indexKey						= keyvalNumeric(key, keyVals, &value);
 		if(-1 != indexKey)
 			outputNumber										= *(_tNumeric*)&value;

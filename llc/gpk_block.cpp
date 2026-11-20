@@ -2,12 +2,12 @@
 #include "gpk_json_expression.h"
 #include "gpk_noise.h"
 
-gpk::err_t			gpk::blockRecordId			(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord)	{
-	idRecord				= ((uint64_t)indices.IdBlock * blockSize + (uint64_t)indices.IndexRecord);
+gpk::err_t			gpk::blockRecordId			(const ::gpk::SRecordMap & indices, uint32_t blockSize, u3_t & idRecord)	{
+	idRecord				= ((u3_t)indices.IdBlock * blockSize + (u3_t)indices.IndexRecord);
 	return 0;
 }
-gpk::err_t			gpk::blockRecordIndices		(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
-	const uint64_t				recordCoord					= (uint64_t)(idRecord & 0x000FFFFFFFFFFFFFULL);
+gpk::err_t			gpk::blockRecordIndices		(const u3_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
+	const u3_t				recordCoord					= (u3_t)(idRecord & 0x000FFFFFFFFFFFFFULL);
 	indices.IdBlock			= (uint32_t)(recordCoord / blockSize);
 	indices.IndexRecord		= (uint32_t)(recordCoord % blockSize);
 	return 0;

@@ -179,7 +179,7 @@ gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
 
 #define GPK_DEBUG_FILE_CONTENTS
 
-gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, uint32_t maxSize, uint64_t offset)		{
+gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, uint32_t maxSize, u3_t offset)		{
 	gpk::asc_t			fileName					= gpk::toString(usfileName);
 	gpk_file_info_printf("Loading '%s'.", fileName.begin());
 
@@ -211,7 +211,7 @@ gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, u
 	fail_if_ne3u(0, gpk::fseek(fp, offset, FSEEK_SET));
 	gpk::err_t	result				= 0;
 	if_failed(fileInMemory.resize(maxRead)) {
-		error_printf("File too large? : %llu.", (uint64_t)fileSize);
+		error_printf("File too large? : %llu.", (u3_t)fileSize);
 		result					= -1;
 	}
 	else {
@@ -279,7 +279,7 @@ gpk::err_t	gpk::	fileDelete				(vcst_t usfileName)	{
 	gpk_file_info_printf("'%s' deleted successfully.", fileName.begin());
 	return 0;
 }
-gpk::err_t	gpk::	fileToMemory	(vcst_t folderPath, vcst_t fileName, gpk::au0_t & fileBytes, uint32_t maxSize, uint64_t offset) {
+gpk::err_t	gpk::	fileToMemory	(vcst_t folderPath, vcst_t fileName, gpk::au0_t & fileBytes, uint32_t maxSize, u3_t offset) {
 	gpk::asc_t			filePath			= {};
 	gpk_necall(gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
 	gpk_necall(gpk::fileToMemory({filePath}, fileBytes, maxSize, offset), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());

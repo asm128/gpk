@@ -38,8 +38,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToText.x	= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, (::gpk::cid_t)-1);
 	::gpk::tcpipInitialize();
-	uint64_t					port						= 9998;
-	uint64_t					adapter						= 0;
+	u3_t					port						= 9998;
+	u3_t					adapter						= 0;
 	{ // load port from config file
 		::gpk::vcsc_t				jsonPort					= {};
 		const ::gpk::SJSONReader	& jsonReader				= framework.JSONConfig.Reader;

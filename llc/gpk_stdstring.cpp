@@ -17,6 +17,6 @@ gpk::err_t			gpk::tolower		(::gpk::view<sc_t> input)											{
 	return countChanged;
 }
 
-gpk::err_t			gpk::stoull			(::gpk::vcsc_c & input, uint64_t & outputNumber)	{
+gpk::err_t			gpk::stoull			(::gpk::vcsc_c & input, u3_t & outputNumber)	{
 	return ::gpk::parseIntegerDecimal(input, outputNumber);
 }

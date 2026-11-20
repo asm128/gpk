@@ -80,7 +80,7 @@ static	constexpr	int64_t			totalCycleTimeInMillisec	(const ::dry::SDryerProgram	
 static	constexpr	int64_t			preheatingTimeInMillisec	(const ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.PreHeatingTime); }
 static	constexpr	int64_t			cycleTimeInMillisec			(const ::dry::SDryerProgram	& dryerProgram) { return ::minutesToMillisec(dryerProgram.SubcycleDuration); }
 
-::gpk::error_t						dry::dryerUpdate			(::dry::SDryer & dryer, uint64_t lastTimeMilliseconds) {
+::gpk::error_t						dry::dryerUpdate			(::dry::SDryer & dryer, u3_t lastTimeMilliseconds) {
 	dryer.EventList.clear();
 	::dry::SDryerState						& dryerState				= dryer.State;
 	if(dryerState.Running) {

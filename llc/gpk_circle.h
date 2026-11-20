@@ -18,7 +18,7 @@ namespace gpk
 	typedef circle<uint8_t>		circleu8;
 	typedef circle<uint16_t>	circleu16;
 	typedef circle<uint32_t>	circleu32;
-	typedef circle<uint64_t>	circleu64;
+	typedef circle<u3_t>	circleu64;
 	typedef circle<int8_t>		circlei8;
 	typedef circle<int16_t>		circlei16;
 	typedef circle<int32_t>		circlei32;

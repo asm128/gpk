@@ -25,7 +25,7 @@ gpk::err_t			gpk::urlDecode					(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & 
 			gpk_necs(decoded.push_back((sc_t)(uint8_t)currentChar));
 			continue;
 		}
-		uint64_t					decodedByte						= 0;
+		u3_t					decodedByte						= 0;
 		gpk_necs(gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, decodedByte));
 		gpk_necs(decoded.push_back((sc_t)(uint8_t)decodedByte));
 		++iChar;
@@ -46,7 +46,7 @@ static	gpk::err_t	httpRequestChunkedJoin			(const ::gpk::vcsc_t & body, ::gpk::a
 			strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
 		else
 			break;
-		uint64_t									sizeChunk						= 0;
+		u3_t									sizeChunk						= 0;
 		::gpk::parseIntegerHexadecimal(strSize, sizeChunk);
 		if(0 == sizeChunk)
 			break;

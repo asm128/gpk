@@ -85,7 +85,7 @@ gpk::err_t			gpk::hexDecode					(const ::gpk::vcsc_t & in_hexed	, ::gpk::as0_t &
 	return 0;
 }
 
-gpk::err_t			gpk::ardellEncode				(as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)						{
+gpk::err_t			gpk::ardellEncode				(as2_t & cache, const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::au0_t & output)						{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	sc_t						saltValue		[4]				= {};
 	if (salt)
@@ -127,7 +127,7 @@ gpk::err_t			gpk::ardellEncode				(as2_t & cache, const ::gpk::vcu0_t & input, u
 	return 0;
 }
 
-gpk::err_t			gpk::ardellDecode				(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)		{
+gpk::err_t			gpk::ardellDecode				(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::au0_t & output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	const int32_t				keyFinal[8]						=
 		{ (int32_t)(11 + (key % 233))

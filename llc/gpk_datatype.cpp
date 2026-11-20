@@ -26,6 +26,6 @@ uint32_t		gpk::getStringFromDataType		( ::gpk::DATA_TYPE dataType, sc_t* string 
 	snprintf(outString, ::gpk::size(outString) - 2, "GDATA_TYPE_%s%" GPK_FMT_U32 "%s%s%s", typeString, GTYPEID_ELEMENTSIZE(dataType), GTYPEID_ISNORMALIZED(dataType) ? typeNORM : typeUNORM, typeElements, GTYPEID_ELEMENTPAD(dataType) ? typePAD : typeNOPAD );
 	uint32_t			resultLen						= (uint32_t)strlen(outString);
 	if(string)
-		strcpy_s(string, (uint64_t)resultLen+1, outString);
+		strcpy_s(string, (u3_t)resultLen+1, outString);
 	return resultLen;
 }

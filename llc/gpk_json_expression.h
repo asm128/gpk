@@ -15,7 +15,7 @@ namespace gpk
 	struct SEvaluationStepResult {
 		uint32_t							IndexRootJSONNode		;
 		int32_t								IndexJSONResult			;
-		uint64_t							LastValue				;
+		u3_t							LastValue				;
 		::gpk::pobj<::gpk::SJSONReader>		JSONReader				;
 		::gpk::vcsc_t						Output					;
 		::gpk::vcsc_t						Expression				;

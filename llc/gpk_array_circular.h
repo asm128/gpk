@@ -97,7 +97,7 @@ namespace gpk
 	tplt<uint32_t _maxCount>	using aciru8 	= ::gpk::acir<uint8_t  , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciru16	= ::gpk::acir<uint16_t , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciru32	= ::gpk::acir<uint32_t , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciru64	= ::gpk::acir<uint64_t , _maxCount>; 
+	tplt<uint32_t _maxCount>	using aciru64	= ::gpk::acir<u3_t , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciri8 	= ::gpk::acir<int8_t   , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciri16	= ::gpk::acir<int16_t  , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciri32	= ::gpk::acir<int32_t  , _maxCount>; 

@@ -48,7 +48,7 @@ namespace gpk
 	tplt<tpnm T>	
 	using	abit	= ::gpk::array_bit<T>;
 
-	typedef	abit<uint64_t>	abitu64;
+	typedef	abit<u3_t>	abitu64;
 } // 
 
 #endif // ARRAY_BIT_ARRAY_H_29037498023612

@@ -11,7 +11,7 @@
 
 namespace gpk
 {
-	typedef	uint64_t				tileid_t;
+	typedef	u3_t				tileid_t;
 	typedef	::gpk::img<tileid_t>	tilegrid;
 
 	GDEFINE_ENUM_TYPE (TILE_FLAG, uint8_t);
@@ -37,7 +37,7 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct STileMapSetup {
-		uint64_t				Seed				= ::gpk::noise1DBase(::gpk::timeCurrentInUs());
+		u3_t				Seed				= ::gpk::noise1DBase(::gpk::timeCurrentInUs());
 		::gpk::n2u0_t				BlockSize			= {255, 255};
 		::gpk::n2u1_t			WorldSize			= {255, 255};	// in blocks
 	};

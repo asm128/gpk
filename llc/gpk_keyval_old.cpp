@@ -47,7 +47,7 @@ gpk::err_t			gpk::find				(const ::gpk::vcst_t & keyToFind, const ::gpk::view<co
 	return index;
 }
 
-gpk::err_t			gpk::keyvalNumeric		(const ::gpk::vcst_t & key, const ::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> keyVals, uint64_t * outputNumber)	{
+gpk::err_t			gpk::keyvalNumeric		(const ::gpk::vcst_t & key, const ::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> keyVals, u3_t * outputNumber)	{
 	ree_if(0 == outputNumber, "%s", "Output number cannot point to a null address.");
 	gpk::err_t				indexKey				= ::gpk::find(key, keyVals);
 	if(-1 != indexKey)

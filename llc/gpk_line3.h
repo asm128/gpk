@@ -27,7 +27,7 @@ namespace gpk
 	typedef line3<uint8_t>	line3u8;
 	typedef line3<uint16_t>	line3u16;
 	typedef line3<uint32_t>	line3u32;
-	typedef line3<uint64_t>	line3u64;
+	typedef line3<u3_t>	line3u64;
 	typedef line3<int8_t>	line3i8;
 	typedef line3<int16_t>	line3i16;
 	typedef line3<int32_t>	line3i32;

@@ -50,11 +50,11 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	gpk::err_t				blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
-	gpk::err_t				blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord);
+	gpk::err_t				blockRecordIndices			(const u3_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
+	gpk::err_t				blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, u3_t & idRecord);
 	gpk::err_t				blockRecordPath				(::gpk::asc_t & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcsc_t & dbName, const ::gpk::vcsc_t & dbPath);
 
-	stin	gpk::err_t		blockRecordPath				(::gpk::asc_t & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
+	stin	gpk::err_t		blockRecordPath				(::gpk::asc_t & fileName, ::gpk::SRecordMap & indices, const u3_t idRecord, uint32_t blockSize, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
 		::gpk::blockRecordIndices(idRecord, blockSize, indices);
 		return ::gpk::blockRecordPath(fileName, indices, dbName, dbPath);
 	}
@@ -78,7 +78,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tElement>
-	gpk::err_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath, uint64_t idRecord) {
+	gpk::err_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath, u3_t idRecord) {
 		::gpk::apod<sc_t>				fileName					= {};
 		gpk_necs(gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath));
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
@@ -94,7 +94,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tMapBlock>
-	gpk::err_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, ::gpk::vcsc_c & dbPath, ::gpk::asc_t & outputData) {
+	gpk::err_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const u3_t idRecord, ::gpk::vcsc_c & dbPath, ::gpk::asc_t & outputData) {
 		::gpk::SRecordMap				recordMap;
 		::gpk::apod<sc_t>				fileBytes;
 		gpk::err_t					indexBlock					= ::gpk::blockMapLoad(fileBytes, recordMap, mapTable, mapTable.DBName, dbPath, idRecord);
@@ -107,7 +107,7 @@ namespace gpk
 	}
 
 	//stin	int16_t	mapTableContainerFromData	(const ::gpk::vcsc_t & sequenceToFind, const uint32_t countContainers)	{
-	//	uint64_t					container					= 0;
+	//	u3_t					container					= 0;
 	//	::gpk::crcGenerate(sequenceToFind, container);
 	//	return (int16_t)(container % countContainers);
 	//}
@@ -126,7 +126,7 @@ namespace gpk
 				::gpk::SRecordMap				indices;
 				indices.IdBlock				= idBlock;
 				indices.IndexRecord			= idEmail;
-				uint64_t						result						= (uint64_t)-1LL;
+				u3_t						result						= (u3_t)-1LL;
 				::gpk::blockRecordId(indices, mapTable.BlockConfig.BlockSize, result);
 				return result;
 			}
@@ -173,7 +173,7 @@ namespace gpk
 			const int32_t				indexRecord					= block.MapId(sequenceToFind);
 			if(0 <= indexRecord) {
 				indexMap.IndexRecord	= indexRecord;
-				uint64_t					result						= (uint64_t)-1LL;
+				u3_t					result						= (u3_t)-1LL;
 				::gpk::blockRecordId(indexMap, mapTable.BlockConfig.BlockSize, result);
 				return result;
 			}
@@ -194,7 +194,7 @@ namespace gpk
 			mapTable.Block	.push_back(newBlock);
 			mapTable.Id		.push_back(newIndices.IdBlock);
 			++mapTable.MaxBlockOnDisk;
-			uint64_t						newIdRecord					= (uint64_t)-1LL;
+			u3_t						newIdRecord					= (u3_t)-1LL;
 			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
 			::gpk::apod<sc_t>				bytesToWrite;
 			gpk_necs(newBlock->Save(bytesToWrite));
@@ -208,7 +208,7 @@ namespace gpk
 				::gpk::SRecordMap				newIndices;
 				gpk_necs(newIndices.IndexRecord = blockInMemory.MapAdd(sequenceToAdd));
 				newIndices.IdBlock			= idBlockInMemory;
-				uint64_t						newIdRecord					= (uint64_t)-1LL;
+				u3_t						newIdRecord					= (u3_t)-1LL;
 				::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
 				::gpk::apod<sc_t>				bytesToWrite;
 				gpk_necs(blockInMemory.Save(bytesToWrite));

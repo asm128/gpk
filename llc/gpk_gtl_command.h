@@ -34,7 +34,7 @@ namespace gpk
 	stxp	size_t	GTL_COMMAND_SIZE	= sizeof(SGTLCommand);
 	struct SGTLPayloadHeader {
 		::gpk::SGTLCommand					Command			;
-		uint64_t							IdSender		;
+		u3_t							IdSender		;
 		uint32_t							IdMessage		;
 		::gpk::packedu16					CounterHeader	;
 	};
@@ -42,7 +42,7 @@ namespace gpk
 
 	struct SGTLMessage {
 		::gpk::au0_t							Payload		;
-		uint64_t							Time		;
+		u3_t							Time		;
 		::gpk::SGTLCommand					Command		;
 		uint8_t								RetryCount	;
 	};
@@ -64,9 +64,9 @@ namespace gpk
 
 	struct SGTLConnection {
 		::gpk::SGTLClientQueue	Queue			= {};
-		uint64_t				LastPing		= 0;
-		uint64_t				FirstPing		= 0;
-		uint64_t				KeyPing			= 0;
+		u3_t				LastPing		= 0;
+		u3_t				FirstPing		= 0;
+		u3_t				KeyPing			= 0;
 		::gpk::GTL_STATE		State			= ::gpk::GTL_STATE_Disconnected;
 	};
 

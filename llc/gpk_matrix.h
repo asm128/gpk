@@ -725,7 +725,7 @@ namespace gpk
 	typedef m3<uint8_t>		m3u8;
 	typedef m3<uint16_t>	m3u16;
 	typedef m3<uint32_t>	m3u32;
-	typedef m3<uint64_t>	m3u64;
+	typedef m3<u3_t>	m3u64;
 	typedef m3<int8_t>		m3i8;
 	typedef m3<int16_t>		m3i16;
 	typedef m3<int32_t>		m3i32;
@@ -738,7 +738,7 @@ namespace gpk
 	typedef m4<uint8_t>		m4u8;
 	typedef m4<uint16_t>	m4u16;
 	typedef m4<uint32_t>	m4u32;
-	typedef m4<uint64_t>	m4u64;
+	typedef m4<u3_t>	m4u64;
 	typedef m4<int8_t>		m4i8;
 	typedef m4<int16_t>		m4i16;
 	typedef m4<int32_t>		m4i32;

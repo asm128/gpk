@@ -11,20 +11,20 @@ namespace gpk
 	stin	gpk::err_t				hexEncode				(const ::gpk::vcs0_t & inputBinary	, ::gpk::asc_t & out_hexed	)			{ return hexEncode(::gpk::vcu0_t{(const uint8_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
 
 	// Based on Gary Ardell's code for VB.
-	gpk::err_t						ardellEncode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output);
-	gpk::err_t						ardellDecode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output);
+	gpk::err_t						ardellEncode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::au0_t & output);
+	gpk::err_t						ardellDecode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::au0_t & output);
 
-	stin	gpk::err_t				ardellEncode			(const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
-	stin	gpk::err_t				ardellDecode			(const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
-	stin	gpk::err_t				ardellEncode			(const ::gpk::vcs0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
-	stin	gpk::err_t				ardellDecode			(const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::as0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au0_t*)&output); }
-	stin	gpk::err_t				ardellEncode			(const ::gpk::vcsc_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
-	stin	gpk::err_t				ardellDecode			(const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::asc_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au0_t*)&output); }
+	stin	gpk::err_t				ardellEncode			(const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
+	stin	gpk::err_t				ardellDecode			(const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
+	stin	gpk::err_t				ardellEncode			(const ::gpk::vcs0_t & input, u3_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
+	stin	gpk::err_t				ardellDecode			(const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::as0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au0_t*)&output); }
+	stin	gpk::err_t				ardellEncode			(const ::gpk::vcsc_t & input, u3_t key, bool salt, ::gpk::au0_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
+	stin	gpk::err_t				ardellDecode			(const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::asc_t & output)	{ ::gpk::as2_t tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au0_t*)&output); }
 
-	stin	gpk::err_t				ardellEncode			(::gpk::as2_t & cache, const ::gpk::vcs0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
-	stin	gpk::err_t				ardellDecode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::as0_t & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au0_t*)&output); }
-	stin	gpk::err_t				ardellEncode			(::gpk::as2_t & cache, const ::gpk::vcsc_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
-	stin	gpk::err_t				ardellDecode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::asc_t & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au0_t*)&output); }
+	stin	gpk::err_t				ardellEncode			(::gpk::as2_t & cache, const ::gpk::vcs0_t & input, u3_t key, bool salt, ::gpk::au0_t & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
+	stin	gpk::err_t				ardellDecode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::as0_t & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au0_t*)&output); }
+	stin	gpk::err_t				ardellEncode			(::gpk::as2_t & cache, const ::gpk::vcsc_t & input, u3_t key, bool salt, ::gpk::au0_t & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu0_t*)&input, key, salt, output); }
+	stin	gpk::err_t				ardellDecode			(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, u3_t key, bool salt, ::gpk::asc_t & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au0_t*)&output); }
 
 	gpk::err_t						saltDataSalt			(const ::gpk::vcu0_t & binary, ::gpk::au0_t & salted);
 	gpk::err_t						saltDataUnsalt			(const ::gpk::vcu0_t & salted, ::gpk::au0_t & binary);

@@ -50,7 +50,7 @@ gpk::err_t			gpk::connectionPayloadCollect		(::gpk::SUDPConnection & client, ::g
 	return 0;
 }
 
-stxp	uint64_t		hashFromTime						(uint64_t currentTime)		noexcept	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
+stxp	u3_t		hashFromTime						(u3_t currentTime)		noexcept	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
 stxp	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 
 gpk::err_t			payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & payloadsToSend) {
@@ -202,9 +202,9 @@ gpk::err_t			gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::
 		::gpk::pobj<::gpk::SUDPMessage> messageSent = client.Queue.Sent[iSent];
 		if(0 == messageSent.get_ref())
 			continue;
-		uint64_t timeCurr = gpk::timeCurrentInUs();
-		const uint64_t timeSent = messageSent->Time;
-		const uint64_t timeDiff = timeCurr - timeSent;
+		u3_t timeCurr = gpk::timeCurrentInUs();
+		const u3_t timeSent = messageSent->Time;
+		const u3_t timeDiff = timeCurr - timeSent;
 		if(timeDiff > ::UDP_PAYLOAD_SENT_LIFETIME) {
 			client.Queue.Sent.remove_unordered(iSent);
 			--iSent;
@@ -286,7 +286,7 @@ static	gpk::err_t	handleRequestCONNECT						(::gpk::SUDPCommand & command, ::gpk
 typedef int socklen_t;
 #endif
 
-static	gpk::err_t	postConfirmationResponse			(::gpk::SUDPClientQueue & queue, const ::gpk::SUDPCommand command, const uint64_t messageId)				{
+static	gpk::err_t	postConfirmationResponse			(::gpk::SUDPClientQueue & queue, const ::gpk::SUDPCommand command, const u3_t messageId)				{
 	::gpk::pobj<::gpk::SUDPMessage>		response							= {};
 	response->Command				= command;
 	response->Command.Type			= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
@@ -314,7 +314,7 @@ static	gpk::err_t	handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader & hea
 				bFound							= true;
 				break;
 			}
-			uint64_t							hashLocal							= messageSent.Hashes[iHash]; //::hashFromTime(messageSent.Time);
+			u3_t							hashLocal							= messageSent.Hashes[iHash]; //::hashFromTime(messageSent.Time);
 			if(hashLocal == header.MessageId) {
 				info_printf("Removing message from confirmation queue: %llx. ", header.MessageId);
 				client.Queue.Sent.remove_unordered(iSent);
@@ -355,7 +355,7 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 
 	ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
 
-	uint64_t							estimatedTimeSent					= 0;
+	u3_t							estimatedTimeSent					= 0;
 	if(client.KeyPing == 0) {
 		for(int64_t iTime = 0, countLapse = 60000000; iTime < countLapse; ++iTime)
 			if(::hashFromTime(client.FirstPing - advantage + iTime) == header.MessageId) {
@@ -367,10 +367,10 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 		ree_if(0 == client.KeyPing, "%s", "Failed to determine encryption key!");
 	}
 	else { // Why the fuck is this commented???
-		//const uint64_t					nowInUs							= ::gpk::timeCurrentInUs();
-		//const uint64_t					startTime						= nowInUs - 3000000;
+		//const u3_t					nowInUs							= ::gpk::timeCurrentInUs();
+		//const u3_t					startTime						= nowInUs - 3000000;
 		//for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
-		//	const uint64_t						timeSent						= startTime + iTime;
+		//	const u3_t						timeSent						= startTime + iTime;
 		//	if(::hashFromTime(timeSent) == header.MessageId) {
 		//		info_printf("Payload timestamp found in %u attempts: Latency: %llu.", iTime, nowInUs - timeSent);
 		//		estimatedTimeSent				= timeSent;

@@ -75,13 +75,13 @@ namespace gpk
 	};
 
 	struct SSpaceshipScore {
-		uint64_t			Score			= 0;
-		uint64_t			Hits			= 0;
-		uint64_t			Shots			= 0;
-		uint64_t			Bullets			= 0;
-		uint64_t			DamageDone		= 0;
-		uint64_t			DamageReceived	= 0;
-		uint64_t			HitsSurvived	= 0;
+		u3_t			Score			= 0;
+		u3_t			Hits			= 0;
+		u3_t			Shots			= 0;
+		u3_t			Bullets			= 0;
+		u3_t			DamageDone		= 0;
+		u3_t			DamageReceived	= 0;
+		u3_t			HitsSurvived	= 0;
 		uint32_t			OrbitersLost	= 0;
 		uint32_t			KilledShips		= 0;
 		uint32_t			KilledOrbiters	= 0;

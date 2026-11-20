@@ -153,8 +153,8 @@ namespace dry
 		::std::thread						SerialThread			= {};
 		//
 		::gpk::refcount_t					ThreadClients			= 0;
-		uint64_t							TimeLastSerial			= {}; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
-		static constexpr	uint64_t		SERIAL_TIMEOUT			= 10; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
+		u3_t							TimeLastSerial			= {}; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
+		static constexpr	u3_t		SERIAL_TIMEOUT			= 10; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
 
 		static constexpr	uint32_t		MAX_HUMIDITY			= 100;
 

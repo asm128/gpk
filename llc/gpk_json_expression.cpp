@@ -112,7 +112,7 @@ static	gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results
 					const int32_t			indexOfResolvedSubExpression	= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode, viewOfExpressionResult);
 					ree_if(-1 == indexOfResolvedSubExpression, "Failed to solve expression: %.*s.", GPK_VIEW_ARGS(currentExpressionView));
 					ree_if(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_INTEGER, "Arrays can only be accessed by index with a json integer. Type found: %s.",::gpk::get_value_label(inputJSON.Token[indexOfResolvedSubExpression].Type).begin());
-					uint64_t				numberRead						= 0;
+					u3_t				numberRead						= 0;
 					gpk_necs(gpk::parseIntegerDecimal(viewOfExpressionResult, numberRead));
 					if(currentType == ::gpk::JSON_TYPE_STRING)
 						lastResult.Output	= output = {&inputJSON.View[lastResult.IndexJSONResult][(uint32_t)numberRead], 1};
@@ -199,8 +199,8 @@ static	gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results
 									valueRight										= (double)resultJSON->Token->Value;
 								}
 								else {
-									memcpy(&valueLeft , &currentJSON->Token->Value, sizeof(uint64_t));
-									memcpy(&valueRight, &resultJSON ->Token->Value, sizeof(uint64_t));
+									memcpy(&valueLeft , &currentJSON->Token->Value, sizeof(u3_t));
+									memcpy(&valueRight, &resultJSON ->Token->Value, sizeof(u3_t));
 								}
 								lastResult.SetBoolCarry(valueLeft == valueRight, output);
 								lastResult.Output								= output;
@@ -208,14 +208,14 @@ static	gpk::err_t	evaluateExpression						(::gpk::SJSONExpressionSolver& results
 							else if(currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_DECIMAL) {
 								const double 										valueLeft				= (double)currentJSON->Token->Value;
 								double 												valueRight				= 0;
-								memcpy(&valueRight, &resultJSON->Token->Value, sizeof(uint64_t));
+								memcpy(&valueRight, &resultJSON->Token->Value, sizeof(u3_t));
 								lastResult.SetBoolCarry(valueLeft == valueRight, output);
 								lastResult.Output								= output;
 							}
 							else if(currentType == ::gpk::JSON_TYPE_DECIMAL && resultType == ::gpk::JSON_TYPE_INTEGER) {
 								const double 										valueRight				= (double)resultJSON->Token->Value;
 								double 												valueLeft				= 0;
-								memcpy(&valueLeft, &currentJSON->Token->Value, sizeof(uint64_t));
+								memcpy(&valueLeft, &currentJSON->Token->Value, sizeof(u3_t));
 								lastResult.SetBoolCarry(valueLeft == valueRight, output);
 								lastResult.Output								= output;
 							}

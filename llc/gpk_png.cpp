@@ -605,8 +605,8 @@ static	gpk::err_t	pngScanlineDecode_0_bits(::gpk::g8bgra & out_View, const ::gpk
 		const ::gpk::view_bit<const uint8_t>										viewPixels										= ::gpk::view_bit<const uint8_t>{scanline.begin(), out_View.metrics().x * bitDepth};
 		::gpk::view<::gpk::bgra>										scanlineOut										= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < out_View.metrics().x; ++iPixel) {
-			uint64_t																	valueGrayscale								= 0;
-			::gpk::view_bit<uint64_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)64};
+			u3_t																	valueGrayscale								= 0;
+			::gpk::view_bit<u3_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)64};
 			for(uint32_t i = 0; i < bitDepth; ++i)
 				valueGrayscaleBits[i]													= viewPixels[bitDepth * iPixel + i];
 
@@ -629,8 +629,8 @@ static	gpk::err_t	pngScanlineDecode_0_bits(::gpk::gu16 & out_View, const ::gpk::
 		const ::gpk::view_bit<const uint8_t>										viewPixels										= ::gpk::view_bit<const uint8_t>{scanline.begin(), out_View.metrics().x * bitDepth};
 		::gpk::vu16													scanlineOut										= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < out_View.metrics().x; ++iPixel) {
-			uint64_t																	valueGrayscale								= 0;
-			::gpk::view_bit<uint64_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)64};
+			u3_t																	valueGrayscale								= 0;
+			::gpk::view_bit<u3_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)64};
 			for(uint32_t i = 0; i < bitDepth; ++i)
 				valueGrayscaleBits[i]													= viewPixels[bitDepth * iPixel + i];
 
@@ -649,8 +649,8 @@ static	gpk::err_t	pngScanlineDecode_0_bits(::gpk::gu8 & out_View, const ::gpk::v
 		const ::gpk::view_bit<const uint8_t>										viewPixels										= ::gpk::view_bit<const uint8_t>{scanline.begin(), out_View.metrics().x * bitDepth};
 		::gpk::vu8													scanlineOut										= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < out_View.metrics().x; ++iPixel) {
-			uint64_t																	valueGrayscale								= 0;
-			::gpk::view_bit<uint64_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)64};
+			u3_t																	valueGrayscale								= 0;
+			::gpk::view_bit<u3_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)64};
 			for(uint32_t i = 0; i < bitDepth; ++i)
 				valueGrayscaleBits[i]													= viewPixels[bitDepth * iPixel + i];
 

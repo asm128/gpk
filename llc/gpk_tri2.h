@@ -22,7 +22,7 @@ namespace gpk
 		inxp	tri2<uint8_t>	s0_t			()		const	noexcept	{ return {A.s0_t (), B.s0_t (), C.s0_t ()}; }
 		inxp	tri2<uint16_t>	s1_t			()		const	noexcept	{ return {A.s1_t(), B.s1_t(), C.s1_t()}; }
 		inxp	tri2<uint32_t>	s2_t			()		const	noexcept	{ return {A.s2_t(), B.s2_t(), C.s2_t()}; }
-		inxp	tri2<uint64_t>	s3_t			()		const	noexcept	{ return {A.s3_t(), B.s3_t(), C.s3_t()}; }
+		inxp	tri2<u3_t>	s3_t			()		const	noexcept	{ return {A.s3_t(), B.s3_t(), C.s3_t()}; }
 		inxp	tri2<int8_t>	u0_t			()		const	noexcept	{ return {A.u0_t (), B.u0_t (), C.u0_t ()}; }
 		inxp	tri2<int16_t>	u1_t			()		const	noexcept	{ return {A.u1_t(), B.u1_t(), C.u1_t()}; }
 		inxp	tri2<int32_t>	u2_t			()		const	noexcept	{ return {A.u2_t(), B.u2_t(), C.u2_t()}; }
@@ -54,7 +54,7 @@ namespace gpk
 	typedef	tri2<uint8_t>	tri2u8;
 	typedef	tri2<uint16_t>	tri2u16;
 	typedef	tri2<uint32_t>	tri2u32;
-	typedef	tri2<uint64_t>	tri2u64;
+	typedef	tri2<u3_t>	tri2u64;
 	typedef	tri2<int8_t>	tri2i8;
 	typedef	tri2<int16_t>	tri2i16;
 	typedef	tri2<int32_t>	tri2i32;

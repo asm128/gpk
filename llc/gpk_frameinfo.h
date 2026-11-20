@@ -17,26 +17,26 @@ namespace gpk
 			LastFrameHalfSquared	=  secondsToAdd * secondsToAdd * 0.5;
 			return LastFrame;
 		}
-		inline	double			UpdateFromTimeUs	(uint64_t microsecondsToAdd)	noexcept	{
+		inline	double			UpdateFromTimeUs	(u3_t microsecondsToAdd)	noexcept	{
 			return UpdateFromTime(microsecondsToAdd * .000001);
 		}
 	};
 
 	struct SFrameMicroseconds {
-		uint64_t				Total				;
-		uint64_t				LastFrame			;
+		u3_t				Total				;
+		u3_t				LastFrame			;
 		// Helper
-		inline	void			UpdateFromTime		(uint64_t microsecondsToAdd)	noexcept	{ Total += LastFrame = microsecondsToAdd; }
+		inline	void			UpdateFromTime		(u3_t microsecondsToAdd)	noexcept	{ Total += LastFrame = microsecondsToAdd; }
 	};
 
 	struct SFrameMeter {
 		double					AverageFrameTime	= 0;
-		uint64_t				FrameNumber			= 0;
+		u3_t				FrameNumber			= 0;
 		uint32_t				FramesPerSecond		= 0;
 		uint32_t				FramesThisSecond	= 0;
 		uint32_t				FrameStep			= 0;
 		// Updates frame number and stats from delta time.
-		uint64_t				Frame				(uint64_t deltaMicroseconds)	{
+		u3_t				Frame				(u3_t deltaMicroseconds)	{
 			++FrameNumber;
 			++FramesThisSecond;
 			FrameStep				+= (uint32_t)deltaMicroseconds;
@@ -55,7 +55,7 @@ namespace gpk
 		SFrameSeconds			Seconds				= {};
 		SFrameMeter				FrameMeter			= {};
 		// Sets last frame time and number. Returns delta seconds since last time.
-		double					Frame				(uint64_t deltaMicroseconds)						{
+		double					Frame				(u3_t deltaMicroseconds)						{
 			Microseconds	.UpdateFromTime(deltaMicroseconds);
 			Seconds			.UpdateFromTimeUs(deltaMicroseconds);
 			FrameMeter		.Frame(deltaMicroseconds);

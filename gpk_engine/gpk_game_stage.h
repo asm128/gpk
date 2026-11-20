@@ -14,7 +14,7 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SStageSetup {
-		uint64_t		Seed					= {};
+		u3_t		Seed					= {};
 		uint16_t		Players					= {};
 		MATCH_TYPE		MatchType				= {};
 		uint8_t			Padding1				= {};
@@ -23,8 +23,8 @@ namespace gpk
 	stxp	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
 
 	struct SStageTime {
-		uint64_t		Started					= {};	// Timestamp
-		uint64_t		Loaded					= {};	// Timestamp
+		u3_t		Started					= {};	// Timestamp
+		u3_t		Loaded					= {};	// Timestamp
 		double			Played					= {};	// This one represents the real-world time played, incremented on every tick while not paused.
 	};
 

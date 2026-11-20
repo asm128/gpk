@@ -22,7 +22,7 @@ namespace gpk
 		SDialog					* Dialog			= 0;
 		cid_t					IdGUIControl		= (cid_t)-1;
 		cid_t					IdParent			= (cid_t)-1;
-		uint64_t				DeleteControl		: 1;
+		u3_t				DeleteControl		: 1;
 
 		constexpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();

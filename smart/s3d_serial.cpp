@@ -68,8 +68,8 @@
 	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
 	uint32_t					totalBytesRead		= 0;
 	::gpk::STimer				timerTimeout;
-	uint64_t					timeElapsed				= 0;
-	const uint64_t				timeoutInMicroseconds	= timeout * 1000;
+	u3_t					timeElapsed				= 0;
+	const u3_t				timeoutInMicroseconds	= timeout * 1000;
 	do {
 		timerTimeout.Frame();
 		timeElapsed				+= timerTimeout.LastTimeMicroseconds;
@@ -108,8 +108,8 @@
 	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
 	uint32_t					totalBytesRead			= 0;
 	::gpk::STimer				timerTimeout;
-	uint64_t					timeElapsed				= 0;
-	const uint64_t				timeoutInMicroseconds	= timeout * 1000;
+	u3_t					timeElapsed				= 0;
+	const u3_t				timeoutInMicroseconds	= timeout * 1000;
 	do {
 		timerTimeout.Frame();
 		timeElapsed				+= timerTimeout.LastTimeMicroseconds;

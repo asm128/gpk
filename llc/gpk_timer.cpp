@@ -39,7 +39,7 @@ double			gpk::STimer::Frame		()				noexcept				{
 	int64_t				currentTimeStamp		= osKernelGetTickCount();
 #	endif
 	LastTimeSeconds			= (currentTimeStamp - PrevTimeStamp) * SecondsPerCount;
-	LastTimeMicroseconds	= uint64_t((currentTimeStamp - PrevTimeStamp) * MicrosecondsPerCount);
+	LastTimeMicroseconds	= u3_t((currentTimeStamp - PrevTimeStamp) * MicrosecondsPerCount);
 	PrevTimeStamp			= currentTimeStamp;
 	return LastTimeSeconds;
 #else

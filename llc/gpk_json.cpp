@@ -305,7 +305,7 @@ sttc	gpk::err_t	lengthJsonNumber			(u2_t indexCurrentChar, gpk::vcsc_c & jsonAsS
 //			json_info_printf("Decimal part: %f.", decValue);
 //			finalValue				+= decValue;
 //		}
-//		memcpy((f3_t*)&output.Value, &finalValue, szof(uint64_t));
+//		memcpy((f3_t*)&output.Value, &finalValue, szof(u3_t));
 //	}
 //	else {
 //		json_info_printf("Integer part: %" GPK_FMT_S2 ".", output.Value);
@@ -349,7 +349,7 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 		if(isNegative) {
 			valuef64 	*= -1;
 		}
-		memcpy(&(currentElement.Value = 0), &valuef64, szof(uint64_t));
+		memcpy(&(currentElement.Value = 0), &valuef64, szof(u3_t));
 		json_info_printf("Decimal read: %f.", valuef64);
 	}
 	else { // there is an integer part so we need to check for decimals
@@ -373,7 +373,7 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 			}
 			if(isNegative)
 				finalValue *= -1;
-			memcpy(&currentElement.Value, &finalValue, szof(uint64_t));
+			memcpy(&currentElement.Value, &finalValue, szof(u3_t));
 		}
 	}
 	gpk_necs(tokens.push_back(currentElement));

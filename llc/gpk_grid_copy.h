@@ -58,7 +58,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tCoord>
-	gpk::err_t			grid_raster_alpha_bit_ex		(const ::gpk::view_bit<uint64_t> & src, const ::gpk::n2u2_t & srcMetrics, const ::gpk::n2u2_t & size_, const ::gpk::n2<_tCoord> & offsetDst, const ::gpk::n2<_tCoord> & offsetSrc, ::gpk::apod<::gpk::n2u1_t> & dstCoords) {
+	gpk::err_t			grid_raster_alpha_bit_ex		(const ::gpk::view_bit<u3_t> & src, const ::gpk::n2u2_t & srcMetrics, const ::gpk::n2u2_t & size_, const ::gpk::n2<_tCoord> & offsetDst, const ::gpk::n2<_tCoord> & offsetSrc, ::gpk::apod<::gpk::n2u1_t> & dstCoords) {
 		for(uint16_t y = 0; y < size_.y; ++y)
 			for(uint16_t x = 0; x < size_.x; ++x)
 				if(src[(y + offsetSrc.y) * srcMetrics.x + (x + offsetSrc.x)])
@@ -66,7 +66,7 @@ namespace gpk
 		return ::gpk::max(size_.x * size_.y, (uint32_t)0U);
 	}
 	tplt<tpnm _tCoord>
-	gpk::err_t			grid_raster_alpha_bit			(const ::gpk::n2u2_t & dstMetrics, const ::gpk::view_bit<uint64_t> & src, const ::gpk::n2u2_t & srcMetrics, const ::gpk::rect2<_tCoord>& dstRect, const ::gpk::n2<_tCoord> & srcOffset, ::gpk::apod<::gpk::n2u1_t> & dstCoords) {
+	gpk::err_t			grid_raster_alpha_bit			(const ::gpk::n2u2_t & dstMetrics, const ::gpk::view_bit<u3_t> & src, const ::gpk::n2u2_t & srcMetrics, const ::gpk::rect2<_tCoord>& dstRect, const ::gpk::n2<_tCoord> & srcOffset, ::gpk::apod<::gpk::n2u1_t> & dstCoords) {
 		const ::gpk::n2s2_t			offsetSrc					= srcOffset.s2_t()  + ::gpk::n2s2_t{-::gpk::min((int32_t)0, (int32_t)dstRect.Offset.x), -::gpk::min((int32_t)0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::n2s2_t			offsetDst					= {::gpk::max((int32_t)0, (int32_t)dstRect.Offset.x),  ::gpk::max((int32_t)0, (int32_t)dstRect.Offset.y)};
 		const int32_t				stopYDst					= int32_t(srcMetrics.y) + ::gpk::min((int32_t)0, (int32_t)dstRect.Offset.y) - ::gpk::min<_tCoord>(srcOffset.y, 0);

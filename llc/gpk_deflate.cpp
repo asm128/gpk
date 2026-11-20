@@ -22,7 +22,7 @@ GPK_USING_TYPEINT();
 
 stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 
-gpk::err_t			gpk::crcGenerate			(vcu0_c & bytes, uint64_t & crc)	{
+gpk::err_t			gpk::crcGenerate			(vcu0_c & bytes, u3_t & crc)	{
 	crc						= 0;
 	u2_c				lastPos						= bytes.size() - 1;
 	for(uint32_t i=0; i < bytes.size(); ++i) {
@@ -33,18 +33,18 @@ gpk::err_t			gpk::crcGenerate			(vcu0_c & bytes, uint64_t & crc)	{
 }
 
 gpk::err_t			gpk::crcGenerateAndAppend	(::gpk::au0_t & bytes)	{
-	uint64_t					crcToStore					= 0;
+	u3_t					crcToStore					= 0;
 	::gpk::crcGenerate(bytes, crcToStore);
-	gpk_necs(bytes.append((const uint8_t*)&crcToStore, szof(uint64_t)));;
+	gpk_necs(bytes.append((const uint8_t*)&crcToStore, szof(u3_t)));;
 	return 0;
 }
 
 gpk::err_t			gpk::crcVerifyAndRemove		(::gpk::au0_t & bytes)	{
 	ree_if(bytes.size() < 8, "Invalid input. No CRC can be found in an array of %u bytes.", bytes.size());
-	uint64_t					check						= 0;
+	u3_t					check						= 0;
 	u2_c				startOfCRC					= bytes.size() - 8;
 	::gpk::crcGenerate({bytes.begin(), startOfCRC}, check);
-	const uint64_t				found						= *(uint64_t*)&bytes[startOfCRC];
+	const u3_t				found						= *(u3_t*)&bytes[startOfCRC];
 	ree_if(check != found, "CRC Check failed: Stored: %llu. Calculated: %llu.", found, check);
 	gpk_necs(bytes.resize(bytes.size() - 8));
 	return 0;

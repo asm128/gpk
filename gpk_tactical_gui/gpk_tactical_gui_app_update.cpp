@@ -188,7 +188,7 @@ static	::gpk::error_t				stateSwitch				(::dry::SApplication & app, ::dry::SCREE
 			{
 				::dry::SSpoolData		spoolScanned	= {};
 				const int32_t			material		= rand() % ::gpk::size(materials);
-				spoolScanned.UniqueId				= 123456;//(uint64_t(rand()) << 32) | time(0);
+				spoolScanned.UniqueId				= 123456;//(u3_t(rand()) << 32) | time(0);
 				spoolScanned.Brand					= brands	[rand() % ::gpk::size(brands)];
 				spoolScanned.Material				= materials	[material];
 				spoolScanned.Color					= colors	[rand() % ::gpk::size(colors)];

@@ -25,8 +25,8 @@ namespace gpk
 		cxpr	Tn3			oper/			(double scalar)						cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
 		cxpr	Tn3			oper*			(int64_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
 		cxpr	Tn3			oper/			(int64_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
-		cxpr	Tn3			oper*			(uint64_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
-		cxpr	Tn3			oper/			(uint64_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cxpr	Tn3			oper*			(u3_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cxpr	Tn3			oper/			(u3_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
 		cxpr	Tn3			oper*			(int32_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
 		cxpr	Tn3			oper/			(int32_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
 		cxpr	Tn3			oper*			(uint32_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }

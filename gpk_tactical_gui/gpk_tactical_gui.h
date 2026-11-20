@@ -107,7 +107,7 @@ namespace dry
 	};
 
 	::gpk::error_t							dryerSetup						(::dry::SDryer & dryer);
-	::gpk::error_t							dryerUpdate						(::dry::SDryer & dryer, uint64_t lastTimeMilliseconds);
+	::gpk::error_t							dryerUpdate						(::dry::SDryer & dryer, u3_t lastTimeMilliseconds);
 
 	static constexpr uint8_t				DRYER_MIN_TEMPERATURE			= 45;
 

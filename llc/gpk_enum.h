@@ -122,7 +122,7 @@ namespace gpk
 					index					= (int32_t)i;
 					return 0;
 				}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return index					= -1;
 		}
 		int32_t				get_value_index			(const T & value)				const			{
@@ -130,7 +130,7 @@ namespace gpk
 				if(value == Values[i])
 					return (int32_t)i;
 			}
-			enum_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: %llX.", (u3_t)value);
 			return -1;
 		}
 		err_t				get_value_label			(const T & value, ::gpk::vcsc_t & name)	const			{
@@ -139,7 +139,7 @@ namespace gpk
 					name				= Names[i];
 					return 0;
 				}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			name				= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
@@ -149,7 +149,7 @@ namespace gpk
 					name				= Descriptions[i];
 					return 0;
 				}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			name				= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
@@ -158,7 +158,7 @@ namespace gpk
 				if(value == Values[i])
 					return Names[i];
 			}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 		::gpk::vcsc_c&	get_value_desc			(const T & value)				const			{
@@ -166,7 +166,7 @@ namespace gpk
 				if(value == Values[i])
 					return Descriptions[i];
 			}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 		err_t				add_value				(const T & value, ::gpk::vcsc_c & name, ::gpk::vcsc_c & title, ::gpk::vcsc_c & description)	{
@@ -174,7 +174,7 @@ namespace gpk
 				if(Values[i] == value) {
 					rww_if(name != Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
 				, Name		.begin()
-				, (uint64_t)value
+				, (u3_t)value
 				, Names[i]	.begin()
 				, name		.begin()
 				);
@@ -188,7 +188,7 @@ namespace gpk
 			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s."
 				, Name.begin()
 				, (uint32_t)newIndex
-				, (uint64_t)value
+				, (u3_t)value
 				, name.begin()
 				);
 			return newIndex;
@@ -197,7 +197,7 @@ namespace gpk
 			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
 				ree_if(name == Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
 					, Name		.begin()
-					, (uint64_t)Values[i]
+					, (u3_t)Values[i]
 					, Names[i]	.begin()
 					, name		.begin()
 					);
@@ -208,7 +208,7 @@ namespace gpk
 			gpk_necs(Names.push_back(name));
 			gpk_necs(Titles.push_back(title));
 			gpk_necs(Descriptions.push_back(description));
-			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s.", Name.begin(), (uint32_t)newIndex, (uint64_t)value, name.begin());
+			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s.", Name.begin(), (uint32_t)newIndex, (u3_t)value, name.begin());
 			return newIndex;
 		}
 	};
@@ -383,7 +383,7 @@ namespace gpk
 				if(value == Values[i].Value)																						\
 					return Values[i].Name;																							\
 			}																														\
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);											\
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (u3_t)value);											\
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;																				\
 		}																															\
 		stxp 	::gpk::SGPKEnumValue<IntType> 	Values	[]	= {

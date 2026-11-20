@@ -42,7 +42,7 @@ namespace gpk
 	}
 	ndsi			err_t	fopen_s		(FILE* * out_fp, vs filename, vcs mode)						{ return fopen_s(out_fp, filename.cc(), mode); }
 	tplN1u	ndsi	err_t	fopen_s		(FILE* * out_fp, sc_c (&filename)[N], vcs mode)				{ return fopen_s(out_fp, vcsc_t{filename}, mode); }
-	ndsi			err_t	fopen_s		(FILE* * out_fp, vcs filename, vcs mode, uint64_t offset)	{ gpk_necs(::gpk::fopen_s(out_fp, filename, mode)); return 0 == offset ? 0 : ::gpk::fseek(*out_fp, offset, FSEEK_SET); }
+	ndsi			err_t	fopen_s		(FILE* * out_fp, vcs filename, vcs mode, u3_t offset)	{ gpk_necs(::gpk::fopen_s(out_fp, filename, mode)); return 0 == offset ? 0 : ::gpk::fseek(*out_fp, offset, FSEEK_SET); }
 } // namespace
 
 #endif // GPK_CSTDIO_H

@@ -61,7 +61,7 @@ namespace gpk
 	err_t			folderPackToDisk		(vcst_c nameFileDst, vcst_c nameFolderSrc);
 	err_t			folderUnpackToDisk		(vcst_c namePathDst, vcst_c nameFileSrc);
 
-	err_t			crcGenerate				(vcu0_c & bytes, uint64_t & crc);
+	err_t			crcGenerate				(vcu0_c & bytes, u3_t & crc);
 	err_t			crcVerifyAndRemove		(au0_t & bytes);
 	err_t			crcGenerateAndAppend	(au0_t & bytes);
 
