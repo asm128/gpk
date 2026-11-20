@@ -40,7 +40,6 @@ gpk::err_t 		gpk::virtualKeyboardSetup	(SGUI & gui, SVirtualKeyboard & vk, u0_t 
 		if_fail_fe(gpk::controlSetParent(gui, idKey, vk.IdRoot));
 		if_fail_fe(gpk::controlTextSet(gui, idKey, label(text)));
 	}
-
 	if_fail_fe(gpk::guiCreateControlList<VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ALIGN_TOP_RIGHT, ALIGN_CENTER, vk.IdKeys));
 	return 0;
 }

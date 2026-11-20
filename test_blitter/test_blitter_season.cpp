@@ -1,5 +1,6 @@
 #include "test_blitter_suites.h"
 
+#include "blitter.h"
 #include "gpk_file.h"
 #include "gpk_json.h"
 
@@ -7,38 +8,78 @@ GDEFINE_ENUM_TYPE(TEST_SEASON_RESULT, ::gpk::u0_t);
 GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, INPUT_WRITE	, 0, "The season input fixture could not be written.");
 GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, PROCESS_LAUNCH	, 1, "The season frontend could not be launched.");
 GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, PROCESS_EXIT	, 2, "The season frontend rejected a valid JSON-array fixture.");
-GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, BLOCK_READ	, 3, "A season output block could not be read.");
-GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, BLOCK_PARSE	, 4, "A season output block is not valid JSON.");
-GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, BLOCK_ROOT	, 5, "A season output block root is not a JSON array.");
-GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, BLOCK_COUNT	, 6, "A season output block contains the wrong number of records.");
+GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, BLITTER_LOAD	, 3, "Blitter could not load a block written by season.");
+GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, BLOCK_AVAILABLE	, 4, "Blitter did not retain a loaded season block.");
+GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, JSON_WRITE	, 5, "A season block loaded by Blitter could not be serialized.");
+GDEFINE_ENUM_VALUED(TEST_SEASON_RESULT, JSON_CONTENT	, 6, "A season block loaded by Blitter differs from the expected source records.");
 
 ::gpk::err_t test_season(STestRunnerState &, ::gpk::ATestError & errors, ::gpk::vcst_t outputFolder) {
-	stxp ::gpk::vcst_t inputName = "season_input.json";
 	stxp ::gpk::vcst_t inputJSON = "[{\"id\":1},{\"id\":2},{\"id\":3},{\"id\":4},{\"id\":5}]";
-	cnst ::gpk::err_t writeResult = ::gpk::fileFromMemory(outputFolder, inputName, inputJSON.bytes());
-	GPK_TEST_REQUIREF(errors, TEST_SEASON_RESULT_INPUT_WRITE, ::gpk::failed(writeResult), "Result:%i.", writeResult);
-
-	int exitCode = -1;
-	cnst ::gpk::err_t launchResult = ::testBlitterRunFrontend("season", outputFolder, "season_input.json 2 0", exitCode);
-	GPK_TEST_REQUIREF(errors, TEST_SEASON_RESULT_PROCESS_LAUNCH, ::gpk::failed(launchResult), "Result:%i.", launchResult);
-	GPK_TEST_REQUIREF(errors, TEST_SEASON_RESULT_PROCESS_EXIT, 0 != exitCode, "Exit code:%i.", exitCode);
-
-	stxp ::gpk::vcst_t blockNames[] =
-		{ "season_input.2.db/season_input.0.sson"
-		, "season_input.2.db/season_input.1.sson"
-		, "season_input.2.db/season_input.2.sson"
+	stxp ::gpk::vcst_t encryptionKey = "0123456789ABCDEF0123456789ABCDEF";
+	struct SModeCase {
+		::gpk::vcst_t Name;
+		::gpk::vcst_t Database;
+		::gpk::vcst_t InputFile;
+		::gpk::vcst_t Arguments;
+		::blt::DATABASE_HOST Host;
+		::gpk::vcst_t Key;
+	};
+	stxp SModeCase modes[] =
+		{ {"plain"              , "season_plain"    , "season_plain.json"    , "season_plain.json 2 0"                      , ::blt::DATABASE_HOST_LOCAL  , {}}
+		, {"deflated"           , "season_deflated" , "season_deflated.json" , "season_deflated.json 2 1"                   , ::blt::DATABASE_HOST_DEFLATE, {}}
+		, {"encrypted"          , "season_encrypted", "season_encrypted.json", "season_encrypted.json 2 0 0123456789ABCDEF0123456789ABCDEF" , ::blt::DATABASE_HOST_LOCAL  , encryptionKey}
+		, {"encrypted+deflated" , "season_secure"   , "season_secure.json"   , "season_secure.json 2 1 0123456789ABCDEF0123456789ABCDEF"    , ::blt::DATABASE_HOST_DEFLATE, encryptionKey}
 		};
-	stxp ::gpk::u2_t expectedCounts[] = {2, 2, 1};
-	for(::gpk::u2_t iBlock = 0; iBlock < ::gpk::size(blockNames); ++iBlock) {
-		::gpk::au0_t outputBytes;
-		cnst ::gpk::err_t readResult = ::gpk::fileToMemory(outputFolder, blockNames[iBlock], outputBytes);
-		GPK_TEST_REQUIREF(errors, TEST_SEASON_RESULT_BLOCK_READ, ::gpk::failed(readResult), "Block:%u, result:%i.", iBlock, readResult);
 
-		::gpk::SJSONReader reader;
-		cnst ::gpk::err_t parseResult = ::gpk::jsonParse(reader, ::gpk::vcst_t{(cnst ::gpk::sc_t*)outputBytes.begin(), outputBytes.size()});
-		GPK_TEST_REQUIREF(errors, TEST_SEASON_RESULT_BLOCK_PARSE, ::gpk::failed(parseResult), "Block:%u, result:%i, bytes:%u.", iBlock, parseResult, outputBytes.size());
-		GPK_TEST_REQUIREF(errors, TEST_SEASON_RESULT_BLOCK_ROOT, 0 == reader.Tree.size() || ::gpk::JSON_TYPE_ARRAY != reader.Token[0].Type, "Block:%u, tree:%u.", iBlock, reader.Tree.size());
-		GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_BLOCK_COUNT, expectedCounts[iBlock] != (::gpk::u2_t)::gpk::jsonArraySize(*reader.Tree[0]), "Block:%u, records:%u, expected:%u.", iBlock, ::gpk::jsonArraySize(*reader.Tree[0]), expectedCounts[iBlock]);
+	::gpk::SJSONReader sourceReader;
+	if_fail_fe(::gpk::jsonParse(sourceReader, inputJSON));
+	::gpk::aobj<::gpk::string> expectedBlocks;
+	if_fail_fe(::gpk::jsonArraySplit(*sourceReader.Tree[0], sourceReader.View, 2, expectedBlocks));
+
+	for(cnst SModeCase & mode : modes) {
+		cnst ::gpk::err_t writeResult = ::gpk::fileFromMemory(outputFolder, mode.InputFile, inputJSON.bytes());
+		GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_INPUT_WRITE, ::gpk::failed(writeResult), "Mode:%.*s, result:%i.", GPK_VIEW_ARGS(mode.Name), writeResult);
+		if(::gpk::failed(writeResult))
+			continue;
+
+		int exitCode = -1;
+		cnst ::gpk::err_t launchResult = ::testBlitterRunFrontend("season", outputFolder, mode.Arguments, exitCode);
+		GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_PROCESS_LAUNCH, ::gpk::failed(launchResult), "Mode:%.*s, result:%i.", GPK_VIEW_ARGS(mode.Name), launchResult);
+		if(::gpk::failed(launchResult))
+			continue;
+		GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_PROCESS_EXIT, 0 != exitCode, "Mode:%.*s, exit code:%i.", GPK_VIEW_ARGS(mode.Name), exitCode);
+		if(0 != exitCode)
+			continue;
+
+		::gpk::SLoadCache loadCache;
+		::blt::TNamedBlitterDB database = {};
+		database.Key = mode.Database;
+		database.Val.BlockSize = 2;
+		database.Val.HostType = mode.Host;
+		database.Val.EncryptionKey = mode.Key;
+		for(::gpk::u2_t iBlock = 0; iBlock < expectedBlocks.size(); ++iBlock)
+			if_fail_fe(database.Val.BlocksOnDisk.push_back(iBlock));
+		database.Val.MaxBlockOnDisk = expectedBlocks.size() - 1;
+
+		for(::gpk::u2_t iBlock = 0; iBlock < expectedBlocks.size(); ++iBlock) {
+			cnst ::gpk::err_t loadResult = ::blt::blockFileLoad(loadCache, database, outputFolder, iBlock);
+			GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_BLITTER_LOAD, ::gpk::failed(loadResult), "Mode:%.*s, block:%u, result:%i.", GPK_VIEW_ARGS(mode.Name), iBlock, loadResult);
+			if(::gpk::failed(loadResult))
+				continue;
+
+			cnst ::gpk::u2_t loadedIndex = (::gpk::u2_t)loadResult;
+			GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_BLOCK_AVAILABLE, loadedIndex >= database.Val.Blocks.size() || 0 == database.Val.Blocks[loadedIndex], "Mode:%.*s, block:%u, loaded index:%u, blocks:%u.", GPK_VIEW_ARGS(mode.Name), iBlock, loadedIndex, database.Val.Blocks.size());
+			if(loadedIndex >= database.Val.Blocks.size() || 0 == database.Val.Blocks[loadedIndex])
+				continue;
+
+			::gpk::string recoveredJSON;
+			cnst ::gpk::SJSONReader & recoveredReader = database.Val.Blocks[loadedIndex]->Reader;
+			cnst ::gpk::err_t jsonResult = ::gpk::jsonWrite(recoveredReader.Tree[0], recoveredReader.View, recoveredJSON);
+			GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_JSON_WRITE, ::gpk::failed(jsonResult), "Mode:%.*s, block:%u, result:%i.", GPK_VIEW_ARGS(mode.Name), iBlock, jsonResult);
+			if(::gpk::failed(jsonResult))
+				continue;
+			GPK_TEST_CHECKF(errors, TEST_SEASON_RESULT_JSON_CONTENT, recoveredJSON != expectedBlocks[iBlock], "Mode:%.*s, block:%u, recovered:'%.*s', expected:'%.*s'.", GPK_VIEW_ARGS(mode.Name), iBlock, GPK_VIEW_ARGS(recoveredJSON), GPK_VIEW_ARGS(expectedBlocks[iBlock]));
+		}
 	}
 	rtrn 0;
 }
