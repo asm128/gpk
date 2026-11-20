@@ -133,7 +133,7 @@ namespace gpk
 				Connect(); 
 				break;
 			case ::gpk::UDP_CONNECTION_STATE_HANDSHAKE		: 
-				gpk_necs(gpk::controlTextSet(gui, Dialog.Root + 1, {connectingString.begin(), connectingString.size() - 3 + ((uint32_t)::gpk::timeCurrent() % 4)}));
+				gpk_necs(gpk::controlTextSet(gui, Dialog.Root + 1, {connectingString.begin(), connectingString.size() - 3 + ((u2_t)::gpk::timeCurrent() % 4)}));
 				break;
 			}
 
@@ -180,12 +180,12 @@ namespace gpk
 			}
 			{
 				::std::lock_guard								lockRecv					(Client.Queue.MutexReceive);
-				for(uint32_t iMessage = 0; iMessage < Client.Queue.Received.size(); ++iMessage) {
+				for(u2_t iMessage = 0; iMessage < Client.Queue.Received.size(); ++iMessage) {
 					gpk_necall(MessagesToProcess.push_back(Client.Queue.Received[iMessage]), "%s", "Out of memory?");
 				}
 				Client.Queue.Received.clear();
 			}
-			for(uint32_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
+			for(u2_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
 				::gpk::vcu0_t							viewPayload					= MessagesToProcess[iMessage]->Payload;
 				info_printf("Client received: %s.", viewPayload.begin());
 			}

@@ -3,7 +3,7 @@
 
 gpk::err_t			gpk::toupper		(::gpk::view<sc_t> input)											{
 	int			countChanged		= 0;
-	for(uint32_t iByte = 0, sizeHeader = input.size(); iByte < sizeHeader; ++iByte)
+	for(u2_t iByte = 0, sizeHeader = input.size(); iByte < sizeHeader; ++iByte)
 		if(::gpk::toupper(input[iByte]))
 			++countChanged;
 	return countChanged;
@@ -11,7 +11,7 @@ gpk::err_t			gpk::toupper		(::gpk::view<sc_t> input)											{
 
 gpk::err_t			gpk::tolower		(::gpk::view<sc_t> input)											{
 	int			countChanged		= 0;
-	for(uint32_t iByte = 0, sizeHeader = input.size(); iByte < sizeHeader; ++iByte)
+	for(u2_t iByte = 0, sizeHeader = input.size(); iByte < sizeHeader; ++iByte)
 		if(::gpk::tolower(input[iByte]))
 			++countChanged;
 	return countChanged;

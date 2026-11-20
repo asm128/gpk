@@ -38,8 +38,8 @@ namespace s3d
 		::gpk::aobj<::gpk::pobj<SXCBPixmap>>	XCBPixmap				= {};
 		//::gpk::array_obj<::gpk::view_const_char	>		Filename				= {};
 
-		::gpk::error_t									Create(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::grid<const ::gpk::SColorBGRA> pixels);
-		::gpk::error_t									CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::vcst filename);
+		::gpk::error_t									Create(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t depth, ::gpk::grid<const ::gpk::SColorBGRA> pixels);
+		::gpk::error_t									CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t depth, ::gpk::vcst filename);
 	};
 } // namespace
 

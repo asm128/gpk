@@ -60,7 +60,7 @@ namespace gpk
 	};
 
 	gpk::err_t				createBuffers
-		( uint32_t						vertexCount
+		( u2_t						vertexCount
 		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
 		, ::gpk::pobj<SRenderBuffer>	& pVertices
 		, ::gpk::pobj<SRenderBuffer>	& pNormals

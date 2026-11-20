@@ -55,7 +55,7 @@ namespace gpk
 			DepthStencilState	.clear();
 		}
 
-		void									Render							(uint32_t iMesh, ::gpk::rangeu2_t indexRange, uint32_t iTexture, uint32_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
+		void									Render							(u2_t iMesh, ::gpk::rangeu2_t indexRange, u2_t iTexture, u2_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
 			auto										context							= DeviceResources->GetD3DDeviceContext();
 			context->UpdateSubresource1(ConstantBuffer[0], 0, NULL, &constantBufferModel, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
 			context->UpdateSubresource1(ConstantBuffer[1], 0, NULL, &ConstantBufferScene, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.

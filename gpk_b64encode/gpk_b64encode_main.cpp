@@ -7,7 +7,7 @@ stacxpr	const char	sign []	= "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u";
 
 int main(int argc, char** argv) {
 	ree_if(2 > argc, "usage: %s [filename]", argv[0]);
-	::gpk::vcs				in_filename		= {argv[1], (uint32_t)-1};
+	::gpk::vcs				in_filename		= {argv[1], (u2_t)-1};
 
 	::gpk::au0_t				in_data			= {};
 	::gpk::au0_t				out_b64			= {};

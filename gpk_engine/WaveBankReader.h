@@ -34,7 +34,7 @@ namespace DirectX
 		WaveBankReader&			operator=			(WaveBankReader const&)	= delete;
 
 		HRESULT					Open				(_In_z_ const wchar_t * szFileName)	noexcept;
-		uint32_t				Find				(_In_z_ const sc_t * name)			const;
+		u2_t				Find				(_In_z_ const sc_t * name)			const;
 
 		bool					IsPrepared			()	noexcept;
 		void					WaitOnPrepare		()	noexcept;
@@ -42,22 +42,22 @@ namespace DirectX
 		bool					HasNames			()	const noexcept;
 		bool					IsStreamingBank		()	const noexcept;
 		const sc_t*				BankName			()	const noexcept;
-		uint32_t				Count				()	const noexcept;
-		uint32_t				BankAudioSize		()	const noexcept;
+		u2_t				Count				()	const noexcept;
+		u2_t				BankAudioSize		()	const noexcept;
 		HANDLE					GetAsyncHandle		()	const noexcept;
-		uint32_t				GetWaveAlignment	()	const noexcept;
-		HRESULT					GetFormat			(_In_ uint32_t index, _Out_writes_bytes_(maxsize) WAVEFORMATEX * pFormat, _In_ size_t maxsize)			const noexcept;
-		HRESULT					GetWaveData			(_In_ uint32_t index, _Outptr_ const uint8_t* * pData, _Out_ uint32_t & dataSize)						const noexcept;
-		HRESULT					GetSeekTable		(_In_ uint32_t index, _Out_ const uint32_t* * pData, _Out_ uint32_t & dataCount, _Out_ uint32_t & tag)	const noexcept;
+		u2_t				GetWaveAlignment	()	const noexcept;
+		HRESULT					GetFormat			(_In_ u2_t index, _Out_writes_bytes_(maxsize) WAVEFORMATEX * pFormat, _In_ size_t maxsize)			const noexcept;
+		HRESULT					GetWaveData			(_In_ u2_t index, _Outptr_ const uint8_t* * pData, _Out_ u2_t & dataSize)						const noexcept;
+		HRESULT					GetSeekTable		(_In_ u2_t index, _Out_ const u2_t* * pData, _Out_ u2_t & dataCount, _Out_ u2_t & tag)	const noexcept;
 
 		struct Metadata {
-			uint32_t				Duration;
-			uint32_t				LoopStart;
-			uint32_t				LoopLength;
-			uint32_t				OffsetBytes;
-			uint32_t				LengthBytes;
+			u2_t				Duration;
+			u2_t				LoopStart;
+			u2_t				LoopLength;
+			u2_t				OffsetBytes;
+			u2_t				LengthBytes;
 		};
-		HRESULT					GetMetadata			(_In_ uint32_t index, _Out_ Metadata & metadata)	const noexcept;
+		HRESULT					GetMetadata			(_In_ u2_t index, _Out_ Metadata & metadata)	const noexcept;
 	};
 }
 

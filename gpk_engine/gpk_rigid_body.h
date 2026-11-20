@@ -99,7 +99,7 @@ namespace gpk
 			return 0;
 		}
 
-		int32_t 							Clone							(uint32_t iBody)	{
+		int32_t 							Clone							(u2_t iBody)	{
 			Frames					.push_back(::gpk::SBodyFrame		{Frames				[iBody]});
 			Flags					.push_back(::gpk::SBodyFlags		{Flags				[iBody]});
 			Forces					.push_back(::gpk::SBodyForces		{Forces				[iBody]});
@@ -119,7 +119,7 @@ namespace gpk
 			return TransformsLocal	.push_back(MatrixIdentity4);
 		}
 
-		int32_t 							Delete							(uint32_t iBody)	{
+		int32_t 							Delete							(u2_t iBody)	{
 			Frames					.remove_unordered(iBody);
 			Flags					.remove_unordered(iBody);
 			Forces					.remove_unordered(iBody);
@@ -129,9 +129,9 @@ namespace gpk
 			return TransformsLocal	.remove_unordered(iBody);
 		}
 
-		int32_t 							Create							(uint32_t bodyCount)	{
-			const uint32_t							indexFirstBody					= Centers.size();
-			const uint32_t							newSize							= indexFirstBody + bodyCount;
+		int32_t 							Create							(u2_t bodyCount)	{
+			const u2_t							indexFirstBody					= Centers.size();
+			const u2_t							newSize							= indexFirstBody + bodyCount;
 			gpk_necs(Frames				.resize(newSize, {}));				
 			gpk_necs(Flags				.resize(newSize, {}));
 			gpk_necs(Forces				.resize(newSize, {}));
@@ -142,7 +142,7 @@ namespace gpk
 			return indexFirstBody;
 		}
 
-		int32_t 							GetTransform					(uint32_t iBody, ::gpk::m4f32	& transform)	{
+		int32_t 							GetTransform					(u2_t iBody, ::gpk::m4f32	& transform)	{
 			::gpk::SBodyFlags						& bodyFlags						= Flags				[iBody];
 			::gpk::m4f32							& bodyTransformLocal			= TransformsLocal	[iBody];
 			if(false == bodyFlags.UpdatedTransform || false == bodyFlags.UpdatedTensorWorld) {
@@ -163,7 +163,7 @@ namespace gpk
 			return 0;
 		}
 
-		void								AddForceAtPoint					(uint32_t iBody, const ::gpk::n3f2_t & force, const ::gpk::n3f2_t & point)	{
+		void								AddForceAtPoint					(u2_t iBody, const ::gpk::n3f2_t & force, const ::gpk::n3f2_t & point)	{
 			::gpk::SBodyCenter						& bodyCenter					= Centers	[iBody];
 			::gpk::SBodyFlags						& bodyFlags						= Flags	[iBody];
 			::gpk::SBodyFrame						& bodyFrame						= Frames[iBody];
@@ -175,7 +175,7 @@ namespace gpk
 		int32_t								Integrate						(double duration)	{
 			const double							durationHalfSquared				= duration * duration * 0.5;
 			::gpk::m4f32							dummy;
-			for(uint32_t iBody = 0; iBody < Flags.size(); ++iBody) {
+			for(u2_t iBody = 0; iBody < Flags.size(); ++iBody) {
 				::gpk::SBodyFlags						& bodyFlags						= Flags[iBody];
 				if(false == bodyFlags.Active)
 					continue;
@@ -196,36 +196,36 @@ namespace gpk
 			return 0;
 		}
 
-		inline	const SBodyFlags&			GetBodyFlags					(uint32_t iBody)	const	{ return Flags  [iBody]; }
-		inline	const SBodyFrame&			GetBodyFrame					(uint32_t iBody)	const	{ return Frames [iBody]; }
-		inline	const SBodyForces&			GetBodyForces					(uint32_t iBody)	const	{ return Forces [iBody]; }
-		inline	const SBodyMass&			GetBodyMass						(uint32_t iBody)	const	{ return Masses [iBody]; }
-		inline	const SBodyCenter&			GetBodyCenter					(uint32_t iBody)	const	{ return Centers[iBody]; }
-		inline	SBodyFlags&					GetBodyFlags					(uint32_t iBody)			{ return Flags  [iBody]; }
-		inline	SBodyFrame&					GetBodyFrame					(uint32_t iBody)			{ return Frames [iBody]; }
-		inline	SBodyForces&				GetBodyForces					(uint32_t iBody)			{ return Forces [iBody]; }
-		inline	SBodyMass&					GetBodyMass						(uint32_t iBody)			{ return Masses [iBody]; }
-		inline	SBodyCenter&				GetBodyCenter					(uint32_t iBody)			{ return Centers[iBody]; }
+		inline	const SBodyFlags&			GetBodyFlags					(u2_t iBody)	const	{ return Flags  [iBody]; }
+		inline	const SBodyFrame&			GetBodyFrame					(u2_t iBody)	const	{ return Frames [iBody]; }
+		inline	const SBodyForces&			GetBodyForces					(u2_t iBody)	const	{ return Forces [iBody]; }
+		inline	const SBodyMass&			GetBodyMass						(u2_t iBody)	const	{ return Masses [iBody]; }
+		inline	const SBodyCenter&			GetBodyCenter					(u2_t iBody)	const	{ return Centers[iBody]; }
+		inline	SBodyFlags&					GetBodyFlags					(u2_t iBody)			{ return Flags  [iBody]; }
+		inline	SBodyFrame&					GetBodyFrame					(u2_t iBody)			{ return Frames [iBody]; }
+		inline	SBodyForces&				GetBodyForces					(u2_t iBody)			{ return Forces [iBody]; }
+		inline	SBodyMass&					GetBodyMass						(u2_t iBody)			{ return Masses [iBody]; }
+		inline	SBodyCenter&				GetBodyCenter					(u2_t iBody)			{ return Centers[iBody]; }
 
 
-		inline	bool						Active							(uint32_t iBody)									const	{ return Flags[iBody].Active; }
-		inline	bool						Collides						(uint32_t iBody)									const	{ return Flags[iBody].Collides; }
-		inline	float						GetMass							(uint32_t iBody)									const	{ return 1.0f / Masses[iBody].InverseMass; }
-		inline	void						GetPosition						(uint32_t iBody, ::gpk::n3f2_t & position)			const	{ position		= Centers[iBody].Position; }
-		inline	void						GetOrientation					(uint32_t iBody, ::gpk::quatf32 & orientation)		const	{ orientation	= Centers[iBody].Orientation; }
-		inline	void						GetRotation						(uint32_t iBody, ::gpk::n3f2_t & rotation)			const	{ rotation		= Forces[iBody].Rotation;		}
-		inline	void						GetAcceleration					(uint32_t iBody, ::gpk::n3f2_t & acceleration)		const	{ acceleration	= Forces[iBody].Acceleration;	}
-		inline	void						GetVelocity						(uint32_t iBody, ::gpk::n3f2_t & velocity)			const	{ velocity		= Forces[iBody].Velocity;		}
+		inline	bool						Active							(u2_t iBody)									const	{ return Flags[iBody].Active; }
+		inline	bool						Collides						(u2_t iBody)									const	{ return Flags[iBody].Collides; }
+		inline	float						GetMass							(u2_t iBody)									const	{ return 1.0f / Masses[iBody].InverseMass; }
+		inline	void						GetPosition						(u2_t iBody, ::gpk::n3f2_t & position)			const	{ position		= Centers[iBody].Position; }
+		inline	void						GetOrientation					(u2_t iBody, ::gpk::quatf32 & orientation)		const	{ orientation	= Centers[iBody].Orientation; }
+		inline	void						GetRotation						(u2_t iBody, ::gpk::n3f2_t & rotation)			const	{ rotation		= Forces[iBody].Rotation;		}
+		inline	void						GetAcceleration					(u2_t iBody, ::gpk::n3f2_t & acceleration)		const	{ acceleration	= Forces[iBody].Acceleration;	}
+		inline	void						GetVelocity						(u2_t iBody, ::gpk::n3f2_t & velocity)			const	{ velocity		= Forces[iBody].Velocity;		}
 
-		inline	void						SetActive						(uint32_t iBody, bool active)								{ Flags[iBody].Active	= active; }
-		inline	void						SetCollides						(uint32_t iBody, bool collides)								{ Flags[iBody].Collides	= collides; }
-		inline	void						SetHalfSizes					(uint32_t iBody, const ::gpk::n3f2_t & halfSizes)			{ BoundingVolumes[iBody].HalfSizes	= halfSizes; }
+		inline	void						SetActive						(u2_t iBody, bool active)								{ Flags[iBody].Active	= active; }
+		inline	void						SetCollides						(u2_t iBody, bool collides)								{ Flags[iBody].Collides	= collides; }
+		inline	void						SetHalfSizes					(u2_t iBody, const ::gpk::n3f2_t & halfSizes)			{ BoundingVolumes[iBody].HalfSizes	= halfSizes; }
 		
-		inline	void						SetMassInverse					(uint32_t iBody, float inverseMass)							{ Masses[iBody].InverseMass = inverseMass; }
-		inline	void						SetMass							(uint32_t iBody, float mass)								{ Masses[iBody].InverseMass = 1.0f / mass; }
-		inline	void						AddForce						(uint32_t iBody, const ::gpk::n3f2_t & force)				{ Frames[iBody].AccumulatedForce += force; }
+		inline	void						SetMassInverse					(u2_t iBody, float inverseMass)							{ Masses[iBody].InverseMass = inverseMass; }
+		inline	void						SetMass							(u2_t iBody, float mass)								{ Masses[iBody].InverseMass = 1.0f / mass; }
+		inline	void						AddForce						(u2_t iBody, const ::gpk::n3f2_t & force)				{ Frames[iBody].AccumulatedForce += force; }
 
-		void								SetPosition						(uint32_t iBody, const ::gpk::n3f2_t & newPosition)			{
+		void								SetPosition						(u2_t iBody, const ::gpk::n3f2_t & newPosition)			{
 			::gpk::SBodyCenter						& bodyCenter					= Centers[iBody];
 			if(0 == memcmp(&newPosition.x, &bodyCenter.Position.x, sizeof(::gpk::n3f2_t)))
 				return;
@@ -234,7 +234,7 @@ namespace gpk
 			bodyFlags.UpdatedTransform			= 
 			bodyFlags.UpdatedTensorWorld		= false;
 		}
-		void								SetOrientation					(uint32_t iBody, const ::gpk::quatf32 & newOrientation)		{
+		void								SetOrientation					(u2_t iBody, const ::gpk::quatf32 & newOrientation)		{
 			::gpk::SBodyCenter						& bodyCenter					= Centers[iBody];
 			if(0 == memcmp(&newOrientation.x, &bodyCenter.Orientation.x, sizeof(::gpk::quat<float>)))
 				return;
@@ -243,7 +243,7 @@ namespace gpk
 			bodyFlags.UpdatedTransform			= 
 			bodyFlags.UpdatedTensorWorld		= false;
 		}
-		void								SetVelocity						(uint32_t iBody, const ::gpk::n3f2_t & newVelocity)			{
+		void								SetVelocity						(u2_t iBody, const ::gpk::n3f2_t & newVelocity)			{
 			::gpk::SBodyForces						& bodyForces					= Forces[iBody];
 			if(0 == memcmp(&newVelocity.x, &bodyForces.Velocity.x, sizeof(::gpk::n3f2_t)))
 				return;
@@ -253,7 +253,7 @@ namespace gpk
 			if(newVelocity.y) 
 				bodyFlags.Falling					= true; 
 		}
-		void								SetAcceleration					(uint32_t iBody, const ::gpk::n3f2_t & acceleration)			{
+		void								SetAcceleration					(u2_t iBody, const ::gpk::n3f2_t & acceleration)			{
 			::gpk::SBodyForces						& bodyForces					= Forces[iBody];
 			if(0 == memcmp(&acceleration.x, &bodyForces.Acceleration.x, sizeof(::gpk::n3f2_t)))
 				return;
@@ -261,7 +261,7 @@ namespace gpk
 			::gpk::SBodyFlags						& bodyFlags						= Flags[iBody];
 			bodyFlags.Active					= true;
 		}
-		void								SetRotation						(uint32_t iBody, const ::gpk::n3f2_t & newRotation)			{
+		void								SetRotation						(u2_t iBody, const ::gpk::n3f2_t & newRotation)			{
 			::gpk::SBodyForces						& bodyForces					= Forces[iBody];
 			if(0 == memcmp(&newRotation.x, &bodyForces.Rotation.x, sizeof(::gpk::n3f2_t)))
 				return;

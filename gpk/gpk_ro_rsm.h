@@ -40,7 +40,7 @@ namespace gpk
 	};
 
 	struct SRSMTexCoord {
-		uint32_t								Unknown;
+		u2_t								Unknown;
 		::gpk::n2f2_t							UV;
 	};
 #pragma pack(pop)
@@ -57,8 +57,8 @@ namespace gpk
 	};
 
 	struct SRSMFileContents {
-		uint32_t								AnimLength;
-		uint32_t								ShadeType;
+		u2_t								AnimLength;
+		u2_t								ShadeType;
 		uint8_t									Alpha;
 		sc_t									Unknown[16];
 		::gpk::aobj<::gpk::astsc_t<40>>	TextureNames;

@@ -5,7 +5,7 @@
 #include "gpk_engine_shader.h"
 
 gpk::err_t			gpk::updateEntityTransforms			
-	( uint32_t								iEntity
+	( u2_t								iEntity
 	, const ::gpk::SEntity			& entity
 	, const ::gpk::SVirtualEntityManager	& managedEntities	
 	, ::gpk::SRigidBodyIntegrator			& integrator		
@@ -47,8 +47,8 @@ gpk::err_t			gpk::updateEntityTransforms
 		}
 	}
 	if(children) {
-		for(uint32_t iChild = 0; iChild < children->size(); ++iChild) {
-			const uint32_t								iChildEntity					= (*children)[iChild];
+		for(u2_t iChild = 0; iChild < children->size(); ++iChild) {
+			const u2_t								iChildEntity					= (*children)[iChild];
 			::gpk::updateEntityTransforms(iChildEntity, managedEntities.Entities[iChildEntity], managedEntities, integrator, renderNodes);
 		}
 	}
@@ -228,17 +228,17 @@ gpk::err_t			gpk::SEngine::CreateImageFromFile(const ::gpk::vcs & fileFolder, co
 //	::gpk::SEntity		& entity				= Entities[iEntity];
 //	::gpk::SRenderNode			& renderNode			= Scene->RenderNodes[entity.RenderNode];
 //
-//	uint32_t					iMesh					= renderNode.Mesh;
+//	u2_t					iMesh					= renderNode.Mesh;
 //	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= Scene->Graphics->Meshes[iMesh];
 //	Scene->Graphics->Skins[renderNode.Skin]->Material.Color.Diffuse.a = .25f;
 //	mesh->GeometrySlices.resize(6);	// one per face
 //
-//	uint32_t					offsetIndex				= 0;
-//	for(uint32_t iFace = 0; iFace < 6; ++iFace) {
-//		uint32_t					iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
+//	u2_t					offsetIndex				= 0;
+//	for(u2_t iFace = 0; iFace < 6; ++iFace) {
+//		u2_t					iSkin					= (u2_t)Scene->Graphics->Skins.Create();
 //		::gpk::pobj<::gpk::SSkin>	& skin					= Scene->Graphics->Skins.Elements[iSkin];
 //
-//		uint32_t					iSurface				= (uint32_t)Scene->Graphics->Surfaces.Create();
+//		u2_t					iSurface				= (u2_t)Scene->Graphics->Surfaces.Create();
 //		::gpk::pobj<::gpk::SSurface>& surface				= Scene->Graphics->Surfaces[iSurface];
 //		surface->Desc.ColorType				= ::gpk::COLOR_TYPE_BGRA;
 //		surface->Desc.MethodCompression		= 0;
@@ -261,7 +261,7 @@ gpk::err_t			gpk::SEngine::CreateImageFromFile(const ::gpk::vcs & fileFolder, co
 //		offsetIndex				+= slice.Slice.Count;
 //
 //		int32_t						iFaceEntity				= Entities.Create();
-//		uint32_t					iFaceRenderNode			= Scene->RenderNodes.Create();
+//		u2_t					iFaceRenderNode			= Scene->RenderNodes.Create();
 //		::gpk::SEntity		& faceEntity			= Entities[iFaceEntity];
 //		::gpk::SRenderNode			& faceRenderNode		= Scene->RenderNodes.RenderNodes[iFaceRenderNode];
 //

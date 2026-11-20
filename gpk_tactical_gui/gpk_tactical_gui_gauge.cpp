@@ -51,7 +51,7 @@
 	dummyDepth.resize(target.metrics(), 0xFFFFFFFFU);
 	::gpk::apod<::gpk::n2s1_t>	pixelCoords;
 	::gpk::apod<::gpk::trif32>	triangleWeights;
-	for(uint32_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
+	for(u2_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
 		const ::gpk::tri3f32	triangleCoords			= {
 			  gauge.Vertices[gauge.Indices[iTriangle].A]
 			, gauge.Vertices[gauge.Indices[iTriangle].B]
@@ -59,7 +59,7 @@
 			};
 		const double			colorFactor				= radialColor ? ::gpk::min(1.0, iTriangle / (double)triangleCount) : gauge.CurrentValue / (float)gauge.MaxValue;
 		::gpk::rgbaf			finalColor;
-		const bool				isEmptyGauge				= ((iTriangle + 2) >> 1) >= (uint32_t)gauge.CurrentValue * 2;
+		const bool				isEmptyGauge				= ((iTriangle + 2) >> 1) >= (u2_t)gauge.CurrentValue * 2;
 		finalColor = isEmptyGauge
 			? ::gpk::rgbaf(colorEmpty)
 			: (colorFactor < .5)
@@ -69,7 +69,7 @@
 		finalColor.Clamp();
 		pixelCoords.clear();
 		::gpk::drawTriangle(target.metrics(), triangleCoords, pixelCoords, triangleWeights, dummyDepth);
-		for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+		for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 			const ::gpk::n2s1_t	pixelCoord					= pixelCoords[iPixelCoord];
 //#define GAUGE_NO_SHADING
 #ifndef GAUGE_NO_SHADING

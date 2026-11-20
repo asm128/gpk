@@ -43,8 +43,8 @@ static	gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	gpk_necs(gpk::controlTextSet(gui, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcs{"Listening"} : ::gpk::vcs{"Stopped"})); 
 	sc_t						buf [128]		= {};
 	{	
-		uint32_t					clientCount		= 0;
-		for(uint32_t iClient = 0; iClient < udpServer.Clients.size(); ++iClient) 
+		u2_t					clientCount		= 0;
+		for(u2_t iClient = 0; iClient < udpServer.Clients.size(); ++iClient) 
 			if(udpServer.Clients[iClient]->State == ::gpk::UDP_CONNECTION_STATE_IDLE)
 				++clientCount;
 
@@ -68,7 +68,7 @@ gpk::err_t			gpk::serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui) {
 	server.QueueReceived.clear();
 	es_if_failed(::gpk::serverPayloadCollect(server.UDP, server.QueueReceived));
 
-	server.UDP.Clients.enumerate([&server](uint32_t & iClient, ::gpk::pobj<::gpk::SUDPConnection> & client){
+	server.UDP.Clients.enumerate([&server](u2_t & iClient, ::gpk::pobj<::gpk::SUDPConnection> & client){
 		if(server.QueueToSend.size() <= iClient)
 			iClient					= server.UDP.Clients.size();
 		else {
@@ -95,7 +95,7 @@ gpk::err_t			gpk::processGUIEvent	(::gpk::SServer & server, ::gpk::SGUI & gui, c
 		if(0 == (stateChange.Set & ::gpk::GUI_CONTROL_FLAG_Action))
 			return 0;
 
-		for(uint32_t iInput = 0; iInput < server.UI.Input.size(); ++iInput) {
+		for(u2_t iInput = 0; iInput < server.UI.Input.size(); ++iInput) {
 			if(server.UI.Input[iInput] != stateChange.Id) 
 				continue;
 

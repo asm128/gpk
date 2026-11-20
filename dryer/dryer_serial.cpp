@@ -149,7 +149,7 @@ static	::gpk::error_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJ
 		info_printf("trimmed: '%.*s'", GPK_VIEW_ARGS(trimmed));
 		::gpk::array_obj<::gpk::vcsc_t>		splitMessage;
 		::gpk::split(trimmed, ',', splitMessage);
-		for(uint32_t iArg = 0; iArg < splitMessage.size(); ++iArg)
+		for(u2_t iArg = 0; iArg < splitMessage.size(); ++iArg)
 			if_fail_ef(::gpk::failed(::processStatusArg(app, jsonReader, splitMessage[iArg])), "Failed to process message parameter: %.*s", GPK_VIEW_ARGS(splitMessage[iArg]));
 		app.Dryer.State.Dryer				= true;
 		::gpk::sleep(1000);

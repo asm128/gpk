@@ -23,7 +23,7 @@ namespace gpk
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::SLight3>		& lightPoints
 		, ::gpk::apod<::gpk::rgbaf>			& lightColors
-		, ::gpk::grid<uint32_t>			depthBuffer
+		, ::gpk::grid<u2_t>			depthBuffer
 		);
 }
 

@@ -18,7 +18,7 @@ namespace gpk
 
 	tplt<tpnm _tVal>
 				err_t							find			(const vcs & keyToFind, const view<const SKeyVal<vcsc_t, _tVal>> & keyvals)	{
-		for(uint32_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal) {
+		for(u2_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal) {
 			vcsc_c							& keyCurrent					= keyvals[iKeyVal].Key;
 			if(keyToFind == keyCurrent)
 				return iKeyVal;
@@ -47,7 +47,7 @@ namespace gpk
 
 	tplt <tpnm... _tArgs>
 	err_t				keyValVerify					(const view<kv<vcsc_t, vcsc_t>> & environViews, vcsc_c & keyToVerify, const view<vcsc_c>& valueToVerify)	{
-		for(uint32_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
+		for(u2_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
 			const err_t			val								= keyValVerify(environViews, keyToVerify, valueToVerify[iKey]);
 			if(-1 != val)
 				return val;

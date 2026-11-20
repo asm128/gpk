@@ -9,7 +9,7 @@
 namespace gpk 
 {
 #pragma pack(push, 1)
-	typedef	uint32_t		eid_t;
+	typedef	u2_t		eid_t;
 	stxp	eid_t			EID_INVALID		= eid_t(-1);
 
 	typedef	const eid_t		ceid_t;
@@ -18,8 +18,8 @@ namespace gpk
 	typedef	view<ceid_t>	vceid;
 	typedef	papod<eid_t>	paeid;
 	struct SEntity {
-		uint32_t				RenderNode		= (uint32_t)-1;
-		uint32_t				RigidBody		= (uint32_t)-1;
+		u2_t				RenderNode		= (u2_t)-1;
+		u2_t				RigidBody		= (u2_t)-1;
 		::gpk::eid_t			Parent			= EID_INVALID;
 	};
 #pragma pack(pop)
@@ -33,8 +33,8 @@ namespace gpk
 		const ::gpk::SEntity&			operator[]		(::gpk::eid_t id)	const	{ return Entities[id]; }
 		SEntity&						operator[]		(::gpk::eid_t id)			{ return Entities[id]; }
 
-		uint32_t						size			()					const	{ return Names.size(); }
-		uint32_t						clear			()							{ ::gpk::clear(Entities, Names, Children); return 0; }
+		u2_t						size			()					const	{ return Names.size(); }
+		u2_t						clear			()							{ ::gpk::clear(Entities, Names, Children); return 0; }
 
 		gpk::err_t					Create			() {
 			Children.push_back({});
@@ -54,9 +54,9 @@ namespace gpk
 		inline	const ::gpk::SEntity&	GetChild		(::gpk::eid_t id, int32_t iChild)	const	{ return Entities[GetIndexChild	(id, iChild)]; }
 		inline	SEntity&				GetParent		(::gpk::eid_t id)							{ return Entities[GetIndexParent(id)]; }
 		inline	SEntity&				GetChild		(::gpk::eid_t id, int32_t iChild)			{ return Entities[GetIndexChild	(id, iChild)]; }
-		inline	gpk::err_t			GetChildCount	(uint32_t iEntity)					const	{ const ::gpk::papod<::gpk::eid_t> & children = Children[iEntity]; return children ? children->size() : 0; }
-		inline	::gpk::vceid			GetChildren		(uint32_t iEntity)					const	{ const ::gpk::papod<::gpk::eid_t> & children = Children[iEntity]; return children ? ::gpk::vceid{*children} : ::gpk::vceid{}; }
-		inline	::gpk::veid				GetChildren		(uint32_t iEntity)							{ ::gpk::papod<::gpk::eid_t> & children = Children[iEntity]; return children ? *children : ::gpk::veid{}; }
+		inline	gpk::err_t			GetChildCount	(u2_t iEntity)					const	{ const ::gpk::papod<::gpk::eid_t> & children = Children[iEntity]; return children ? children->size() : 0; }
+		inline	::gpk::vceid			GetChildren		(u2_t iEntity)					const	{ const ::gpk::papod<::gpk::eid_t> & children = Children[iEntity]; return children ? ::gpk::vceid{*children} : ::gpk::vceid{}; }
+		inline	::gpk::veid				GetChildren		(u2_t iEntity)							{ ::gpk::papod<::gpk::eid_t> & children = Children[iEntity]; return children ? *children : ::gpk::veid{}; }
 
 
 		gpk::err_t					SetParent		(::gpk::eid_t id, ::gpk::eid_t idParent)		{
@@ -73,7 +73,7 @@ namespace gpk
 
 		gpk::err_t					Save			(::gpk::au0_t & output) const { 
 			gpk_necs(gpk::saveView(output, Entities));
-			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
+			for(u2_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				gpk_necall(gpk::saveView(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
 				gpk_necall(gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
 			}
@@ -85,7 +85,7 @@ namespace gpk
 			gpk_necs(gpk::loadView(input, Entities));
 			gpk_necs(Children	.resize(Entities.size()));
 			gpk_necs(Names		.resize(Entities.size()));
-			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
+			for(u2_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				if(!Children[iEntity])
 					Children[iEntity].create();
 

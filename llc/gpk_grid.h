@@ -44,9 +44,9 @@ namespace gpk
 		inxp	u2_t 				byte_count		()		const	nxpt	{ return area() * sizeof(T); }
 		inxp	u2_t				area			()		const	nxpt	{ return Size.x * Size.y; }
 
-		inln	gpk::err_t		fill			(const T & value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
+		inln	gpk::err_t		fill			(const T & value, u2_t offset = 0, u2_t count = 0xFFFFFFFFU) {
 			ree_if((count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);
-			for(uint32_t i = offset, actualCount = ::gpk::min(size(), count); i < actualCount; ++i)
+			for(u2_t i = offset, actualCount = ::gpk::min(size(), count); i < actualCount; ++i)
 				Data[i]						= value;
 			return 0;
 		}

@@ -19,28 +19,28 @@ namespace gpk
 		const T&			operator[]		(const K & key)	const	{ return Values[Keys.find(key)]; }
 		T&					operator[]		(const K & key)			{ return Values[Keys.find(key)]; }
 
-		uint32_t			size			()				const	{ return Keys.size(); }
+		u2_t			size			()				const	{ return Keys.size(); }
 
 		gpk::err_t		push_back		(const K & key, const T & instance)	{ 
-			rees_if(Keys.size() > (uint32_t)Keys.find(key));
+			rees_if(Keys.size() > (u2_t)Keys.find(key));
 			Keys.push_back(key); 
 			return Values.push_back(instance); 
 		}
 
 		gpk::err_t		Create			(const K & key)							{
-			rees_if(Keys.size() > (uint32_t)Keys.find(key));
+			rees_if(Keys.size() > (u2_t)Keys.find(key));
 			Keys.push_back(key);
 			return Values.push_back({});
 		}
 
 		gpk::err_t		Delete			(const K & key)					{
-			uint32_t				index			= Keys.find(key);
+			u2_t				index			= Keys.find(key);
 			rees_if(Keys.size() <= index);
 			Keys.remove_unordered(index);
 			return Values.remove_unordered(index); 
 		}
 
-		gpk::err_t		Clone			(const K & key, uint32_t index)	{ 
+		gpk::err_t		Clone			(const K & key, u2_t index)	{ 
 			Values[Values.push_back({})] = Values[index]; 
 			return Keys.push_back(key); 
 		}

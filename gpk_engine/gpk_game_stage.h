@@ -18,7 +18,7 @@ namespace gpk
 		uint16_t		Players					= {};
 		MATCH_TYPE		MatchType				= {};
 		uint8_t			Padding1				= {};
-		uint32_t		Padding4				= {};
+		u2_t		Padding4				= {};
 	};
 	stxp	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
 

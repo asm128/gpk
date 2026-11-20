@@ -28,10 +28,10 @@ namespace gpk
 				gpk_necs(gpk::loadView(input, Blocks[iArray]->Storage));
 			return 0;
 		}
-		gpk::err_t						push_sequence				(const sc_t * sequence, uint32_t length, ::gpk::vcsc_t & out_view)	{
-			const uint32_t							lengthPlusOne				= length + 1;
-			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
-				uint32_t								& blkRemainingSpace			= RemainingSpace[iBlock];
+		gpk::err_t						push_sequence				(const sc_t * sequence, u2_t length, ::gpk::vcsc_t & out_view)	{
+			const u2_t							lengthPlusOne				= length + 1;
+			for(u2_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
+				u2_t								& blkRemainingSpace			= RemainingSpace[iBlock];
 				if(blkRemainingSpace >= lengthPlusOne) {
 					sc_t									* sequenceStart				= &Blocks[iBlock]->operator[](_size - blkRemainingSpace);
 					out_view							= {sequenceStart, length};

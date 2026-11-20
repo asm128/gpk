@@ -24,7 +24,7 @@ namespace gpk
 	typedef quad3<double>	quad3f64, quad3d;
 	typedef quad3<uint8_t>	quad3u8;
 	typedef quad3<uint16_t>	quad3u16;
-	typedef quad3<uint32_t>	quad3u32;
+	typedef quad3<u2_t>	quad3u32;
 	typedef quad3<u3_t>	quad3u64;
 	typedef quad3<int8_t>	quad3i8;
 	typedef quad3<int16_t>	quad3i16;

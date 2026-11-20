@@ -31,7 +31,7 @@ namespace gpk
 #define GPK_END_POD(_structName)																									\
 	public:																															\
 		sinx	::gpk::vcsc_t	gpk_type_name			()		noexcept	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
-		sinx	uint32_t		gpk_type_name_len		()		noexcept	{ return ::gpk::size(#_structName) - 1; }					\
+		sinx	u2_t		gpk_type_name_len		()		noexcept	{ return ::gpk::size(#_structName) - 1; }					\
 	};																																\
 	static	const int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
 

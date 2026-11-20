@@ -12,7 +12,7 @@ using gpk::sc_t, gpk::sc_c;
 	if(0 == lastError)
 		return {};
 	sc_t						* messageBuffer					= nullptr;
-	const uint32_t				size							= FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)lastError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+	const u2_t				size							= FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)lastError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
 
 	ve_if(::gpk::apod<sc_t>(), nullptr == messageBuffer)
 	else {
@@ -44,7 +44,7 @@ gpk::err_t			gpk::mbstowcs					(::gpk::apod<wchar_t> & output, ::gpk::vcsc_c inp
 	::gpk::apod<wchar_t>		converted;
 	converted.resize(input.size());
 	gpk_hrcall(MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, &input[0], input.size(), &converted[0], converted.size()));
-	converted.resize((uint32_t)wcslen(converted.begin()));
+	converted.resize((u2_t)wcslen(converted.begin()));
 	output.append(converted);
 	return converted.size();
 }

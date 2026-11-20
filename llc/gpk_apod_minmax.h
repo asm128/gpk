@@ -15,7 +15,7 @@ namespace gpk
 	typedef	::gpk::aminmax<double	>	aminmaxf64	;
 	typedef	::gpk::aminmax<uint8_t	>	aminmaxu8	;
 	typedef	::gpk::aminmax<uint16_t	>	aminmaxu16	;
-	typedef	::gpk::aminmax<uint32_t	>	aminmaxu32	;
+	typedef	::gpk::aminmax<u2_t	>	aminmaxu32	;
 	typedef	::gpk::aminmax<u3_t	>	aminmaxu64	;
 	typedef	::gpk::aminmax<int8_t	>	aminmaxi8	;
 	typedef	::gpk::aminmax<int16_t	>	aminmaxi16	;

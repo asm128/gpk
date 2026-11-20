@@ -50,7 +50,7 @@ static	gpk::err_t	createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFi
 	bufferVertexColors	.resize(stlFile.Triangles.size());
 	newNode.PerFaceColor					= 1;
 	newNode.PerFaceNormal					= 1;
-	for(uint32_t iTriangle = 0; iTriangle < stlFile.Triangles.size(); ++iTriangle) {
+	for(u2_t iTriangle = 0; iTriangle < stlFile.Triangles.size(); ++iTriangle) {
 		const ::gpk::SSTLTriangle					triangle				= stlFile.Triangles[iTriangle];
 		bufferVertices		[iTriangle * 3 + 0]	= {triangle.Triangle.A.x, triangle.Triangle.A.z, triangle.Triangle.A.y};
 		bufferVertices		[iTriangle * 3 + 2]	= {triangle.Triangle.B.x, triangle.Triangle.B.z, triangle.Triangle.B.y};
@@ -67,7 +67,7 @@ static	gpk::err_t	createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFi
 	boundingVolume.Center					= boundingVolume.Limits.Min + (boundingVolume.Limits.Max - boundingVolume.Limits.Min) / 2.0;
 	boundingVolume.Radius					= ::gpk::max(boundingVolume.Limits.Min.Length(), boundingVolume.Limits.Max.Length()) / 2;
 	boundingVolume.Type						= ::gpk::BOUNDINGPRIMITIVE_TYPE_SPHERE;
-	for(uint32_t iVertex = 0; iVertex < bufferVertices.size(); ++iVertex)
+	for(u2_t iVertex = 0; iVertex < bufferVertices.size(); ++iVertex)
 		bufferVertices[iVertex]					-= boundingVolume.Center;
 
 	::gpk::SComponentData						newComponentGroup		= {};
@@ -88,7 +88,7 @@ static	gpk::err_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 	::gpk::apod<sc_t>							materialPath			= {};
 	::gpk::label								materialName			= {};
 	::gpk::SMaterial							newMaterial				= {};
-	for(uint32_t iLine = 0; iLine < matFileLines.size(); ++iLine) {
+	for(u2_t iLine = 0; iLine < matFileLines.size(); ++iLine) {
 		::gpk::vcsc_t & line = matFileLines[iLine];
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
@@ -97,7 +97,7 @@ static	gpk::err_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 
 		::gpk::aobj<::gpk::vcsc_t>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
-		for(uint32_t iValue = 0; iValue < lineValues.size(); ++iValue) {
+		for(u2_t iValue = 0; iValue < lineValues.size(); ++iValue) {
 			::gpk::vcsc_t						& value					= lineValues[iValue];
 			::gpk::trim(value, value);
 			if(0 == value.size())
@@ -116,17 +116,17 @@ static	gpk::err_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 				 ++countMaterials;
 			 }
 		else if(command == ::gpk::vcs{"Ka"		}) {
-			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
+			for(u2_t iAxis = 0; iAxis < 3; ++iAxis)
 				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Ambient.r)[iAxis]));
 			info_printf("Material Ambient: [%f, %f, %f].", newMaterial.Ambient.r, newMaterial.Ambient.g, newMaterial.Ambient.b);
 		}
 		else if(command == ::gpk::vcs{"Kd"		}) {
-			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
+			for(u2_t iAxis = 0; iAxis < 3; ++iAxis)
 				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Diffuse.r)[iAxis]));
 			info_printf("Material Diffuse: [%f, %f, %f].", newMaterial.Diffuse.r, newMaterial.Diffuse.g, newMaterial.Diffuse.b);
 		}
 		else if(command == ::gpk::vcs{"Ks"		}) {
-			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
+			for(u2_t iAxis = 0; iAxis < 3; ++iAxis)
 				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Diffuse.r)[iAxis]));
 			info_printf("Material Diffuse: [%f, %f, %f].", newMaterial.Diffuse.r, newMaterial.Diffuse.g, newMaterial.Diffuse.b);
 		}
@@ -157,8 +157,8 @@ static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 
 	::gpk::SComponentData						newObject				= {};
 	::gpk::SComponentData						newGroup				= {};
-	uint32_t									countObjects			= 0;
-	uint32_t									countGroups				= 0;
+	u2_t									countObjects			= 0;
+	u2_t									countGroups				= 0;
 	::gpk::apod<int16_t>						objectIndices			= {};
 	::gpk::apod<sc_t>							objectPath				= {};
 	::gpk::label								objectName				= {};
@@ -170,7 +170,7 @@ static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 	::gpk::split(::gpk::vcsc_t{rawObj}, '\n', objFileLines);
 	::gpk::SJSONReader							numberReader			= {};
 	info_printf("%s", "Preloading materials...");
-	for(uint32_t iLine = 0; iLine < objFileLines.size(); ++iLine) {
+	for(u2_t iLine = 0; iLine < objFileLines.size(); ++iLine) {
 		::gpk::vcsc_t						& line					= objFileLines[iLine];
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
@@ -179,7 +179,7 @@ static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 		::gpk::aobj<::gpk::vcsc_t>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
 
-		for(uint32_t iValue = 0; iValue < lineValues.size(); ++iValue) {
+		for(u2_t iValue = 0; iValue < lineValues.size(); ++iValue) {
 			::gpk::vcsc_t						& value					= lineValues[iValue];
 			::gpk::ltrim(value, value);
 			::gpk::rtrim(value, value);
@@ -206,7 +206,7 @@ static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 	}
 
 	info_printf("%s", "Loading geometries...");
-	for(uint32_t iLine = 0; iLine < objFileLines.size(); ++iLine) {
+	for(u2_t iLine = 0; iLine < objFileLines.size(); ++iLine) {
 		::gpk::vcsc_t						& line					= objFileLines[iLine];
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
@@ -215,7 +215,7 @@ static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 
 		::gpk::aobj<::gpk::vcsc_t>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
-		for(uint32_t iValue = 0; iValue < lineValues.size(); ++iValue) {
+		for(u2_t iValue = 0; iValue < lineValues.size(); ++iValue) {
 			::gpk::vcsc_t						& value					= lineValues[iValue];
 			::gpk::ltrim(value, value);
 			::gpk::rtrim(value, value);
@@ -249,7 +249,7 @@ static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 		else if(command == ::gpk::vcs{"usemtl"}) {
 			::gpk::vcsc_t									materialName	= lineValues[1];
 			info_printf("Setting material: %.*s", GPK_VIEW_ARGS(materialName));
-			for(uint32_t iMaterial = 0; iMaterial < materialIndices.size(); ++iMaterial)
+			for(u2_t iMaterial = 0; iMaterial < materialIndices.size(); ++iMaterial)
 				if(materialIndices.Names[iMaterial] == materialName) {
 					info_printf("Setting material: %.*s", GPK_VIEW_ARGS(materialName));
 					scene.Renderer.Nodes[newGroup.RenderNodes[0]].Material = materialIndices.Values[iMaterial];
@@ -258,26 +258,26 @@ static	gpk::err_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcsc_t
 		}
 		else if(command == ::gpk::vcs{"v"}) {
 			::gpk::n3f2_t						vertex			= {};
-			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
+			for(u2_t iAxis = 0; iAxis < 3; ++iAxis)
 				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis]));
 			info_printf("Vertex found: [%f, %f, %f].", vertex.x, vertex.y, vertex.z);
 			//scene.Renderer.Vertices[scene.Renderer.Nodes[newGroup.RenderNodes[0]].Vertices].push_back(vertex);
 		}
 		else if(command == ::gpk::vcs{"vt"}) {
 			::gpk::n2f2_t						texCoord		= {};
-			for(uint32_t iAxis = 0; iAxis < 2; ++iAxis)
+			for(u2_t iAxis = 0; iAxis < 2; ++iAxis)
 				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&texCoord.x)[iAxis]));
 			info_printf("TexCoord found: [%f, %f, %f].", texCoord.x, texCoord.y);
 		}
 		else if(command == ::gpk::vcs{"vn"}) {
 			::gpk::n3f2_t						vertex			= {};
-			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
+			for(u2_t iAxis = 0; iAxis < 3; ++iAxis)
 				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis]));
 			info_printf("Normal found: [%f, %f, %f].", vertex.x, vertex.y, vertex.z);
 		}
 		else if(command == ::gpk::vcs{"f"}) {
 			::gpk::n3s2_t						indices			= {};
-			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
+			for(u2_t iAxis = 0; iAxis < 3; ++iAxis)
 				es_if_failed(::integerRead(numberReader, lineValues[1 + iAxis], (&indices.x)[iAxis]));
 			info_printf("Face found: [%i, %i, %i].", indices.x, indices.y, indices.z);
 		}

@@ -23,7 +23,7 @@ namespace gpk
 
 		inxp	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
 		inxp	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inxp	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
+		inxp	minmax<u2_t>	u2_t			()		const	noexcept	{ return Cast<u2_t	>(); }
 		inxp	minmax<u3_t>	u3_t			()		const	noexcept	{ return Cast<u3_t	>(); }
 		inxp	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
 		inxp	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
@@ -51,7 +51,7 @@ namespace gpk
 
 		inxp	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
 		inxp	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inxp	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
+		inxp	minmax<u2_t>	u2_t			()		const	noexcept	{ return Cast<u2_t	>(); }
 		inxp	minmax<u3_t>	u3_t			()		const	noexcept	{ return Cast<u3_t	>(); }
 		inxp	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
 		inxp	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
@@ -67,7 +67,7 @@ namespace gpk
 	typedef gaugemax<double		>	gaugemaxf64;
 	typedef gaugemax<uint8_t	>	gaugemaxu8;
 	typedef gaugemax<uint16_t	>	gaugemaxu16;
-	typedef gaugemax<uint32_t	>	gaugemaxu32;
+	typedef gaugemax<u2_t	>	gaugemaxu32;
 	typedef gaugemax<u3_t	>	gaugemaxu64;
 	typedef gaugemax<int8_t		>	gaugemaxi8;
 	typedef gaugemax<int16_t	>	gaugemaxi16;
@@ -80,7 +80,7 @@ namespace gpk
 	typedef gaugeminmax<double	>	gaugeminmaxf64;
 	typedef gaugeminmax<uint8_t	>	gaugeminmaxu8;
 	typedef gaugeminmax<uint16_t>	gaugeminmaxu16;
-	typedef gaugeminmax<uint32_t>	gaugeminmaxu32;
+	typedef gaugeminmax<u2_t>	gaugeminmaxu32;
 	typedef gaugeminmax<u3_t>	gaugeminmaxu64;
 	typedef gaugeminmax<int8_t	>	gaugeminmaxi8;
 	typedef gaugeminmax<int16_t	>	gaugeminmaxi16;

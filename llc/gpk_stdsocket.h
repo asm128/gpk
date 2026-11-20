@@ -32,10 +32,10 @@ namespace gpk
 	};
 
 	gpk::err_t			tcpipAddressToSockaddr		(uint8_t a1, uint8_t a2, uint8_t a3, uint8_t a4, uint16_t port, sockaddr_in & sockaddr);
-	gpk::err_t			tcpipAddressToSockaddr		(uint32_t address, uint16_t port, sockaddr_in & sockaddr);
+	gpk::err_t			tcpipAddressToSockaddr		(u2_t address, uint16_t port, sockaddr_in & sockaddr);
 
 	gpk::err_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
-	gpk::err_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, uint32_t & address, uint16_t & port);
+	gpk::err_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, u2_t & address, uint16_t & port);
 	gpk::err_t			tcpipAddress				(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
 
 	stin	gpk::err_t	tcpipAddressToSockaddr		(const ::gpk::SIPv4End & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		

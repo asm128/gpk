@@ -147,21 +147,21 @@ namespace gpk
 			return 0;
 		}
 
-		gpk::err_t					Clone					(uint32_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
-			const uint32_t						iNewNode				= RenderNodes.Clone(iRenderNode);
-			const uint32_t						idShaderSource			= RenderNodes[iRenderNode].Shader;
+		gpk::err_t					Clone					(u2_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+			const u2_t						iNewNode				= RenderNodes.Clone(iRenderNode);
+			const u2_t						idShaderSource			= RenderNodes[iRenderNode].Shader;
 			if(cloneShaders && idShaderSource < Graphics->Shaders.size())
 				gpk_necs(RenderNodes[iNewNode].Shader = Graphics->Shaders.Clone(idShaderSource));
 
-			const uint32_t						idSkinSource			= RenderNodes[iNewNode].Skin;
+			const u2_t						idSkinSource			= RenderNodes[iNewNode].Skin;
 			if(cloneSkin && idSkinSource < Graphics->Skins.size()) {
-				uint32_t							idSkin;
+				u2_t							idSkin;
 				gpk_necs(idSkin = Graphics->Skins.Clone(idSkinSource));
 				RenderNodes[iNewNode].Skin		= idSkin;
 				if(cloneSurfaces) {
 					if(Graphics->Skins[idSkin]) {
 						::gpk::SSkin						& newSkin			= *Graphics->Skins[idSkin];
-						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
+						for(u2_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
 							newSkin.Textures[iTexture]			= Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
 						}
 					}

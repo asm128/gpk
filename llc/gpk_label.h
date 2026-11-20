@@ -14,12 +14,12 @@ namespace gpk
 	public:
 		inxp				label			()								noexcept	= default;
 							label			(const label & other)			noexcept	= default;
-							label			(const char* str, uint32_t len)	noexcept;
+							label			(const char* str, u2_t len)	noexcept;
 
 		label&				oper=		(const label & other)			noexcept	= default;
 
 		tplt<size_t _stringLength>
-		inline 				label			(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)	noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
+		inline 				label			(const char (&str)[_stringLength], u2_t count = (u2_t)-1)	noexcept	: label(&str[0], ::gpk::min((u2_t)_stringLength, count))	{}
 		inline 				label			(const ::gpk::vcst_t & other)											noexcept	: label(other.begin(), other.size())							{}
 
 		inline	oper	::gpk::vcst_t		()								const				{ return {Data, Count}; }
@@ -30,7 +30,7 @@ namespace gpk
 	};
 
 	stin gpk::err_t	loadLabel		(::gpk::vcu0_t & input, ::gpk::vcsc_t & output) { 
-		uint32_t					bytesRead		= 0;
+		u2_t					bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
 		gpk_necs(input.slice(input, bytesRead));
 		output					= ::gpk::label(output);

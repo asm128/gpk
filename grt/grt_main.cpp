@@ -85,7 +85,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 	{
 		::gpk::vcs						fileName						= "gme";
 		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine.size() > 1)
-			fileName					= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1], (uint32_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1])};
+			fileName					= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1], (u2_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1])};
 		char							mainModuleName	[512]			= {};
 		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule			mainModule						= {};
@@ -117,12 +117,12 @@ int WINAPI					WinMain
 	, _In_		LPSTR			lpCmdLine
 	, _In_		INT				nShowCmd
 	) {
-	const uint32_t					argc							= __argc;
+	const u2_t					argc							= __argc;
 	const char						** argv							= (const char**)__argv;
 	const char						** envp							= (const char**)_environ;
 	ree_if(65535 < argc, "Invalid parameter count: %u.", argc);
 	::gpk::STypeRegistry			& typeRegistry						= ::gpk::STypeRegistry::GetGlobalInstance();
-	for(uint32_t iType = 0; iType < typeRegistry.Names.size(); ++iType)
+	for(u2_t iType = 0; iType < typeRegistry.Names.size(); ++iType)
 		info_printf("Type at index %u: '%s'.", iType, typeRegistry.Names[iType].begin());
 
 	::gpk::SRuntimeValues			runtimeValues					= {};
@@ -143,7 +143,7 @@ int							main		(int argc, char *argv[], char *envp[])			{
 #if defined(GPK_WINDOWS)
 	runtimeValues.PlatformDetail.EntryPointArgsWin					= {GetModuleHandle(NULL), 0, 0, SW_SHOW};
 #endif // defined(GPK_WINDOWS)
-	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {(const char**)argv, (uint32_t)argc};
+	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {(const char**)argv, (u2_t)argc};
 	(void)envp;
 	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
 	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;

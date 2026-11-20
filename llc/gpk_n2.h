@@ -87,7 +87,7 @@ namespace gpk
 			return -1;
 		}
 
-		inxp	uint32_t	Index				(uint32_t width) 							csnx	{ return y * width + x; }
+		inxp	u2_t	Index				(u2_t width) 							csnx	{ return y * width + x; }
 		inxp	T			Area				()											csnx	{ return x * y; }
 		Tn2					Clamp				(cnst Tn2 & min, cnst Tn2 & max)			csnx	{ return {::gpk::clamped(x, min.x, max.x), ::gpk::clamped(y, min.y, max.y)}; }
 		inxp	Tn2			GetScaled			(::gpk::f3_t	scalar)						csnx	{ return {(T)(x * scalar), (T)(y * scalar)}; }
@@ -122,7 +122,7 @@ namespace gpk
 		}
 
 		tydf	FVoid<Tn2&>				TFuncForEach;
-		tydf	FVoid<uint32_t&, Tn2&>	TFuncEnumerate;
+		tydf	FVoid<u2_t&, Tn2&>	TFuncEnumerate;
 
 		T					for_each			(cnst TFuncForEach & funcForEach, T xStart = 0)			cnst	{
 			Tn2						offset				= {};
@@ -132,8 +132,8 @@ namespace gpk
 
 			return T(offset.x * offset.y);
 		}
-		uint32_t			enumerate			(cnst TFuncEnumerate & funcForEach)	cnst {
-			uint32_t				index				= 0;
+		u2_t			enumerate			(cnst TFuncEnumerate & funcForEach)	cnst {
+			u2_t				index				= 0;
 			Tn2						offset				= {};
 			for(; offset.y < y; ++offset.y)
 			for(offset.x = 0; offset.x < x; ++offset.x, ++index) 
@@ -141,8 +141,8 @@ namespace gpk
 
 			return index;
 		}
-		uint32_t			enumerate			(cnst TFuncEnumerate & funcForEachX, cnst TFuncEnumerate & funcForEachY)	cnst {
-			uint32_t				index				= 0;
+		u2_t			enumerate			(cnst TFuncEnumerate & funcForEachX, cnst TFuncEnumerate & funcForEachY)	cnst {
+			u2_t				index				= 0;
 			Tn2						offset				= {};
 			for(; offset.y < y; ++offset.y) {
 				for(offset.x = 0; offset.x < x; ++offset.x, ++index) 

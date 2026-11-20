@@ -21,7 +21,7 @@ static	gpk::err_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_TOKE
 	const int32_t			parentIndex					= reader.StateRead.IndexCurrentElement;
 	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
 	(void)parentType;
-	const uint32_t			offsetChar					= (iStartCharacter == -1) ? reader.StateRead.IndexCurrentChar : iStartCharacter;
+	const u2_t			offsetChar					= (iStartCharacter == -1) ? reader.StateRead.IndexCurrentChar : iStartCharacter;
 	gpk_necs(reader.StateRead.IndexCurrentElement	= reader.Token.push_back({token, {offsetChar, 0}, parentIndex}));
 	xml_info_printf("Opening element type: %i (%s) at index %i."
 		"\nNest level: %i"
@@ -105,7 +105,7 @@ static	gpk::err_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::vcst_
 	case '/':
 		// if it is, then we need to remove the node-open-name elements and replace them
 		if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_OPEN) {
-			const uint32_t nextIdx = reader.StateRead.IndexCurrentChar + 1;
+			const u2_t nextIdx = reader.StateRead.IndexCurrentChar + 1;
 			if(nextIdx < xmlDoc.size() && xmlDoc[nextIdx] == '>') // maybe it's an open tag that is also a close tag
 				reader.StateRead.CurrentElement->Type	= ::gpk::XML_TOKEN_TAG_OPENCLOSE;
 		}
@@ -177,13 +177,13 @@ static	gpk::err_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::vcsc
 				gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NAME, reader.StateRead.IndexCurrentChar + 1));
 			}
 			else {
-				const uint32_t			nextIdx					= reader.StateRead.IndexCurrentChar + 1;
+				const u2_t			nextIdx					= reader.StateRead.IndexCurrentChar + 1;
 				if(nextIdx < xmlDoc.size() && xmlDoc[nextIdx] == '>') // maybe it's an open tag that is also a close tag
 					reader.Token[reader.StateRead.CurrentElement->Parent].Type		= ::gpk::XML_TOKEN_TAG_OPENCLOSE;
 			}
 		}
 		else if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_OPEN) {
-			const uint32_t			nextIdx					= reader.StateRead.IndexCurrentChar + 1;
+			const u2_t			nextIdx					= reader.StateRead.IndexCurrentChar + 1;
 			if(nextIdx < xmlDoc.size() && xmlDoc[nextIdx] == '>') // maybe it's an open tag that is also a close tag
 				reader.StateRead.CurrentElement->Type	= ::gpk::XML_TOKEN_TAG_OPENCLOSE;
 		}

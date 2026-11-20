@@ -18,10 +18,10 @@ GPK_USING_TYPEINT();
 		int32_t										Bottom			;
 		int32_t										Left			;
 		int32_t										Right			;
-		uint32_t									ObjectCount;
+		u2_t									ObjectCount;
 		//uc_t								Unknown2	[8];
 		//uc_t								UnknownStr	[40];
-		//uint32_t									UnknownInts	[2];
+		//u2_t									UnknownInts	[2];
 	};
 #pragma pack(pop)
 
@@ -30,10 +30,10 @@ gpk::err_t			gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, ::gpk::vcu0_c &
 	SRSWHeader							header				= {};//*(SRSWHeader*)input.begin();
 	gpk_necs(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
 	info_printf("RSW magic number: %.4s.", header.Filecode);
-	info_printf("RSW version: %u.%u.", (uint32_t)header.VersionMajor, (uint32_t)header.VersionMinor);
-	info_printf("RSW version major: 0x%x.", (uint32_t)header.VersionMajor);
-	info_printf("RSW version minor: 0x%x.", (uint32_t)header.VersionMinor);
-	const uint32_t						promoted			= *(uint16_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
+	info_printf("RSW version: %u.%u.", (u2_t)header.VersionMajor, (u2_t)header.VersionMinor);
+	info_printf("RSW version major: 0x%x.", (u2_t)header.VersionMajor);
+	info_printf("RSW version minor: 0x%x.", (u2_t)header.VersionMinor);
+	const u2_t						promoted			= *(uint16_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
 	info_printf("RSW version number: 0x%x.", promoted);
 	(void)promoted;
 	//info_printf("RSW version: 0x%x.", header.Version);

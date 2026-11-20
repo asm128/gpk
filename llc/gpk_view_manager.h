@@ -8,11 +8,11 @@ namespace gpk
 	tplt<tpnm T>
 	class CViewManager	{
 #if defined(GPK_ARDUINO)
-		stxp	const uint32_t	BLOCK_SIZE	= 1024 >> 1;
+		stxp	const u2_t	BLOCK_SIZE	= 1024 >> 1;
 #elif defined(GPK_ESP32)
-		stxp	const uint32_t	BLOCK_SIZE	= 1024 * 4;
+		stxp	const u2_t	BLOCK_SIZE	= 1024 * 4;
 #else
-		stxp	const uint32_t	BLOCK_SIZE	= 1024 * 64;
+		stxp	const u2_t	BLOCK_SIZE	= 1024 * 64;
 #endif
 		::gpk::block_container<T, BLOCK_SIZE>	Cells;
 
@@ -24,7 +24,7 @@ namespace gpk
 
 		gpk::err_t					Save						(::gpk::apod<u0_t> & output)	const	{
 			gpk_necs(gpk::saveView(output, Counts));
-			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
+			for(u2_t iArray = 0; iArray < Counts.size(); ++iArray)
 				gpk_necs(output.append((const uint8_t*)Views[iArray], Counts[iArray] * sizeof(T)));
 
 			return 0;
@@ -33,7 +33,7 @@ namespace gpk
 		::gpk::err_t					Load						(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadView(input, Counts));
 			::gpk::view<const T>				out_view; 
-			uint32_t							offsetByte					= 0;
+			u2_t							offsetByte					= 0;
 			for(u2_t iArray = 0; iArray < Counts.size(); ++iArray) {
 				u2_c							elementCount				= Counts[iArray];
 				u2_c							byteCount					= elementCount * sizeof(T);
@@ -73,7 +73,7 @@ namespace gpk
 				return viewIndex;
 			}
 			gpk_necs(Cells.push_sequence(elements, totalChars, out_view));
-			uint32_t									newIndex;
+			u2_t									newIndex;
 			gpk_necs(newIndex = Counts.push_back((u1_t)out_view.size()));
 			gpk_necs(Views.push_back(out_view.begin()));
 			return newIndex;

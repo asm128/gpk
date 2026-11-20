@@ -7,10 +7,10 @@
 
 namespace gpk
 {
-	tplt<tpnm _tPOD, uint32_t _nSize> 
+	tplt<tpnm _tPOD, u2_t _nSize> 
 	gpk::err_t			loadView					(::gpk::vcu0_t & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
 		::gpk::view<const _tPOD>	readView					= {}; 
-		uint32_t					bytesRead					= 0;
+		u2_t					bytesRead					= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
 		gpk_necs(input.slice(input, bytesRead));
 		memcpy(output.begin(), readView.begin(), ::gpk::min(readView.byte_count(), ::gpk::view<_tPOD>{output}.byte_count()));

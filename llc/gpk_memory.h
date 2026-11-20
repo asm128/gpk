@@ -65,12 +65,12 @@ namespace gpk
 	struct auto_gpk_free : public ::gpk::auto_handler<void*, nullptr>	{ using TWrapper::auto_handler; inline ~auto_gpk_free() noexcept { close(); } inline void close() noexcept { safe_gpk_free(Handle); } };
 
 #define GREF_PAGE_SIZE_MAX (4096)
-	tplt<tpnm _tBase>	sinx	uint32_t	get_page_size				()							noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };
-	tplt<tpnm _tBase>	sinx	uint32_t	get_type_size				()							noexcept	{ return (uint32_t) sizeof(_tBase); }
-	tplt<tpnm _tBase>	sinx	uint32_t	get_type_size				(const _tBase&)				noexcept	{ return (uint32_t) sizeof(_tBase); }
-	tplt<tpnm _tBase>	sinx	uint32_t	get_type_size_padded		(uint32_t paddingInBytes)	noexcept	{ return paddingInBytes ? (uint32_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes : sizeof(_tBase); }
-	tplt<tpnm _tBase>	sinx	uint32_t	get_type_align				()							noexcept	{
-		return (uint32_t)
+	tplt<tpnm _tBase>	sinx	u2_t	get_page_size				()							noexcept	{ return (u2_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };
+	tplt<tpnm _tBase>	sinx	u2_t	get_type_size				()							noexcept	{ return (u2_t) sizeof(_tBase); }
+	tplt<tpnm _tBase>	sinx	u2_t	get_type_size				(const _tBase&)				noexcept	{ return (u2_t) sizeof(_tBase); }
+	tplt<tpnm _tBase>	sinx	u2_t	get_type_size_padded		(u2_t paddingInBytes)	noexcept	{ return paddingInBytes ? (u2_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes : sizeof(_tBase); }
+	tplt<tpnm _tBase>	sinx	u2_t	get_type_align				()							noexcept	{
+		return (u2_t)
 			(	(0 == (sizeof(_tBase) % 32))	? 32
 			:	(0 == (sizeof(_tBase) % 16))	? 16
 			:	(0 == (sizeof(_tBase) % 8 ))	? 8
@@ -80,8 +80,8 @@ namespace gpk
 			);
 	}
 
-	tplt <tpnm _tBase>	sinx	uint32_t	get_type_align_multiplier	()							noexcept	{
-		return (uint32_t)
+	tplt <tpnm _tBase>	sinx	u2_t	get_type_align_multiplier	()							noexcept	{
+		return (u2_t)
 			(	(0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
 			:	(0 == (sizeof(_tBase) % 16)) ? sizeof(_tBase) / 16
 			:	(0 == (sizeof(_tBase) %  8)) ? sizeof(_tBase) /  8
@@ -100,21 +100,21 @@ namespace gpk
 		return memcmp(pA, pB, sizeof(_tBase));
 	}
 
-	tplt <tpnm _tBase>	stin	_tBase*		chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		noexcept	{
-			for (uint32_t i = 0; i < count; ++i)
+	tplt <tpnm _tBase>	stin	_tBase*		chkcpy						(_tBase* destination, const _tBase* source, u2_t count)		noexcept	{
+			for (u2_t i = 0; i < count; ++i)
 				if (destination[i] != source[i])
 					destination[i]  = source[i];
 			return destination;
 	}
 
 	tplt <tpnm _tBase>			_tBase*		podcpy						(_tBase* dest, const _tBase* source)							noexcept	{
-		stxp	const uint32_t													dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
-		stxp	const uint32_t													typeAlign					= (uint32_t)get_type_align<_tBase>();
+		stxp	const u2_t													dataMultiplier				= (u2_t)get_type_align_multiplier<_tBase>();
+		stxp	const u2_t													typeAlign					= (u2_t)get_type_align<_tBase>();
 		switch (typeAlign) {
 		case 32: chkcpy((u3_t*)dest, (const u3_t*)source, dataMultiplier * 4);	break;
 		case 16: chkcpy((u3_t*)dest, (const u3_t*)source, dataMultiplier * 2);	break;
 		case  8: chkcpy((u3_t*)dest, (const u3_t*)source, dataMultiplier);		break;
-		case  4: chkcpy((uint32_t*)dest, (const uint32_t*)source, dataMultiplier);		break;
+		case  4: chkcpy((u2_t*)dest, (const u2_t*)source, dataMultiplier);		break;
 		case  2: chkcpy((uint16_t*)dest, (const uint16_t*)source, dataMultiplier);		break;
 		default:
 			if( memcmp(dest, source, sizeof(_tBase)) )

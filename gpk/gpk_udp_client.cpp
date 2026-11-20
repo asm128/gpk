@@ -105,7 +105,7 @@ gpk::err_t			gpk::clientDisconnect						(::gpk::SUDPClient & client)		{
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	// Data to send */
 	{
 		::std::lock_guard												lock										(client.Queue.MutexSend);
-		for(uint32_t i = 0; i < 2; ++i)
+		for(u2_t i = 0; i < 2; ++i)
 			sendto(client.Socket, (const sc_t*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
 		client.Socket.close();
 	}
@@ -116,8 +116,8 @@ gpk::err_t			gpk::clientDisconnect						(::gpk::SUDPClient & client)		{
 }
 
 gpk::err_t			gpk::clientConnect							(::gpk::SUDPClient & client)		{
-	uint32_t						attempts									= 0;
-	stxp	uint32_t												MAX_ATTEMPTS								= 1;
+	u2_t						attempts									= 0;
+	stxp	u2_t												MAX_ATTEMPTS								= 1;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 	{
 		::std::lock_guard												lock										(client.Queue.MutexSend);
@@ -132,7 +132,7 @@ gpk::err_t			gpk::clientConnect							(::gpk::SUDPClient & client)		{
 		client.Socket.close();
 		client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 		_beginthread(::threadClientConnect, 0, &client);
-		for(uint32_t i = 0; i < 1000; ++i) {
+		for(u2_t i = 0; i < 1000; ++i) {
 			::gpk::sleep(1);
 			if(client.State == ::gpk::UDP_CONNECTION_STATE_IDLE)
 				break;

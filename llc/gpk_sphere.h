@@ -17,7 +17,7 @@ namespace gpk
 	typedef sphere<double>		spheref64, sphered;
 	typedef sphere<uint8_t>		sphereu8;
 	typedef sphere<uint16_t>	sphereu16;
-	typedef sphere<uint32_t>	sphereu32;
+	typedef sphere<u2_t>	sphereu32;
 	typedef sphere<u3_t>	sphereu64;
 	typedef sphere<int8_t>		spherei8;
 	typedef sphere<int16_t>		spherei16;

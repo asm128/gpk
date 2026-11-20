@@ -51,7 +51,7 @@ namespace dry
 		::gpk::SJSONFile					JSONData				;
 
 		bool								Exists					(int64_t uniqueId) {
-			for(uint32_t iId = 0; iId < FilamentLoaded.size(); ++iId) {
+			for(u2_t iId = 0; iId < FilamentLoaded.size(); ++iId) {
 				if(FilamentLoaded[iId].UniqueId == uniqueId)
 					return true;
 			}

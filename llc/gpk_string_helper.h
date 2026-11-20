@@ -5,11 +5,11 @@
 
 namespace gpk
 {
-	gpk::err_t			formatForSize			(::gpk::vcsc_t text, sc_t* output, uint32_t maxlen, const sc_t* pre = "", const sc_t* post = "");
+	gpk::err_t			formatForSize			(::gpk::vcsc_t text, sc_t* output, u2_t maxlen, const sc_t* pre = "", const sc_t* post = "");
 
 	tplt<size_t _sizeOutput>
 	inline	gpk::err_t	formatForSize			(::gpk::vcsc_t text, sc_t (&output)[_sizeOutput], const sc_t* pre = "", const sc_t* post = "")		{
-		return ::gpk::formatForSize(text, output, (uint32_t)_sizeOutput, pre, post);
+		return ::gpk::formatForSize(text, output, (u2_t)_sizeOutput, pre, post);
 	}
 }
 

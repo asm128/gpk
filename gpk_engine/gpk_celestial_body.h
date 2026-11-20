@@ -29,25 +29,25 @@ namespace gpk
 		float			CentralDensity			= {};	// 1.622		// x 105	kg/m3	// 17
 		float			Luminosity				= {};	// 382.8		// (1024 J/s)		// 11
 		float			SurfaceEmission			= {};	// 62.94		// (106 J/m2s)		//
-		uint32_t		MeanDensity				= {};	// 1408		// (kg/m3)			//
-		uint32_t		Gm						= {};	// 132712		// (x 106 km3/s2)	// 1
-		uint32_t		Volume					= {};	// 1412000	// (1012 km3)		//
-		uint32_t		VolumetricMeanRadius	= {};	// 695700		// (km)				// 3
+		u2_t		MeanDensity				= {};	// 1408		// (kg/m3)			//
+		u2_t		Gm						= {};	// 132712		// (x 106 km3/s2)	// 1
+		u2_t		Volume					= {};	// 1412000	// (1012 km3)		//
+		u2_t		VolumetricMeanRadius	= {};	// 695700		// (km)				// 3
 		float			Ellipticity				= {};	// 0.00005						// 7
 		float			MomentOfInertia			= {};	// 0.070		// (I/MR2)			//
 		float			VisualMagnitude			= {};	// -26.74		// V(1,0)			// 9
 		float			AbsoluteMagnitude		= {};	// 4.83							//
-		uint32_t		MassConversionRate		= {};	// 4260		// (106 kg/s)		//
+		u2_t		MassConversionRate		= {};	// 4260		// (106 kg/s)		//
 		float			MeanEnergyProduction	= {};	// 0.1925		// (10-3 J/kg s)	// 13
 		float			CentralTemperature		= {};	// 1.571		// x 107	K		//
 	};
 
 	struct SDetailPlanet {
 		float			Gravity					= {};	// 3.7		// (m/s^2)		// 3
-		uint32_t		SurfacePressure			= {};	// 0			// (Bars)		//
-		uint32_t		Density					= {};	// 5427		// (kg/m3)		//
-		uint32_t		MeanTemperature			= {};	// 167		// (Celsius)	// 15
-		uint32_t		NumberOfMoons			= {};	// 0			// 				// 17
+		u2_t		SurfacePressure			= {};	// 0			// (Bars)		//
+		u2_t		Density					= {};	// 5427		// (kg/m3)		//
+		u2_t		MeanTemperature			= {};	// 167		// (Celsius)	// 15
+		u2_t		NumberOfMoons			= {};	// 0			// 				// 17
 		float			RadiusPolar				= {};	// (km)						//
 		float			RadiusEquatorial		= {};	// (km)						// 21
 		float			Perihelion				= {};	// 46.0		// (10^6 km)	//
@@ -60,7 +60,7 @@ namespace gpk
 
 	struct SCelestialBody : public SOrbiter {
 		float			Mass					= {}; // 0.330		// (10^24 kg)	//
-		uint32_t		Diameter				= {}; // 4879		// (km)			// 1
+		u2_t		Diameter				= {}; // 4879		// (km)			// 1
 		float			OrbitalVelocity			= {}; // 47.4		// (km/s)		// 11
 		float			OrbitalEccentricity		= {}; // 0.205						// 13
 		float			EscapeVelocity			= {}; // 4.3		// (km/s)		//

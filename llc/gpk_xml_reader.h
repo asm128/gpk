@@ -32,10 +32,10 @@ namespace gpk
 	};
 
 	struct SXMLReaderState {
-		uint32_t				IndexCurrentChar	= 0;
+		u2_t				IndexCurrentChar	= 0;
 		int32_t					IndexCurrentElement	= -1;
 		SXMLToken				* CurrentElement	= 0;
-		uint32_t				NestLevel			= 0;
+		u2_t				NestLevel			= 0;
 		sc_t					CharCurrent			= 0;
 		::gpk::apod<SXMLToken>	Token				= {};
 	};

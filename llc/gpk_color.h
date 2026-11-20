@@ -86,7 +86,7 @@ namespace gpk
 								SColorRGBA		()									noexcept	= default;
 		cxpr					SColorRGBA		(const SColorRGBA &)				noexcept	= default;
 		cxpr					SColorRGBA		(u0_t r_, u0_t g_, u0_t b_, u0_t a_=0xff)	noexcept	: color_rgba<u0_t>{{{{r_}, g_}, b_}, a_}						{}
-		cxpr					SColorRGBA		(uint32_t other)					noexcept	: color_rgba<u0_t>
+		cxpr					SColorRGBA		(u2_t other)					noexcept	: color_rgba<u0_t>
 			{ {{{u0_t(((other & 0x000000FF) >>  0))}
 			, u0_t(((other & 0x0000FF00) >>  8))	 }
 			, u0_t(((other & 0x00FF0000) >> 16))	 }
@@ -95,10 +95,10 @@ namespace gpk
 		{}
 
 		COLOR_RGBA_OPERATOR_MEMBERS(SColorRGBA); 
-		cxpr	operator		uint32_t		()							const	noexcept	{ return (((uint32_t)a) << 24) | (((uint32_t)b) << 16) | (((uint32_t)g) << 8) | (((uint32_t)r) << 0);					}
+		cxpr	operator		u2_t		()							const	noexcept	{ return (((u2_t)a) << 24) | (((u2_t)b) << 16) | (((u2_t)g) << 8) | (((u2_t)r) << 0);					}
 
 
-		cxpr	bool			operator ==		(uint32_t other)			const	noexcept	{ return other == *((const uint32_t*)this);			}
+		cxpr	bool			operator ==		(u2_t other)			const	noexcept	{ return other == *((const u2_t*)this);			}
 		cxpr	SColorRGBA		operator *		(const SColorRGBA & color)	const	noexcept	{ return {(u0_t)::gpk::clamped(r * (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g * (int)color.g, 0, 255), (u0_t)::gpk::clamped(b * (int)color.b, 0, 255), a};	}
 		cxpr	SColorRGBA		operator +		(const SColorRGBA & color)	const	noexcept	{ return {(u0_t)::gpk::clamped(r + (int)color.r, 0, 255)	, (u0_t)::gpk::clamped(g + (int)color.g, 0, 255), (u0_t)::gpk::clamped(b + (int)color.b, 0, 255), a};	}
 		cxpr	SColorRGBA		operator *		(double scalar)				const	noexcept	{ return {(u0_t)::gpk::clamped(r * scalar, 0.0 , 255.0)		, (u0_t)::gpk::clamped(g * scalar, 0.0,   255.0), (u0_t)::gpk::clamped(b * scalar, 0.0,   255.0), a};	}
@@ -111,7 +111,7 @@ namespace gpk
 		cxpr					SColorBGRA		(const SColorBGRA &)				noexcept	= default;
 		cxpr					SColorBGRA		(const SColorRGBA & other)			noexcept	: color_bgra<u0_t>{{{{other.b}, other.g}, other.r}, other.a} {}
 		cxpr					SColorBGRA		(u0_t b_, u0_t g_, u0_t r_, u0_t a_=0xff)	noexcept	: color_bgra<u0_t>{{{{b_}, g_}, r_}, a_} {}
-		cxpr					SColorBGRA		(uint32_t other)					noexcept	: color_bgra<u0_t>
+		cxpr					SColorBGRA		(u2_t other)					noexcept	: color_bgra<u0_t>
 			{ {{{u0_t(((other & 0x000000FF) >>  0)) }
 			, u0_t(((other & 0x0000FF00) >>  8))	  }
 			, u0_t(((other & 0x00FF0000) >> 16))	  }
@@ -121,9 +121,9 @@ namespace gpk
 
 		COLOR_RGBA_OPERATOR_MEMBERS(SColorBGRA); 
 		cxpr	operator		SColorRGBA		()							const	noexcept	{ return {r, g, b, a};						}
-		cxpr	operator		uint32_t		()							const	noexcept	{ return (((uint32_t)a) << 24) | (((uint32_t)r) << 16) | (((uint32_t)g) << 8) | (((uint32_t)b) << 0);					}
+		cxpr	operator		u2_t		()							const	noexcept	{ return (((u2_t)a) << 24) | (((u2_t)r) << 16) | (((u2_t)g) << 8) | (((u2_t)b) << 0);					}
 
-		cxpr	bool			operator==		(uint32_t other)			const	noexcept	{ return other == *((const uint32_t*)this);			}
+		cxpr	bool			operator==		(u2_t other)			const	noexcept	{ return other == *((const u2_t*)this);			}
 		cxpr	SColorBGRA		operator*		(const SColorBGRA & color)	const	noexcept	{ return {(u0_t)::gpk::min(b * (int)color.b, 255)	, (u0_t)::gpk::min(g * (int)color.g, 255)	,(u0_t)::gpk::min(r * (int)color.r, 255), a};			}
 		cxpr	SColorBGRA		operator+		(const SColorBGRA & color)	const	noexcept	{ return {(u0_t)::gpk::min(b + (int)color.b, 255)	, (u0_t)::gpk::min(g + (int)color.g, 255)	,(u0_t)::gpk::min(r + (int)color.r, 255), a};			}
 		cxpr	SColorBGRA		operator-		(const SColorBGRA & color)	const	noexcept	{ return {(u0_t)::gpk::clamped(b - (int16_t)color.b, 0, 255), (u0_t)::gpk::clamped(g - (int16_t)color.g, 0, 255),(u0_t)::gpk::clamped(r - (int16_t)color.r, 0, 255), a};	}
@@ -145,7 +145,7 @@ namespace gpk
 								SColorRGB		()									noexcept	= default;
 		cxpr					SColorRGB		(const SColorRGB & other)			noexcept	= default;
 		cxpr					SColorRGB		(u0_t r_, u0_t g_, u0_t b_)				noexcept	: color_rgb<u0_t>{{{r_}, g_}, b_} {}
-		cxpr					SColorRGB		(uint32_t other)					noexcept	: color_rgb<u0_t>
+		cxpr					SColorRGB		(u2_t other)					noexcept	: color_rgb<u0_t>
 			{ {{u0_t(((other & 0x000000FF) >>  0))}
 			, u0_t(((other & 0x0000FF00) >>  8))	}
 			, u0_t(((other & 0x00FF0000) >> 16))
@@ -153,8 +153,8 @@ namespace gpk
 		{}
 
 		COLOR_RGB_OPERATOR_MEMBERS(SColorRGB); 
-		cxpr	operator		uint32_t		()							const	noexcept	{ return  0xFF000000 | (((uint32_t)b) << 16) | (((uint32_t)g) << 8)	| (((uint32_t)r) << 0);  }
-		cxpr	operator		SColorRGBA		()							const	noexcept	{ return {0xFF000000 | (((uint32_t)b) << 16) | (((uint32_t)g) << 8)	| (((uint32_t)r) << 0)}; }
+		cxpr	operator		u2_t		()							const	noexcept	{ return  0xFF000000 | (((u2_t)b) << 16) | (((u2_t)g) << 8)	| (((u2_t)r) << 0);  }
+		cxpr	operator		SColorRGBA		()							const	noexcept	{ return {0xFF000000 | (((u2_t)b) << 16) | (((u2_t)g) << 8)	| (((u2_t)r) << 0)}; }
 		cxpr	operator		SColor16		()							const	noexcept	{ return (((uint16_t)(r * BYTE_SCALE * 0x001F)) << 0) | (((uint16_t)(g * BYTE_SCALE * 0x003F)) << 5) | (((uint16_t)(b * BYTE_SCALE * 0x001F)) << 11 );												}
 		cxpr	bool			operator ==		(const SColorRGBA & other)	const	noexcept	{ return r == other.r && g == other.g && b == other.b;	}
 		cxpr	bool			operator !=		(const SColorRGBA & other)	const	noexcept	{ return r != other.r || g != other.g || b != other.b;	}
@@ -175,7 +175,7 @@ namespace gpk
 								SColorBGR		()									noexcept	= default;
 		cxpr					SColorBGR		(const SColorBGR & other)			noexcept	= default;
 		cxpr					SColorBGR		(u0_t b_, u0_t g_, u0_t r_)				noexcept	: color_bgr<u0_t>{{{b_}, g_}, r_} {}
-		cxpr					SColorBGR		(uint32_t other)					noexcept	: color_bgr<u0_t>
+		cxpr					SColorBGR		(u2_t other)					noexcept	: color_bgr<u0_t>
 			{ {{u0_t(((other & 0x000000FF) >>  0))}
 			, u0_t(((other & 0x0000FF00) >>  8))	}
 			, u0_t(((other & 0x00FF0000) >> 16))
@@ -183,7 +183,7 @@ namespace gpk
 		{}
 
 		COLOR_RGB_OPERATOR_MEMBERS(SColorBGR); 
-		cxpr	operator		uint32_t		()							const	noexcept	{ return 0xFF000000 | (((uint32_t)r) << 16)	| (((uint32_t)g) << 8) | (((uint32_t)b) << 0);																	}
+		cxpr	operator		u2_t		()							const	noexcept	{ return 0xFF000000 | (((u2_t)r) << 16)	| (((u2_t)g) << 8) | (((u2_t)b) << 0);																	}
 		cxpr	operator		SColorBGRA		()							const	noexcept	{ return {b, g, r, 0xFF};														}
 		cxpr	operator		SColor16		()							const	noexcept	{ return (((uint16_t)(b * BYTE_SCALE * 0x001F)) << 0) | (((uint16_t)(g * BYTE_SCALE * 0x003F)) << 5) | (((uint16_t)(r * BYTE_SCALE * 0x001F)) << 11 );	}
 

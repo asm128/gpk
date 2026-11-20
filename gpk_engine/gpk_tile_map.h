@@ -54,7 +54,7 @@ namespace gpk
 			gpk_necs(gpk::saveView(output, Coords)); 
 			gpk_necs(gpk::saveView(output, Stamps)); 
 			gpk_necs(gpk::savePOD (output, Blocks.size())); 
-			for(uint32_t iMap = 0; iMap < Blocks.size(); ++iMap) {
+			for(u2_t iMap = 0; iMap < Blocks.size(); ++iMap) {
 				gpk_necs(Blocks[iMap] ? Blocks[iMap]->Save(output) : STileBlock{}.Save(output));
 			}
 			return 0; 
@@ -63,10 +63,10 @@ namespace gpk
 			gpk_necs(gpk::loadPOD (input, Config)); 
 			gpk_necs(gpk::loadView(input, Coords)); 
 			gpk_necs(gpk::loadView(input, Stamps)); 
-			uint32_t					blockCount			= {};
+			u2_t					blockCount			= {};
 			gpk_necs(gpk::loadPOD (input, blockCount)); 
 			gpk_necs(Blocks.reserve(blockCount));
-			for(uint32_t iMap = 0; iMap < blockCount; ++iMap) {
+			for(u2_t iMap = 0; iMap < blockCount; ++iMap) {
 				::gpk::pobj<STileBlock>		block;
 				gpk_necs(block->Load(input));
 				if(0 == block->Tiles.size())

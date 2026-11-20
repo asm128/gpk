@@ -158,7 +158,7 @@ namespace gpk
 	typedef quat<double>	quatf64;
 	typedef quat<uint8_t>	quatu8;
 	typedef quat<uint16_t>	quatu16;
-	typedef quat<uint32_t>	quatu32;
+	typedef quat<u2_t>	quatu32;
 	typedef quat<u3_t>	quatu64;
 	typedef quat<int8_t>	quati8;
 	typedef quat<int16_t>	quati16;

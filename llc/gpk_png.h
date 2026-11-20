@@ -13,7 +13,7 @@ namespace gpk
 #pragma pack(push, 1)
 	struct SPNGChunk {
 		uint8_t			Type				[4]	= {};
-		uint32_t		CRC						= {};
+		u2_t		CRC						= {};
 		::gpk::au0_t	Data					= {};
 	};
 
@@ -65,8 +65,8 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	uint32_t				update_crc	(const ::gpk::vcu0_t & buf, uint32_t crc)		;
-	stin	uint32_t		get_crc		(const ::gpk::vcu0_t & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
+	u2_t				update_crc	(const ::gpk::vcu0_t & buf, u2_t crc)		;
+	stin	u2_t		get_crc		(const ::gpk::vcu0_t & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
 
 	gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::g8bgra	out_View);
 	gpk::err_t			pngDecode	(::gpk::SPNGData & pngData, ::gpk::gu16		out_View);

@@ -52,13 +52,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"listen_port"					}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, port);
-				info_printf("Port to listen on: %u.", (uint32_t)port);
+				info_printf("Port to listen on: %u.", (u2_t)port);
 			}
 			jsonPort = "";
 			wf_if(::gpk::failed(::gpk::jsonExpressionResolve(::gpk::vcs{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, adapter);
-				info_printf("Adapter: %u.", (uint32_t)adapter);
+				info_printf("Adapter: %u.", (u2_t)adapter);
 			}
 		}
 	}
@@ -71,7 +71,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	szCmdlineFinal.push_back(0);
 	szCmdlineApp.push_back(0);
 
-	gpk_necall(gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (uint32_t)port);
+	gpk_necall(gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (u2_t)port);
 	return 0;
 }
 
@@ -86,7 +86,7 @@ static	::gpk::error_t	createChildProcess
 	::gpk::vstr_t				szCmdlineFinal			= commandLine;
 	bool						bSuccess				= false;
 	stacxpr	bool				isUnicodeEnv			= false;
-	stacxpr	uint32_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stacxpr	u2_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 	
 	if(INVALID_HANDLE_VALUE != process.ProcessInfo.hProcess	){ CloseHandle(process.ProcessInfo.hProcess	); }
 	bSuccess				= CreateProcessA(szCmdlineApp	// Create the child process.
@@ -123,10 +123,10 @@ static	::gpk::error_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::
 
 static	::gpk::error_t	readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	static	::gpk::au0_t		chBuf;
-	stacxpr	uint32_t			BUFSIZE					= 1024 * 1024 * 50;
+	stacxpr	u2_t			BUFSIZE					= 1024 * 1024 * 50;
 	chBuf.resize(BUFSIZE);
 	for (;;) {
-		uint32_t					dwRead					= 0;
+		u2_t					dwRead					= 0;
 		if_zero_fe(ReadFile(handles.ChildStd_OUT_Read, chBuf.begin(), chBuf.size(), (DWORD*)&dwRead, NULL));
 		if(0 == dwRead)
 			break;
@@ -175,7 +175,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	{	// pick up messages for later processing
 		::std::lock_guard			lock						(app.Server.Mutex);
 		receivedPerClient.resize(app.Server.Clients.size());
-		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
+		for(u2_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
 			::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
 			::std::lock_guard					lockRecv					(conn->Queue.MutexReceive);
 			*(receivedPerClient[iClient])	= app.Server.Clients[iClient]->Queue.Received;
@@ -186,10 +186,10 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	app.ClientIOHandles.resize(receivedPerClient.size());
 	app.ClientProcesses.resize(receivedPerClient.size());
 	{	// Exectue processes
-		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
+		for(u2_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			::brt::SProcessHandles		& iohandles				= app.ClientIOHandles[iClient];
 			::brt::SProcess				& process				= app.ClientProcesses[iClient];
-			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
+			for(u2_t iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, (*(receivedPerClient[iClient]))[iMessage]->Payload.begin());
 				::gpk::vu8					environmentBlock		= (*(receivedPerClient[iClient]))[iMessage]->Payload;
 				// llamar proceso
@@ -202,7 +202,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 				::gpk::vcu0_t					payload					= (*(receivedPerClient[iClient]))[iMessage]->Payload;
 				::gpk::error_t				contentOffset			= ::gpk::find_sequence_pod(::gpk::vcu0_t{(const uint8_t*)"\0", 1}, payload);
 				if_fail_cef(contentOffset, "%s", "Failed to find environment block stop code.");
-				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
+				if(payload.size() && (payload.size() > (u2_t)contentOffset + 2))
 					if_fail_ef(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2}), "%s", "Failed to write request content to process' stdin.");
 				if_fail_ef(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process.
 			}
@@ -212,12 +212,12 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	::gpk::apobj<::gpk::apobj<::gpk::au0_t>>	& clientsResponses		= app.ClientResponses;
 	if_fail_fef(clientsResponses.resize(receivedPerClient.size()), "current:%u,new:%u", clientsResponses.size(), receivedPerClient.size());
 	{	// Read processes output if they're done processing.
-		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
+		for(u2_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			::gpk::pobj<::gpk::apobj<::gpk::au0_t>>	& clientResponses = clientsResponses[iClient];
 			if_fail_fe(clientResponses->resize(receivedPerClient[iClient]->size()));
 			::brt::SProcessHandles	& iohandles				= app.ClientIOHandles[iClient];
 			::brt::SProcess			& process				= app.ClientProcesses[iClient];
-			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
+			for(u2_t iMessage = 0; iMessage < receivedPerClient[iClient]->size(); ++iMessage) {
 				info_printf("Client %i received: %.*s.", iClient, (*(receivedPerClient[iClient]))[iMessage]->Payload.size(), (*(receivedPerClient[iClient]))[iMessage]->Payload.begin());
 				// generar respuesta proceso
 				//clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
@@ -229,9 +229,9 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 			}
 		}
 	}
-	for(uint32_t iClient = 0; iClient < clientsResponses.size(); ++iClient) {
+	for(u2_t iClient = 0; iClient < clientsResponses.size(); ++iClient) {
 		::gpk::pobj<::gpk::apobj<::gpk::au0_t>>	& clientResponses = clientsResponses[iClient];
-		for(uint32_t iMessage = 0; iMessage < clientResponses->size(); ++iMessage) { // contestar
+		for(u2_t iMessage = 0; iMessage < clientResponses->size(); ++iMessage) { // contestar
 			if((*clientResponses)[iMessage]->size()) {
 				::std::lock_guard					lock						(app.Server.Mutex);
 				::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
@@ -255,7 +255,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	app;
 	::gpk::pobj<::gpk::rtbgra8d32>	target;
 	target.create();
-	target->resize(app.Framework.RootWindow.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
+	target->resize(app.Framework.RootWindow.Size, {0xFF, 0x40, 0x7F, 0xFF}, (u2_t)-1);
 	{
 		::std::lock_guard				lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
@@ -274,7 +274,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 // Example 1
 // By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
 static int					REM_tmain0							()		{
-	stacxpr	uint32_t	BUFSIZE					= 4096;
+	stacxpr	u2_t	BUFSIZE					= 4096;
 	char							environmentBlock2Set	[BUFSIZE]	= {};
 	int32_t							charsWritten						= 0;
 	DWORD							dwFlags								= 0;
@@ -297,7 +297,7 @@ static int					REM_tmain0							()		{
 #define VARNAME "MyVariable"
 
 static int					REM_tmain1			() {
-	stacxpr	const uint32_t			BUFSIZE					= 4096;
+	stacxpr	const u2_t			BUFSIZE					= 4096;
 	stxp	::gpk::vcst_c			szAppName			= GPK_CXS("ex3.exe");
 	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
 	PROCESS_INFORMATION				pi					= {};

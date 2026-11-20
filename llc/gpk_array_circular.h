@@ -8,12 +8,12 @@
 namespace gpk
 {
 
-	tplt<tpnm _tPOD, uint32_t mAx>
+	tplt<tpnm _tPOD, u2_t mAx>
 	struct array_circular : private astatic<_tPOD, mAx> {
 	protected:
 		typedef	_tPOD			_t;
-		uint32_t				Offset	= 0;
-		uint32_t				Count	= 0;
+		u2_t				Offset	= 0;
+		u2_t				Count	= 0;
 
 		using astatic<_t, mAx>	::Storage;
 		using astatic<_t, mAx>	::size;
@@ -38,7 +38,7 @@ namespace gpk
 			return Count += 1;
 		}
 
-		template<uint32_t _nBatch>
+		template<u2_t _nBatch>
 		gpk::err_t			append			(const T (&output)[_nBatch])	{
 			rees_if(Count + _nBatch > free());
 			Storage[(Offset + Count) % mAx] = output;
@@ -61,11 +61,11 @@ namespace gpk
 		inxp	gpk::err_t	used			()	const	noexcept	{ return Count; }
 		inxp	gpk::err_t	byte_count		()	const	noexcept	{ return Count * sizeof(T); }
 
-//		gpk::err_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<int(T *, uint32_t)> & funcRead) {
+//		gpk::err_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<int(T *, u2_t)> & funcRead) {
 //			return 0;	
 //		}	
 		gpk::err_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
-			const uint32_t			stop			= mAx - Count;
+			const u2_t			stop			= mAx - Count;
 			int32_t					readCount		= 0; 
 			while(readCount < stop)
 			switch(const err_t funcRemainingResult = funcRemaining()) {
@@ -79,8 +79,8 @@ namespace gpk
 			return readCount;
 		}
 
-		gpk::err_t			read		(uint32_t countToRead, const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
-			const uint32_t			stop			= ::gpk::min(countToRead, mAx - Count);
+		gpk::err_t			read		(u2_t countToRead, const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
+			const u2_t			stop			= ::gpk::min(countToRead, mAx - Count);
 			for(int32_t readCount = 0; readCount < stop; ++readCount) {
 				rve_if(-readCount, 0 >= funcRemaining(), "%" GPK_FMT_I32 " < %" GPK_FMT_I32, readCount, countToRead);
 				rve_if_failed(-readCount, push_back(funcNext()), "%" GPK_FMT_I32, readCount);
@@ -89,21 +89,21 @@ namespace gpk
 		}
 	};
 
-	tplt<tpnm T, uint32_t _maxCount> using acir			= ::gpk::array_circular<T, _maxCount>;
-	tplt<tpnm T, uint32_t _maxCount> using acircular	= ::gpk::acir<T, _maxCount>;
+	tplt<tpnm T, u2_t _maxCount> using acir			= ::gpk::array_circular<T, _maxCount>;
+	tplt<tpnm T, u2_t _maxCount> using acircular	= ::gpk::acir<T, _maxCount>;
 	
-	tplt<uint32_t _maxCount>	using acirc		= ::gpk::acir<sc_t     , _maxCount>; tplt<uint32_t _maxCount>	using acirchar	= ::gpk::acir<sc_t    , _maxCount>;
-	tplt<uint32_t _maxCount>	using aciruc 	= ::gpk::acir<uc_t  , _maxCount>; tplt<uint32_t _maxCount>	using aciruchar	= ::gpk::acir<uc_t , _maxCount>;
-	tplt<uint32_t _maxCount>	using aciru8 	= ::gpk::acir<uint8_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciru16	= ::gpk::acir<uint16_t , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciru32	= ::gpk::acir<uint32_t , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciru64	= ::gpk::acir<u3_t , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri8 	= ::gpk::acir<int8_t   , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri16	= ::gpk::acir<int16_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri32	= ::gpk::acir<int32_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri64	= ::gpk::acir<int64_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using acirf32	= ::gpk::acir<f2_t, _maxCount>; 
-	tplt<uint32_t _maxCount>	using acirf64	= ::gpk::acir<f3_t, _maxCount>; 
+	tplt<u2_t _maxCount>	using acirc		= ::gpk::acir<sc_t     , _maxCount>; tplt<u2_t _maxCount>	using acirchar	= ::gpk::acir<sc_t    , _maxCount>;
+	tplt<u2_t _maxCount>	using aciruc 	= ::gpk::acir<uc_t  , _maxCount>; tplt<u2_t _maxCount>	using aciruchar	= ::gpk::acir<uc_t , _maxCount>;
+	tplt<u2_t _maxCount>	using aciru8 	= ::gpk::acir<uint8_t  , _maxCount>; 
+	tplt<u2_t _maxCount>	using aciru16	= ::gpk::acir<uint16_t , _maxCount>; 
+	tplt<u2_t _maxCount>	using aciru32	= ::gpk::acir<u2_t , _maxCount>; 
+	tplt<u2_t _maxCount>	using aciru64	= ::gpk::acir<u3_t , _maxCount>; 
+	tplt<u2_t _maxCount>	using aciri8 	= ::gpk::acir<int8_t   , _maxCount>; 
+	tplt<u2_t _maxCount>	using aciri16	= ::gpk::acir<int16_t  , _maxCount>; 
+	tplt<u2_t _maxCount>	using aciri32	= ::gpk::acir<int32_t  , _maxCount>; 
+	tplt<u2_t _maxCount>	using aciri64	= ::gpk::acir<int64_t  , _maxCount>; 
+	tplt<u2_t _maxCount>	using acirf32	= ::gpk::acir<f2_t, _maxCount>; 
+	tplt<u2_t _maxCount>	using acirf64	= ::gpk::acir<f3_t, _maxCount>; 
 } // namespace 
 
 #endif // GPK_ARRAY_CIRCULAR_H

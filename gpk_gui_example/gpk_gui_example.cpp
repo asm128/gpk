@@ -58,10 +58,10 @@ stacxpr	const ::gpk::tri3<float>						modelNormalVectors		[12]						=
 
 template<typename _tIndex, typename _tValue>
 					::gpk::error_t									indexValues									(const ::gpk::view<const _tValue> & in_values, ::gpk::array_pod<_tIndex> & out_indices, ::gpk::array_pod<_tValue> & out_values, ::gpk::array_pod<_tIndex> & out_remap){
-	for(uint32_t iValue = 0; iValue < in_values.size(); ++iValue) {
+	for(u2_t iValue = 0; iValue < in_values.size(); ++iValue) {
 		bool																	bFound										= false;
 		const _tValue															& in_value									= in_values[iValue];
-		for(uint32_t iValueIndexed = 0; iValueIndexed < out_values.size(); ++iValueIndexed) {
+		for(u2_t iValueIndexed = 0; iValueIndexed < out_values.size(); ++iValueIndexed) {
 			const _tValue															& out_value									= out_values[iValueIndexed];
 			if(in_value == out_value) {
 				bFound																= true;
@@ -115,11 +115,11 @@ static ::gpk::error_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8b
 	dummyDepth.resize(target.metrics(), 0xFFFFFFFFU);
 	::gpk::apod<::gpk::n2s1_t>	pixelCoords;
 	::gpk::apod<::gpk::trif32>	triangleWeights;
-	for(uint32_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
+	for(u2_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
 		const ::gpk::tri3f32			triangleCoords				= {gauge.Vertices[gauge.Indices[iTriangle].A], gauge.Vertices[gauge.Indices[iTriangle].B], gauge.Vertices[gauge.Indices[iTriangle].C]};
 		const double					colorFactor					= radialColor ? ::gpk::min(1.0, iTriangle / (double)triangleCount) : gauge.CurrentValue / (float)gauge.MaxValue;
 		::gpk::rgbaf					finalColor;
-		const bool						isEmptyGauge				= ((iTriangle + 2) >> 1) >= (uint32_t)gauge.CurrentValue * 2;
+		const bool						isEmptyGauge				= ((iTriangle + 2) >> 1) >= (u2_t)gauge.CurrentValue * 2;
 		finalColor					= isEmptyGauge
 			? ::gpk::rgbaf(colorEmpty)
 			: (colorFactor < .5)
@@ -128,7 +128,7 @@ static ::gpk::error_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8b
 		finalColor.Clamp();
 		pixelCoords.clear();
 		::gpk::drawTriangle(target.metrics(), triangleCoords, pixelCoords, triangleWeights, dummyDepth);
-		for(uint32_t iPixelCoords = 0; iPixelCoords < pixelCoords.size(); ++iPixelCoords) {
+		for(u2_t iPixelCoords = 0; iPixelCoords < pixelCoords.size(); ++iPixelCoords) {
 			const ::gpk::n2s1_t		pixelCoord					= pixelCoords[iPixelCoords];
 			const ::gpk::n2f2_t		floatCoord					= pixelCoord.f2_t();
 			const double				distanceFromCenter			= (floatCoord - center2).Length();
@@ -194,9 +194,9 @@ static const SControlParams<::gme::GUI_EXAMPLE_CONTROL> controlList[] =
 	};
 
 template<typename _tId>
-static ::gpk::error_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::view<const SControlParams<_tId>> params, uint32_t idCount) {
+static ::gpk::error_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::view<const SControlParams<_tId>> params, u2_t idCount) {
 	gpk_necs(ids.resize(idCount));
-	for(uint32_t iControl = 0; iControl < params.size(); ++iControl) {
+	for(u2_t iControl = 0; iControl < params.size(); ++iControl) {
 		const SControlParams<_tId>	& param	= params[iControl];
 		const ::gpk::cid_t	idControl	= ::gpk::controlCreate(gui);
 		gpk_necs(idControl);
@@ -218,7 +218,7 @@ template<typename _tValue>
 static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const SMenuItem<_tValue>> items, ::gpk::cid_t parent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN align, ::gpk::acid & ids) {
 	::gpk::aobj<::gpk::vcsc_t>	labels;
 	gpk_necs(labels.resize(items.size()));
-	for(uint32_t iItem = 0; iItem < labels.size(); ++iItem)
+	for(u2_t iItem = 0; iItem < labels.size(); ++iItem)
 		labels[iItem] = items[iItem].Text;
 	return ::gpk::guiCreateControlList(gui, labels, parent, buttonSize, offset, align, ::gpk::ALIGN_CENTER, ids);
 }
@@ -280,7 +280,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	stacxpr const ::gpk::n3f2_t							cubeCenter									= {0.5f, 0.5f, 0.5f};
 	::gpk::array_pod<uint8_t>												& remap										= app.ModelGeometry.PositionRemap;
 	::indexValues({&modelPositionsVertices[0].A, ::gpk::size(modelPositionsVertices) * 3}, app.ModelGeometry.Positions.Indices, app.ModelGeometry.Positions.Values, remap);
-	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {
+	for(u2_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {
 		::gpk::n3f2_t													& vertexToTransform					= app.ModelGeometry.Positions.Values[iVertex];
 		vertexToTransform													-= cubeCenter;
 	}
@@ -321,7 +321,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 				app.DialogMain.Controls[app.Viewport].as(viewport);
 				return ::gpk::viewportFold(*viewport, viewport->Settings.Unfolded);
 			}
-			for(uint32_t iItem = 0; iItem < app.IdKlibActions.size(); ++iItem)
+			for(u2_t iItem = 0; iItem < app.IdKlibActions.size(); ++iItem)
 				if(iControl == app.IdKlibActions[iItem]) {
 					const SMenuItem<::gme::GUI_EXAMPLE_KLIB_ACTION> & item = klibMenuItems[iItem];
 					return ::gpk::controlTextSet(gui, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Klib_selection], ::gme::GUI_EXAMPLE_KLIB_ACTION_Exit == item.ReturnValue ? ::gpk::vcst_t{"WELCOME COMMANDER"} : ::gpk::vcst_t{item.Text});
@@ -334,7 +334,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	app.DialogMain.Update();
 	::gpk::pobj<::gpk::SDialogSlider>	slider;
 	app.DialogMain.Controls[app.Slider].as(slider);
-	app.Gauge.SetValue((float)slider->ValueCurrent, (uint32_t)slider->ValueLimits.Max);
+	app.Gauge.SetValue((float)slider->ValueCurrent, (u2_t)slider->ValueLimits.Max);
 	memset(app.Gauge.Image.View.begin(), 0, app.Gauge.Image.View.byte_count());
 	gpk_necs(::gaugeImageUpdate(app.Gauge, app.Gauge.Image.View, ::gpk::RED, ::gpk::YELLOW, ::gpk::LIGHTGREEN, ::gme::SUIRadialGauge::COLOR_BKG_DEFAULT, false));
 
@@ -355,7 +355,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 		scene.ViewMatrix.LookAt(scene.Camera.Position, scene.Camera.Target, scene.CameraUp);
 		::gpk::pobj<::gpk::SDialogViewport>									viewport									= {};
 		app.DialogMain.Controls[app.Viewport].as(viewport);
-		const ::gpk::n2u2_t											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint32_t>();
+		const ::gpk::n2u2_t											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<u2_t>();
 		scene.Projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar);
 		scene.Projection															= scene.ViewMatrix * scene.Projection;
 		scene.LightPos.Normalize();
@@ -387,11 +387,11 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	::gpk::pobj<::gpk::SDialogViewport>	viewport	= {};
 	app.DialogMain.Controls[app.Viewport].as(viewport);
 	const ::gpk::n2<uint16_t>											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
-	buffer3d->resize(offscreenMetrics.Cast<uint32_t>(), {0, 0, 0, 0}, (uint32_t)-1);
+	buffer3d->resize(offscreenMetrics.Cast<u2_t>(), {0, 0, 0, 0}, (u2_t)-1);
 
 	::gpk::array_pod<::gpk::tri3<float>>								& triangle3dList							= app.VertexCache.Triangle3dTransformed	;
 	::gpk::array_pod<::gpk::bgra>										& triangle3dColorList						= app.VertexCache.Triangle3dColorList	;
-	const uint32_t															countTriangles								= app.ModelGeometry.Positions.Indices.size() / 3;
+	const u2_t															countTriangles								= app.ModelGeometry.Positions.Indices.size() / 3;
 	triangle3dList		.resize(countTriangles);
 	triangle3dColorList	.resize(countTriangles * 3);
 	::gpk::m4<float>													projection									;
@@ -403,7 +403,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	}
 
 	::gpk::n3f2_t													& lightPos									= app.Scene.LightPos;
-	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) {
+	for(u2_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) {
 		::gpk::tri3<float>												& transformedTriangle						= triangle3dList[iTriangle];
 		transformedTriangle													=
 			{ app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 0]]
@@ -415,7 +415,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	::gpk::array_pod<::gpk::tri2<int32_t>>							triangle2dList								= {};
 	triangle2dList.resize(countTriangles);
 	const ::gpk::n2<int32_t>											screenCenter								= {(int32_t)offscreenMetrics.x / 2, (int32_t)offscreenMetrics.y / 2};
-	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) { // Maybe the scale
+	for(u2_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) { // Maybe the scale
 		::gpk::tri3<float>												& transformedTriangle3D						= triangle3dList[iTriangle];
 		::gpk::tri2<int32_t>												& transformedTriangle2D						= triangle2dList[iTriangle];
 		transformedTriangle2D.A												= {(int32_t)transformedTriangle3D.A.x, (int32_t)transformedTriangle3D.A.y};
@@ -426,7 +426,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	}
 
 	::gpk::view<::gpk::n3f2_t>								normals										= {(::gpk::n3f2_t*)app.ModelGeometry.NormalsVertex.Values.begin(), app.ModelGeometry.NormalsVertex.Values.size() * 3};
-	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Indices.size(); ++iVertex) {
+	for(u2_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Indices.size(); ++iVertex) {
 		double																	lightFactor									= normals[iVertex].Dot(lightPos);
 		triangle3dColorList[iVertex]										= (::gpk::RED * lightFactor).Clamp();
 	}
@@ -435,7 +435,7 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 	::gpk::n3f2_t													cameraFront										= (camera.Target - camera.Position).Normalize();
 	::gpk::array_pod<::gpk::tri<float>>								triangleWeights;
 
-	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
+	for(u2_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
 		double																	lightFactor									= normals[iTriangle * 3].Dot(cameraFront);
 		if(lightFactor > 0)
 			continue;
@@ -445,15 +445,15 @@ static ::gpk::error_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const 
 		transformedTriangle3D.A												= {(float)triangle2dList[iTriangle].A.x, (float)triangle2dList[iTriangle].A.y, triangle3dList[iTriangle].A.z};
 		transformedTriangle3D.B												= {(float)triangle2dList[iTriangle].B.x, (float)triangle2dList[iTriangle].B.y, triangle3dList[iTriangle].B.z};
 		transformedTriangle3D.C												= {(float)triangle2dList[iTriangle].C.x, (float)triangle2dList[iTriangle].C.y, triangle3dList[iTriangle].C.z};
-		es_if(::gpk::failed(::gpk::drawTriangle(offscreenMetrics.Cast<uint32_t>(), transformedTriangle3D, trianglePixelCoords, triangleWeights, buffer3d->DepthStencil.View)));
-		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord)
+		es_if(::gpk::failed(::gpk::drawTriangle(offscreenMetrics.Cast<u2_t>(), transformedTriangle3D, trianglePixelCoords, triangleWeights, buffer3d->DepthStencil.View)));
+		for(u2_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord)
 			buffer3d->Color.View[trianglePixelCoords[iCoord].y][trianglePixelCoords[iCoord].x] = triangle3dColorList[iTriangle * 3];
 
 		::gpk::drawLine(offscreenMetrics, ::gpk::line2<int32_t>{triangle2dList[iTriangle].A, triangle2dList[iTriangle].B}, wireframePixelCoords);
 		::gpk::drawLine(offscreenMetrics, ::gpk::line2<int32_t>{triangle2dList[iTriangle].B, triangle2dList[iTriangle].C}, wireframePixelCoords);
 		::gpk::drawLine(offscreenMetrics, ::gpk::line2<int32_t>{triangle2dList[iTriangle].C, triangle2dList[iTriangle].A}, wireframePixelCoords);
 	}
-	for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
+	for(u2_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
 		::gpk::drawPixelLight(buffer3d->Color.View, wireframePixelCoords[iCoord], (::gpk::bgra)::gpk::GREEN, 0.05f, 1.5);
 
 	gui.Controls.Images[viewport->IdClient].Image						= buffer3d->Color.View;

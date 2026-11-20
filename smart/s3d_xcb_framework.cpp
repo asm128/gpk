@@ -10,15 +10,15 @@ static ::gpk::error_t		create_window	(xcb_connection_t * connection, xcb_screen_
 	xcb_create_pixmap(connection, screen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, screen->root, window.Size.x, window.Size.y);
 	{	// create graphics context
 		window.PlatformDetail.GC		= xcb_generate_id(connection);
-		const uint32_t						mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-		const uint32_t						values[3]	= {screen->black_pixel, screen->white_pixel, 0};
+		const u2_t						mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+		const u2_t						values[3]	= {screen->black_pixel, screen->white_pixel, 0};
 		xcb_create_gc(connection, window.PlatformDetail.GC, screen->root, mask, values);
 	}
 
 	{	// create the window
 		window.PlatformDetail.IdDrawable			= xcb_generate_id(connection);
-		const uint32_t					mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
-		const uint32_t					values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
+		const u2_t					mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
+		const u2_t					values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
 			, XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY
 			| XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_KEY_PRESS  | XCB_EVENT_MASK_KEY_RELEASE | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION
 		};
@@ -38,8 +38,8 @@ static ::gpk::error_t		create_window	(xcb_connection_t * connection, xcb_screen_
 	}
 	{	// context for filling with white
 		xcb_gcontext_t				fill		= xcb_generate_id(connection);
-		const uint32_t				mask		= XCB_GC_FOREGROUND;
-		const uint32_t				values[2]	= {0xFF00FF,};
+		const u2_t				mask		= XCB_GC_FOREGROUND;
+		const u2_t				values[2]	= {0xFF00FF,};
 		xcb_create_gc(connection, fill, window.PlatformDetail.IdDrawableBackPixmap, mask, values);
 
 		const xcb_rectangle_t		r1			= {0, 0, (uint16_t)window.Size.x, (uint16_t)window.Size.y};
@@ -61,13 +61,13 @@ static ::gpk::error_t		create_window	(xcb_connection_t * connection, xcb_screen_
 
 ::gpk::error_t				s3d::frameworkUpdate				(::s3d::SXCBFramework & framework) {
 #ifndef GPK_WINDOWS
-	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, u2_t>>
 										& guiRenderTarget			= framework.MainDisplayOffscreen;
-	const ::gpk::n2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+	const ::gpk::n2<u2_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 	::gpk::SInput						& input						= *framework.Input;
 	if(framework.MainDisplay.Repaint) {
 		const xcb_image_format_t			format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
-		const ::gpk::n2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+		const ::gpk::n2<u2_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 		xcb_image_t							* image						= xcb_image_create_native
 			( framework.PlatformDetail.XCBConnection
 			, guiRenderTargetMetrics.x

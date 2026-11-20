@@ -55,7 +55,7 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SDialogEditBox : public ::gpk::IDialogControl {
-		::gpk::minmax<uint32_t>	Selection			= {};
+		::gpk::minmax<u2_t>	Selection			= {};
 		::gpk::apod<sc_t>		String				= {};
 
 		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::editBoxUpdate(*this); }
@@ -79,7 +79,7 @@ namespace gpk
 
 		TCallback				FuncValueFormat		= []	(::gpk::vcsc_t & format, int64_t, const ::gpk::minmax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
 		TCallback				FuncGetString		= [this](::gpk::vcsc_t & inouts, int64_t value, const ::gpk::minmax<int64_t> &)			{ 
-			inouts	= {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
+			inouts	= {ValueString, (u2_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
 			return 0; 
 		};
 
@@ -100,14 +100,14 @@ namespace gpk
 
 		TCallback				FuncValueFormat	= [this](::gpk::vcsc_t & format, _tValue/*value*/, const ::gpk::minmax<_tValue> &)	mutable	{ format = ::gpk::vcs("%lli"); return 0; };
 		TCallback				FuncGetString	= [this](::gpk::vcsc_t & inouts, _tValue value, const ::gpk::minmax<_tValue> &)			{ 
-			inouts	= {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
+			inouts	= {ValueString, (u2_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
 			return 0; 
 		};
 
 		virtual	gpk::err_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn) { 
 			::gpk::SDialog				& dialog			= *Dialog;
 			::gpk::SControlTable		& controlTable		= dialog.GUI->Controls;
-			for(uint32_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {
+			for(u2_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {
 				if(eventsIn[iEvent]->Type == ::gpk::SYSTEM_EVENT_GUI) {
 					::gpk::eventExtractAndHandle<::gpk::EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & eventGui) {
 						switch(eventGui.Type) {

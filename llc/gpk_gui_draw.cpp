@@ -48,10 +48,10 @@ static	gpk::err_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::gpk::
 
 	::gpk::SControlText			& controlText		= gui.Controls.Text		[iControl];
 	::gpk::apod<::gpk::n2u1_t>	dstCoords;
-	const uint32_t				iFont				= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
+	const u2_t				iFont				= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont	& selectedFont		= *gui.Fonts[iFont];
 	gpk_necs(gpk::textLineRaster(target.metrics(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
-	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
+	for(u2_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
 		const ::gpk::n2u1_t			dstCoord			= dstCoords[iCoord];
 		target[dstCoord.y][dstCoord.x]	= colorFace;
 		//::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
@@ -126,7 +126,7 @@ static	gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl
 	{
 		::fillColorTable(gui, iControl, disabled, colors);
 
-		for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_AREA_OLD_COUNT; ++iElement) {
+		for(u2_t iElement = 0; iElement < ::gpk::GUI_CONTROL_AREA_OLD_COUNT; ++iElement) {
 			if( (controlDraw.NoBorder && iElement != ::gpk::GUI_CONTROL_AREA_OLD_CLIENT) // (iElement >= ::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT || iElement <= ::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM))
 			 || (controlDraw.NoClient && iElement == ::gpk::GUI_CONTROL_AREA_OLD_CLIENT) //(iElement == ::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND || iElement == ::gpk::GUI_CONTROL_AREA_OLD_CLIENT))
 			)
@@ -145,7 +145,7 @@ static	gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl
 		, ::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM
 		};
 	if(false == controlDraw.NoBorder && ::gpk::controlNCSpacing(gui.Controls.Placement[iControl]).Area()) {
-		for(uint32_t iTri = 0; iTri < 8; ++iTri)
+		for(u2_t iTri = 0; iTri < 8; ++iTri)
 			::gpk::drawTriangle(target, colors[colorIndices[iTri]], controlMetrics.Triangles[iTri]);
 	}
 
@@ -183,27 +183,27 @@ static	gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl
 gpk::err_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra target)								{
 	gpk_necall(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics16()) {
-		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
+		for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
 			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
 		gui.LastSize			= target.metrics().u1_t();
 	}
 	if(false == ::gpk::controlHidden(gui, iControl)) {
 		gpk_necs(::actualControlDraw(gui, iControl, target));
 		::gpk::vccid				children						= gui.Controls.Children[iControl];
-		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
+		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 			gpk_necs(gpk::controlDrawHierarchy(gui, children[iChild], target));
 	}
 	return 0;
 }
 gpk::err_t			gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::g8bgra target)													{
 	if(gui.LastSize != target.metrics().u1_t() || gui.LastZoom != gui.Zoom) {
-		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
+		for(u2_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
 			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
 		gui.LastSize			= target.metrics().u1_t();
 		gui.LastZoom			= gui.Zoom;
 	}
 	gpk_necs(gpk::guiUpdateMetrics(gui, gui.LastSize, false));;
-	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
+	for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
 		if(false == ::gpk::controlInvalid(gui, (::gpk::cid_t)iControl) && ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent))
 			es_if(::gpk::failed(::gpk::controlDrawHierarchy(gui, (::gpk::cid_t)iControl, target)));
 	return 0;

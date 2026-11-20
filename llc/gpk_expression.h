@@ -30,7 +30,7 @@ namespace gpk
 	};
 
 	struct SExpressionReaderState {
-		uint32_t						IndexCurrentChar				= 0;
+		u2_t						IndexCurrentChar				= 0;
 		int32_t							IndexCurrentElement				= -1;
 		::gpk::SExpressionToken			* CurrentElement				= 0;
 		int32_t							NestLevel						= 0;

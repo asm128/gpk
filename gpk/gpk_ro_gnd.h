@@ -15,7 +15,7 @@ namespace gpk
 		float									v[4]							= { 0, 0, 1, 1 };		//< west->east, north->south ordering; 0=up 1=down
 		int16_t									TextureIndex					= -1			;		//< -1 for none
 		int16_t									LightmapIndex					= -1			;		//< -1 for none?
-		uint32_t								dwColor							= 0xFFFFFFFFU	;		// a default color to set to the tile for other kind of representations
+		u2_t								dwColor							= 0xFFFFFFFFU	;		// a default color to set to the tile for other kind of representations
 	};
 
 	struct STileFaceSkinMapping {
@@ -64,7 +64,7 @@ namespace gpk
 	struct SGNDFileContents {
 		STiledTerrainMetricsGND					Metrics;
 		::gpk::aobj<::gpk::apod<sc_t>>			TextureNames;
-		uint32_t								LightmapTiles;		// ??
+		u2_t								LightmapTiles;		// ??
 		::gpk::n2u2_t							LightmapSize;
 		::gpk::apod<STileBrightnessGND	>		lstTileBrightnessData;
 		::gpk::apod<STileSkinGND		>		lstTileTextureData;
@@ -80,7 +80,7 @@ namespace gpk
 		::gpk::apod<::gpk::n3f2_t>				Normals			;
 		::gpk::apod<::gpk::n3f2_t>				Vertices		;
 		::gpk::apod<::gpk::n2f2_t>				UVs				;
-		::gpk::apod<::gpk::tri<uint32_t>>		VertexIndices	;
+		::gpk::apod<::gpk::tri<u2_t>>		VertexIndices	;
 		//::gpk::apod<int32_t>					SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
@@ -100,25 +100,25 @@ namespace gpk
 	};
 
 	struct STiledTerrainCounters {
-		uint32_t								nBaseTileCount						;	// Base tile count is equal to (tile map width*tile map depth)
-		uint32_t								nTileColumnCount					;	// Stores the amount of tile columns that contain a single map chunk
-		uint32_t								nTileRowCount						;	// Stores the amount of tile rows that contain a single map chunk
-		uint32_t								nTopTileFaceCount					;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
+		u2_t								nBaseTileCount						;	// Base tile count is equal to (tile map width*tile map depth)
+		u2_t								nTileColumnCount					;	// Stores the amount of tile columns that contain a single map chunk
+		u2_t								nTileRowCount						;	// Stores the amount of tile rows that contain a single map chunk
+		u2_t								nTopTileFaceCount					;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
 
-		uint32_t								nFrontTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
-		uint32_t								nRightTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
-		uint32_t								nBottomTileFaceCount				;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
-		uint32_t								nBackTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
+		u2_t								nFrontTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
+		u2_t								nRightTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
+		u2_t								nBottomTileFaceCount				;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
+		u2_t								nBackTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
 
-		uint32_t								nLeftTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
-		uint32_t								nTotalTileFaceCount					;	// Stores the total number of valid tiles, which should be equal to the addition of top, front and right tiles.
-		uint32_t								nChunkColumnTileCount				;	// Stores the amount of tile columns that contain a single map chunk
-		uint32_t								nChunkRowTileCount					;	// Stores the amount of tile rows that contain a single map chunk
+		u2_t								nLeftTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
+		u2_t								nTotalTileFaceCount					;	// Stores the total number of valid tiles, which should be equal to the addition of top, front and right tiles.
+		u2_t								nChunkColumnTileCount				;	// Stores the amount of tile columns that contain a single map chunk
+		u2_t								nChunkRowTileCount					;	// Stores the amount of tile rows that contain a single map chunk
 
-		uint32_t								nChunkTotalTileCount				;	// Stores the total number of tiles contained in a single chunk
-		uint32_t								nColumnChunkCount					;	// Stores the amount of column chunks
-		uint32_t								nRowChunkCount						;	// Stores the amount of row chunks
-		uint32_t								nTotalChunkCount					;	// Stores the total chunks contained in a map
+		u2_t								nChunkTotalTileCount				;	// Stores the total number of tiles contained in a single chunk
+		u2_t								nColumnChunkCount					;	// Stores the amount of column chunks
+		u2_t								nRowChunkCount						;	// Stores the amount of row chunks
+		u2_t								nTotalChunkCount					;	// Stores the total chunks contained in a map
 	};
 
 	enum TILE_FACE_FACING

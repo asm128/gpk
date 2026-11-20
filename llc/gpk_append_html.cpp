@@ -4,7 +4,7 @@
 gpk::err_t	gpk::appendHtmlScripts	(::gpk::asc_t & output, gpk::view<vcst_c> filenames) { 
 	::gpk::err_t 		result 				= 0;
 	stxp	const char	FMT_ATTR_SRC_JS	[]	= "type=\"text/javascript\" src=\"/%s.js\"";
-	for(uint32_t iFile = 0; iFile < filenames.size(); ++iFile) {
+	for(u2_t iFile = 0; iFile < filenames.size(); ++iFile) {
 		char 				cooked	[128] 		= {};
 		if_fail_e(::gpk::sprintf_s(cooked, FMT_ATTR_SRC_JS, filenames[iFile].begin()));
 		result 		+= ::gpk::appendXmlTag(output, "script", cooked);
@@ -14,7 +14,7 @@ gpk::err_t	gpk::appendHtmlScripts	(::gpk::asc_t & output, gpk::view<vcst_c> file
 gpk::err_t	gpk::appendHtmlStyles	(::gpk::asc_t & output, gpk::view<vcst_c> filenames) { 
 	::gpk::err_t 		result 				= 0;
 	stxp	const char	FMT_ATTR_HREF_CSS	[]	= "rel=\"stylesheet\" href=\"/%s.css\"";
-	for(uint32_t iFile = 0; iFile < filenames.size(); ++iFile) {
+	for(u2_t iFile = 0; iFile < filenames.size(); ++iFile) {
 		char 				cooked	[128] 		= {};
 		if_fail_e(::gpk::sprintf_s(cooked, FMT_ATTR_HREF_CSS, filenames[iFile].begin()));
 		result 		+= ::gpk::appendXmlTag(output, "link", cooked);

@@ -20,7 +20,7 @@ namespace dry
 		stacxpr	::gpk::rgbaf								COLOR_BKG_DEFAULT		= ::gpk::BROWN * .5 + ::gpk::DARKBLUE * .5;
 
 		inline	int16_t										SetValue				(float weight)							noexcept	{ return CurrentValue = int16_t(weight * MaxValue); }
-				int16_t										SetValue				(float currentValue, uint32_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
+				int16_t										SetValue				(float currentValue, u2_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
 	};
 
 	enum GAUGE : uint8_t

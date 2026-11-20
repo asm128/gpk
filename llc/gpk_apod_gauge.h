@@ -15,7 +15,7 @@ namespace gpk
 	typedef	::gpk::agauge<double	>	agaugef64	;
 	typedef	::gpk::agauge<uint8_t	>	agaugeu8	;
 	typedef	::gpk::agauge<uint16_t	>	agaugeu16	;
-	typedef	::gpk::agauge<uint32_t	>	agaugeu32	;
+	typedef	::gpk::agauge<u2_t	>	agaugeu32	;
 	typedef	::gpk::agauge<u3_t	>	agaugeu64	;
 	typedef	::gpk::agauge<int8_t	>	agaugei8	;
 	typedef	::gpk::agauge<int16_t	>	agaugei16	;

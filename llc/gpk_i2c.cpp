@@ -6,7 +6,7 @@ gpk::err_t gpk::i2cInit(SI2CDevice & device) {
 	return 0;
 }
 
-gpk::err_t gpk::i2cRead(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::I2C_MODE mode, uint32_t timeout) {
+gpk::err_t gpk::i2cRead(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::I2C_MODE mode, u2_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {
@@ -23,7 +23,7 @@ gpk::err_t gpk::i2cRead(SI2CDevice & device, uint16_t address, uint16_t count, :
 #endif
 }
 
-gpk::err_t gpk::i2cWrite(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::I2C_MODE mode, uint32_t timeout) {
+gpk::err_t gpk::i2cWrite(SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::I2C_MODE mode, u2_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {

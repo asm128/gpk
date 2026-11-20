@@ -63,7 +63,7 @@ namespace gpk
 	gpk::err_t			controlDrawHierarchy			(::gpk::SGUI & gui, cid_t iControl, ::gpk::g8bgra target);
 	gpk::err_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcs & text);
 	gpk::err_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, int16_t iFont);
-	//gpk::err_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint32_t> & targetSize);
+	//gpk::err_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<u2_t> & targetSize);
 	gpk::err_t			controlUpdateMetricsTopToDown	(::gpk::SGUI & gui, cid_t iControl, const ::gpk::n2u1_t & targetSize, bool forceUpdate);
 	gpk::err_t			controlMetricsInvalidate		(::gpk::SGUI & gui, cid_t iControl);
 	gpk::err_t			controlHidden					(const ::gpk::SGUI & gui, cid_t iControl);

@@ -98,24 +98,24 @@ gpk::err_t			gpk::generateCubeGeometry
 
 
 gpk::err_t			gpk::generateGridPositions		(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3	<float>>& out_Positions	) {
-	for(uint32_t z = 0; z < gridMetrics.y; ++z)
-		for(uint32_t x = 0; x < gridMetrics.x; ++x) {
+	for(u2_t z = 0; z < gridMetrics.y; ++z)
+		for(u2_t x = 0; x < gridMetrics.x; ++x) {
 			out_Positions.push_back({{(float)x, 0, (float)z}, {(float)x		, 0, (float)z + 1}, {(float)x + 1, 0, (float)z + 1}});
 			out_Positions.push_back({{(float)x, 0, (float)z}, {(float)x + 1	, 0, (float)z + 1}, {(float)x + 1, 0, (float)z}});
 		}
 	return 0;
 }
 gpk::err_t			gpk::generateGridNormalsTriangle				(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::n3		<float>>& out_Normals	) {
-	for(uint32_t z = 0; z < gridMetrics.y; ++z)
-		for(uint32_t x = 0; x < gridMetrics.x; ++x) {
+	for(u2_t z = 0; z < gridMetrics.y; ++z)
+		for(u2_t x = 0; x < gridMetrics.x; ++x) {
 			out_Normals.push_back({0, 1, 0});
 			out_Normals.push_back({0, 1, 0});
 		}
 	return 0;
 }
 gpk::err_t			gpk::generateGridNormalsVertex					(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3	<float>>& out_Normals	) {
-	for(uint32_t z = 0; z < gridMetrics.y; ++z)
-		for(uint32_t x = 0; x < gridMetrics.x; ++x) {
+	for(u2_t z = 0; z < gridMetrics.y; ++z)
+		for(u2_t x = 0; x < gridMetrics.x; ++x) {
 			out_Normals.push_back({{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
 			out_Normals.push_back({{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
 		}
@@ -124,8 +124,8 @@ gpk::err_t			gpk::generateGridNormalsVertex					(const ::gpk::n2u1_t & gridMetri
 gpk::err_t			gpk::generateGridUV					(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri2	<float>>& out_UV		) {
 	const ::gpk::n2f3_t				gridUnit							= {1.0 / gridMetrics.x, 1.0 / gridMetrics.y};
 	const ::gpk::n2f3_t				gridMetricsF						= gridMetrics.f3_t();
-	for(uint32_t z = 0; z < gridMetrics.y; ++z)
-	for(uint32_t x = 0; x < gridMetrics.x; ++x) {
+	for(u2_t z = 0; z < gridMetrics.y; ++z)
+	for(u2_t x = 0; x < gridMetrics.x; ++x) {
 		const ::gpk::n2f3_t				gridCell							= {x / gridMetricsF.x, z / gridMetricsF.y};
 		const ::gpk::n2f3_t				gridCellFar							= gridCell + gridUnit;
 		out_UV.push_back({{(float)gridCell.x, (float)gridCell.y}, {(float)gridCell.x, (float)gridCellFar.y}, gridCellFar.f2_t()});

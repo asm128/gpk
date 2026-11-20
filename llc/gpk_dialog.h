@@ -77,7 +77,7 @@ namespace gpk
 		inline	gpk::err_t	Focused			()	const	noexcept	{ return FocusedCurrent; }
 
 		gpk::err_t			Focus			(cid_t iControl)		{ 
-			ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
+			ree_if(Controls.size() <= (u2_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
 			FocusedPrevious	= FocusedCurrent; 
 			FocusedCurrent	= iControl; 
 			return 0; 
@@ -89,7 +89,7 @@ namespace gpk
 				GUI.create();
 			::gpk::SGUI				& gui				= *GUI;
 			cid_t					index				= (cid_t)-1;
-			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
+			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl].get_ref()) {
 					index				= (cid_t)iControl;
 					break;
@@ -104,7 +104,7 @@ namespace gpk
 			rees_if(0 == ::gpk::ref_create(&newRef));
 			Controls[index].set_ref((::gpk::gref<::gpk::IDialogControl>*)newRef);
 			Controls[index]->Dialog	= this;
-			const uint32_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
+			const u2_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
 			gui.Controls.Draw[idGUIControl].UseNewPalettes	= true;
 			::gpk::memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
 			//gpk_necall(gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
@@ -123,7 +123,7 @@ namespace gpk
 				GUI.create();
 
 			::gpk::SGUI					& gui			= *GUI;
-			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) {
+			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl) {
 				if(0 == Controls[iControl].get_ref() || ::gpk::controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
 					Controls.remove_unordered(iControl);
 					--iControl;
@@ -131,13 +131,13 @@ namespace gpk
 				}
 			}
 			if(LastSize != gui.LastSize) {
-				for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
+				for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)
 					Controls[iControl]->Resize(gui.LastSize);
 				LastSize				= gui.LastSize;
 			}
 			//if(0 != Input)
 			//	gpk_necall(gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
-			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
+			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
 					Controls[iControl]->Update(gui.Controls.EventQueue);
 

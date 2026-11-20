@@ -13,16 +13,16 @@ namespace gpk
 		::gpk::aobj<_tElement>		Elements;
 		::gpk::au3_t				UnusedData;
 
-		inxp	const _tElement&	operator[]					(uint32_t index)			const				{ return Elements[index]; }
-		inxp	_tElement&			operator[]					(uint32_t index)								{ return Elements[index]; }
+		inxp	const _tElement&	operator[]					(u2_t index)			const				{ return Elements[index]; }
+		inxp	_tElement&			operator[]					(u2_t index)								{ return Elements[index]; }
 
-		inxp	uint32_t			size						()							const	noexcept	{ return Elements.size(); }
+		inxp	u2_t			size						()							const	noexcept	{ return Elements.size(); }
 		gpk::err_t				push_back					(const _tElement & toPush)						{
 			const ::gpk::cid_t				elemIndex					= (::gpk::cid_t)Elements.push_back(toPush);
 			ree_if(failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");
-			stxp	uint32_t				boolContainerElementSize	= sizeof(u3_t) * ::gpk::BYTE_SIZE;
+			stxp	u2_t				boolContainerElementSize	= sizeof(u3_t) * ::gpk::BYTE_SIZE;
 			gpk_necs(UnusedData.resize((elemIndex + 1) / boolContainerElementSize + 1));
-			Unused						= {UnusedData.begin(), (uint32_t)(elemIndex + 1)};
+			Unused						= {UnusedData.begin(), (u2_t)(elemIndex + 1)};
 			Unused[elemIndex]			= false;
 			return elemIndex;
 		}

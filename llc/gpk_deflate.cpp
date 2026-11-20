@@ -25,7 +25,7 @@ stxp	u2_c	GPK_CRC_CRC_SEED			= 18973;
 gpk::err_t			gpk::crcGenerate			(vcu0_c & bytes, u3_t & crc)	{
 	crc						= 0;
 	u2_c				lastPos						= bytes.size() - 1;
-	for(uint32_t i=0; i < bytes.size(); ++i) {
+	for(u2_t i=0; i < bytes.size(); ++i) {
 		crc						+= ::gpk::noise1DBase(bytes[i], ::GPK_CRC_CRC_SEED);
 		crc						+= ::gpk::noise1DBase(bytes[lastPos - i], ::GPK_CRC_CRC_SEED);
 	}
@@ -72,7 +72,7 @@ gpk::err_t			gpk::arrayDeflate		(vcu0_c & inflated, ::gpk::au0_t & deflated, u2_
 		strm.next_out			= (Bytef*)block.begin();
 		ret						= deflate(&strm, Z_FINISH);    // no bad return value
 		bef_if(ret == Z_STREAM_ERROR, "Failed to compress: 0x%x.", ret);  // state not clobbered
-		u2_c				deflatedSize			= (uint32_t)((uint8_t*)strm.next_out - block.begin());
+		u2_c				deflatedSize			= (u2_t)((uint8_t*)strm.next_out - block.begin());
 		gpk_necs(deflated.append(block.begin(), deflatedSize));
 		if(ret == Z_STREAM_END)
 			break;
@@ -82,7 +82,7 @@ gpk::err_t			gpk::arrayDeflate		(vcu0_c & inflated, ::gpk::au0_t & deflated, u2_
 	ree_if(ret < 0, "%s", "Unknown error");												// stream will be complete
 	ef_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				// stream will be complete
 	ree_if(ret_end == Z_STREAM_ERROR, "deflateEnd() returned %s", "Z_STREAM_ERROR");
-	info_printf("deflateEnd: %u.", (uint32_t)ret);
+	info_printf("deflateEnd: %u.", (u2_t)ret);
 #endif
 	return 0;
 }
@@ -100,12 +100,12 @@ gpk::err_t			gpk::arrayInflate		(vcu0_c & deflated, ::gpk::au0_t & inflated, u2_
 	if (ret != Z_OK)
 		return ret;
 
-	strm.avail_in			= (uint32_t)deflated.size();
+	strm.avail_in			= (u2_t)deflated.size();
 	strm.next_in			= (Bytef *)deflated.begin();
 	::gpk::au0_t					block;
 	gpk_necs(block.resize(chunkSize));
 	while(true) {
-		strm.avail_out			= (uint32_t)block.size();
+		strm.avail_out			= (u2_t)block.size();
 		strm.next_out			= (Bytef *)block.begin();
 		ret						= ::inflate(&strm, Z_NO_FLUSH);
 		switch (ret) {
@@ -118,7 +118,7 @@ gpk::err_t			gpk::arrayInflate		(vcu0_c & deflated, ::gpk::au0_t & inflated, u2_
 			break;
 		}
 		ree_if(ret < 0, "Failed to decompress? inflate error: %i.", ret);
-		u2_c				inflatedSize			= (uint32_t)((const uint8_t*)strm.next_out - block.begin());
+		u2_c				inflatedSize			= (u2_t)((const uint8_t*)strm.next_out - block.begin());
 		gpk_necs(inflated.append(block.begin(), inflatedSize));
 		if(ret == Z_STREAM_END)
 			break;
@@ -152,7 +152,7 @@ gpk::err_t			gpk::folderToDisk			(const ::gpk::SFolderPackage & folderPackage, c
 	return 0;
 }
 
-stxp	uint32_t		DEFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
+stxp	u2_t		DEFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
 gpk::err_t			gpk::folderPack				(::gpk::SFolderPackage & output, const ::gpk::vcst_t nameFolderSrc) {
 	::gpk::SPackHeader 			& fileHeader			= output.PackageInfo = {};
 	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
@@ -180,7 +180,7 @@ gpk::err_t			gpk::folderPack				(::gpk::SFolderPackage & output, const ::gpk::vc
 	return 0;
 }
 
-stxp	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
+stxp	u2_t		INFLATE_CHUNK_SIZE			= u2_t(1024) * 1024 * 4;
 gpk::err_t			gpk::folderUnpack			(::gpk::SFolderInMemory & output, vcu0_c & rawFileInMemory)		{
 	const ::gpk::SPackHeader	& header					= *(::gpk::SPackHeader*)&rawFileInMemory[0];
 	output.Names	.resize(header.TotalFileCount);
@@ -190,12 +190,12 @@ gpk::err_t			gpk::folderUnpack			(::gpk::SFolderInMemory & output, vcu0_c & rawF
 	gpk_necs(gpk::arrayInflate({&rawFileInMemory[0] + szof(::gpk::SPackHeader)									, header.SizeCompressedTableFiles		}, output.DataInfo	, ::INFLATE_CHUNK_SIZE));
 	gpk_necs(gpk::arrayInflate({&rawFileInMemory[0] + szof(::gpk::SPackHeader) + header.SizeCompressedTableFiles, header.SizeCompressedContentsPacked	}, output.DataContents	, ::INFLATE_CHUNK_SIZE));
 	{ // Build access tables.
-		uint32_t					offsetInfo					= 0;
-		for(uint32_t iFile = 0; iFile < output.Names.size(); ++iFile) {
+		u2_t					offsetInfo					= 0;
+		for(u2_t iFile = 0; iFile < output.Names.size(); ++iFile) {
 			const ::gpk::rangeu2_t		& fileLocation				= *(const ::gpk::rangeu2_t*)&output.DataInfo[offsetInfo];
 			offsetInfo				+= szof(::gpk::rangeu2_t);
-			u2_c				lenName						= *(uint32_t*)&output.DataInfo[offsetInfo];
-			offsetInfo				+= szof(uint32_t);
+			u2_c				lenName						= *(u2_t*)&output.DataInfo[offsetInfo];
+			offsetInfo				+= szof(u2_t);
 			output.Names[iFile]	= {(const char*)&output.DataInfo[offsetInfo], lenName};
 			offsetInfo				+= lenName;
 			output.Contents[iFile]	= {&output.DataContents	[fileLocation.Offset], fileLocation.Count};
@@ -210,14 +210,14 @@ gpk::err_t			gpk::folderLoad
 	, ::gpk::au0_t		& contentsPacked			
 	) {
 	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
-	uint32_t					totalFileCount			= 0;
+	u2_t					totalFileCount			= 0;
 	{
 		::gpk::aobj<::gpk::asc_t>		listFiles				= {};
 		gpk_necall(gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
 
 		::gpk::au0_t					contentsTemp			= {};
 		::gpk::rangeu2_t			fileLocation			= {0, 0};
-		for(uint32_t iFile = 0; iFile < listFiles.size(); ++iFile) {
+		for(u2_t iFile = 0; iFile < listFiles.size(); ++iFile) {
 			fileLocation.Offset		= contentsPacked.size();
 			const ::gpk::vcst_t			pathToLoad				= {listFiles[iFile].begin(), listFiles[iFile].size()};
 			if(0 == pathToLoad.size())
@@ -245,18 +245,18 @@ gpk::err_t			gpk::folderToDisk			(const ::gpk::SFolderInMemory & virtualFolder, 
 	finalPathName.resize(8 * 1024);
 	finalPathName.fill(0);
 	FILE						* fp						= 0;
-	for(uint32_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
+	for(u2_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
 		gpk_safe_fclose(fp);
 		const ::gpk::vcst_t			& fileName					= virtualFolder.Names		[iFile];
 		vcu0_c			& fileContent				= virtualFolder.Contents	[iFile];
 		sprintf_s(bufferFormat, "%%.%us%%.%us", destinationPath.size(), fileName.size());
 		snprintf(finalPathName.begin(), finalPathName.size(), bufferFormat, destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u):'%s'. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
-		uint32_t					lenPath						= (uint32_t)strlen(finalPathName.begin());
-		gpk::err_t				indexSlash					= ::gpk::findLastSlash(::gpk::vcst_t{finalPathName.begin(), uint32_t(-1)});
+		u2_t					lenPath						= (u2_t)strlen(finalPathName.begin());
+		gpk::err_t				indexSlash					= ::gpk::findLastSlash(::gpk::vcst_t{finalPathName.begin(), u2_t(-1)});
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash]	= 0;
-			lenPath						= (uint32_t)strlen(finalPathName.begin());
+			lenPath						= (u2_t)strlen(finalPathName.begin());
  			if_fail_cef(::gpk::pathCreate({finalPathName.begin(), lenPath}), "Failed to create foder: %s.", finalPathName.begin());
 			finalPathName[indexSlash]	= '/';
 		}

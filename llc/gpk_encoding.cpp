@@ -17,7 +17,7 @@ gpk::err_t			gpk::saltDataSalt				(const ::gpk::vcu0_t & binary, ::gpk::au0_t & 
 	gpk_necs(salted.resize(binary.size() * 2));
 	uint8_t						* pSalted						= salted.begin();
 	const uint8_t				* pBinary						= binary.begin();
-	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary) {
+	for(u2_t iBinary = 0; iBinary < binary.size(); ++iBinary) {
 		pSalted[iBinary * 2]		= pBinary[iBinary];
 		pSalted[iBinary * 2 + 1]	= (::gpk::noise1DBase(::gpk::timeCurrentInUs()) + ::gpk::timeCurrentInUs()) & 0xFF;
 	}
@@ -28,7 +28,7 @@ gpk::err_t			gpk::saltDataUnsalt				(const ::gpk::vcu0_t & salted, ::gpk::au0_t 
 	gpk_necs(binary.resize(salted.size() / 2));
 	const uint8_t				* pSalted						= salted.begin();
 	uint8_t						* pBinary						= binary.begin();
-	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary)
+	for(u2_t iBinary = 0; iBinary < binary.size(); ++iBinary)
 		pBinary[iBinary]		= pSalted[iBinary * 2];
 	return 0;
 }
@@ -54,33 +54,33 @@ static	gpk::err_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 }
 
 gpk::err_t			gpk::hexEncode					(const ::gpk::vcu0_t & in_binary, ::gpk::asc_t & out_hexed	)	{
-	uint32_t					offset							= out_hexed.size();
+	u2_t					offset							= out_hexed.size();
 	gpk_necs(out_hexed.resize(offset + in_binary.size() * 2));
 	sc_t						* pHexed						= out_hexed.begin();
 	const uint8_t				* pBinary						= in_binary.begin();
-	for(uint32_t iByte = 0; iByte < in_binary.size(); ++iByte)
+	for(u2_t iByte = 0; iByte < in_binary.size(); ++iByte)
 		hexFromByte(pBinary[iByte], &pHexed[offset + iByte * 2]);
 	return 0;
 }
 
 gpk::err_t			gpk::hexDecode					(const ::gpk::vcsc_t & in_hexed	, ::gpk::au0_t & out_binary)	{
-	uint32_t					offset							= out_binary.size();
-	uint32_t					binarySize						= in_hexed.size() >> 1;
+	u2_t					offset							= out_binary.size();
+	u2_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necs(out_binary.resize(offset + binarySize));
 	const sc_t					* pHexed						= in_hexed.begin();
 	uint8_t						* pBinary						= out_binary.begin();
-	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
+	for(u2_t iByte = 0; iByte < binarySize; ++iByte)
 		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
 	return 0;
 }
 
 gpk::err_t			gpk::hexDecode					(const ::gpk::vcsc_t & in_hexed	, ::gpk::as0_t & out_binary)	{
-	uint32_t					offset							= out_binary.size();
-	uint32_t					binarySize						= in_hexed.size() >> 1;
+	u2_t					offset							= out_binary.size();
+	u2_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necs(out_binary.resize(offset + binarySize));
 	const sc_t					* pHexed						= in_hexed.begin();
 	int8_t						* pBinary						= out_binary.begin();
-	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
+	for(u2_t iByte = 0; iByte < binarySize; ++iByte)
 		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
 	return 0;
 }
@@ -119,7 +119,7 @@ gpk::err_t			gpk::ardellEncode				(as2_t & cache, const ::gpk::vcu0_t & input, u
 	for(i = 2		; i  < n; ++i) sn[i] = sn[i] ^ sn[i - 2] ^  (keyFinal[2] * sn[i - 1]) % 256 ;
 	for(i = n - 3	; i >= 0; --i) sn[i] = sn[i] ^ sn[i + 2] ^  (keyFinal[3] * sn[i + 1]) % 256 ;
 
-	uint32_t					outputOffset					= output.size();
+	u2_t					outputOffset					= output.size();
 	gpk_necs(output.resize(outputOffset + n));
 	uint8_t					* outputFast					= output.begin();
 	for( i = 0; i < n; ++i)
@@ -146,8 +146,8 @@ gpk::err_t			gpk::ardellDecode				(::gpk::as2_t & cache, const ::gpk::vcu0_t & i
 	for(i = 0		; i  < n - 1; ++i)	sn[i]			= sn[i] ^ sn[i + 1] ^ (keyFinal[1] * sn[i + 1]) % 256;
 	for(i = n - 1	; i >= 1	; --i)	sn[i]			= sn[i] ^ sn[i - 1] ^ (keyFinal[0] * sn[i - 1]) % 256;
 
-	uint32_t					outputOffset					= output.size();
-	const uint32_t				finalStringSize					= salt ? n - 4 : n;
+	u2_t					outputOffset					= output.size();
+	const u2_t				finalStringSize					= salt ? n - 4 : n;
 	const ::gpk::vci32			finalValues						= {salt ? &sn[2] : sn, finalStringSize};
 	gpk_necs(output.resize(outputOffset + finalStringSize));
 	uint8_t						* outputFast					= output.begin();
@@ -157,8 +157,8 @@ gpk::err_t			gpk::ardellDecode				(::gpk::as2_t & cache, const ::gpk::vcu0_t & i
 	return 0;
 }
 
-gpk::err_t			gpk::utf8FromCodePoint			(uint32_t codePoint, ::gpk::asc_t & hexDigits) {
-	const uint32_t				offset							= hexDigits.size();
+gpk::err_t			gpk::utf8FromCodePoint			(u2_t codePoint, ::gpk::asc_t & hexDigits) {
+	const u2_t				offset							= hexDigits.size();
 	if (codePoint <= 0x7f) {
 		hexDigits.resize(offset + 1);
 		hexDigits[offset + 0]	= static_cast<sc_t>(codePoint);
@@ -184,9 +184,9 @@ gpk::err_t			gpk::utf8FromCodePoint			(uint32_t codePoint, ::gpk::asc_t & hexDig
 }
 
 gpk::err_t			gpk::digest				(const ::gpk::vcu0_t & input, ::gpk::au2_t & digest)		{
-	uint32_t					x								= 0;
+	u2_t					x								= 0;
 	::gpk::au2_t					filtered						= {};
-	for(uint32_t i = 0; i < input.size() - 8; ++i) {
+	for(u2_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])
 			+  ::gpk::noise1DBase32(input[i + 2])
@@ -199,7 +199,7 @@ gpk::err_t			gpk::digest				(const ::gpk::vcu0_t & input, ::gpk::au2_t & digest)
 		x												+= x ^ (x << 11);
 		filtered.push_back(x);
 	}
-	for(uint32_t i = 0; i < filtered.size() - 8; ++i) {
+	for(u2_t i = 0; i < filtered.size() - 8; ++i) {
 		filtered[i]	^= ::gpk::noise1DBase32(filtered[i])
 					+  ::gpk::noise1DBase32(filtered[i + 1])
 					+  ::gpk::noise1DBase32(filtered[i + 2])
@@ -210,18 +210,18 @@ gpk::err_t			gpk::digest				(const ::gpk::vcu0_t & input, ::gpk::au2_t & digest)
 					+  ::gpk::noise1DBase32(filtered[i + 7])
 					;
 	}
-	for(uint32_t i = 2; i < (filtered.size() - 32); i += 2) {
-		for(uint32_t j = 0; j < 32; j++)
+	for(u2_t i = 2; i < (filtered.size() - 32); i += 2) {
+		for(u2_t j = 0; j < 32; j++)
 			filtered[j]										+= filtered[i + j];
 	}
-	digest.append({filtered.begin(), ::gpk::min((uint32_t)32U, filtered.size())});
+	digest.append({filtered.begin(), ::gpk::min((u2_t)32U, filtered.size())});
 	return 0;
 }
 
 gpk::err_t			gpk::digest									(const ::gpk::vcu0_t & input, ::gpk::asc_t & digest)		{
-	uint32_t					x								= 0;
+	u2_t					x								= 0;
 	::gpk::au2_t					filtered						= {};
-	for(uint32_t i = 0; i < input.size() - 8; ++i) {
+	for(u2_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])
 			+  ::gpk::noise1DBase32(input[i + 2])
@@ -234,7 +234,7 @@ gpk::err_t			gpk::digest									(const ::gpk::vcu0_t & input, ::gpk::asc_t & di
 		x						+= x ^ (x << 11);
 		filtered.push_back(x);
 	}
-	for(uint32_t i = 0; i < filtered.size() - 8; ++i) {
+	for(u2_t i = 0; i < filtered.size() - 8; ++i) {
 		filtered[i]	^= ::gpk::noise1DBase32(filtered[i])
 					+  ::gpk::noise1DBase32(filtered[i + 1])
 					+  ::gpk::noise1DBase32(filtered[i + 2])
@@ -245,12 +245,12 @@ gpk::err_t			gpk::digest									(const ::gpk::vcu0_t & input, ::gpk::asc_t & di
 					+  ::gpk::noise1DBase32(filtered[i + 7])
 					;
 	}
-	for(uint32_t i = 2, count = (filtered.size() - 8); i < count; i += 2) {
-		for(uint32_t j = 0; j < 8; j++)
+	for(u2_t i = 2, count = (filtered.size() - 8); i < count; i += 2) {
+		for(u2_t j = 0; j < 8; j++)
 			filtered[j]				+= filtered[i + j];
 	}
 	sc_t						temp		[32]				= {};
-	for(uint32_t i = 0; i < ::gpk::min(filtered.size(), (uint32_t)8U); ++i) {
+	for(u2_t i = 0; i < ::gpk::min(filtered.size(), (u2_t)8U); ++i) {
 		snprintf(temp, ::gpk::size(temp) - 2, "%i", filtered[i]);
 		gpk_necs(digest.append_string(temp));
 	}

@@ -54,12 +54,12 @@ namespace gpk
 	gpk::err_t			processUDPEvents
 		( ::gpk::vcpobj<SServer>	servers
 		, _tState					& state
-		, const ::std::function<gpk::err_t(uint32_t iServer, uint32_t iClient, _tState &, const _tEvent &)>	
+		, const ::std::function<gpk::err_t(u2_t iServer, u2_t iClient, _tState &, const _tEvent &)>	
 										& funcProcessServerRequest
 		) {
-		for(uint32_t iServer = 0; iServer < servers.size(); ++iServer) {
-			const ::std::function<gpk::err_t(uint32_t iClient, _tState &, const _tEvent &)>	
-										funcProcessRequest		= [iServer, funcProcessServerRequest](uint32_t iClient, _tState & customState, const _tEvent & customEvent) {
+		for(u2_t iServer = 0; iServer < servers.size(); ++iServer) {
+			const ::std::function<gpk::err_t(u2_t iClient, _tState &, const _tEvent &)>	
+										funcProcessRequest		= [iServer, funcProcessServerRequest](u2_t iClient, _tState & customState, const _tEvent & customEvent) {
 				return funcProcessServerRequest(iServer, iClient, customState, customEvent);
 			};
 			gpk_necs(gpk::processUDPEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));

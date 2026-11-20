@@ -23,8 +23,8 @@ namespace gpk
 		};
 
 	gpk::err_t spiInit (SSPIDevice& device);
-	gpk::err_t spiRead (SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::SPI_MODE mode, uint32_t timeout);
-	gpk::err_t spiWrite(SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::SPI_MODE mode, uint32_t timeout);
+	gpk::err_t spiRead (SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::SPI_MODE mode, u2_t timeout);
+	gpk::err_t spiWrite(SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::SPI_MODE mode, u2_t timeout);
 } // namespace
 
 #endif // GPK_SPI_H_02394293

@@ -43,7 +43,7 @@
 	scrollableSize						= {int16_t(spoolGroupSize.x - 36), int16_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 6)};
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLBAR	]].Area.Size.y		= int16_t(spoolGroupSize.y - controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_LIST_TITLE]].Area.Size.y - 8);
 	const ::gpk::vcid						listChildren						= controls.Children[screen.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE]];
-	for(uint32_t iSpool = 0, countSpools = listChildren.size(); iSpool < countSpools; ++iSpool) {
+	for(u2_t iSpool = 0, countSpools = listChildren.size(); iSpool < countSpools; ++iSpool) {
 		controls.Placement[listChildren[iSpool]].Area.Size.x		= int16_t(spoolGroupSize.x - 40);
 		controls.SetUpdated(listChildren[iSpool], false);
 	}
@@ -56,7 +56,7 @@
 	screenHome.GaugeDryerSmall.Gauges[::dry::GAUGE_TEMPERATURE	].SetValue(dryerState.Temperature	, 100);	//::dry::DRYER_MAX_TEMPERATURE);
 	screenHome.GaugeDryerSmall.Gauges[::dry::GAUGE_VACUUM		].SetValue(dryerState.Vacuum		, 1000);//::dry::DRYER_MAX_PRESSURE);
 	screenHome.GaugeDryerSmall.Gauges[::dry::GAUGE_HUMIDITY		].SetValue(dryerState.Humidity		, 100);	//app.MAX_HUMIDITY);
-	for(uint32_t iFeeder = 0; iFeeder < ::gpk::size(screenHome.GaugeFeederSmall); ++iFeeder) {
+	for(u2_t iFeeder = 0; iFeeder < ::gpk::size(screenHome.GaugeFeederSmall); ++iFeeder) {
 		screenHome.GaugeFeederSmall[iFeeder].SetValue(iFeeder ? dryerState.Humidity : dryerState.Vacuum, iFeeder ? 100 : 1000);//app.MAX_HUMIDITY : ::dry::DRYER_MAX_PRESSURE);
 	}
 	// The following string comparisons are to refresh the gauge images only if the values changed
@@ -69,7 +69,7 @@
 		app.Framework.RootWindow.Repaint	= true;
 		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYER_SMALL], screenHome.Strings.DryerTemperature.Storage)));
 	}
-	for(uint32_t iFeeder = 0; iFeeder < ::gpk::size(screenHome.GaugeFeederSmall); ++iFeeder) {
+	for(u2_t iFeeder = 0; iFeeder < ::gpk::size(screenHome.GaugeFeederSmall); ++iFeeder) {
 		snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, iFeeder ? "%i%%" : "%i mbar", int32_t(iFeeder ? dryerState.Humidity : dryerState.Vacuum));
 		if(forceUpdate || (::gpk::vcs{bufferTemp} != ::gpk::vcs{screenHome.Strings.FeederTemperature[iFeeder].Storage})) {
 			::gpk::memcpy_s(screenHome.Strings.FeederTemperature[iFeeder].Storage, bufferTemp);
@@ -125,7 +125,7 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 	::gpk::cid_t							indexSpoolList					= screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SPOOL_SCROLLABLE];
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::gpk::vcid							menuItemControls				= gui.Controls.Children[indexSpoolList];
-	for(uint32_t iSpool = 0, countSpools = app.Catalog.FilamentLoaded.size(); iSpool < countSpools; ++iSpool) {
+	for(u2_t iSpool = 0, countSpools = app.Catalog.FilamentLoaded.size(); iSpool < countSpools; ++iSpool) {
 		::gpk::cid_t							indexControl					= -1;
 		if(iSpool < menuItemControls.size())
 			indexControl						= menuItemControls[iSpool];
@@ -148,7 +148,7 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 			);
 		controlText.Text					= ::gpk::label(bufferFormat);
 	}
-	for(uint32_t iSpool = app.Catalog.FilamentLoaded.size(), countSpools = menuItemControls.size(); iSpool < countSpools; ++iSpool) {
+	for(u2_t iSpool = app.Catalog.FilamentLoaded.size(), countSpools = menuItemControls.size(); iSpool < countSpools; ++iSpool) {
 		const ::gpk::error_t					indexControl					= menuItemControls[iSpool];
 		::gpk::SControlPlacement				& controlFilament				= gui.Controls.Placement[indexControl];
 		::gpk::SControlText						& controlText					= gui.Controls.Text[indexControl];
@@ -163,9 +163,9 @@ static	::gpk::error_t				updateControlIfNeeded			(::dry::SApplication & app, ::g
 static	::gpk::error_t				formatTimerString				(int64_t timeInMilliseconds, ::gpk::vc target) {
 	const int64_t							timeInSeconds					= timeInMilliseconds / 1000;
 	const int64_t							timeInMinutes					= timeInSeconds / 60;
-	const uint32_t							hours							= (uint32_t)(timeInMinutes / 60);
-	const uint32_t							mins							= (uint32_t)(timeInMinutes) % 60;
-	const uint32_t							secs							= (uint32_t)(timeInSeconds) % 60;
+	const u2_t							hours							= (u2_t)(timeInMinutes / 60);
+	const u2_t							mins							= (u2_t)(timeInMinutes) % 60;
+	const u2_t							secs							= (u2_t)(timeInSeconds) % 60;
 	if(1 == hours)
 		snprintf(target.begin(), target.size() - 2, "%u:%2.2uHr", hours, mins);
 	else if (hours)
@@ -190,7 +190,7 @@ static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
 }
 
 ::gpk::error_t						dry::updateScreenHome			(::dry::SApplication & app) {
-	for(uint32_t iDryerEvent = 0; iDryerEvent < app.Dryer.EventList.size(); ++iDryerEvent) {
+	for(u2_t iDryerEvent = 0; iDryerEvent < app.Dryer.EventList.size(); ++iDryerEvent) {
 		::dry::DRYER_EVENT						dryerEvent						= app.Dryer.EventList[iDryerEvent];
 		::dry::SScreenHome						& screenHome					= app.Screens.Home;
 		::gpk::SGUI								& gui							= *app.Framework.GUI;
@@ -258,7 +258,7 @@ static	::gpk::error_t				updateSessionDisplay			(::dry::SApplication & app)	{
 }
 
 ::gpk::error_t						dry::handleControlHome			(::dry::SApplication & app, int32_t idControl)	{
-	switch((uint32_t)idControl) {
+	switch((u2_t)idControl) {
 	case dry::SCREEN_CONTROL_HOME_SPOOL_LIST_PREV:
 		if (app.Catalog.FilamentLoaded.size()) {
 			--app.Screens.Home.IndexSpool;

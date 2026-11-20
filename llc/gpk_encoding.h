@@ -31,13 +31,13 @@ namespace gpk
 
 	tplt<tpnm _tBase>
 	gpk::err_t						rleEncode				(const ::gpk::view<_tBase> & decoded, ::gpk::au0_t & encoded) {
-		uint32_t								idxLatest				= 0;
-		stxp	const uint32_t					sizeBlock				= sizeof(_tBase) + 1;
-		for(uint32_t iIn = 0; iIn < decoded.size(); ++iIn) {
+		u2_t								idxLatest				= 0;
+		stxp	const u2_t					sizeBlock				= sizeof(_tBase) + 1;
+		for(u2_t iIn = 0; iIn < decoded.size(); ++iIn) {
 			const _tBase 							& current				= decoded[iIn];
 			const _tBase							& latest				= decoded[idxLatest];
 			if(0 == iIn || 0 != memcmp(&current, &latest, sizeof(_tBase)) || 255 == (uint8_t)encoded[encoded.size() - 1]) {
-				const uint32_t							newSize					= encoded.size() + sizeBlock;
+				const u2_t							newSize					= encoded.size() + sizeBlock;
 				gpk_necs(encoded.resize(newSize));
 				memcpy(&encoded[encoded.size() - sizeBlock], &current, sizeof(_tBase));
 				encoded[encoded.size() - 1]			= 0;
@@ -51,19 +51,19 @@ namespace gpk
 
 	tplt<tpnm _tBase>
 	gpk::err_t						rleDecode			(const ::gpk::vcu0_t & encoded, ::gpk::apod<_tBase> & decoded) {
-		stxp	const uint32_t					sizeBlock			= sizeof(_tBase) + 1;
-  		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
+		stxp	const u2_t					sizeBlock			= sizeof(_tBase) + 1;
+  		for(u2_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 							& current			= *(_tBase*)&encoded[iIn];
 			const uint8_t							count				= encoded[iIn + sizeof(_tBase)];
 			gpk_necs(decoded.push_back(current));
-			for(uint32_t iOut = 0; iOut < count; ++iOut)
+			for(u2_t iOut = 0; iOut < count; ++iOut)
 				gpk_necs(decoded.push_back(current));
 		}
 		return 0;
 	}
 
 	// Description at http://en.wikipedia.org/wiki/UTF-8
-	gpk::err_t			utf8FromCodePoint	(uint32_t codePoint, ::gpk::asc_t & hexDigits);
+	gpk::err_t			utf8FromCodePoint	(u2_t codePoint, ::gpk::asc_t & hexDigits);
 	gpk::err_t			digest				(const ::gpk::vcu0_t & input, ::gpk::au2_t & digest);
 	gpk::err_t			digest				(const ::gpk::vcu0_t & input, ::gpk::asc_t & digest);
 	stin	gpk::err_t	digest				(const ::gpk::vcsc_t & input, ::gpk::asc_t & digest) { return ::gpk::digest(*(const ::gpk::vcu0_t*)&input, digest); }

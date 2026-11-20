@@ -10,7 +10,7 @@ namespace gpk
 		u3_t				Private;
 	};
 
-	gpk::err_t			rsaKeys				(uint32_t prime1, uint32_t prime2, uint32_t offset, u3_t limit, ::gpk::apod<SRSAKeyPair> & keys);
+	gpk::err_t			rsaKeys				(u2_t prime1, u2_t prime2, u2_t offset, u3_t limit, ::gpk::apod<SRSAKeyPair> & keys);
 	gpk::err_t			rsaDecode			(const ::gpk::vcu3_t & encrypted, u3_t n, u3_t key, ::gpk::au0_t & decrypted);
 	gpk::err_t			rsaEncode			(const ::gpk::vcu0_t  & decrypted, u3_t n, u3_t key, u3_t testKey, ::gpk::au3_t & encrypted);
 	gpk::err_t			gpcDecode			(const ::gpk::vcu3_t & encrypted, u3_t n, u3_t key, bool salt, ::gpk::au0_t & decrypted);

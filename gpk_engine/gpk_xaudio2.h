@@ -52,8 +52,8 @@ namespace gpk
 		float					EmitterAzimuths			[INPUTCHANNELS]                     = {};
 		float					MatrixCoefficients		[INPUTCHANNELS * OUTPUTCHANNELS]    = {};
 
-		uint32_t				ChannelMask				= 0;
-		uint32_t				nChannels				= 0;
+		u2_t				ChannelMask				= 0;
+		u2_t				nChannels				= 0;
 		X3DAUDIO_DSP_SETTINGS	dspSettings				= {};
 		bool					Playing					= false;
 
@@ -83,8 +83,8 @@ namespace gpk
 		IXAudio2SourceVoice		* SourceVoice			= 0;
 
 
-		uint32_t				ChannelMask				= 0;
-		uint32_t				nChannels				= 0;
+		u2_t				ChannelMask				= 0;
+		u2_t				nChannels				= 0;
 		X3DAUDIO_DSP_SETTINGS	dspSettings				= {};
 
 		X3DAUDIO_LISTENER		listener				= {};
@@ -100,8 +100,8 @@ namespace gpk
 		bool					Playing					= false;
 		float					FrequencyRatio			= 1.0f;
 #ifdef USING_XAUDIO2_7_DIRECTX
-		uint32_t				SampleRateOriginal		= 0;
-		uint32_t				SampleRateCurrent		= 0;
+		u2_t				SampleRateOriginal		= 0;
+		u2_t				SampleRateCurrent		= 0;
 #endif
 
 		FLOAT32					emitterAzimuths			[INPUTCHANNELS]                     = {};

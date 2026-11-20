@@ -9,8 +9,8 @@
 // Joins a file split into file.split.## parts.
 int									main							(int argc, char ** argv)				{
 	ree_if(2 > argc, "Usage:\n\t%s [filename]", argv[0]);
-	ree_if(65535 < argc, "Invalid parameter count: %u.", (uint32_t)argc);
-	const ::gpk::vcsc_t						fileNameDst						= {argv[1], (uint32_t)-1};	// First parameter is the only parameter, which is the name of the original file that has been split.
+	ree_if(65535 < argc, "Invalid parameter count: %u.", (u2_t)argc);
+	const ::gpk::vcsc_t						fileNameDst						= {argv[1], (u2_t)-1};	// First parameter is the only parameter, which is the name of the original file that has been split.
 	::gpk::error_t							countJoined						= ::gpk::fileJoin(fileNameDst);
 	ree_if(::gpk::failed(countJoined), "Failed to join file. Disk full? File name: %s.", fileNameDst.begin());
 	info_printf("%u parts joined.", countJoined);

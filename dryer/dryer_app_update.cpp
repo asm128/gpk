@@ -40,7 +40,7 @@
 	gui.Controls.SetUpdated(indexDialog, false);
 	::gpk::vcid											dialogChildren				= gui.Controls.Children[indexDialog];
 	int32_t												offsetX						= 0;
-	for(uint32_t iMenuItem = 0, countMneuItems = dialogChildren.size(); iMenuItem < countMneuItems; ++iMenuItem) {
+	for(u2_t iMenuItem = 0, countMneuItems = dialogChildren.size(); iMenuItem < countMneuItems; ++iMenuItem) {
 		const ::gpk::cid_t									indexMenuItem				= dialogChildren[iMenuItem];
 		gui.Controls.Placement[indexMenuItem].Area.Offset.x	= (int16_t)offsetX;
 		offsetX											+= gui.Controls.Placement[indexMenuItem].Area.Size.x;
@@ -71,7 +71,7 @@
 	,	::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_DIAMETER
 	,	::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_SPOOL_SIZE
 	};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(idControls); ++iControl) {
+	for(u2_t iControl = 0; iControl < ::gpk::size(idControls); ++iControl) {
 		if(screen.ControlIds[idControls[iControl]] < screen.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_BRAND])
 			gui.Controls.Placement[screen.ControlIds[idControls[iControl]]].Area.Size.x		= int16_t(dialogArea.Size.x - 2);
 		else
@@ -111,8 +111,8 @@ static	::gpk::error_t				handleControlSpoolInfo	(::dry::SApplication & app, int3
 	default: break;
 	case ::dry::SCREEN_CONTROL_MODAL_CANCEL: app.Scanned.clear(); break;
 	case ::dry::SCREEN_CONTROL_MODAL_UNLOAD:
-		for(uint32_t iScanned = 0; iScanned < app.Scanned.size(); ++iScanned) {
-			for(uint32_t iSpool = 0; iSpool < app.Catalog.FilamentLoaded.size(); ++iSpool)
+		for(u2_t iScanned = 0; iScanned < app.Scanned.size(); ++iScanned) {
+			for(u2_t iSpool = 0; iSpool < app.Catalog.FilamentLoaded.size(); ++iSpool)
 				if(app.Scanned[iScanned].UniqueId == app.Catalog.FilamentLoaded[iSpool].UniqueId) {
 					app.Catalog.FilamentLoaded.remove_unordered(iSpool--);
 					break;
@@ -123,7 +123,7 @@ static	::gpk::error_t				handleControlSpoolInfo	(::dry::SApplication & app, int3
 		app.Scanned.clear();
 		break;
 	case ::dry::SCREEN_CONTROL_MODAL_LOAD:
-		for(uint32_t iScanned = 0; iScanned < app.Scanned.size(); ++iScanned)
+		for(u2_t iScanned = 0; iScanned < app.Scanned.size(); ++iScanned)
 			::dry::catalogAdd(app.Catalog, app.Scanned[iScanned], time(0), 0, 0, false);
 
 		::dry::updateCatalogDisplay(app);
@@ -149,7 +149,7 @@ static	::gpk::error_t				stateSwitch				(::dry::SApplication & app, ::dry::SCREE
 	case ::dry::SCREEN_LOAD_FILAMENT: ::dry::handleControlLoadFilament	(app, idControl); break;
 	case ::dry::SCREEN_CONFIG		: ::dry::handleControlConfig		(app, idControl); break;
 	case ::dry::SCREEN_MENU:
-		switch((uint32_t)idControl) {
+		switch((u2_t)idControl) {
 		default: break;
 		case dry::SCREEN_CONTROL_MENU_CONFIG		: ::screenSwitch(app, app.Screens.ScreenSelected, ::dry::SCREEN_CONFIG			, idControl); break;
 		case dry::SCREEN_CONTROL_MENU_HOME			: ::screenSwitch(app, app.Screens.ScreenSelected, ::dry::SCREEN_HOME			, idControl); break;
@@ -176,7 +176,7 @@ static	::gpk::error_t				stateSwitch				(::dry::SApplication & app, ::dry::SCREE
 			::dry::modalClose(app);
 		break;
 	case ::dry::SCREEN_HUD:
-		switch((uint32_t)idControl) {
+		switch((u2_t)idControl) {
 		default: break;
 		case ::dry::SCREEN_CONTROL_HUD_DOOR		: dryerState.DoorClosed = !dryerState.DoorClosed; break;
 		case ::dry::SCREEN_CONTROL_HUD_ETHERNET	: commState.Ethernet	= !commState.Ethernet	; break;
@@ -212,11 +212,11 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 	::gpk::acid							controlsToProcess		= {};
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 	bool									executed				= false;
-	for(uint32_t iProcessable = 0, countControls = controlsToProcess.size(); iProcessable < countControls; ++iProcessable) {
+	for(u2_t iProcessable = 0, countControls = controlsToProcess.size(); iProcessable < countControls; ++iProcessable) {
 		const ::gpk::cid_t					iControl				= controlsToProcess[iProcessable];
 		if(gui.Controls.IsAction(iControl)) {
-			info_printf("Executed %u.", (uint32_t)iControl);
-			for(uint32_t iScreenControl = 0; iScreenControl < app.Screens.HUD.ControlIds.size(); ++iScreenControl)
+			info_printf("Executed %u.", (u2_t)iControl);
+			for(u2_t iScreenControl = 0; iScreenControl < app.Screens.HUD.ControlIds.size(); ++iScreenControl)
 				if(app.Screens.HUD.ControlIds[iScreenControl] == (int32_t)iControl) {
 					info_printf("HUD Control executed: %s", ::gpk::get_value_label((::dry::SCREEN_CONTROL_HUD)iScreenControl).begin());
 					::stateSwitch (app, ::dry::SCREEN_HUD, iScreenControl);
@@ -226,7 +226,7 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 			if(executed)
 				break;
 			if(app.Screens.ModalEnabled) { // Avoid processing other controls while modal is enabled.
-				for(uint32_t iScreenControl = 0; iScreenControl < app.Screens.Modal.ControlIds.size(); ++iScreenControl)
+				for(u2_t iScreenControl = 0; iScreenControl < app.Screens.Modal.ControlIds.size(); ++iScreenControl)
 					if(app.Screens.Modal.ControlIds[iScreenControl] == (int32_t)iControl) {
 						info_printf("Modal Control executed: %s", ::gpk::get_value_label((::dry::SCREEN_CONTROL_MODAL)iScreenControl).begin());
 						::stateSwitch (app, ::dry::SCREEN_MODAL, iScreenControl);
@@ -237,7 +237,7 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 					break;
 			}
 			else {
-				for(uint32_t iScreenControl = 0; iScreenControl < app.Screens.Menu.ControlIds.size(); ++iScreenControl)
+				for(u2_t iScreenControl = 0; iScreenControl < app.Screens.Menu.ControlIds.size(); ++iScreenControl)
 					if(app.Screens.Menu.ControlIds[iScreenControl] == (int32_t)iControl) {
 						info_printf("Menu Control executed: %s", ::gpk::get_value_label((::dry::SCREEN_CONTROL_MENU)iScreenControl).begin());
 						::stateSwitch (app, ::dry::SCREEN_MENU, iScreenControl);
@@ -246,7 +246,7 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 					}
 				if(executed)
 					break;
-				for(uint32_t iScreenControl = 0; iScreenControl < app.Screens.Home.ControlIds.size(); ++iScreenControl)
+				for(u2_t iScreenControl = 0; iScreenControl < app.Screens.Home.ControlIds.size(); ++iScreenControl)
 					if(app.Screens.Home.ControlIds[iScreenControl] == (int32_t)iControl) {
 						info_printf("Home Control executed: %s", ::gpk::get_value_label((::dry::SCREEN_CONTROL_HOME)iScreenControl).begin());
 						::stateSwitch (app, ::dry::SCREEN_HOME, iScreenControl);
@@ -266,7 +266,7 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 
 ::gpk::error_t						dry::updateApp			(::dry::SApplication & app) {
 	if_fail_e(::gpk::failed(::dry::dryerUpdate(app.Dryer, app.Framework.Timer.LastTimeMicroseconds / 1000)));
-	for(uint32_t iDryerEvent = 0; iDryerEvent < app.Dryer.EventList.size(); ++iDryerEvent) {
+	for(u2_t iDryerEvent = 0; iDryerEvent < app.Dryer.EventList.size(); ++iDryerEvent) {
 		::dry::DRYER_EVENT						dryerEvent						= app.Dryer.EventList[iDryerEvent];
 		always_printf("Processing dryer event: %s (%u).", ::gpk::get_value_label(dryerEvent).begin(), dryerEvent);
 		switch(dryerEvent) {
@@ -284,7 +284,7 @@ static	::gpk::error_t				handleGUI				(::dry::SApplication & app) {
 			break;
 		}
 	}
-	//for(uint32_t iDryerCommand = 0; iDryerCommand < app.Dryer.CommandList.size(); ++iDryerCommand) {
+	//for(u2_t iDryerCommand = 0; iDryerCommand < app.Dryer.CommandList.size(); ++iDryerCommand) {
 	//	const ::dry::SDryerCommand				dryerCommand					= app.Dryer.CommandList[iDryerCommand];
 	//	::gpk::error_t							failed							= {};
 	//	always_printf("Processing dryer command: %s (%u). Args: %i.", ::gpk::get_value_label(dryerCommand.Command).begin(), dryerCommand.Command, dryerCommand.Args);

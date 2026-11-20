@@ -17,10 +17,10 @@ namespace gpk
 	gpk::err_t			createBuffers
 		( SRenderBufferManager			& bufferManager 
 		, const ::gpk::SGeometryBuffers	& geometry
-		, uint32_t						& iIndicesVertex
-		, uint32_t						& iVertices
-		, uint32_t						& iNormals
-		, uint32_t						& iUV
+		, u2_t						& iIndicesVertex
+		, u2_t						& iVertices
+		, u2_t						& iNormals
+		, u2_t						& iUV
 		);
 
 } // namespace

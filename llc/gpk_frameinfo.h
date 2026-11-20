@@ -32,16 +32,16 @@ namespace gpk
 	struct SFrameMeter {
 		double					AverageFrameTime	= 0;
 		u3_t				FrameNumber			= 0;
-		uint32_t				FramesPerSecond		= 0;
-		uint32_t				FramesThisSecond	= 0;
-		uint32_t				FrameStep			= 0;
+		u2_t				FramesPerSecond		= 0;
+		u2_t				FramesThisSecond	= 0;
+		u2_t				FrameStep			= 0;
 		// Updates frame number and stats from delta time.
 		u3_t				Frame				(u3_t deltaMicroseconds)	{
 			++FrameNumber;
 			++FramesThisSecond;
-			FrameStep				+= (uint32_t)deltaMicroseconds;
+			FrameStep				+= (u2_t)deltaMicroseconds;
 			if(FrameStep > 1000000 || FramesThisSecond > 30) {
-				FramesPerSecond			= uint32_t(FramesThisSecond / (FrameStep * .000001));
+				FramesPerSecond			= u2_t(FramesThisSecond / (FrameStep * .000001));
 				FramesThisSecond		= 0;
 				FrameStep				= 0;
 				AverageFrameTime		= 1.0f / FramesPerSecond;

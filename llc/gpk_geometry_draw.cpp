@@ -13,9 +13,9 @@ gpk::err_t			gpk::drawTriangle
 	, ::gpk::gc8bgra					textureImage
 	, ::gpk::apod<::gpk::SLight3>		& lightPoints
 	, ::gpk::apod<::gpk::rgbaf>			& lightColors
-	, ::gpk::grid<uint32_t>			depthBuffer
+	, ::gpk::grid<u2_t>			depthBuffer
 	) {
-	::gpk::triu2_t				triangleIndices		= *(const ::gpk::tri<uint32_t>*)&geometry.PositionIndices[iTriangle * 3];
+	::gpk::triu2_t				triangleIndices		= *(const ::gpk::tri<u2_t>*)&geometry.PositionIndices[iTriangle * 3];
 	::gpk::tri3f32				triangleWorld		= {geometry.Positions[triangleIndices.A], geometry.Positions[triangleIndices.B], geometry.Positions[triangleIndices.C]};
 	::gpk::tri3f32				triangle			= triangleWorld;
 	::gpk::transform(triangle, matrixTransformView);
@@ -42,7 +42,7 @@ gpk::err_t			gpk::drawTriangle
 	const ::gpk::tri3f32		triangleNormals			= {geometry.Normals[triangleIndices.A], geometry.Normals[triangleIndices.B], geometry.Normals[triangleIndices.C]};
 	const ::gpk::tri2f32		triangleTexCoords		= {geometry.TextureCoords[triangleIndices.A], geometry.TextureCoords[triangleIndices.B], geometry.TextureCoords[triangleIndices.C]};
 	const ::gpk::n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
-	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
 		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 
@@ -51,10 +51,10 @@ gpk::err_t			gpk::drawTriangle
 		double						lightFactorDirectional	= normal.Dot(lightVector);
 		::gpk::n3f2_t				position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
 		::gpk::n2f2_t				texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
-		::gpk::rgbaf				texelColor				= textureImage[(uint32_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(uint32_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x];
+		::gpk::rgbaf				texelColor				= textureImage[(u2_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(u2_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x];
 		::gpk::rgbaf				fragmentColor			= {};
 
-		for(uint32_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
+		for(u2_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
 			const ::gpk::SLight3		& light					= lightPoints[iLight];
 
 			::gpk::n3f2_t				lightToPoint			= light.Position - position;

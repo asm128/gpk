@@ -20,21 +20,21 @@ namespace gpk
 #	pragma warning(disable : 4996)
 #endif
 	stin	int	strcat_s		(sc_t *dst, size_t bufferSize, const sc_t *src)										{
-		if((uint32_t)strlen(dst)+(uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
+		if((u2_t)strlen(dst)+(u2_t)strlen(src)+1U > (u2_t)bufferSize)
 			return -1;
 		strcat(dst, src);
 		return 0;
 	}
 
 	stin	int	strcpy_s		(sc_t *dst, size_t bufferSize, const sc_t *src)										{
-		if((uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
+		if((u2_t)strlen(src)+1U > (u2_t)bufferSize)
 			return -1;
 		strcpy(dst, src);
 		return 0;
 	}
 
 	stin	int	strncpy_s		(sc_t *dst, const sc_t *src, size_t bufferSize)										{
-		//if((uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
+		//if((u2_t)strlen(src)+1U > (u2_t)bufferSize)
 		//	return -1;
 		strncpy(dst, src, bufferSize);
 		return 0;
@@ -83,7 +83,7 @@ namespace gpk
 		return result;
 	}
 
-	stin	int	sprintf_s		(sc_t *buffer , uint32_t bufferSize, const sc_t* format, ...)								{
+	stin	int	sprintf_s		(sc_t *buffer , u2_t bufferSize, const sc_t* format, ...)								{
 		va_list			args			= {};
 		va_start(args, format);
 		const int		result			= ::vsnprintf(buffer, bufferSize - 1, format, args);
@@ -108,7 +108,7 @@ namespace gpk
 		return result;
 	}
 
-	stin	int	sprintf_s		(sc_t *buffer , uint32_t bufferSize, const sc_t* format, ...)								{
+	stin	int	sprintf_s		(sc_t *buffer , u2_t bufferSize, const sc_t* format, ...)								{
 		va_list			args			= {};
 		va_start(args, format);
 		const int		result			= std::vsnprintf(buffer, bufferSize - 1, format, args);

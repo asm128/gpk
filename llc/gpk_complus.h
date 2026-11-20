@@ -65,7 +65,7 @@ namespace gpk
 
 		inline	TRef**			operator &		()									noexcept	{ return &Unknown; }
 
-		inline	uint32_t		clear			()									noexcept	{ return ::gpk::safe_release(&Unknown); }
+		inline	u2_t		clear			()									noexcept	{ return ::gpk::safe_release(&Unknown); }
 		inxp	const TRef*		get_ref			()							const	noexcept	{ return Unknown; }
 		inxp	const TRef*		set_ref			(TRef* ref)							noexcept	{ ::gpk::safe_addref(&Unknown, ref); return Unknown; }
 		inxp	TRef*			get				()							const	noexcept	{ return Unknown; }

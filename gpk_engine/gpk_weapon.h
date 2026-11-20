@@ -31,7 +31,7 @@ namespace gpk
 		::gpk::an3f32				PositionPrev		= {};
 		::gpk::SParticles3			Particles			= {};
 
-		int							Remove				(uint32_t iShot)			{
+		int							Remove				(u2_t iShot)			{
 			Particles.Remove(iShot);
 			DistanceToTargets	.remove_unordered(iShot);
 			Lifetime			.remove_unordered(iShot);
@@ -59,11 +59,11 @@ namespace gpk
 		}
 
 		gpk::err_t				Update				(float secondsLastFrame)	{
-			stxp	uint32_t				maxRange			= 200;
-			stxp	uint32_t				maxRangeSquared		= maxRange * maxRange;
+			stxp	u2_t				maxRange			= 200;
+			stxp	u2_t				maxRangeSquared		= maxRange * maxRange;
 			memcpy(PositionPrev.begin(), Particles.Position.begin(), Particles.Position.size() * sizeof(::gpk::n3f2_t));
 			Particles.IntegrateSpeed(secondsLastFrame);
-			for(uint32_t iShot = 0; iShot < Particles.Position.size(); ++iShot) {
+			for(u2_t iShot = 0; iShot < Particles.Position.size(); ++iShot) {
 				Lifetime[iShot] -= secondsLastFrame;
 				if(0 >= Lifetime[iShot])
 					Remove(iShot--);
@@ -79,7 +79,7 @@ namespace gpk
 			gpk_necs(gpk::saveView(output, PositionPrev	));
 			gpk_necs(gpk::saveView(output, Brightness		));
 			gpk_necs(gpk::saveView(output, Lifetime		));
-			for(uint32_t iParticle = 0; iParticle < Particles.Position.size(); ++iParticle) 
+			for(u2_t iParticle = 0; iParticle < Particles.Position.size(); ++iParticle) 
 				gpk_necs(gpk::saveView(output, DistanceToTargets[iParticle]));
 			
 			return 0; 
@@ -92,7 +92,7 @@ namespace gpk
 			gpk_necs(gpk::loadView(input, Brightness		));
 			gpk_necs(gpk::loadView(input, Lifetime		));
 			gpk_necs(DistanceToTargets.resize(Particles.Position.size()));
-			for(uint32_t iParticle = 0; iParticle < DistanceToTargets.size(); ++iParticle)
+			for(u2_t iParticle = 0; iParticle < DistanceToTargets.size(); ++iParticle)
 				gpk_necs(gpk::loadView(input, DistanceToTargets[iParticle]));
 
 			return 0;
@@ -136,7 +136,7 @@ namespace gpk
 
 	};
 
-	GDEFINE_FLAG_TYPE(WEAPON_LOAD, uint32_t);
+	GDEFINE_FLAG_TYPE(WEAPON_LOAD, u2_t);
 	// these are the ammo classes that I can think of right now
 	GDEFINE_FLAG_VALUE(WEAPON_LOAD, None		,	0);	
 	GDEFINE_FLAG_VALUE(WEAPON_LOAD, Arrow		,	0x1UL);	
@@ -224,8 +224,8 @@ namespace gpk
 				return shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
 
 			const int32_t		indexFirst			= shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
-			const uint32_t		stop				= uint32_t(Shot.ParticleCount - 1);
-			for(uint32_t iDebris = 0; iDebris < stop; ++iDebris)
+			const u2_t		stop				= u2_t(Shot.ParticleCount - 1);
+			for(u2_t iDebris = 0; iDebris < stop; ++iDebris)
 				shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
 
 			return indexFirst;
@@ -255,7 +255,7 @@ namespace gpk
 		gpk::err_t				Save					(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::saveView(output, Weapons));
 			info_printf("Saved %s, %i", "Weapons", Weapons.size());
-			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
+			for(u2_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
 				if(WeaponTargets[iWeapon] && WeaponTargets[iWeapon]->size())
 					gpk_necall(gpk::saveView(output, *WeaponTargets[iWeapon]), "iWeapon: %i", iWeapon);
 				else
@@ -269,7 +269,7 @@ namespace gpk
 			gpk_necs(gpk::loadView(input, Weapons));
 			Shots.resize(Weapons.size());
 			gpk_necs(WeaponTargets.reserve(Weapons.size()));
-			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
+			for(u2_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
 				gpk_necs(gpk::loadView(input, WeaponTargets, iWeapon));
 				gpk_necall(Shots[iWeapon].Load(input), "iWeapon: %i", iWeapon);
 			}

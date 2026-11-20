@@ -9,12 +9,12 @@ namespace gpk
 {
 	tplt<tpnm T, tpnm _tCoord>
 	gpk::err_t			grid_copy_ex					(::gpk::grid<T> & dst, const ::gpk::grid<T>& src, const ::gpk::n2<_tCoord> & size_, const ::gpk::n2<_tCoord> & offsetDst, const ::gpk::n2<_tCoord> & offsetSrc)	{
-		for(uint32_t y = 0; y < (uint32_t)size_.y; ++y) {
+		for(u2_t y = 0; y < (u2_t)size_.y; ++y) {
 #if defined(GPK_DEBUG_GRID_COPY_EX) && (defined(DEBUG) || defined(_DEBUG))
-			for(uint32_t x = 0; x < (uint32_t)size_.x; ++x)
+			for(u2_t x = 0; x < (u2_t)size_.x; ++x)
 				dst[y + offsetDst.y][x + offsetDst.x]						= src[y + offsetSrc.y][x + offsetSrc.x];
 #else
-			const uint32_t													sizeToCopy						= size_.x * sizeof(T);
+			const u2_t													sizeToCopy						= size_.x * sizeof(T);
 			memcpy(&dst[y + offsetDst.y][offsetDst.x], &src[y + offsetSrc.y][offsetSrc.x], sizeToCopy);
 #endif
 		}
@@ -23,8 +23,8 @@ namespace gpk
 
 	tplt<tpnm T, tpnm _tCoord>
 	gpk::err_t			grid_copy_alpha_ex				(::gpk::grid<T> & dst, const ::gpk::grid<T>& src, const ::gpk::n2<_tCoord> & size_, const ::gpk::n2<_tCoord> & offsetDst, const ::gpk::n2<_tCoord> & offsetSrc, const T& comparand)	{
-		for(uint32_t y = 0; y < (uint32_t)size_.y; ++y)
-			for(uint32_t x = 0; x < (uint32_t)size_.x; ++x)
+		for(u2_t y = 0; y < (u2_t)size_.y; ++y)
+			for(u2_t x = 0; x < (u2_t)size_.x; ++x)
 				if (src[y + offsetSrc.y][x + offsetSrc.x] != comparand)
 					dst[y + offsetDst.y][x + offsetDst.x]						= src[y + offsetSrc.y][x + offsetSrc.x];
 		return ::gpk::max(int32_t(size_.x * size_.y), (int32_t)0);
@@ -32,8 +32,8 @@ namespace gpk
 
 	tplt<tpnm T, tpnm _tCoord>
 	gpk::err_t			grid_copy_alpha_ex				(::gpk::grid<T> & dst, const ::gpk::grid<T>& src, const ::gpk::n2<_tCoord> & size_, const ::gpk::n2<_tCoord> & offsetDst, const ::gpk::n2<_tCoord> & offsetSrc, const T& comparand, const T& color)	{
-		for(uint32_t y = 0; y < (uint32_t)size_.y; ++y)
-			for(uint32_t x = 0; x < (uint32_t)size_.x; ++x)
+		for(u2_t y = 0; y < (u2_t)size_.y; ++y)
+			for(u2_t x = 0; x < (u2_t)size_.x; ++x)
 				if (src[y + offsetSrc.y][x + offsetSrc.x] != comparand)
 					dst[y + offsetDst.y][x + offsetDst.x]						= color;
 		return ::gpk::max(int32_t(size_.x * size_.y), (int32_t)0);
@@ -63,7 +63,7 @@ namespace gpk
 			for(uint16_t x = 0; x < size_.x; ++x)
 				if(src[(y + offsetSrc.y) * srcMetrics.x + (x + offsetSrc.x)])
 					dstCoords.push_back({(uint16_t)(x + offsetDst.x), (uint16_t)(y + offsetDst.y)});
-		return ::gpk::max(size_.x * size_.y, (uint32_t)0U);
+		return ::gpk::max(size_.x * size_.y, (u2_t)0U);
 	}
 	tplt<tpnm _tCoord>
 	gpk::err_t			grid_raster_alpha_bit			(const ::gpk::n2u2_t & dstMetrics, const ::gpk::view_bit<u3_t> & src, const ::gpk::n2u2_t & srcMetrics, const ::gpk::rect2<_tCoord>& dstRect, const ::gpk::n2<_tCoord> & srcOffset, ::gpk::apod<::gpk::n2u1_t> & dstCoords) {
@@ -252,9 +252,9 @@ namespace gpk
 		return (stopDst.x > 0) ? ::gpk::grid_copy_ex(dst, src, stopDst, offsetDst, offsetSrc) : 0;
 	}
 
-	tplt<tpnm T> gpk::err_t		grid_copy_alpha					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const T & comparand)	{ const ::gpk::n2u2_t metrics = {(uint32_t)::gpk::min(dst.metrics().x, src.metrics().x), (uint32_t)::gpk::min(dst.metrics().y, src.metrics().y)}; return ::gpk::grid_copy_alpha_ex	(dst, src, metrics, {}, {}, comparand); }
-	tplt<tpnm T> gpk::err_t		grid_copy_blend					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src)						{ const ::gpk::n2u2_t metrics = {(uint32_t)::gpk::min(dst.metrics().x, src.metrics().x), (uint32_t)::gpk::min(dst.metrics().y, src.metrics().y)}; return ::gpk::grid_copy_blend_ex	(dst, src, metrics, {}, {}); }
-	tplt<tpnm T> gpk::err_t		grid_copy						(::gpk::grid<T> & dst, const ::gpk::grid<T> & src)						{ const ::gpk::n2u2_t metrics = {(uint32_t)::gpk::min(dst.metrics().x, src.metrics().x), (uint32_t)::gpk::min(dst.metrics().y, src.metrics().y)}; return ::gpk::grid_copy_ex		(dst, src, metrics, {}, {}); }
+	tplt<tpnm T> gpk::err_t		grid_copy_alpha					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const T & comparand)	{ const ::gpk::n2u2_t metrics = {(u2_t)::gpk::min(dst.metrics().x, src.metrics().x), (u2_t)::gpk::min(dst.metrics().y, src.metrics().y)}; return ::gpk::grid_copy_alpha_ex	(dst, src, metrics, {}, {}, comparand); }
+	tplt<tpnm T> gpk::err_t		grid_copy_blend					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src)						{ const ::gpk::n2u2_t metrics = {(u2_t)::gpk::min(dst.metrics().x, src.metrics().x), (u2_t)::gpk::min(dst.metrics().y, src.metrics().y)}; return ::gpk::grid_copy_blend_ex	(dst, src, metrics, {}, {}); }
+	tplt<tpnm T> gpk::err_t		grid_copy						(::gpk::grid<T> & dst, const ::gpk::grid<T> & src)						{ const ::gpk::n2u2_t metrics = {(u2_t)::gpk::min(dst.metrics().x, src.metrics().x), (u2_t)::gpk::min(dst.metrics().y, src.metrics().y)}; return ::gpk::grid_copy_ex		(dst, src, metrics, {}, {}); }
 
 	tplt<tpnm T>
 	gpk::err_t			grid_mirror_x					(::gpk::grid<T> & dst, const ::gpk::grid<T>& src)											{
@@ -262,7 +262,7 @@ namespace gpk
 			{ ::gpk::min((int32_t)dst.metrics().x, (int32_t)src.metrics().x)
 			, ::gpk::min((int32_t)dst.metrics().y, (int32_t)src.metrics().y)
 			};
-		uint32_t					srcMaxX							= src.metrics().x - 1;
+		u2_t					srcMaxX							= src.metrics().x - 1;
 		for(int32_t y = 0; y < metrics.y; ++y)
 		for(int32_t x = 0; x < metrics.x; ++x)
 			dst[y][x]				= src[y][srcMaxX - x];
@@ -275,9 +275,9 @@ namespace gpk
 			{ ::gpk::min((int32_t)dst.metrics().x, (int32_t)src.metrics().x)
 			, ::gpk::min((int32_t)dst.metrics().y, (int32_t)src.metrics().y)
 			};
-		uint32_t					srcMaxY							= src.metrics().y - 1;
+		u2_t					srcMaxY							= src.metrics().y - 1;
 		if(metrics.x > 0)
-			for(uint32_t y = 0; y < (uint32_t)metrics.y; ++y)
+			for(u2_t y = 0; y < (u2_t)metrics.y; ++y)
 				memcpy(&dst[y][0], &src[srcMaxY - y][0], sizeof(T) * metrics.x);
 		return metrics.y * metrics.x;
 	}

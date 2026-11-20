@@ -38,8 +38,8 @@ namespace gpk
 			return *this;
 		}
 
-		inln	TView				operator[]	(uint32_t index)							{ return View[index]; }
-		inln	TViewConst			operator[]	(uint32_t index)		cnst				{ return View[index]; }
+		inln	TView				operator[]	(u2_t index)							{ return View[index]; }
+		inln	TViewConst			operator[]	(u2_t index)		cnst				{ return View[index]; }
 
 		inxp	const T*			begin		()						csnx		{ return View.begin		();	}
 		inxp	const T*			end			()						csnx		{ return View.end		();	}
@@ -92,7 +92,7 @@ namespace gpk
 
 		::gpk::apod<T>				Texels				;
 		::gpk::view_bit<T>			View				;
-		uint32_t					Pitch				= 0;
+		u2_t					Pitch				= 0;
 
 		cxpr				imgmono	()		noexcept	= default;
 							imgmono	(const ::gpk::view_bit<T> & other)
@@ -121,8 +121,8 @@ namespace gpk
 
 		inxp	::gpk::n2u2_c&	metrics				()									const	noexcept	{ return {Pitch, View.size() / Pitch}; }
 		inln	gpk::err_t	resize				(const ::gpk::n2u2_c & newSize)				noexcept	{ return resize(newSize.x, newSize.y); }
-		gpk::err_t			resize				(uint32_t newSizeX, uint32_t newSizeY)		noexcept	{
-			gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1), "cannot resize? Size requested: %u.", (uint32_t)((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1));
+		gpk::err_t			resize				(u2_t newSizeX, u2_t newSizeY)		noexcept	{
+			gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1), "cannot resize? Size requested: %u.", (u2_t)((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1));
 			View						= {Texels.begin(), newSizeX * newSizeY};
 			Pitch						= newSizeX;
 			return 0;

@@ -88,7 +88,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::dry::SApplication, "GPK Tactical GUI v0.1")
 	if(framework.RootWindow.Repaint) {
 		verbose_printf("%s", "Repainting...");
 		::gpk::SGUI							& gui						= *framework.GUI;
-		::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
+		::gpk::pobj<::gpk::rt<::gpk::bgra, u2_t>>
 											& guiRenderTarget			= framework.RootWindow.BackBuffer;
 		gpk_necall(guiRenderTarget->resize(framework.RootWindow.Size.u2_t(), ::gpk::bgra{0x10, 0x04, 0x08, 0xFF}, 0xFFFFFFFFU), "Failed to resize render target to display size: [%u x %u]", framework.RootWindow.Size.x, framework.RootWindow.Size.y);
 		::gpk::guiDraw(gui, guiRenderTarget->Color.View);

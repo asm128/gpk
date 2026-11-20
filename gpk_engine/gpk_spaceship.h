@@ -70,8 +70,8 @@ namespace gpk
 	struct SSpaceshipOrbiter {
 		SHIP_PART_TYPE		Type			= SHIP_PART_TYPE_Cargo;
 		::gpk::gaugemaxi32	Health			= {};
-		uint32_t			Weapon			= (uint32_t)-1;
-		uint32_t			ActiveAction	= ~0U;
+		u2_t			Weapon			= (u2_t)-1;
+		u2_t			ActiveAction	= ~0U;
 	};
 
 	struct SSpaceshipScore {
@@ -82,9 +82,9 @@ namespace gpk
 		u3_t			DamageDone		= 0;
 		u3_t			DamageReceived	= 0;
 		u3_t			HitsSurvived	= 0;
-		uint32_t			OrbitersLost	= 0;
-		uint32_t			KilledShips		= 0;
-		uint32_t			KilledOrbiters	= 0;
+		u2_t			OrbitersLost	= 0;
+		u2_t			KilledShips		= 0;
+		u2_t			KilledOrbiters	= 0;
 	};
 
 	struct SSpaceshipCore {
@@ -94,12 +94,12 @@ namespace gpk
 
 		// Variable, may change at any time during 
 		int32_t				Health			= {};
-		uint32_t			AvailableNitros	= {};
+		u2_t			AvailableNitros	= {};
 		double				TimePlayed		= {};
 	};
 #pragma pack(pop)
 	tplt<tpnm _tPOD> 
-	gpk::err_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
+	gpk::err_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const u2_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
 		gpk_necall(gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
@@ -140,10 +140,10 @@ namespace gpk
 			return 0;
 		}
 
-		int32_t						GetShipHealth		(uint32_t iShipCore)				{ 
+		int32_t						GetShipHealth		(u2_t iShipCore)				{ 
 			int32_t							totalHealth			= 0;
 			::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
-			for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart)
+			for(u2_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart)
 				totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 
 			return totalHealth;
@@ -151,12 +151,12 @@ namespace gpk
 
 		int32_t						GetTeamHealth		(int32_t teamId) {
 			int32_t							totalHealth			= 0;
-			for(uint32_t iShipCore = 0, countShips = ShipCores.size(); iShipCore < countShips; ++iShipCore) {
+			for(u2_t iShipCore = 0, countShips = ShipCores.size(); iShipCore < countShips; ++iShipCore) {
 				if(ShipCores[iShipCore].Team != teamId) 
 					continue;
 
 				::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
-				for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart) 
+				for(u2_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart) 
 					totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 			}
 			return totalHealth;
@@ -166,8 +166,8 @@ namespace gpk
 		gpk::err_t				Save				(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::saveView(output, ShipScores	));
 			gpk_necs(gpk::saveView(output, ShipCores	));
-			uint32_t						totalEntityChildren	= 0;
-			for(uint32_t iShipCore = 0; iShipCore < ShipCores.size(); ++iShipCore) {
+			u2_t						totalEntityChildren	= 0;
+			for(u2_t iShipCore = 0; iShipCore < ShipCores.size(); ++iShipCore) {
 				::gpk::vcu1_t					v		{ShipParts[iShipCore]};
 				gpk_necall(gpk::saveView(output, v), "iPart: %i", iShipCore);
 				totalEntityChildren += v.size();
@@ -179,7 +179,7 @@ namespace gpk
 			// Orbiters
 			gpk_necs(gpk::saveView(output, Orbiters));
 			info_printf("Saved %s, %i", "Orbiters", Orbiters.size());
-			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
+			for(u2_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
 				if(ShipOrbiterActionQueue[iShipOrbiter] && ShipOrbiterActionQueue[iShipOrbiter]->size())
 					gpk_necall(gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
 				else
@@ -193,13 +193,13 @@ namespace gpk
 			gpk_necs(gpk::loadView(input, ShipScores	));
 			gpk_necs(gpk::loadView(input, ShipCores	));
 			gpk_necs(ShipParts.resize(ShipCores.size()));
-			for(uint32_t iPart = 0; iPart < ShipParts.size(); ++iPart) 
+			for(u2_t iPart = 0; iPart < ShipParts.size(); ++iPart) 
 				gpk_necall(gpk::loadView(input, ShipParts[iPart]), "iPart: %i", iPart);
 
 			Orbiters.clear();
 			gpk_necs(gpk::loadView(input, Orbiters));
 			gpk_necs(ShipOrbiterActionQueue.reserve(Orbiters.size()));
-			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
+			for(u2_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
 				gpk_necs(gpk::loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
 			}
 			return 0; 

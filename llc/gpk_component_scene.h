@@ -111,7 +111,7 @@ namespace gpk {
 			;
 		constexpr										SBlendIndices					()												noexcept 	= default;
 		constexpr										SBlendIndices					(uint8_t a, uint8_t b, uint8_t c, uint8_t d)	noexcept	: A(a), B(b), C(c), D(d)	{}
-		constexpr										SBlendIndices					(uint32_t packedValue)							noexcept
+		constexpr										SBlendIndices					(u2_t packedValue)							noexcept
 			: A((uint8_t)((packedValue & 0x000000FF) >>  0))
 			, B((uint8_t)((packedValue & 0x0000FF00) >>  8))
 			, C((uint8_t)((packedValue & 0x00FF0000) >> 16))
@@ -139,8 +139,8 @@ namespace gpk {
 		::gpk::n3f2_t			Direction						= {};
 		double					Angle							= {};
 		float					RangeSquared					= 1;
-		uint32_t				Type							: 3;
-		uint32_t				Disabled						: 1;
+		u2_t				Type							: 3;
+		u2_t				Disabled						: 1;
 	};
 
 	struct SCamera {
@@ -185,12 +185,12 @@ namespace gpk {
 		::gpk::au2_t			Textures						= {};
 		::gpk::au2_t			Lights							= {};
 
-		uint32_t				PerFaceNormal					: 1;
-		uint32_t				PerFaceColor					: 1;
-		uint32_t				Transparent						: 1;
-		uint32_t				Hidden							: 1;
-		uint32_t				CullMode						: 2;
-		uint32_t				PrimitiveType					: 3;
+		u2_t				PerFaceNormal					: 1;
+		u2_t				PerFaceColor					: 1;
+		u2_t				Transparent						: 1;
+		u2_t				Hidden							: 1;
+		u2_t				CullMode						: 2;
+		u2_t				PrimitiveType					: 3;
 
 	};
 #pragma pack(pop)
@@ -230,10 +230,10 @@ namespace gpk {
 		::gpk::aobj<::gpk::vcsc_t>		Names	;
 		_tContainer						Values	;
 
-		_tValue &						operator[]					(uint32_t index)				{ return Values[index]; }
-		const _tValue &					operator[]					(uint32_t index)	const		{ return Values[index]; }
+		_tValue &						operator[]					(u2_t index)				{ return Values[index]; }
+		const _tValue &					operator[]					(u2_t index)	const		{ return Values[index]; }
 
-		const uint32_t &				size						()				const noexcept	{ return Names.size(); }
+		const u2_t &				size						()				const noexcept	{ return Names.size(); }
 		gpk::err_t					push_back					(::gpk::vcsc_t name, const _tValue & value) {
 			gpk_necs(Names.push_back(name));
 			return Values.push_back(value);
@@ -273,19 +273,19 @@ namespace gpk {
 
 	gpk::err_t					nodeRendererDrawNode
 		( ::gpk::SNodeRenderer			& renderer
-		, uint32_t						iNode
+		, u2_t						iNode
 		, const ::gpk::m4f32			& view
 		, const ::gpk::m4f32			& projection
 		, const ::gpk::m4f32			& viewProjection
 		, ::gpk::g8bgra					target_image
-		, ::gpk::grid<uint32_t>			target_depth
+		, ::gpk::grid<u2_t>			target_depth
 		);
 
 	gpk::err_t					nodeRendererDraw
 		( ::gpk::SNodeRenderer			& renderer
 		, int32_t						iCamera
 		, ::gpk::g8bgra					target_image
-		, ::gpk::grid<uint32_t>			target_depth
+		, ::gpk::grid<u2_t>			target_depth
 		, bool							drawHidden			= false
 		);
 

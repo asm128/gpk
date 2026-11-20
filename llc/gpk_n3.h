@@ -29,8 +29,8 @@ namespace gpk
 		cxpr	Tn3			oper/			(u3_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
 		cxpr	Tn3			oper*			(int32_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
 		cxpr	Tn3			oper/			(int32_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
-		cxpr	Tn3			oper*			(uint32_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
-		cxpr	Tn3			oper/			(uint32_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cxpr	Tn3			oper*			(u2_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cxpr	Tn3			oper/			(u2_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
 		//
 		Tn3&				oper+=			(cnst Tn3 & other)					nxpt	{ x += other.x; y += other.y; z += other.z;	return *this; }
 		Tn3&				oper-=			(cnst Tn3 & other)					nxpt	{ x -= other.x; y -= other.y; z -= other.z;	return *this; }
@@ -107,7 +107,7 @@ namespace gpk
 		inline	Tn3&		Set					(T value)							nxpt	{ x = y = z = value; return *this; }
 		inline	Tn3&		From				(T value)							nxpt	{ x = y = z = value; return *this; }
 
-		int					SetAxis				(uint32_t axisIndex, T value) {
+		int					SetAxis				(u2_t axisIndex, T value) {
 			switch(axisIndex) { 
 			case 0: x = value; return 0; 
 			case 1: y = value; return 1; 
@@ -115,7 +115,7 @@ namespace gpk
 			}
 			return -1;
 		}
-		int					SetOthers			(uint32_t axisExcluded, T value) {
+		int					SetOthers			(u2_t axisExcluded, T value) {
 			switch(axisExcluded) { 
 			case 0: y = z = value; break; 
 			case 1: x = z = value; break; 

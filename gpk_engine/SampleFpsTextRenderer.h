@@ -38,15 +38,15 @@ namespace gpk
 		}
 
 		// Updates the text to be displayed.
-		gpk::err_t									Update							(double /*frameSeconds*/, double /*totalSeconds*/, uint32_t framesPerSecond) {
+		gpk::err_t									Update							(double /*frameSeconds*/, double /*totalSeconds*/, u2_t framesPerSecond) {
 			// Update display text.
-			uint32_t											fps								= framesPerSecond;
+			u2_t											fps								= framesPerSecond;
 			Text											= (fps > 0) ? std::to_wstring(fps) + L" FPS" : L" - FPS";
 
 			::gpk::pcom<IDWriteTextLayout>						textLayout;
 			constexpr float										w								= 240.0f; // Max width of the input text.
 			constexpr float										h								= 50.0f;// Max height of the input text.
-			gpk_hrcall(DeviceResources->GetDWriteFactory()->CreateTextLayout(Text.c_str(), (uint32_t) Text.length(), TextFormat, w, h, &textLayout));
+			gpk_hrcall(DeviceResources->GetDWriteFactory()->CreateTextLayout(Text.c_str(), (u2_t) Text.length(), TextFormat, w, h, &textLayout));
 			gpk_necs(textLayout.as(TextLayout));
 			gpk_hrcall(TextLayout->GetMetrics(&TextMetrics));
 			return 0;

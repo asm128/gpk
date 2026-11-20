@@ -71,10 +71,10 @@ namespace gpk
 		stateChange.Clear		= ::gpk::bit_clear(oldState, newState);
 		stateChange.Set			= ::gpk::bit_clear(newState, oldState);
 		gpk_gui_printf("Control state change: %i", iControl);
-		for(uint32_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
+		for(u2_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
 			const GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((uint8_t)i);
-			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
-			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
+			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (u2_t)bit, ::gpk::get_value_namep(bit));
+			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (u2_t)bit, ::gpk::get_value_namep(bit));
 		}
 		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_GUI, ::gpk::EVENT_GUI_CONTROL_StateChange, stateChange); 
 	}

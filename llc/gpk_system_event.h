@@ -50,8 +50,8 @@ namespace gpk
 
 		cxpr						SDeviceResult	(::gpk::RESULT deviceEvent = ::gpk::RESULT_Error)
 			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
-			, TailWidth   {::gpk::uint_tail_width<uint32_t>((uint32_t)szof(::gpk::RESULT))}
-			, Multiplier  {::gpk::uint_tail_multiplier<uint32_t>((uint32_t)szof(::gpk::RESULT))}
+			, TailWidth   {::gpk::uint_tail_width<u2_t>((u2_t)szof(::gpk::RESULT))}
+			, Multiplier  {::gpk::uint_tail_multiplier<u2_t>((u2_t)szof(::gpk::RESULT))}
 			, DeviceEvent {deviceEvent}
 			{}
 	};
@@ -63,8 +63,8 @@ namespace gpk
 
 		cxpr						SDeviceCommand	(::gpk::COMMAND deviceEvent = ::gpk::COMMAND_Ok)
 			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
-			, TailWidth   {::gpk::uint_tail_width<uint32_t>((uint32_t)szof(::gpk::COMMAND))}
-			, Multiplier  {::gpk::uint_tail_multiplier<uint32_t>((uint32_t)szof(::gpk::COMMAND))}
+			, TailWidth   {::gpk::uint_tail_width<u2_t>((u2_t)szof(::gpk::COMMAND))}
+			, Multiplier  {::gpk::uint_tail_multiplier<u2_t>((u2_t)szof(::gpk::COMMAND))}
 			, DeviceEvent {deviceEvent}
 			{}
 	};

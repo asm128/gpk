@@ -67,7 +67,7 @@ static const ::dry::SControlParams	control_list_home[]				=
 		{ ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP
 		//, ::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_TIME_LABEL
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
+	for(u2_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
 		const ::gpk::cid_t								indexControl			= app.Screens.Home.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;

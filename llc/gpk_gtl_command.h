@@ -35,7 +35,7 @@ namespace gpk
 	struct SGTLPayloadHeader {
 		::gpk::SGTLCommand					Command			;
 		u3_t							IdSender		;
-		uint32_t							IdMessage		;
+		u2_t							IdMessage		;
 		::gpk::packedu16					CounterHeader	;
 	};
 #pragma pack(pop)

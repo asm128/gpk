@@ -94,9 +94,9 @@ namespace gpk
 		::gpk::apod<::gpk::tri3f32>	Triangle3dToDraw			= {};
 		::gpk::apod<::gpk::tri3f32>	Triangle3dWorld				= {};
 
-		uint32_t					TrianglesDrawn				= 0;
-		uint32_t					PixelsDrawn					= 0;
-		uint32_t					PixelsSkipped				= 0;
+		u2_t					TrianglesDrawn				= 0;
+		u2_t					PixelsDrawn					= 0;
+		u2_t					PixelsSkipped				= 0;
 	};
 
 	struct SColorsMaterial {
@@ -195,7 +195,7 @@ namespace gpk
 	};
 
 	stin	gpk::err_t		sceneBoxAdd			(SScene& scene)	{
-		const uint32_t					newIndex			= scene.ObjectPivots.size();
+		const u2_t					newIndex			= scene.ObjectPivots.size();
 		if(failed(::gpk::resize
 			( newIndex + 1
 			, scene.ObjectPivots

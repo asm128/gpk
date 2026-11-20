@@ -21,10 +21,10 @@ namespace DirectX
 	struct WAVData {		
 		const WAVEFORMATEX		* WaveFormat			= 0;
 		::gpk::vcu0_t				AudioView				= {};
-		uint32_t				LoopStart				= 0;
-		uint32_t				LoopLength				= 0;
-		const uint32_t			* Seek					= 0;	// Note: XMA Seek data is Big-Endian
-		uint32_t				SeekCount				= 0;
+		u2_t				LoopStart				= 0;
+		u2_t				LoopLength				= 0;
+		const u2_t			* Seek					= 0;	// Note: XMA Seek data is Big-Endian
+		u2_t				SeekCount				= 0;
 	};						
 							
 	HRESULT					LoadWAVAudioInMemoryEx	(::gpk::vcu0_t wavData, WAVData & result) noexcept;

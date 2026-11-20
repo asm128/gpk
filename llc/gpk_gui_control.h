@@ -20,7 +20,7 @@ namespace gpk
 	typedef	n2<cid_t>		n2cid;
 	typedef	rect<cid_t>		rectcid;
 
-	tplt<uint32_t _sizeArray>	
+	tplt<u2_t _sizeArray>	
 	using	astcid	= astatic<cid_t, _sizeArray>;
 
 	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, u0_t)

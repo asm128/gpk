@@ -30,12 +30,12 @@ gpk::err_t			gpk::controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList&
 
 gpk::err_t			gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	const ::gpk::SRasterFont	& selectedFont			= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
-	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		const uint32_t				idControl				= menu.IdControls[iItem];
+	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
+		const u2_t				idControl				= menu.IdControls[iItem];
 		::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[idControl];
 		::gpk::SControlPlacement	& control				= gui.Controls.Placement	[idControl];
 		::gpk::SControlText			& controlText			= gui.Controls.Text			[idControl];
-		const uint32_t				iPrevItem				= iItem - 1;
+		const u2_t				iPrevItem				= iItem - 1;
 		const ::gpk::n2u0_t			fontCharSize			= selectedFont.CharSize;
 		control.Area.Size.y		= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
@@ -56,8 +56,8 @@ gpk::err_t			gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& me
 	::gpk::SControlPlacement	& controlMenu			= gui.Controls.Placement[menu.IdControl];
 	controlMenu.Area.Size	= {};
 	const ::gpk::n2u0_t			fontCharSize			= selectedFont.CharSize;
-	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		const uint32_t				idControl			= menu.IdControls		[iItem];
+	for(u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
+		const u2_t				idControl			= menu.IdControls		[iItem];
 		::gpk::SControlPlacement	& control			= gui.Controls.Placement[idControl];
 		::gpk::SControlText			& controlText		= gui.Controls.Text		[idControl];
 		switch(menu.Orientation) {
@@ -101,8 +101,8 @@ gpk::err_t			gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid&
 	palette.IdControl		= ::gpk::controlCreate(gui);
 
 	::gpk::SControlPlacement	& control					= gui.Controls.Placement[palette.IdControl];
-	const uint32_t				widthViewport				= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
-	const uint32_t				heightViewport				= (uint32_t)(targetSize.y + ((int64_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
+	const u2_t				widthViewport				= (u2_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
+	const u2_t				heightViewport				= (u2_t)(targetSize.y + ((int64_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
 	control.Area.Size		= {(int16_t)widthViewport, (int16_t)heightViewport};
 	control.Align			= ::gpk::ALIGN_CENTER;
 	return 0;
@@ -121,10 +121,10 @@ gpk::err_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& 
 	const ::gpk::n2f3_t			targetSize					= gui.Controls.Area[palette.IdControl].Client.Global.Size.f3_t(); //{256.0, 256.0};
 	::gpk::n2f3_t				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
-	for(uint32_t y = 0; y < gridMetrics.y; ++y)
-	for(uint32_t x = 0; x < gridMetrics.x; ++x) {
+	for(u2_t y = 0; y < gridMetrics.y; ++y)
+	for(u2_t x = 0; x < gridMetrics.x; ++x) {
 		const int32_t				linearIndex					= y * gridMetrics.x + x;
-		uint32_t					iFoundColor					= 0;
+		u2_t					iFoundColor					= 0;
 		int32_t						themeIndex					= -1;
 		const ::gpk::bgra			& gridCellColor				= colors[y][x];
 		for(; iFoundColor < gui.Colors->Palette->size(); ++iFoundColor)
@@ -151,11 +151,11 @@ gpk::err_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& 
 			comboHover		[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
 			comboPressed	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= indexColor;
 			comboPressed	[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
-			//for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState)
-			//for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea)
-			//	theme.ColorCombos[iState][iArea]	= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);
+			//for(u2_t iState = 0; iState < theme.ColorCombos.size(); ++iState)
+			//for(u2_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea)
+			//	theme.ColorCombos[iState][iArea]	= ::gpk::min((u2_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);
 		}
-		const uint32_t				paletteElemIndex	= linearIndex;
+		const u2_t				paletteElemIndex	= linearIndex;
 		palette.IdControls[paletteElemIndex] = ::gpk::controlCreate(gui);
 		::gpk::SControlPlacement	& control			= gui.Controls.Placement[palette.IdControls[paletteElemIndex]];
 		::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw[palette.IdControls[paletteElemIndex]];

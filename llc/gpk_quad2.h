@@ -24,7 +24,7 @@ namespace gpk
 	typedef quad2<double>	quad2f64, quad2d;
 	typedef quad2<uint8_t>	quad2u8;
 	typedef quad2<uint16_t>	quad2u16;
-	typedef quad2<uint32_t>	quad2u32;
+	typedef quad2<u2_t>	quad2u32;
 	typedef quad2<u3_t>	quad2u64;
 	typedef quad2<int8_t>	quad2i8;
 	typedef quad2<int16_t>	quad2i16;

@@ -32,7 +32,7 @@ gpk::err_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboa
 		controlRoot.Area.Size	= sizeKeypad;
 		controlRoot.Align		= ::gpk::ALIGN_CENTER_BOTTOM;
 	}
-	for(uint32_t iKey = 0; iKey < vk.Keys.size(); ++iKey) {
+	for(u2_t iKey = 0; iKey < vk.Keys.size(); ++iKey) {
 		sc_t						text[8]		= {};
 		sprintf_s(text, "%c", vk.Keys[iKey]);
 

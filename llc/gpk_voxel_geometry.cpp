@@ -8,12 +8,12 @@ static	gpk::err_t	geometryVoxelFace
 	, const ::gpk::view<const uint8_t>				& rawIndices
 	) {
 	::gpk::n3f2_t				vertices [4]				= {}; 
-	uint32_t					indices  [6]				= {}; 
-	uint32_t					offsetVertex				= geometry.Positions.size();
-	for(uint32_t iVertex = 0; iVertex < 4; ++iVertex)
+	u2_t					indices  [6]				= {}; 
+	u2_t					offsetVertex				= geometry.Positions.size();
+	for(u2_t iVertex = 0; iVertex < 4; ++iVertex)
 		vertices[iVertex] = rawVertices[iVertex] + voxelPos; 
 
-	for(uint32_t iIndex = 0; iIndex < 6; ++iIndex)
+	for(u2_t iIndex = 0; iIndex < 6; ++iIndex)
 		indices[iIndex] = rawIndices[iIndex] + offsetVertex;
 
 	gpk_necs(geometry.Positions			.append(vertices));
@@ -28,7 +28,7 @@ gpk::err_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::g
 	::gpk::apod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;
 
 	::gpk::SAABBGeometry		& aabbModel				= output.AABBModel;
-	for(uint32_t i = 0; i < 8; ++i) {
+	for(u2_t i = 0; i < 8; ++i) {
 		aabbModel.Vertices[i]								= ::gpk::VOXEL_VERTICES[i];
 		aabbModel.Vertices[i].Scale(dimensions.f2_t());
 	}
@@ -38,7 +38,7 @@ gpk::err_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::g
 		rgba				= ::gpk::VOXEL_PALETTE;
 
 	const ::gpk::view<const ::gpk::SVoxel<uint8_t>>	voxels					= voxelMap.Voxels;
-	for(uint32_t iFace = 0; iFace < 6; ++iFace) {
+	for(u2_t iFace = 0; iFace < 6; ++iFace) {
 		::gpk::apod<::gpk::SGeometryGroup>	& faceSlices			= output.GeometrySlices[iFace];
 		::gpk::SAABBGeometry				& aabbSlice				= output.AABBSlices[iFace];
 
@@ -49,7 +49,7 @@ gpk::err_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::g
 
 		geometry.Normals.push_back(::gpk::VOXEL_NORMALS[iFace]);
 		geometry.TextureCoords.append(rawTexCoord);
-		for(uint32_t iValue = 0; iValue < rgba.size(); ++iValue) {
+		for(u2_t iValue = 0; iValue < rgba.size(); ++iValue) {
 			::gpk::SGeometryGroup				newGroup					= {};
 			newGroup.Geometry				= 0;
 			newGroup.Image					= iValue;
@@ -59,7 +59,7 @@ gpk::err_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::g
 			newGroup.Slice.Offset			= (uint16_t)geometry.PositionIndices.size();
 			::gpk::minmax<::gpk::n3f2_t>			aabbLimits					= {};
 
-			for(uint32_t iVoxel = 0; iVoxel < voxels.size(); ++iVoxel) {
+			for(u2_t iVoxel = 0; iVoxel < voxels.size(); ++iVoxel) {
 				const ::gpk::SVoxel<uint8_t>		voxel						= voxels[iVoxel];
 				if(voxel.ColorIndex != iValue)
 					continue;

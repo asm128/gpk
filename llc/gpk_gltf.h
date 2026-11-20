@@ -6,9 +6,9 @@
 namespace gpk
 {
 	struct SGLTFHeader {
-		uint32_t				Magic			= {};
-		uint32_t				Version			= {};
-		uint32_t				Length			= {};
+		u2_t				Magic			= {};
+		u2_t				Version			= {};
+		u2_t				Length			= {};
 	};
 
 	struct SGLTF {

@@ -30,20 +30,20 @@ gpk::err_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, c
 		requestReceived.QueryStringKeyVals				= runtimeValues.QueryStringKeyVals;
 	}
 	if(false == isCGIEnviron && runtimeValues.EntryPointArgs.ArgsCommandLine.size() > 1) {	// Get query from command line instead of CGI environ
-		requestReceived.Path							= ::gpk::vcs{runtimeValues.EntryPointArgs.ArgsCommandLine[1], (uint32_t)-1};
+		requestReceived.Path							= ::gpk::vcs{runtimeValues.EntryPointArgs.ArgsCommandLine[1], (u2_t)-1};
 		if(requestReceived.Path.size() > 2) {
 			if('"' == requestReceived.Path[0])
 				requestReceived.Path							= {&requestReceived.Path[1], requestReceived.Path.size() - 2};
 
 			const int32_t										queryStringStart					= ::gpk::find('?', requestReceived.Path);
 			if(0 <= queryStringStart) {
-				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (uint32_t)queryStringStart - 1};
-				requestReceived.Path							= {&requestReceived.Path[0], (uint32_t)queryStringStart};
+				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (u2_t)queryStringStart - 1};
+				requestReceived.Path							= {&requestReceived.Path[0], (u2_t)queryStringStart};
 
 				//::gpk::vcs								querystring;
 				::gpk::querystring_split(requestReceived.QueryString, requestReceived.QueryStringElements);
 				requestReceived.QueryStringKeyVals.resize(requestReceived.QueryStringElements.size());
-				for(uint32_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
+				for(u2_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
 					::gpk::kv<vcsc_t, vcsc_t>								& keyValDst				= requestReceived.QueryStringKeyVals[iKeyVal];
 					::gpk::keyval_split(requestReceived.QueryStringElements[iKeyVal], keyValDst);
 				}
@@ -123,8 +123,8 @@ static	gpk::err_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & strR
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
 	if(strRemoteIP.size()) {
-		uint32_t					iOffset			= 0;
-		uint32_t					iEnd			= 0;
+		u2_t					iOffset			= 0;
+		u2_t					iEnd			= 0;
 		remoteIP.IP				= 0;
 		for(uint8_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
@@ -140,7 +140,7 @@ static	gpk::err_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & strR
 			uint8_t			valueRead	= 0;
 			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, valueRead);
 
-			remoteIP.IP	|= ::gpk::byte_to<uint32_t>(valueRead, iVal);
+			remoteIP.IP	|= ::gpk::byte_to<u2_t>(valueRead, iVal);
 
 			iOffset		= iEnd + 1;
 			iEnd		= iOffset;
@@ -172,7 +172,7 @@ gpk::err_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeVal
 	::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	& environViews	= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
 	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
-	//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
+	//for(u2_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
 	//	info_printf("CGI Environ (original): '%.*s = %.*s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key), GPK_VIEW_ARGS(environViews[iEnviron].Val));
 
 	{
@@ -180,7 +180,7 @@ gpk::err_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeVal
 		::gpk::find(::gpk::vcs{"QUERY_STRING"}, environViews, querystring);
 		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
 		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
-		for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
+		for(u2_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
 			::gpk::kv<vcsc_t, vcsc_t>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
 			::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
 		}
@@ -207,7 +207,7 @@ gpk::err_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeVal
 	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
 	fread(cgiRuntimeValues.Content.Body.begin(), 1, cgiRuntimeValues.Content.Length, stdin);
 	//memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());
-	//uint32_t												iChar							= 0;
+	//u2_t												iChar							= 0;
 	//int														iArg							= 0;
 	//while(iChar < cgiRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
 	//	cgiRuntimeValues.Content.Body[iChar++]				= (sc_t)iArg;

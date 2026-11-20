@@ -30,7 +30,7 @@ namespace gpk
 					double					brightDistanceLength	= brightDistance.Length();
 					double					distanceFactor			= brightDistanceLength * rangeUnit;
 					if(distanceFactor <= 1.0) {
-						viewOffscreen[(uint32_t)blendPos.y][(uint32_t)blendPos.x]	= ::gpk::interpolate_linear(viewOffscreen[(uint32_t)blendPos.y][(uint32_t)blendPos.x], colorLight, factor * (1.0f - distanceFactor));
+						viewOffscreen[(u2_t)blendPos.y][(u2_t)blendPos.x]	= ::gpk::interpolate_linear(viewOffscreen[(u2_t)blendPos.y][(u2_t)blendPos.x], colorLight, factor * (1.0f - distanceFactor));
 					}
 				}
 			}
@@ -40,10 +40,10 @@ namespace gpk
 
 	tplt<tpnm _tCoord, tpnm T>
 	gpk::err_t		drawPixelLight				(::gpk::grid<T> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const T & colorLight, float maxFactor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		if( ((uint32_t)sourcePosition.x) < viewOffscreen.metrics().x
-		 && ((uint32_t)sourcePosition.y) < viewOffscreen.metrics().y
+		if( ((u2_t)sourcePosition.x) < viewOffscreen.metrics().x
+		 && ((u2_t)sourcePosition.y) < viewOffscreen.metrics().y
 		 )
-			viewOffscreen[(uint32_t)sourcePosition.y][(uint32_t)sourcePosition.x]	= colorLight;
+			viewOffscreen[(u2_t)sourcePosition.y][(u2_t)sourcePosition.x]	= colorLight;
 		return drawPixelBrightness(viewOffscreen, sourcePosition, colorLight, maxFactor, range);
 	}
 
@@ -222,7 +222,7 @@ namespace gpk
 		if(steep) {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
 				if(::gpk::in_range(x, (int32_t)0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(y, (int32_t)0, (int32_t)bitmapTarget.metrics().x)) {
-					callback(bitmapTarget.begin(), bitmapTarget.metrics(), {(uint32_t)x, (uint32_t)y}, &value);
+					callback(bitmapTarget.begin(), bitmapTarget.metrics(), {(u2_t)x, (u2_t)y}, &value);
 					++pixelsDrawn;
 				}
 				error					-= d.y;
@@ -235,7 +235,7 @@ namespace gpk
 		else {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
 				if(::gpk::in_range(y, (int32_t)0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(x, (int32_t)0, (int32_t)bitmapTarget.metrics().x)) {
-					callback(bitmapTarget.begin(), bitmapTarget.metrics(), {(uint32_t)x, (uint32_t)y}, &value);
+					callback(bitmapTarget.begin(), bitmapTarget.metrics(), {(u2_t)x, (u2_t)y}, &value);
 					++pixelsDrawn;
 				}
 				error					-= d.y;

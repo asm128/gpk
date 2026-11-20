@@ -12,7 +12,7 @@ namespace gpk
 	struct SInputJoystick {
 		::gpk::n2s1_t				Position			= {};
 		::gpk::n3s1_t				Deltas				= {};
-		uint32_t					ButtonState			= 0;
+		u2_t					ButtonState			= 0;
 	};
 	struct SInputMouse {
 		::gpk::n2s1_t				Position			= {};

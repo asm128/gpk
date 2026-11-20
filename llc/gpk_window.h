@@ -27,7 +27,7 @@ namespace gpk
 
 		::HWND								WindowHandle				= {};
 		::WNDCLASSEX						WindowClass					= {sizeof(::WNDCLASSEX), CS_DBLCLKS, 0, 0, 0, 0, 0, 0, 0, 0, DefaultRootWindowClassName.begin(), 0};
-		uint32_t							BitmapInfoSize				= 0;
+		u2_t							BitmapInfoSize				= 0;
 		::BITMAPINFO						BitmapInfo					= {sizeof(::BITMAPINFO)};
 		::HDC								IntermediateDeviceContext	= 0;    // <- note, we're creating, so it needs to be destroyed
 		::HBITMAP							IntermediateBitmap			= 0;
@@ -46,7 +46,7 @@ namespace gpk
 		xcb_drawable_t						IdDrawableBackPixmap		= {};
 
 											~SWindowPlatformDetail		()	{
-			if(uint32_t(-1) != GC) {
+			if(u2_t(-1) != GC) {
 				xcb_free_gc(Connection, GC);
 				info_printf("%s.", "Window graphics context freed");
 			}
@@ -56,7 +56,7 @@ namespace gpk
 
 	struct SWindow {
 		typedef	::gpk::bgra					TTexel;
-		typedef	::gpk::rt<TTexel, uint32_t>	TOffscreen;
+		typedef	::gpk::rt<TTexel, u2_t>	TOffscreen;
 
 		::gpk::SWindowPlatformDetail		PlatformDetail			= {};
 		::gpk::apobj<::gpk::SEventSystem>	EventQueue				= {};

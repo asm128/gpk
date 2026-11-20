@@ -1,4 +1,4 @@
-#include "gpk_typeint.h"	// for uint16_t and uint32_t
+#include "gpk_typeint.h"	// for uint16_t and u2_t
 
 #ifndef GPK_ASCII_COLOR_H_23627
 #define GPK_ASCII_COLOR_H_23627
@@ -6,7 +6,7 @@
 namespace gpk
 {
 	// This type is used to represent the palette array of the ASCII console. Having : uint16_t here makes ASCII_COLOR_INDEX to have the same memory footprint as an unsigned short.
-	enum ASCII_COLOR_INDEX : uint32_t
+	enum ASCII_COLOR_INDEX : u2_t
 		{	ASCII_COLOR_INDEX_0			= 0x000000		// BLACK
 		,	ASCII_COLOR_INDEX_1 		= 0x800000	 	// DARKBLUE
 		,	ASCII_COLOR_INDEX_2 		= 0x008000	 	// DARKGREEN
@@ -26,7 +26,7 @@ namespace gpk
 		,	ASCII_COLOR_INDEX_COUNT		= 16			// COUNT
 		};
 
-	stxp	uint32_t ASCII_PALETTE [] = 
+	stxp	u2_t ASCII_PALETTE [] = 
 		{	0xFF000000		// BLACK
 		,	0xFF800000	 	// DARKBLUE
 		,	0xFF008000	 	// DARKGREEN

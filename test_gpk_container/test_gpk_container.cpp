@@ -10,7 +10,7 @@ int test_array_pod() {
 	::gpk::apod<char>			atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 
-	always_printf("test_chars: %u, %u, %s", (uint32_t)strlen(test_chars), (uint32_t)::gpk::size(test_chars), test_chars);
+	always_printf("test_chars: %u, %u, %s", (u2_t)strlen(test_chars), (u2_t)::gpk::size(test_chars), test_chars);
 	always_printf("aconst_0  : %u, %s", aconst_0	.size(), aconst_0	.begin());
 	always_printf("aconst_1  : %u, %s", aconst_1	.size(), aconst_1	.begin());
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());
@@ -101,7 +101,7 @@ int test_array_obj() {
 	::gpk::aobj<char>				atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 
-	always_printf("test_chars: %u, %u, %s", (uint32_t)strlen(test_chars), (uint32_t)::gpk::size(test_chars), test_chars);
+	always_printf("test_chars: %u, %u, %s", (u2_t)strlen(test_chars), (u2_t)::gpk::size(test_chars), test_chars);
 	always_printf("aconst_0  : %u, %s", aconst_0	.size(), aconst_0	.begin());
 	always_printf("aconst_1  : %u, %s", aconst_1	.size(), aconst_1	.begin());
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());

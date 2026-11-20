@@ -10,7 +10,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	enum DATA_TYPE : uint32_t
+	enum DATA_TYPE : u2_t
 		{	DATA_TYPE_IS_SIGNED				= 0x80000000
 		,	DATA_TYPE_IS_NORMALIZED			= 0x40000000
 		,	DATA_TYPE_IS_FLOAT				= 0x20000000
@@ -52,8 +52,8 @@ namespace gpk
 #define	GTYPEID_ISFLOAT(		_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_IS_FLOAT			& _dataTypeID ))		// returns true if the element bits represent a floating point number
 #define	GTYPEID_ISBIGENDIAN(	_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_IS_BIG_ENDIAN		& _dataTypeID ))		// returns true if the element bits has the bits inverted
 #define	GTYPEID_ELEMENTPAD(		_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_HAS_INNER_PADDING	& _dataTypeID ))		// returns true if the elements have inner padding to next byte size
-#define	GTYPEID_ELEMENTCOUNT(	_dataTypeID )	(uint32_t((0x0FFFFF00U	& _dataTypeID) >> 8) + 1U)							// returns the element count (up to 1024k elements)
-#define	GTYPEID_ELEMENTSIZE(	_dataTypeID )	(uint32_t( 0x7FU		& _dataTypeID) + 1U)								// returns the element size in bits (up to 128 bits)
+#define	GTYPEID_ELEMENTCOUNT(	_dataTypeID )	(u2_t((0x0FFFFF00U	& _dataTypeID) >> 8) + 1U)							// returns the element count (up to 1024k elements)
+#define	GTYPEID_ELEMENTSIZE(	_dataTypeID )	(u2_t( 0x7FU		& _dataTypeID) + 1U)								// returns the element size in bits (up to 128 bits)
 
 // Return the byte count of the element type (ElementSize/8). Note: this funcion pads leading bits to next byte size.
 #define	GTYPEID_ELEMENTBYTES( _dataTypeID )		((GTYPEID_ELEMENTSIZE( _dataTypeID )/8)	+ one_if(GTYPEID_ELEMENTSIZE( _dataTypeID ) % 8))
@@ -63,22 +63,22 @@ namespace gpk
 	( GTYPEID_ELEMENTPAD(_dataTypeID) ?																			\
 		(GTYPEID_ELEMENTBYTES( _dataTypeID )*GTYPEID_ELEMENTCOUNT( _dataTypeID )) :								\
 		(							\
-			( (GTYPEID_ELEMENTSIZE( _dataTypeID )*(uint32_t)GTYPEID_ELEMENTCOUNT( _dataTypeID )) / 8 )			\
-			+ one_if( (GTYPEID_ELEMENTSIZE( _dataTypeID )*(uint32_t)GTYPEID_ELEMENTCOUNT( _dataTypeID )) % 8 )	\
+			( (GTYPEID_ELEMENTSIZE( _dataTypeID )*(u2_t)GTYPEID_ELEMENTCOUNT( _dataTypeID )) / 8 )			\
+			+ one_if( (GTYPEID_ELEMENTSIZE( _dataTypeID )*(u2_t)GTYPEID_ELEMENTCOUNT( _dataTypeID )) % 8 )	\
 		)							\
 	)
 
 	struct SDataTypeID {
-		uint32_t			SizeInBits		:  7	;
-		uint32_t			ElementPad		:  1	;
-		uint32_t			ElementCount	: 20	;
-		uint32_t			IsBigEndian		:  1	;
-		uint32_t			IsFloat			:  1	;
-		uint32_t			IsNorm			:  1	;
-		uint32_t			IsSigned		:  1	;
+		u2_t			SizeInBits		:  7	;
+		u2_t			ElementPad		:  1	;
+		u2_t			ElementCount	: 20	;
+		u2_t			IsBigEndian		:  1	;
+		u2_t			IsFloat			:  1	;
+		u2_t			IsNorm			:  1	;
+		u2_t			IsSigned		:  1	;
 
-		inxp	uint32_t	ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
-		inxp	uint32_t	TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
+		inxp	u2_t	ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
+		inxp	u2_t	TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
 
 		inxp	bool		IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
 		inxp	bool		IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
@@ -96,7 +96,7 @@ namespace gpk
 		//
 		inxp				SDataTypeID
 			( uint8_t	sizeInBits		= 1
-			, uint32_t	elementCount	= 1
+			, u2_t	elementCount	= 1
 			, bool		isFloat			= false
 			, bool		isSigned		= true
 			, bool		isNorm			= false
@@ -123,9 +123,9 @@ namespace gpk
 				);
 		}
 		inxp	bool		operator==		(const DATA_TYPE& other)	const				{
-			return	uint32_t(SizeInBits) + 1	==	uint32_t(GTYPEID_ELEMENTSIZE	(other))
+			return	u2_t(SizeInBits) + 1	==	u2_t(GTYPEID_ELEMENTSIZE	(other))
 				&&	ElementPad					==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
-				&&	uint32_t(ElementCount) + 1	==	uint32_t(GTYPEID_ELEMENTCOUNT	(other))
+				&&	u2_t(ElementCount) + 1	==	u2_t(GTYPEID_ELEMENTCOUNT	(other))
 				&&	IsBigEndian					==			(GTYPEID_ISBIGENDIAN	(other) ? 1U : 0U)
 				&&	IsFloat						==			(GTYPEID_ISFLOAT		(other) ? 1U : 0U)
 				&&	IsNorm						==			(GTYPEID_ISNORMALIZED	(other) ? 1U : 0U)
@@ -535,7 +535,7 @@ namespace gpk
 	stxp	DATA_TYPE	DATA_TYPE_BOOL				= DATA_TYPE_UINT8;
 
 #pragma pack(pop)
-	uint32_t			getStringFromDataType			(DATA_TYPE dataType, sc_t* string);
+	u2_t			getStringFromDataType			(DATA_TYPE dataType, sc_t* string);
 
 #if defined(__WINDOWS__)
 #	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4

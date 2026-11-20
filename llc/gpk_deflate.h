@@ -8,11 +8,11 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	stct SPackHeader {
-		uint32_t				TotalFileCount					;
-		uint32_t				SizeCompressedTableFiles		;
-		uint32_t				SizeCompressedContentsPacked	;
-		uint32_t				SizeUncompressedTableFiles		;
-		uint32_t				SizeUncompressedContentsPacked	;
+		u2_t				TotalFileCount					;
+		u2_t				SizeCompressedTableFiles		;
+		u2_t				SizeCompressedContentsPacked	;
+		u2_t				SizeUncompressedTableFiles		;
+		u2_t				SizeUncompressedContentsPacked	;
 	};
 #pragma pack(pop)
 
@@ -31,11 +31,11 @@ namespace gpk
 
 
 #if defined(GPK_ESP32) || defined(GPK_ARDUINO)
-	stxp	uint32_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
-	stxp	uint32_t		INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
+	stxp	u2_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
+	stxp	u2_t		INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
 #else
-	stxp	uint32_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
-	stxp	uint32_t		INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
+	stxp	u2_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
+	stxp	u2_t		INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
 #endif	
 
 	err_t			arrayDeflate			(vcu0_c & inflated, au0_t & deflated, u2_c chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE);

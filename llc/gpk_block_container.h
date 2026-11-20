@@ -16,7 +16,7 @@ namespace gpk
 
 		gpk::err_t							Save						(::gpk::apod<u0_t> & output)	const	{
 			gpk_necs(gpk::saveView(output, RemainingSpace));
-			for(uint32_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
+			for(u2_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
 				gpk_necs(gpk::saveView(output, *Blocks[iArray]));
 
 			return 0;
@@ -26,15 +26,15 @@ namespace gpk
 			clear();
 			gpk_necs(gpk::loadView(input, RemainingSpace));
 			gpk_necs(Blocks.resize(RemainingSpace.size()));
-			for(uint32_t iArray = 0; iArray < Blocks.size(); ++iArray)
+			for(u2_t iArray = 0; iArray < Blocks.size(); ++iArray)
 				gpk_necs(gpk::loadView(input, Blocks[iArray]->Storage));
 
 			return 0;
 		}
 
 		gpk::err_t							push_sequence				(const T * sequence, u2_t length, ::gpk::view<const T> & out_view)	{
-			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
-				uint32_t										& blkRemainingSpace			= RemainingSpace[iBlock];
+			for(u2_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
+				u2_t										& blkRemainingSpace			= RemainingSpace[iBlock];
 				if(blkRemainingSpace >= length) {
 					T												* sequenceStart				= &Blocks[iBlock]->operator[](_size - blkRemainingSpace);
 					out_view									= {sequenceStart, length};

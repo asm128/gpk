@@ -32,7 +32,7 @@ static	::gpk::error_t								createChildProcess
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	bool													bSuccess				= false;
 	stacxpr	bool								isUnicodeEnv			= false;
-	stacxpr	uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stacxpr	u2_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
 	gpk_safe_closehandle(process.ProcessInfo.hProcess);
 	bSuccess											= CreateProcessA
@@ -146,11 +146,11 @@ static	::gpk::error_t				readFromPipe			(::SThreadStateRead & appState)	{	// Rea
 
 	//char									chBuf	[BUFSIZE]		= {};
 	static	::gpk::au0_t						chBuf;
-	stacxpr	const uint32_t					BUFSIZE					= 1024 * 1024;
+	stacxpr	const u2_t					BUFSIZE					= 1024 * 1024;
 	chBuf.resize(BUFSIZE);
 	bool									bSuccess				= FALSE;
 	while(true) {
-		uint32_t								dwRead					= 0;
+		u2_t								dwRead					= 0;
 		if(handleReadable(handles.ChildStd_OUT_Read)) {
 			bSuccess							= ReadFile(handles.ChildStd_OUT_Read, chBuf.begin(), chBuf.size(), (DWORD*)&dwRead, NULL);
 			ree_if(false == bSuccess, "Failed to read from child process' standard output.");
@@ -231,7 +231,7 @@ static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValue
 static int											cgiMain					(int argc, char** argv, char**envv)		{
 	(void)(envv);
 	::gpk::SCGIRuntimeValues								runtimeValues;
-	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
+	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (u2_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::SThreadStateRead										appState;
 	if(::gpk::failed(::cgiBootstrap(runtimeValues, appState))) {
 		printf("%s\r\n", "Content-Type: text/html"

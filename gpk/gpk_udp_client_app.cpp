@@ -43,7 +43,7 @@ gpk::err_t		gpk::processGUIEvent	(::gpk::SClient & client, ::gpk::SGUI & gui, co
 		if(0 == (stateChange.Set & ::gpk::GUI_CONTROL_FLAG_Action))
 			return 0;
 
-		for(uint32_t iInput = 0; iInput < client.UI.Input.size(); ++iInput) {
+		for(u2_t iInput = 0; iInput < client.UI.Input.size(); ++iInput) {
 			if(client.UI.Input[iInput] != stateChange.Id) 
 				continue;
 
@@ -67,7 +67,7 @@ gpk::err_t		gpk::processGUIEvent	(::gpk::SClient & client, ::gpk::SGUI & gui, co
 
 gpk::err_t			gpk::updateGUI		(::gpk::SClient & client, ::gpk::SGUI & gui) {
 	sc_t						buf [128]			= {};
-	uint32_t					dots				= ::gpk::timeCurrent() % 4;
+	u2_t					dots				= ::gpk::timeCurrent() % 4;
 	::gpk::asc_t				textConnecting		= ::gpk::vcs{"Connecting"};
 	textConnecting.append(gpk::vcs{"...", dots});
 	gpk_necs(gpk::controlTextSet(gui, client.UI.Input[::gpk::UI_CLIENT_INPUT_Connect]

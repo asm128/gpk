@@ -121,8 +121,8 @@ namespace gpk
 
 	tplt<tpnm T, uint16_t _width = 16>
 	struct SVoxelLayer {
-		stxp	uint32_t					WIDTH						= _width;
-		stxp	uint32_t					DEPTH						= WIDTH;
+		stxp	u2_t					WIDTH						= _width;
+		stxp	u2_t					DEPTH						= WIDTH;
 
 		uint16_t										Y							= {};
 		T											Cells	[DEPTH][WIDTH]		= {};
@@ -179,7 +179,7 @@ namespace gpk
 			}
 
 			::gpk::SVoxelChunk<T>							& chunk						= Chunks[indexChunk];
-			if(chunk.Layers.size() < uint32_t(voxelPosition.y) + 1)
+			if(chunk.Layers.size() < u2_t(voxelPosition.y) + 1)
 				chunk.Layers.resize(voxelPosition.y + 1);
 
 			T												& cell						= chunk.Layers[voxelPosition.y]
@@ -188,8 +188,8 @@ namespace gpk
 				if(0 == cell) 
 					Voxels.push_back({voxelPosition.x, voxelPosition.y, voxelPosition.z, cellValue});
 				else {
-					uint32_t											foundVoxel					= (uint32_t)-1;
-					for(uint32_t iVoxel = 0; iVoxel < Voxels.size(); ++iVoxel) {
+					u2_t											foundVoxel					= (u2_t)-1;
+					for(u2_t iVoxel = 0; iVoxel < Voxels.size(); ++iVoxel) {
 						::gpk::SVoxel<uint8_t>								& voxel						= Voxels[iVoxel];
 						if(voxel.Position == voxelPosition) {
 							if(0 == cellValue)

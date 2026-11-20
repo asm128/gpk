@@ -25,7 +25,7 @@ static	gpk::err_t	updateDPI									(::gpk::SFramework & framework)													
 		RECT			rcWindow									= {};
 		::GetWindowRect(framework.RootWindow.PlatformDetail.WindowHandle, &rcWindow);
 		POINT			point										= {rcWindow.left + 8, rcWindow.top};
-		::gpk::n2<uint32_t>																	dpi											= {96, 96};
+		::gpk::n2<u2_t>																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
 #if defined(GPK_WINDOWS7_COMPAT)
 		if((framework.GUI->Zoom.DPI * 96).u2_t() != dpi) {
@@ -38,7 +38,7 @@ static	gpk::err_t	updateDPI									(::gpk::SFramework & framework)													
 		HRESULT			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
 		if(0 == hr && (framework.GUI->Zoom.DPI * 96).u2_t() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
-			::gpk::pobj<::gpk::rt<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.RootWindow.BackBuffer;
+			::gpk::pobj<::gpk::rt<::gpk::SFramework::TTexel, u2_t>>					offscreen									= framework.RootWindow.BackBuffer;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
 		}
 #endif
@@ -54,7 +54,7 @@ gpk::err_t			gpk::updateFramework						(::gpk::SFramework& framework)											
 	input.KeyboardPrevious	= input.KeyboardCurrent;
 	input.MousePrevious		= input.MouseCurrent;
 	input.MouseCurrent.Deltas	= {};
-	for(uint32_t iJoy = 0; iJoy < input.JoystickCurrent.size(); ++iJoy) {
+	for(u2_t iJoy = 0; iJoy < input.JoystickCurrent.size(); ++iJoy) {
 		input.JoystickCurrent[iJoy].Deltas	= {};
 		//XINPUT_STATE xistate = {};
 		//HRESULT err = XInputGetState(iJoy, &xistate);
@@ -75,12 +75,12 @@ gpk::err_t			gpk::updateFramework						(::gpk::SFramework& framework)											
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, (u3_t)200000));
 #if defined(GPK_XCB)
-	::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
+	::gpk::pobj<::gpk::rt<::gpk::bgra, u2_t>>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;
 	if(mainWindow.Repaint) {
 		xcb_screen_t								* xcbScreen					= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;
 		const xcb_image_format_t					format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
-		const ::gpk::n2<uint32_t>				& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+		const ::gpk::n2<u2_t>				& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 		xcb_image_t									* image						= xcb_image_create_native
 			( mainWindow.PlatformDetail.Connection
 			, guiRenderTargetMetrics.x
@@ -225,11 +225,11 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		}
 		break;
 	}
-	case WM_CHAR			: verbose_printf("WM_CHAR          '%u'.", wParam); if_fail_e(gpk::eventEnqueueTextChar				(mainDisplay.EventQueue, (uint32_t)wParam)); mainDisplay.Repaint = true; break;
-	case WM_KEYDOWN			: verbose_printf("WM_KEYDOWN       '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardDown			(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; break;
-	case WM_KEYUP			: verbose_printf("WM_KEYUP         '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardUp			(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; break;
-	case WM_SYSKEYDOWN		: verbose_printf("WM_SYSKEYDOWN    '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysDown		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; break;
-	case WM_SYSKEYUP		: verbose_printf("WM_SYSKEYUP      '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysUp		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; break;
+	case WM_CHAR			: verbose_printf("WM_CHAR          '%u'.", wParam); if_fail_e(gpk::eventEnqueueTextChar				(mainDisplay.EventQueue, (u2_t)wParam)); mainDisplay.Repaint = true; break;
+	case WM_KEYDOWN			: verbose_printf("WM_KEYDOWN       '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardDown			(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 1; mainDisplay.Repaint = true; break;
+	case WM_KEYUP			: verbose_printf("WM_KEYUP         '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardUp			(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 0; mainDisplay.Repaint = true; break;
+	case WM_SYSKEYDOWN		: verbose_printf("WM_SYSKEYDOWN    '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysDown		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 1; mainDisplay.Repaint = true; break;
+	case WM_SYSKEYUP		: verbose_printf("WM_SYSKEYUP      '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysUp		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(u2_t)wParam] = 0; mainDisplay.Repaint = true; break;
 	case WM_LBUTTONDOWN		: verbose_printf("WM_LBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; break;
 	case WM_RBUTTONDOWN		: verbose_printf("WM_RBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 1; mainDisplay.Repaint = true; break;
 	case WM_MBUTTONDOWN		: verbose_printf("WM_MBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 1; mainDisplay.Repaint = true; break;
@@ -283,8 +283,8 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 				mainDisplay.Resized				= true;
 				mainDisplay.Repaint				= true;
 				sc_t								buffer		[256]							= {};
-				//snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u]. Last frame seconds: %g. ", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y, app.Framework.Timer.LastTimeSeconds);
-				snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u].", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y);
+				//snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u]. Last frame seconds: %g. ", (u2_t)newMetrics.x, (u2_t)newMetrics.y, app.Framework.Timer.LastTimeSeconds);
+				snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u].", (u2_t)newMetrics.x, (u2_t)newMetrics.y);
 #if defined(UNICODE)
 #else
 				SetWindowText(mainDisplay.PlatformDetail.WindowHandle, buffer);
@@ -352,14 +352,14 @@ static	gpk::err_t	xcbWindowCreate								(::gpk::SWindow & window) {
 	xcb_create_pixmap(window.PlatformDetail.Connection, xcbScreen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, xcbScreen->root, window.Size.x, window.Size.y);
 	{	// create graphics context
 		window.PlatformDetail.GC																= xcb_generate_id(window.PlatformDetail.Connection);
-		const uint32_t			mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-		const uint32_t			values[3]	= {xcbScreen->black_pixel, xcbScreen->white_pixel, 0};
+		const u2_t			mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+		const u2_t			values[3]	= {xcbScreen->black_pixel, xcbScreen->white_pixel, 0};
 		xcb_create_gc(window.PlatformDetail.Connection, window.PlatformDetail.GC, xcbScreen->root, mask, values);
 	}
 	{	// create the window
 		window.PlatformDetail.IdDrawable																		= xcb_generate_id(window.PlatformDetail.Connection);
-		const uint32_t			mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
-		const uint32_t			values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
+		const u2_t			mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
+		const u2_t			values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
 			, XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY
 			| XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_KEY_PRESS  | XCB_EVENT_MASK_KEY_RELEASE | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION
 		};

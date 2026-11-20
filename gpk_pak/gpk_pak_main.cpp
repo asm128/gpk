@@ -7,7 +7,7 @@
 
 int										main						(int argc, char ** argv)	{
 	ree_if(2 > argc, "Usage:\n\t%s [input folder name] [output file name (optional)]", argv[0]);
-	ree_if(65535 < argc, "Invalid parameter count: %u.", (uint32_t)argc);
+	ree_if(65535 < argc, "Invalid parameter count: %u.", (u2_t)argc);
 
 	char										nameFileDst[1024*2]			= {};
 	if(2 < argc)	// compose filename from folder name or just use the second argument.
@@ -15,7 +15,7 @@ int										main						(int argc, char ** argv)	{
 	else
 		gpk_necall(sprintf_s(nameFileDst, "%s.gpk", argv[1]), "%s", "Buffer overflow.");
 
-	const ::gpk::view_const_string				nameFolderSrc				= {argv[1], (uint32_t)strlen(argv[1])};;
+	const ::gpk::view_const_string				nameFolderSrc				= {argv[1], (u2_t)strlen(argv[1])};;
 	gpk_necall(gpk::folderPackToDisk(nameFileDst, nameFolderSrc), "Failed to pack folder '%s' to file '%s'.", nameFolderSrc.begin(), nameFileDst);
 	info_printf("Successfully written '%s'?", nameFileDst);
 	for(int32_t iArg = 3; iArg < argc; ++iArg)

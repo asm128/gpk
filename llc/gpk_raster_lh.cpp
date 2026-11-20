@@ -21,7 +21,7 @@ gpk::err_t			gpk::setPixel			(::gpk::g8bgra pixels, ::gpk::n2s1_t position, ::gp
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
 	) {
 		::gpk::bgra					& targetPixel = pixels[position.y][position.x];
-		targetPixel				= {color.b, color.g, color.r, (uint8_t)::gpk::clamped(targetPixel.a + (uint32_t)color.a, 0U, 255U)};
+		targetPixel				= {color.b, color.g, color.r, (uint8_t)::gpk::clamped(targetPixel.a + (u2_t)color.a, 0U, 255U)};
 		return 1;
 	}
 	return 0;
@@ -114,7 +114,7 @@ gpk::err_t			gpk::drawLine
 	( const ::gpk::n2u1_t		offscreenMetrics
 	, const ::gpk::line3f32		& lineFloat
 	, ::gpk::apod<::gpk::n3f2_t>	& pixelCoords
-	, ::gpk::grid<uint32_t>	depthBuffer
+	, ::gpk::grid<u2_t>	depthBuffer
 	) {
 	::gpk::line2i32				line					= {{(int32_t)lineFloat.A.x, (int32_t)lineFloat.A.y}, {(int32_t)lineFloat.B.x, (int32_t)lineFloat.B.y}};
 	int32_t						xDiff					= (int32_t)fabs(line.B.x - line.A.x);
@@ -130,8 +130,8 @@ gpk::err_t			gpk::drawLine
 	 && lineFloat.A.z >= 0 && lineFloat.A.z <= 1
 	) {
 		depthBufferRow			= depthBuffer[line.A.y];
-		uint32_t					& depthCell				= depthBufferRow[line.A.x];
-		uint32_t					intZ					= uint32_t((double)0xFFFFFFFU * lineFloat.A.z);
+		u2_t					& depthCell				= depthBufferRow[line.A.x];
+		u2_t					intZ					= u2_t((double)0xFFFFFFFU * lineFloat.A.z);
 		if( depthCell > intZ ) {
 			depthCell				= intZ;
 			//pixelCoords.push_back({(int32_t)line.A.x, (int32_t)line.A.y});
@@ -156,8 +156,8 @@ gpk::err_t			gpk::drawLine
 				const double				finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
 				if (finalZ <= 0 || finalZ >= 1)
 					continue;
-				const uint32_t				intZ					= uint32_t(0xFFFFFFFU * finalZ);
-				uint32_t					& depthCell				= depthBufferRow[line.A.x];
+				const u2_t				intZ					= u2_t(0xFFFFFFFU * finalZ);
+				u2_t					& depthCell				= depthBufferRow[line.A.x];
 				if(depthCell <= intZ)
 					continue;
 
@@ -178,8 +178,8 @@ gpk::err_t			gpk::drawLine
 				const double				finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
 				if (finalZ <= 0 || finalZ >= 1)
 					continue;
-				const uint32_t				intZ					= uint32_t(0xFFFFFFFU * finalZ);
-				uint32_t					& depthCell				= depthBufferRow[line.A.x];
+				const u2_t				intZ					= u2_t(0xFFFFFFFU * finalZ);
+				u2_t					& depthCell				= depthBufferRow[line.A.x];
 				if(depthCell <= intZ)
 					continue;
 
@@ -239,7 +239,7 @@ gpk::err_t			gpk::drawTriangle
 	, const ::gpk::tri3f32			& triangle
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& proportions
-	, ::gpk::grid<uint32_t>		depthBuffer
+	, ::gpk::grid<u2_t>		depthBuffer
 	)	{
 	// Compute triangle bounding box
 	int16_t						minX					= (int16_t)::min3(triangle.A.x, triangle.B.x, triangle.C.x);
@@ -282,8 +282,8 @@ gpk::err_t			gpk::drawTriangle
 		if(finalZ >= 1.0 || finalZ <= 0)
 			continue;
 
-		uint32_t					intZ					= uint32_t(0xFFFFFFFU * finalZ);
-		uint32_t					& currentDepth			= depthBuffer[p.y][p.x];
+		u2_t					intZ					= u2_t(0xFFFFFFFU * finalZ);
+		u2_t					& currentDepth			= depthBuffer[p.y][p.x];
 		if(currentDepth <= intZ)
 			continue;
 
@@ -356,19 +356,19 @@ gpk::err_t			gpk::drawPixels
 	double						lightFactorDirectional	= normal.Dot(lightVector);
 	(void)lightFactorDirectional;
 	int32_t						countPixels				= 0;
-	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		::gpk::n2s1_t				pixelCoord				= pixelCoords		[iPixelCoord];
 		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		const ::gpk::n2f2_t			texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
 		const ::gpk::n3f2_t			position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
-		const ::gpk::rgbaf			texelColor				= textureImage.size() ? textureImage[(uint32_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(uint32_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x] : ::gpk::bgra{::gpk::GRAY};
-		const uint32_t				countLights				= lightPoints.size();
+		const ::gpk::rgbaf			texelColor				= textureImage.size() ? textureImage[(u2_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(u2_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x] : ::gpk::bgra{::gpk::GRAY};
+		const u2_t				countLights				= lightPoints.size();
 		const ::gpk::rgbaf			ambientPerLight			= countLights ? texelColor / (10.0 * countLights) : ::gpk::rgbaf{};
 		::gpk::rgbaf				fragmentColor			= {};
 		stxp	double				rangeLight				= 10.0;
 		stxp	double				rangeLightSquared		= rangeLight * rangeLight;
 		stxp	double				rangeUnit				= 1.0 / rangeLightSquared;
-		for(uint32_t iLight = 0; iLight < countLights; ++iLight) {
+		for(u2_t iLight = 0; iLight < countLights; ++iLight) {
 			const ::gpk::n3f2_t			lightToPoint			= lightPoints[iLight] - position;
 			const double				distanceToLight			= lightToPoint.LengthSquared();
 			if(distanceToLight > rangeLightSquared)
@@ -406,7 +406,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, const ::gpk::tri3f32		& triangleScreen
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<uint32_t>		depthBuffer
+	, ::gpk::grid<u2_t>		depthBuffer
 	) {
 	return ::gpk::drawTriangle(targetSize, triangleScreen, pixelCoords, pixelVertexWeights, depthBuffer);
 }
@@ -417,7 +417,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, const ::gpk::m4f32			& matrixTransformVP
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<uint32_t>		depthBuffer
+	, ::gpk::grid<u2_t>		depthBuffer
 	) {
 	::gpk::transform(triangle, matrixTransformVP);
 	if( triangle.A.z <= 0 || triangle.A.z >= 1
@@ -440,7 +440,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
-	, ::gpk::grid<uint32_t>		depthBuffer
+	, ::gpk::grid<u2_t>		depthBuffer
 	) {
 	return ::gpk::drawQuadTriangle(targetPixels, geometry, iTriangle, matrixTransform, matrixTransformVP, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, depthBuffer, setPixel);
 }
@@ -457,7 +457,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
-	, ::gpk::grid<uint32_t>		depthBuffer
+	, ::gpk::grid<u2_t>		depthBuffer
 	, const ::gpk::function<gpk::err_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 	) {
 	const ::gpk::tri3f32		& triangle			= geometry.Triangles	[iTriangle];;
@@ -480,7 +480,7 @@ gpk::err_t			gpk::drawQuadTriangle
 	, const ::gpk::bgra				color
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<uint32_t>		depthBuffer
+	, ::gpk::grid<u2_t>		depthBuffer
 	) {
 	::gpk::tri3f32				triangle			= geometry.Triangles	[iTriangle];
 	::gpk::n3f2_t				normal				= geometry.Normals		[iTriangle / 2];
@@ -496,7 +496,7 @@ gpk::err_t			gpk::drawQuadTriangle
 
 	int32_t						countPixels			= 0;
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
-	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		::gpk::n2s1_t				pixelCoord			= pixelCoords[iPixelCoord];
 		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, (color * 0.1) + color * lightFactor);
 	}
@@ -513,7 +513,7 @@ gpk::err_t			gpk::drawTriangle
 	, const ::gpk::bgra				color
 	, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-	, ::gpk::grid<uint32_t>		depthBuffer
+	, ::gpk::grid<u2_t>		depthBuffer
 	) {
 	::gpk::tri3f32				triangle			= geometry.Triangles	[iTriangle];
 	const ::gpk::tri3f32		& triangleNormals	= geometry.Normals		[iTriangle];
@@ -526,7 +526,7 @@ gpk::err_t			gpk::drawTriangle
 
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 	int32_t						countPixels				= 0;
-	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
 		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
@@ -547,7 +547,7 @@ gpk::err_t			gpk::drawTriangle
 	, ::gpk::apod<::gpk::n2s1_t>			& pixelCoords
 	, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 	, ::gpk::gc8bgra	textureImage
-	, ::gpk::grid<uint32_t>			depthBuffer
+	, ::gpk::grid<u2_t>			depthBuffer
 	) {
 	::gpk::tri3f32				triangle			= geometry.Triangles		[iTriangle];
 	const ::gpk::tri3f32		& triangleNormals	= geometry.Normals			[iTriangle];
@@ -562,7 +562,7 @@ gpk::err_t			gpk::drawTriangle
 	int32_t						countPixels				= 0;
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 	const ::gpk::n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
-	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
 		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		::gpk::n3f2_t				normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
@@ -573,7 +573,7 @@ gpk::err_t			gpk::drawTriangle
 		::gpk::n2f2_t				texCoord				= triangleTexCoords.A * vertexWeights.A;
 		texCoord				+= triangleTexCoords.B * vertexWeights.B;
 		texCoord				+= triangleTexCoords.C * vertexWeights.C;
-		::gpk::bgra					texelColor				= textureImage[(uint32_t)(texCoord.y * imageUnit.y)][(uint32_t)(texCoord.x * imageUnit.x)];
+		::gpk::bgra					texelColor				= textureImage[(u2_t)(texCoord.y * imageUnit.y)][(u2_t)(texCoord.x * imageUnit.x)];
 		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, (::gpk::rgbaf(texelColor) * .3 + ::gpk::rgbaf(texelColor) * lightFactor).Clamp());
 	}
 	return countPixels;
@@ -592,7 +592,7 @@ gpk::err_t			gpk::drawTriangle
 	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::SLight3>		& lightPoints
 	, ::gpk::a8bgra			& lightColors
-	, ::gpk::grid<uint32_t>			depthBuffer
+	, ::gpk::grid<u2_t>			depthBuffer
 	) {
 	::gpk::tri3f32				triangleWorld			= geometry.Triangles		[iTriangle];
 	::gpk::tri3f32				triangle				= triangleWorld;
@@ -610,7 +610,7 @@ gpk::err_t			gpk::drawTriangle
 	const ::gpk::tri3f32		& triangleNormals		= geometry.Normals			[iTriangle];
 	const ::gpk::tri2f32		& triangleTexCoords		= geometry.TextureCoords	[iTriangle];
 	const ::gpk::n2f2_t			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
-	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+	for(u2_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::n2s1_t			pixelCoord				= pixelCoords		[iPixelCoord];
 		const ::gpk::trif2_t			& vertexWeights			= pixelVertexWeights[iPixelCoord];
 
@@ -619,10 +619,10 @@ gpk::err_t			gpk::drawTriangle
 		double						lightFactorDirectional	= normal.Dot(lightVector);
 		::gpk::n3f2_t				position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
 		::gpk::n2f2_t				texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
-		::gpk::rgbaf				texelColor				= textureImage[(uint32_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(uint32_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x];
+		::gpk::rgbaf				texelColor				= textureImage[(u2_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(u2_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x];
 		::gpk::rgbaf				fragmentColor			= {};
 
-		for(uint32_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
+		for(u2_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
 			const ::gpk::SLight3		& light					= lightPoints[iLight];
 
 			::gpk::n3f2_t				lightToPoint			= light.Position - position;

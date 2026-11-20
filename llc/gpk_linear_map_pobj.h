@@ -15,13 +15,13 @@ namespace gpk
 		::gpk::aobj<TPObj>			Elements		= {};
 		::gpk::avcsc_t				Names			= {};
 
-		inline	const TPObj&		operator[]		(uint32_t index)	const	{ return Elements[index]; }
-		inline	TPObj&				operator[]		(uint32_t index)			{ return Elements[index]; }
+		inline	const TPObj&		operator[]		(u2_t index)	const	{ return Elements[index]; }
+		inline	TPObj&				operator[]		(u2_t index)			{ return Elements[index]; }
 		inline	const TPObj&		operator[]		(::gpk::vcsc_t key)	const	{ return Elements[Names.find(key)]; }
 		inline	TPObj&				operator[]		(::gpk::vcsc_t key)			{ return Elements[Names.find(key)]; }
 
-		inxp	uint32_t			size			()											const	{ return Names.size(); }
-		inline	gpk::err_t		find			(::gpk::vcsc_c key, uint32_t offset = 0)	const	{ return Names.find(key, offset); }
+		inxp	u2_t			size			()											const	{ return Names.size(); }
+		inline	gpk::err_t		find			(::gpk::vcsc_c key, u2_t offset = 0)	const	{ return Names.find(key, offset); }
 
 		gpk::err_t				push_back		(const ::gpk::pobj<T> & instance, ::gpk::vcsc_c name = {})	{ 
 			Names.push_back(name); 
@@ -29,12 +29,12 @@ namespace gpk
 		}
 
 		inline	gpk::err_t		Create			(const ::gpk::vcsc_t name = {})									{ return push_back({}, name); }
-		gpk::err_t				Delete			(uint32_t index)												{ 
+		gpk::err_t				Delete			(u2_t index)												{ 
 			Names.remove_unordered(index); 
 			return Elements.remove_unordered(index); 
 		}
 
-		gpk::err_t				Clone			(uint32_t index)												{ 
+		gpk::err_t				Clone			(u2_t index)												{ 
 			int32_t							iNew;
 			gpk_necall(iNew = Create(Names[index]), "index: %i", index);
 			const TPObj						& srcElement	= Elements[index];
@@ -49,7 +49,7 @@ namespace gpk
 
 		gpk::err_t				Save			(::gpk::au0_t & output) const { 
 			gpk_necs(output.append(::gpk::vcu0_t{(const uint8_t*)&Elements.size(), 4}));
-			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
+			for(u2_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Save(output), "iEntity: %i", iEntity);
 				gpk_necall(gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
 			}
@@ -58,10 +58,10 @@ namespace gpk
 		}
 
 		gpk::err_t				Load			(::gpk::vcu0_t & input) {
-			gpk_necs(Elements.resize(*(uint32_t*)input.begin()));
-			input						= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			gpk_necs(Elements.resize(*(u2_t*)input.begin()));
+			input						= {input.begin() + sizeof(u2_t), input.size() - 4};
 			gpk_necall(Names.resize(Elements.size()), "size: %i", Elements.size());
-			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
+			for(u2_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Load(input), "iEntity: %i", iEntity);
 				gpk_necall(gpk::loadLabel(input, Names[iEntity]), "iEntity: %i", iEntity);
 			}

@@ -87,7 +87,7 @@ namespace gpk
 		};
 
 	struct SCGIRequestContent {
-		uint32_t								Length						= {};
+		u2_t								Length						= {};
 		::gpk::CGI_MEDIA_TYPE					Type						= {};
 		::gpk::apod<sc_t>						Body						= {};
 	};
@@ -126,7 +126,7 @@ gpk::err_t	GPK_STDCALL	gpk_moduleSetup			(void*	instanceApp)									{ try { con
 gpk::err_t	GPK_STDCALL	gpk_moduleCleanup		(void*	instanceApp)									{ try { const gpk::err_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
 gpk::err_t	GPK_STDCALL	gpk_moduleUpdate		(void*	instanceApp, bool systemRequestedExit)			{ try { const gpk::err_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
 gpk::err_t	GPK_STDCALL	gpk_moduleRender		(void*	instanceApp, ::gpk::apod<sc_t>& output)			{ try { const gpk::err_t result = draw		(*(_mainClass*)instanceApp, output);				return result;	} catch(...) {} return -1; }	\
-gpk::err_t	GPK_STDCALL	gpk_moduleTitle			(sc_t* out_title, uint32_t *maxCount)					{	\
+gpk::err_t	GPK_STDCALL	gpk_moduleTitle			(sc_t* out_title, u2_t *maxCount)					{	\
 	stxp	sc_c					mylmoduleTitle[]		= _moduleTitle;							\
 	if(0 == out_title) 																				\
 		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\

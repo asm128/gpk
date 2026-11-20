@@ -53,7 +53,7 @@
 static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catalog, ::gpk::view<const ::dry::SSpool> filaments, ::gpk::string & output) {
 	output.push_back('[');
 	::gpk::string				bufferFormat				= {};
-	for(uint32_t iFilament = 0; iFilament < filaments.size(); ++iFilament) {
+	for(u2_t iFilament = 0; iFilament < filaments.size(); ++iFilament) {
 		::dry::SSpool							filament					= filaments[iFilament];
 		bufferFormat.resize(1024 * 16);
 		int32_t									newSize						= sprintf_s(bufferFormat.Data, bufferFormat.size(),
@@ -111,10 +111,10 @@ static	::gpk::error_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catal
 	const ::gpk::SJSONReader				& reader				= catalog.JSONData.Reader;
 	const int32_t							indexHistory			= ::gpk::jsonObjectValueGet(reader, 0, "history");
 	static const	::gpk::vcs				keys	[]				= {"loaded", "history"};
-	for(uint32_t iKey = 0; iKey < ::gpk::size(keys); ++iKey) {
+	for(u2_t iKey = 0; iKey < ::gpk::size(keys); ++iKey) {
 		const int32_t							indexValue				= ::gpk::jsonObjectValueGet(reader, 0, keys[iKey]);
 		cef_if(0 > indexValue, "'%.*s' node not found in '%s'", keys[iKey].begin(), GPK_VIEW_ARGS(filename)) else {}
-		for(uint32_t iFilament = 0, countFilaments = ::gpk::jsonArraySize(reader, indexValue); iFilament < countFilaments; ++iFilament) {
+		for(u2_t iFilament = 0, countFilaments = ::gpk::jsonArraySize(reader, indexValue); iFilament < countFilaments; ++iFilament) {
 			const int32_t							jsonIndexFilament			= ::gpk::jsonArrayValueGet(*reader[indexValue], iFilament);
 			const int32_t							jsonIndexUniqueId			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unique_id"				);
 			const int32_t							jsonIndexBrand				= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "brand"					);

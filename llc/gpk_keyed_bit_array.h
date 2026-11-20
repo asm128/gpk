@@ -17,12 +17,12 @@ namespace gpk
 
 		inline	gpk::err_t	GetFieldIndex	(const ::gpk::vcsc_t & fieldName)			const	{ return FieldNames.find(fieldName); }
 
-		TViewConst				GetView			(uint32_t client)						const	{ 
+		TViewConst				GetView			(u2_t client)						const	{ 
 			const ::gpk::au3_t			& data			= Bits[client]; 
 			return {data.begin(), ::gpk::min(FieldNames.size(), data.bit_count())}; 
 		}
 
-		TView					GetView			(uint32_t client, bool resize = false)			{ 
+		TView					GetView			(u2_t client, bool resize = false)			{ 
 			::gpk::au3_t					& data			= Bits[client]; 
 			if(resize && FieldNames.size() > data.bit_count()) 
 				gsthrow_if(data.resize_bits(FieldNames.size())); 
@@ -37,7 +37,7 @@ namespace gpk
 		}
 
 		// This function only appends or clears `true` bits. It doesn't clear `false` bits, avoiding to resize the array.
-		gpk::err_t			SetField		(uint32_t client, uint32_t index, bool value)	{ 
+		gpk::err_t			SetField		(u2_t client, u2_t index, bool value)	{ 
 			ree_if(index >= FieldNames.size(), "invalid index: %i", index);
 			::gpk::au3_t					& data			= Bits[client]; 
 			return (value || data.bit_count() > index) 
@@ -46,7 +46,7 @@ namespace gpk
 				; 
 		}
 
-		gpk::err_t			GetField		(uint32_t client, uint32_t index)		const	{ 
+		gpk::err_t			GetField		(u2_t client, u2_t index)		const	{ 
 			ree_if(index >= FieldNames.size(), "invalid index: %i", index);
 			const ::gpk::au3_t			& data			= Bits[client]; 
 			return (index < data.bit_count())

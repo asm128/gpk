@@ -31,10 +31,10 @@ namespace gpk
 		( const ::gpk::n2<uint16_t>	offscreenMetrics
 		, const ::gpk::line3f32		& lineFloat
 		, ::gpk::apod<::gpk::n3f2_t>	& pixelCoords
-		, ::gpk::grid<uint32_t>	depthBuffer
+		, ::gpk::grid<u2_t>	depthBuffer
 		);
 	int				drawTriangle		(::gpk::g8bgra pixels, const ::gpk::tri2i16 & triangle, ::gpk::bgra color);
-	int				drawTriangle		(::gpk::n2u2_t targetSize, const ::gpk::tri3f32 & triangle, ::gpk::apod<::gpk::n2s1_t> & pixelCoords, ::gpk::apod<::gpk::trif2_t> & proportions, ::gpk::grid<uint32_t> depthBuffer);
+	int				drawTriangle		(::gpk::n2u2_t targetSize, const ::gpk::tri3f32 & triangle, ::gpk::apod<::gpk::n2s1_t> & pixelCoords, ::gpk::apod<::gpk::trif2_t> & proportions, ::gpk::grid<u2_t> depthBuffer);
 	int				drawTriangle		(::gpk::n2u2_t targetSize, const ::gpk::tri2f32 & triangle, ::gpk::apod<::gpk::n2s1_t> & pixelCoords, ::gpk::apod<::gpk::trif2_t> & proportions);
 	int				drawQuadTriangle
 		( ::gpk::g8bgra					targetPixels
@@ -46,7 +46,7 @@ namespace gpk
 		, const ::gpk::bgra				color
 		, ::gpk::apod<::gpk::n2s1_t>	& pixelCoords
 		, ::gpk::apod<::gpk::trif2_t>	& pixelVertexWeights
-		, ::gpk::grid<uint32_t>			depthBuffer
+		, ::gpk::grid<u2_t>			depthBuffer
 		);
 	int				drawQuadTriangle
 		( ::gpk::g8bgra						targetPixels
@@ -60,7 +60,7 @@ namespace gpk
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
-		, ::gpk::grid<uint32_t>				depthBuffer
+		, ::gpk::grid<u2_t>				depthBuffer
 		);
 
 	int				drawQuadTriangle
@@ -75,7 +75,7 @@ namespace gpk
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::n3f2_t>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
-		, ::gpk::grid<uint32_t>				depthBuffer
+		, ::gpk::grid<u2_t>				depthBuffer
 		, const ::gpk::function<gpk::err_t(::gpk::g8bgra targetPixels, const ::gpk::n2s1_t & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 		);
 
@@ -85,14 +85,14 @@ namespace gpk
 		, const ::gpk::m4f32				& matrixTransformView
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
-		, ::gpk::grid<uint32_t>				depthBuffer
+		, ::gpk::grid<u2_t>				depthBuffer
 		);
 	int				drawQuadTriangle
 		( ::gpk::n2u2_c						& targetSize
 		, const ::gpk::tri3f32				& triangleScreen
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
-		, ::gpk::grid<uint32_t>				depthBuffer
+		, ::gpk::grid<u2_t>				depthBuffer
 		);
 	int				drawTriangle
 		( ::gpk::g8bgra						targetPixels
@@ -104,7 +104,7 @@ namespace gpk
 		, ::gpk::bgra						color
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
-		, ::gpk::grid<uint32_t>				depthBuffer
+		, ::gpk::grid<u2_t>				depthBuffer
 		);
 	int				drawTriangle
 		( ::gpk::g8bgra						targetPixels
@@ -116,7 +116,7 @@ namespace gpk
 		, ::gpk::apod<::gpk::n2s1_t>		& pixelCoords
 		, ::gpk::apod<::gpk::trif2_t>		& pixelVertexWeights
 		, ::gpk::gc8bgra					textureImage
-		, ::gpk::grid<uint32_t>				depthBuffer
+		, ::gpk::grid<u2_t>				depthBuffer
 		);
 	int				drawTriangle
 		( ::gpk::g8bgra						targetPixels
@@ -131,7 +131,7 @@ namespace gpk
 		, ::gpk::gc8bgra					textureImage
 		, ::gpk::apod<::gpk::SLight3>		& lightPoints
 		, ::gpk::a8bgra						& lightColors
-		, ::gpk::grid<uint32_t>				depthBuffer
+		, ::gpk::grid<u2_t>				depthBuffer
 		);
 
 	int				drawPixels

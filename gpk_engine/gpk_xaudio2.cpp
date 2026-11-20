@@ -312,7 +312,7 @@ gpk::err_t			gpk::AUDIO_STATE::UpdateAudio(double fElapsedTime) {
 			emitter.Velocity		= {eVelocity.x, eVelocity.y, eVelocity.z};
 		}
 
-		uint32_t dwCalcFlags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER
+		u2_t dwCalcFlags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER
 			| X3DAUDIO_CALCULATE_LPF_DIRECT | X3DAUDIO_CALCULATE_LPF_REVERB
 			| X3DAUDIO_CALCULATE_REVERB;
 
@@ -516,7 +516,7 @@ static	gpk::err_t	enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<
 #else // USING_XAUDIO2_7_DIRECTX
 
 	// Enumerating with XAudio 2.7
-	uint32_t						count			= 0;
+	u2_t						count			= 0;
 	gpk_hrcall(pXaudio2->GetDeviceCount(&count));
 	if(!count)
 		return S_FALSE;

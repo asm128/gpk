@@ -36,7 +36,7 @@ namespace gpk
 
 	struct SUDPPayloadHeader {
 		::gpk::SUDPCommand					Command		;
-		uint32_t							Size		;
+		u2_t							Size		;
 		u3_t							MessageId	;
 	};
 #pragma pack(pop)
@@ -82,7 +82,7 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE			State						= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
-	stxp	const uint32_t				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
+	stxp	const u2_t				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
 	gpk::err_t						connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
 	gpk::err_t						connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
@@ -98,12 +98,12 @@ namespace gpk
 	tplt<tpnm _tWithLoad, tpnm _tState> 
 	gpk::err_t						processUDPClientQueueEvents	
 		( _tWithLoad						& eventCache
-		, uint32_t							iClient
+		, u2_t							iClient
 		, ::gpk::vpobj<::gpk::SUDPMessage>	clientQueue
 		, _tState							& state
-		, const ::std::function<gpk::err_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
+		, const ::std::function<gpk::err_t (u2_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
 		) {
-		for(uint32_t iMessage = 0; iMessage < clientQueue.size(); ++iMessage) {
+		for(u2_t iMessage = 0; iMessage < clientQueue.size(); ++iMessage) {
 			const ::gpk::SUDPMessage				& message					= *clientQueue[iMessage];
 			switch(message.Command.Command) {
 			case ::gpk::ENDPOINT_COMMAND_PAYLOAD: {
@@ -123,10 +123,10 @@ namespace gpk
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 
 	stin	gpk::err_t				processUDPClientQueueEvents	
-		( uint32_t							iClient
+		( u2_t							iClient
 		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
 		, _tState							& state
-		, const ::std::function<gpk::err_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
+		, const ::std::function<gpk::err_t (u2_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
 		) {
 		_tWithLoad								eventCache					= {};
 		return ::gpk::processUDPClientQueueEvents(eventCache, iClient, clientQueue, state, funcProcessRequest);
@@ -136,10 +136,10 @@ namespace gpk
 	gpk::err_t						processUDPEvents
 		( ::gpk::view<::gpk::apobj<::gpk::SUDPMessage>>	queueReceived
 		, _tState										& state
-		, const ::std::function<gpk::err_t (uint32_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest
+		, const ::std::function<gpk::err_t (u2_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest
 		) {
 		_tEvent									eventReceived				= {};
-		for(uint32_t iClient = 0; iClient < queueReceived.size(); ++iClient) {
+		for(u2_t iClient = 0; iClient < queueReceived.size(); ++iClient) {
 			 const ::gpk::apobj<::gpk::SUDPMessage>	& clientQueue				= queueReceived[iClient];
 			 gpk_necs(gpk::processUDPClientQueueEvents(eventReceived, iClient, clientQueue, state, funcProcessRequest));
 		}

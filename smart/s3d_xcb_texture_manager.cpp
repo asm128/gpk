@@ -13,7 +13,7 @@
 //#define NANOSVGRAST_IMPLEMENTATION
 //#include "nanosvgrast.h"
 
-::gpk::error_t					s3d::SXCBTextureManager::Create(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::view_grid<const ::gpk::SColorBGRA> pixels) {
+::gpk::error_t					s3d::SXCBTextureManager::Create(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t depth, ::gpk::view_grid<const ::gpk::SColorBGRA> pixels) {
 	::gpk::ptr_obj<::s3d::SXCBPixmap>	newPixmap		= {};
 	::gpk::SImage<::gpk::SColorBGRA>	& loadedImage	= newPixmap->Image;
 	gpk_necall(loadedImage.Texels.append({pixels.begin(), pixels.size()}), "%s", "");
@@ -42,7 +42,7 @@
 	return XCBPixmap.push_back(newPixmap);
 }
 
-::gpk::error_t					s3d::SXCBTextureManager::CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, uint32_t depth, ::gpk::view_const_char filename) {
+::gpk::error_t					s3d::SXCBTextureManager::CreateFromFile(xcb_connection_t * c, xcb_drawable_t idDrawable, u2_t depth, ::gpk::view_const_char filename) {
 	::gpk::view_const_char				extension		= {};
 	::gpk::array_pod<char_t>			ext_lwr			= {};
 	gpk_necall(filename.slice(extension, filename.size() - 3, 3), "File extension not supported for file '%s'", filename.begin());
@@ -62,7 +62,7 @@
 	//	int									w = 0, h = 0, n = 0;
 	//	if (::gpk::SColorBGRA *data = (::gpk::SColorBGRA*)stbi_load((char*)::gpk::toString(filename).begin(), &w, &h, &n, 4)) {
 	//		info_printf("Loaded with stb_image: '%s'", filename.begin());
-	//		gpk_necall(loadedImage.Texels.append({data, uint32_t(w * h)}), "%s", "");
+	//		gpk_necall(loadedImage.Texels.append({data, u2_t(w * h)}), "%s", "");
 	//		free(data);
 	//	}
 	//	else if (NSVGimage * shapes = nsvgParseFromFile(::gpk::toString(filename).begin(), "px", 96.0f)) {
@@ -77,8 +77,8 @@
 	//	}
 	//	else
 	//		return -1;
-	//	loadedImage.View			= {loadedImage.Texels.begin(), (uint32_t)w, (uint32_t)h};
-	//	for(uint32_t i = 0, len = loadedImage.Texels.size(); i < len; ++i) {	//rgba to bgra
+	//	loadedImage.View			= {loadedImage.Texels.begin(), (u2_t)w, (u2_t)h};
+	//	for(u2_t i = 0, len = loadedImage.Texels.size(); i < len; ++i) {	//rgba to bgra
 	//		const ::gpk::SColorBGRA			texel	= loadedImage.Texels[i];
 	//		loadedImage.Texels[i]		= {texel.r, texel.g, texel.b, texel.a};
 	//	}

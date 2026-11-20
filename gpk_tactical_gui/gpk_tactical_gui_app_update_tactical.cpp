@@ -69,32 +69,32 @@ static ::gpk::error_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vc
 ::gpk::error_t dry::updateScreenTactical(::dry::SApplication & app) {
 	::gpk::SGUI & gui = *app.Framework.GUI;
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
-	const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> & selected = ::tacticalMenuItems[(uint32_t)screen.SectionSelected];
+	const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> & selected = ::tacticalMenuItems[(u2_t)screen.SectionSelected];
 	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_TITLE], selected.Text), "%s", "Failed to set tactical detail title.");
 	::gpk::vcsc_t detailLines[5] = {};
 	::tacticalDetails(screen.SectionSelected, detailLines);
-	for(uint32_t iLine = 0; iLine < ::gpk::size(detailLines); ++iLine)
+	for(u2_t iLine = 0; iLine < ::gpk::size(detailLines); ++iLine)
 		gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_LINE_0 + iLine], detailLines[iLine]), "line: %u", iLine);
 
 	const int32_t productionLength = snprintf(screen.ProductionText.begin(), screen.ProductionText.size(), "%i%%", screen.ProductionBudget);
 	const int32_t researchLength = snprintf(screen.ResearchText.begin(), screen.ResearchText.size(), "%i%%", screen.ResearchBudget);
-	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_VALUE], {screen.ProductionText.begin(), (uint32_t)productionLength}), "%s", "Failed to set production allocation.");
-	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_VALUE], {screen.ResearchText.begin(), (uint32_t)researchLength}), "%s", "Failed to set research allocation.");
+	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_VALUE], {screen.ProductionText.begin(), (u2_t)productionLength}), "%s", "Failed to set production allocation.");
+	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_VALUE], {screen.ResearchText.begin(), (u2_t)researchLength}), "%s", "Failed to set research allocation.");
 	app.Framework.RootWindow.Repaint = true;
 	return 0;
 }
 
 ::gpk::error_t dry::handleControlTactical(::dry::SApplication & app, int32_t idControl) {
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
-	for(uint32_t iItem = 0; iItem < ::gpk::size(::tacticalMenuItems); ++iItem)
+	for(u2_t iItem = 0; iItem < ::gpk::size(::tacticalMenuItems); ++iItem)
 		if(screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_START_MISSION + iItem] == idControl) {
 			screen.SectionSelected = ::tacticalMenuItems[iItem].Value;
-			for(uint32_t iMenu = 0; iMenu < ::gpk::size(::tacticalMenuItems); ++iMenu)
+			for(u2_t iMenu = 0; iMenu < ::gpk::size(::tacticalMenuItems); ++iMenu)
 				app.Framework.GUI->Controls.SetSelected(screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_START_MISSION + iMenu], iMenu == iItem);
 			return ::dry::updateScreenTactical(app);
 		}
 
-	switch((uint32_t)idControl) {
+	switch((u2_t)idControl) {
 	case ::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_DECREASE: screen.ProductionBudget = ::gpk::max(0, screen.ProductionBudget - 5); break;
 	case ::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_INCREASE: screen.ProductionBudget = ::gpk::min(100, screen.ProductionBudget + 5); break;
 	case ::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_DECREASE: screen.ResearchBudget = ::gpk::max(0, screen.ResearchBudget - 5); break;
@@ -130,9 +130,9 @@ static ::gpk::error_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vc
 		, ::dry::SCREEN_CONTROL_TACTICAL_DETAIL_LINE_4
 		, ::dry::SCREEN_CONTROL_TACTICAL_BALANCE_TITLE
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(stretchControls); ++iControl)
+	for(u2_t iControl = 0; iControl < ::gpk::size(stretchControls); ++iControl)
 		controls.Placement[screen.ControlIds[stretchControls[iControl]]].Area.Size.x = int16_t(contentWidth - 16);
-	for(uint32_t iControl = 0; iControl < ::dry::SCREEN_CONTROL_TACTICAL_COUNT; ++iControl)
+	for(u2_t iControl = 0; iControl < ::dry::SCREEN_CONTROL_TACTICAL_COUNT; ++iControl)
 		if(screen.ControlIds[iControl] != -1)
 			controls.SetUpdated(screen.ControlIds[iControl], false);
 	return 0;

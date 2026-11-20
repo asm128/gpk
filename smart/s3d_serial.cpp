@@ -58,15 +58,15 @@
         return -1;
     }
 #endif
-	ree_if(((uint32_t)sentBytes) != data.size(), "%i bytes written. Expected: %u", sentBytes, data.size());
+	ree_if(((u2_t)sentBytes) != data.size(), "%i bytes written. Expected: %u", sentBytes, data.size());
 	return sentBytes;
 }
 
-::gpk::error_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, uint32_t count, uint32_t timeout) {
+::gpk::error_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, u2_t count, u2_t timeout) {
 	rnw_if(count == 0, "%s", "Zero bytes specified to be read");
 	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
 	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
-	uint32_t					totalBytesRead		= 0;
+	u2_t					totalBytesRead		= 0;
 	::gpk::STimer				timerTimeout;
 	u3_t					timeElapsed				= 0;
 	const u3_t				timeoutInMicroseconds	= timeout * 1000;
@@ -102,11 +102,11 @@
 	return totalBytesRead;
 }
 
-::gpk::error_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, uint32_t maxCount, uint32_t timeout) {
+::gpk::error_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, u2_t maxCount, u2_t timeout) {
 	rnw_if(maxCount == 0, "%s", "Zero bytes specified to be read");
 	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
 	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
-	uint32_t					totalBytesRead			= 0;
+	u2_t					totalBytesRead			= 0;
 	::gpk::STimer				timerTimeout;
 	u3_t					timeElapsed				= 0;
 	const u3_t				timeoutInMicroseconds	= timeout * 1000;

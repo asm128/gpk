@@ -5,7 +5,7 @@
 #include "gpk_file.h"
 
 gpk::err_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, const ::gpk::SMeshManager & engineMeshes, const ::gpk::SRenderBufferManager & engineBuffers, ::gpk::array_com<ID3D11Buffer> & indexBuffers, ::gpk::array_com<ID3D11Buffer> & vertexBuffers)	{
-	for(uint32_t iMesh = 0; iMesh < engineMeshes.size(); ++iMesh) {
+	for(u2_t iMesh = 0; iMesh < engineMeshes.size(); ++iMesh) {
 		const ::gpk::pobj<::gpk::SGeometryMesh>		& mesh									= engineMeshes[iMesh];
 		if(!mesh)
 			continue;
@@ -14,8 +14,8 @@ gpk::err_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, con
 		::gpk::apobj<::gpk::SRenderBuffer>			engineBufferVertices;
 		::gpk::au2_t						layoutOffsets;
 
-		uint32_t										vertexSize					= 0;
-		for(uint32_t iBuffer = 0; iBuffer < mesh->GeometryBuffers.size(); ++iBuffer) {
+		u2_t										vertexSize					= 0;
+		for(u2_t iBuffer = 0; iBuffer < mesh->GeometryBuffers.size(); ++iBuffer) {
 			const ::gpk::pobj<::gpk::SRenderBuffer>		& buffer								= engineBuffers[mesh->GeometryBuffers[iBuffer]];
 			if(buffer->Desc.Usage == ::gpk::BUFFER_USAGE_Index) {
 				engineBufferIndices							= buffer;
@@ -27,8 +27,8 @@ gpk::err_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, con
 
 		}
 		::gpk::apod<uint8_t>						packed;
-		for(uint32_t iValue = 0, valueCount = engineBufferVertices[0]->Data.size() / engineBufferVertices[0]->Desc.Format.TotalBytes(); iValue < valueCount; ++iValue) {
-			for(uint32_t iBuffer = 0; iBuffer < engineBufferVertices.size(); ++iBuffer) {
+		for(u2_t iValue = 0, valueCount = engineBufferVertices[0]->Data.size() / engineBufferVertices[0]->Desc.Format.TotalBytes(); iValue < valueCount; ++iValue) {
+			for(u2_t iBuffer = 0; iBuffer < engineBufferVertices.size(); ++iBuffer) {
 				const ::gpk::SRenderBuffer						& buffer					= *engineBufferVertices[iBuffer];
 				::gpk::vcu0_t							value						= {&buffer.Data[iValue * buffer.Desc.Format.TotalBytes()], buffer.Desc.Format.TotalBytes()};
 				packed.append(value);
@@ -48,12 +48,12 @@ gpk::err_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, con
 			indexBufferDesc.BindFlags	= D3D11_BIND_INDEX_BUFFER;
 			::gpk::au1_t						indices;
 			const SDataTypeID				indexFormat				= engineBufferIndices->Desc.Format;
-			const uint32_t					indexSize				= engineBufferIndices->Desc.Format.TotalBytes();
+			const u2_t					indexSize				= engineBufferIndices->Desc.Format.TotalBytes();
 			//if(engineBufferIndices->Desc.Format.TotalBytes() == 4) 
 			//else 
 			if(indexSize == 1) {
 				if_fail_fe(indices.resize(engineBufferIndices->Data.size()));
-				indices.enumerate([engineBufferIndices](uint32_t & i, uint16_t & value){ value = engineBufferIndices->Data[i]; return 0; }, 0);
+				indices.enumerate([engineBufferIndices](u2_t & i, uint16_t & value){ value = engineBufferIndices->Data[i]; return 0; }, 0);
 				indexBufferData.pSysMem	= indices.begin();
 				indexBufferDesc.ByteWidth = indices.byte_count();
 			}
@@ -68,7 +68,7 @@ gpk::err_t			gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device * pDevice, con
 }
 
 gpk::err_t			gpk::d3dCreateTexturesFromEngineSurfaces	(ID3D11Device* pDevice, const ::gpk::SSurfaceManager & engineSurfaces, ::gpk::array_com<ID3D11ShaderResourceView> & shaderResourceViews) {
-	for(uint32_t iSurface = 0; iSurface < engineSurfaces.size(); ++iSurface) {
+	for(u2_t iSurface = 0; iSurface < engineSurfaces.size(); ++iSurface) {
 		const ::gpk::SSurface						& surface			= *engineSurfaces[iSurface];
 		D3D11_TEXTURE2D_DESC						desc				= {surface.Desc.Dimensions.x, surface.Desc.Dimensions.y, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE};
 		D3D11_SUBRESOURCE_DATA						initData			= {};
@@ -94,7 +94,7 @@ gpk::err_t			gpk::d3dCreateTexturesFromEngineSurfaces	(ID3D11Device* pDevice, co
 
 //
 gpk::err_t			gpk::d3dCreatePixelShadersFromEngineShaders	(ID3D11Device* pDevice, const ::gpk::SShaderManager & engineShaders, ::gpk::array_com<ID3D11PixelShader> & pixelShaders) {
-	for(uint32_t iShader = 0; iShader < engineShaders.size(); ++iShader) {
+	for(u2_t iShader = 0; iShader < engineShaders.size(); ++iShader) {
 		const ::gpk::vcsc_t								shaderName				= engineShaders.Names[iShader];
 
 		// After the pixel shader file is loaded, create the shader.

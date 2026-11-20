@@ -5,7 +5,7 @@ using ::gpk::sc_t;
 #define gpk_expression_info_printf(...) //info_printf
 
 static	gpk::err_t	expressionReaderViews					(::gpk::apod<::gpk::SExpressionToken> & tokens, ::gpk::aobj<::gpk::vcsc_t>& views, const ::gpk::vcsc_t & expression) {
-	for(uint32_t iTag = 0; iTag < tokens.size(); ++iTag) {
+	for(u2_t iTag = 0; iTag < tokens.size(); ++iTag) {
 		const ::gpk::SExpressionToken								& type									 = tokens[iTag];
 		if(iTag && (::gpk::EXPRESSION_READER_TYPE_TERM_INDEX == type.Type || ::gpk::EXPRESSION_READER_TYPE_TERM_KEY == type.Type || ::gpk::EXPRESSION_READER_TYPE_LITERAL
 			== type.Type) && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
@@ -21,18 +21,18 @@ static	gpk::err_t	expressionTreeRebuild					(::gpk::view<::gpk::SExpressionToken
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
 	// -- Build all nodes linearly, without assigning the children
-	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
+	for(u2_t iObject = 0; iObject < tree.size(); ++iObject) {
 		::gpk::pobj<::gpk::SExpressionNode>							& nodeCurrent										= tree[iObject];
 		nodeCurrent->Token											= &in_object[iObject];
-		nodeCurrent->Parent											= ((uint32_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SExpressionNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
+		nodeCurrent->Parent											= ((u2_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SExpressionNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex									= iObject;
 	}
 
 	// -- Assign the children to every object of the hierarchy
-	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
-		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
+	for(u2_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
+		for(u2_t iOther = 0; iOther < countNodes; ++iOther) {
 			const ::gpk::pobj<::gpk::SExpressionNode>					& nodeOther											= tree[iOther];
-			if(((uint32_t)nodeOther->Token->ParentIndex) == iObject)
+			if(((u2_t)nodeOther->Token->ParentIndex) == iObject)
 				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "%s", "Failed to push tree node. Out of memory?");
 		}
 	}
@@ -58,7 +58,7 @@ static	gpk::err_t	expressionReaderCloseIfType				(::gpk::SExpressionReaderState 
 	return 0;
 }
 
-static	gpk::err_t	expressionReaderOpenLevel				(::gpk::SExpressionReaderState & stateReader, ::gpk::apod<::gpk::SExpressionToken> & tokens, ::gpk::EXPRESSION_READER_TYPE type, uint32_t iChar)	{
+static	gpk::err_t	expressionReaderOpenLevel				(::gpk::SExpressionReaderState & stateReader, ::gpk::apod<::gpk::SExpressionToken> & tokens, ::gpk::EXPRESSION_READER_TYPE type, u2_t iChar)	{
 	stateReader.IndexCurrentElement								= tokens.push_back({stateReader.IndexCurrentElement, type, {iChar, iChar}});
 	stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
 	++stateReader.NestLevel;
@@ -152,13 +152,13 @@ static	bool												isSpaceCharacter		(const sc_t characterToTest)		{
 }
 
 //static	bool												isAnyOfCharacters		(const ::gpk::vcsc_t & charactersToFind, const sc_t characterToTest)		{
-//	for(uint32_t iCharacter = 0; iCharacter < charactersToFind.size(); ++iCharacter)
+//	for(u2_t iCharacter = 0; iCharacter < charactersToFind.size(); ++iCharacter)
 //		if(characterToTest == charactersToFind[iCharacter])
 //			return true;
 //	return false;
 //}
 
-static	gpk::err_t	skipToNextCharacter						(uint32_t & indexCurrentChar, const ::gpk::vcsc_t & expression)		{
+static	gpk::err_t	skipToNextCharacter						(u2_t & indexCurrentChar, const ::gpk::vcsc_t & expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(::isSpaceCharacter(expression[indexCurrentChar]))
 			++indexCurrentChar;
@@ -339,7 +339,7 @@ gpk::err_t			gpk::expressionReaderParseStep			(::gpk::SExpressionReader & reader
 		: ::expressionReaderProcessDocCharacter		(stateReader, tokens, expression)
 		;
 	if (gpk::failed(result)) {
-		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
+		const bool														validElement										= (u2_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
 		const ::gpk::SExpressionToken									* currentElement									= validElement ? &reader.Token[reader.StateRead.IndexCurrentElement] : 0;
 		error_printf("Error during read step. Malformed expression?"
 			"\nPosition         : %i."

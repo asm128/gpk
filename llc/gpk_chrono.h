@@ -24,7 +24,7 @@ namespace gpk
 
 	struct SDaylight {
 		u3_t				TimeOffset		= {};
-		uint32_t				OffsetMinutes	= 90;
+		u2_t				OffsetMinutes	= 90;
 		float					ExtraRatio		= .5;
 	};
 #pragma pack(pop)

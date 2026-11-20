@@ -18,8 +18,8 @@
 using gpk::sc_t;
 
 gpk::err_t			gpk::urlDecode					(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded)		{
-	uint32_t					decodedCharacters				= 0;
-	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
+	u2_t					decodedCharacters				= 0;
+	for(u2_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
 		const sc_t					currentChar						= urlToDecode[iChar];
 		if('%' != currentChar) {
 			gpk_necs(decoded.push_back((sc_t)(uint8_t)currentChar));
@@ -35,23 +35,23 @@ gpk::err_t			gpk::urlDecode					(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & 
 }
 
 static	gpk::err_t	httpRequestChunkedJoin			(const ::gpk::vcsc_t & body, ::gpk::apod<sc_t> & joined)		{
-	uint32_t									iBegin							= 0;
-	uint32_t									iStop							= 0;
+	u2_t									iBegin							= 0;
+	u2_t									iStop							= 0;
 	while(iBegin < body.size()) {
 		iBegin									= iStop;
-		iStop									= (uint32_t)::gpk::find('\n', body, iBegin);
+		iStop									= (u2_t)::gpk::find('\n', body, iBegin);
 		++iStop;	// skip \n
 		::gpk::vcs					strSize;
 		if(iStop <= body.size())
-			strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
+			strSize								= {&body[iBegin], (u2_t)iStop - iBegin};
 		else
 			break;
 		u3_t									sizeChunk						= 0;
 		::gpk::parseIntegerHexadecimal(strSize, sizeChunk);
 		if(0 == sizeChunk)
 			break;
-		joined.append({&body[iStop], (uint32_t)sizeChunk});
-		iStop									+= (uint32_t)sizeChunk;
+		joined.append({&body[iStop], (u2_t)sizeChunk});
+		iStop									+= (u2_t)sizeChunk;
 		iStop									+= 2;	// skip \n
 	}
 	return 0;
@@ -146,9 +146,9 @@ gpk::err_t			gpk::httpClientRequest
 
 	::gpk::apod<sc_t>						buf								= {};
 	gpk_necall(buf.resize(1024*1024*16, 0), "%s", "Failed to resize buffer. Out of memory?");
-	uint32_t									totalBytes						= 0;
-	uint32_t									stopOfHeader					= 0;
-	uint32_t									contentLength					= 0;
+	u2_t									totalBytes						= 0;
+	u2_t									stopOfHeader					= 0;
+	u2_t									contentLength					= 0;
 	bool										bChunked						= false;
 	//const ::gpk::vcs				viewEndOfChunk					= "\r\n0\r\n\r\n";
     while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], ::gpk::min(buf.size() - totalBytes - 1, 1U), 0)) && 0 != numbytes) {
@@ -159,9 +159,9 @@ gpk::err_t			gpk::httpClientRequest
 			if(0 <= offsetStopOfHeader) {
 				// here we should do something in order to detect the content size
 				stopOfHeader						= offsetStopOfHeader;
-				info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
+				info_printf("Header stop at position %u.", (u2_t)stopOfHeader);
 
-				for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
+				for(u2_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
 					buf[iByte]							= (int8_t)::tolower(buf[iByte]);
 
 				bChunked							= 0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, {buf.begin(), totalBytes});
@@ -169,10 +169,10 @@ gpk::err_t			gpk::httpClientRequest
 				int32_t									offsetContentLength				= ::gpk::find_string("content-length", {buf.begin(), totalBytes});
 				if(-1 == offsetContentLength) // no content
 					continue;
-				int32_t									offsetCristobal					= (uint32_t)::gpk::find(':', {buf.begin(), totalBytes}, offsetContentLength);
-				int32_t									offsetEndLine					= (uint32_t)::gpk::find('\r', {buf.begin(), totalBytes}, offsetCristobal);
+				int32_t									offsetCristobal					= (u2_t)::gpk::find(':', {buf.begin(), totalBytes}, offsetContentLength);
+				int32_t									offsetEndLine					= (u2_t)::gpk::find('\r', {buf.begin(), totalBytes}, offsetCristobal);
 				if(0 > offsetEndLine)
-					offsetEndLine						= (uint32_t)::gpk::find('\n', {buf.begin(), totalBytes}, offsetCristobal);
+					offsetEndLine						= (u2_t)::gpk::find('\n', {buf.begin(), totalBytes}, offsetCristobal);
 
 				int32_t digitsLengthStart	= 0;
 				int32_t digitsLengthStop	= offsetEndLine;
@@ -186,7 +186,7 @@ gpk::err_t			gpk::httpClientRequest
 					if(0 == digitsLengthStart)
 						digitsLengthStart	= iOffset;
 				}
-				::gpk::vcs				strContentLength				= {&buf[digitsLengthStart], (uint32_t)(digitsLengthStop - digitsLengthStart)};
+				::gpk::vcs				strContentLength				= {&buf[digitsLengthStart], (u2_t)(digitsLengthStop - digitsLengthStart)};
 				::gpk::parseIntegerDecimal(strContentLength, contentLength);
 			}
 		}
@@ -209,20 +209,20 @@ gpk::err_t			gpk::httpClientRequest
 
 	::gpk::vcsc_t						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4) {
-		info_printf("Fixed header %u stop to position %u.", (uint32_t)stopOfHeader, buf.size());
+		info_printf("Fixed header %u stop to position %u.", (u2_t)stopOfHeader, buf.size());
 		stopOfHeader							= buf.size();
 	}
 
-	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
+	for(u2_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
 		buf[iByte]								= (int8_t)::tolower(buf[iByte]);
 
 	::gpk::aobj<::gpk::vcsc_t>			headerLines;
-	out_received.HeaderData					= {buf.begin(), (uint32_t)stopOfHeader};
+	out_received.HeaderData					= {buf.begin(), (u2_t)stopOfHeader};
 
 	::gpk::split(::gpk::vcsc_t{out_received.HeaderData}, '\n', headerLines);
 	bChunked						= false;
 	out_received.Headers.resize(headerLines.size());
-	for(uint32_t iLine = 0; iLine < headerLines.size(); ++iLine) {
+	for(u2_t iLine = 0; iLine < headerLines.size(); ++iLine) {
 		::gpk::kv<vcsc_t, vcsc_t>					& header						= out_received.Headers[iLine];
 		if(-1 == ::gpk::token_split(':', headerLines[iLine], header)) {
 			header.Key								= {headerLines[iLine].begin(), headerLines[iLine].size()};

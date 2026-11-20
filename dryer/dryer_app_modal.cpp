@@ -90,7 +90,7 @@ static	::gpk::error_t				modalDisplayCloseDoor			(::dry::SApplication & app) {
 	::dry::modalClose(app);
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::gpk::vcid							children						= gui.Controls.Children[app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]];
-	for(uint32_t iChild = 0; iChild < children.size(); ++iChild) {
+	for(u2_t iChild = 0; iChild < children.size(); ++iChild) {
 		gui.Controls.SetHidden(children[iChild], true);
 	}
 	switch(modal) {

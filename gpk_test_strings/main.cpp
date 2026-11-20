@@ -12,7 +12,7 @@ int									main							(int , char ** )		{
 	const ::gpk::vcs text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
 	const ::gpk::vcs words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
 	info_printf("%u:%s.", text.size(), text.begin());
-	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
+	for(u2_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
 		const ::gpk::vcsc_t word = words[iWord];
 
 		::gpk::vcsc_t left, right;
@@ -22,7 +22,7 @@ int									main							(int , char ** )		{
 	}
 
 	info_printf("%u:%s.", text1.size(), text1.begin());
-	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
+	for(u2_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
 		const ::gpk::vcsc_t word = words[iWord];
 
 		::gpk::vcsc_t left, right;

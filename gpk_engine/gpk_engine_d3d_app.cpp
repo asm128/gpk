@@ -8,11 +8,11 @@ gpk::err_t			gpk::d3dGUIDraw		(::DX::D3DDeviceResources & d3dResources, ::gpk::S
 	D3D11_MAPPED_SUBRESOURCE	mappedTexture				= {};
 	gpk_hrcall(d3dResources.GetD3DDeviceContext()->Map(guiStuff.Texture2D.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedTexture));
 	if(mappedTexture.pData) {
-		for(uint32_t y = 0; y < guiStuff.RenderTarget.metrics().y; ++y) {
+		for(u2_t y = 0; y < guiStuff.RenderTarget.metrics().y; ++y) {
 			::gpk::vcbgra			scanLineSrc					= guiStuff.RenderTarget[y];
 			::gpk::vbgra			scanLineDst					= {(::gpk::bgra*)(&((sc_t*)mappedTexture.pData)[y * mappedTexture.RowPitch]), scanLineSrc.size()};
 			memcpy(scanLineDst.begin(), scanLineSrc.begin(), scanLineSrc.byte_count());
-			//for(uint32_t x = 0; x < scanLineDst.size(); ++x)
+			//for(u2_t x = 0; x < scanLineDst.size(); ++x)
 			//	 scanLineDst.begin()[x].a	= scanLineDst.begin()[x].a;
 		}
 	}
@@ -41,7 +41,7 @@ gpk::err_t			gpk::d3dGUIDraw		(::DX::D3DDeviceResources & d3dResources, ::gpk::S
 	return 0;
 }
 
-static	gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeManager, uint32_t iNode, const ::gpk::SEngineSceneConstants & constants, ::gpk::SRenderNodeConstants	& nodeConstants) {
+static	gpk::err_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeManager, u2_t iNode, const ::gpk::SEngineSceneConstants & constants, ::gpk::SRenderNodeConstants	& nodeConstants) {
 	nodeConstants			= nodeManager.Transforms[iNode];
 
 	nodeConstants.Model					= nodeManager.BaseTransforms[iNode].Model * nodeConstants.Model;
@@ -74,7 +74,7 @@ gpk::err_t			gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, c
 
 	::gpk::au2_t								solid;
 	::gpk::au2_t								alpha;
-	for(uint32_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
+	for(u2_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
 		const ::gpk::SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
 		if(flags.NoDraw)
 			continue;
@@ -89,15 +89,15 @@ gpk::err_t			gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, c
 		else
 			solid.push_back(iNode);
 	}
-	for(uint32_t iSolid = 0; iSolid < solid.size(); ++iSolid) {
-		uint32_t								iNode							= solid[iSolid];
+	for(u2_t iSolid = 0; iSolid < solid.size(); ++iSolid) {
+		u2_t								iNode							= solid[iSolid];
 		::gpk::SRenderNodeConstants				nodeConstants;
 		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
 		
 		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
 		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
 
-		uint32_t				indexCount			= 0;
+		u2_t				indexCount			= 0;
 		if(mesh.GeometryBuffers.size() > 0) {
 			auto					pindices			= engineScene.Graphics->Buffers[mesh.GeometryBuffers[0]];
 			indexCount			= pindices->Data.size() / pindices->Desc.Format.TotalBytes();
@@ -110,14 +110,14 @@ gpk::err_t			gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, c
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
 		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, skin.Material.Color.Diffuse.a != 1.0f, nodeConstants);
 	}
-	for(uint32_t iAlpha  = 0; iAlpha < alpha.size(); ++iAlpha) {
-		uint32_t								iNode							= alpha[iAlpha];
+	for(u2_t iAlpha  = 0; iAlpha < alpha.size(); ++iAlpha) {
+		u2_t								iNode							= alpha[iAlpha];
 		::gpk::SRenderNodeConstants				nodeConstants;
 		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
 		
 		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
 		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
-		uint32_t				indexCount			= 0;
+		u2_t				indexCount			= 0;
 		if(mesh.GeometryBuffers.size() > 0) {
 			auto					pindices			= engineScene.Graphics->Buffers[mesh.GeometryBuffers[0]];
 			indexCount			= pindices->Data.size() / pindices->Desc.Format.TotalBytes();

@@ -6,21 +6,21 @@
 #include "gpk_sphere.h"
 
 gpk::err_t			gpk::geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox & params) {
-	const uint32_t				offsetPositions				= geometry.Positions		.size(); geometry.Positions			.resize(offsetPositions			+ 24);
-	const uint32_t				offsetNormals				= geometry.Normals			.size(); geometry.Normals			.resize(offsetNormals			+ 24);
-	const uint32_t				offsetTextureCoords			= geometry.TextureCoords	.size(); geometry.TextureCoords		.resize(offsetTextureCoords		+ 24);
-	const uint32_t				offsetPositionIndices		= geometry.PositionIndices	.size(); geometry.PositionIndices	.resize(offsetPositionIndices	+ 36);
+	const u2_t				offsetPositions				= geometry.Positions		.size(); geometry.Positions			.resize(offsetPositions			+ 24);
+	const u2_t				offsetNormals				= geometry.Normals			.size(); geometry.Normals			.resize(offsetNormals			+ 24);
+	const u2_t				offsetTextureCoords			= geometry.TextureCoords	.size(); geometry.TextureCoords		.resize(offsetTextureCoords		+ 24);
+	const u2_t				offsetPositionIndices		= geometry.PositionIndices	.size(); geometry.PositionIndices	.resize(offsetPositionIndices	+ 36);
 	const ::gpk::vc3f32			vertices					= {&::gpk::VOXEL_FACE_VERTICES[0].A, 24};
-	for(uint32_t iVertex = offsetPositions; iVertex < geometry.Positions.size(); ++iVertex)
+	for(u2_t iVertex = offsetPositions; iVertex < geometry.Positions.size(); ++iVertex)
 		geometry.Positions[iVertex]	= params.Orientation.RotateVector(vertices[iVertex].Scaled(params.HalfSizes * 2.0f) - params.Origin);
 
 	//memcpy(&geometry.Positions		[0], ::gpk::VOXEL_FACE_VERTICES	, geometry.Positions		.byte_count());
-	for(uint32_t iVertex = offsetPositions; iVertex < geometry.Normals.size(); ++iVertex)
+	for(u2_t iVertex = offsetPositions; iVertex < geometry.Normals.size(); ++iVertex)
 		geometry.Normals[iVertex]	= params.Orientation.RotateVector(geometry.Normals[iVertex]);
 	memcpy(&geometry.Normals		[offsetNormals		], ::gpk::VOXEL_FACE_NORMALS.begin(), ::gpk::VOXEL_FACE_NORMALS	.byte_count());
 	memcpy(&geometry.TextureCoords	[offsetTextureCoords], ::gpk::VOXEL_FACE_UV.begin()		, ::gpk::VOXEL_FACE_UV		.byte_count());
 	const ::gpk::vcu1_t			indices						= {::gpk::VOXEL_FACE_INDICES_16[0], 36};
-	for(uint32_t iIndex = offsetPositionIndices; iIndex < geometry.PositionIndices.size(); ++iIndex) 
+	for(u2_t iIndex = offsetPositionIndices; iIndex < geometry.PositionIndices.size(); ++iIndex) 
 		geometry.PositionIndices[iIndex] = indices[iIndex];
 
 	return 0;
@@ -32,35 +32,35 @@ enum SQUARE_MODE
 	};
 
 tplt<tpnm _tIndex>
-static	gpk::err_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionIndices, uint32_t vertexOffset, const ::gpk::n2u1_t cellCount, bool counterClockwise, bool outward) {
+static	gpk::err_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionIndices, u2_t vertexOffset, const ::gpk::n2u1_t cellCount, bool counterClockwise, bool outward) {
 	const uint16_t				pitch						= cellCount.x + 1;								// 2 3 
-	const ::gpk::astu32<4>		indices						= counterClockwise ? ::gpk::astu32<4>{{1U, 0U, uint32_t(pitch + 1U), pitch}} : ::gpk::astu32<4>{{0U, 1U, pitch, uint32_t(pitch + 1U)}};	// 0 1 2 3
-	const uint32_t				indices_modes[2][6]			=
+	const ::gpk::astu32<4>		indices						= counterClockwise ? ::gpk::astu32<4>{{1U, 0U, u2_t(pitch + 1U), pitch}} : ::gpk::astu32<4>{{0U, 1U, pitch, u2_t(pitch + 1U)}};	// 0 1 2 3
+	const u2_t				indices_modes[2][6]			=
 		{ {indices[0], indices[2], indices[3], indices[0], indices[3], indices[1]}
 		, {indices[0], indices[2], indices[1], indices[1], indices[2], indices[3]}
 		};
 	const ::gpk::n2u1_t			halfCount					= {uint16_t(cellCount.x >> 1U), uint16_t(cellCount.y >> 1U)};
-	cellCount.enumerate([&positionIndices, halfCount, indices_modes, vertexOffset, outward](uint32_t & vertexIndex, ::gpk::n2u1_t & coord) {
+	cellCount.enumerate([&positionIndices, halfCount, indices_modes, vertexOffset, outward](u2_t & vertexIndex, ::gpk::n2u1_t & coord) {
 		const bool					reverseQuad 
 			= ( (coord.x >= halfCount.x && coord.y <  halfCount.y)
 			 || (coord.x <  halfCount.x && coord.y >= halfCount.y)
 			);
 		const ::gpk::vcu32			relative_indices			= indices_modes[((reverseQuad ? SQUARE_MODE_TOP_RIGHT : SQUARE_MODE_TOP_LEFT) + one_if(outward)) % 2];
-		for(uint32_t i = 0; i < 6; ++i) {
+		for(u2_t i = 0; i < 6; ++i) {
 			positionIndices.push_back(vertexOffset + vertexIndex + relative_indices[i]);
 		}
-	}, [](uint32_t & vertexIndex, ::gpk::n2u1_t & ) { 
+	}, [](u2_t & vertexIndex, ::gpk::n2u1_t & ) { 
 		++vertexIndex; 
 	});
 	return 0;
 }
 gpk::err_t			gpk::geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid & params) {
-	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const u2_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
 	// -- Generate texture coordinates
 	const ::gpk::n2f3_t			cellUnits					= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
-	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (uint32_t)params.CellCount.y - coord.y}.f2_t().InPlaceScale(cellUnits).f2_t()); });
+	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (u2_t)params.CellCount.y - coord.y}.f2_t().InPlaceScale(cellUnits).f2_t()); });
 
 	// -- Generate normals
 	geometry.Normals.resize(geometry.Normals.size() + vertexCount.Area(), params.Orientation.RotateVector({0, params.Reverse ? -1.0f : 1.0f, 0}));	// The normals are all the same for grids
@@ -74,21 +74,21 @@ gpk::err_t			gpk::geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const 
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, params.Reverse, params.Outward); 
 }
 gpk::err_t			gpk::geometryBuildSphere	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere & params) {
-	const uint32_t				 vertexOffset				= geometry.Positions.size();
+	const u2_t				 vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
 	// -- Generate texture coordinates
 	const ::gpk::n2f3_t			cellUnits					= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
-	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (uint32_t)params.CellCount.y - coord.y}.f3_t().InPlaceScale(cellUnits).f2_t()); });
+	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (u2_t)params.CellCount.y - coord.y}.f3_t().InPlaceScale(cellUnits).f2_t()); });
 
 	// -- Generate normals and positions
 	const double				reverseScale				= params.Reverse ? -1.0 : 1.0;
 	const ::gpk::n2f3_t			sliceScale					= ::gpk::n2f3_t{::gpk::math_2pi * cellUnits.x * reverseScale * params.Circumference, ::gpk::math_pi * cellUnits.y};
 	const double				sliceOffset					= 0; //::gpk::math_pi * (1.0 - params.Circumference) * .5;
-	for(uint32_t y = 0; y < vertexCount.y; ++y) {
+	for(u2_t y = 0; y < vertexCount.y; ++y) {
 		const double				currentY					= sliceScale.y * y;
 		const double				currentRadius				= sin(currentY);
-		for(uint32_t x = 0; x < vertexCount.x; ++x) {
+		for(u2_t x = 0; x < vertexCount.x; ++x) {
 			const double				currentX					= sliceScale.x * x + sliceOffset;
 			const ::gpk::n3f3_t			coord 						= ::gpk::n3f3_t{currentRadius * cos(currentX), -cos(currentY), currentRadius * sin(currentX)};
 			gpk_necs(geometry.Normals	.push_back(params.Orientation.RotateVector((coord * reverseScale).f2_t())));
@@ -98,8 +98,8 @@ gpk::err_t			gpk::geometryBuildSphere	(::gpk::SGeometryBuffers & geometry, const
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, false, false); 
 }
 gpk::err_t			gpk::geometryBuildCircleSide(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle & params) {
-	const uint32_t				vertexOffset				= geometry.Positions.size();
-	const uint32_t				vertexCount					= (uint32_t)params.Slices + 1;
+	const u2_t				vertexOffset				= geometry.Positions.size();
+	const u2_t				vertexCount					= (u2_t)params.Slices + 1;
 	const double				cellUnits					= 1.0 / params.Slices;
 	const double				reverseScale				= params.Reverse ? -1.0 : 1.0;
 	const double				sliceScale					= cellUnits * ::gpk::math_2pi * params.Circumference * reverseScale;
@@ -108,7 +108,7 @@ gpk::err_t			gpk::geometryBuildCircleSide(::gpk::SGeometryBuffers & geometry, co
 	// -- Generate positions and texture coordinates
 	gpk_necs(geometry.Positions		.push_back(params.Orientation.RotateVector(-params.Origin)));	// The first vertex is the center of the circle
 	gpk_necs(geometry.TextureCoords	.push_back(::gpk::n2f2_t{.5f, .5f}));					// The first vertex is the center of the circle
-	for(uint32_t iVertex = 0; iVertex < vertexCount; ++iVertex) {
+	for(u2_t iVertex = 0; iVertex < vertexCount; ++iVertex) {
 		double						angle						= sliceScale * iVertex + sliceOffset;
 		gpk_necs(geometry.Positions		.push_back(params.Orientation.RotateVector(::gpk::n3f3_t{params.Radius}.RotateY(angle).f2_t() - params.Origin)));
 		gpk_necs(geometry.TextureCoords	.push_back(::gpk::n2f3_t{.5}.Rotate(angle).f2_t() + ::gpk::n2f2_t{.5f, .5f}));
@@ -117,18 +117,18 @@ gpk::err_t			gpk::geometryBuildCircleSide(::gpk::SGeometryBuffers & geometry, co
 	// -- Generate normals
 	gpk_necs(geometry.Normals.resize(geometry.Normals.size() + vertexCount + 1, params.Orientation.RotateVector({0, 1, 0})));	// The normals are all the same for a circle
 
-	for(uint32_t iSlice = 0, sliceCount = params.Slices + 1; iSlice < sliceCount; ++iSlice)
+	for(u2_t iSlice = 0, sliceCount = params.Slices + 1; iSlice < sliceCount; ++iSlice)
 		gpk_necs(geometry.PositionIndices.append({vertexOffset + 0, vertexOffset + iSlice + 1, vertexOffset + iSlice + 0}));
 
 	return 0; 
 }
 gpk::err_t			gpk::geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall & params) {
-	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const u2_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
 	// -- Generate texture coordinates
 	const ::gpk::n2f3_t			cellUnits					= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
-	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (uint32_t)params.CellCount.y - coord.y}.f3_t().InPlaceScale(cellUnits).f2_t()); });
+	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (u2_t)params.CellCount.y - coord.y}.f3_t().InPlaceScale(cellUnits).f2_t()); });
 
 	// -- Generate normals
 	const double				reverseScale				= params.Reverse ? -1.0 : 1.0;
@@ -139,16 +139,16 @@ gpk::err_t			gpk::geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry,
 	vertexCount.for_each([&geometry, &normalBase, sliceScale, sliceOffset, &params](::gpk::n2u1_t & coord) { geometry.Normals.push_back(params.Orientation.RotateVector((::gpk::n3f3_t{normalBase}.RotateY(sliceScale * coord.x + sliceOffset)).f2_t())); });
 
 	// -- Generate positions
-	for(uint32_t y = 0; y < vertexCount.y; ++y) {
+	for(u2_t y = 0; y < vertexCount.y; ++y) {
 		const double				radius						= ::gpk::interpolate_linear(params.Radius.Min, params.Radius.Max, cellUnits.y * y);
-		for(uint32_t x = 0; x < vertexCount.x; ++x)
+		for(u2_t x = 0; x < vertexCount.x; ++x)
 			geometry.Positions.push_back(params.Orientation.RotateVector(::gpk::n3f3_t{radius, (double)y * lengthScale}.RotateY(sliceScale * x + sliceOffset).f2_t() - params.Origin));
 	}
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, false, false); 
 }
 //
-gpk::err_t			gpk::geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) { //(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f2_t & gridCenter)	{
-	const uint32_t				vertexOffset				= geometry.Positions.size();
+gpk::err_t			gpk::geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) { //(::gpk::SGeometryQuads & geometry, u2_t stacks, u2_t slices, float radius, const ::gpk::n3f2_t & gridCenter)	{
+	const u2_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
 	// -- Generate texture coordinates
@@ -156,20 +156,20 @@ gpk::err_t			gpk::geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, cons
 	geometry.TextureCoords	.reserve(vertexCount.Area());
 	geometry.Positions		.reserve(vertexCount.Area());
 	geometry.Normals		.reserve(vertexCount.Area());
-	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (uint32_t)params.CellCount.y - coord.y}.f2_t().InPlaceScale(cellUnits).f2_t()); });
+	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (u2_t)params.CellCount.y - coord.y}.f2_t().InPlaceScale(cellUnits).f2_t()); });
 
 	//const double				lengthScale					= cellUnits.y * params.Length;
 	const ::gpk::n2f3_t			sliceScale					= ::gpk::n2f3_t{::gpk::math_2pi * cellUnits.x, ::gpk::math_pi * cellUnits.y};
-	for(uint32_t y = 0; y < vertexCount.y; ++y) {
+	for(u2_t y = 0; y < vertexCount.y; ++y) {
 		const double				radius						= ::gpk::interpolate_linear(params.Radius.Min, params.Radius.Max, cellUnits.y * y);
-		for(uint32_t x = 0; x < vertexCount.x; ++x) {
+		for(u2_t x = 0; x < vertexCount.x; ++x) {
 			::gpk::n3f3_t				position					= {sin(sliceScale.y * y) * sin(sliceScale.x * x) * radius, sin(sliceScale.y * y) * sin(::gpk::math_pi * x / params.CellCount.x) * params.Length, cos(sliceScale.x * x) * radius};
 			geometry.Positions.push_back(params.Orientation.RotateVector(position.f2_t() - params.Origin));
 		}
 	}
-	const uint32_t				indexOffset				= geometry.PositionIndices.size();
+	const u2_t				indexOffset				= geometry.PositionIndices.size();
 	gpk_necs(::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, false, false)); 
-	for(uint32_t iVertexIndex = indexOffset; iVertexIndex < geometry.PositionIndices.size(); iVertexIndex += 3) {
+	for(u2_t iVertexIndex = indexOffset; iVertexIndex < geometry.PositionIndices.size(); iVertexIndex += 3) {
 		const ::gpk::n3f2_t	a	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 0]];
 		const ::gpk::n3f2_t	b	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 1]];
 		const ::gpk::n3f2_t	c	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 2]];
@@ -178,7 +178,7 @@ gpk::err_t			gpk::geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, cons
 	return 0;
 }
 gpk::err_t			gpk::geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) {
-	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const u2_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u1_t			vertexCount					= params.CellCount + ::gpk::n2u1_t{1, 1};
 
 	// -- Generate texture coordinates
@@ -186,21 +186,21 @@ gpk::err_t			gpk::geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, co
 	geometry.TextureCoords	.reserve(vertexCount.Area());
 	geometry.Positions		.reserve(vertexCount.Area());
 	geometry.Normals		.reserve(vertexCount.Area());
-	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (uint32_t)params.CellCount.y - coord.y}.f2_t().InPlaceScale(cellUnits).f2_t()); });
+	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u1_t & coord) { geometry.TextureCoords.push_back(::gpk::n2u2_t{coord.x, (u2_t)params.CellCount.y - coord.y}.f2_t().InPlaceScale(cellUnits).f2_t()); });
 
 	//const double				lengthScale					= cellUnits.y * params.Length;
 	const ::gpk::n2f3_t			sliceScale					= ::gpk::n2f3_t{::gpk::math_2pi * cellUnits.x, ::gpk::math_pi * cellUnits.y};
-	for(uint32_t y = 0; y < vertexCount.y; ++y) {
+	for(u2_t y = 0; y < vertexCount.y; ++y) {
 		const double				radius						= ::gpk::interpolate_linear(params.Radius.Min, params.Radius.Max, cellUnits.y * y);
-		for(uint32_t x = 0; x < vertexCount.x; ++x) {
+		for(u2_t x = 0; x < vertexCount.x; ++x) {
 			::gpk::n3f3_t				position					= {sin(sliceScale.y * y) * sin(sliceScale.x * x) * radius, sin(sliceScale.y * y) * cos(::gpk::math_pi * x / params.CellCount.x) * params.Length, cos(sliceScale.x * x) * radius};
 			geometry.Positions.push_back(params.Orientation.RotateVector(position.f2_t() - params.Origin));
 		}
 	}
 
-	const uint32_t				indexOffset				= geometry.PositionIndices.size();
+	const u2_t				indexOffset				= geometry.PositionIndices.size();
 	gpk_necs(::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, false, false)); 
-	for(uint32_t iVertexIndex = indexOffset; iVertexIndex < geometry.PositionIndices.size(); iVertexIndex += 3) {
+	for(u2_t iVertexIndex = indexOffset; iVertexIndex < geometry.PositionIndices.size(); iVertexIndex += 3) {
 		const ::gpk::n3f2_t	a	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 0]];
 		const ::gpk::n3f2_t	b	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 1]];
 		const ::gpk::n3f2_t	c	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 2]];
@@ -209,9 +209,9 @@ gpk::err_t			gpk::geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, co
 	return 0;
 }
 gpk::err_t			gpk::geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params)	{
-	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const u2_t				vertexOffset				= geometry.Positions.size();
 	gpk_necs(gpk::geometryBuildHelixHalf(geometry, params));
-	const uint32_t				vertexCount					= geometry.Positions.size() - vertexOffset;
+	const u2_t				vertexCount					= geometry.Positions.size() - vertexOffset;
 	gpk_necs(geometry.TextureCoords	.append({&geometry.TextureCoords[vertexOffset], vertexCount}));
 	gpk_necs(geometry.Positions		.append({&geometry.Positions	[vertexOffset], vertexCount}));
 	gpk_necs(geometry.Normals		.append({&geometry.Normals		[vertexOffset], vertexCount}));
@@ -220,12 +220,12 @@ gpk::err_t			gpk::geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const
 	return 0;
 }
 gpk::err_t			gpk::geometryBuildRingSide	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
-	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const u2_t				vertexOffset				= geometry.Positions.size();
 	::gpk::SParamsGrid			paramsGrid					= {{}, {params.Slices, 1}, params.Reverse};
 	gpk_necall(gpk::geometryBuildGrid(geometry, paramsGrid), "params.Slices: %i", params.Slices);
-	const uint32_t				vertexCount					= geometry.Positions.size() - vertexOffset;
+	const u2_t				vertexCount					= geometry.Positions.size() - vertexOffset;
 	const double				sliceScale					= ::gpk::math_2pi * params.Circumference;
-	geometry.Positions.enumerate([sliceScale, params, &geometry](const uint32_t & index, const ::gpk::n3f2_t & position) {
+	geometry.Positions.enumerate([sliceScale, params, &geometry](const u2_t & index, const ::gpk::n3f2_t & position) {
 			const double				weight						= position.x * sliceScale;
 			const ::gpk::SSinCos		sinCos						= {sin(weight), -cos(weight)};
 			const ::gpk::n3f3_t			relativePosOuter			= {sinCos.Sin * params.Radius.Max, 0, sinCos.Cos * params.Radius.Max};

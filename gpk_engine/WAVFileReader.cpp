@@ -23,10 +23,10 @@ using namespace DirectX;
 
 #ifndef MAKEFOURCC
 #	define MAKEFOURCC(ch0, ch1, ch2, ch3) \
-		(static_cast<uint32_t>(static_cast<uint8_t>(ch0)) \
-		| (static_cast<uint32_t>(static_cast<uint8_t>(ch1)) << 8) \
-		| (static_cast<uint32_t>(static_cast<uint8_t>(ch2)) << 16) \
-		| (static_cast<uint32_t>(static_cast<uint8_t>(ch3)) << 24))
+		(static_cast<u2_t>(static_cast<uint8_t>(ch0)) \
+		| (static_cast<u2_t>(static_cast<uint8_t>(ch1)) << 8) \
+		| (static_cast<u2_t>(static_cast<uint8_t>(ch2)) << 16) \
+		| (static_cast<u2_t>(static_cast<uint8_t>(ch3)) << 24))
 #endif /* defined(MAKEFOURCC) */
 
 namespace
@@ -44,74 +44,74 @@ namespace
 	}
 
 	// .WAV files
-	stxp	uint32_t		FOURCC_RIFF_TAG			= MAKEFOURCC('R', 'I', 'F', 'F');
-	stxp	uint32_t		FOURCC_FORMAT_TAG		= MAKEFOURCC('f', 'm', 't', ' ');
-	stxp	uint32_t		FOURCC_DATA_TAG			= MAKEFOURCC('d', 'a', 't', 'a');
-	stxp	uint32_t		FOURCC_WAVE_FILE_TAG	= MAKEFOURCC('W', 'A', 'V', 'E');
-	stxp	uint32_t		FOURCC_XWMA_FILE_TAG	= MAKEFOURCC('X', 'W', 'M', 'A');
-	stxp	uint32_t		FOURCC_DLS_SAMPLE		= MAKEFOURCC('w', 's', 'm', 'p');
-	stxp	uint32_t		FOURCC_MIDI_SAMPLE		= MAKEFOURCC('s', 'm', 'p', 'l');
-	stxp	uint32_t		FOURCC_XWMA_DPDS		= MAKEFOURCC('d', 'p', 'd', 's');
-	stxp	uint32_t		FOURCC_XMA_SEEK			= MAKEFOURCC('s', 'e', 'e', 'k');
+	stxp	u2_t		FOURCC_RIFF_TAG			= MAKEFOURCC('R', 'I', 'F', 'F');
+	stxp	u2_t		FOURCC_FORMAT_TAG		= MAKEFOURCC('f', 'm', 't', ' ');
+	stxp	u2_t		FOURCC_DATA_TAG			= MAKEFOURCC('d', 'a', 't', 'a');
+	stxp	u2_t		FOURCC_WAVE_FILE_TAG	= MAKEFOURCC('W', 'A', 'V', 'E');
+	stxp	u2_t		FOURCC_XWMA_FILE_TAG	= MAKEFOURCC('X', 'W', 'M', 'A');
+	stxp	u2_t		FOURCC_DLS_SAMPLE		= MAKEFOURCC('w', 's', 'm', 'p');
+	stxp	u2_t		FOURCC_MIDI_SAMPLE		= MAKEFOURCC('s', 'm', 'p', 'l');
+	stxp	u2_t		FOURCC_XWMA_DPDS		= MAKEFOURCC('d', 'p', 'd', 's');
+	stxp	u2_t		FOURCC_XMA_SEEK			= MAKEFOURCC('s', 'e', 'e', 'k');
 
 #pragma pack(push,1)
 	struct RIFFChunk {
-		uint32_t				Tag;
-		uint32_t				Size;
+		u2_t				Tag;
+		u2_t				Size;
 	};
 
 	struct RIFFChunkHeader {
-		uint32_t				Tag;
-		uint32_t				Size;
-		uint32_t				Riff;
+		u2_t				Tag;
+		u2_t				Size;
+		u2_t				Riff;
 	};
 
 	struct DLSLoop {
-		stxp	uint32_t		LOOP_TYPE_FORWARD		= 0x00000000;
-		stxp	uint32_t		LOOP_TYPE_RELEASE		= 0x00000001;
+		stxp	u2_t		LOOP_TYPE_FORWARD		= 0x00000000;
+		stxp	u2_t		LOOP_TYPE_RELEASE		= 0x00000001;
 
-		uint32_t				Size;
-		uint32_t				LoopType;
-		uint32_t				LoopStart;
-		uint32_t				LoopLength;
+		u2_t				Size;
+		u2_t				LoopType;
+		u2_t				LoopStart;
+		u2_t				LoopLength;
 	};
 
 	struct RIFFDLSSample
 	{
-		stxp	uint32_t		OPTIONS_NOTRUNCATION	= 0x00000001;
-		stxp	uint32_t		OPTIONS_NOCOMPRESSION	= 0x00000002;
+		stxp	u2_t		OPTIONS_NOTRUNCATION	= 0x00000001;
+		stxp	u2_t		OPTIONS_NOCOMPRESSION	= 0x00000002;
 
-		uint32_t				Size;
+		u2_t				Size;
 		uint16_t				UnityNote;
 		int16_t					FineTune;
 		int32_t					Gain;
-		uint32_t				Options;
-		uint32_t				LoopCount;
+		u2_t				Options;
+		u2_t				LoopCount;
 	};
 
 	struct MIDILoop {
-		stxp	uint32_t		LOOP_TYPE_FORWARD		= 0x00000000;
-		stxp	uint32_t		LOOP_TYPE_ALTERNATING	= 0x00000001;
-		stxp	uint32_t		LOOP_TYPE_BACKWARD		= 0x00000002;
+		stxp	u2_t		LOOP_TYPE_FORWARD		= 0x00000000;
+		stxp	u2_t		LOOP_TYPE_ALTERNATING	= 0x00000001;
+		stxp	u2_t		LOOP_TYPE_BACKWARD		= 0x00000002;
 
-		uint32_t				CuePointId;
-		uint32_t				Type;
-		uint32_t				Start;
-		uint32_t				End;
-		uint32_t				Fraction;
-		uint32_t				PlayCount;
+		u2_t				CuePointId;
+		u2_t				Type;
+		u2_t				Start;
+		u2_t				End;
+		u2_t				Fraction;
+		u2_t				PlayCount;
 	};
 
 	struct RIFFMIDISample {
-		uint32_t				ManufacturerId;
-		uint32_t				ProductId;
-		uint32_t				SamplePeriod;
-		uint32_t				UnityNode;
-		uint32_t				PitchFraction;
-		uint32_t				SMPTEFormat;
-		uint32_t				SMPTEOffset;
-		uint32_t				LoopCount;
-		uint32_t				SamplerData;
+		u2_t				ManufacturerId;
+		u2_t				ProductId;
+		u2_t				SamplePeriod;
+		u2_t				UnityNode;
+		u2_t				PitchFraction;
+		u2_t				SMPTEFormat;
+		u2_t				SMPTEOffset;
+		u2_t				LoopCount;
+		u2_t				SamplerData;
 	};
 #pragma pack(pop)
 
@@ -123,7 +123,7 @@ namespace
 	static_assert(36 == sizeof(RIFFMIDISample)	, "structure size mismatch");
 
 	//---------------------------------------------------------------------------------
-	const RIFFChunk* FindChunk(::gpk::vcu0_t data, _In_ uint32_t tag) noexcept {
+	const RIFFChunk* FindChunk(::gpk::vcu0_t data, _In_ u2_t tag) noexcept {
 		const uint8_t* ptr = data.begin();
 		const uint8_t* end = data.end();
 		while (end > (ptr + sizeof(RIFFChunk))) {
@@ -142,7 +142,7 @@ namespace
 	//---------------------------------------------------------------------------------
 	HRESULT WaveFindFormatAndData(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * pwfx, ::gpk::vcu0_t & data, _Out_ bool & dpds, _Out_ bool & seek) noexcept {
 		dpds = seek = false;
-		rves_if(E_FAIL, wavData.size() < (sizeof(RIFFChunk) * 2 + sizeof(uint32_t) + sizeof(WAVEFORMAT)));
+		rves_if(E_FAIL, wavData.size() < (sizeof(RIFFChunk) * 2 + sizeof(u2_t) + sizeof(WAVEFORMAT)));
 
 		const uint8_t* wavEnd = wavData.begin() + wavData.size();
 
@@ -248,8 +248,8 @@ namespace
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT WaveFindLoopInfo(::gpk::vcu0_t wavData, _Out_ uint32_t* pLoopStart, _Out_ uint32_t* pLoopLength) noexcept {
-		if (wavData.size() < (sizeof(RIFFChunk) + sizeof(uint32_t)))
+	HRESULT WaveFindLoopInfo(::gpk::vcu0_t wavData, _Out_ u2_t* pLoopStart, _Out_ u2_t* pLoopLength) noexcept {
+		if (wavData.size() < (sizeof(RIFFChunk) + sizeof(u2_t)))
 			return E_FAIL;
 
 		*pLoopStart = 0;
@@ -284,7 +284,7 @@ namespace
 
 				if (dlsChunk->Size >= (dlsSample->Size + dlsSample->LoopCount * sizeof(DLSLoop))) {
 					const DLSLoop			* loops			= (const DLSLoop*)(ptr + dlsSample->Size);
-					for (uint32_t j = 0; j < dlsSample->LoopCount; ++j) {
+					for (u2_t j = 0; j < dlsSample->LoopCount; ++j) {
 						if ((loops[j].LoopType == DLSLoop::LOOP_TYPE_FORWARD || loops[j].LoopType == DLSLoop::LOOP_TYPE_RELEASE)) {
 							// Return 'forward' loop
 							*pLoopStart = loops[j].LoopStart;
@@ -308,7 +308,7 @@ namespace
 
 				if (midiChunk->Size >= (sizeof(RIFFMIDISample) + midiSample->LoopCount * sizeof(MIDILoop))) {
 					auto loops = (const MIDILoop*)(ptr + sizeof(RIFFMIDISample));
-					for (uint32_t j = 0; j < midiSample->LoopCount; ++j) {
+					for (u2_t j = 0; j < midiSample->LoopCount; ++j) {
 						if (loops[j].Type == MIDILoop::LOOP_TYPE_FORWARD) {
 							// Return 'forward' loop
 							*pLoopStart = loops[j].Start;
@@ -325,8 +325,8 @@ namespace
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT WaveFindTable(::gpk::vcu0_t wavData, _In_ uint32_t tag, _Outptr_result_maybenull_ const uint32_t* * pData, _Out_ uint32_t * dataCount) noexcept {
-		rves_if(E_FAIL, wavData.size() < (sizeof(RIFFChunk) + sizeof(uint32_t)));
+	HRESULT WaveFindTable(::gpk::vcu0_t wavData, _In_ u2_t tag, _Outptr_result_maybenull_ const u2_t* * pData, _Out_ u2_t * dataCount) noexcept {
+		rves_if(E_FAIL, wavData.size() < (sizeof(RIFFChunk) + sizeof(u2_t)));
 
 		*pData				= nullptr;
 		*dataCount			= 0;
@@ -353,10 +353,10 @@ namespace
 			if (ptr + tableChunk->Size > wavEnd)
 				return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
-			if ((tableChunk->Size % sizeof(uint32_t)) != 0)
+			if ((tableChunk->Size % sizeof(u2_t)) != 0)
 				return E_FAIL;
 
-			*pData				= reinterpret_cast<const uint32_t*>(ptr);
+			*pData				= reinterpret_cast<const u2_t*>(ptr);
 			*dataCount			= tableChunk->Size / 4;
 		}
 

@@ -16,7 +16,7 @@ namespace gpk
 
 	struct SPlayer {
 		::gpk::vcsc_t		Name				= "Player 1";
-		uint32_t			Color				= 0xFFFF0000;
+		u2_t			Color				= 0xFFFF0000;
 		::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
 	};
 
@@ -27,12 +27,12 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SGameSetup {
-		uint32_t			OffsetStage			= 0;
+		u2_t			OffsetStage			= 0;
 		::gpk::NETWORK_MODE	NetworkMode			= ::gpk::NETWORK_MODE_Offline;
 	};
 
 	struct SGameState {
-		uint32_t			Stage				= 0;
+		u2_t			Stage				= 0;
 		SStageTime			UserTime			= {};
 		bool				Paused				= false;
 		double				CameraSwitchDelay	= 0;

@@ -159,7 +159,7 @@ namespace dry
 		u3_t							TimeLastSerial			= {}; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
 		static constexpr	u3_t		SERIAL_TIMEOUT			= 10; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
 
-		static constexpr	uint32_t		MAX_HUMIDITY			= 100;
+		static constexpr	u2_t		MAX_HUMIDITY			= 100;
 
 											SApplication			(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues) {}
 	};

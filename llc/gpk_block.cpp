@@ -2,14 +2,14 @@
 #include "gpk_json_expression.h"
 #include "gpk_noise.h"
 
-gpk::err_t			gpk::blockRecordId			(const ::gpk::SRecordMap & indices, uint32_t blockSize, u3_t & idRecord)	{
+gpk::err_t			gpk::blockRecordId			(const ::gpk::SRecordMap & indices, u2_t blockSize, u3_t & idRecord)	{
 	idRecord				= ((u3_t)indices.IdBlock * blockSize + (u3_t)indices.IndexRecord);
 	return 0;
 }
-gpk::err_t			gpk::blockRecordIndices		(const u3_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
+gpk::err_t			gpk::blockRecordIndices		(const u3_t idRecord, u2_t blockSize, ::gpk::SRecordMap & indices)	{
 	const u3_t				recordCoord					= (u3_t)(idRecord & 0x000FFFFFFFFFFFFFULL);
-	indices.IdBlock			= (uint32_t)(recordCoord / blockSize);
-	indices.IndexRecord		= (uint32_t)(recordCoord % blockSize);
+	indices.IdBlock			= (u2_t)(recordCoord / blockSize);
+	indices.IndexRecord		= (u2_t)(recordCoord % blockSize);
 	return 0;
 }
 gpk::err_t			gpk::blockRecordPath		(::gpk::apod<sc_t> & fileName, const ::gpk::SRecordMap & indices, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath)	{
@@ -25,7 +25,7 @@ gpk::err_t			gpk::blockFilePath			(::gpk::apod<sc_t> & finalPath, ::gpk::vcsc_c 
 	gpk_necs(finalPath.append(dbName));
 	return 0;
 }
-gpk::err_t			gpk::blockFileName			(::gpk::apod<sc_t> & fileName, const uint32_t idBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & folderName)	{
+gpk::err_t			gpk::blockFileName			(::gpk::apod<sc_t> & fileName, const u2_t idBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & folderName)	{
 	if(folderName.size()) {
 		gpk_necs(fileName.append(folderName));
 		gpk_necs(fileName.push_back('/'));
@@ -42,9 +42,9 @@ gpk::err_t			gpk::blockConfigLoad		(::gpk::SBlockConfig & loaded, const ::gpk::S
 	if(0 > ::gpk::jsonExpressionResolve(::gpk::vcs{"key"}, reader, iNode, loaded.Key))
 		loaded.Key				= configDefault.Key;
 
-	gpk::err_t				indexJSONBlockSize			= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"blocksize"}, reader, (uint32_t)iNode);
-	gpk::err_t				indexJSONDeflate			= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"deflate"  }, reader, (uint32_t)iNode);
-	loaded.BlockSize		= (0 <= indexJSONBlockSize	) ? (uint32_t)	reader.Token[indexJSONBlockSize	].Value : configDefault.BlockSize;
+	gpk::err_t				indexJSONBlockSize			= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"blocksize"}, reader, (u2_t)iNode);
+	gpk::err_t				indexJSONDeflate			= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"deflate"  }, reader, (u2_t)iNode);
+	loaded.BlockSize		= (0 <= indexJSONBlockSize	) ? (u2_t)	reader.Token[indexJSONBlockSize	].Value : configDefault.BlockSize;
 	loaded.Deflate			= (0 <= indexJSONDeflate	) ?				reader.Token[indexJSONDeflate	].Value : configDefault.Deflate;
 	return 0;
 }

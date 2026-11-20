@@ -51,7 +51,7 @@ gpk::err_t			gpk::connectionPayloadCollect		(::gpk::SUDPConnection & client, ::g
 }
 
 stxp	u3_t		hashFromTime						(u3_t currentTime)		noexcept	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
-stxp	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
+stxp	u2_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 
 gpk::err_t			payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & payloadsToSend) {
 	if(payloadsToSend.size() < 2)
@@ -72,7 +72,7 @@ gpk::err_t			payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::apo
 		optimizedMsg->RetryCount		= 1;
 
 		bool						keyPing								= false;
-		for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
+		for(u2_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
 			::gpk::pobj<::gpk::SUDPMessage>	currentPayloadMsg				= payloadsToSend[iPayload];
 			const ::gpk::vcu0_t				currentPayloadView				= currentPayloadMsg->Payload;
 			if(0 == currentPayloadMsg.get_ref())
@@ -93,7 +93,7 @@ gpk::err_t			payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::apo
 		}
 		rni_if(0 == payloadSizes.size(), "No packets to optimize. Total packets searched: %u.", payloadsToSend.size());
 		info_printf("%u packets optimized.", payloadSizes.size());
-		const uint32_t				sizeRequired						= serialized.size() + sizeof(uint16_t) * payloadSizes.size() + sizeof(uint16_t);	// payloads + sizes + packet count
+		const u2_t				sizeRequired						= serialized.size() + sizeof(uint16_t) * payloadSizes.size() + sizeof(uint16_t);	// payloads + sizes + packet count
 		uint16_t					packetCount							= (uint16_t)payloadSizes.size();
 		::gpk::au0_t				& optimizedPayloadBuffer			= optimizedMsg->Payload;
 		gpk_necall(optimizedPayloadBuffer.resize(sizeRequired), "Out of memory? Size required: %u.", sizeRequired);
@@ -124,7 +124,7 @@ gpk::err_t			payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::apobj<
 	::gpk::au0_t				messageBytes;
 	sockaddr_in					sa_remote							= {};							// Information about the client
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
-	for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
+	for(u2_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
 		::gpk::pobj<::gpk::SUDPMessage>	pMessageToSend						= payloadsToSend[iPayload];
 		if(0 == pMessageToSend.get_ref())
 			continue;
@@ -164,7 +164,7 @@ gpk::err_t			payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::apobj<
 				}
 			}
 
-			gpk_necs(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + payloadHeader.Size));
+			gpk_necs(messageBytes.resize((u2_t)sizeof(::gpk::SUDPPayloadHeader) + payloadHeader.Size));
 			sendStream						= {messageBytes.begin(), messageBytes.size()};
 			gpk_necs(sendStream.write_pod(payloadHeader));
 
@@ -211,7 +211,7 @@ gpk::err_t			gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::
 			if(messageSent->RetryCount) {
 				--messageSent->RetryCount;
 				timeCurr	+= ::UDP_PAYLOAD_SENT_LIFETIME;
-				info_printf("A message sent didn't receive a confirmation on time: %llx (%llx). Setting current time: %llx, Retries left: %u.", messageSent->Time, ::hashFromTime(messageSent->Time), timeCurr, (uint32_t)messageSent->RetryCount);
+				info_printf("A message sent didn't receive a confirmation on time: %llx (%llx). Setting current time: %llx, Retries left: %u.", messageSent->Time, ::hashFromTime(messageSent->Time), timeCurr, (u2_t)messageSent->RetryCount);
 				if(messageSent->Time == client.KeyPing)
 					messageSent->Time	= client.KeyPing	= timeCurr;
 				else
@@ -228,7 +228,7 @@ gpk::err_t			gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::
 	::gpk::apobj<::gpk::SUDPMessage>					& payloadsToSend						= messageCacheSend;
 	payloadsToSend.clear();
 	messageCacheSent.clear();
-	for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
+	for(u2_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
 		::gpk::pobj<::gpk::SUDPMessage>					 pMessageToSend						= queueToSend[iSend];
 		if(0 == pMessageToSend.get_ref())
 			continue;
@@ -245,8 +245,8 @@ gpk::err_t			gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::
 	}
 	gpk_necall(::payloadQueueOptimize(client, messageCacheSent, payloadsToSend), "%s", "Failed to optimize payload queue.");
 	gpk_necall(::payloadQueueSend(client, messageCacheSent, payloadsToSend), "%s", "Failed ");
-	for(uint32_t iSent = 0; iSent < messageCacheSent.size(); ++iSent)
-		for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend)
+	for(u2_t iSent = 0; iSent < messageCacheSent.size(); ++iSent)
+		for(u2_t iSend = 0; iSend < queueToSend.size(); ++iSend)
 			if(queueToSend[iSend] == messageCacheSent[iSent]) {
 				queueToSend.remove(iSend);
 				break;
@@ -270,7 +270,7 @@ static	gpk::err_t	handleRequestCONNECT						(::gpk::SUDPCommand & command, ::gpk
 	client.LastPing					= gpk::timeCurrentInUs();
 	{
 		::std::lock_guard					lock								(client.Queue.MutexSend);
-		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent)
+		for(u2_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent)
 			if(::gpk::ENDPOINT_COMMAND_CONNECT == client.Queue.Sent[iSent]->Command.Command) {
 				client.Queue.Sent.remove_unordered(iSent);
 				break;
@@ -303,9 +303,9 @@ static	gpk::err_t	handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader & hea
 	::std::lock_guard					lock								(client.Queue.MutexSend);
 	info_printf("Received response to message id: %llx", header.MessageId);
 	bool								bFound								= false;
-	for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) {
+	for(u2_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) {
 		::gpk::SUDPMessage					& messageSent						= *client.Queue.Sent[iSent];
-		for(uint32_t iHash = 0; iHash < messageSent.Hashes.size(); ++iHash) {
+		for(u2_t iHash = 0; iHash < messageSent.Hashes.size(); ++iHash) {
 			info_printf("Checking hash for message: %llx.", messageSent.Hashes[iHash]);
 			if(::hashFromTime(messageSent.Time) == header.MessageId) {
 				info_printf("Removing message from confirmation queue: %llx. ", header.MessageId);
@@ -353,7 +353,7 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 	else
 		rni_if(0 == bytes_received, "The peer has performed an orderly shutdown: '%s'", "https://linux.die.net/man/3/recvfrom");
 
-	ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
+	ree_if(receiveBuffer.size() != (u2_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
 
 	u3_t							estimatedTimeSent					= 0;
 	if(client.KeyPing == 0) {
@@ -369,7 +369,7 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 	else { // Why the fuck is this commented???
 		//const u3_t					nowInUs							= ::gpk::timeCurrentInUs();
 		//const u3_t					startTime						= nowInUs - 3000000;
-		//for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
+		//for(u2_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
 		//	const u3_t						timeSent						= startTime + iTime;
 		//	if(::hashFromTime(timeSent) == header.MessageId) {
 		//		info_printf("Payload timestamp found in %u attempts: Latency: %llu.", iTime, nowInUs - timeSent);
@@ -411,7 +411,7 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 	}
 	info_printf("Packet received. Payload size received: %u. Payload size after unpacking/decrypting: %u.", header.Size, messageReceived->Payload.size());
 	client.LastPing					= ::gpk::timeCurrentInUs();
-	//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);
+	//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (u2_t)header.Command.Payload);
 	if(0 == (header.Command.Packed & 1)) {
 		{
 			::std::lock_guard					lock								(client.Queue.MutexReceive);
@@ -434,7 +434,7 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 		::gpk::vcu1_t						sizes								= {(uint16_t*)&payload[payload.CursorPosition], packetCount};
 		payload.CursorPosition			+= packetCount * sizeof(uint16_t);
 		::gpk::apobj<::gpk::SUDPMessage>	tempQueue;
-		for(uint32_t iSizes = 0; iSizes < sizes.size(); ++iSizes) {
+		for(u2_t iSizes = 0; iSizes < sizes.size(); ++iSizes) {
 			::gpk::pobj<::gpk::SUDPMessage>	messageReceivedInt						= {};
 			messageReceivedInt->Command				= header.Command;
 			messageReceivedInt->Time				= header.MessageId;
@@ -447,7 +447,7 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 		}
 		{
 			::std::lock_guard					lock								(client.Queue.MutexReceive);
-			for(uint32_t iMessage = 0; iMessage < tempQueue.size(); ++iMessage)
+			for(u2_t iMessage = 0; iMessage < tempQueue.size(); ++iMessage)
 				gpk_necall(client.Queue.Received.push_back(tempQueue[iMessage]), "Out of memory? Queue size: %u.", client.Queue.Received.size());
 		}
 		::postConfirmationResponse(client.Queue, header.Command, header.MessageId);

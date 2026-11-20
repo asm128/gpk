@@ -16,7 +16,7 @@ gpk::err_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, c
 	int32_t						iFurthest					= 0;
 	float						fFurthest					= 0;
 
-	for(uint32_t iPlanet = 0; iPlanet < stellarBodyIndices.size(); ++iPlanet) {
+	for(u2_t iPlanet = 0; iPlanet < stellarBodyIndices.size(); ++iPlanet) {
 		const int32_t				jsonIndexStellarBody		= stellarBodyIndices[iPlanet];
 		int32_t						indexProperty;
 
@@ -40,7 +40,7 @@ gpk::err_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, c
 		gpk_necs(solarSystem.Body.push_back(::gpk::label(stellarBodyNames[iPlanet]), bodyProperties));
 	}
 
-	for(uint32_t iPlanet = 0; iPlanet < solarSystem.Body.Keys.size(); ++iPlanet)
+	for(u2_t iPlanet = 0; iPlanet < solarSystem.Body.Keys.size(); ++iPlanet)
 		gpk_necs(solarSystem.Parent.push_back(solarSystem.Body.Keys.find(bodyParentNames[iPlanet])));
 
 	return iFurthest;

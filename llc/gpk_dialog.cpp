@@ -42,7 +42,7 @@ static	gpk::err_t	dialogInitializeColors			(::gpk::SDialogColors & dialogColors,
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_PRESSED	]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_PRESSED	]; palettes.push_back({{::gpk::WHITE		 		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, {}, ::gpk::WHITE				,}});
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_ACTION	]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_ACTION	]; palettes.push_back({{::gpk::BLUE					, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_OUTDATED]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_OUTDATED	]; palettes.push_back({{::gpk::BLUE					, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
-	for(uint32_t i=0; i < 4; ++i) {
+	for(u2_t i=0; i < 4; ++i) {
 		dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]		= dialogColors.Control			[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
 		dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]		= dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
 		dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]		= dialogColors.CheckBox			[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
@@ -88,7 +88,7 @@ static	gpk::err_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	::dialogInitialize(*this);
 }
 
-stxp	const uint32_t	heightOfField			= 18;
+stxp	const u2_t	heightOfField			= 18;
 ::gpk::cid_t			gpk::checkBoxCreate		(::gpk::SDialog			& dialog)								{
 	cid_t						index					= -1;
 	::gpk::pobj<::gpk::SDialogCheckBox>	checkBox;
@@ -108,7 +108,7 @@ gpk::err_t			gpk::checkBoxUpdate			(::gpk::SDialogCheckBox	& checkbox)								{
 			if_fail_e(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross));
 #endif
 			dialog.ImageCross.resize(imageCross.metrics());
-			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
+			for(u2_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
 				if(imageCross.Texels[iTexel] == (::gpk::bgra)::gpk::BLACK)
 					dialog.ImageCross.View[iTexel]	=  true;
 				else {
@@ -138,7 +138,7 @@ gpk::err_t			gpk::checkBoxUpdate			(::gpk::SDialogCheckBox	& checkbox)								{
 	::gpk::memcpy_s(controlTable.Draw[slider->IdButton		].Palettes.Storage, dialog.Colors->Button		.Storage);
 	::gpk::memcpy_s(controlTable.Draw[slider->IdGUIControl	].Palettes.Storage, dialog.Colors->CheckBox	.Storage);
 	::gpk::SControlText			& tunerText									= controlTable.Text[slider->IdGUIControl];
-	tunerText.Text			= {slider->ValueString, (uint32_t)snprintf(slider->ValueString, ::gpk::size(slider->ValueString) - 2, "%lli", (long long int)slider->ValueCurrent)};
+	tunerText.Text			= {slider->ValueString, (u2_t)snprintf(slider->ValueString, ::gpk::size(slider->ValueString) - 2, "%lli", (long long int)slider->ValueCurrent)};
 	return index;
 }
 gpk::err_t			gpk::sliderSetValue		(::gpk::SDialogSlider & slider, int64_t value)				{

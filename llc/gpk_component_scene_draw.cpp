@@ -6,7 +6,7 @@ static	gpk::err_t	drawOrderedVertices
 	, const ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::m4f32				matrixWVP
 	, ::gpk::g8bgra	target_image
-	, ::gpk::grid<uint32_t>			target_depth
+	, ::gpk::grid<u2_t>			target_depth
 	) {
 
 	::gpk::tri3f32							triangleTransformed		= {};
@@ -19,7 +19,7 @@ static	gpk::err_t	drawOrderedVertices
 		else if(nodeToDraw.PerFaceColor) {
 			::gpk::apod<::gpk::n3f2_t>		& nodeVertices			= renderer.Vertices[nodeToDraw.Vertices];
 			::gpk::apod<::gpk::n3f2_t>		& nodeNormals			= renderer.Normals [nodeToDraw.Normals];
-			for(uint32_t iTriangle = 0; iTriangle < nodeVertices.size() / 3; ++iTriangle) {
+			for(u2_t iTriangle = 0; iTriangle < nodeVertices.size() / 3; ++iTriangle) {
 				::gpk::bgra							triangleColor			= (nodeToDraw.VertexColor >= 0) ? renderer.VertexColors[nodeToDraw.VertexColor][iTriangle] : nodeColor;
 				;
 				triangleTransformed.A = nodeVertices[iTriangle * 3 + 0];
@@ -35,7 +35,7 @@ static	gpk::err_t	drawOrderedVertices
 				renderer.RenderCache.TriangleWeightBuffer.clear();
 				ree_if(::gpk::drawTriangle(target_image.metrics(), triangleTransformed, renderer.RenderCache.PixelCoordBuffer, renderer.RenderCache.TriangleWeightBuffer, target_depth), "%s", "Maybe the pixel caches weren't cleared properly");
 				triangleColor							= triangleColor * nodeNormals[iTriangle].Dot(renderer.Lights[0].Direction);
-				for(uint32_t iPixelCoord = 0; iPixelCoord < renderer.RenderCache.PixelCoordBuffer.size(); ++iPixelCoord) {
+				for(u2_t iPixelCoord = 0; iPixelCoord < renderer.RenderCache.PixelCoordBuffer.size(); ++iPixelCoord) {
 					::gpk::n2s1_c				pixelCoord				= renderer.RenderCache.PixelCoordBuffer[iPixelCoord];
 					target_image[pixelCoord.y][pixelCoord.x]	= triangleColor;
 				}
@@ -54,12 +54,12 @@ static	gpk::err_t	drawOrderedVertices
 
 gpk::err_t			gpk::nodeRendererDrawNode
 	( ::gpk::SNodeRenderer					& renderer
-	, uint32_t								iNode
+	, u2_t								iNode
 	, const ::gpk::m4f32			& view
 	, const ::gpk::m4f32			& projection
 	, const ::gpk::m4f32			& viewProjection
 	, ::gpk::g8bgra	target_image
-	, ::gpk::grid<uint32_t>			target_depth
+	, ::gpk::grid<u2_t>			target_depth
 	) {
 	if(0 == target_image.size())
 		return 1;
@@ -88,12 +88,12 @@ gpk::err_t			gpk::nodeRendererDraw
 	( ::gpk::SNodeRenderer					& renderer
 	, int32_t								iCamera
 	, ::gpk::g8bgra	target_image
-	, ::gpk::grid<uint32_t>			target_depth
+	, ::gpk::grid<u2_t>			target_depth
 	, bool									drawHidden
 	) {
 	if(0 == target_image.size())
 		return 1;
-	memset(target_depth.begin(), 0xFFFFFFFFU, sizeof(uint32_t) * target_depth.size());
+	memset(target_depth.begin(), 0xFFFFFFFFU, sizeof(u2_t) * target_depth.size());
 	::gpk::m4f32						matrixView				= ::gpk::m4f32::GetIdentity();
 	::gpk::m4f32						matrixProjection		= ::gpk::m4f32::GetIdentity();
 	::gpk::m4f32						matrixVP				= ::gpk::m4f32::GetIdentity();
@@ -104,13 +104,13 @@ gpk::err_t			gpk::nodeRendererDraw
 	renderer.RenderCache.NodesToRender.clear();
 	matrixVP								= matrixView * matrixProjection;
 
-	for(uint32_t iNode = 0; iNode < renderer.Nodes.size(); ++iNode) {
+	for(u2_t iNode = 0; iNode < renderer.Nodes.size(); ++iNode) {
 		const ::gpk::SRenderNode					& nodeToRender			= renderer.Nodes[iNode];
 		if(drawHidden || false == nodeToRender.Hidden) {
 			renderer.RenderCache.NodesToRender.push_back(iNode);
 			::gpk::au2_t						& nodeLights			= renderer.RenderCache.NodeLights[renderer.RenderCache.NodeLights.push_back({})];
 			::gpk::n3f2_t						nodePosition			= (-1 == nodeToRender.Transform) ? ::gpk::n3f2_t{} : renderer.Transforms[nodeToRender.Transform].Matrix.GetTranslation();
-			for(uint32_t iLight = 0; iLight < renderer.Lights.size(); ++iLight) {
+			for(u2_t iLight = 0; iLight < renderer.Lights.size(); ++iLight) {
 				const ::gpk::SLight							& light					= renderer.Lights[iLight];
 				if(light.Type & ::gpk::GLIGHT_STATE_ENABLED) {
 					if((light.Position - nodePosition).LengthSquared() < light.RangeSquared) {
@@ -120,8 +120,8 @@ gpk::err_t			gpk::nodeRendererDraw
 			}
 		}
 	}
-	for(uint32_t iNode = 0; iNode < renderer.RenderCache.NodesToRender.size(); ++iNode) {
-		const uint32_t												indexNode				= renderer.RenderCache.NodesToRender[iNode];
+	for(u2_t iNode = 0; iNode < renderer.RenderCache.NodesToRender.size(); ++iNode) {
+		const u2_t												indexNode				= renderer.RenderCache.NodesToRender[iNode];
 		if_fail_ef(::gpk::nodeRendererDrawNode(renderer, indexNode, matrixView, matrixProjection, matrixVP, target_image, target_depth), "Failed to render node %i", indexNode);
 	}
 	return 0;

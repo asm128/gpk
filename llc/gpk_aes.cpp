@@ -12,11 +12,11 @@
 // void AES_ECB_encrypt(struct AES_ctx* ctx, uint8_t * buf);
 // void AES_ECB_decrypt(struct AES_ctx* ctx, uint8_t * buf);
 //
-// void AES_CBC_encrypt_buffer(struct AES_ctx* ctx, uint8_t * buf, uint32_t length);
-// void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t * buf, uint32_t length);
+// void AES_CBC_encrypt_buffer(struct AES_ctx* ctx, uint8_t * buf, u2_t length);
+// void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t * buf, u2_t length);
 //
 // /* Same function for encrypting as for decrypting in CTR mode */
-// void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t * buf, uint32_t length);
+// void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t * buf, u2_t length);
 // Note:
 //
 // No padding is provided so for CBC and ECB all buffers should be multiples of 16 bytes. For padding PKCS7 is recommendable.
@@ -148,7 +148,7 @@ stin	uint8_t						getSBoxInvert							(uint8_t num)														{ return rsbox[
 
 // This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states.
 static	void						KeyExpansion							(uint8_t* RoundKey, const uint8_t * Key, ::gpk::AES_LEVEL level)		{
-	uint32_t											Nk = 0, Nr = 0;
+	u2_t											Nk = 0, Nr = 0;
 	switch(level) {
 	case ::gpk::AES_LEVEL_128: Nk = 4; Nr = 10; break;
 	case ::gpk::AES_LEVEL_192: Nk = 6; Nr = 12; break;
@@ -156,15 +156,15 @@ static	void						KeyExpansion							(uint8_t* RoundKey, const uint8_t * Key, ::g
 	}
 
 	// The first round key is the key itself.
-	for (uint32_t base = 0; base < Nk; ++base) {
+	for (u2_t base = 0; base < Nk; ++base) {
 		for(int idx = 0; idx < 4; ++idx)
 			RoundKey[(base * 4) + idx]							= Key[(base * 4) + idx];
 	}
 
 	// All other round keys are found from the previous round keys.
 	uint8_t												tempa[4]; // Used for the column/row operations
-	for (uint32_t i = Nk; i < AES_Nb * (Nr + 1); ++i) {
-		uint32_t											k										= (i - 1) * 4;
+	for (u2_t i = Nk; i < AES_Nb * (Nr + 1); ++i) {
+		u2_t											k										= (i - 1) * 4;
 		for(int idx = 0; idx < 4; ++idx)
 			tempa[idx]										= RoundKey[k + idx];
 
@@ -188,7 +188,7 @@ static	void						KeyExpansion							(uint8_t* RoundKey, const uint8_t * Key, ::g
 				for(int idx = 0; idx < 4; ++idx)	// Function Subword()
 					tempa[idx]										= getSBoxValue(tempa[idx]);
 			}
-		uint32_t											j										= i * 4;
+		u2_t											j										= i * 4;
 		k												= (i - Nk) * 4;
 		for(int idx = 0; idx < 4; ++idx)
 			RoundKey[j + idx]									= RoundKey[k + idx] ^ tempa[idx];
@@ -368,7 +368,7 @@ static	void									XorWithIv							(uint8_t* buf, uint8_t * Iv)											{
 /* Public functions:                                                         */
 void											gpk::aesECBEncrypt					(::gpk::SAESContext * ctx, uint8_t * buf)								{ Cipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // Cipher encrypts the PlainText with the Key using AES algorithm.
 void											gpk::aesECBDecrypt					(::gpk::SAESContext * ctx, uint8_t * buf)								{ InvCipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // InvCiper decrypts the PlainText with the Key using AES algorithm.
-void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext * ctx, uint8_t * buf, uint32_t length)	{
+void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext * ctx, uint8_t * buf, u2_t length)	{
 	uint8_t												* Iv								= ctx->Iv;
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
 		XorWithIv(buf, Iv);
@@ -380,7 +380,7 @@ void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext * ctx, uint8_t * b
 	memcpy(ctx->Iv, Iv, ::gpk::AES_SIZEBLOCK);	// store Iv in ctx for next call */
 }
 
-void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext * ctx, uint8_t * buf, uint32_t length)			{
+void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext * ctx, uint8_t * buf, u2_t length)			{
 	uint8_t												storeNextIv	[::gpk::AES_SIZEBLOCK];
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
 		memcpy(storeNextIv, buf, ::gpk::AES_SIZEBLOCK);
@@ -392,10 +392,10 @@ void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext * ctx, uint8_t * b
 }
 
 // Symmetrical operation: same function for encrypting as for decrypting. Note any IV/nonce should never be reused with the same key
-void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t * buf, uint32_t length)			{
+void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t * buf, u2_t length)			{
 	uint8_t												buffer	[::gpk::AES_SIZEBLOCK];
 	int													bi									= ::gpk::AES_SIZEBLOCK;
-	for (uint32_t i = 0; i < length; ++i, ++bi) {
+	for (u2_t i = 0; i < length; ++i, ++bi) {
 		if (bi == ::gpk::AES_SIZEBLOCK) {// we need to regen xor compliment in buffer */
 			memcpy(buffer, ctx->Iv, ::gpk::AES_SIZEBLOCK);
 			Cipher((state_t*)buffer, ctx->RoundKey.begin(), ctx->Level);
@@ -416,7 +416,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t * bu
 gpk::err_t			gpk::aesEncode			(vcu0_c & messageToEncrypt, vcu0_c & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au0_t & outputEncrypted)	{
 	uint8_t													iv		[::gpk::AES_SIZEIV]				= {};
 	const double											fraction								= (1.0 / (65535>>1)) * 255.0;
-	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
+	for(u2_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
 		iv[iVal]											= (uint8_t)(::gpk::noise1DBase(::gpk::timeCurrentInUs()) * fraction);
 
 	gpk_necs(gpk::aesEncode(messageToEncrypt, iv, encryptionKey, level, outputEncrypted));

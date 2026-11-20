@@ -326,7 +326,7 @@ namespace DX
 			m_nativeOrientation						= ScreenRotation();
 			m_currentOrientation					= ScreenRotation();
 
-			uint32_t									dpi							= GetDpiForWindow(m_window);
+			u2_t									dpi							= GetDpiForWindow(m_window);
 			m_dpi									= float(dpi);
 			m_d2dContext->SetDpi(m_dpi, m_dpi);
 			gpk_necs(CreateSizeDependentResources());
@@ -363,7 +363,7 @@ namespace DX
 		// Configures the Direct3D device, and stores handles to it and the device context.
 		gpk::err_t							CreateDeviceResources		() {
 			// This flag adds support for surfaces with a different color channel ordering than the API default. It is required for compatibility with Direct2D.
-			uint32_t									creationFlags				= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+			u2_t									creationFlags				= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 		#if defined(_DEBUG)
 			if (DX::SdkLayersAvailable()) // If the project is in a debug build, enable debugging via SDK Layers with this flag.
 				creationFlags							|= D3D11_CREATE_DEVICE_DEBUG;
@@ -387,7 +387,7 @@ namespace DX
 			::gpk::pcom<ID3D11DeviceContext>			context;
 
 			 // If the initialization fails, fall back to the WARP device. For more information on WARP, see: https://go.microsoft.com/fwlink/?LinkId=286690. 
-			if (FAILED(D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, creationFlags, featureLevels, (uint32_t)std::size(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context)))
+			if (FAILED(D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, creationFlags, featureLevels, (u2_t)std::size(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context)))
 				gpk_hrcall(D3D11CreateDevice(nullptr,D3D_DRIVER_TYPE_WARP, 0, creationFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context));
 
 			// Store pointers to the Direct3D 11.3 API device and immediate context.

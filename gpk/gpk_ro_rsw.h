@@ -19,7 +19,7 @@ namespace gpk
 		sc_t				somePath		[16];
 		sc_t				unkstr			[12];
 		::gpk::n3<int8_t>	unkchars		;
-		uint32_t			minusone		;
+		u2_t			minusone		;
 		sc_t				somevals		[8];
 		float				part3			;
 		uint8_t				part4			[4];
@@ -74,11 +74,11 @@ namespace gpk
 
 	struct SRSWWorldWater {
 		float				Height			;
-		uint32_t			Type			;
+		u2_t			Type			;
 		float				Amplitude		;
 		float				Speed			;
 		float				Pitch			;
-		uint32_t			TexCycling		;
+		u2_t			TexCycling		;
 	};
 
 	struct SRSWWorldLight {

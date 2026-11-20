@@ -16,7 +16,7 @@ namespace gpk
 	typedef	::gpk::papod<double		>	paf64;
 	typedef	::gpk::papod<uint8_t	>	pau8;
 	typedef	::gpk::papod<uint16_t	>	pau16;
-	typedef	::gpk::papod<uint32_t	>	pau32;
+	typedef	::gpk::papod<u2_t	>	pau32;
 	typedef	::gpk::papod<u3_t	>	pau64;
 	typedef	::gpk::papod<int8_t		>	pai8;
 	typedef	::gpk::papod<int16_t	>	pai16;

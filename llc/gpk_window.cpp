@@ -90,7 +90,7 @@ gpk::err_t			gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
 
 #if defined(GPK_WINDOWS)
 gpk::err_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
-	const uint32_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
+	const u2_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
 	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1_t();
 	::gpk::n2u1_c				prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
@@ -122,10 +122,10 @@ gpk::err_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenD
 		ree_if(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
 		offscreenDetail.PixelBits							= {pixelBits, colorArray.area()};
 	}
-	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
-	const uint32_t lastLine		= metricsSource.y - 1;
+	const u2_t lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
+	const u2_t lastLine		= metricsSource.y - 1;
 	const ::gpk::bgra									* dest										= colorArray.begin();
-	for(uint32_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
+	for(u2_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
 		memcpy(&offscreenDetail.PixelBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
 
 	::HBITMAP									hBmpOld										= (::HBITMAP)::SelectObject(offscreenDetail.IntermediateDeviceContext, offscreenDetail.IntermediateBitmap);    // <- altering state

@@ -58,7 +58,7 @@ gpk::err_t			gpk::editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, 
 	}
 	else {
 		::gpk::guiProcessControls(gui, controlsToProcess, [&](::gpk::cid_t iControl) {
-			//uint32_t					offsetControl				= editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu];
+			//u2_t					offsetControl				= editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu];
 			editor.UI.InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
 			editor.UI.InputBox.Edit(gui, true);
 			return 0;

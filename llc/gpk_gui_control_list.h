@@ -7,7 +7,7 @@ namespace gpk
 {
 	::gpk::cid_t			guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids);
 	stin	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids)									{ 
-		const uint32_t offset = out_ids.size();
+		const u2_t offset = out_ids.size();
 		gpk_necs(out_ids.resize(offset + buttonText.size()));
 		return ::gpk::guiCreateControlList(gui, direction, buttonText, iParent, args, textAlign, vcid{out_ids.begin() + offset, buttonText.size()}); 
 	}
@@ -22,7 +22,7 @@ namespace gpk
 		return ::gpk::guiCreateControlList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	}
 	stin	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids)	{ 
-		const uint32_t offsetId = out_ids.size();
+		const u2_t offsetId = out_ids.size();
 		out_ids.resize(offsetId + buttonText.size()); 
 		return ::gpk::guiCreateControlList(gui, buttonText, iParent, buttonSize, offset, controlAlign, textAlign, vcid{out_ids.begin() + offsetId, buttonText.size()}); 
 	}

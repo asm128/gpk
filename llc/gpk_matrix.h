@@ -17,7 +17,7 @@ namespace gpk
 								,				_41, _42, _43, _44
 								;
 
-		inline				Tn3&				operator[]					(uint32_t index)				{ return *(Tn3*)((&_11) + 4 * index); }
+		inline				Tn3&				operator[]					(u2_t index)				{ return *(Tn3*)((&_11) + 4 * index); }
 		constexpr			bool				operator ==					(const _tMat4& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _14 == other._14 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _24 == other._24 && _31 == other._31 && _32 == other._32 && _33 == other._33 && _34 == other._34 && _41 == other._41 && _42 == other._42 && _43 == other._43 && _44 == other._44; }
 		constexpr inline	bool				operator !=					(const _tMat4& other)															const	noexcept	{ return !operator==(other); }
 
@@ -724,7 +724,7 @@ namespace gpk
 	typedef m3<double>		m3f64;
 	typedef m3<uint8_t>		m3u8;
 	typedef m3<uint16_t>	m3u16;
-	typedef m3<uint32_t>	m3u32;
+	typedef m3<u2_t>	m3u32;
 	typedef m3<u3_t>	m3u64;
 	typedef m3<int8_t>		m3i8;
 	typedef m3<int16_t>		m3i16;
@@ -737,7 +737,7 @@ namespace gpk
 	typedef m4<double>		m4f64;
 	typedef m4<uint8_t>		m4u8;
 	typedef m4<uint16_t>	m4u16;
-	typedef m4<uint32_t>	m4u32;
+	typedef m4<u2_t>	m4u32;
 	typedef m4<u3_t>	m4u64;
 	typedef m4<int8_t>		m4i8;
 	typedef m4<int16_t>		m4i16;

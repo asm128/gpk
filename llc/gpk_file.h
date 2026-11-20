@@ -13,12 +13,12 @@ namespace gpk
 	err_t			fileDelete		(vcst_t fileName);
 
 	err_t			fileFromMemory	(vcst_t fileName, vcu0_c & fileInMemory, bool append = false);
-	err_t			fileToMemory	(vcst_t fileName, au0_t & fileInMemory, uint32_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
-	err_t			fileToMemory	(vcst_t folderPath, vcst_t fileName, au0_t & fileBytes, uint32_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
+	err_t			fileToMemory	(vcst_t fileName, au0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
+	err_t			fileToMemory	(vcst_t folderPath, vcst_t fileName, au0_t & fileBytes, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
 	err_t			fileFromMemory	(vcst_t folderPath, vcst_t fileName, vcu0_c & fileInMemory, bool append = false);
 
-	stin	err_t	fileToMemory	(vcst_t fileName, as0_t & fileInMemory, uint32_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
-	stin	err_t	fileToMemory	(vcst_t fileName, asc_t & fileInMemory, uint32_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
+	stin	err_t	fileToMemory	(vcst_t fileName, as0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
+	stin	err_t	fileToMemory	(vcst_t fileName, asc_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
 	stin	err_t	fileFromMemory	(vcst_t fileName, vcs0_c & fileInMemory, bool append = false)									{ rtrn fileFromMemory	(fileName, *(vcu0_c*)&fileInMemory, append); }
 	stin	err_t	fileFromMemory	(vcst_t fileName, vcsc_c & fileInMemory, bool append = false)									{ rtrn fileFromMemory	(fileName, *(vcu0_c*)&fileInMemory, append); }
 

@@ -72,7 +72,7 @@ s3_t	gpk::	fileSize			(gpk::vcst_t usfileName)			{
 	FIX_SOC_PATH(fileName);
 	File				fp						= getSoCFileSystem().open(fileName.begin(), GPK_OPEN_MODE_READ);
 	ree_if(!fp, "Cannot open file: %s.", fileName.begin());
-	u2_c				fileSize				= (uint32_t)fp.size();
+	u2_c				fileSize				= (u2_t)fp.size();
 #	endif // GPK_ESP32
 #else
 	::FILE				* fp					= 0;
@@ -98,9 +98,9 @@ static	gpk::err_t	fileSplitSmall	(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 	gpk_necall(gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load '%s'.", fileNameSrc);
 
 	// -- Write parts to disk.
-	uint32_t			countParts			= fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
+	u2_t			countParts			= fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
 	char				fileNameDst	[1024]	= {};
-	uint32_t			iPart				= 0;
+	u2_t			iPart				= 0;
 	for(; iPart < countParts; ++iPart) {
 		u2_c					offsetPart					= sizePartMax * iPart;
 		gpk_necall(snprintf(fileNameDst, gpk::size(fileNameDst) - 2, "%s.%.2" GPK_FMT_U2, fileNameSrc.begin(), iPart), "File name too large: %s.", fileNameSrc.begin());
@@ -108,7 +108,7 @@ static	gpk::err_t	fileSplitSmall	(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 		FILE				* fpDest					= 0;
 		ree_if(0 != gpk::fopen_s(&fpDest, fileNameDst, GPK_OPEN_MODE_WRITE), "Failed to open file: %s.", fileNameDst);
 		ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst);
-		uint32_t			countBytes					= (iPart == countParts - 1) ? fileInMemory.size() - offsetPart : sizePartMax;
+		u2_t			countBytes					= (iPart == countParts - 1) ? fileInMemory.size() - offsetPart : sizePartMax;
 		ree_if(countBytes != fwrite(&fileInMemory[offsetPart], 1, countBytes, fpDest), "Failed to write part %" GPK_FMT_U2 " of %" GPK_FMT_U2 " bytes to disk. Disk full?", iPart, countBytes);
 		fclose(fpDest);
 	}
@@ -129,9 +129,9 @@ static	gpk::err_t	fileSplitLarge				(gpk::vcst_t fileNameSrc, u2_c sizePartMax) 
 	gpk_necall(partInMemory.resize(sizePartMax), "Failed to allocate buffer for file part. Out of memory? File part size: %" GPK_FMT_U2 ".", sizePartMax);
 
 	// -- Write parts to disk.
-	uint32_t			countParts					= (uint32_t)(sizeFile / sizePartMax + one_if(sizeFile % sizePartMax));
+	u2_t			countParts					= (u2_t)(sizeFile / sizePartMax + one_if(sizeFile % sizePartMax));
 	char				fileNameDst	[1024]			= {};
-	uint32_t			iPart				= 0;
+	u2_t			iPart				= 0;
 	for(; iPart < countParts; ++iPart) { //
 		u2_c					offsetPart					= sizePartMax * iPart;
 		gpk_necall(snprintf(fileNameDst, gpk::size(fileNameDst) - 2, "%s.%.2" GPK_FMT_U2, fileNameSrc.begin(), iPart), "File name too large: %s.", fileNameSrc.begin());
@@ -140,7 +140,7 @@ static	gpk::err_t	fileSplitLarge				(gpk::vcst_t fileNameSrc, u2_c sizePartMax) 
 		ree_if(0 != gpk::fopen_s(&fpDest, fileNameDst, GPK_OPEN_MODE_WRITE), "Failed to open file: %s.", fileNameDst);
 		ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst);
 		s3_t				countBytes					= (iPart == countParts - 1) ? sizeFile - offsetPart : sizePartMax;
-		ree_if(countBytes != (s3_t)fwrite(partInMemory.begin(), 1, (uint32_t)countBytes, fpDest), "Failed to write part %" GPK_FMT_U2 " of %" GPK_FMT_U2 " bytes to disk. Disk full?", iPart, countBytes);
+		ree_if(countBytes != (s3_t)fwrite(partInMemory.begin(), 1, (u2_t)countBytes, fpDest), "Failed to write part %" GPK_FMT_U2 " of %" GPK_FMT_U2 " bytes to disk. Disk full?", iPart, countBytes);
 		fclose(fpDest);
 	}
 	return countParts;
@@ -160,7 +160,7 @@ gpk::err_t	gpk::	fileSplit				(vcst_t fileNameSrc, u2_c sizePartMax) {
 // Joins a file split into file.## parts.
 gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
 	char				fileNameSrc	[1024]			= {};
-	uint32_t					iFile				= 0;
+	u2_t					iFile				= 0;
 	gpk_necall(snprintf(fileNameSrc, gpk::size(fileNameSrc) - 2, "%s.%.2" GPK_FMT_U2, str(fileNameDst).begin(), ++iFile), "File name too large: %s.", fileNameDst.begin());
 	::FILE				* fpDest					= 0;
 	gpk::apod<char>			finalPathName				= gpk::toString(fileNameDst);
@@ -179,7 +179,7 @@ gpk::err_t	gpk::	fileJoin				(vcst_t fileNameDst)	{
 
 #define GPK_DEBUG_FILE_CONTENTS
 
-gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, uint32_t maxSize, u3_t offset)		{
+gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, u2_t maxSize, u3_t offset)		{
 	gpk::asc_t			fileName					= gpk::toString(usfileName);
 	gpk_file_info_printf("Loading '%s'.", fileName.begin());
 
@@ -188,14 +188,14 @@ gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, u
 	FIX_SOC_PATH(fileName);
 	File				fp					= getSoCFileSystem().open(fileName.begin(), GPK_OPEN_MODE_READ);
 	ree_if(!fp, "Cannot open file: %s.", fileName.begin());
-	u2_c				fileSize					= (uint32_t)fp.size();
+	u2_c				fileSize					= (u2_t)fp.size();
 	fileInMemory.clear();
 #		ifdef GPK_ESP32
 	gpk_necall(fileInMemory.resize(fileSize), "Too large to load in memory? File size: %" GPK_FMT_S2 ". Available memory: %" GPK_FMT_S2 ".", fp.size(), heap_caps_get_free_size(MALLOC_CAP_8BIT));
 #		else
 	gpk_necall(fileInMemory.resize(fileSize), "Too large to load in memory? File size: %" GPK_FMT_S2 ". Available memory: %" GPK_FMT_S2 ".", fp.size(), umm_free_heap_size_lw());
 #		endif // GPK_ESP32
-	rees_if(fileSize != (uint32_t)fp.readBytes((char*)fileInMemory.begin(), fileSize));
+	rees_if(fileSize != (u2_t)fp.readBytes((char*)fileInMemory.begin(), fileSize));
 	fp.close();
 #	endif // GPK_ESP32 || GPK_ESP8266
 	gpk::err_t	result				= 0;
@@ -207,7 +207,7 @@ gpk::err_t	gpk::	fileToMemory			(vcst_t usfileName, gpk::au0_t & fileInMemory, u
 	const s3_t				fileSize					= gpk::ftell(fp);
 	fail_if_lt3s(fileSize, 0);
 	fail_if_ge3u(offset, fileSize);
-	u2_c				maxRead				= (uint32_t)min((s3_t)maxSize, fileSize - (s3_t)offset);
+	u2_c				maxRead				= (u2_t)min((s3_t)maxSize, fileSize - (s3_t)offset);
 	fail_if_ne3u(0, gpk::fseek(fp, offset, FSEEK_SET));
 	gpk::err_t	result				= 0;
 	if_failed(fileInMemory.resize(maxRead)) {
@@ -279,7 +279,7 @@ gpk::err_t	gpk::	fileDelete				(vcst_t usfileName)	{
 	gpk_file_info_printf("'%s' deleted successfully.", fileName.begin());
 	return 0;
 }
-gpk::err_t	gpk::	fileToMemory	(vcst_t folderPath, vcst_t fileName, gpk::au0_t & fileBytes, uint32_t maxSize, u3_t offset) {
+gpk::err_t	gpk::	fileToMemory	(vcst_t folderPath, vcst_t fileName, gpk::au0_t & fileBytes, u2_t maxSize, u3_t offset) {
 	gpk::asc_t			filePath			= {};
 	gpk_necall(gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
 	gpk_necall(gpk::fileToMemory({filePath}, fileBytes, maxSize, offset), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());

@@ -13,9 +13,9 @@
 gpk::err_t			gpk::querystring_split	(::gpk::vcsc_c & input_string, ::gpk::aobj<::gpk::vcsc_t>& output_views) {
 	if(0 == input_string.size())
 		return 0;
-	uint32_t						start				= 0;
+	u2_t						start				= 0;
 	::gpk::apod<::gpk::sliceu2_t>	slices;
-	for(uint32_t iChar = 0; iChar < input_string.size(); ++iChar) {
+	for(u2_t iChar = 0; iChar < input_string.size(); ++iChar) {
 		if('&' == input_string[iChar]) {
 			if(start != iChar)
 				slices.push_back({start, iChar});
@@ -23,9 +23,9 @@ gpk::err_t			gpk::querystring_split	(::gpk::vcsc_c & input_string, ::gpk::aobj<:
 		}
 	}
 	slices.push_back({start, input_string.size()});
-	for(uint32_t iSlice = 0; iSlice < slices.size(); ++iSlice) {
+	for(u2_t iSlice = 0; iSlice < slices.size(); ++iSlice) {
 		::gpk::sliceu2_c		& slice				= slices[iSlice];
-		const uint32_t			slicelen			= slice.End - slice.Begin;
+		const u2_t			slicelen			= slice.End - slice.Begin;
 		if(slicelen) {
 			::gpk::vcsc_c			keyval				= {&input_string[slice.Begin], slicelen};
 			output_views.push_back(keyval);
@@ -41,7 +41,7 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::kv<vcsc_t, vc
 		::gpk::au0_t					temp;
 		::gpk::apod<sc_t>				tempName						= {};
 		u3_t						curTime							= time(0);
-		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)
+		for(u2_t iKey = 0; iKey < environViews.size(); ++iKey)
 			if(environViews[iKey].Key == ::gpk::vcs{"REMOTE_ADDR"}) {
 				tempName							= environViews[iKey].Val;
 				if(0 == tempName.size() || tempName[0] == ':')
@@ -59,9 +59,9 @@ gpk::err_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::kv<vcsc_t, vc
 		::gpk::fileFromMemory({tempName}, temp);
 		::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	environViewsTest;
 		::gpk::keyValConstStringDeserialize(environmentBlockToSave, environViewsTest);
-		//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
+		//for(u2_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
 		//	info_printf("CGI Environ (original): '%.*s = %.*s'.", GPK_VIEW_ARGS(environViews[iEnviron].Key), GPK_VIEW_ARGS(environViews[iEnviron].Val));
-		for(uint32_t iEnviron = 0; iEnviron < environViewsTest.size(); ++iEnviron)
+		for(u2_t iEnviron = 0; iEnviron < environViewsTest.size(); ++iEnviron)
 			info_printf("CGI Environ: '%.*s = %.*s'.", GPK_VIEW_ARGS(environViewsTest[iEnviron].Key), GPK_VIEW_ARGS(environViewsTest[iEnviron].Val));
 	}
 	return 0;

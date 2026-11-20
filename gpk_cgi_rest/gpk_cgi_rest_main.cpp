@@ -35,7 +35,7 @@ static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										
 				u3_t					port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, port);
 				bestClient.AddressConnect.Port	= (uint16_t)port;
-				info_printf("Remote port: %u.", (uint32_t)port);
+				info_printf("Remote port: %u.", (u2_t)port);
 			}
 		}
 	}
@@ -85,7 +85,7 @@ static	int				cgiMain				(int argc, char** argv, char**envv)	{
 	(void)(envv);
 	gpk_necall(gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
 	::gpk::SCGIRuntimeValues	runtimeValues;
-	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
+	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (u2_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::gpk::apod<char>			html;
 	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"

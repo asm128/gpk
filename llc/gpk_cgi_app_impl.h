@@ -22,7 +22,7 @@
 	gpk::err_t			cgiMain				(int argc, sc_t** argv, sc_t**envv)		{										\
 		(void)(envv);																		\
 		::gpk::SCGIRuntimeValues	runtimeValues;				\
-		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const sc_t**)argv, (uint32_t)argc});			\
+		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const sc_t**)argv, (u2_t)argc});			\
 		::gpk::apod<sc_t>			output;						\
 		output.append_string("Content-type: application/json\r\n");							\
 		::generate_output(runtimeValues, output);											\

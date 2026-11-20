@@ -18,7 +18,7 @@ namespace gpk
 		cid_t					IdText				= {};
 		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
 		::gpk::asc_t			Text				= {};
-		uint32_t				MaxLength			= 16;
+		u2_t				MaxLength			= 16;
 		bool					Editing				= false;
 
 
@@ -44,7 +44,7 @@ namespace gpk
 			}));
 
 			::gpk::apobj<::gpk::SEventSystem>	sysEvents			= frameEvents;
-			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
+			for(u2_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:
 					if(Text.size() < MaxLength) {

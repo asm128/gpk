@@ -29,17 +29,17 @@ namespace gpk
 	}
 
 //#ifdef GPK_BIGENDIAN
-//	sinx	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF000000 >> (byteIndex * 8)) & bytes) >> ((sizeof(bytes) - byteIndex) * 8); }
+//	sinx	uint8_t		le_byte_at		(u2_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF000000 >> (byteIndex * 8)) & bytes) >> ((sizeof(bytes) - byteIndex) * 8); }
 //#else
-//	sinx	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF << (byteIndex * 8)) & bytes) >> (byteIndex * 8); }
+//	sinx	uint8_t		le_byte_at		(u2_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF << (byteIndex * 8)) & bytes) >> (byteIndex * 8); }
 //#endif
 
 	tplt<tpnm _tField>
 	static	_tField			reverse_bitfield	(_tField input, const int32_t bitDepth)	{
-		const uint32_t				sizeType			= (uint32_t)(sizeof(_tField) * 8);
+		const u2_t				sizeType			= (u2_t)(sizeof(_tField) * 8);
 		const _tField				mask				= ((_tField)(-1)) >> (sizeType - bitDepth);
 		_tField						result				= 0;
-		for(uint32_t iBit = 0; iBit < sizeType; iBit += bitDepth) {
+		for(u2_t iBit = 0; iBit < sizeType; iBit += bitDepth) {
 			result					|= (input & mask) << (sizeType - bitDepth - iBit);
 			input					>>= bitDepth;
 		}
