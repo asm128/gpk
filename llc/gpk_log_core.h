@@ -1,4 +1,4 @@
-#include "gpk_error.h"
+#include "gpk_typeint.h"
 #include "gpk_sync.h"
 
 #ifdef GPK_ATMEL

@@ -125,7 +125,6 @@
     <ClInclude Include="gpk_minmax_n3.h" />
     <ClInclude Include="gpk_n3.h" />
     <ClInclude Include="gpk_path.h" />
-    <ClInclude Include="gpk_platform_error.h" />
     <ClInclude Include="gpk_pod_definition.h" />
     <ClInclude Include="gpk_quad3.h" />
     <ClInclude Include="gpk_queue_event.h" />
@@ -136,7 +135,6 @@
     <ClInclude Include="gpk_slice.h" />
     <ClInclude Include="gpk_slice_n2.h" />
     <ClInclude Include="gpk_slice_n3.h" />
-    <ClInclude Include="gpk_spi.h" />
     <ClInclude Include="gpk_std_cstring.h" />
     <ClInclude Include="gpk_std_initializer_list.h" />
     <ClInclude Include="gpk_string.h" />
@@ -175,7 +173,6 @@
     <ClInclude Include="gpk_raster_lh.h" />
     <ClInclude Include="gpk_encoding.h" />
     <ClInclude Include="gpk_enum.h" />
-    <ClInclude Include="gpk_error.h" />
     <ClInclude Include="gpk_eval.h" />
     <ClInclude Include="gpk_expression.h" />
     <ClInclude Include="gpk_frameinfo.h" />
@@ -294,11 +291,9 @@
     <ClCompile Include="gpk_gltf.cpp" />
     <ClCompile Include="gpk_gui_inputbox.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
-    <ClCompile Include="gpk_i2c.cpp" />
     <ClCompile Include="gpk_keyval_old.cpp" />
     <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_path.cpp" />
-    <ClCompile Include="gpk_spi.cpp" />
     <ClCompile Include="gpk_string.cpp" />
     <ClCompile Include="gpk_string_compose.cpp" />
     <ClCompile Include="gpk_typeint.cpp" />

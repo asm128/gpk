@@ -264,9 +264,6 @@
     <ClInclude Include="gpk_enum.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_error.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_eval.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -687,12 +684,6 @@
     <ClInclude Include="gpk_serial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_spi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_platform_error.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_linear_map_pobj.h">
       <Filter>container</Filter>
     </ClInclude>
@@ -976,12 +967,6 @@
     </ClCompile>
     <ClCompile Include="gpk_scene.cpp">
       <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_i2c.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_spi.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_string_compose.cpp">
       <Filter>string</Filter>

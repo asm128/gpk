@@ -198,9 +198,6 @@
     <Compile Include="gpk_enum.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="gpk_error.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="gpk_eval.h">
       <SubType>compile</SubType>
     </Compile>
@@ -256,9 +253,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="gpk_http_client.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="gpk_i2c.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="gpk_i2c.h">
@@ -345,12 +339,6 @@
     <Compile Include="gpk_platform.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="gpk_platform_error.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="gpk_platform_error.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="gpk_png.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -403,12 +391,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="gpk_size.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="gpk_spi.cpp">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="gpk_spi.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="gpk_stdsocket.h">
