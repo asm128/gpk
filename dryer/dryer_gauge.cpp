@@ -50,7 +50,7 @@ gpk::err_t	dry::gaugeImageUpdate
 	const double			radiusCenter				= radiusHalfWidth + radiusSmall;
 	dummyDepth.resize(target.metrics(), 0xFFFFFFFFU);
 	::gpk::apod<::gpk::n2s1_t>	pixelCoords;
-	::gpk::apod<::gpk::trif32>	triangleWeights;
+	::gpk::apod<::gpk::trif2_t>	triangleWeights;
 	for(uint32_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
 		const ::gpk::tri3f32	triangleCoords			= {
 			  gauge.Vertices[gauge.Indices[iTriangle].A]
