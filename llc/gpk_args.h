@@ -12,6 +12,7 @@ namespace gpk
 		vcst_t					ProgramName = {};
 		aobj<keyval<vcst_t>>	Options		= {};
 		aobj<vcst_t>			Positionals	= {};
+		au0_t					Order		= {};
 		aobj<vcst_t>			Environment	= {};
 	};
 

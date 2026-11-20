@@ -789,6 +789,9 @@
     <ClInclude Include="gpk_file_pack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_args.h">
+      <Filter>script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -1010,9 +1013,6 @@
     <ClCompile Include="gpk_append_tcpip.cpp">
       <Filter>string</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_args.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_keyval_old.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1027,6 +1027,9 @@
     </ClCompile>
     <ClCompile Include="gpk_string.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_args.cpp">
+      <Filter>script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

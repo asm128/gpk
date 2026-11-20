@@ -268,6 +268,8 @@
 #define GPK_FMT_LT_I64	GPK_FMT_I64_LT_I64
 #define GPK_FMT_LT_U64	GPK_FMT_U64_LT_U64
 
+#define GPK_VIEW(view) (int)view.size(), view.begin() // Parenthesizing the argument does not merely tolerate expressions—it legitimizes and conceals them. Without those parentheses, the macro enforces its intended use.
+
 // Legacy -- Compat
 #define cnstnxpt	csnx
 #define cnstvltl	csvl

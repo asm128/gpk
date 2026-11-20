@@ -38,6 +38,7 @@
     <ClInclude Include="gpk_append_xml.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_arduino_string.h" />
+    <ClInclude Include="gpk_args.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_base.h" />
     <ClInclude Include="gpk_array_bit.h" />

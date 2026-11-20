@@ -158,8 +158,10 @@ gpk::err_t			gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcsc_t> & out_views,
 			offsetView									= ::gpk::min(in_format.size() - 1, type.Span.Begin);
 			lenView										= ::gpk::min(in_format.size() - type.Span.Begin, type.Span.End - type.Span.Begin);
 		}
-		if(0 >= lenView)
+		if(0 >= lenView) {
+			gpk_necs(out_views.push_back({}));
 			continue;
+		}
 		view										= {&in_format[offsetView], lenView};
 		gpk_necs(out_views.push_back(view));
 	}

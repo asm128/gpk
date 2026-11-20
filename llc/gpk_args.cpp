@@ -79,6 +79,10 @@ gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_
 	for(u2_t iArg = 1; iArg < argv.size(); ++iArg) {
 		vcst_t					argument			= {argv[iArg], (u2_t)-1};
 		if_zero_cwf(argument.size(), "iArg:(%" GPK_FMT_U2  ")", iArg);
+		if(state == ARGS_STATE_POSITIONAL || (state == ARGS_STATE_ARGUMENT && argument[0] != '-'))
+			if_fail_fe(output.Order.push_back(0));
+		if(state == ARGS_STATE_ARGUMENT && argument[0] == '-' && argument != vcsc_t{"--", 2})
+			if_fail_fe(output.Order.push_back(1));
 		if(state != ARGS_STATE_ARGUMENT) {
 				 if(state == ARGS_STATE_POSITIONAL)		{ if_fail_fe(output.Positionals.push_back(argument)); }
 			else if(state != ARGS_STATE_OPTION_VALUE)	{ warning_printf("Unrecognized state! 0x%X(%s)", (u2_t)state, gpk::get_value_namep(state)); }
