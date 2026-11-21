@@ -3,7 +3,7 @@
 #include "gpk_bitmap_target.h"
 #include "gpk_sphere.h"
 
-gpk::err_t	dry::gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef32 & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
+gpk::err_t	dry::gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef2_t & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
 	const double				stepUnit		= (1.0 / resolution) * ::gpk::math_2pi;
 	const ::gpk::spheref32	sphereMetrics	= {gaugeMetrics.Radius, {gaugeMetrics.Center.x, gaugeMetrics.Center.y, .5f}};
 	const double				outerRadius		= gaugeMetrics.Radius;

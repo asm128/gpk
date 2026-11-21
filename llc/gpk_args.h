@@ -26,6 +26,10 @@ namespace gpk
     }
     err_t			viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, char * envp[]);
     err_t			viewsFromArgv		(aobj<vcst_t> & outputViews, u2_t argc, char * argv[]);
+
+    err_t			environmentBlockViews		(vcu0_c & environmentBlock, aobj<kv<vcst_t>> & out_Views);	
+	err_t			environmentBlockFromEnviron	(au0_t & environmentBlock);
+    
 }
 
 #endif // GPK_ARGS_H_23627

@@ -46,11 +46,11 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(ARGS_STATE, POSITIONAL	, 2);
 } // namespace
 
-sttc gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst<::gpk::vcst_t> & option) {
+sttc gpk::err_t	argsOptionName			(gpk::vcst_c & argument, gpk::kvvcst<gpk::vcst_t> & option) {
 	if_zero_fw(argument.size());
-	::gpk::b8_c				isDoubleDash		= argument.size() > 1 && '-' == argument[1];
-	::gpk::u0_c				prefixLen			= isDoubleDash ? 2U : 1U;
-	::gpk::u2_t				iChar				= prefixLen;
+	gpk::b8_c				isDoubleDash		= argument.size() > 1 && '-' == argument[1];
+	gpk::u0_c				prefixLen			= isDoubleDash ? 2U : 1U;
+	gpk::u2_t				iChar				= prefixLen;
 	for(; iChar < argument.size() && argument[iChar] != '='; ++iChar) 
 		continue;
 
@@ -74,7 +74,7 @@ gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, char ** argv,
 	return argsParse(output, arguments, envvars);
 }
 
-gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_t> argv, ::gpk::view<cnst kv<vcst_t>> envp) {
+gpk::err_t		gpk::argsParse		(SCommandLineArgs & output, view<vcst_t> argv, view<cnst kv<vcst_t>> envp) {
 	output.Environment	= envp;
 	if_zero_vw(0, argv.size()); // Exit early if no argv: nothing to do
 
@@ -120,4 +120,53 @@ gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_
 		if_fail_fe(output.Options.push_back(option));
 	}
 	rtrn output.Options.size() + output.Positionals.size();
+}
+
+#include "gpk_process.h"
+#include "gpk_keyval_view.h"
+
+#ifdef GPK_WINDOWS
+#	include <Windows.h>
+#else
+#	include <unistd.h>
+#endif
+
+gpk::err_t			gpk::environmentBlockViews		(vcu0_c & environmentBlock, aobj<kv<vcst_t>> & out_Views)	{
+	u2_t					offsetEndVar					= 0;
+	while(offsetEndVar < environmentBlock.size() - 1) {
+		u2_t					offsetBeginVar					= offsetEndVar + (offsetEndVar ? 1 : 0);
+		if(environmentBlock.size() - 1 == (offsetEndVar = find((u0_t)0, environmentBlock, offsetBeginVar)))
+			break;
+		vcu0_t					viewEnvironVar					= {}; // {&environmentBlock[offsetBeginVar], offsetEndVar - offsetBeginVar};
+		if_fail_fe(environmentBlock.slice(viewEnvironVar, offsetBeginVar, offsetEndVar - offsetBeginVar));
+		kv<vcst_t>		newKeyVal						= {};
+		kv<vcst_t>		parsedKeyVal					= {};
+		if(-1 != keyval_split(viewEnvironVar.as<sc_c>(), parsedKeyVal)) {
+			newKeyVal	= parsedKeyVal;
+			out_Views.push_back(newKeyVal);
+		}
+		else if(viewEnvironVar.size()) {
+			newKeyVal.Key			= viewEnvironVar.as<sc_c>();
+			out_Views.push_back(newKeyVal);
+			break;
+		}
+		else
+			break;
+	}
+	return 0;
+}
+gpk::err_t			gpk::environmentBlockFromEnviron(au0_t & environmentBlock)	{
+#ifndef GPK_ATMEL
+    for (sc_t **env = environ; *env; ++env)
+		if_fail_fe(environmentBlock.append((u0_t*)*env, (u2_t)strlen(*env) + 1));
+#endif
+	environmentBlock.push_back(0);
+
+	// The following function retrieves the process's environment block using GetEnvironmentStrings and adds it to the environmentBlock parameter.
+	//sc_t						* lpvEnv						= GetEnvironmentStringsA();	// Get a pointer to the environment block.
+	//if_true_fef(lpvEnv == NULL, "GetEnvironmentStringsA failed (%x)\n", (u2_t)GetLastError());
+	//s2_t						lengthEnvStrings				= find_sequence_pod(view<const sc_t>{"\0", 2U}, view<const sc_t>{(const sc_t*)lpvEnv, (u2_t)-1});
+	//environmentBlock		= view<const sc_t>{lpvEnv, (u2_t)lengthEnvStrings + 2U};
+	//FreeEnvironmentStringsA(lpvEnv);
+	return 0;
 }
