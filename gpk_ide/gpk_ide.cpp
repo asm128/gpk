@@ -2,7 +2,6 @@
 #include "gpk_png.h"
 #include "gpk_grid_copy.h"
 #include "gpk_grid_scale.h"
-#include "gpk_dialog_controls.h"
 #include "gpk_matrix.h"
 #include "gpk_bitmap_target.h"
 #include "gpk_raster_lh.h"
@@ -184,7 +183,7 @@ static const SMenuItem<::gme::GUI_EXAMPLE_KLIB_ACTION> klibMenuItems[] =
 static const SControlParams<::gme::GUI_EXAMPLE_CONTROL> controlList[] =
 	{ {::gme::GUI_EXAMPLE_CONTROL_Frame_rate_update, -1, {{     }, {384, 20}}, {10, 10, 10, 10}, {1, 1, 1, 1}, ::gpk::ALIGN_TOP_LEFT     , ""          , ::gpk::ALIGN_CENTER     , ::gpk::GUI_COLOR_MODE_3D  }
 	, {::gme::GUI_EXAMPLE_CONTROL_Frame_rate_render, -1, {{     }, {384, 20}}, {10, 10, 10, 10}, {1, 1, 1, 1}, ::gpk::ALIGN_TOP_RIGHT    , ""          , ::gpk::ALIGN_CENTER     , ::gpk::GUI_COLOR_MODE_3D  }
-	, {::gme::GUI_EXAMPLE_CONTROL_Dryer_panel      , -1, {{0, 16}, {448, 88}}, { 2,  2,  2,  2}, {2, 2, 2, 2}, ::gpk::ALIGN_CENTER_BOTTOM, "DRYER DATA", ::gpk::ALIGN_CENTER_TOP , ::gpk::GUI_COLOR_MODE_Flat}
+	, {::gme::GUI_EXAMPLE_CONTROL_Dryer_panel      , -1, {{0, 32}, {448, 88}}, { 2,  2,  2,  2}, {2, 2, 2, 2}, ::gpk::ALIGN_TOP_RIGHT    , "DRYER DATA", ::gpk::ALIGN_CENTER_TOP , ::gpk::GUI_COLOR_MODE_Flat}
 	, {::gme::GUI_EXAMPLE_CONTROL_Program_label    ,  2, {{8,  8}, {428, 32}}, { 1,  1,  1,  1}, {2, 2, 2, 2}, ::gpk::ALIGN_TOP_LEFT     , "Program:"   , ::gpk::ALIGN_CENTER_LEFT, ::gpk::GUI_COLOR_MODE_Flat}
 	, {::gme::GUI_EXAMPLE_CONTROL_Program_value    ,  3, {{     }, {160, 28}}, { 1,  1,  1,  1}, {2, 2, 2, 2}, ::gpk::ALIGN_CENTER_RIGHT , "default"    , ::gpk::ALIGN_CENTER     , ::gpk::GUI_COLOR_MODE_3D  }
 	, {::gme::GUI_EXAMPLE_CONTROL_Status_label     ,  2, {{8, 44}, {428, 32}}, { 1,  1,  1,  1}, {2, 2, 2, 2}, ::gpk::ALIGN_TOP_LEFT     , "Status:"    , ::gpk::ALIGN_CENTER_LEFT, ::gpk::GUI_COLOR_MODE_Flat}
@@ -228,13 +227,11 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 	app.Buffer3D.create();
 	::gpk::SFramework				& framework									= app.Framework;
 	::gpk::SWindow					& mainWindow								= framework.RootWindow;
-	app.Framework.GUI													= app.DialogMain.GUI;
-	app.DialogMain.Input												= mainWindow.Input;
 	framework.RootWindow.Size												= {1280, 720};
 	es_if(::gpk::failed(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)));
 	::gpk::SGUI						& gui										= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
-	gui.ThemeDefault													= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
+	gui.ThemeDefault													= ::gpk::ASCII_COLOR_LIGHTGREY * 16;
 	::gpk::SControlPlacement menuPlacement = {};
 	menuPlacement.Align = ::gpk::ALIGN_TOP_LEFT;
 	menuPlacement.Area = {{8, 32}, {64, 24}};
@@ -250,38 +247,46 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 	gpk_necs(::buildControlTree<::gme::GUI_EXAMPLE_CONTROL>(gui, app.IdControls, {controlList, ::gpk::size(controlList)}, ::gme::GUI_EXAMPLE_CONTROL_COUNT));
 	gpk_necs(::guiCreateControlList<::gme::GUI_EXAMPLE_KLIB_ACTION>(gui, {klibMenuItems, ::gpk::size(klibMenuItems)}, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Klib_panel], {208, 20}, {8, 24}, ::gpk::ALIGN_TOP_LEFT, app.IdKlibActions));
 
-	::gpk::pobj<::gpk::SDialogTuner<uint8_t>>						tuner						= {};
-	app.NumericTuner											= ::gpk::tunerCreate(app.DialogMain, tuner);
-	tuner->ValueLimits.Min										= 100;
-	tuner->ValueLimits.Max										= 200;
+	::gpk::STuner<uint8_t> & tuner = app.NumericTuner;
+	gpk_necs(::gpk::tunerCreate(gui, tuner));
+	tuner.ValueLimits.Min										= 100;
+	tuner.ValueLimits.Max										= 200;
 	::gpk::SControlTable											 & controlTable								= gui.Controls;
-	controlTable.Placement[tuner->IdGUIControl].Area.Offset		= {128, 192};
-	controlTable.Placement[tuner->IdGUIControl].Area.Size.x		= 128;
-	controlTable.Placement[tuner->IdGUIControl].Area.Size.y		=  20;
-	tuner->SetValue(0);
+	controlTable.Placement[tuner.IdControl].Area.Offset		= {128, 192};
+	controlTable.Placement[tuner.IdControl].Area.Size.x		= 128;
+	controlTable.Placement[tuner.IdControl].Area.Size.y		=  20;
+	tuner.SetValue(gui, 0);
 
-	::gpk::pobj<::gpk::SDialogSlider>							slider										= {};
-	app.Slider													= ::gpk::sliderCreate(app.DialogMain, slider);
-	slider->ValueLimits.Min										= 0;
-	slider->ValueLimits.Max										= 255;
-	controlTable.Placement[slider->IdGUIControl].Area.Offset	= {128, 128};
-	controlTable.Placement[slider->IdGUIControl].Area.Size.x	= 128;
-	controlTable.Placement[slider->IdGUIControl].Area.Size.y	= 8;
-	slider->ValueCurrent										= 192;
+	::gpk::SSlider & slider = app.Slider;
+	gpk_necs(::gpk::sliderCreate(gui, slider));
+	slider.ValueLimits.Min										= 0;
+	slider.ValueLimits.Max										= 255;
+	controlTable.Placement[slider.IdControl].Area.Offset	= {128, 128};
+	controlTable.Placement[slider.IdControl].Area.Size.x	= 128;
+	controlTable.Placement[slider.IdControl].Area.Size.y	= 8;
+	slider.ValueCurrent										= 192;
 
 	app.GaugeControl											= ::gaugeCreate(gui, app.Gauge, -1, {112, 112}, {48, {56, 56}}, 32, 12);
 	gpk_necs(app.GaugeControl);
 	controlTable.Placement[app.GaugeControl].Area				= {{16, 64}, {112, 112}};
 
-	::gpk::pobj<::gpk::SDialogCheckBox>									checkbox									= {};
-	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain, checkbox);
-	controlTable.Placement[checkbox->IdGUIControl].Area.Offset			= {128, 256};
+	::gpk::SCheckBox & checkbox = app.CheckBox;
+	gpk_necs(::gpk::checkBoxCreate(gui, checkbox));
+	controlTable.Placement[checkbox.IdControl].Area.Offset			= {128, 256};
 
-	::gpk::pobj<::gpk::SDialogViewport>									viewport									= {};
-	app.Viewport														= ::gpk::viewportCreate(app.DialogMain, viewport);
-	controlTable.Placement	[viewport->IdGUIControl	].Area.Offset			= {320, 128};
-	controlTable.Placement	[viewport->IdGUIControl	].Area.Size				= {640, 480};
-	controlTable.Images		[viewport->IdClient		].ImageInvertY			= true;
+	::gpk::SViewport & viewport = app.Viewport;
+	gpk_necs(::gpk::viewportCreate(gui, viewport));
+	const ::gpk::cid_t idLayer = ::gpk::controlCreate(gui);
+	gpk_necs(idLayer);
+	controlTable.Draw[idLayer].NoClient = controlTable.Draw[idLayer].NoBorder = true;
+	controlTable.Placement[idLayer].Margin = controlTable.Placement[idLayer].Border = {};
+	controlTable.Constraints[idLayer].AttachSizeToControl = {idLayer, idLayer};
+	controlTable.States[idLayer].Mask &= ~::gpk::GUI_CONTROL_FLAG_Hovered;
+	gpk_necs(::gpk::controlSetParent(gui, viewport.IdControl, idLayer));
+	gpk_necs(::gpk::controlSetParent(gui, app.InputBox.IdRoot, idLayer));
+	controlTable.Placement	[viewport.IdControl	].Area.Offset			= {320, 128};
+	controlTable.Placement	[viewport.IdControl	].Area.Size				= {640, 480};
+	controlTable.Images		[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]		].ImageInvertY			= true;
 
 	stxp const ::gpk::n3f2_t							cubeCenter									= {0.5f, 0.5f, 0.5f};
 	::gpk::array_pod<uint8_t>												& remap										= app.ModelGeometry.PositionRemap;
@@ -310,9 +315,8 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	const gpk::err_t		inputBoxResult	= app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, toProcess);
 	gpk_necs(inputBoxResult);
 	if(INT_MAX == inputBoxResult) {
-		::gpk::pobj<::gpk::SDialogViewport>	viewport;
-		app.DialogMain.Controls[app.Viewport].as(viewport);
-		gpk_necs(::gpk::controlTextSet(gui, viewport->IdTitle, ::gpk::vcs{app.InputBox.Text}));
+		::gpk::SViewport & viewport = app.Viewport;
+		gpk_necs(::gpk::controlTextSet(gui, viewport.IdControls[::gpk::VIEWPORT_CONTROL_TITLE], ::gpk::vcs{app.InputBox.Text}));
 		gpk_necs(app.InputBox.Edit(gui, false));
 	}
 	else if(0 == inputBoxResult) {
@@ -323,9 +327,8 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 			else if(iControl == app.IdActions[::gme::GUI_EXAMPLE_ACTION_Edit_label])
 				return app.InputBox.Edit(gui, true);
 			else if(iControl == app.IdActions[::gme::GUI_EXAMPLE_ACTION_Fold_viewport]) {
-				::gpk::pobj<::gpk::SDialogViewport>	viewport;
-				app.DialogMain.Controls[app.Viewport].as(viewport);
-				return ::gpk::viewportFold(*viewport, viewport->Settings.Unfolded);
+				::gpk::SViewport & viewport = app.Viewport;
+				return ::gpk::viewportFold(gui, viewport, viewport.Settings.Unfolded);
 			}
 			for(uint32_t iItem = 0; iItem < app.IdKlibActions.size(); ++iItem)
 				if(iControl == app.IdKlibActions[iItem]) {
@@ -337,10 +340,12 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 		rvis_if(::gpk::APPLICATION_STATE_EXIT, exitRequested);
 	}
 
-	app.DialogMain.Update();
-	::gpk::pobj<::gpk::SDialogSlider>	slider;
-	app.DialogMain.Controls[app.Slider].as(slider);
-	app.Gauge.SetValue((float)slider->ValueCurrent, (uint32_t)slider->ValueLimits.Max);
+	gpk_necs(app.NumericTuner.Update(gui, gui.Controls.EventQueue));
+	gpk_necs(::gpk::sliderUpdate(gui, *framework.RootWindow.Input, app.Slider));
+	gpk_necs(::gpk::checkBoxUpdate(gui, app.CheckBox));
+	gpk_necs(::gpk::viewportUpdate(gui, *framework.RootWindow.Input, app.Viewport));
+	::gpk::SSlider & slider = app.Slider;
+	app.Gauge.SetValue((float)slider.ValueCurrent, (uint32_t)slider.ValueLimits.Max);
 	memset(app.Gauge.Image.View.begin(), 0, app.Gauge.Image.View.byte_count());
 	gpk_necs(::gaugeImageUpdate(app.Gauge, app.Gauge.Image.View, ::gpk::RED, ::gpk::YELLOW, ::gpk::LIGHTGREEN, ::gme::SUIRadialGauge::COLOR_BKG_DEFAULT, false));
 
@@ -359,9 +364,8 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 		scene.Camera.Position	.RotateY(frameInfo.Microseconds.Total / 1000000.0f);
 		scene.LightPos		.RotateY(frameInfo.Microseconds.Total /  500000.0f);
 		scene.ViewMatrix.LookAt(scene.Camera.Position, scene.Camera.Target, scene.CameraUp);
-		::gpk::pobj<::gpk::SDialogViewport>									viewport									= {};
-		app.DialogMain.Controls[app.Viewport].as(viewport);
-		const ::gpk::n2u2_t											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint32_t>();
+		::gpk::SViewport & viewport = app.Viewport;
+		const ::gpk::n2u2_t											& offscreenMetrics							= gui.Controls.Placement[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size.Cast<uint32_t>();
 		scene.Projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar);
 		scene.Projection															= scene.ViewMatrix * scene.Projection;
 		scene.LightPos.Normalize();
@@ -390,9 +394,8 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 	::gpk::SGUI					& gui			= *framework.GUI;
 
 	::gpk::pobj<::gpk::rtbgra8d32>	buffer3d	= app.Buffer3D;
-	::gpk::pobj<::gpk::SDialogViewport>	viewport	= {};
-	app.DialogMain.Controls[app.Viewport].as(viewport);
-	const ::gpk::n2<uint16_t>											& offscreenMetrics							= gui.Controls.Placement[viewport->IdClient].Area.Size.Cast<uint16_t>();
+	::gpk::SViewport & viewport = app.Viewport;
+	const ::gpk::n2<uint16_t>											& offscreenMetrics							= gui.Controls.Placement[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size.Cast<uint16_t>();
 	buffer3d->resize(offscreenMetrics.Cast<uint32_t>(), {0, 0, 0, 0}, (uint32_t)-1);
 
 	::gpk::array_pod<::gpk::tri3<float>>								& triangle3dList							= app.VertexCache.Triangle3dTransformed	;
@@ -462,7 +465,7 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 	for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
 		::gpk::drawPixelLight(buffer3d->Color.View, wireframePixelCoords[iCoord], (::gpk::bgra)::gpk::GREEN, 0.05f, 1.5);
 
-	gui.Controls.Images[viewport->IdClient].Image						= buffer3d->Color.View;
+	gui.Controls.Images[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Image						= buffer3d->Color.View;
 
 	// ---
 	::gpk::pobj<::gpk::rtbgra8d32>	target;
@@ -470,7 +473,7 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 	target->resize(app.Framework.RootWindow.Size, ::gpk::LIGHTGRAY, 0xFFFFFFFFU);
 	{
 		::std::lock_guard														lock										(app.Framework.LockGUI);
-		::gpk::guiDraw(*app.DialogMain.GUI, target->Color.View);
+		::gpk::guiDraw(gui, target->Color.View);
 	}
 	{
 		::std::lock_guard														lock										(app.LockRender);

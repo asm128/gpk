@@ -113,6 +113,7 @@
     <ClInclude Include="gpk_gui_control_state.h" />
     <ClInclude Include="gpk_gui_inputbox.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
+    <ClInclude Include="gpk_gui_widgets.h" />
     <ClInclude Include="gpk_img_color.h" />
     <ClInclude Include="gpk_img_serialize.h" />
     <ClInclude Include="gpk_line.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="gpk_gltf.cpp" />
     <ClCompile Include="gpk_gui_inputbox.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
+    <ClCompile Include="gpk_gui_widgets.cpp" />
     <ClCompile Include="gpk_i2c.cpp" />
     <ClCompile Include="gpk_keyval_old.cpp" />
     <ClCompile Include="gpk_particle.cpp" />

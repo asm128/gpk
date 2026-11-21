@@ -69,6 +69,11 @@ namespace gpk
 	gpk::err_t			controlHidden					(const ::gpk::SGUI & gui, cid_t iControl);
 	gpk::err_t			controlDisabled					(const ::gpk::SGUI & gui, cid_t iControl);
 	gpk::err_t			controlInvalid					(const ::gpk::SGUI & gui, cid_t iControl);
+	inline gpk::err_t	controlToFront				(::gpk::SGUI & gui, cid_t iControl) {
+		const cid_t iParent = gui.Controls.States[iControl].Parent;
+		gpk_necs(controlSetParent(gui, iControl, -1));
+		return controlSetParent(gui, iControl, iParent);
+	}
 
 
 	gpk::err_t			guiProcessControls				(const ::gpk::SGUI & gui, const ::gpk::function<gpk::err_t(::gpk::cid_t iControl)> & funcOnExecute);

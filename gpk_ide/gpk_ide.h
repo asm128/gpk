@@ -2,7 +2,8 @@
 #include "gpk_gui.h"
 #include "gpk_gui_control_list.h"
 #include "gpk_gui_inputbox.h"
-#include "gpk_dialog.h"
+#include "gpk_gui_widgets.h"
+#include "gpk_gui_viewport.h"
 #include "gpk_camera.h"
 #include "gpk_matrix.h"
 #include "gpk_scene.h"
@@ -94,11 +95,10 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::SInputBox				InputBox						= {};
 
 		::std::mutex					LockViewport					;
-		::gpk::SDialog					DialogMain						= {};
-		::gpk::cid_t					Slider							= -1;
-		::gpk::cid_t					NumericTuner					= -1;
-		::gpk::cid_t					CheckBox						= -1;
-		::gpk::cid_t					Viewport						= -1;
+		::gpk::SSlider					Slider							= {};
+		::gpk::STuner<uint8_t>			NumericTuner					= {};
+		::gpk::SCheckBox				CheckBox						= {};
+		::gpk::SViewport				Viewport						= {};
 		::gpk::cid_t					GaugeControl					= -1;
 		SUIRadialGauge					Gauge							= {};
 		//::gpk::tri3<float>			CubePositions	[12]			= {};

@@ -28,14 +28,26 @@ namespace gpk
 		, GUI_CONTROL_TYPE_COUNT
 		};
 
+	struct SViewportSettings {
+		bool Dragging = false;
+		bool Unfolded = false;
+		bool DisplacementLockX = false;
+		bool DisplacementLockY = false;
+	};
+
 	struct SViewport {
 		cid_t					IdControl			= (int32_t)-1;
 		::gpk::astcid<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};
 		cid_t					IdDesktopElement	= (int32_t)-1;
 		GUI_CONTROL_TYPE		ControlType			= (GUI_CONTROL_TYPE)-1;
+		SViewportSettings Settings = {false, true, false, false};
+		SViewportSettings SettingsOld = {};
 	};
 
 	gpk::err_t			viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
+	::gpk::cid_t		viewportCreate			(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
+	gpk::err_t			viewportFold			(::gpk::SGUI & gui, ::gpk::SViewport & viewport, bool fold);
+	gpk::err_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SInput & input, ::gpk::SViewport & viewport);
 #pragma pack(pop)
 }
 

@@ -26,6 +26,8 @@ namespace gpk
 		gpk::err_t			Edit				(::gpk::SGUI & gui, bool editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
+			if(Editing)
+				gpk_necs(::gpk::controlToFront(gui, IdRoot));
 			return one_if(Editing);
 		}
 #ifndef GPK_ATMEL		

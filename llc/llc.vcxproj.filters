@@ -258,6 +258,9 @@
     <ClInclude Include="gpk_dialog_controls.h">
       <Filter>dialog</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_widgets.h">
+      <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_encoding.h">
       <Filter>encoding</Filter>
     </ClInclude>
@@ -844,6 +847,9 @@
     </ClCompile>
     <ClCompile Include="gpk_dialog.cpp">
       <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_widgets.cpp">
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_encoding.cpp">
       <Filter>encoding</Filter>

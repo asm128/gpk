@@ -279,11 +279,6 @@ gpk::err_t			gpk::controlSetParent	(::gpk::SGUI & gui, cid_t iControl, cid_t iPa
 		return 0;
 
 	control.Parent			= iParent;
-	if(::gpk::controlInvalid(gui, iParent)) {
-		ree_if(-1 != iParent, "Invalid parent control id: %u.", iParent);
-		return 0;
-	}
-
 	if((uint32_t)oldParent < gui.Controls.States.size() && false == gui.Controls.IsUnused(oldParent)) {
 		::gpk::acid					& children				= gui.Controls.Children[oldParent];
 		for(int32_t iChild = 0; iChild < (int32_t)children.size(); ++iChild)
@@ -292,6 +287,10 @@ gpk::err_t			gpk::controlSetParent	(::gpk::SGUI & gui, cid_t iControl, cid_t iPa
 				gpk_necall(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
 				break;
 			}
+	}
+	if(::gpk::controlInvalid(gui, iParent)) {
+		ree_if(-1 != iParent, "Invalid parent control id: %u.", iParent);
+		return 0;
 	}
 
 	// Set iControl to parent's children array.
@@ -508,6 +507,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 	//--------------------
 	::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
 	::gpk::cid_t				controlHovered			= -1;
+	::gpk::cid_t				controlBranch			= -1;
 	{
 		::gpk::vcid					& children				= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
@@ -518,9 +518,12 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 				//controlState.Hover		= false;
 				gui.Controls.SetPressed(iControl, false);
 				controlHovered			= controlPressed;
+				controlBranch			= children[iChild];
 			}
 		}
 	}
+	if(input.ButtonDown(0) && ::gpk::controlInvalid(gui, controlState.Parent) && false == ::gpk::controlInvalid(gui, controlBranch))
+		gpk_necs(::gpk::controlToFront(gui, controlBranch));
 	if(controlHovered == -1 && ::gpk::in_range(gui.CursorPos.s1_t(), gui.Controls.Area[iControl].Total.Global))
 		controlHovered			= ::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl));
 	else {
