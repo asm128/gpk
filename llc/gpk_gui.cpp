@@ -17,15 +17,6 @@ gpk::cid_t		gpk::controlCreateChild	(SGUI & gui, cid_t iParent)						{
 	if_fail_e(controlSetParent(gui.Controls, idControl, iParent));
 	return idControl;
 }
-gpk::err_t			gpk::controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target) {
-	if(false == controlHidden(gui.Controls, iControl)) {
-		if_fail_fe(controlDraw(gui, iControl, target));
-		vccid				children						= gui.Controls.Children[iControl];
-		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-			if_fail_fe(controlDrawHierarchy(gui, children[iChild], target));
-	}
-	return 0;
-}
 gpk::err_t		gpk::guiSetupDefaults	(SGUI & gui)							{
 	if_fail_fe(controlColorsDefault(gui.Colors));
 

@@ -42,6 +42,7 @@ nmsp gpk
 	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, b8_t forceUpdate);
 	err_t				controlUpdateHierarchy			(SGUI & guigui, cid_t iControl, n2u1_c & targetMetrics);
 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
+	err_t				guiControlDraw					(SGUI & gui, cid_t iControl, g8bgra & target);
 
 	err_t				guiSetupDefaults				(SGUI & gui);
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});

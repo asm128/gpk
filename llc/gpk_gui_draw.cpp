@@ -121,7 +121,7 @@ static	gpk::err_t	fillColorTable					(::gpk::SGUI & gui, ::gpk::cid_t iControl, 
 
     return 0;
 }
-gpk::err_t	    gpk::controlDraw				(SGUI & gui, cid_t iControl, g8bgra & target)					{
+gpk::err_t	    gpk::guiControlDraw				(SGUI & gui, cid_t iControl, g8bgra & target)					{
     bgra					colors[GUI_CONTROL_AREA_OLD_COUNT]	= {}; // -- Fill color table
     const bool					disabled						= controlDisabled(gui.Controls, iControl);
     const SControlArea	& controlMetrics				= gui.Controls.Area[iControl];
@@ -182,6 +182,16 @@ gpk::err_t	    gpk::controlDraw				(SGUI & gui, cid_t iControl, g8bgra & target)
         }
     }
 
-    if_true_e(failed(::controlTextDraw(gui, iControl, target, disabled)));
+    if_fail_ef(::controlTextDraw(gui, iControl, target, disabled), "iControl:%i.", iControl);
     return 0;
+}
+
+gpk::err_t			gpk::controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target) {
+	if(false == controlHidden(gui.Controls, iControl)) {
+		if_fail_fe(guiControlDraw(gui, iControl, target));
+		vccid				children						= gui.Controls.Children[iControl];
+		for(u2_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
+			if_fail_fe(controlDrawHierarchy(gui, children[iChild], target));
+	}
+	return 0;
 }

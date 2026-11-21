@@ -16,7 +16,7 @@ stxp	::gpk::astatic<::gpk::bgra, LLS_MAX_PLAYERS>	PLAYER_COLORS	=
 	, 0xFFFFFF00U
 	};
 
-sttc	::gpk::err_t	guiSetupCommon		(::gpk::SGUI & gui) {
+sttc gpk::err_t	guiSetupCommon		(::gpk::SGUI & gui) {
 	gui.ColorModeDefault	= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault		= ::gpk::ASCII_COLOR_Dark_red * 16 + 10;
 	gui.SelectedFont		= 7;
@@ -27,7 +27,7 @@ sttc	::gpk::err_t	guiSetupCommon		(::gpk::SGUI & gui) {
 	return 0;
 }
 
-sttc	::gpk::err_t	dialogCreateCommon	(::gpk::SDialog & dialog, cnst ::gpk::pobj<::gpk::SInput> & inputState, cnst ::gpk::n2f2_t & cursorPos) {
+sttc gpk::err_t	dialogCreateCommon	(::gpk::SDialog & dialog, cnst ::gpk::pobj<::gpk::SInput> & inputState, cnst ::gpk::n2f2_t & cursorPos) {
 	dialog						= {};
 	dialog.Input				= inputState;
 	dialog.GUI->CursorPos		= cursorPos;
@@ -37,7 +37,7 @@ sttc	::gpk::err_t	dialogCreateCommon	(::gpk::SDialog & dialog, cnst ::gpk::pobj<
 	return dialog.Update();
 }
 
-sttc	::gpk::err_t	uiPlayerSetupHome	(::lls::SUIPlayer & uiPlayer, cnst ::gpk::pobj<::gpk::SInput> & input, cnst ::gpk::n2f2_t & cursorPos, uint32_t iPlayer, cnst ::gpk::vcst_t & playerName) {
+sttc gpk::err_t	uiPlayerSetupHome	(::lls::SUIPlayer & uiPlayer, cnst ::gpk::pobj<::gpk::SInput> & input, cnst ::gpk::n2f2_t & cursorPos, uint32_t iPlayer, cnst ::gpk::vcst_t & playerName) {
 	::gpk::ALIGN				playerAlign		= {};
 	::gpk::n2s1_t			playerPosition	= {};
 	switch(iPlayer) {
@@ -75,7 +75,7 @@ sttc	::gpk::err_t	uiPlayerSetupHome	(::lls::SUIPlayer & uiPlayer, cnst ::gpk::po
 	return 0;
 }
 
-sttc	::gpk::err_t	clientUISetup		(::lls::LLSClient & app, cnst ::gpk::pobj<::gpk::SInput> & input) {
+sttc gpk::err_t	clientUISetup		(::lls::LLSClient & app, cnst ::gpk::pobj<::gpk::SInput> & input) {
 	while(app.Game.Players.size() < LLS_MAX_PLAYERS) {
 		sc_t					playerName[64]	= {};
 		sprintf_s(playerName, "Player %u", app.Game.Players.size() + 1);
@@ -92,7 +92,7 @@ sttc	::gpk::err_t	clientUISetup		(::lls::LLSClient & app, cnst ::gpk::pobj<::gpk
 	return 0;
 }
 
-sttc	::gpk::err_t	uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, uint16_t iPlayer, cnst ::gpk::vcst_t & playerName, cnst ::gpk::bgra & playerColor) {
+sttc gpk::err_t		uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, uint16_t iPlayer, cnst ::gpk::vcst_t & playerName, cnst ::gpk::bgra & playerColor) {
 	::gpk::SDialog			& playerDialog		= uiPlayer.DialogHome;
 	::gpk::SGUI				& playerGUI			= *playerDialog.GUI;
 	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, playerDialog.Root + 1 + ::lls::UI_PROFILE_Score, ""));
@@ -110,7 +110,7 @@ sttc	::gpk::err_t	uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, uint16_t iPla
 	return 0;
 }
 
-sttc	::gpk::err_t	processClientScreenEvent	(::lls::LLSClient & app, cnst ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) {
+sttc gpk::err_t	processClientScreenEvent	(::lls::LLSClient & app, cnst ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) {
 	switch(screenEvent.Type) {
 	default: break;
 	case ::gpk::EVENT_SCREEN_Create:
@@ -123,7 +123,7 @@ sttc	::gpk::err_t	processClientScreenEvent	(::lls::LLSClient & app, cnst ::gpk::
 	return 0;
 }
 
-sttc	::gpk::err_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) {
+sttc gpk::err_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) {
 	for(uint32_t iPlayer = 0; iPlayer < app.UIPlay.PlayerUI.size(); ++iPlayer) {
 		::lls::SUIPlayer		& uiPlayer			= app.UIPlay.PlayerUI[iPlayer];
 		::gpk::SDialog			& dialog				= uiPlayer.DialogHome;
