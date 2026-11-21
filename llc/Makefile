@@ -21,7 +21,7 @@ INCDIR	:= $(patsubst %,-I%,$(IncDir))
 CFLAGS	:= -std=c++17 -Wall -Werror -O$(OPT) $(INCDIR) 
 CC		:= g++
 
-_OBJ	:= $(patsubst %.cpp,%.o,$(wildcard *.cpp)) 
+_OBJ	:= $(filter-out gpk_block.o gpk_file_pack.o gpk_mapblock.o,$(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 OBJ		:= $(patsubst %,$(IntDir)/%,$(_OBJ))
 
 $(IntDir)/%.o: %.cpp
