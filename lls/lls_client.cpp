@@ -88,11 +88,11 @@ sttc gpk::err_t	clientUISetup		(::lls::LLSClient & app, cnst ::gpk::pobj<::gpk::
 
 	if_fail_fe(app.UIPlay.PlayerUI.resize(LLS_MAX_PLAYERS));
 	for(uint32_t iPlayer = 0; iPlayer < app.UIPlay.PlayerUI.size(); ++iPlayer)
-		do { if_fail_fef(::uiPlayerSetupHome(app.UIPlay.PlayerUI[iPlayer], input, app.GUI->CursorPos, iPlayer, app.Game.Players[iPlayer].Name), "iPlayer: %u", iPlayer);
+		if_fail_fef(::uiPlayerSetupHome(app.UIPlay.PlayerUI[iPlayer], input, app.GUI->CursorPos, iPlayer, app.Game.Players[iPlayer].Name), "iPlayer: %u", iPlayer);
 	return 0;
 }
 
-sttc gpk::err_t		uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, uint16_t iPlayer, cnst ::gpk::vcst_t & playerName, cnst ::gpk::bgra & playerColor) {
+sttc gpk::err_t		uiPlayerUpdateHome	(::lls::SUIPlayer & uiPlayer, ::gpk::u1_t iPlayer, cnst ::gpk::vcst_t & playerName, cnst ::gpk::bgra & playerColor) {
 	::gpk::SDialog			& playerDialog		= uiPlayer.DialogHome;
 	::gpk::SGUI				& playerGUI			= *playerDialog.GUI;
 	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, playerDialog.Root + 1 + ::lls::UI_PROFILE_Score, ""));
@@ -122,7 +122,6 @@ sttc gpk::err_t	processClientScreenEvent	(::lls::LLSClient & app, cnst ::gpk::SE
 	}
 	return 0;
 }
-
 sttc gpk::err_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gpk::SEventSystem> systemEvents) {
 	for(uint32_t iPlayer = 0; iPlayer < app.UIPlay.PlayerUI.size(); ++iPlayer) {
 		::lls::SUIPlayer		& uiPlayer			= app.UIPlay.PlayerUI[iPlayer];
