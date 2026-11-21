@@ -100,7 +100,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart.lib; llc.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>smart.lib; llc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
@@ -122,7 +122,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart.lib; llc.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>smart.lib; llc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
@@ -140,7 +140,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart.lib; llc.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>smart.lib; llc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
@@ -162,7 +162,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart.lib; llc.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
+      <AdditionalDependencies>smart.lib; llc.lib; user32.lib; gdi32.lib; shcore.lib; ws2_32.lib; </AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>

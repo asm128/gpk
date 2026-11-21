@@ -1,12 +1,13 @@
 #include "gpk_array.h"
+#include "gpk_string.h"
 #include <windows.h>
 
 static	const char				test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};
 
 int test_array_pod() {
-	static	const ::gpk::apod<char>	aconst_0			= ::gpk::vcst_t{"Hello"};
+	static	const ::gpk::string		aconst_0			= ::gpk::vcst_t{"Hello"};
 	static	const ::gpk::apod<char>	aconst_1			{test_chars};
-	::gpk::apod<char>			atest_0				= "Again ";
+	::gpk::string			atest_0				= "Again ";
 	::gpk::apod<char>			atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 
@@ -17,7 +18,7 @@ int test_array_pod() {
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());
 	OutputDebugString("\n\n");
 
-	::gpk::view<const char>			vtest_0(aconst_0), vtest_1{atest_1};
+	::gpk::string			vtest_0(aconst_0), vtest_1{atest_1};
 	atest_0						= vtest_0;
 	atest_1						= aconst_1;
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());

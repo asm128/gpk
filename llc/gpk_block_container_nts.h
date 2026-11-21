@@ -17,7 +17,7 @@ nmsp gpk
 		err_t	push_sequence	(sc_c * sequence, u2_t length, vcst_t & out_view) {
 			if_true_fef(length >= _size, GPK_FMT_GE_U2, length, (u2_t)_size);
 			if_true_fe(length && 0 == sequence);
-			vs0_t	stored	= {};
+			vsc_t	stored	= {};
 			err_t	iBlock	= {};
 			if_fail_fe(iBlock = Characters.reserve(length + 1, stored));
 			if(length)

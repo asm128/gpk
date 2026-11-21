@@ -4,8 +4,8 @@
 #include "gpk_chrono.h"
 
 gpk::err_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, ::gpk::s2_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port) {
-	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"remote_ip"  }, jsonConfig, parentNode, remote_ip));
-	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"remote_port"}, jsonConfig, parentNode, remote_port));
+	if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"remote_ip"  }, jsonConfig, parentNode, remote_ip));
+	if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"remote_port"}, jsonConfig, parentNode, remote_port));
 	info_printf("Remote server address '%.*s:%.*s'", GPK_VIEW_ARGS(remote_ip), GPK_VIEW_ARGS(remote_port));
 	return 0;
 }
@@ -105,7 +105,7 @@ gpk::err_t			gpk::clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui) {
 		client.QueueReceived.clear();
 		if_fail_fe(gpk::connectionPayloadCollect(client.UDP, client.QueueReceived));
 
-		client.QueueToSend.for_each([&client](const ::gpk::pau8 & ev) {
+		client.QueueToSend.for_each([&client](const ::gpk::pauc_t & ev) {
 			if_fail_fe(gpk::connectionPushData(client.UDP, client.UDP.Queue, *ev));
  			return 0;
 		});

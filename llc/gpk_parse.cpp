@@ -59,7 +59,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbo
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	gpk_safe_assign(number_, number);
+	::gpk::safe_assign(number_, number);
 	return totalCharsProcessed;
 }
 

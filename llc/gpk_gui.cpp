@@ -306,6 +306,22 @@ gpk::err_t			gpk::controlSetParent	(::gpk::SGUI & gui, cid_t iControl, cid_t iPa
 	return 0;
 }
 
+gpk::err_t gpk::controlToFront(::gpk::SGUI & gui, cid_t iControl) {
+	if_fail_fe(controlInvalid(gui, iControl));
+	const cid_t parent = gui.Controls.States[iControl].Parent;
+	if(parent < 0)
+		return 0;
+	if_fail_fe(controlInvalid(gui, parent));
+	acid & children = gui.Controls.Children[parent];
+	for(u2_t i = 0; i < children.size(); ++i)
+		if(children[i] == iControl) {
+			if_fail_fe(children.remove(i));
+			if_fail_fe(children.push_back(iControl));
+			return 0;
+		}
+	return -1;
+}
+
 static	gpk::err_t	buildControlGeometry	(const ::gpk::SControlPlacement & control, const ::gpk::SControlArea & controlMetrics, const ::gpk::SGUIZoom & zoom, ::gpk::view<::gpk::rect2s1_t> finalRects, ::gpk::view<::gpk::tri2s1_t> triangles)					{
 	::gpk::rects1_t				scaledBorders			= {};
 	const ::gpk::n2f3_t			scaleFinal				= zoom.DPI * zoom.ZoomLevel;
@@ -660,43 +676,3 @@ gpk::err_t			gpk::controlFontSet		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::g
 	return 0;
 }
 
-static	gpk::err_t	controlInstanceReset	(::gpk::SControlTable & controlTable, ::gpk::cid_t iControl, ::gpk::vs1_t defaultColors)										{
-	controlTable.States		[iControl]	= {};
-	controlTable.Placement	[iControl]	= {};
-	controlTable.Area		[iControl]	= {};
-	controlTable.Constraints[iControl]	= {};
-	controlTable.Draw		[iControl]	= {};
-	controlTable.Text		[iControl]	= {};
-	controlTable.Children	[iControl]	= ::gpk::vcid{};
-	controlTable.Images		[iControl]	= {};
-	
-	::gpk::SControlDraw			& controlDraw			= controlTable.Draw[iControl];
-	for(::gpk::u2_t iColor = 0, countColors = ::gpk::min(controlDraw.Palettes.size(), defaultColors.size()); iColor < countColors; ++iColor)
-		controlDraw.Palettes[iColor] = defaultColors[iColor];
-
-	return 0;
-}
-
-
-::gpk::cid_t			gpk::controlCreate		(::gpk::SControlTable & controlTable, ::gpk::vs1_t defaultColors)	{
-	for(::gpk::u2_t iControl = 0; iControl < controlTable.States.size(); ++iControl) {
-		if(controlTable.IsUnused((::gpk::cid_t)iControl)) {
-			if_fail_fef(::controlInstanceReset(controlTable, (::gpk::cid_t)iControl, defaultColors), "iControl: %i", iControl);
-			return (::gpk::cid_t)iControl;
-		}
-	}
-
-	::gpk::cid_t				iControl				= -1;
-	if_fail_fe(iControl = (::gpk::cid_t)::gpk::resize(controlTable.States.size() + 1
-		, controlTable.States
-		, controlTable.Placement
-		, controlTable.Area
-		, controlTable.Constraints
-		, controlTable.Draw
-		, controlTable.Text
-		, controlTable.Images
-		, controlTable.Children
-		) - 1);
-	if_fail_fe(::controlInstanceReset(controlTable, iControl, defaultColors));
-	return iControl;
-}

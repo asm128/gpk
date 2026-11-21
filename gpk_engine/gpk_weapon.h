@@ -7,31 +7,30 @@
 #ifndef GPK_WEAPON_H
 #define GPK_WEAPON_H
 
-namespace gpk 
+nmsp gpk 
 {
-
-	typedef	::gpk::aobj<::gpk::an3char	>	aan3c	, aan3char		;
-	typedef	::gpk::aobj<::gpk::an3uchar	>	aan3uc	, aan3uchar		;
-	typedef	::gpk::aobj<::gpk::an3f32	>	aan3f32	;
-	typedef	::gpk::aobj<::gpk::an3f64	>	aan3f64	;
-	typedef	::gpk::aobj<::gpk::an3u8	>	aan3u8	;
-	typedef	::gpk::aobj<::gpk::an3u16	>	aan3u16	;
-	typedef	::gpk::aobj<::gpk::an3u32	>	aan3u32	;
-	typedef	::gpk::aobj<::gpk::an3u64	>	aan3u64	;
-	typedef	::gpk::aobj<::gpk::an3i8	>	aan3i8	;
-	typedef	::gpk::aobj<::gpk::an3i16	>	aan3i16	;
-	typedef	::gpk::aobj<::gpk::an3i32	>	aan3i32	;
-	typedef	::gpk::aobj<::gpk::an3i64	>	aan3i64	;
+	tydf	aobj<a3sc_t>	aa3sc_t; tdcs aa3sc_t aa3sc_c;
+	tydf	aobj<a3uc_t>	aa3uc_t; tdcs aa3uc_t aa3uc_c;
+	tydf	aobj<a3f2_t>	aa3f2_t; tdcs aa3f2_t aa3f2_c;
+	tydf	aobj<a3f3_t>	aa3f3_t; tdcs aa3f3_t aa3f3_c;
+	tydf	aobj<a3u0_t>	aa3u0_t; tdcs aa3u0_t aa3u0_c;
+	tydf	aobj<a3u1_t>	aa3u1_t; tdcs aa3u1_t aa3u1_c;
+	tydf	aobj<a3u2_t>	aa3u2_t; tdcs aa3u2_t aa3u2_c;
+	tydf	aobj<a3u3_t>	aa3u3_t; tdcs aa3u3_t aa3u3_c;
+	tydf	aobj<a3s0_t>	aa3s0_t; tdcs aa3s0_t aa3s0_c;
+	tydf	aobj<a3s1_t>	aa3s1_t; tdcs aa3s1_t aa3s1_c;
+	tydf	aobj<a3s2_t>	aa3s2_t; tdcs aa3s2_t aa3s2_c;
+	tydf	aobj<a3s3_t>	aa3s3_t; tdcs aa3s3_t aa3s3_c;
 
 	struct SShots	{
-		::gpk::aan3f32				DistanceToTargets	= {};
-		::gpk::af2_t				Lifetime			= {};
-		::gpk::af2_t				Brightness			= {};
-		::gpk::an3f32				PositionDraw		= {};
-		::gpk::an3f32				PositionPrev		= {};
-		::gpk::SParticles3			Particles			= {};
+		aa3f2_t			DistanceToTargets	= {};
+		af2_t				Lifetime			= {};
+		af2_t				Brightness			= {};
+		a3f2_t				PositionDraw		= {};
+		a3f2_t				PositionPrev		= {};
+		SParticles3			Particles			= {};
 
-		int							Remove				(::gpk::u2_t iShot)			{
+		int					Remove				(u2_t iShot)			{
 			Particles.Remove(iShot);
 			DistanceToTargets	.remove_unordered(iShot);
 			Lifetime			.remove_unordered(iShot);
@@ -40,7 +39,7 @@ namespace gpk
 			return PositionDraw	.remove_unordered(iShot);
 		}
 
-		int							SpawnForced			(const ::gpk::n3f2_t & position, const ::gpk::n3f2_t & direction, float speed, float brightness, float lifetime)	{
+		int					SpawnForced			(cnst n3f2_t & position, cnst n3f2_t & direction, f2_t speed, f2_t brightness, f2_t lifetime)	{
 			PositionDraw.push_back(position);
 			PositionPrev.push_back(position);
 			Brightness	.push_back(brightness);
@@ -49,21 +48,21 @@ namespace gpk
 			return Particles.Create(position, direction, speed);
 		}
 
-		int							SpawnForcedDirected	(double stabilityFactor, const ::gpk::n3f2_t & position, const ::gpk::n3f2_t & direction, float speed, float brightness, float lifetime)	{
-			stxp	double					randUnit			= ::gpk::math_2pi / RAND_MAX;
-			::gpk::n3f2_t					finalDirection		= {0, 1, 0};
+		int					SpawnForcedDirected	(f3_t stabilityFactor, cnst n3f2_t & position, cnst n3f2_t & direction, f2_t speed, f2_t brightness, f2_t lifetime)	{
+			stxp	f3_t			randUnit			= math_2pi / RAND_MAX;
+			n3f2_t					finalDirection		= {0, 1, 0};
 			finalDirection.RotateX(rand() * randUnit);
 			finalDirection.RotateY(rand() * randUnit);
 			finalDirection.Normalize();
-			return SpawnForced(position, ::gpk::interpolate_linear(finalDirection, direction, stabilityFactor), speed, brightness, lifetime);
+			return SpawnForced(position, interpolate_linear(finalDirection, direction, stabilityFactor), speed, brightness, lifetime);
 		}
 
-		gpk::err_t				Update				(float secondsLastFrame)	{
-			stxp	::gpk::u2_t				maxRange			= 200;
-			stxp	::gpk::u2_t				maxRangeSquared		= maxRange * maxRange;
-			memcpy(PositionPrev.begin(), Particles.Position.begin(), Particles.Position.size() * sizeof(::gpk::n3f2_t));
+		gpk::err_t 			Update				(f2_t secondsLastFrame)	{
+			stxp	u2_t			maxRange			= 200;
+			stxp	u2_t			maxRangeSquared		= maxRange * maxRange;
+			memcpy(PositionPrev.begin(), Particles.Position.begin(), Particles.Position.size() * sizeof(n3f2_t));
 			Particles.IntegrateSpeed(secondsLastFrame);
-			for(::gpk::u2_t iShot = 0; iShot < Particles.Position.size(); ++iShot) {
+			for(u2_t iShot = 0; iShot < Particles.Position.size(); ++iShot) {
 				Lifetime[iShot] -= secondsLastFrame;
 				if(0 >= Lifetime[iShot])
 					Remove(iShot--);
@@ -73,26 +72,26 @@ namespace gpk
 			return 0;
 		}
 
-		gpk::err_t				Save				(::gpk::au0_t & output)	const	{ 
+		gpk::err_t 			Save				(au0_t & output)	cnst	{ 
 			if_fail_fe(Particles.Save(output));
 			if_fail_fe(gpk::saveView(output, PositionDraw	));
 			if_fail_fe(gpk::saveView(output, PositionPrev	));
 			if_fail_fe(gpk::saveView(output, Brightness		));
 			if_fail_fe(gpk::saveView(output, Lifetime		));
-			for(::gpk::u2_t iParticle = 0; iParticle < Particles.Position.size(); ++iParticle) 
+			for(u2_t iParticle = 0; iParticle < Particles.Position.size(); ++iParticle) 
 				if_fail_fe(gpk::saveView(output, DistanceToTargets[iParticle]));
 			
 			return 0; 
 		}
 
-		gpk::err_t				Load				(::gpk::vcu0_t & input)			{ 
+		gpk::err_t 			Load				(vcu0_t & input)			{ 
 			if_fail_fe(Particles.Load(input));
 			if_fail_fe(gpk::loadView(input, PositionPrev	));
 			if_fail_fe(gpk::loadView(input, PositionDraw	));
 			if_fail_fe(gpk::loadView(input, Brightness		));
 			if_fail_fe(gpk::loadView(input, Lifetime		));
 			if_fail_fe(DistanceToTargets.resize(Particles.Position.size()));
-			for(::gpk::u2_t iParticle = 0; iParticle < DistanceToTargets.size(); ++iParticle)
+			for(u2_t iParticle = 0; iParticle < DistanceToTargets.size(); ++iParticle)
 				if_fail_fe(gpk::loadView(input, DistanceToTargets[iParticle]));
 
 			return 0;
@@ -102,19 +101,19 @@ namespace gpk
 #pragma pack(push, 1)
 
 	struct SWeaponTrigger {
-		gaugemaxf32		Delay				= {};	// Trigger delay
-		gaugemaxf32		Overheat			= {};	// Cooldown/Reload time in seconds
-		float			OverheatPerShot		= {};	// 
-		bool			CoolingDown			= {};	// Reloading
+		gaugemaxf2_t	Delay				= {};	// Trigger delay
+		gaugemaxf2_t	Overheat			= {};	// Cooldown/Reload time in seconds
+		f2_t			OverheatPerShot		= {};	// 
+		b8_t			CoolingDown			= {};	// Reloading
 
-		inxp	float	Busy				()	const			noexcept	{ 
-			return CoolingDown					? ::gpk::max(Delay.Limit - Delay.Value, Overheat.Value)
+		inxp	f2_t	Busy				()	cnst			nxpt	{ 
+			return CoolingDown					? max(Delay.Limit - Delay.Value, Overheat.Value)
 				: (Delay.Value < Delay.Limit)	? Delay.Limit - Delay.Value
 				: 0
 				; 
 		}
-		float			Pull				()					noexcept	{ 
-			const float			busy				= Busy();
+		f2_t			Pull				()					nxpt	{ 
+			cnst f2_t			busy				= Busy();
 			if(busy)
 				return busy;
 
@@ -124,19 +123,19 @@ namespace gpk
 				CoolingDown		= true;
 			return 0;
 		}
-		float			Update				(double seconds)	noexcept		{
-			Delay.Value		+= (float)seconds;
+		f2_t			Update				(f3_t seconds)	nxpt		{
+			Delay.Value		+= (f2_t)seconds;
 			if(0 >= Overheat.Value && CoolingDown)
 				CoolingDown		= Overheat.Value	= 0;
 			else
-				Overheat.Value	-= (float)seconds;
+				Overheat.Value	-= (f2_t)seconds;
 
 			return Busy();
 		}
 
 	};
 
-	GDEFINE_FLAG_TYPE(WEAPON_LOAD, ::gpk::u2_t);
+	GDEFINE_FLAG_TYPE(WEAPON_LOAD, u2_t);
 	// these are the ammo classes that I can think of right now
 	GDEFINE_FLAG_VALUE(WEAPON_LOAD, None		,	0);	
 	GDEFINE_FLAG_VALUE(WEAPON_LOAD, Arrow		,	0x1UL);	
@@ -169,12 +168,12 @@ namespace gpk
 	GDEFINE_FLAG_VALUE(WEAPON_LOAD, Temporized	,	0x10000000UL);
 	GDEFINE_FLAG_VALUE(WEAPON_LOAD, Detonable	,	0x20000000UL);
 
-	GDEFINE_ENUM_TYPE(WEAPON_ACTION, ::gpk::u1_t);
+	GDEFINE_ENUM_TYPE(WEAPON_ACTION, u1_t);
 	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Shoot		, 0x0);
 	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Cooldown	, 0x1);
 	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Target	, 0x2);
 
-	GDEFINE_ENUM_TYPE (DAMAGE_TYPE, ::gpk::u1_t);
+	GDEFINE_ENUM_TYPE (DAMAGE_TYPE, u1_t);
 	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Pierce		, 0x0);
 	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Impact		, 0x1);
 	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Wave		, 0x2);
@@ -189,7 +188,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, EMP			, 0x400);
 	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Gravity		, 0x800);
 
-	GDEFINE_ENUM_TYPE(WEAPON_TYPE, ::gpk::u0_t);
+	GDEFINE_ENUM_TYPE(WEAPON_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(WEAPON_TYPE, Gun			, 0);
 	GDEFINE_ENUM_VALUE(WEAPON_TYPE, Cannon		, 1);
 	GDEFINE_ENUM_VALUE(WEAPON_TYPE, Rocket		, 2);
@@ -203,11 +202,11 @@ namespace gpk
 	struct SWeaponShot {
 		WEAPON_LOAD		Type				= {};	//= WEAPON_LOAD_Bullet;
 		DAMAGE_TYPE		DamageType			= {};	//= WEAPON_DAMAGE_Pierce;
-		::gpk::u1_t		ParticleCount		= 1;	//= 1;
-		::gpk::s2_t			Damage				= 1;	//= 1;
-		float			Stability			= 1;	//= 1.0;
-		float			Lifetime			= .5f;	//= 0;
-		float			Speed				= {};	//= 150;
+		u1_t		ParticleCount		= 1;	//= 1;
+		s2_t			Damage				= 1;	//= 1;
+		f2_t			Stability			= 1;	//= 1.0;
+		f2_t			Lifetime			= .5f;	//= 0;
+		f2_t			Speed				= {};	//= 150;
 	};
 
 	// One per orbiter
@@ -216,16 +215,16 @@ namespace gpk
 		SWeaponTrigger	Trigger				= {};
 		SWeaponShot		Shot				= {};
 
-		int				Shoot				(::gpk::SShots & shots, const ::gpk::n3f2_t & position, const ::gpk::n3f2_t & direction, float brightness)	{
+		int				Shoot				(SShots & shots, cnst n3f2_t & position, cnst n3f2_t & direction, f2_t brightness)	{
 			if(Trigger.Pull())
 				return 0;
 
 			if(0 == Shot.ParticleCount) 
 				return shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
 
-			const ::gpk::s2_t		indexFirst			= shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
-			const ::gpk::u2_t		stop				= ::gpk::u2_t(Shot.ParticleCount - 1);
-			for(::gpk::u2_t iDebris = 0; iDebris < stop; ++iDebris)
+			cnst s2_t		indexFirst			= shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
+			u2_c		stop				= u2_t(Shot.ParticleCount - 1);
+			for(u2_t iDebris = 0; iDebris < stop; ++iDebris)
 				shots.SpawnForcedDirected(Shot.Stability, position, direction, Shot.Speed, brightness, Shot.Lifetime);
 
 			return indexFirst;
@@ -233,49 +232,50 @@ namespace gpk
 	};
 
 	struct SWeaponScore {
-		::gpk::s3_t		ImpactTime		= 0;
-		::gpk::s3_t		BulletsHit		= 0;
-		::gpk::s3_t		BulletsUsed		= 0;
-		::gpk::s3_t		BulletsLoaded	= 0;
-		::gpk::s3_t		ShotsUsed		= 0;
-		::gpk::s3_t		ShotsLoaded		= 0;
-		::gpk::s3_t		ReloadCount		= 0;
-		::gpk::s3_t		ReloadTime		= 0;
-		::gpk::s3_t		OverheatCount	= 0;
-		::gpk::s3_t		OverheatTime	= 0;
+		s3_t		ImpactTime		= 0;
+		s3_t		BulletsHit		= 0;
+		s3_t		BulletsUsed		= 0;
+		s3_t		BulletsLoaded	= 0;
+		s3_t		ShotsUsed		= 0;
+		s3_t		ShotsLoaded		= 0;
+		s3_t		ReloadCount		= 0;
+		s3_t		ReloadTime		= 0;
+		s3_t		OverheatCount	= 0;
+		s3_t		OverheatTime	= 0;
 	};
 #pragma pack(pop)
 
 	struct SWeaponManager {
-		::gpk::apod<::gpk::SWeapon>	Weapons			= {};	// 
-		::gpk::aobj<::gpk::SShots >	Shots			= {};	// One per weapon
-		::gpk::apobj<::gpk::an3f32>	WeaponTargets	= {};	// One per weapon
+		apod<SWeapon>	Weapons			= {};	// 
+		aobj<SShots >	Shots			= {};	// One per weapon
+		apobj<a3f2_t>	WeaponTargets	= {};	// One per weapon
 
-		::gpk::s2_t						Clear					()		{ ::gpk::clear(Weapons, Shots, WeaponTargets); return 0; }
-		gpk::err_t				Save					(::gpk::au0_t & output)	const	{ 
+		s2_t						Clear					()		{ clear(Weapons, Shots, WeaponTargets); return 0; }
+		gpk::err_t 			Save					(au0_t & output)	cnst	{ 
 			if_fail_fe(gpk::saveView(output, Weapons));
 			info_printf("Saved %s, %i", "Weapons", Weapons.size());
-			for(::gpk::u2_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
-				if(WeaponTargets[iWeapon] && WeaponTargets[iWeapon]->size())
+			for(u2_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
+				if(WeaponTargets[iWeapon] && WeaponTargets[iWeapon]->size()) {
 					if_fail_fef(gpk::saveView(output, *WeaponTargets[iWeapon]), "iWeapon: %i", iWeapon);
+				}
 				else
-					if_fail_fef(gpk::saveView(output, ::gpk::vc3f32{}), "iWeapon: %i", iWeapon);
+					if_fail_fef(gpk::saveView(output, vc3f2_t{}), "iWeapon: %i", iWeapon);
 				if_fail_fef(Shots[iWeapon].Save(output), "iWeapon: %i", iWeapon);
 			}
 			return 0;
 		}
-		gpk::err_t				Load				(::gpk::vcu0_t & input) { 
+		gpk::err_t 			Load				(vcu0_t & input) { 
 			Weapons.clear();
 			if_fail_fe(gpk::loadView(input, Weapons));
 			Shots.resize(Weapons.size());
 			if_fail_fe(WeaponTargets.reserve(Weapons.size()));
-			for(::gpk::u2_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
+			for(u2_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
 				if_fail_fe(gpk::loadView(input, WeaponTargets, iWeapon));
 				if_fail_fef(Shots[iWeapon].Load(input), "iWeapon: %i", iWeapon);
 			}
 			return 0;
 		}
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_GALAXY_HELL_WEAPON_H

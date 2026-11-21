@@ -41,7 +41,7 @@ static	gpk::err_t	rsmReadRotationKeyframes									(::gpk::view_stream<const ::g
 	info_printf("Rotation keyframe count: %u.", keyframeCount);
 	if(keyframeCount) {
 		modelKeyframes.resize(keyframeCount);
-		rsm_stream.read_pod(modelKeyframes.begin(), keyframeCount);
+		rsm_stream.read_pod(::gpk::view{modelKeyframes.begin(), keyframeCount});
 	}
 	return 0;
 }
@@ -53,7 +53,7 @@ static	gpk::err_t	rsmReadPositionKeyframes									(::gpk::view_stream<const ::g
 	::gpk::debugBreak();
 	if(positionFrameCount) {
 		modelKeyframes.resize(positionFrameCount);
-		rsm_stream.read_pod(modelKeyframes.begin(), positionFrameCount);
+		rsm_stream.read_pod(::gpk::view{modelKeyframes.begin(), positionFrameCount});
 	}
 	return 0;
 }
@@ -109,7 +109,7 @@ gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const
 			if(texMappingCount) {
 				::gpk::apod<::gpk::s2_t>									& modelTextures												= newNode.TextureIndices;
 				modelTextures.resize(texMappingCount);
-				rsm_stream.read_pod(modelTextures.begin(), texMappingCount);
+				rsm_stream.read_pod(::gpk::view{modelTextures.begin(), texMappingCount});
 			}
 		}
 
@@ -129,7 +129,7 @@ gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const
 			if(vertexCount) {
 				::gpk::apod<::gpk::n3f2_t>						& modelVertices												= newNode.Vertices;
 				modelVertices.resize(vertexCount);
-				rsm_stream.read_pod(modelVertices.begin(), vertexCount);
+				rsm_stream.read_pod(::gpk::view{modelVertices.begin(), vertexCount});
 			}
 		}
 		{ // Read vertex attributes (texCoord & ...color?)
@@ -140,7 +140,7 @@ gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const
 				::gpk::apod<::gpk::SRSMTexCoord>						& modelUNKs													= newNode.UVs;
 				modelUNKs.resize(texVtxCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || header.versionMajor > 1) //{ >= v1.2
-					rsm_stream.read_pod(modelUNKs.begin(), texVtxCount);
+					rsm_stream.read_pod(::gpk::view{modelUNKs.begin(), texVtxCount});
 				else {
 					for( ::gpk::u2_t iVertex = 0; iVertex < texVtxCount; ++iVertex ) {
 						::gpk::SRSMTexCoord											& curTexCoord												= modelUNKs[iVertex];
@@ -159,7 +159,7 @@ gpk::err_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const
 				::gpk::apod<SRSMFace>									& modelFaces												= newNode.Faces;
 				modelFaces.resize(faceCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || (header.versionMajor > 1))
-					rsm_stream.read_pod(modelFaces.begin(), faceCount);
+					rsm_stream.read_pod(::gpk::view{modelFaces.begin(), faceCount});
 				else {
 					for(::gpk::u2_t iFace = 0; iFace < faceCount; ++iFace) {
 						::gpk::SRSMFace												& currentFace												= modelFaces[iFace];

@@ -1,5 +1,6 @@
 #include "gpk_index_path.h"
 #include "gpk_file.h"
+#include "gpk_string_compose.h"
 
 usng nmsp gpk;
 
@@ -16,7 +17,7 @@ sttc gpk::err_t	pathRelative				(gpk::string & output, cnst gpk::SPathTree & tre
 		if_true_fef(current.ObjectIndex >= tree.Name.size(), "Invalid path object index: %u.", current.ObjectIndex);
 		if(output.size())
 			if_fail_fe(output.push_back('/'));
-		if_fail_fe(output.append(tree.Name[current.ObjectIndex]));
+		if_fail_fe(append_strings(output, tree.Name[current.ObjectIndex]));
 	}
 	rtrn output.size();
 }

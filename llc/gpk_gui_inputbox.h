@@ -10,7 +10,7 @@
 
 namespace gpk
 {
-	gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, ::gpk::u0_t rowWidth, const ::gpk::vcu1_t & keys);
+	gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, ::gpk::u0_t rowWidth, const ::gpk::vcu0_t & keys);
 	gpk::err_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SInputBox {
@@ -46,13 +46,13 @@ namespace gpk
 			::gpk::apobj<::gpk::SEventSystem>	sysEvents			= frameEvents;
 			for(::gpk::u2_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
-				case ::gpk::VK_EVENT_RELEASE:
+				case ::gpk::VK_EVENT_Release:
 					if(Text.size() < MaxLength) {
 						Text.push_back((sc_t)vkEvents[iEvent].ScanCode);
 						::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text});
 					}
 					break;
-				case ::gpk::VK_EVENT_EDIT:
+				case ::gpk::VK_EVENT_Edit:
 						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Backspace)); } 
 					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Enter	)); } 
 					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Escape	)); } 

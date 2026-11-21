@@ -7,11 +7,11 @@ gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & planetarySystem, vcst
 }
 
 gpk::err_t 		gpk::planetarySystemSetup	(SPlanetarySystem & solarSystem, cnst SJSONReader & jsonData) {
-	aobj<vcst_t>		stellarBodyNames			= {};
+	avcsc_t			stellarBodyNames			= {};
 	as2_t				stellarBodyIndices;
 	if_fail_fe(gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));
-	view<vcst_c>		jsonView					= jsonData.View;
-	aobj<vcst_t>		bodyParentNames;
+	view<vcsc_t>		jsonView					= jsonData.View;
+	avcsc_t			bodyParentNames;
 
 	s2_t						iFurthest					= 0;
 	f2_t						fFurthest					= 0;

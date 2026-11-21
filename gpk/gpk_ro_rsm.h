@@ -31,7 +31,7 @@ namespace gpk
 
 	struct SRSMFrameRotation {
 		int										Time;
-		::gpk::quatf32							Orientation;
+		::gpk::quatf2_t							Orientation;
 	};
 
 	struct SRSMFramePosition {

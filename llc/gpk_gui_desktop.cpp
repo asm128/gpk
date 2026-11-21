@@ -38,9 +38,9 @@ gpk::err_t			gpk::desktopDeleteControlList	(::gpk::SGUI & gui, ::gpk::SDesktop &
 	::gpk::acid					childLists						= desktop.Children[iElement];
 	for(::gpk::u2_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
 		::gpk::cid_t				childControlListIndex			= childLists[iOption];
-		if(desktop.Items.ControlLists.size() > (::gpk::u2_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex])
+		if(desktop.Items.ControlLists.size() > (::gpk::u2_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex]) {
 			if_fail_fef(gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "%s", "??");
-		else
+		} else
 			if_true_ef(childControlListIndex != -1, "%s", "");
 	}
 	if(desktop.Items.ControlLists.size() > (::gpk::u2_t)controlListToDelete.IndexParentList && false == desktop.Items.ControlLists.Unused[controlListToDelete.IndexParentList]) {
@@ -78,13 +78,7 @@ static	gpk::err_t	displace					(::gpk::SGUI & gui, ::gpk::cid_t iControl, const 
 }
 
 static	gpk::err_t	pushToFrontAndDisplace		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::SInput & input)							{
-	const ::gpk::cid_t			parentControlId				= gui.Controls.States[iControl].Parent;
-	for(::gpk::u2_t iChild = 0, childCount = gui.Controls.Children[parentControlId].size(); iChild < childCount; ++iChild)
-		if(gui.Controls.Children[parentControlId][iChild] == iControl) {
-			if_fail_fe(gui.Controls.Children[parentControlId].remove(iChild));
-			if_fail_fe(gui.Controls.Children[parentControlId].push_back(iControl));
-			break;
-		}
+	if_fail_fe(::gpk::controlToFront(gui, iControl));
 	if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
 		if_fail_fef(::displace(gui, iControl, {(double)input.MouseCurrent.Deltas.x, (double)input.MouseCurrent.Deltas.y}), "%s", "Unknown issue!");
 	return 0;

@@ -1,5 +1,5 @@
 #include "gpk_process.h"
-#include "gpk_keyval.h"
+#include "gpk_keyval_view.h"
 
 #ifdef GPK_WINDOWS
 #	include <Windows.h>
@@ -16,8 +16,12 @@ gpk::err_t			gpk::environmentBlockViews		(const ::gpk::vcsc_t & environmentBlock
 		::gpk::vcsc_t					viewEnvironVar					= {}; // {&environmentBlock[offsetBeginVar], offsetEndVar - offsetBeginVar};
 		if_fail_fe(environmentBlock.slice(viewEnvironVar, offsetBeginVar, offsetEndVar - offsetBeginVar));
 		::gpk::kv<vcsc_t, vcsc_t>	newKeyVal						= {};
-		if(-1 != ::gpk::keyval_split({viewEnvironVar.begin(), viewEnvironVar.size()}, newKeyVal))
+		::gpk::kv<vcst_t>		parsedKeyVal					= {};
+		if(-1 != ::gpk::keyval_split({viewEnvironVar.begin(), viewEnvironVar.size()}, parsedKeyVal)) {
+			newKeyVal.Key = {parsedKeyVal.Key.begin(), parsedKeyVal.Key.size()};
+			newKeyVal.Val = {parsedKeyVal.Val.begin(), parsedKeyVal.Val.size()};
 			out_Views.push_back(newKeyVal);
+		}
 		else if(viewEnvironVar.size()) {
 			newKeyVal.Key			= {viewEnvironVar.begin(), viewEnvironVar.size()};
 			out_Views.push_back(newKeyVal);

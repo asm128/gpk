@@ -21,6 +21,7 @@ nmsp gpk
 	err_t			fileToMemory		(vcst_t fileName, au0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
 	err_t			fileToMemory		(vcst_t folderPath, vcst_t fileName, au0_t & fileBytes, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0);
 	stin	err_t	fileToMemory		(vcst_t fileName, as0_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
+	stin	err_t	fileToMemory		(vcst_t fileName, asc_t & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
 	stin	err_t	fileToMemory		(vcst_t fileName, string & fileInMemory, u2_t maxSize = 0xFFFFFFFFU, u3_t offset = 0)	{ rtrn fileToMemory		(fileName, *(au0_t*)&fileInMemory, maxSize, offset); }
 
 	stin	err_t	with				(vcst_t filename, gpk::FError<vcu0_t /*fileInMemory*/> funcWithFile) {

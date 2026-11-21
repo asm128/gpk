@@ -4,6 +4,7 @@
 #include "gpk_json_expression.h"
 
 #include "gpk_expression.h"
+#include "gpk_string_compose.h"
 #include "gpk_parse.h"
 
 #define gpk_jexpr_info_printf(...) // info_printf
@@ -316,6 +317,6 @@ gpk::err_t			gpk::jsonStringFormat					(::gpk::vcst_c & format, const ::gpk::SJS
 	}
 
 	for(::gpk::u2_t iView = 0; iView < views.size(); ++iView)
-		if_fail_fef(output.append(views[iView]), "iView: %i", iView);
+		if_fail_fef(append_strings(output, views[iView]), "iView: %i", iView);
 	return 0;
 }

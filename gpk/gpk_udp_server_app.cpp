@@ -7,8 +7,8 @@
 GPK_USING_TYPEINT();
 
 gpk::err_t			gpk::loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, ::gpk::s2_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter) {
-	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"}, jsonConfig, parentNode, port));
-	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonConfig, parentNode, adapter));
+	if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"listen_port"}, jsonConfig, parentNode, port));
+	if_fail_w(::gpk::jsonExpressionResolve(::gpk::vcst_t{"adapter"}, jsonConfig, parentNode, adapter));
 	info_printf("\nListen port: %.*s.\nAdapter: %.*s.'", GPK_VIEW_ARGS(port), GPK_VIEW_ARGS(adapter));
 	return 0;
 }
@@ -66,13 +66,13 @@ static	gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 
 gpk::err_t			gpk::serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui) {
 	server.QueueReceived.clear();
-	es_if_failed(::gpk::serverPayloadCollect(server.UDP, server.QueueReceived));
+	if_fail_e(::gpk::serverPayloadCollect(server.UDP, server.QueueReceived));
 
 	server.UDP.Clients.enumerate([&server](::gpk::u2_t & iClient, ::gpk::pobj<::gpk::SUDPConnection> & client){
 		if(server.QueueToSend.size() <= iClient)
 			iClient					= server.UDP.Clients.size();
 		else {
-			if_fail_fe(server.QueueToSend[iClient]->for_each([&client](::gpk::pau8 & payload) {
+			if_fail_fe(server.QueueToSend[iClient]->for_each([&client](::gpk::pauc_t & payload) {
 				if(payload && payload->size())
 					if_fail_fe(gpk::connectionPushData(*client, client->Queue, *payload));
 

@@ -146,7 +146,7 @@ gpk::err_t			gpk::checkBoxUpdate			(SDialogCheckBox	& checkbox)								{
 			}
 		}
 		checkbox.Checked									= !checkbox.Checked;
-		controlTable.Images[checkbox.IdGUIControl].Image	= (false == checkbox.Checked) ? g8bgra{} : imageCross.View;
+		controlTable.ImageViews[checkbox.IdGUIControl]	= (false == checkbox.Checked) ? g8bgra{} : imageCross.View;
 	}
 	return 0;
 }

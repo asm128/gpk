@@ -3,7 +3,7 @@
 #ifndef GPK_ENGINE_RENDERCOLOR_H_23627
 #define GPK_ENGINE_RENDERCOLOR_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 #pragma pack(push, 1)
 	struct SRenderColor {
@@ -12,6 +12,6 @@ namespace gpk
 		::gpk::rgbaf							Specular	= ::gpk::LIGHTGRAY;
 	};
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_RENDERCOLOR_H_23627

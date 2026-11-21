@@ -7,18 +7,18 @@
 #endif
 
 gpk::err_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
-	::gpk::au1_t					keys;
-	for(::gpk::u1_t i = 1; i < 255; ++i) {
+	::gpk::au0_t					keys;
+	for(::gpk::u0_t i = 1; i < 255; ++i) {
 		keys.push_back(i);
 	}
 	keys.push_back('!');
 	keys.push_back('?');
-	if_fail_fe(gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu1_t{keys}));
+	if_fail_fe(gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu0_t{keys}));
 	gui.Controls.SetHidden(vk.IdRoot, true);
 	return vk.IdRoot;
 }
 
-gpk::err_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, ::gpk::u0_t rowWidth, ::gpk::vcu1_c & keys) {
+gpk::err_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, ::gpk::u0_t rowWidth, ::gpk::vcu0_c & keys) {
 	vk.Keys					= keys;
 
 	vk.IdRoot				= ::gpk::controlCreate(gui);

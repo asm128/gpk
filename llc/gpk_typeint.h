@@ -265,6 +265,7 @@ nmsp gpk
 	tdcs		err_t	err_c;
 
 	tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
+	sinx	b8_t	failed		(b8_t)		nxpt	{ rtrn false; }
 	tplTnsix	b8_t	succeeded	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
 } // namespace
 

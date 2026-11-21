@@ -33,7 +33,7 @@ gpk::err_t			gpk::gndFileLoad										(::gpk::SGNDFileContents & loaded, const 
 	loaded.TextureNames.resize(nTextureCount);
 	for(::gpk::u2_t iTexture = 0; iTexture < nTextureCount; ++iTexture) {
 		loaded.TextureNames[iTexture].resize(nTextureStringSize);
-		gnd_stream.read_pod(&loaded.TextureNames[iTexture][0], nTextureStringSize);
+		gnd_stream.read_pod(::gpk::view{&loaded.TextureNames[iTexture][0], nTextureStringSize});
 	}
 	::gpk::u2_t						tileCountBrightness								= 0;
 	gnd_stream.read_pod(tileCountBrightness		);
@@ -41,17 +41,17 @@ gpk::err_t			gpk::gndFileLoad										(::gpk::SGNDFileContents & loaded, const 
 	gnd_stream.read_pod(loaded.LightmapSize.y	);
 	gnd_stream.read_pod(loaded.LightmapTiles		);
 	loaded.lstTileBrightnessData.resize(tileCountBrightness);
-	gnd_stream.read_pod(loaded.lstTileBrightnessData.begin(), loaded.lstTileBrightnessData.size());
+	gnd_stream.read_pod(::gpk::view{loaded.lstTileBrightnessData.begin(), loaded.lstTileBrightnessData.size()});
 
 	::gpk::u2_t						tileCountSkin									= 0;
 	gnd_stream.read_pod(tileCountSkin);
 	loaded.lstTileTextureData	.resize(tileCountSkin);
-	gnd_stream.read_pod(loaded.lstTileTextureData.begin(), loaded.lstTileTextureData.size());
+	gnd_stream.read_pod(::gpk::view{loaded.lstTileTextureData.begin(), loaded.lstTileTextureData.size()});
 
 	::gpk::u2_t						tileCountGeometry								= loaded.Metrics.Size.x * loaded.Metrics.Size.y;
 	loaded.lstTileGeometryData.resize(tileCountGeometry);
 	if( gndHeader.nVersionMajor > 1 || ( gndHeader.nVersionMajor == 1 && gndHeader.nVersionMinor >= 7 ) )
-		gnd_stream.read_pod(loaded.lstTileGeometryData.begin(), loaded.lstTileGeometryData.size());
+		gnd_stream.read_pod(::gpk::view{loaded.lstTileGeometryData.begin(), loaded.lstTileGeometryData.size()});
 	else if( gndHeader.nVersionMajor < 1 || ( gndHeader.nVersionMajor == 1 && gndHeader.nVersionMinor <= 5 ) ) {// it seems old 1.5 format used 16 bit integers
 		for(::gpk::u2_t iTile = 0; iTile < tileCountGeometry; ++iTile) {
 			::gpk::s1_t															top												= -1;
@@ -59,7 +59,7 @@ gpk::err_t			gpk::gndFileLoad										(::gpk::SGNDFileContents & loaded, const 
 			::gpk::s1_t															front											= -1;
 			::gpk::s1_t															flags											= -1;
 			::gpk::STileGeometryGND											& tileGeometry									= loaded.lstTileGeometryData[iTile];
-			gnd_stream.read_pod(tileGeometry.fHeight, 4);
+			gnd_stream.read_pod(::gpk::view{tileGeometry.fHeight, 4});
 			gnd_stream.read_pod(top		);
 			gnd_stream.read_pod(right	);
 			gnd_stream.read_pod(front	);

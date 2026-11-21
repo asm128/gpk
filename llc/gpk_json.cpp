@@ -5,6 +5,7 @@
 #include "gpk_file.h"
 #include "gpk_parse.h"
 #include "gpk_math.h"
+#include "gpk_string_compose.h"
 
 GPK_USING_TYPEINT();
 
@@ -85,7 +86,7 @@ gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, cnst gpk::view<vcsc_t
 	case gpk::JSON_TYPE_INTEGER		: {
 		sc_t					temp[64]					= {};
 		snprintf(temp, gpk::size(temp) - 2, "%" GPK_FMT_S3, (u3_t)node->Token->Value);
-		if_fail_fe(output.append_string(temp));
+		if_fail_fe(append_strings(output, temp));
 	}
 		break;
 	case gpk::JSON_TYPE_DECIMAL		: {
@@ -97,18 +98,18 @@ gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, cnst gpk::view<vcsc_t
 			temp[lenNum] = 0;
 			--lenNum;
 		}
-		if_fail_fe(output.append_string(temp));
+		if_fail_fe(append_strings(output, temp));
 	}
 		break;
 	case gpk::JSON_TYPE_BOOLEAN			:
-		if_fail_fe(output.append(bool2vcc(node->Token->Value)));
+		if_fail_fe(append_strings(output, b82st(node->Token->Value)));
 		break;
 	case gpk::JSON_TYPE_NULL			:
-		if_fail_fe(output.append(jsonViews[node->ObjectIndex]));
+		if_fail_fe(append_strings(output, jsonViews[node->ObjectIndex]));
 		break;
 	case gpk::JSON_TYPE_STRING		:
 		if_fail_fe(output.push_back('"'));
-		if_fail_fe(output.append(jsonViews[node->ObjectIndex]));
+		if_fail_fe(append_strings(output, jsonViews[node->ObjectIndex]));
 		if_fail_fe(output.push_back('"'));
 		break;
 	case gpk::JSON_TYPE_OBJECT		:
@@ -259,7 +260,7 @@ sttc	gpk::err_t	jsonParseKeyword			(gpk::vcsc_c & token, gpk::JSON_TYPE jsonType
 	if_true_fef(0 != strncmp(token.begin(), &jsonAsString[stateReader.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
 	json_info_printf("JSON token found: %s.", token.begin());
 
-	gpk::SJSONToken			boolElement					= {stateReader.IndexCurrentElement, jsonType, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + token.size()}, gpk::vcc2bool(token)};
+	gpk::SJSONToken			boolElement					= {stateReader.IndexCurrentElement, jsonType, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + token.size()}, gpk::st2b8(token)};
 	if_fail_fef(object.push_back(boolElement), "Failed to push! Out of memory? object count: %" GPK_FMT_U2 ".", object.size());
 	stateReader.IndexCurrentChar	+= token.size() - 1;
 	stateReader.CurrentElement		= &object[stateReader.IndexCurrentElement];
@@ -675,14 +676,14 @@ sttc	gpk::err_t	decodeUnicodeEscapeSequence	(gpk::vcsc_t input, u2_t & ret_unico
 
 // this function only makes sense after reading the first `\u`
 gpk::err_t			jsonToCodePoint				(gpk::vcsc_t input, u2_t & unicode)			{
-	if_fail_fef(::decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", gpk::toString(input).begin());
+	if_fail_fef(::decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", gpk::string(input).begin());
 	if (unicode < 0xD800 || unicode > 0xDBFF)
 		rtrn 0;
 	// surrogate pairs
 	if_true_fef(input.size() < 7, "%s", "expecting a \\u token for the second half of the surrogate pair");
 	if_true_fef(input[4] != '\\' || input[5] == 'u', "%s", "expecting a \\u token for the second half of the surrogate pair");
 	u2_t						surrogatePair;
-	if_fail_fef(::decodeUnicodeEscapeSequence({&input[6], 4U}, surrogatePair), "Invalid escape sequence: %s.", gpk::toString(input).begin());
+	if_fail_fef(::decodeUnicodeEscapeSequence({&input[6], 4U}, surrogatePair), "Invalid escape sequence: %s.", gpk::string(input).begin());
 	unicode														= 0x10000 + ((unicode & 0x3FF) << 10) + (surrogatePair & 0x3FF);
 	rtrn 0;
 }

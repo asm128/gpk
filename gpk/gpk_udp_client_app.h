@@ -43,7 +43,7 @@ namespace gpk
 
 							~SClient			()	{
 			if(UDP.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
-				ws_if_failed(::gpk::clientDisconnect(UDP));
+				if_fail_w(::gpk::clientDisconnect(UDP));
 		}
 	};
 

@@ -1,4 +1,5 @@
-#include "gpk_gui_control_state.h"
+#include "gpk_gui_control_flag.h"
+#include "gpk_gui_image.h"
 
 #include "gpk_tri2.h"
 #include "gpk_rect.h"
@@ -76,7 +77,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_PRESSED	, 7);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, ACTION				, 8);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, OUTDATED			, 9);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, COUNT				, 10);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DRAGGING			, 10);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, COUNT				, 11);
 	
 
 	struct SControlDraw {
@@ -89,7 +91,7 @@ namespace gpk
 
 		::gpk::s1_t			ColorTheme			= 0;
 		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>	
-						Palettes			= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
+					Palettes			= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}};
 	};
 
 	enum CONTROL_AREA_BASE : ::gpk::u0_t 
@@ -191,50 +193,6 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	struct SControlImage {
-		::gpk::rtbgra8d32			Temp				= {};
-		::gpk::g8bgra				Image				= {};
-		::gpk::n2s1_t				ImageOffset			= {};
-		::gpk::u0_t						ImageAlign			= ::gpk::ALIGN_CENTER;
-		::gpk::u0_t						ImageInvertX		: 1;
-		::gpk::u0_t						ImageInvertY		: 1;
-		::gpk::u0_t						Rotation			: 2;
-	};
-
-	struct SControlTable {
-		::gpk::apod<::gpk::SControlState		>	States			= {};
-		::gpk::apod<::gpk::SControlPlacement	>	Placement		= {};
-		::gpk::apod<::gpk::SControlArea			>	Area			= {};
-		::gpk::apod<::gpk::SControlConstraints	>	Constraints		= {};
-		::gpk::apod<::gpk::SControlDraw			>	Draw			= {};
-		::gpk::aobj<::gpk::SControlText			>	Text			= {};
-		::gpk::aobj<::gpk::SControlImage		>	Images			= {};
-		::gpk::aobj<::gpk::acid					>	Children		= {};
-		//
-		::gpk::apobj<::gpk::SEventSystem		>	EventQueue		= {};
-
-		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
-		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
-		inline	bool		SetHidden		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
-		inline	bool		SetFocused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
-		inline	bool		SetSelected		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
-		inline	bool		SetDisabled		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
-		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
-		inline	bool		SetAction		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
-		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
-
-		inline	bool		IsHovered		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
-		inline	bool		IsPressed		(cid_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
-		inline	bool		IsHidden		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHidden   (); }
-		inline	bool		IsFocused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsFocused  (); }
-		inline	bool		IsSelected		(cid_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
-		inline	bool		IsDisabled		(cid_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
-		inline	bool		IsUpdated		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
-		inline	bool		IsAction		(cid_t iControl)		const	noexcept	{ return States[iControl].IsAction   (); }
-		inline	bool		IsUnused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
-	};
-
-	::gpk::cid_t		controlCreate					(::gpk::SControlTable & gui, ::gpk::vs1_t defaultColors);
 } // namespace
 
 #endif // GPK_GUI_CONTROL_H_23627

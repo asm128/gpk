@@ -1,4 +1,4 @@
-#include "gpk_gui_control.h"
+#include "gpk_gui_control_table.h"
 #include "gpk_input.h"
 #include "gpk_font.h"
 
@@ -60,6 +60,7 @@ namespace gpk
 	::gpk::cid_t 			controlCreate					(::gpk::SGUI & gui);
 	::gpk::cid_t			controlCreateChild				(::gpk::SGUI & gui, cid_t iParent);
 	gpk::err_t			controlSetParent				(::gpk::SGUI & gui, cid_t iControl, cid_t iParent);
+	gpk::err_t			controlToFront				(::gpk::SGUI & gui, cid_t iControl);
 	gpk::err_t			controlDrawHierarchy			(::gpk::SGUI & gui, cid_t iControl, ::gpk::g8bgra target);
 	gpk::err_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcst_t & text);
 	gpk::err_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, ::gpk::s1_t iFont);

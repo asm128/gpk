@@ -6,7 +6,7 @@
 #ifndef SAMPLE3DSCENERENDERER_H_23627
 #define SAMPLE3DSCENERENDERER_H_23627
 
-namespace gpk
+nmsp gpk
 {
 
 	// This sample renderer instantiates a basic rendering pipeline.
@@ -30,11 +30,11 @@ namespace gpk
 		::gpk::SEngineSceneConstants			ConstantBufferScene				= {};
 
 		// Variables used with the rendering loo
-		double									TotalSecondsElapsed				= 0;
+		f3_t									TotalSecondsElapsed				= 0;
 		
 												~Sample3DSceneRenderer			() { ReleaseDeviceResources(); }
 
-		gpk::err_t							Initialize		(const ::gpk::pobj<DX::D3DDeviceResources> & deviceResources) {
+		gpk::err_t 						Initialize		(cnst ::gpk::pobj<DX::D3DDeviceResources> & deviceResources) {
 			DeviceResources							= deviceResources;
 			if_fail_fe(CreateDeviceResources(DeviceResources->GetD3DDevice()));
 			if_fail_fe(CreateSizeDependentResources(DeviceResources->GetLogicalSize(), DeviceResources->GetOrientationTransform3D()));
@@ -55,7 +55,7 @@ namespace gpk
 			DepthStencilState	.clear();
 		}
 
-		void									Render							(::gpk::u2_t iMesh, ::gpk::rangeu2_t indexRange, ::gpk::u2_t iTexture, ::gpk::u2_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
+		void									Render							(u2_t iMesh, ::gpk::rangeu2_t indexRange, u2_t iTexture, u2_t iShader, b8_t alpha, cnst::gpk::SRenderNodeConstants & constantBufferModel) {
 			auto										context							= DeviceResources->GetD3DDeviceContext();
 			context->UpdateSubresource1(ConstantBuffer[0], 0, NULL, &constantBufferModel, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
 			context->UpdateSubresource1(ConstantBuffer[1], 0, NULL, &ConstantBufferScene, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
@@ -92,9 +92,9 @@ namespace gpk
 			context->DrawIndexed(indexRange.Count, indexRange.Offset, 0);	// Draw the objects.
 		}
 
-		gpk::err_t							CreateSizeDependentResources	(const ::gpk::n2f2_t & outputSize, const DirectX::XMFLOAT4X4 & orientation) {
-			const float									aspectRatio						= outputSize.x / outputSize.y;
-			float										fovAngleY						= 70.0f * DirectX::XM_PI / 180.0f;
+		gpk::err_t 						CreateSizeDependentResources	(cnst ::gpk::n2f2_t & outputSize, cnst DirectX::XMFLOAT4X4 & orientation) {
+			cnst f2_t									aspectRatio						= outputSize.x / outputSize.y;
+			f2_t										fovAngleY						= 70.0f * DirectX::XM_PI / 180.0f;
 
 			// This is a simple example of change that can be made when the app is in portrait or snapped view.
 			if (aspectRatio < 1.0f)
@@ -108,14 +108,14 @@ namespace gpk
 			DirectX::XMStoreFloat4x4((DirectX::XMFLOAT4X4*)&ConstantBufferScene.Perspective, DirectX::XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
 			// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-			const	DirectX::XMVECTORF32			eye								= { 0.0f, (float)sin(TotalSecondsElapsed) * 5, 5.5f, 0.0f };
+			cnst	DirectX::XMVECTORF32			eye								= { 0.0f, (f2_t)sin(TotalSecondsElapsed) * 5, 5.5f, 0.0f };
 			stxp	DirectX::XMVECTORF32			at								= { 0.0f, -0.1f, 0.0f, 0.0f };
 			stxp	DirectX::XMVECTORF32			up								= { 0.0f, 1.0f, 0.0f, 0.0f };
 			DirectX::XMStoreFloat4x4((DirectX::XMFLOAT4X4*)&ConstantBufferScene.View, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtLH(eye, at, up)));
 			return 0;
 		}
 
-		gpk::err_t							CreateDeviceResources			(ID3D11Device3 * d3dDevice)	{
+		gpk::err_t 						CreateDeviceResources			(ID3D11Device3 * d3dDevice)	{
 			ReleaseDeviceResources();
 			{	// Create a point sampler state for fonts 
 				D3D11_SAMPLER_DESC							samDesc						= {};
@@ -150,7 +150,7 @@ namespace gpk
 				::gpk::pcom<ID3D11InputLayout>				inputLayout;
 				::gpk::pcom<ID3D11VertexShader>				vertexShader;
 
-				::gpk::apod<::gpk::s0_t>							fileVS;
+				::gpk::apod<s0_t>							fileVS;
 				if_fail_fe(gpk::fileToMemory("SampleVertexShader.cso", fileVS));
 				stxp	D3D11_INPUT_ELEMENT_DESC			vertexDesc []			=
 					{	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }

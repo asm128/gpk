@@ -116,7 +116,7 @@ gpk::err_t 		gpk::updateFramework						(SFramework& framework)													{
 		}
 	}
 	if_fail_e(::updateDPI(framework));
-	if_fail_fe(::gpk::guiUpdate(gui, framework.RootWindow.Size));
+	if_fail_fe(::gpk::guiUpdateMetrics(gui, framework.RootWindow.Size, false));
 	rtrn 0;
 }
 

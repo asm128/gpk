@@ -24,7 +24,7 @@ gpk::err_t			s3d::serialClose		(::s3d::SSerial & serial) {
 }
 
 gpk::err_t			s3d::serialWrite		(::s3d::SSerial & serial, ::gpk::vcu0_t data) {
-	if_true_vw(0, (data.size() == 0, "%s", "Zero bytes specified to be written");
+	if_zero_vw(0, data.size());
 	if_true_fef(false == serial.Connected, "%s", "Serial port is closed.");
 	if_true_fef(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
 #if !defined(GPK_WINDOWS)
@@ -63,7 +63,7 @@ gpk::err_t			s3d::serialWrite		(::s3d::SSerial & serial, ::gpk::vcu0_t data) {
 }
 
 gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ::gpk::u2_t count, ::gpk::u2_t timeout) {
-	if_zero_vw(0, count == 0);
+	if_zero_vw(0, count);
 	if_true_fef(false == serial.Connected, "%s", "Serial port is closed.");
 	if_true_fef(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
 	::gpk::u2_t					totalBytesRead		= 0;
@@ -103,7 +103,7 @@ gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ::
 }
 
 gpk::err_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, ::gpk::u2_t maxCount, ::gpk::u2_t timeout) {
-	if_true_vw(0, (maxCount == 0, "%s", "Zero bytes specified to be read");
+	if_zero_vw(0, maxCount);
 	if_true_fef(false == serial.Connected, "%s", "Serial port is closed.");
 	if_true_fef(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
 	::gpk::u2_t					totalBytesRead			= 0;
@@ -185,7 +185,7 @@ gpk::err_t			s3d::serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName,
 	if_fail_fef(tcsetattr(fd, TCSANOW, &toptions), "%s", "Couldn't set term attributes");
 	serial.Handle			= fd;
 #else
-	gpk_safe_closehandle(serial.Handle);
+	gpk::safe_closehandle(serial.Handle);
 	DWORD								dwDesiredAccess			= GENERIC_READ | GENERIC_WRITE;
 	serial.Handle					= CreateFileA(portName.begin(), dwDesiredAccess, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (serial.Handle == INVALID_HANDLE_VALUE) {

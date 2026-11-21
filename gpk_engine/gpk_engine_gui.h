@@ -4,16 +4,16 @@
 #ifndef GPK_ENGINE_GUI_H_23627
 #define GPK_ENGINE_GUI_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
-	GDEFINE_ENUM_TYPE(GUI_ENTITY, ::gpk::u0_t);
+	GDEFINE_ENUM_TYPE(GUI_ENTITY, u0_t);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Label	, 0);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Button	, 1);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Menu		, 2);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Viewport	, 3);
 	GDEFINE_ENUM_VALUE(GUI_ENTITY, Palette	, 4);
 
-	GDEFINE_ENUM_TYPE(UI3D_CONTROL_AREA, ::gpk::u0_t);
+	GDEFINE_ENUM_TYPE(UI3D_CONTROL_AREA, u0_t);
 	GDEFINE_ENUM_VALUE(UI3D_CONTROL_AREA, Total		, 0);
 	GDEFINE_ENUM_VALUE(UI3D_CONTROL_AREA, Client	, 1);
 	GDEFINE_ENUM_VALUE(UI3D_CONTROL_AREA, Left		, 0x80 + ::gpk::ALIGN_LEFT		);
@@ -31,9 +31,9 @@ namespace gpk
 		::gpk::SGUI			GUI				= {};
 		::gpk::aeid			Entities		= {};
 		
-		inline				SEngineGUI		()	{ Reset(); }
+		inln				SEngineGUI		()	{ Reset(); }
 
-		gpk::err_t		Reset			()	{
+		gpk::err_t 	Reset			()	{
 			Engine				= {};
 			GUI					= {};
 			Entities.clear();
@@ -58,7 +58,7 @@ namespace gpk
 		::gpk::eid_t	CreateMenu		()	{ return 0; }
 		::gpk::eid_t	CreateViewport	()	{ return 0; }
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_GUI_H_23627
 

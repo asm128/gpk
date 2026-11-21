@@ -192,9 +192,9 @@ static	gpk::err_t	expressionReaderProcessDocCharacter		(::gpk::SExpressionReader
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_OR		== stateReader.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_EQUALS	== stateReader.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT		== stateReader.CurrentElement->Type
-		 )
+			 ) {
 			if_fail_fef(::expressionReaderOpenLevel(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY, stateReader.IndexCurrentChar), "Failed to open key at index %i", stateReader.IndexCurrentChar);
-		else if(0x20 > stateReader.CharCurrent || 0x7F < stateReader.CharCurrent)
+		} else if(0x20 > stateReader.CharCurrent || 0x7F < stateReader.CharCurrent)
 		 	error_printf("Invalid character: %c. Only ascii printable characters are allowed in expressions.", stateReader.CharCurrent);
 		break;
 	case '/':

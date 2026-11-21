@@ -1,11 +1,16 @@
 #include "gpk_args.h"
 #include "gpk_enum.h"
+#include "gpk_keyval_view.h"
 
-gpk::err_t			gpk::viewsFromEnvp(gpk::aobj<vcst_t> & outputViews, char * envp[]) {
+gpk::err_t			gpk::viewsFromEnvp(gpk::aobj<kv<vcst_t>> & outputViews, char * envp[]) {
 	if_null_fe(envp);
 	u2_t iVar = 0;
 	for (; envp[iVar]; ++iVar) {
-		if_fail_fe(outputViews.push_back({envp[iVar], (u2_t)-1}));
+		vcst_t entry = {envp[iVar], (u2_t)-1};
+		kv<vcst_t> keyVal = {};
+		if(-1 == keyval_split(entry, keyVal))
+			keyVal.Key = entry;
+		if_fail_fe(outputViews.push_back(keyVal));
 	}
 	rtrn iVar;
 }
@@ -61,14 +66,15 @@ sttc gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::gp
 
 
 gpk::err_t		gpk::argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp) {
-	gpk::aobj<gpk::vcst_t> arguments, envvars;											
+	gpk::aobj<gpk::vcst_t> arguments;
+	gpk::aobj<gpk::kv<gpk::vcst_t>> envvars;
 	if_fail_fe(viewsFromArgv(arguments, argc, argv));
 	if(envp)
 		if_fail_fe(viewsFromEnvp(envvars, envp));
 	return argsParse(output, arguments, envvars);
 }
 
-gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_t> argv, ::gpk::view<vcst_t> envp) {
+gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_t> argv, ::gpk::view<cnst kv<vcst_t>> envp) {
 	output.Environment	= envp;
 	if_zero_vw(0, argv.size()); // Exit early if no argv: nothing to do
 

@@ -15,6 +15,7 @@ static	gpk::err_t	controlTextDraw		(::gpk::SGUI & gui, ::gpk::s2_t iControl, ::g
 		const ::gpk::astu2_t<::gpk::UI_CONTROL_AREA_COUNT>	
 									& colorCombo		= theme.ColorCombos
 			[ bDisabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+			: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
 			: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
 			: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
 			: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
@@ -27,6 +28,7 @@ static	gpk::err_t	controlTextDraw		(::gpk::SGUI & gui, ::gpk::s2_t iControl, ::g
 		const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>	& colorCombo											=
 			gui.Colors->Palettes[controlDraw.Palettes
 				[ bDisabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+				: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
 				: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
 				: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
 				: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
@@ -60,6 +62,7 @@ static	gpk::err_t	controlTextDraw		(::gpk::SGUI & gui, ::gpk::s2_t iControl, ::g
 }
 static	::gpk::GUI_CONTROL_PALETTE	paletteIndexFromState	(bool disabled, const ::gpk::SControlState & controlState)					{
 	return disabled					? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+		: controlState.IsDragging() ? ::gpk::GUI_CONTROL_PALETTE_DRAGGING
 		: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
 		: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
 		: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
@@ -150,7 +153,8 @@ static	gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl
 	}
 
 	const ::gpk::SControlImage	& controlImage			= gui.Controls.Images[iControl];
-	if(controlImage.Image.metrics().x && controlImage.Image.metrics().y) {
+	const ::gpk::g8bgra & image = gui.Controls.ImageViews[iControl];
+	if(image.metrics().x && image.metrics().y) {
 		const ::gpk::SControlState	& controlState			= gui.Controls.States[iControl];
 		//::gpk::rect2<::gpk::s2_t>	rectImage						=
 		//	{ controlMetrics.Client.Global.Offset
@@ -160,7 +164,7 @@ static	gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl
 		//			, ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))
 		//			}
 		//	};
-		::gpk::rect2s1_t				rectImage				= {{}, controlImage.Image.metrics().s1()};
+		::gpk::rect2s1_t				rectImage				= {{}, image.metrics().s1()};
 		::gpk::realignRectangle(controlMetrics.Client.Global.Size, rectImage, rectImage, (::gpk::ALIGN)controlImage.ImageAlign);
 		rectImage.Offset		+= controlMetrics.Client.Global.Offset;
 		rectImage.Size.x		= ::gpk::min(rectImage.Limit().x, controlMetrics.Client.Global.Limit().x) - rectImage.Offset.x;
@@ -168,11 +172,12 @@ static	gpk::err_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl
 		if(controlState.IsHovered())
 			rectImage.Offset		+= {1, 1};
 		if(0 == controlImage.ImageInvertY)
-			::gpk::grid_copy_blend(target, controlImage.Image, rectImage, controlImage.ImageOffset);
+			::gpk::grid_copy_blend(target, image, rectImage, controlImage.ImageOffset);
 		else {
-			::gpk::img8bgra				& inverted				= gui.Controls.Images[iControl].Temp.Color;
-			if_fail_fe(gui.Controls.Images[iControl].Temp.resize(controlImage.Image.metrics()));
-			::gpk::grid_mirror_y(inverted.View, controlImage.Image);
+			::gpk::rtbgra8d32 & imageTemp = gui.Controls.ImageTemps[iControl];
+			::gpk::img8bgra				& inverted				= imageTemp.Color;
+			if_fail_fe(imageTemp.resize(image.metrics()));
+			::gpk::grid_mirror_y(inverted.View, image);
 			::gpk::grid_copy_blend(target, inverted.View, rectImage, controlImage.ImageOffset);
 		}
 	}

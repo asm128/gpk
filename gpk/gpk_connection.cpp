@@ -134,12 +134,12 @@ gpk::err_t			payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::apobj<
 		payloadHeader.Size					= messageToSend.Payload.size();
 		if(messageToSend.Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE) {
 			payloadHeader.MessageId				= messageToSend.Time;
-			cef_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (sc_c*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			if_true_cef((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (sc_c*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			if_fail_fe(messageCacheSent.push_back(pMessageToSend));
 			info_printf("Sent response to message id: %llx", payloadHeader.MessageId);
 		}
 		else {
-			cef_if(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
+			if_true_cef(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
 			::gpk::view_stream<::gpk::u0_t>				sendStream;
 			::gpk::au0_t					ardellEncoded;
 			payloadHeader.MessageId				= ::hashFromTime(messageToSend.Time);
@@ -170,18 +170,18 @@ gpk::err_t			payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::apobj<
 
 			if(0 != payloadHeader.Command.Encrypted) {
 				info_printf("Original packet size: %u. Final size: %u.", messageToSend.Payload.size(), ardellEncoded.size());
-				if_fail_fe(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()));
+				if_fail_fe(sendStream.write_pod(::gpk::vcu0_t{ardellEncoded.begin(), ardellEncoded.size()}));
 			}
 			else {
 				if(0 == payloadHeader.Command.Compressed)
-					if_fail_fe(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()));
+					if_fail_fe(sendStream.write_pod(::gpk::vcu0_t{messageToSend.Payload.begin(), messageToSend.Payload.size()}));
 				else {
 					info_printf("Original packet size: %u. Compressed size: %u.", messageToSend.Payload.size(), compressed.size());
-					if_fail_fe(sendStream.write_pod(compressed.begin(), compressed.size()));
+					if_fail_fe(sendStream.write_pod(::gpk::vcu0_t{compressed.begin(), compressed.size()}));
 				}
 			}
 
-			cef_if((int)sendStream.CursorPosition != ::sendto(client.Socket, (const sc_t*)sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			if_true_cef((int)sendStream.CursorPosition != ::sendto(client.Socket, (const sc_t*)sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			verbose_printf("%u bytes sent.", sendStream.CursorPosition);
 			{
 				if_fail_fe(client.Queue.Sent.push_back(pMessageToSend));
@@ -237,7 +237,7 @@ gpk::err_t			gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::
 		if(messageToSend.Command.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 			payloadsToSend.push_back(pMessageToSend);
 		else {
-			cef_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const sc_t*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			if_true_cef((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const sc_t*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			//pMessageToSend->Time										= currentTime;
 			if_fail_fe(client.Queue.Sent.push_back(pMessageToSend));
 			if_fail_fe(messageCacheSent.push_back(pMessageToSend));
@@ -442,7 +442,7 @@ static	gpk::err_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & head
 			messageReceivedInt->Command.Encrypted	= 0;
 			messageReceivedInt->Command.Compressed	= 0;
 			if_fail_fe(messageReceivedInt->Payload.resize(sizes[iSizes]));
-			if_fail_fef(payload.read_pod(messageReceivedInt->Payload.begin(), messageReceivedInt->Payload.size()), "Corrupt payload data. Sizes don't match. Payload size: %u.", payload.size());
+			if_fail_fef(payload.read_pod(::gpk::view{messageReceivedInt->Payload.begin(), messageReceivedInt->Payload.size()}), "Corrupt payload data. Sizes don't match. Payload size: %u.", payload.size());
 			if_fail_fe(tempQueue.push_back(messageReceivedInt));
 		}
 		{

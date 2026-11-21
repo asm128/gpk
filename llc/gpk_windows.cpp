@@ -30,7 +30,7 @@ gpk::err_t	gpk::wcstombs				(string & output, view<cnst wchar_t> input)	{
 	gpk::string			converted;
 	if_fail_fe(converted.resize(sizeNeededForMultiByte));
 	WideCharToMultiByte(CP_UTF8, 0, input.begin(), input.size(), &converted[0], int(converted.size()), nullptr, nullptr);
-	if_fail_fe(output.append(converted));
+	if_fail_fe(append_strings(output, converted));
 	return sizeNeededForMultiByte;
 }
 

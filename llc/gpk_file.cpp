@@ -128,7 +128,7 @@ sttc gpk::err_t fileSplitSmall(gpk::vcst_t fileNameSrc, u2_c sizePartMax) {
 		if_fail_fe(gpk::sprintf_s(fileNameDst, "%.*s.%.2u", GPK_VIEW_ARGS(fileNameSrc), iPart));
 		info_printf("Creating part %u: '%s'.", iPart, fileNameDst);
 		u2_c		countBytes = gpk::min(sizePartMax, fileInMemory.size() - offsetPart);
-		if_fail_fe(gpk::fileFromMemory(fileNameDst, gpk::vcs0_t{fileInMemory.begin() + offsetPart, countBytes}));
+		if_fail_fe(gpk::fileFromMemory(fileNameDst, gpk::vcu0_t{(cnst u0_t*)fileInMemory.begin() + offsetPart, countBytes}));
 	}
 	return (gpk::err_t)countParts;
 }

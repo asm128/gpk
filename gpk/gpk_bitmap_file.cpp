@@ -2,6 +2,7 @@
 #include "gpk_bitmap_file.h"
 #include "gpk_png.h"
 #include "gpk_file.h"
+#include "gpk_string_compose.h"
 
 using ::gpk::sc_t;
 
@@ -67,7 +68,7 @@ static	gpk::err_t	LoadBitmapFromBMPFile		(const ::gpk::vcst_t & szFileName, ::gp
 
 	::gpk::apod<sc_t>			filename					= szFileName;
 	filename.resize(filename.size() - 3);
-	filename.append_string("png");
+	::gpk::append_strings(filename, "png");
 
 	::gpk::vcst_t					pngfn						= {filename};
 	::gpk::au0_t					filebytes;
@@ -156,12 +157,12 @@ struct SHeaderInfoBMP {
 // Currently supporting only 24-bit bitmaps
 gpk::err_t			gpk::bmpFileLoad			(const ::gpk::s0_t * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
 	SHeaderFileBMP				& fileHeader				= *(SHeaderFileBMP*)*source;
-	if_true_fef(0 != memcmp(fileHeader.Type, "BM", 2), "Invalid magic number for BMP file.");
+	if_true_fef(0 != memcmp(fileHeader.Type, "BM", 2), "%s", "Invalid magic number for BMP file.");
 	SHeaderInfoBMP				& infoHeader				= *(SHeaderInfoBMP*)*(source + sizeof(SHeaderFileBMP));
 	if_true_fef(infoHeader.Bpp != 24
 		&& infoHeader.Bpp != 32
 		&& infoHeader.Bpp != 8
-		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
+		, "%s", "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
 	::gpk::u2_t					nPixelCount					= infoHeader.Metrics.x * infoHeader.Metrics.y;
 	if_true_fef(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
 	out_Colors.resize(nPixelCount);
@@ -207,22 +208,22 @@ gpk::err_t			gpk::bmpFileLoad			(const ::gpk::s0_t * source, ::gpk::a8bgra & out
 gpk::err_t			gpk::bmpFileLoad	(FILE * source, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra & out_ImageView)					{
 	::SHeaderFileBMP			fileHeader			= {};
 	::SHeaderInfoBMP			infoHeader			= {};
-	if_true_fef(fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source) != sizeof(::SHeaderFileBMP), "Failed to read file! File corrupt?");
-	if_true_fef(fread(&infoHeader, 1, sizeof(::SHeaderInfoBMP), source) != sizeof(::SHeaderInfoBMP), "Failed to read file! File corrupt?");
+	if_true_fef(fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source) != sizeof(::SHeaderFileBMP), "%s", "Failed to read file! File corrupt?");
+	if_true_fef(fread(&infoHeader, 1, sizeof(::SHeaderInfoBMP), source) != sizeof(::SHeaderInfoBMP), "%s", "Failed to read file! File corrupt?");
 	::gpk::u2_t					nPixelCount			= infoHeader.Metrics.x * infoHeader.Metrics.y;
 	if_true_fef(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
-	if_true_fef(infoHeader.Compression != BI_RGB, "Unsupported bmp compression!");
+	if_true_fef(infoHeader.Compression != BI_RGB, "%s", "Unsupported bmp compression!");
 	if_true_fef(infoHeader.Bpp != 24
 		&& infoHeader.Bpp != 32
 		&& infoHeader.Bpp != 8
 		&& infoHeader.Bpp != 1
-		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
+		, "%s", "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
 	::gpk::u2_t					pixelSize			= infoHeader.Bpp == 1 ? 1 : infoHeader.Bpp / 8;
 	::gpk::au0_t				srcBytes			= {};
-	if_fail_fef(srcBytes.resize(nPixelCount * pixelSize), "Out of memory?");
+	if_fail_fef(srcBytes.resize(nPixelCount * pixelSize), "%s", "Out of memory?");
 	size_t						readResult			= fread(&srcBytes[0], pixelSize, nPixelCount, source);
-	if_true_fef(readResult != (size_t)nPixelCount, "Failed to read file! File corrupt?");
-	if_fail_fef(out_Colors.resize(nPixelCount), "Out of memory?");
+	if_true_fef(readResult != (size_t)nPixelCount, "%s", "Failed to read file! File corrupt?");
+	if_fail_fef(out_Colors.resize(nPixelCount), "%s", "Out of memory?");
 	bool						b32Bit				= false;
 	::gpk::u2_t					colorSize			= 0;
 	::gpk::s2_t						x, y, linearIndexSrc;

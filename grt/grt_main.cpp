@@ -1,8 +1,9 @@
-#include "gpk_runtime_module.h"
+#include "gpk_framework_module.h"
 #include "gpk_type_registry.h"
 #include "gpk_sync.h"
 #include "gpk_timer.h"
-#include "gpk_process.h"
+#include "gpk_app_impl.h"
+#include "gpk_string_compose.h"
 
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
@@ -11,39 +12,42 @@
 #endif
 #include <cstdlib>		// for EXIT_SUCCESS
 
+using nmsp gpk;
+
+
 struct SRuntimeState {
 	::gpk::refcount_t		RenderThreadUsers	= 0; 
 	::gpk::SRuntimeModule	* MainModule		= 0; 
-	bool					Running				= false;
-	bool					RequestedExit		= false; 
-	bool					Exit				= false; 
+	b8_t					Running				= false;
+	b8_t					RequestedExit		= false; 
+	b8_t					Exit				= false; 
 };
 
-static	void			threadRender		(void* pRuntimeState)												{
+sttc	void			threadRender		(void* pRuntimeState)												{
 	::SRuntimeState				& runtimeState		= *(::SRuntimeState*)pRuntimeState;
 	::gpk::SRuntimeModule		* runtimeModule		= runtimeState.MainModule;
-	re_if(0 == runtimeModule, "Main module is null!");
+	if_null_re(runtimeModule);
 	gpk_sync_increment(runtimeState.RenderThreadUsers);
-	::gpk::s2_t						result				= 0;
+	s2_t						result				= 0;
 	while(result = gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1) - 1 && result != -1) {
 		runtimeModule->Render(runtimeModule->Application);
 	}
 	info_printf("Render thread done.");
 }
 
-static	int				threadRenderStart	(::SRuntimeState& runtimeState)										{
+sttc	int				threadRenderStart	(::SRuntimeState& runtimeState)										{
 	_beginthread(threadRender, 0, &runtimeState);
 	return 0;
 }
 
-static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
+sttc	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
 #if defined(GPK_WINDOWS)
-	gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
+	gpk::err_t 			updateResult		= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 #else
-	gpk::err_t				updateResult		= mainModule.Update(mainModule.Application, false);
+	gpk::err_t 			updateResult		= mainModule.Update(mainModule.Application, false);
 #endif
 	if(1 == updateResult || ::gpk::failed(updateResult)) {
-		is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);
+		if_true_i(::gpk::APPLICATION_STATE_EXIT == updateResult);
 		if_true_e(::gpk::failed(updateResult));
 	}
 	else {
@@ -51,20 +55,15 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 		if_fail_fef(::threadRenderStart(runtimeState), "%s", "Unknown error");
 		info_printf("%s", "Application instance initialized successfully. Executing main loop...");
 		while(true) {
-#if defined(GPK_WINDOWS)
-			updateResult			= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
-#else
-			updateResult			= mainModule.Update(mainModule.Application, false);
-#endif
-			break_ginfo_if(1 == updateResult, "Application requested termination.");
-			break_gerror_if(::gpk::failed(updateResult), "update() returned error.");
+			if_fail_bef(updateResult = mainModule.Update(mainModule.Application, false), "updateResult:%i", updateResult);
+			if_true_bi(gpk::APPLICATION_STATE_EXIT == updateResult);
 			//if_true_ef(mainModule.Render(app), "Why would this ever happen?");
 		}
 		gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done
 	}
 	{
 		::gpk::STimer				timer;
-		double						elapsedTime						= 0;
+		f3_t						elapsedTime						= 0;
 		while(-1 != gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, -1, 0)) {		// Wait until the render thread is closed.
 			if(elapsedTime > 5.0f)
 				break;
@@ -76,75 +75,36 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 	return updateResult;
 }
 
-static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
-	globalRuntimeValues;
-#if defined(GPK_WINDOWS)
-	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-#endif
+sttc	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 	SRuntimeState					runtimeState					= {};
 	{
-		::gpk::vcst_t						fileName						= "gme";
-		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine.size() > 1)
-			fileName					= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1], (::gpk::u2_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1])};
-		char							mainModuleName	[512]			= {};
-		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
+		::gpk::vcst_t					fileName						= "gme";
+		if(globalRuntimeValues.EntryPointArgs.Positionals.size())
+			fileName					= {globalRuntimeValues.EntryPointArgs.Positionals[0], (u2_t )strlen(globalRuntimeValues.EntryPointArgs.Positionals[0])};
+		string							mainModuleName					= {};
+		::gpk::vcst_t					extension						= (GPK_MODULE_EXTENSION);
+		if_fail_fe(::gpk::append_strings(mainModuleName, fileName, '.', extension));
 		::gpk::SRuntimeModule			mainModule						= {};
-		if_fail_fef(gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
-		info_printf("Created main module: '%s'.", mainModuleName);
+		if_fail_fef(::gpk::frameworkModuleLoad(mainModule, mainModuleName), "Failed to create main module. %.*s.", GPK_VIEW_ARGS(mainModuleName));
+		info_printf("Created main module: '%.*s'.", GPK_VIEW_ARGS(mainModuleName));
 		void							* app;
-		if_fail_fef(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
+		if_fail_fef(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %.*s.", GPK_VIEW_ARGS(mainModuleName));
 		mainModule.Application		= app;
 		info_printf("%s", "Initializing application instance.");
 		if(::gpk::failed(mainModule.Setup(app))) {
 			error_printf("%s", "Setup() Failed!");
-			if_fail_fef(mainModule.Delete(&app), "Failed to create main module. %s.");
+			if_fail_fef(mainModule.Delete(&app), "Failed to create main module.%.*s.", GPK_VIEW_ARGS(mainModuleName));
 			return -1;
 		}
 		runtimeState.MainModule		= &mainModule;
+
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
-		if_true_e(::gpk::failed(mainModule.Cleanup(app)));
+		if_fail_e(mainModule.Cleanup(app));
 		info_printf("%s", "Application instance destroyed.");
-		if_fail_fef(mainModule.Delete(&app), "");
+		if_fail_fe(mainModule.Delete(&app));
 	}
 	return 0;
 }
 
-#if defined(GPK_WINDOWS)
-int WINAPI					WinMain
-	( _In_		HINSTANCE		hInstance
-	, _In_opt_	HINSTANCE		hPrevInstance
-	, _In_		LPSTR			lpCmdLine
-	, _In_		INT				nShowCmd
-	) {
-	const ::gpk::u2_t					argc							= __argc;
-	const char						** argv							= (const char**)__argv;
-	const char						** envp							= (const char**)_environ;
-	if_true_fef(65535 < argc, "Invalid parameter count: %u.", argc);
-	::gpk::STypeRegistry			& typeRegistry						= ::gpk::STypeRegistry::GetGlobalInstance();
-	for(::gpk::u2_t iType = 0; iType < typeRegistry.Names.size(); ++iType)
-		info_printf("Type at index %u: '%s'.", iType, typeRegistry.Names[iType].begin());
-
-	::gpk::SRuntimeValues			runtimeValues					= {};
-	runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance		= hInstance		;
-	runtimeValues.PlatformDetail.EntryPointArgsWin.hPrevInstance	= hPrevInstance	;
-	runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine		= lpCmdLine		;
-	runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd			= nShowCmd		;
-	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {argv, argc};
-	(void)envp;
-	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
-	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;
-}
-#endif // defined(GPK_WINDOWS)
-
-int							main		(int argc, char *argv[], char *envp[])			{
-	if_true_fef(65535 < argc, "Invalid parameter count: %u.", argc);
-	::gpk::SRuntimeValues			runtimeValues					= {};
-#if defined(GPK_WINDOWS)
-	runtimeValues.PlatformDetail.EntryPointArgsWin					= {GetModuleHandle(NULL), 0, 0, SW_SHOW};
-#endif // defined(GPK_WINDOWS)
-	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {(const char**)argv, (::gpk::u2_t)argc};
-	(void)envp;
-	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
-	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;
-}
+GPK_OS_ENTRY_POINT(grt_Main);

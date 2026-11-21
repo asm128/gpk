@@ -108,17 +108,17 @@ gpk::err_t			gpk::tcpipAddressFromSockaddr		(const sockaddr_in & sockaddr_ipv4, 
 
 gpk::err_t			gpk::tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr_ipv4, ::gpk::u0_t * a1, ::gpk::u0_t * a2, ::gpk::u0_t * a3, ::gpk::u0_t * a4, ::gpk::u1_t * port)	{
 #if defined(GPK_WINDOWS)
-	gpk_safe_assign(a1, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
-	gpk_safe_assign(a2, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
-	gpk_safe_assign(a3, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
-	gpk_safe_assign(a4, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
+	::gpk::safe_assign(a1, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
+	::gpk::safe_assign(a2, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
+	::gpk::safe_assign(a3, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
+	::gpk::safe_assign(a4, (::gpk::u0_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
 #else
-	gpk_safe_assign(a1, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 0));
-	gpk_safe_assign(a2, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 1));
-	gpk_safe_assign(a3, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 2));
-	gpk_safe_assign(a4, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 3));
+	::gpk::safe_assign(a1, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 0));
+	::gpk::safe_assign(a2, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 1));
+	::gpk::safe_assign(a3, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 2));
+	::gpk::safe_assign(a4, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 3));
 #endif
-	gpk_safe_assign(port, (::gpk::u1_t)ntohs(sockaddr_ipv4.sin_port));
+	::gpk::safe_assign(port, (::gpk::u1_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
 }
 gpk::err_t			gpk::tcpipAddressToSockaddr		(::gpk::u2_t address, ::gpk::u1_t port, sockaddr_in & sockaddr_ipv4) {
@@ -173,11 +173,11 @@ gpk::err_t			gpk::tcpipAddress	(::gpk::u1_t portRequested, ::gpk::u2_t adapterIn
 gpk::err_t			gpk::tcpipAddress	(const sc_t* szHostName, ::gpk::u1_t portRequested, ::gpk::u2_t adapterIndex, TRANSPORT_PROTOCOL mode, ::gpk::u0_t* a1, ::gpk::u0_t* a2, ::gpk::u0_t* a3, ::gpk::u0_t * a4, ::gpk::u1_t * port)				{
 	::gpk::SIPv4End 		addr; 
 	if_fail_fe(gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, addr.IP, addr.Port));
-	gpk_safe_assign(a1, addr[0]);
-	gpk_safe_assign(a2, addr[1]);
-	gpk_safe_assign(a3, addr[2]);
-	gpk_safe_assign(a4, addr[3]);	
-	gpk_safe_assign(port, addr.Port);		
+	::gpk::safe_assign(a1, addr[0]);
+	::gpk::safe_assign(a2, addr[1]);
+	::gpk::safe_assign(a3, addr[2]);
+	::gpk::safe_assign(a4, addr[3]);	
+	::gpk::safe_assign(port, addr.Port);		
 	return 0;
 }
 

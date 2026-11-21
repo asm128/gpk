@@ -7,6 +7,9 @@
 
 namespace gpk
 {
+	stxp vcsc_t VCC_NULL = "null";
+	stxp vcsc_t VCC_FALSE = "false";
+	stxp vcsc_t VCC_TRUE = "true";
 #pragma pack(push, 1)
 #ifdef GPK_ARDUINO
 	tydf  s1_t json_id_t;
