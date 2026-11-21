@@ -300,7 +300,7 @@ gpk::err_t			gpk::jsonExpressionResolve				(const ::gpk::SExpressionReader & rea
 }
 
 gpk::err_t			gpk::jsonStringFormat					(::gpk::vcst_c & format, const ::gpk::SJSONReader& inputJSON, ::gpk::u2_t indexNodeJSON, ::gpk::apod<sc_t>& output)					{
-	::gpk::apod<::gpk::SStripLiteralType>	typesLiteral				= {};
+	::gpk::apod<::gpk::SStripLiteralToken>	typesLiteral				= {};
 	{
 		::gpk::SStripLiteralState	stateLiteralStripper					= {};
 		if_fail_fe(gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format));	// strip root literals

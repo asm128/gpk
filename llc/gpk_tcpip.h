@@ -38,7 +38,7 @@ namespace gpk
 	}
 
 			err_t	tcpipAddress		(vcst_t strAddress, vcst_t strPort, SIPv4End & ipv4end);
-	
+#pragma pack(pop)
 } // namespace
 
 #endif // GPK_TCPIP_H_23627

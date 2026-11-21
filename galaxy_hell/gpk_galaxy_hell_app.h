@@ -6,6 +6,7 @@
 #include "gpk_circle.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_chrono.h"
+#include "gpk_mutex.h"
 
 namespace ghg
 {
@@ -103,11 +104,11 @@ namespace ghg
 				s1_t					SetValue				(float currentValue, u2_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
 	};
 
-			gpk::err_t			gaugeBuildRadial		(::ghg::SUIRadialGauge & gauge, const ::gpk::circlef2_t & gaugeMetrics, s1_t resolution, s1_t width);
-			gpk::err_t			gaugeImageUpdate		(::ghg::SUIRadialGauge & gauge, ::gpk::g8bgra target, ::gpk::rgbaf colorMin = ::ghg::SUIRadialGauge::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::ghg::SUIRadialGauge::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::ghg::SUIRadialGauge::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::ghg::SUIRadialGauge::COLOR_BKG_DEFAULT, bool radialColor = false);
-	inline	gpk::err_t			gaugeImageUpdate		(::ghg::SUIRadialGauge & gauge, ::gpk::rgbaf colorMin = ::ghg::SUIRadialGauge::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::ghg::SUIRadialGauge::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::ghg::SUIRadialGauge::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::ghg::SUIRadialGauge::COLOR_BKG_DEFAULT, bool radialColor = false) {
+			gpk::err_t			gaugeBuildRadial		(SUIRadialGauge & gauge, const ::gpk::circlef2_t & gaugeMetrics, s1_t resolution, s1_t width);
+			gpk::err_t			gaugeImageUpdate		(SUIRadialGauge & gauge, ::gpk::g8bgra target, ::gpk::rgbaf colorMin = SUIRadialGauge::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = SUIRadialGauge::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = SUIRadialGauge::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = SUIRadialGauge::COLOR_BKG_DEFAULT, bool radialColor = false);
+	inline	gpk::err_t			gaugeImageUpdate		(SUIRadialGauge & gauge, ::gpk::rgbaf colorMin = SUIRadialGauge::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = SUIRadialGauge::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = SUIRadialGauge::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = SUIRadialGauge::COLOR_BKG_DEFAULT, bool radialColor = false) {
 		//gauge.Image.Texels.fill({0, 0, 0, 0});
-		return ::ghg::gaugeImageUpdate(gauge, gauge.Image, colorMin, colorMid, colorMax, colorEmpty, radialColor);
+		return gaugeImageUpdate(gauge, gauge.Image, colorMin, colorMid, colorMax, colorEmpty, radialColor);
 	}
 
 	struct SUIPlayShipPartViewport {
@@ -117,9 +118,9 @@ namespace ghg
 		SUIRadialGauge					GaugeCooldown	;
 		SUIRadialGauge					GaugeDelay		;
 		::gpk::m4f2_t					MatrixProjection;
-		::ghg::TRenderTarget			RenderTargetOrbiter	;
-		::ghg::TRenderTarget			RenderTargetWeaponLoad	;
-		::ghg::TRenderTarget			RenderTargetWeaponType	;
+		TRenderTarget			RenderTargetOrbiter	;
+		TRenderTarget			RenderTargetWeaponLoad	;
+		TRenderTarget			RenderTargetWeaponType	;
 	};
 
 
@@ -131,15 +132,15 @@ namespace ghg
 	GDEFINE_ENUM_VALUE(SHIP_CONTROLLER, Turbo	, 0x05);
 
 	struct SUIPlayer {
-		::gpk::apobj<::ghg::SUIPlayShipPartViewport>	
-								ModuleViewports			= {};
-		::gpk::SDialog			DialogPlay				= {};
-		::gpk::SDialog			DialogHome				= {};
+		::gpk::apobj<SUIPlayShipPartViewport>	
+							ModuleViewports			= {};
+		::gpk::SDialog		DialogPlay				= {};
+		::gpk::SDialog		DialogHome				= {};
 
-		::gpk::acid				ControlsDialogPlay		= {};
-		::gpk::acid				ControlsDialogHome		= {};
+		::gpk::acid			ControlsDialogPlay		= {};
+		::gpk::acid			ControlsDialogHome		= {};
 
-		::gpk::SInputBox		InputBox				= {};
+		::gpk::SInputBox	InputBox				= {};
 	
 		::gpk::astsc_t<128>	TextScore				= {};
 		::gpk::astsc_t<128>	TextHits				= {};
@@ -154,8 +155,8 @@ namespace ghg
 	};
 
 	struct SUIPlay {
-		::gpk::aobj<::ghg::SUIPlayer>	PlayerUI				= {};
-		::ghg::SGalaxyHellDrawCache		DrawCache				= {};
+		::gpk::aobj<SUIPlayer>	PlayerUI				= {};
+		SGalaxyHellDrawCache		DrawCache				= {};
 
 		::gpk::astatic<sc_t, 128>		TextLevel				= {};
 		::gpk::astatic<sc_t, 128>		TextTimeStage			= {};
@@ -204,16 +205,16 @@ namespace ghg
 		PLAYER_TYPE			Type;
 		::gpk::bgra			Color;
 		s2_t				ShipSelected;
-		::ghg::SPlayerScore	Score;
+		SPlayerScore	Score;
 	};
 #pragma pack(pop)
 
 	struct SPlayer {
 		::gpk::vcst_t							Name			= {};
-		::ghg::SPlayerState						State			= {};
+		SPlayerState						State			= {};
 		::gpk::apod<::gpk::SWeapon>				Weapons			= {};
 		::gpk::apod<::gpk::SSpaceshipOrbiter>	Orbiters		= {};
-		::gpk::aobj<::ghg::SPlayerShip>			Ships			= {};
+		::gpk::aobj<SPlayerShip>			Ships			= {};
 
 		gpk::err_t					Save			(const ::gpk::vcsc_t & filename) const {
 			::gpk::au0_t					serialized;
@@ -295,33 +296,33 @@ namespace ghg
 	struct SGalaxyHellApp {
 		::gpk::apobj<TRenderTarget>			RenderTargetPool			= {};
 		::gpk::apobj<TRenderTarget>			RenderTargetQueue			= {};
-		::std::mutex						RenderTargetLockPool		= {};
-		::std::mutex						RenderTargetLockQueue		= {};
-		vltl	u3_t					CurrentRenderTarget			= 0;
+		::gpk::mutex						RenderTargetLockPool		= {};
+		::gpk::mutex						RenderTargetLockQueue		= {};
+		vltl	u3_t						CurrentRenderTarget			= 0;
 		s2_t								PlayerSelected				= 0;
 
 		bool								Exit						= false;
-		::gpk::astatic<::gpk::SDialog, ::ghg::APP_STATE_COUNT>	
+		::gpk::asttc<::gpk::SDialog, APP_STATE_COUNT>	
 											DialogPerState				= {};
 
-		::gpk::astatic<::gpk::acid, APP_STATE_COUNT>	
+		::gpk::asttc<::gpk::acid, APP_STATE_COUNT>	
 											DialogControls				= {}; 	
 
 		::gpk::SVirtualKeyboard				VirtualKeyboard				= {};
-		::ghg::SUIPlay						UIPlay;
+		SUIPlay								UIPlay;
 
 		::gpk::SDialog						DialogDesktop				= {};
-		::gpk::aobj<::ghg::SPlayer>			Players						= {};
+		::gpk::aobj<SPlayer>				Players						= {};
 		::gpk::pnco<::gpk::SDialogTuner<u0_t>>	TunerPlayerCount;
 		::gpk::acid							DesktopControls			= {}; 	
 
-		::ghg::SGalaxyHell						Game;
-		::gpk::aobj<::ghg::SUserCredentials>	UserCredentials				= {};
+		SGalaxyHell							Game;
+		::gpk::aobj<SUserCredentials>		UserCredentials				= {};
 
 		::gpk::pobj<::gpk::SDialogViewport>	Inputbox;
-		::gpk::apod<sc_t>					InputboxText;
+		::gpk::string						InputboxText;
 
-		::gpk::aobj<::gpk::apod<sc_t>>	FileNames					= {};
+		::gpk::aobj<::gpk::string>	FileNames					= {};
 		::gpk::vcst_t						SavegameFolder				= ".";
 		::gpk::vcst_t						ExtensionSaveAuto			= ".auto.ghz";
 		::gpk::vcst_t						ExtensionSaveStage			= ".stage.ghz";
@@ -333,9 +334,9 @@ namespace ghg
 		::gpk::vcst_t						ExtensionProfile			= ".ghp";
 		::gpk::vcst_t						ExtensionCredentials		= ".ghc";
 
-		::ghg::APP_STATE				ActiveState					= APP_STATE_Init;
+		APP_STATE				ActiveState					= APP_STATE_Init;
 
-		gpk::err_t					AddNewPlayer				(::gpk::vcsc_t playerName)			{
+		gpk::err_t					AddNewPlayer				(::gpk::vcst_t playerName)			{
 			::gpk::trim(playerName);
 			return Players.push_back({::gpk::label(::gpk::vcst_t{playerName})});
 		}
@@ -345,7 +346,7 @@ namespace ghg
 			::gpk::au0_t							b64PlayerName				= {};
 			for(u2_t iPlayer = 0; iPlayer < Players.size(); ++iPlayer) {
 				b64PlayerName.clear();
-				const ::ghg::SPlayer				& player					= Players[iPlayer];
+				const SPlayer				& player					= Players[iPlayer];
 				::gpk::base64Encode(player.Name, b64PlayerName);
 				::gpk::sprintf_s(fileName, "%.*s/%.*s.%llu%s", GPK_VIEW_ARGS(SavegameFolder), GPK_VIEW_ARGS(b64PlayerName), 0ULL, ExtensionProfile.begin());
 				if_fail_fef(player.Save(fileName), "iPlayer: %i", iPlayer);
@@ -364,18 +365,18 @@ namespace ghg
 
 			const s2_t						totalHealth					= Game.ShipState.SpaceshipManager.GetTeamHealth(0);
 			if(totalHealth > 0) // Save only if a player is alive
-				return ::ghg::solarSystemSave(Game, fileName);
+				return solarSystemSave(Game, fileName);
 			return 0;
 		}
 	};
 
-	gpk::err_t	guiSetup			(::ghg::SGalaxyHellApp & gameui, const ::gpk::pobj<::gpk::SInput> & inputState);
-	gpk::err_t	guiUpdate			(::ghg::SGalaxyHellApp & gameui, ::gpk::vpobj<::gpk::SEventSystem> sysEvents);
+	gpk::err_t	guiSetup			(SGalaxyHellApp & gameui, const ::gpk::pobj<::gpk::SInput> & inputState);
+	gpk::err_t	guiUpdate			(SGalaxyHellApp & gameui, ::gpk::vpobj<::gpk::SEventSystem> sysEvents);
 	
-	gpk::err_t	galaxyHellUpdate	(::ghg::SGalaxyHellApp & app, double lastTimeSeconds, const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> systemEventsNew);
-	gpk::err_t	galaxyHellDraw		(::ghg::SGalaxyHellApp & app, ::gpk::n2u1_t renderTargetSize);
+	gpk::err_t	galaxyHellUpdate	(SGalaxyHellApp & app, double lastTimeSeconds, const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> systemEventsNew);
+	gpk::err_t	galaxyHellDraw		(SGalaxyHellApp & app, ::gpk::n2u1_t renderTargetSize);
 
-	gpk::err_t	listFilesSavegame	(::ghg::SGalaxyHellApp & app, const ::gpk::vcsc_t & saveGameFolder, ::gpk::aobj<::gpk::vcst_t> & savegameFilenames);
-	gpk::err_t	listFilesProfile	(::ghg::SGalaxyHellApp & app, const ::gpk::vcsc_t & saveGameFolder, ::gpk::aobj<::gpk::vcst_t> & savegameFilenames);
+	gpk::err_t	listFilesSavegame	(SGalaxyHellApp & app, const ::gpk::vcsc_t & saveGameFolder, ::gpk::aobj<::gpk::vcst_t> & savegameFilenames);
+	gpk::err_t	listFilesProfile	(SGalaxyHellApp & app, const ::gpk::vcsc_t & saveGameFolder, ::gpk::aobj<::gpk::vcst_t> & savegameFilenames);
 
 }

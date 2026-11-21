@@ -46,7 +46,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(ARGS_STATE, POSITIONAL	, 2);
 } // namespace
 
-sttc gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst_t<::gpk::vcst_t> & option) {
+sttc gpk::err_t	argsOptionName			(::gpk::vcst_c & argument, ::gpk::kvvcst<::gpk::vcst_t> & option) {
 	if_zero_fw(argument.size());
 	::gpk::b8_c				isDoubleDash		= argument.size() > 1 && '-' == argument[1];
 	::gpk::u0_c				prefixLen			= isDoubleDash ? 2U : 1U;
@@ -81,7 +81,7 @@ gpk::err_t		gpk::argsParse		(::gpk::SCommandLineArgs & output, ::gpk::view<vcst_
 	output.ProgramName	= argv[0];
 
 	ARGS_STATE				state				= ARGS_STATE_ARGUMENT;
-	kvvcst_t<vcst_t>		option				= {};
+	kvvcst<vcst_t>		option				= {};
 	for(u2_t iArg = 1; iArg < argv.size(); ++iArg) {
 		vcst_t					argument			= {argv[iArg], (u2_t)-1};
 		if_zero_cwf(argument.size(), "iArg:(%" GPK_FMT_U2  ")", iArg);

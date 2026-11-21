@@ -157,8 +157,19 @@
 #define tpl_tnsix		tpl_t	nsix 
 #define tpl_tstin		tpl_t	stin
 
-#define tplTInTOut		tplt<tpnm TIn, tpnm TOut>
-#define tplTOutTIn		tplt<tpnm TOut, tpnm TIn>
+#define tnTInTOut		tpnm TIn, tpnm TOut
+#define tnTOutTIn		tpnm TOut, tpnm TIn
+
+#define tplTInTOut		tplt<tnTInTOut>
+#define tplTOutTIn		tplt<tnTOutTIn>
+
+#ifdef GPK_WINDOWS
+#	define tplTInTOutArgs(...)	tplt<tnTInTOut, __VA_ARGS__>
+#	define tplTOutTInArgs(...)	tplt<tnTOutTIn, __VA_ARGS__>
+#else
+#	define tplTInTOutArgs(...)	tplt<tnTInTOut, ##__VA_ARGS__>
+#	define tplTOutTInArgs(...)	tplt<tnTOutTIn, ##__VA_ARGS__>
+#endif
 
 #define cxpr_if(condition)		if cxpr(condition)
 #define cxpr_if_not(condition)	if cxpr(not(condition))

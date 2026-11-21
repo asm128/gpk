@@ -463,7 +463,7 @@ nmsp gpk
 #define if_zero_logf_and_return_value_info(value, condition, format, ...)		if_zero_logf_and_return_value	(info_printf    , (value), (condition), format, ##__VA_ARGS__)
 #define if_zero_logf_and_return_value_verbose(value, condition, format, ...)	if_zero_logf_and_return_value	(verbose_printf , (value), (condition), format, ##__VA_ARGS__)
 #define if_true_logf_and_fail_always(condition, format, ...)	if_true_logf_and_fail(always_printf  , (condition), format, ##__VA_ARGS__)
-#define if_true_logf_and_fail_error(condition, format, ...)		do { if_true_logf_and_fail(error_printf, (condition), format, ##__VA_ARGS__); } while(0)
+#define if_true_logf_and_fail_error(condition, format, ...)		if_true_logf_and_fail(error_printf   , (condition), format, ##__VA_ARGS__)
 #define if_true_logf_and_fail_warning(condition, format, ...)	if_true_logf_and_fail(warning_printf , (condition), format, ##__VA_ARGS__)
 #define if_true_logf_and_fail_info(condition, format, ...)		if_true_logf_and_fail(info_printf    , (condition), format, ##__VA_ARGS__)
 #define if_true_logf_and_fail_verbose(condition, format, ...)	if_true_logf_and_fail(verbose_printf , (condition), format, ##__VA_ARGS__)

@@ -7,19 +7,23 @@
 nmsp gpk
 {
     tplt<tpnm TOutput, tpnm T, u0_t widthField = uint_width_field_size<T>()>
-    err_t					savePacked					(TOutput & output, cnst T & input) {
-        cnst packed_uint<T, widthField>	packedInput					= input;
-        u2_c						offset						= output.size();
+                err_t   savePacked  (TOutput & output, cnst T & input) {
+        cnst packed_uint<T, widthField> packedInput					= input;
+        u2_c            offset						= output.size();
         if_fail_fe(output.resize(offset + packedInput.ValueWidth()));
         memcpy(&output[offset], &packedInput, packedInput.ValueWidth());
         return packedInput.ValueWidth();
     }
-
-    tplT			err_t	saveView					(au0_t & output, cnst view<T> & viewToSerialize)	{
-        err_t						counterWidth				= 0;
+    tplT        err_t   saveView    (au0_t & output, cnst view<T> & viewToSerialize)	{
+        err_t                   counterWidth    = 0;
         if_fail_fe(counterWidth = savePacked(output, viewToSerialize.size()));
         if_fail_fe(output.append(viewToSerialize.bytes()));
         return counterWidth + viewToSerialize.byte_count();
+    }
+    tpl_vtArgs  err_t   saveViews    (au0_t & output, _tArgs&&... args)	{ 
+        err_t		            err             = 0;
+        s2_c		            results []      = {err = (failed(err) ? -1 : save(output, args))..., 0}; 
+        rtrn failed(err) ? err : sum(vcs2_t{results});
     }
     //tplT			err_t	saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
     //	u2_c						offset				= output.size();
@@ -36,13 +40,12 @@ nmsp gpk
     //tplt<>	inln	err_t	saveView	<u2_c>	(au0_t & output, vcu2_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
     //tplt<>	inln	err_t	saveView	<u3_c>	(au0_t & output, vcu3_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
 
-    tplTstin		err_t	saveView					(as0_t & output, cnst view<T> & headerToWrite)	{ return saveView(*(au0_t*)&output, headerToWrite); }
     tplT			err_t	savePOD						(au0_t & output, cnst T & input)				{ if_fail_fe(output.append((cnst u0_t*)&input, szof(T))); return szof(T); }
     tplTstin		err_t	savePOD						(as0_t & output, cnst T & input)				{ return savePOD(*(au0_t*)&output, input); }
     tplt<tpnm TMap, tpnm TSave>
     err_t					saveMap						(au0_t & output, cnst TMap & map, TSave save) {
         u2_c						count						= map.size();
-        if_fail_fe(savePOD(output, count));
+        if_fail_fe(savePacked(output, count));
         for(u2_t index = 0; index < count; ++index)
             if_fail_fe(save(output, index, map[index]));
         return 0;
@@ -56,6 +59,7 @@ nmsp gpk
         return 0;
     }
     tplTstin    err_t   loadView    (vcs0_t & input, apod<T> & output)			            { return loadView(*(vcu0_t*)& input, output); }
+
     tplTstin    err_t   save        (au0_t & output, cnst T & input)                        { if_fail_fe(savePOD(output, input)); }
     tplTstin    err_t   save        (au0_t & output, cnst view<cnst T> & input)             { if_fail_fe(saveView(output, input)); }
     tplTstin    err_t   save        (au0_t & output, cnst view<cnst view<T>> & input)       { rtrn input.for_each([&](cnst T & entry){ rtrn saveView(output, entry); }); }

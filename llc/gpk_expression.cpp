@@ -1,4 +1,5 @@
 #include "gpk_expression.h"
+#include "gpk_string_compose.h"
 
 using ::gpk::sc_t;
 
@@ -384,4 +385,34 @@ gpk::err_t			gpk::expressionReaderParse			(::gpk::SExpressionReader & reader, co
 	if_fail_fef(::expressionReaderViews(tokens, reader.View, expression), "%s", "Failed to build views. Corrupt info?");
 	if_fail_fef(::expressionTreeRebuild(tokens, reader.Tree), "%s", "Failed to rebuild tree. Corrupt tree?");
 	return 0;
+}
+
+::gpk::err_t gpk::expressionStringFormat(::gpk::vcst_t format, ::gpk::view<cnst ::gpk::SStripLiteralToken> tokens, cnst ::gpk::FError<::gpk::vcst_c &, ::gpk::vcst_t &> & resolve, ::gpk::asc_t & output) {
+	::gpk::string formatted;
+	for(::gpk::u2_t iType = 0; iType < tokens.size(); ++iType) {
+		cnst ::gpk::SStripLiteralToken & type = tokens[iType];
+		b8_c isToken = ::gpk::STRIP_LITERAL_TYPE_TOKEN == type.Type;
+		if_true_fef(type.Span.Begin > type.Span.End || type.Span.End > format.size(), "Invalid format span: %u..%u, size:%u.", type.Span.Begin, type.Span.End, format.size());
+		if_true_fef(isToken && type.Span.End - type.Span.Begin < 2, "Invalid token span: %u..%u.", type.Span.Begin, type.Span.End);
+		::gpk::u2_c offsetView = isToken ? type.Span.Begin + 1 : type.Span.Begin;
+		::gpk::u2_c lengthView = isToken ? type.Span.End - type.Span.Begin - 2 : type.Span.End - type.Span.Begin;
+		if(0 == lengthView)
+			continue;
+		::gpk::vcst_t viewToAppend = {&format[offsetView], lengthView};
+		if(isToken) {
+			::gpk::vcst_t resolved;
+			if_fail_fef(resolve(viewToAppend, resolved), "Failed to resolve expression: %.*s.", GPK_VIEW_ARGS(viewToAppend));
+			viewToAppend = resolved;
+		}
+		if_fail_fef(::gpk::append_strings(formatted, viewToAppend), "iType: %u", iType);
+	}
+	if_fail_fe(::gpk::append_strings(output, formatted));
+	rtrn 0;
+}
+
+::gpk::err_t gpk::expressionStringFormat(::gpk::vcst_t format, cnst ::gpk::FError<::gpk::vcst_c &, ::gpk::vcst_t &> & resolve, ::gpk::asc_t & output) {
+	::gpk::apod<::gpk::SStripLiteralToken> tokens;
+	::gpk::SStripLiteralState state;
+	if_fail_fef(::gpk::stripLiteralParse(state, tokens, format), "%.*s", GPK_VIEW_ARGS(format));
+	rtrn ::gpk::expressionStringFormat(format, tokens, resolve, output);
 }

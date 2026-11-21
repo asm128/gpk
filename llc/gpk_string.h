@@ -8,7 +8,6 @@
 
 nmsp gpk
 {
-
     struct string : asc_t {
         usng    asc_t       ::Data;
         usng    asc_t       ::Count;
@@ -25,8 +24,8 @@ nmsp gpk
         ndin        oper    String      ()                      cnst    { return String(Data, Count); }
 #   endif
 #endif
-        inln        b8_t    oper==      (vcst_c & other)   cnst    { rtrn asc_t::oper==(other); }
-        inln        b8_t    oper!=      (vcst_c & other)   cnst    { rtrn asc_t::oper!=(other); }
+        inln        b8_t    oper==      (vcst_c & other)        cnst    { rtrn asc_t::oper==(other); }
+        inln        b8_t    oper!=      (vcst_c & other)        cnst    { rtrn asc_t::oper!=(other); }
         tplN2uinln  b8_t    oper==      (sc_c (&other)[N])      cnst    { rtrn oper==(vcst_t{other}); }
         tplN2uinln  b8_t    oper!=      (sc_c (&other)[N])      cnst    { rtrn oper!=(vcst_t{other}); }
 

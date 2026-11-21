@@ -1,5 +1,5 @@
 #include "gpk_debug.h"
-	
+    
 
 #ifdef GPK_ATMEL
 //#	include "initializer_list.h"
@@ -12,36 +12,36 @@
 
 nmsp gpk
 {
-	tydf	bool							b8_t;
-	tydf	char							sc_t;
-	tydf	signed char						s0_t;
-	tydf	unsd char						uc_t, u0_t;
-	tydf	short							s1_t;
-	tydf	unsd short						u1_t;
-	tydf	long long						s3_t;
-	tydf	unsd long long					u3_t;
-	tydf	decltype(sizeof(0))				uP_t;
-	tydf	decltype((sc_t*)0 - (sc_t*)0)	sP_t;
-	tydf	void*							uV_t;
-	tydf	float							f2_t;
+    tydf	bool							b8_t;
+    tydf	char							sc_t;
+    tydf	signed char						s0_t;
+    tydf	unsd char						uc_t, u0_t;
+    tydf	short							s1_t;
+    tydf	unsd short						u1_t;
+    tydf	long long						s3_t;
+    tydf	unsd long long					u3_t;
+    tydf	decltype(sizeof(0))				uP_t;
+    tydf	decltype((sc_t*)0 - (sc_t*)0)	sP_t;
+    tydf	void*							uV_t;
+    tydf	float							f2_t;
 
 #if defined(GPK_ATMEL)
-	tydf	long							s2_t;
-	tydf	unsd long						u2_t;
-	tydf	long double						f3_t;
+    tydf	long							s2_t;
+    tydf	unsd long						u2_t;
+    tydf	long double						f3_t;
 #	if !defined(__SIZEOF_LONG_DOUBLE__) || (__SIZEOF_LONG_DOUBLE__ != (1 << 3))
 #		warning No native 8-byte floating-point type available; f3_t falls back to f3_t.
 #	endif
 #else
-	tydf	int								s2_t;
-	tydf	unsd int						u2_t;
-	tydf	double							f3_t;
+    tydf	int								s2_t;
+    tydf	unsd int						u2_t;
+    tydf	double							f3_t;
 #endif
 
-	tplt<tpnm... T>	stct type_pack			{};
-	tplt<tpnm T>	stct type_tag			{ usng type = T; };
-	usng			type_pack_unsigned		= type_pack<u0_t, u1_t, u2_t, u3_t>;
-	usng			type_pack_integers		= type_pack<u0_t, u1_t, u2_t, u3_t, s0_t, s1_t, s2_t, s3_t>;
+    tplt<tpnm... T>	stct type_pack			{};
+    tplt<tpnm T>	stct type_tag			{ usng type = T; };
+    usng			type_pack_unsigned		= type_pack<u0_t, u1_t, u2_t, u3_t>;
+    usng			type_pack_integers		= type_pack<u0_t, u1_t, u2_t, u3_t, s0_t, s1_t, s2_t, s3_t>;
 
 //	tplt<size_t _size>
 //	sinx auto szof() nxpt {
@@ -51,31 +51,31 @@ nmsp gpk
 //	}
 //#define szof(type) ::gpk::szof<sizeof(type)>()
 #define	szof(type)																\
-	( (sizeof(type) > 0xFFFFU)	? ::gpk::u2_t(sizeof(type) & 0xFFFFFFFFU	)	\
-	: (sizeof(type) > 0xFFU)	? ::gpk::u1_t(sizeof(type) & 0xFFFFU		)	\
-	: ::gpk::u0_t(sizeof(type) & 0xFFU)											\
-	)
+    ( (sizeof(type) > 0xFFFFU)	? ::gpk::u2_t(sizeof(type) & 0xFFFFFFFFU	)	\
+    : (sizeof(type) > 0xFFU)	? ::gpk::u1_t(sizeof(type) & 0xFFFFU		)	\
+    : ::gpk::u0_t(sizeof(type) & 0xFFU)											\
+    )
 #define bcof(type) (szof(type) * 8U)
-	tdcs		b8_t	b8_c;
-	tdcs		uc_t	uc_c;
-	tdcs		sc_t	sc_c;
-	tdcs		u0_t	u0_c;
-	tdcs		u1_t	u1_c;
-	tdcs		u2_t	u2_c;
-	tdcs		u3_t	u3_c;
-	tdcs		s0_t	s0_c;
-	tdcs		s1_t	s1_c;
-	tdcs		s2_t	s2_c;
-	tdcs		s3_t	s3_c;
-	tdcs		f2_t	f2_c;
-	tdcs		f3_t	f3_c;
-	tdcs		uP_t	uP_c;
+    tdcs		b8_t	b8_c;
+    tdcs		uc_t	uc_c;
+    tdcs		sc_t	sc_c;
+    tdcs		u0_t	u0_c;
+    tdcs		u1_t	u1_c;
+    tdcs		u2_t	u2_c;
+    tdcs		u3_t	u3_c;
+    tdcs		s0_t	s0_c;
+    tdcs		s1_t	s1_c;
+    tdcs		s2_t	s2_c;
+    tdcs		s3_t	s3_c;
+    tdcs		f2_t	f2_c;
+    tdcs		f3_t	f3_c;
+    tdcs		uP_t	uP_c;
 
-	tplTsinx	T			printf_arg	(T value)			nxpt	{ rtrn value; }
-	tplTsinx	void*		printf_arg	(T * value)			nxpt	{ rtrn value; }
-	tplTsinx	cnst void*	printf_arg	(cnst T * value)	nxpt	{ rtrn value; }
-	sinx		sc_c*		printf_arg	(sc_t * value)		nxpt	{ rtrn value; }
-	sinx		sc_c*		printf_arg	(sc_c * value)		nxpt	{ rtrn value; }
+    tplTsinx	T			printf_arg	(T value)			nxpt	{ rtrn value; }
+    tplTsinx	void*		printf_arg	(T * value)			nxpt	{ rtrn value; }
+    tplTsinx	cnst void*	printf_arg	(cnst T * value)	nxpt	{ rtrn value; }
+    sinx		sc_c*		printf_arg	(sc_t * value)		nxpt	{ rtrn value; }
+    sinx		sc_c*		printf_arg	(sc_c * value)		nxpt	{ rtrn value; }
 
 #define tplN0u		tplt<::gpk::u0_t N>
 #define tplN1u		tplt<::gpk::u1_t N>
@@ -104,47 +104,51 @@ nmsp gpk
 #define tplN2unsix	tplN2u	nsix
 #define tplN2undin	tplN2u	ndin
 #define tplN2undix	tplN2u	ndix
+#define tplN2uinxp	tplN2u	inxp
 #define tplTN2stct	tplTN2	stct
 #define tplTN2sttc	tplTN2	sttc
 #define tplTN2inln	tplTN2	inln
+#define tplTN2stin	tplTN2	stin
 #define tplTN2usng	tplTN2	usng
 #define tplTN2ndsx	tplTN2	ndsx
 #define tplTN2sinx	tplTN2	sinx
 #define tplTN2stxp	tplTN2	stxp
 #define tplTN2nsix	tplTN2	nsix
-	
+#define tplTN2ndin	tplTN2	ndin
+#define tplTN2ndix	tplTN2	ndix
+#define tplTN2inxp	tplTN2	inxp
 #if defined(GPK_ANDROID) || defined(GPK_CLANG)
 #	pragma clang diagnostic push
 #	pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
 #endif
-	// -- Returns 0 on little-endian machines
-	ndsi	int		test_endianness		()	nxpt	{ stxp u1_c test = 0xFF00U; rtrn (0xFFU == ((sc_c*)&test)[0]) ? 1 : 0; }
+    // -- Returns 0 on little-endian machines
+    ndsi	int		test_endianness		()	nxpt	{ stxp u1_c test = 0xFF00U; rtrn (0xFFU == ((sc_c*)&test)[0]) ? 1 : 0; }
 #if defined(GPK_ANDROID) || defined(GPK_CLANG)
 #	pragma clang diagnostic pop
 #endif
-	stxp	b8_c	flse			= false;
-	stxp	u0_c	BYTE_SIZE		= 8;
+    stxp	b8_c	    flse			= false;
+    stxp	u0_c	    BYTE_SIZE		= 8;
 #if defined(GPK_WINDOWS) && !defined(_WIN64) && !defined(WIN64)
-	tydf	long		refcount_t;
+    tydf	long		refcount_t;
 #else
-	tydf	sP_t		refcount_t;
+    tydf	sP_t		refcount_t;
 #endif
-	tdcs	refcount_t	refcount_c;
-	tdvl	refcount_t	refcount_vl;
+    tdcs	refcount_t	refcount_c;
+    tdvl	refcount_t	refcount_vl;
 
-	tpl_tstct	rm_cnst				{ usng T = _t; };
-	tpl_tstct	rm_cnst<cnst _t>	{ usng T = _t; };
-	tpl_tstct	is_cnst				{ stxp b8_t Value = false; };
-	tpl_tstct	is_cnst<cnst _t>	{ stxp b8_t Value = true; };
-	tpl_tstct	rm_vltl				{ usng T = _t; };
-	tpl_tstct	rm_vltl<vltl _t>	{ usng T = _t; };
-	tpl_tstct	rm_csvl				{ usng T = _t; };
-	tpl_tstct	rm_csvl<vltl _t>	{ usng T = _t; };
-	tpl_tstct	rm_csvl<cnst _t>	{ usng T = _t; };
-	tpl_tstct	rm_csvl<csvl _t>	{ usng T = _t; };
-	tpl_tusng	rm_cnst_t			= tpnm rm_cnst<_t>::T;
-	tpl_tusng	rm_vltl_t			= tpnm rm_vltl<_t>::T;
-	tpl_tusng	rm_csvl_t			= tpnm rm_csvl<_t>::T;
+    tpl_tstct	rm_cnst				{ usng T = _t; };
+    tpl_tstct	rm_cnst<cnst _t>	{ usng T = _t; };
+    tpl_tstct	is_cnst				{ stxp b8_t Value = false; };
+    tpl_tstct	is_cnst<cnst _t>	{ stxp b8_t Value = true; };
+    tpl_tstct	rm_vltl				{ usng T = _t; };
+    tpl_tstct	rm_vltl<vltl _t>	{ usng T = _t; };
+    tpl_tstct	rm_csvl				{ usng T = _t; };
+    tpl_tstct	rm_csvl<vltl _t>	{ usng T = _t; };
+    tpl_tstct	rm_csvl<cnst _t>	{ usng T = _t; };
+    tpl_tstct	rm_csvl<csvl _t>	{ usng T = _t; };
+    tpl_tusng	rm_cnst_t			= tpnm rm_cnst<_t>::T;
+    tpl_tusng	rm_vltl_t			= tpnm rm_vltl<_t>::T;
+    tpl_tusng	rm_csvl_t			= tpnm rm_csvl<_t>::T;
 #define gpk_rmcnst(type)	tpnm ::gpk::rm_cnst_t<type>
 #define gpk_rmvltl(type)	tpnm ::gpk::rm_vltl_t<type>
 #define gpk_rmcsvl(type)	tpnm ::gpk::rm_csvl_t<type>
@@ -152,17 +156,31 @@ nmsp gpk
 #define tydfTCnst(type)		tdcs		gpk_rmcnst(type)	TCnst
 #define tdfTTCnst(type)		tdfT(type);	tydfTCnst(type)
 
-	tplTOutTIn	sinx	TOut	truncate	(TIn value)				nxpt	{ rtrn TOut(u3_t(value)); }
-	tplTOutTIn	sinx	TOut	dim2		(TIn value)				nxpt	{ rtrn {value, value}; }
-	tplTOutTIn	sinx	TOut	dim3		(TIn value)				nxpt	{ rtrn {value, value, value}; }
-	tplT		nsix	u0_t	byte_at		(T value, u0_t index)	nxpt	{ rtrn u0_t((value & (T(0xFFU) << (8 * index))) >> (8 * index)); }
-	tplT		nsix	T		byte_to		(u0_t byte, u0_t index)	nxpt	{ rtrn T(byte) << (u2_t(8U) * index); }
-	tplT		ndsc	T&		global		()						nxpt	{ sttc T instance = {}; rtrn instance; }
+    tplTOutTIn	sinx	TOut	truncate	(TIn value)				nxpt	{ rtrn TOut(u3_t(value)); }
+    tplTOutTIn	sinx	TOut	dim2		(TIn value)				nxpt	{ rtrn {value, value}; }
+    tplTOutTIn	sinx	TOut	dim3		(TIn value)				nxpt	{ rtrn {value, value, value}; }
+    tplT		nsix	u0_t	byte_at		(T value, u0_t index)	nxpt	{ rtrn u0_t((value & (T(0xFFU) << (8 * index))) >> (8 * index)); }
+    tplT		nsix	T		byte_to		(u0_t byte, u0_t index)	nxpt	{ rtrn T(byte) << (u2_t(8U) * index); }
+    tplT		ndsc	T&		global		()						nxpt	{ sttc T instance = {}; rtrn instance; }
 
-	tpl_tstct srcdst { tdfTTCnst(_t); T src, dst; }; 
-	tpl_tstct dstsrc { tdfTTCnst(_t); T dst, src; };
+    tpl_tstct srcdst { tdfTTCnst(_t); T src, dst; }; 
+    tpl_tstct dstsrc { tdfTTCnst(_t); T dst, src; };
+
+    tydf		s2_t	err_t;
+    tdcs		err_t	err_c;
+
+    tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
+    sinx	    b8_t	failed		(b8_t)		nxpt	{ rtrn false; }
+    tplTnsix	b8_t	succeeded	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
 
 } // nmsp
+
+#define if_true_exec(condition, block)	if(condition) { block }
+
+#define if_done_exec(condition, block) if_true_exec(0 <= (condition), block)
+#define if_zero_exec(condition, block) if_true_exec(0 == (condition), block)
+#define if_fail_exec(condition, block) if_true_exec(0 == (condition), block)
+#define if_null_exec                   if_zero_exec
 
 #if !defined(GPK_ANDROID) && !defined(GPK_ESP32) && !defined(GPK_ARDUINO)
 #	define GPK_DEFAULT_OPERATOR_I(rightOperand, statement)	inln	b8_t	oper==(cnst rightOperand & other) csnx { rtrn statement; }
@@ -258,54 +276,21 @@ nmsp gpk
 #define GPK_FMT_NE_S3	"%" GPK_FMT_S3 " != %" GPK_FMT_S3
 #define GPK_FMT_NE_U3	"%" GPK_FMT_U3 " != %" GPK_FMT_U3
 
-nmsp gpk
-{
-
-	tydf		s2_t	err_t;
-	tdcs		err_t	err_c;
-
-	tplTnsix	T		failed		(T errorCode)	nxpt	{ rtrn T((errorCode < 0) ? errorCode : 0);	}
-	sinx	b8_t	failed		(b8_t)		nxpt	{ rtrn false; }
-	tplTnsix	b8_t	succeeded	(T errorCode)	nxpt	{ rtrn false == failed(errorCode); }
-} // namespace
-
-#ifndef if_fail
-#	define	if_fail(errVal)		if(::gpk::failed(errVal))
-#endif
-#ifndef if_not_fail
-#	define	if_not_fail(errVal)	if_not(::gpk::failed(errVal))
-#endif
-#ifndef if_zero
-#	define	if_zero(valueToTest)		if(0 == (valueToTest))
-#endif
-#ifndef if_nonzero
-#	define	if_nonzero(valueToTest)		if(0 != (valueToTest))
-#endif
-#ifndef if_failed
-#	define	if_failed			if_fail
-#endif
-#ifndef if_not_failed
-#	define	if_not_failed		if_not_fail
-#endif
-#ifndef if_sccs
-#	define	if_sccs(errVal)	if_not_failed(errVal)
-#endif
-
 #define GPK_USING_TYPEINT()				\
-	usng	::gpk::b8_t, ::gpk::b8_c	\
-		,	::gpk::uc_t, ::gpk::uc_c	\
-		,	::gpk::sc_t, ::gpk::sc_c	\
-		,	::gpk::u0_t, ::gpk::u0_c	\
-		,	::gpk::u1_t, ::gpk::u1_c	\
-		,	::gpk::u2_t, ::gpk::u2_c	\
-		,	::gpk::u3_t, ::gpk::u3_c	\
-		,	::gpk::s0_t, ::gpk::s0_c	\
-		,	::gpk::s1_t, ::gpk::s1_c	\
-		,	::gpk::s2_t, ::gpk::s2_c	\
-		,	::gpk::s3_t, ::gpk::s3_c	\
-		,	::gpk::f2_t, ::gpk::f2_c	\
-		,	::gpk::f3_t, ::gpk::f3_c	\
-		,	::gpk::uP_t, ::gpk::uP_c
+    usng	::gpk::b8_t, ::gpk::b8_c	\
+        ,	::gpk::uc_t, ::gpk::uc_c	\
+        ,	::gpk::sc_t, ::gpk::sc_c	\
+        ,	::gpk::u0_t, ::gpk::u0_c	\
+        ,	::gpk::u1_t, ::gpk::u1_c	\
+        ,	::gpk::u2_t, ::gpk::u2_c	\
+        ,	::gpk::u3_t, ::gpk::u3_c	\
+        ,	::gpk::s0_t, ::gpk::s0_c	\
+        ,	::gpk::s1_t, ::gpk::s1_c	\
+        ,	::gpk::s2_t, ::gpk::s2_c	\
+        ,	::gpk::s3_t, ::gpk::s3_c	\
+        ,	::gpk::f2_t, ::gpk::f2_c	\
+        ,	::gpk::f3_t, ::gpk::f3_c	\
+        ,	::gpk::uP_t, ::gpk::uP_c
 
 #endif // GPK_TYPEINT_H_23627
 

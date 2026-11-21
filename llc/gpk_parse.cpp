@@ -4,7 +4,7 @@
 #include "gpk_math.h"
 #include <ctype.h>
 
-bool					gpk::isSpaceCharacter						(const char characterToTest)		{
+bool				gpk::isSpaceCharacter						(const char characterToTest)		{
 	switch(characterToTest) {
 	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
 		return true;
@@ -12,7 +12,6 @@ bool					gpk::isSpaceCharacter						(const char characterToTest)		{
 		return false;
 	}
 }
-
 gpk::err_t			gpk::skipToNextCharacter					(u2_t & indexCurrentChar, ::gpk::vcsc_c & expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(::gpk::isSpaceCharacter(expression[indexCurrentChar]))
@@ -22,7 +21,6 @@ gpk::err_t			gpk::skipToNextCharacter					(u2_t & indexCurrentChar, ::gpk::vcsc_
 	}
 	return 0;
 }
-
 gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbolList, ::gpk::vcsc_c & sourceChars, u3_t * number_)	{
 	u2_t										totalCharsProcessed							= 0;
 	::gpk::apod<char>								stringToParse								= {};
@@ -63,7 +61,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbo
 	return totalCharsProcessed;
 }
 
-gpk::err_t			stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, ::gpk::vcsc_c & in_format)		{
+gpk::err_t			stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralToken> & out_types, ::gpk::vcsc_c & in_format)		{
 	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
@@ -97,7 +95,7 @@ gpk::err_t			stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, :
 	return 0;
 }
 
-gpk::err_t			stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, ::gpk::vcsc_c & in_format)		{
+gpk::err_t			stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralToken> & out_types, ::gpk::vcsc_c & in_format)		{
 	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
@@ -125,7 +123,7 @@ gpk::err_t			stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, 
 	return 0;
 }
 
-gpk::err_t			gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, ::gpk::vcsc_c & in_format)		{
+gpk::err_t			gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralToken> & out_types, ::gpk::vcsc_c & in_format)		{
 	if(work_state.InsideToken)
 		return ::stripLiteralsParseToken(work_state, out_types, in_format);
 
@@ -136,7 +134,7 @@ gpk::err_t			gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state
 	return ::stripLiteralsParseLiteral(work_state, out_types, in_format);
 }
 
-gpk::err_t			gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralType> & out_types, ::gpk::vcsc_c & in_format)		{
+gpk::err_t			gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralToken> & out_types, ::gpk::vcsc_c & in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
 		if_fail_fe(gpk::stripLiteralParseStep(stateReading, out_types, in_format));
@@ -144,9 +142,9 @@ gpk::err_t			gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading,
 	return 0;
 }
 
-gpk::err_t			gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcsc_t> & out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, ::gpk::vcsc_c & in_format)		{
+gpk::err_t			gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcsc_t> & out_views, const ::gpk::view<const ::gpk::SStripLiteralToken> & in_resultOfParser, ::gpk::vcsc_c & in_format)		{
 	for(u2_t iType = 0; iType < in_resultOfParser.size(); ++iType) {
-		const ::gpk::SStripLiteralType					& type						= in_resultOfParser[iType];
+		const ::gpk::SStripLiteralToken					& type						= in_resultOfParser[iType];
 		::gpk::vcst_t						view						= {};
 		u2_t										offsetView					= 0;
 		u2_t										lenView						= 0;

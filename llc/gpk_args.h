@@ -8,24 +8,24 @@
 
 namespace gpk
 {
-	stct SCommandLineArgs {
-		vcst_t					ProgramName = {};
-		aobj<keyval<vcst_t>>	Options		= {};
-		aobj<vcst_t>			Positionals	= {};
-		au0_t					Order		= {};
-		aobj<kv<vcst_t>>		Environment	= {};
-	};
+    stct SCommandLineArgs {
+        vcst_t			    ProgramName     = {};
+        aobj<kv<vcst_t>>    Options		    = {};
+        aobj<vcst_t>	    Positionals	    = {};
+        au0_t			    Order		    = {};
+        aobj<kv<vcst_t>>    Environment	    = {};
+    };
 
-	err_t			argsParse			(SCommandLineArgs & output, view<vcst_t> argv, view<cnst kv<vcst_t>> envp = {});
-	err_t			argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp = 0);
-	err_t			argsOptionValue		(const SCommandLineArgs & input, vcst_t key, vcst_t & output);
-	stin	err_t	argsOptionIndex		(const SCommandLineArgs & input, vcst_t key)	{ 
-		return input.Options.find([&key](const kvvcst_t<vcst_t> & option) { 
-			return option.Key == key; 
-		}); 
-	}
-	err_t			viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, char * envp[]);
-	err_t			viewsFromArgv		(aobj<vcst_t> & outputViews, u2_t argc, char * argv[]);
+    err_t			argsParse			(SCommandLineArgs & output, view<vcst_t> argv, view<cnst kv<vcst_t>> envp = {});
+    err_t			argsParse			(SCommandLineArgs & output, int argc, char ** argv, char ** envp = 0);
+    err_t			argsOptionValue		(const SCommandLineArgs & input, vcst_t key, vcst_t & output);
+    stin	err_t	argsOptionIndex		(const SCommandLineArgs & input, vcst_t key)	{ 
+        return input.Options.find([&key](const kv<vcst_t> & option) { 
+            return option.Key == key; 
+        }); 
+    }
+    err_t			viewsFromEnvp		(aobj<kv<vcst_t>> & outputViews, char * envp[]);
+    err_t			viewsFromArgv		(aobj<vcst_t> & outputViews, u2_t argc, char * argv[]);
 }
 
 #endif // GPK_ARGS_H_23627

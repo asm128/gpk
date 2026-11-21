@@ -1,6 +1,7 @@
 #include "blitter_process.h"
 #include "blitter_output.h"
 
+#include "gpk_string_compose.h"
 #include "gpk_parse.h"
 #include "gpk_view_bit.h"
 #include "gpk_bit.h"
@@ -101,7 +102,7 @@ static	::gpk::err_t	queryGetDetail
 					}
 				}
 				if(false == bFound)
-					if_fail_fef(output.append(::gpk::vcst_t{"{}"}), "%s", "?¿??");
+					if_fail_fef(output.append(::gpk::vcst_t{"{}"}), "%s", "?Â¿??");
 				appendStart									= digitsToDetailView.end();
 				appendStop									= currentRecordView.end();
 				if_fail_fef(output.append(appendStart, (u2_t )(appendStop - appendStart)), "%s", "Out of memory?");
@@ -131,7 +132,7 @@ static	::gpk::err_t	queryGetDetail
 						}
 					}
 					if(false == bFound)
-						if_fail_fef(output.append(::gpk::vcst_t{"{}"}), "%s", "?¿??");
+						if_fail_fef(output.append(::gpk::vcst_t{"{}"}), "%s", "?Â¿??");
 					if(refCount - 1 != iRef)
 						if_fail_fef(output.push_back(','), "%s", "Out of memory?");
 				}
@@ -271,8 +272,8 @@ static	s3_t			pushNewBlock
 		newBlock->Bytes.push_back('[');
 		loadCache.Deflated.clear();
 		if_true_fef(0 == recordToAdd.Tree.size(), "Invalid json record! %s.", "Forgot to build the reader from the record?")
-		if_fail_fef(::gpk::jsonWrite(recordToAdd[0], recordToAdd.View, *(::gpk::string*)&loadCache.Deflated), "Failed to write json record! %s", "Invalid format?");
-		newBlock->Bytes.append(::gpk::vcst_t{(const sc_t*)loadCache.Deflated.begin(), loadCache.Deflated.size()});
+		if_fail_fef(::gpk::jsonWrite(recordToAdd[0], recordToAdd.View, loadCache.Deflated), "Failed to write json record! %s", "Invalid format?");
+		if_fail_fe(::gpk::append_strings(newBlock->Bytes, loadCache.Deflated));
 		newBlock->Bytes.push_back(']');
 		if_fail_fef(::gpk::jsonParse(newBlock->Reader, newBlock->Bytes), "%s", "Failed to parse new block.");
 		const u2_t 										indexBlock			= database.Val.Blocks.push_back(newBlock);

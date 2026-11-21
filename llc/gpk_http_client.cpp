@@ -134,7 +134,7 @@ gpk::err_t			gpk::httpClientRequest
         }
         break;
     }
-    if_true_fef(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
+    if_true_fef(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address))
 	info_printf("Connected to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
 
 	sc_t										strAddress	[INET6_ADDRSTRLEN]	= {};

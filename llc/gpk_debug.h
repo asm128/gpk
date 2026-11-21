@@ -57,4 +57,5 @@ nmsp gpk
 	int	debugBreakEnable	(int enabled = true)	nxpt;
 	int	debugBreakDisable	()						nxpt;
 } // nmsp
+
 #endif // GPK_DEBUG_H

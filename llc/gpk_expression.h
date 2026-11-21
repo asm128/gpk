@@ -1,13 +1,14 @@
 #include "gpk_enum.h"
 #include "gpk_array_ptr.h"
 #include "gpk_slice.h"
+#include "gpk_parse.h"
 
 #ifndef GPK_EXPRESSION_H_23627
 #define GPK_EXPRESSION_H_23627
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (EXPRESSION_READER_TYPE, ::gpk::s0_t);
+	GDEFINE_ENUM_TYPE (EXPRESSION_READER_TYPE, s0_t);
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, TERM_ANY		,  0);
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, TERM_KEY		,  1);
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, TERM_INDEX	,  2);
@@ -23,17 +24,17 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SExpressionToken {
-		::gpk::s2_t							ParentIndex;
+		s2_t							ParentIndex;
 		EXPRESSION_READER_TYPE			Type;
-		::gpk::sliceu2_t				Span;
+		sliceu2_t				Span;
 		bool							ClosingCondition				= false;
 	};
 
 	struct SExpressionReaderState {
-		::gpk::u2_t						IndexCurrentChar				= 0;
-		::gpk::s2_t							IndexCurrentElement				= -1;
-		::gpk::SExpressionToken			* CurrentElement				= 0;
-		::gpk::s2_t							NestLevel						= 0;
+		u2_t						IndexCurrentChar				= 0;
+		s2_t							IndexCurrentElement				= -1;
+		SExpressionToken			* CurrentElement				= 0;
+		s2_t							NestLevel						= 0;
 		sc_t							CharCurrent						= 0;
 		bool							Escaping						= false;
 		bool							ExpectsSeparator				= false;
@@ -45,20 +46,22 @@ namespace gpk
 	struct SExpressionNode {
 		SExpressionToken				* Token							= 0;
 		SExpressionNode					* Parent						= 0;
-		::gpk::apobj<SExpressionNode>	Children						= {};
-		::gpk::s2_t							ObjectIndex						= -1;
+		apobj<SExpressionNode>	Children						= {};
+		s2_t						ObjectIndex						= -1;
 	};
 
 	struct SExpressionReader {
-		::gpk::apod<::gpk::SExpressionToken>	Token;
-		::gpk::aobj<::gpk::vcsc_t>				View;
-		::gpk::apobj<::gpk::SExpressionNode>	Tree;
-		::gpk::SExpressionReaderState			StateRead;
-		::gpk::pobj<::gpk::SExpressionReader>	SubExpressionCache;
+		apod<SExpressionToken>	Token;
+		aobj<vcsc_t>				View;
+		apobj<SExpressionNode>	Tree;
+		SExpressionReaderState			StateRead;
+		pobj<SExpressionReader>	SubExpressionCache;
 	};
 
-	gpk::err_t					expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
-	gpk::err_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
+	err_t					expressionReaderParse			(SExpressionReader & reader, const vcsc_t & expression);
+	err_t					expressionReaderParseStep		(SExpressionReader & reader, const vcsc_t & expression);
+	err_t					expressionStringFormat		(vcst_t format, view<cnst SStripLiteralToken> tokens, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
+	err_t					expressionStringFormat		(vcst_t format, cnst FError<vcst_c &, vcst_t &> & resolve, asc_t & output);
 } // namespace
 
 #endif // GPK_EXPRESSION_H_23627

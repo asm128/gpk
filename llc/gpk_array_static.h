@@ -61,6 +61,23 @@ nmsp gpk
 	tplN2uusng	astb8_t		= astatic<b8_t, N>; tplN2uusng	astb8_c	= cnst astb8_t<N>; 
 	tplN2uusng	astuc_t		= astatic<uc_t, N>; tplN2uusng	astuc_c	= cnst astuc_t<N>; 
 	tplN2uusng	astsc_t		= astatic<sc_t, N>; tplN2uusng	astsc_c	= cnst astsc_t<N>; 
+	nsix u2_t decimal_digits(u2_t value) {
+		u2_t count = 1;
+		while(value >= 10) { value /= 10; ++count; }
+		rtrn count;
+	}
+
+	tplt<u2_t N>
+	nsix auto str() {
+		astsc_t<decimal_digits(N) + 1> result = {};
+		u2_t value = N;
+		u2_t pos = decimal_digits(N);
+		do {
+			result.Storage[--pos] = digit_ascii(sc_t(value % 10));
+			value /= 10;
+		} while(pos);
+		rtrn result;
+	}
 	tplN2uusng	astu0_t		= astatic<u0_t, N>; tplN2uusng	astu0_c	= cnst astu0_t<N>; 
 	tplN2uusng	astu1_t		= astatic<u1_t, N>; tplN2uusng	astu1_c	= cnst astu1_t<N>; 
 	tplN2uusng	astu2_t		= astatic<u2_t, N>; tplN2uusng	astu2_c	= cnst astu2_t<N>; 
@@ -119,20 +136,20 @@ nmsp gpk
 	tplTN2sinx	u2_t	size		(cnst sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
 	tplTN2sinx	u2_t	byte_count	(cnst sstring<N> & viewToTest)	nxpt	{ rtrn viewToTest.size(); }
 
-	stin sstring<64>	str			(f2_t arg)	{ astsc_t< 64> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
 	stin sstring<384>	str			(f3_t arg)	{ astsc_t<384> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
-	stin sstring< 7>	str			(u1_t arg)	{ astsc_t<  7> dest = {}; sprintf_s(dest.Storage, "%u" , arg); rtrn dest; }
-	stin sstring<12>	str			(u2_t arg)	{ astsc_t< 12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U2, arg); rtrn dest; }
+	stin sstring<64>	str			(f2_t arg)	{ astsc_t< 64> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
 	stin sstring<22>	str			(u3_t arg)	{ astsc_t< 22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U3, arg); rtrn dest; }
-	stin sstring< 8>	str			(s1_t arg)	{ astsc_t<  8> dest = {}; sprintf_s(dest.Storage, "%i", arg); rtrn dest; }
-	stin sstring<13>	str			(s2_t arg)	{ astsc_t< 13> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S2, arg); rtrn dest; }
-	stin sstring<22>	str			(s3_t arg)	{ astsc_t< 22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S3, arg); rtrn dest; }
+	stin sstring<12>	str			(u2_t arg)	{ astsc_t< 12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U2, arg); rtrn dest; }
+	stin sstring< 7>	str			(u1_t arg)	{ astsc_t<  7> dest = {}; sprintf_s(dest.Storage, "%u" , arg); rtrn dest; }
 	stxp sstring<5 >	str			(u0_t arg) {
 		rtrn	(arg >= 100) ?	astsc_t<5>{digit<2>(arg), digit<1>(arg), digit<0>(arg), 0}
 			:	(arg >=  10) ?	astsc_t<5>{digit<1>(arg), digit<0>(arg), 0}
 			:					astsc_t<5>{digit<0>(arg), 0}
 			;
 	}
+	stin sstring< 8>	str			(s1_t arg)	{ astsc_t<  8> dest = {}; sprintf_s(dest.Storage, "%i", arg); rtrn dest; }
+	stin sstring<22>	str			(s3_t arg)	{ astsc_t< 22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S3, arg); rtrn dest; }
+	stin sstring<13>	str			(s2_t arg)	{ astsc_t< 13> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S2, arg); rtrn dest; }
 	stxp sstring<5 >	str			(s0_t arg) {
 		rtrn	(arg >=    0) ?	str(u0_t(arg))
 			:	(arg <= -100) ?	astsc_t<5>{'-', digit<2>((s1_t)-arg), digit<1>((s1_t)-arg), digit<0>((s1_t)-arg)}

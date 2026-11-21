@@ -223,7 +223,7 @@
     <ClInclude Include="gpk_array_ptr.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_runtime.h" />
-    <ClInclude Include="gpk_runtime_module.h" />
+    <ClInclude Include="gpk_framework_module.h" />
     <ClInclude Include="gpk_safe.h" />
     <ClInclude Include="gpk_scene.h" />
     <ClInclude Include="gpk_size.h" />
@@ -376,7 +376,6 @@
     <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_process.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
-    <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_stdstring.cpp" />
     <ClCompile Include="gpk_stl.cpp" />
     <ClCompile Include="gpk_file.cpp" />
@@ -387,7 +386,6 @@
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
-    <ClCompile Include="llc_header_checkingg.cpp" />
     <ClCompile Include="gpk_celestial_body.cpp" />
     <ClCompile Include="gpk_engine.cpp" />
     <ClCompile Include="gpk_engine_collision.cpp" />

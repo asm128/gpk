@@ -255,7 +255,7 @@ static gpk::err_t demoTypes(const gpk::SJSONReader& json) {
 	const gpk::SEvaluationStepResult& evaluation = solver.Results[0];
 	printf("  evaluation step     : root=%u  result=%i\n", evaluation.IndexRootJSONNode, evaluation.IndexJSONResult);
 	gpk::SStripLiteralState stripState = {};
-	gpk::apod<gpk::SStripLiteralType> strips = {};
+	gpk::apod<gpk::SStripLiteralToken> strips = {};
 	if_fail_fe(gpk::stripLiteralParse(stripState, strips, gpk::vcst_t{"Hello, {name}!"}));
 	const gpk::STRIP_LITERAL_TYPE stripType = strips[0].Type;
 	printf("  strip types         : type=%i  spans=%u  cursor=%u\n", (int)stripType, strips.size(), stripState.IndexCurrentChar);
@@ -264,7 +264,7 @@ static gpk::err_t demoTypes(const gpk::SJSONReader& json) {
 
 static gpk::err_t demoLiteralSplit(const gpk::vcst_t format) {
 	gpk::SStripLiteralState state = {};
-	gpk::apod<gpk::SStripLiteralType> types = {};
+	gpk::apod<gpk::SStripLiteralToken> types = {};
 	if_fail_fe(gpk::stripLiteralParse(state, types, format));
 	gpk::aobj<gpk::vcsc_t> views = {};
 	if_fail_fe(gpk::stripLiteralGetViews(views, types, format));
@@ -275,7 +275,7 @@ static gpk::err_t demoLiteralSplit(const gpk::vcst_t format) {
 
 static gpk::err_t demoLiteralSteps(const gpk::vcst_t format) {
 	gpk::SStripLiteralState state = {};
-	gpk::apod<gpk::SStripLiteralType> spans = {};
+	gpk::apod<gpk::SStripLiteralToken> spans = {};
 	for(state.IndexCurrentChar = 0; state.IndexCurrentChar < format.size(); ++state.IndexCurrentChar) {
 		state.CharCurrent = format[state.IndexCurrentChar];
 		if_fail_fe(gpk::stripLiteralParseStep(state, spans, format));
