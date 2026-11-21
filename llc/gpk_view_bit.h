@@ -4,18 +4,18 @@
 #ifndef GPK_ARRAY_VIEW_BIT_H_23627
 #define GPK_ARRAY_VIEW_BIT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplt <tpnm _tInt>
 	struct bit_proxy {
-		tydf	_tInt			T;
+		tydf	_tInt		T;
 
-		T							& Element;
-		u0_t						Offset;
+		T					& Element;
+		u0_t				Offset;
 
-		oper					bool		()				cnst	{ return Element & (1ULL << Offset); }
-		bit_proxy&				oper=		(bool value)			{ value ? Element |= (1ULL << Offset) : Element &= ~(1ULL << Offset); return *this; }
+		oper				b8_t		()				cnst	{ return Element & (1ULL << Offset); }
+		bit_proxy&			oper=		(b8_t value)			{ value ? Element |= (1ULL << Offset) : Element &= ~(1ULL << Offset); return *this; }
 	};
 
 	tplt<tpnm _tInt>	ndsx	u0_t		bit_offset_field_size	() 	{
@@ -43,17 +43,17 @@ namespace gpk
 		u2_t					Index		()		cnst	{ return Begin ? u2_t((Element - Begin) * ELEMENT_BITS + Offset) : 0; }
 
 		bit_proxy<T>			oper*		()				{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return {*Element, (u0_t)Offset}; }
-		bool					oper*		()		cnst	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return (*Element) & (1ULL << Offset); }
+		b8_t					oper*		()		cnst	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return (*Element) & (1ULL << Offset); }
 
-		inline	oper			bool		()							cnst	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return (*Element) & (1ULL << Offset); }
-		inxp	bool			oper==		(cnst bit_iterator & other)	csnx	{ rtrn Element == other.Element && Offset == other.Offset; }
-		inxp	bool			oper!=		(cnst bit_iterator & other)	csnx	{ rtrn Element != other.Element || Offset != other.Offset; }
+		inln	oper			b8_t		()							cnst	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); return (*Element) & (1ULL << Offset); }
+		inxp	b8_t			oper==		(cnst bit_iterator & other)	csnx	{ rtrn Element == other.Element && Offset == other.Offset; }
+		inxp	b8_t			oper!=		(cnst bit_iterator & other)	csnx	{ rtrn Element != other.Element || Offset != other.Offset; }
 
 		bit_iterator			oper++		(int)			{ bit_iterator result (*this); ++(*this); return result; }
 		bit_iterator			oper--		(int)			{ bit_iterator result (*this); --(*this); return result; }
 		bit_iterator&			oper++		()				{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); if(0 == ++Offset) ++Element; return *this; }
 		bit_iterator&			oper--		()				{ if_true_tef(0 == Index(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); if(0 == Offset) { --Element; Offset = ELEMENT_BITS - 1; } else --Offset; return *this; }
-		inline	bit_iterator&	oper=		(bool value)	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
+		inln	bit_iterator&	oper=		(b8_t value)	{ if_true_tef(Index() >= Limit(), "Invalid index:%" GPK_FMT_U2 ", size:%" GPK_FMT_U2 ".", Index(), Limit()); value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
 	};
 
 	tplt<tpnm _tInt>
@@ -72,40 +72,40 @@ namespace gpk
 
 		// Constructors
 		inxp				view_bit		()								nxpt	= default;
-		inline				view_bit		(T * data, u2_t bitCount)				: Data(data), Count(bitCount) { if_true_tef(bitCount && 0 == data, "bitCount(%" GPK_FMT_U2 ")", bitCount); }
+		inln				view_bit		(T * data, u2_t bitCount)				: Data(data), Count(bitCount) { if_true_tef(bitCount && 0 == data, "bitCount(%" GPK_FMT_U2 ")", bitCount); }
 		tplN0u	inxp		view_bit		(T (&data)[N])					nxpt	: Data(data), Count(N * ELEMENT_BITS)								{}
 		tplN0u	inln		view_bit		(u2_t bitCount, T (&data)[N])			: Data(data), Count(::gpk::min(u2_t(N * ELEMENT_BITS), bitCount))	{ if_true_tef(bitCount > (N * ELEMENT_BITS), "max(%" GPK_FMT_U2 "), bitCount(%" GPK_FMT_U2 ")", N * ELEMENT_BITS, bitCount); }
 		// Operators
 		bit_proxy<T>		oper[]		(u2_t index)			{ if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count); u2_c offsetRow = index / ELEMENT_BITS, offsetBit = index % ELEMENT_BITS; return {Data[offsetRow], (u0_t)offsetBit}; }
-		bool				oper[]		(u2_t index)	cnst	{ if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count); u2_c offsetRow = index / ELEMENT_BITS, offsetBit = index % ELEMENT_BITS; return Data[offsetRow] & (1ULL << offsetBit); }
+		b8_t				oper[]		(u2_t index)	cnst	{ if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count); u2_c offsetRow = index / ELEMENT_BITS, offsetBit = index % ELEMENT_BITS; return Data[offsetRow] & (1ULL << offsetBit); }
 		// Methods
-		inln	TIter		begin			()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIter{}; }
-		inln	TIter		end				()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIter{}; }
+		inln	TIter		begin			()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIter{}; }
+		inln	TIter		end				()			nxpt	{ return Count ? TIter{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIter{}; }
 		//
-		inxp	TIterConst	begin			()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIterConst{}; }
-		inxp	TIterConst	end				()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIterConst{}; }
+		inxp	TIterConst	begin			()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data, 0, Count % ELEMENT_BITS} : TIterConst{}; }
+		inxp	TIterConst	end				()	cnst	nxpt	{ return Count ? TIterConst{Data, Data + round_up(Count, (u2_t)ELEMENT_BITS), Data + Count / ELEMENT_BITS, Count % ELEMENT_BITS, Count % ELEMENT_BITS} : TIterConst{}; }
 
 		inxp	u2_c&		size			()	cnst	nxpt	{ return Count; }
 	};
 #pragma pack(pop)
 
-	tplT	using					vbit		= ::gpk::view_bit<T>;
-	tydf	::gpk::view_bit<u0_t>	vbitu0_t, vbitu8	;
-	tydf	::gpk::view_bit<u1_t>	vbitu1_t, vbitu16	;
-	tydf	::gpk::view_bit<u2_t>	vbitu2_t, vbitu32	;
-	tydf	::gpk::view_bit<u3_t>	vbitu3_t, vbitu64	;
-	tplT	err_t		reverse_bits		(::gpk::view_bit<T> toReverse)											{
-		u2_c				countBits			= toReverse.size() / 2;
-		u2_c				lastBitIndex		= toReverse.size() - 1;
+	tplTusng	vbit		= view_bit<T>;
+	tydf		vbit<u0_t>	vbitu0_t;
+	tydf		vbit<u1_t>	vbitu1_t;
+	tydf		vbit<u2_t>	vbitu2_t;
+	tydf		vbit<u3_t>	vbitu3_t;
+	tplT		err_t		reverse_bits		(vbit<T> toReverse)											{
+		u2_c		countBits			= toReverse.size() / 2;
+		u2_c		lastBitIndex		= toReverse.size() - 1;
 		for(u2_t iBit = 0; iBit < countBits; ++iBit) {
 			u2_c				iRev				= lastBitIndex - iBit;
-			cnst bool					current				= toReverse[iBit];
-			toReverse[iBit]			= (bool)toReverse[iRev];
+			b8_c					current				= toReverse[iBit];
+			toReverse[iBit]			= (b8_t)toReverse[iRev];
 			toReverse[iRev]			= current;
 		}
 		return 0;
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ARRAY_VIEW_BIT_H_23627

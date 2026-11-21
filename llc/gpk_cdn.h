@@ -3,23 +3,23 @@
 #ifndef GPK_CDN_H_23627
 #define GPK_CDN_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
-	// Should fit in an uint32_t
+	// Should fit in an u2_t
 	struct SContentIdLocals	{ 
-		uint32_t					Index				: 24;
-		uint32_t					Block				: 8;
+		u2_t					Index				: 24;
+		u2_t					Block				: 8;
 	};
 
-	// Should fit in an uint32_t
+	// Should fit in an u2_t
 	struct SContentIdSystem	{ 
-		uint32_t					Bucket				: 8;
-		uint32_t					Server				: 12;
-		uint32_t					System				: 12;
+		u2_t					Bucket				: 8;
+		u2_t					Server				: 12;
+		u2_t					System				: 12;
 	};
 
-	// Should fit in an uint64_t
+	// Should fit in an u3_t
 	struct SContentId {
 		::gpk::SContentIdLocals		Locals;
 		::gpk::SContentIdSystem		System;
@@ -39,6 +39,6 @@ namespace gpk
 		::gpk::SContentId			Playroom	; // server_playroom
 	};
 #pragma pack(pop)
-} // namespace 
+} // nmsp 
 
 #endif // GPK_CDN_H_23627

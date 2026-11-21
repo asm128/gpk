@@ -19,21 +19,21 @@
 #ifndef GPK_WINDOW_H_23627
 #define GPK_WINDOW_H_23627
 
-namespace gpk
+nmsp gpk
 {
-
 	struct SWindowPlatformDetail {
 #if defined(GPK_WINDOWS)
-		typedef	::gpk::bgra			TOSWindowNativeTexel;
-		stxp	::gpk::astatic<TCHAR, 256>	DefaultRootWindowClassName	= {TEXT("GPK_WINDOW")};
+		tydf	::gpk::bgra			TOSWindowNativeTexel;
+		stxp	::gpk::astatic<WCHAR, 256>	DefaultRootWindowClassName	= {L"GPK_WINDOW"};
 
 		::HWND								WindowHandle				= {};
-		::WNDCLASSEX						WindowClass					= {sizeof(::WNDCLASSEX), CS_DBLCLKS, 0, 0, 0, 0, 0, 0, 0, 0, DefaultRootWindowClassName.begin(), 0};
-		uint32_t							BitmapInfoSize				= 0;
+		::WNDCLASSEXW						WindowClass					= {sizeof(::WNDCLASSEXW), CS_DBLCLKS, 0, 0, 0, 0, 0, 0, 0, 0, DefaultRootWindowClassName.begin(), 0};
+		u2_t								BitmapInfoSize				= 0;
 		::BITMAPINFO						BitmapInfo					= {sizeof(::BITMAPINFO)};
 		::HDC								IntermediateDeviceContext	= 0;    // <- note, we're creating, so it needs to be destroyed
 		::HBITMAP							IntermediateBitmap			= 0;
 		::gpk::view<TOSWindowNativeTexel>	PixelBits					= {};
+		u1_t								PendingHighSurrogate		= {};
 
 											~SWindowPlatformDetail		()	{
 			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			);
@@ -41,21 +41,21 @@ namespace gpk
 			if(WindowHandle					) ::DestroyWindow	(WindowHandle);
 		}
 #elif defined(GPK_XCB)
-		typedef	::gpk::bgra					TOSWindowNativeTexel;
+		tydf	::gpk::bgra					TOSWindowNativeTexel;
 		xcb_connection_t					* Connection				= {};
 		xcb_gcontext_t						GC							= {};
 		xcb_drawable_t						IdDrawable					= {};
 		xcb_drawable_t						IdDrawableBackPixmap		= {};
-		xcb_atom_t							WMDelete				= {};
-		::xkb_context						* XKBContext			= {};
-		::xkb_keymap						* XKBKeymap			= {};
-		::xkb_state						* XKBState			= {};
-		::xkb_compose_table				* XKBComposeTable	= {};
-		::xkb_compose_state				* XKBComposeState	= {};
-		int32_t							XKBDeviceId			= -1;
+		xcb_atom_t							WMDelete					= {};
+		::xkb_context						* XKBContext				= {};
+		::xkb_keymap						* XKBKeymap				= {};
+		::xkb_state						* XKBState					= {};
+		::xkb_compose_table				* XKBComposeTable			= {};
+		::xkb_compose_state				* XKBComposeState			= {};
+		s2_t								XKBDeviceId				= -1;
 
 											~SWindowPlatformDetail		()	{
-			if(GC && Connection) {
+			if(GC) {
 				xcb_free_gc(Connection, GC);
 				info_printf("%s.", "Window graphics context freed");
 			}
@@ -64,8 +64,8 @@ namespace gpk
 	};
 
 	struct SWindow {
-		typedef	::gpk::bgra					TTexel;
-		typedef	::gpk::rt<TTexel, uint32_t>	TOffscreen;
+		tydf	::gpk::bgra					TTexel;
+		tydf	::gpk::rt<TTexel, u2_t>	TOffscreen;
 
 		::gpk::SWindowPlatformDetail		PlatformDetail			= {};
 		::gpk::apobj<::gpk::SEventSystem>	EventQueue				= {};
@@ -73,26 +73,26 @@ namespace gpk
 		::gpk::pobj<::gpk::SInput>			Input					= {};
 		::gpk::n2u1_t						PreviousSize			= {};
 		::gpk::n2u1_t						Size					= {320, 200};
-		::gpk::rectu16						WindowedWindowRect		= {0, 0, 320, 200};
+		::gpk::rectu1_t						WindowedWindowRect		= {0, 0, 320, 200};
 
-		bool								Resized					: 1;
-		bool								Repaint					: 1;
-		bool								NoDraw					: 1;
-		bool								MinOrMaxed				: 1;
-		bool								Closed					: 1;
-		bool								FullScreen				: 1;
+		b8_t								Resized					: 1;
+		b8_t								Repaint					: 1;
+		b8_t								NoDraw					: 1;
+		b8_t								MinOrMaxed				: 1;
+		b8_t								Closed					: 1;
+		b8_t								FullScreen				: 1;
 	};
 
-	gpk::err_t						windowPresentTarget		(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
-	gpk::err_t						windowUpdate			(::gpk::SWindow & windowInstance);
-	gpk::err_t						windowUpdateTick		(::gpk::SWindow & windowInstance);
-	gpk::err_t						fullScreenExit			(::gpk::SWindow & windowInstance);
-	gpk::err_t						fullScreenEnter			(::gpk::SWindow & windowInstance);
+	gpk::err_t 					windowPresentTarget		(::gpk::SWindow & windowInstance, cnst ::gpk::g8bgra & targetToPresent);
+	gpk::err_t 					windowUpdate			(::gpk::SWindow & windowInstance);
+	gpk::err_t 					windowUpdateTick		(::gpk::SWindow & windowInstance);
+	gpk::err_t 					fullScreenExit			(::gpk::SWindow & windowInstance);
+	gpk::err_t 					fullScreenEnter			(::gpk::SWindow & windowInstance);
 
-	stin gpk::err_t				fullScreenToggle		(::gpk::SWindow & windowInstance) { 
+	stin gpk::err_t 			fullScreenToggle		(::gpk::SWindow & windowInstance) { 
 		return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); 
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_WINDOW_H_23627

@@ -12,7 +12,7 @@ static gpk::err_t demoJSONSteps(const gpk::vcsc_t json) {
 	gpk::SJSONReader reader = {};
 	for(reader.StateRead.IndexCurrentChar = 0; reader.StateRead.IndexCurrentChar < json.size(); ++reader.StateRead.IndexCurrentChar)
 		if_fail_fe(gpk::jsonParseStep(reader, json));
-	ree_if(reader.StateRead.NestLevel, "JSON nesting did not close.");
+	if_true_fef(reader.StateRead.NestLevel, "JSON nesting did not close.");
 	printf("  jsonParseStep       : %u tokens\n", reader.Token.size());
 	return 0;
 }
@@ -90,12 +90,12 @@ static gpk::err_t demoJSONNavigation(const gpk::SJSONReader& reader) {
 		printf("    part[%u]           : %.*s\n", i, GPK_VIEW(parts[i]));
 	printSection("JSON comparisons (library diagnostics follow)");
 	fflush(stdout);
-	ree_if(1 != gpk::jsonCompareNumber(*reader.Tree[ageIndex], *reader.Tree[ageIndex], reader.View), "Number comparison failed.");
-	ree_if(1 != gpk::jsonCompareArray(*reader.Tree[itemsIndex], *reader.Tree[itemsIndex], reader.View), "Array comparison failed.");
-	ree_if(1 != gpk::jsonCompareObject(*reader.Tree[0], *reader.Tree[0], reader.View), "Object comparison failed.");
-	ree_if(1 != gpk::jsonCompareNumber(*reader.Tree[ageIndex], reader.View, *reader.Tree[ageIndex], reader.View), "Number comparison failed.");
-	ree_if(1 != gpk::jsonCompareArray(*reader.Tree[itemsIndex], reader.View, *reader.Tree[itemsIndex], reader.View), "Array comparison failed.");
-	ree_if(1 != gpk::jsonCompareObject(*reader.Tree[0], reader.View, *reader.Tree[0], reader.View), "Object comparison failed.");
+	if_true_fef(1 != gpk::jsonCompareNumber(*reader.Tree[ageIndex], *reader.Tree[ageIndex], reader.View), "Number comparison failed.");
+	if_true_fef(1 != gpk::jsonCompareArray(*reader.Tree[itemsIndex], *reader.Tree[itemsIndex], reader.View), "Array comparison failed.");
+	if_true_fef(1 != gpk::jsonCompareObject(*reader.Tree[0], *reader.Tree[0], reader.View), "Object comparison failed.");
+	if_true_fef(1 != gpk::jsonCompareNumber(*reader.Tree[ageIndex], reader.View, *reader.Tree[ageIndex], reader.View), "Number comparison failed.");
+	if_true_fef(1 != gpk::jsonCompareArray(*reader.Tree[itemsIndex], reader.View, *reader.Tree[itemsIndex], reader.View), "Array comparison failed.");
+	if_true_fef(1 != gpk::jsonCompareObject(*reader.Tree[0], reader.View, *reader.Tree[0], reader.View), "Object comparison failed.");
 	printf("  comparisons        : 6 passed\n");
 	return 0;
 }
@@ -110,7 +110,7 @@ static gpk::err_t demoNumericHelpers() {
 	if_fail_fe(digits = gpk::parseIntegerHexadecimal(hexText, hex));
 	printf("  hexadecimal         : %u from %i digits\n", hex, digits);
 	gpk::u3_t binary = {};
-	if_fail_fe(digits = gpk::parseArbitraryBaseInteger(2, gpk::vcs{"01"}, gpk::vcs{"101"}, &binary));
+	if_fail_fe(digits = gpk::parseArbitraryBaseInteger(2, gpk::vcst_t{"01"}, gpk::vcst_t{"101"}, &binary));
 	printf("  binary              : %llu from %i digits\n", (unsigned long long)binary, digits);
 	const gpk::vcst_t spaces = " \tname";
 	gpk::u2_t cursor = 0;
@@ -183,8 +183,8 @@ static gpk::err_t demoTreeRebuild(const gpk::vcsc_t jsonText) {
 }
 
 static gpk::err_t demoFieldMapping() {
-	const gpk::SJSONFieldBinding fields[] = {{gpk::vcs{"name"}, gpk::JSON_TYPE_STRING}, {gpk::vcs{"age"}, gpk::JSON_TYPE_INTEGER}};
-	const gpk::kv<gpk::vcsc_t, gpk::vcsc_t> maps[] = {{gpk::vcs{"age"}, gpk::vcs{"37"}}, {gpk::vcs{"name"}, gpk::vcs{"Ada"}}};
+	const gpk::SJSONFieldBinding fields[] = {{gpk::vcst_t{"name"}, gpk::JSON_TYPE_STRING}, {gpk::vcst_t{"age"}, gpk::JSON_TYPE_INTEGER}};
+	const gpk::kv<gpk::vcsc_t, gpk::vcsc_t> maps[] = {{gpk::vcst_t{"age"}, gpk::vcst_t{"37"}}, {gpk::vcst_t{"name"}, gpk::vcst_t{"Ada"}}};
 	gpk::as2_t fieldIndices = {}, mapIndices = {};
 	if_fail_fe(gpk::jsonMapToFields(fieldIndices, fields, maps));
 	if_fail_fe(gpk::jsonFieldsToMap(mapIndices, fields, maps));
@@ -200,7 +200,7 @@ static gpk::err_t demoExpressionSteps(const gpk::vcst_t expression) {
 	gpk::SExpressionReader reader = {};
 	for(reader.StateRead.IndexCurrentChar = 0; reader.StateRead.IndexCurrentChar < expression.size(); ++reader.StateRead.IndexCurrentChar)
 		if_fail_fe(gpk::expressionReaderParseStep(reader, expression));
-	ree_if(reader.StateRead.NestLevel, "Expression nesting did not close.");
+	if_true_fef(reader.StateRead.NestLevel, "Expression nesting did not close.");
 	printf("  expressionReaderParseStep : %u tokens\n", reader.Token.size());
 	return 0;
 }
@@ -210,7 +210,7 @@ static gpk::err_t demoResolve(const gpk::SJSONReader& json, const gpk::vcst_t ex
 	if_fail_fe(gpk::expressionReaderParse(reader, expression));
 	gpk::SJSONExpressionSolver solver = {};
 	gpk::vcsc_t result = {};
-	ree_if(-1 == gpk::jsonExpressionResolve(reader, json, 0, solver, result), "Expression resolution failed.");
+	if_true_fef(-1 == gpk::jsonExpressionResolve(reader, json, 0, solver, result), "Expression resolution failed.");
 	printf("  %-38.*s => %.*s\n", GPK_VIEW(expression), GPK_VIEW(result));
 	return 0;
 }
@@ -242,7 +242,7 @@ static gpk::err_t demoTypes(const gpk::SJSONReader& json) {
 	(void)file; (void)keyedFile;
 	printf("  JSON types          : id=%i  type=%i  cursor=%u\n", (int)jsonId, (int)jsonType, jsonState.IndexCurrentChar);
 	gpk::SExpressionReader expression = {};
-	if_fail_fe(gpk::expressionReaderParse(expression, gpk::vcs{"name"}));
+	if_fail_fe(gpk::expressionReaderParse(expression, gpk::vcst_t{"name"}));
 	const gpk::SExpressionToken& expressionToken = expression.Token[0];
 	const gpk::SExpressionNode& expressionNode = *expression.Tree[0];
 	const gpk::SExpressionReaderState& expressionState = expression.StateRead;
@@ -250,13 +250,13 @@ static gpk::err_t demoTypes(const gpk::SJSONReader& json) {
 	printf("  expression types    : type=%i  children=%u  cursor=%u\n", (int)expressionType, expressionNode.Children.size(), expressionState.IndexCurrentChar);
 	gpk::SJSONExpressionSolver solver = {};
 	gpk::vcsc_t result = {};
-	ree_if(-1 == gpk::jsonExpressionResolve(expression, json, 0, solver, result), "Expression resolution failed.");
-	ree_if(!solver.Results.size(), "No evaluation steps were recorded.");
+	if_true_fef(-1 == gpk::jsonExpressionResolve(expression, json, 0, solver, result), "Expression resolution failed.");
+	if_true_fef(!solver.Results.size(), "No evaluation steps were recorded.");
 	const gpk::SEvaluationStepResult& evaluation = solver.Results[0];
 	printf("  evaluation step     : root=%u  result=%i\n", evaluation.IndexRootJSONNode, evaluation.IndexJSONResult);
 	gpk::SStripLiteralState stripState = {};
 	gpk::apod<gpk::SStripLiteralType> strips = {};
-	if_fail_fe(gpk::stripLiteralParse(stripState, strips, gpk::vcs{"Hello, {name}!"}));
+	if_fail_fe(gpk::stripLiteralParse(stripState, strips, gpk::vcst_t{"Hello, {name}!"}));
 	const gpk::STRIP_LITERAL_TYPE stripType = strips[0].Type;
 	printf("  strip types         : type=%i  spans=%u  cursor=%u\n", (int)stripType, strips.size(), stripState.IndexCurrentChar);
 	return 0;

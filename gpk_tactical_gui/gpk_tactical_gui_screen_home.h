@@ -6,7 +6,7 @@
 
 namespace dry
 {
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_HOME, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_HOME, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HOME, DIALOG									,  0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HOME, GROUP_PROGRAM							,  1);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HOME, GROUP_GAUGE								,  2);
@@ -95,7 +95,7 @@ namespace dry
 		::dry::SGaugeDryer				GaugeDryerSmall				= {};
 		::dry::SGaugeFeeder				GaugeFeederSmall[2]			= {};
 		::dry::SStringCache				Strings						= {};
-		int32_t							IndexSpool					= 0;
+		::gpk::s2_t							IndexSpool					= 0;
 	};
 
 } // namespace

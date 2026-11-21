@@ -67,7 +67,7 @@ static const ::dry::SControlParams			control_list_config			[]	=
 
 static	gpk::err_t						setupScreenHUD				(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, app.Screens.HUD , ::control_list_hud);
-	return ::dry::handleResizeScreenHUD (app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenHUD (app, app.Framework.RootWindow.Size.s1());
 }
 
 static	gpk::err_t						setupScreenMenu				(::dry::SApplication & app)	{
@@ -76,7 +76,7 @@ static	gpk::err_t						setupScreenMenu				(::dry::SApplication & app)	{
 	if(-1 == indexControlMenuItem)
 		return 1;
 	app.Framework.GUI->Controls.SetSelected(indexControlMenuItem, true);
-	return ::dry::handleResizeScreenMenu(app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenMenu(app, app.Framework.RootWindow.Size.s1());
 }
 static	gpk::err_t						setupScreenSpoolInfo		(::dry::SApplication & app)	{
 	::gpk::SGUI								& gui						= *app.Framework.GUI;
@@ -84,7 +84,7 @@ static	gpk::err_t						setupScreenSpoolInfo		(::dry::SApplication & app)	{
 	::dry::setupScreenFromControlParams(*app.Framework.GUI, app.Screens.RootControlIndex, screen, ::control_list_spool_info);
 	::gpk::controlSetParent(*app.Framework.GUI, screen.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG], app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]);
 	gui.Controls.SetHidden(screen.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_DIALOG], true);
-	return ::dry::handleResizeScreenSpoolInfo(app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenSpoolInfo(app, app.Framework.RootWindow.Size.s1());
 }
 
 static	gpk::err_t						setupScreenModal			(::dry::SApplication & app)	{
@@ -95,13 +95,13 @@ static	gpk::err_t						setupScreenModal			(::dry::SApplication & app)	{
 		, ::dry::SCREEN_CONTROL_MODAL_YES
 		, ::dry::SCREEN_CONTROL_MODAL_NO
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
+	for(::gpk::u2_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
 		const ::gpk::cid_t								indexControl			= app.Screens.Modal.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
 	}
-	return ::dry::handleResizeScreenModal(app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenModal(app, app.Framework.RootWindow.Size.s1());
 }
 
 gpk::err_t								dry::setupScreenLoadFilament		(::dry::SApplication & app)	{
@@ -109,13 +109,13 @@ gpk::err_t								dry::setupScreenLoadFilament		(::dry::SApplication & app)	{
 	const ::dry::SCREEN_CONTROL_LOAD_FILAMENT		controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_LOAD_FILAMENT_DIALOG
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
+	for(::gpk::u2_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
 		const ::gpk::cid_t								indexControl			= app.Screens.LoadFilament.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
 	}
-	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1());
 }
 
 gpk::err_t								dry::setupScreenInfo		(::dry::SApplication & app)	{
@@ -123,13 +123,13 @@ gpk::err_t								dry::setupScreenInfo		(::dry::SApplication & app)	{
 	const ::dry::SCREEN_CONTROL_INFO				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_INFO_DIALOG
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
+	for(::gpk::u2_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
 		const ::gpk::cid_t								indexControl			= app.Screens.Info.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
 	}
-	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1());
 }
 
 gpk::err_t								dry::setupScreenConfig		(::dry::SApplication & app)	{
@@ -137,13 +137,13 @@ gpk::err_t								dry::setupScreenConfig		(::dry::SApplication & app)	{
 	const ::dry::SCREEN_CONTROL_CONFIG				controlsToHide	[]			=
 		{ ::dry::SCREEN_CONTROL_CONFIG_DIALOG
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
+	for(::gpk::u2_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
 		const ::gpk::cid_t								indexControl			= app.Screens.Config.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
 		app.Framework.GUI->Controls.SetHidden(indexControl, true);
 	}
-	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1());
 }
 
 static	gpk::err_t						setupScreens				(::dry::SApplication & app)	{
@@ -152,7 +152,7 @@ static	gpk::err_t						setupScreens				(::dry::SApplication & app)	{
 	info_printf("Created root control with index %i.", app.Screens.RootControlIndex);
 	::gpk::SControlPlacement						& rootControl				= gui.Controls.Placement[app.Screens.RootControlIndex];
 	::gpk::SControlDraw								& controlDraw				= gui.Controls.Draw		[app.Screens.RootControlIndex];
-	rootControl.Area.Size						= app.Framework.RootWindow.Size.s1_t();
+	rootControl.Area.Size						= app.Framework.RootWindow.Size.s1();
 	controlDraw.NoBorder						= true;
 	//controlMode.NoBackgroundRect				= true;
 	rootControl.Border							= {};
@@ -171,22 +171,22 @@ static	gpk::err_t						setupScreens				(::dry::SApplication & app)	{
 
 
 static	gpk::err_t						setupGauge					(::dry::SGaugeFeeder	& feeder, const ::gpk::n2s1_t feederControlSize)	{
-	const ::gpk::circlef32							gaugeMetrics				= {feederControlSize.x / 2.0f - 4, feederControlSize.f2_t() / 2.0f};
+	const ::gpk::circlef32							gaugeMetrics				= {feederControlSize.x / 2.0f - 4, feederControlSize.f2() / 2.0f};
 //#define GAUGE_LOW_RES
 #if defined(GAUGE_LOW_RES)
-	const uint32_t									resolution					= 12;
+	const ::gpk::u2_t									resolution					= 12;
 #else
-	const uint32_t									resolution					= 64;
+	const ::gpk::u2_t									resolution					= 64;
 #endif
 	::dry::gaugeBuildRadial(feeder, gaugeMetrics, resolution, 8);
-	feeder.Image.resize(feederControlSize.u2_t());
+	feeder.Image.resize(feederControlSize.u2());
 	::dry::gaugeImageUpdate(feeder);
 	return 0;
 }
 
-static	gpk::err_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SGaugeFeeder & feeder, int32_t feederControlId)	{
+static	gpk::err_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SGaugeFeeder & feeder, ::gpk::s2_t feederControlId)	{
 	::gpk::SGUI										& gui						= *app.Framework.GUI;
-	const int32_t									indexControlFeeder			= app.Screens.Home.ControlIds[feederControlId];
+	const ::gpk::s2_t									indexControlFeeder			= app.Screens.Home.ControlIds[feederControlId];
 	::gpk::SControlPlacement						& control					= gui.Controls.Placement[indexControlFeeder];
 	const ::gpk::n2s1_t								feederControlSize			= control.Area.Size;
 	::setupGauge(feeder, feederControlSize);
@@ -195,7 +195,7 @@ static	gpk::err_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SG
 }
 
 static	gpk::err_t						setupGauges					(::dry::SApplication & app)	{
-	for(uint32_t iFeeder = 0; iFeeder < ::gpk::size(app.Screens.Home.GaugeFeederSmall); ++iFeeder)
+	for(::gpk::u2_t iFeeder = 0; iFeeder < ::gpk::size(app.Screens.Home.GaugeFeederSmall); ++iFeeder)
 		::setupGaugeControl(app, app.Screens.Home.GaugeFeederSmall[iFeeder], ::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL + iFeeder);
 
 	::setupGaugeControl(app, app.Screens.Home.GaugeDryerSmall.Gauges[::dry::GAUGE_TEMPERATURE], ::dry::SCREEN_CONTROL_HOME_DRYER_SMALL);
@@ -210,14 +210,14 @@ gpk::err_t								dry::setupGUI				(::dry::SApplication & app)	{
 	gui.ThemeDefault							= 7 * 16 + 11;
 	//gui.ThemeDefault							= 18 * 16 + 10;
 
-	gpk_necall(::setupScreens(app), "%s", "Failed to initialize screens.");
-	gpk_necall(::dry::setupPalettes(gui), "%s", "Failed to set up palettes.");
-	gpk_necall(::setupGauges(app), "%s", "Failed to initialize screens.");
+	if_fail_fef(::setupScreens(app), "%s", "Failed to initialize screens.");
+	if_fail_fef(::dry::setupPalettes(gui), "%s", "Failed to set up palettes.");
+	if_fail_fef(::setupGauges(app), "%s", "Failed to initialize screens.");
 
-	::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
+	::gpk::pobj<::gpk::rt<::gpk::bgra, ::gpk::u2_t>>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;
 	const auto								& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
-	gpk_necall(::gpk::guiUpdateMetrics(gui, guiRenderTargetMetrics.u1_t(), true), "Failed to update GUI metrics to {w: %i, h: %i}.", guiRenderTargetMetrics.x, guiRenderTargetMetrics.y);
+	if_fail_fef(::gpk::guiUpdateMetrics(gui, guiRenderTargetMetrics.u1(), true), "Failed to update GUI metrics to {w: %i, h: %i}.", guiRenderTargetMetrics.x, guiRenderTargetMetrics.y);
 	info_printf("Render target size: [%u x %u]", guiRenderTargetMetrics.x, guiRenderTargetMetrics.y);
 	return 0;
 }

@@ -40,11 +40,11 @@ gpk::err_t					setup						(::dry::SApplication & app) {
 	auto								& framework					= app.Framework;
 #if defined(GPK_WINDOWS)
 	framework.RootWindow.Size		= {640, 480};//{720, 576};
-	gpk_necall(::gpk::mainWindowCreate(framework.RootWindow, framework.RuntimeValues.PlatformDetail, framework.RootWindow.Input), "%s", "Failed to initialize framework.");
+	if_fail_fef(::gpk::mainWindowCreate(framework.RootWindow, framework.RuntimeValues.PlatformDetail, framework.RootWindow.Input), "%s", "Failed to initialize framework.");
 #else
-	gpk_necall(::s3d::mainWindowCreate(framework), "%s", "Failed to initialize framework.");
+	if_fail_fef(::s3d::mainWindowCreate(framework), "%s", "Failed to initialize framework.");
 #endif
-	framework.RootWindow.BackBuffer->resize(framework.RootWindow.Size.u2_t(), 0xFFFFFFFFU, 0xFFFFFFFFU);
+	framework.RootWindow.BackBuffer->resize(framework.RootWindow.Size.u2(), 0xFFFFFFFFU, 0xFFFFFFFFU);
 #if !defined(GPK_WINDOWS)
 	gpk_sync_increment(app.ThreadClients);
 	app.SerialThread				=
@@ -88,9 +88,9 @@ gpk::err_t					draw						(::dry::SApplication & app) {
 	if(framework.RootWindow.Repaint) {
 		verbose_printf("%s", "Repainting...");
 		::gpk::SGUI							& gui						= *framework.GUI;
-		::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
+		::gpk::pobj<::gpk::rt<::gpk::bgra, ::gpk::u2_t>>
 											& guiRenderTarget			= framework.RootWindow.BackBuffer;
-		gpk_necall(guiRenderTarget->resize(framework.RootWindow.Size.u2_t(), ::gpk::bgra{0x10, 0x04, 0x08, 0xFF}, 0xFFFFFFFFU), "Failed to resize render target to display size: [%u x %u]", framework.RootWindow.Size.x, framework.RootWindow.Size.y);
+		if_fail_fef(guiRenderTarget->resize(framework.RootWindow.Size.u2(), ::gpk::bgra{0x10, 0x04, 0x08, 0xFF}, 0xFFFFFFFFU), "Failed to resize render target to display size: [%u x %u]", framework.RootWindow.Size.x, framework.RootWindow.Size.y);
 		::gpk::guiDraw(gui, guiRenderTarget->Color.View);
 	}
 	return 0;

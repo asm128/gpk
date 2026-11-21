@@ -1,6 +1,6 @@
 #include "dryer_app.h"
 
-static void							timeFormat				(::gpk::vc output)		{
+static void							timeFormat				(::gpk::vsc_t output)		{
 	static constexpr const char				* month_names[]			= {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 	time_t									rawtime					= {};
     time ( &rawtime );
@@ -15,11 +15,11 @@ static void							timeFormat				(::gpk::vc output)		{
 }
 
 template <typename _tScreen>
-static	gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, int32_t idControl, bool isOn) {
+static	gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, ::gpk::s2_t idControl, bool isOn) {
 	const ::gpk::cid_t						controlIndex			= screen.ControlIds[idControl];
 	::dry::SControlImages					& icons					= screen.ControlIcons[idControl];
 	if(-1 != controlIndex)
-		gui.Controls.Images[controlIndex].Image = isOn ? icons.On.View : icons.Off.View;
+		gui.Controls.ImageViews[controlIndex] = isOn ? icons.On.View : icons.Off.View;
 	return 0;
 }
 
@@ -27,7 +27,7 @@ gpk::err_t						dry::updateScreenHUD	(::dry::SApplication & app) {
 	::gpk::SGUI								& gui					= *app.Framework.GUI;
 	char									bufferTime	[64]		= {};
 	::timeFormat(bufferTime);
-	if(::gpk::vcs{bufferTime} != ::gpk::vcs{app.TimeString.Storage}) {
+	if(::gpk::vcst_t{bufferTime} != ::gpk::vcst_t{app.TimeString.Storage}) {
 		::gpk::memcpy_s(app.TimeString.Storage, bufferTime);
 		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_CALENDAR], app.TimeString.Storage)));
 	}

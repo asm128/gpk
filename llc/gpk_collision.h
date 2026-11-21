@@ -37,7 +37,7 @@ namespace gpk
 		}
 		out_intersect_point.x	= (TAxis)(xnom / denom);
 		out_intersect_point.y	= (TAxis)(ynom / denom);
-		ree_if(!isfinite(out_intersect_point.x)
+		if_true_fef(!isfinite(out_intersect_point.x)
 			|| !isfinite(out_intersect_point.y)
 			, "%s", "Probably a numerical issue.");
 		return 1; //All OK
@@ -46,7 +46,7 @@ namespace gpk
 	// Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
 	// returns t value of intersection and intersection point q
 	tplt<tpnm TAxis>
-	int32_t				intersectRaySphere
+	::gpk::s2_t				intersectRaySphere
 		( const ::gpk::n3<TAxis>		& position
 		, const ::gpk::n3<TAxis>		& direction
 		, const ::gpk::sphere<TAxis>	& sphere

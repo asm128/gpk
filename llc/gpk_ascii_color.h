@@ -1,12 +1,12 @@
-#include "gpk_typeint.h"	// for uint16_t and uint32_t
+#include "gpk_enum.h"
 
 #ifndef GPK_ASCII_COLOR_H_23627
 #define GPK_ASCII_COLOR_H_23627
 
-namespace gpk
+nmsp gpk
 {
-	// This type is used to represent the palette array of the ASCII console. Having : uint16_t here makes ASCII_COLOR_INDEX to have the same memory footprint as an unsigned short.
-	enum ASCII_COLOR_INDEX : uint32_t
+	// This type is used to represent the palette array of the ASCII console. Having : u1_t here makes ASCII_COLOR_INDEX to have the same memory footprint as an unsigned short.
+	enum ASCII_COLOR_INDEX : u2_t
 		{	ASCII_COLOR_INDEX_0			= 0x000000		// BLACK
 		,	ASCII_COLOR_INDEX_1 		= 0x800000	 	// DARKBLUE
 		,	ASCII_COLOR_INDEX_2 		= 0x008000	 	// DARKGREEN
@@ -26,7 +26,7 @@ namespace gpk
 		,	ASCII_COLOR_INDEX_COUNT		= 16			// COUNT
 		};
 
-	stxp	uint32_t ASCII_PALETTE [] = 
+	stxp	u2_t ASCII_PALETTE [] = 
 		{	0xFF000000		// BLACK
 		,	0xFF800000	 	// DARKBLUE
 		,	0xFF008000	 	// DARKGREEN
@@ -48,28 +48,44 @@ namespace gpk
 	// 3-Channel color array with a max value of 0xFF each. This means we use 24 bit for each color but as there is no fundamental type of 24-bit in C++ we gpkose the next larger, in this case an unsigned int of 32-bit size.
 	// This particular channel arrangement has the red channel stored in the first 8 bits (the first byte), the green channel in the next 8 bits (the second byte), and the blue channel in the last 8 bits (the third byte) of the channel array.
 	// The remaining 8 bits must be set to 0 and I don't remember if they have an actual meaning for the console system. More complex graphics systems may use those remaining bits to represent transparency (the alpha channel) or other rendering-related information.
-	enum ASCII_COLOR : uint16_t
-		{	ASCII_COLOR_BLACK			=  0
-		,	ASCII_COLOR_DARKBLUE
-		,	ASCII_COLOR_DARKGREEN
-		,	ASCII_COLOR_DARKCYAN
-		,	ASCII_COLOR_DARKRED
-		,	ASCII_COLOR_DARKMAGENTA
-		,	ASCII_COLOR_DARKYELLOW
-		,	ASCII_COLOR_LIGHTGREY
-		,	ASCII_COLOR_DARKGREY
-		,	ASCII_COLOR_BLUE
-		,	ASCII_COLOR_GREEN
-		,	ASCII_COLOR_CYAN
-		,	ASCII_COLOR_RED
-		,	ASCII_COLOR_MAGENTA
-		,	ASCII_COLOR_YELLOW
-		,	ASCII_COLOR_WHITE
-		,	ASCII_COLOR_COUNT
-		};
+	GDEFINE_ENUM_TYPE(ASCII_COLOR, u1_t);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Black, 0);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Dark_blue, 1);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Dark_green, 2);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Dark_cyan, 3);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Dark_red, 4);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Dark_magenta, 5);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Dark_yellow, 6);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Light_grey, 7);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Dark_grey, 8);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Blue, 9);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Green, 10);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Cyan, 11);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Red, 12);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Magenta, 13);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Yellow, 14);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, White, 15);
+	GDEFINE_ENUM_VALUE(ASCII_COLOR, Count, 16);
+	stxp ASCII_COLOR ASCII_COLOR_BLACK = ASCII_COLOR_Black;
+	stxp ASCII_COLOR ASCII_COLOR_DARKBLUE = ASCII_COLOR_Dark_blue;
+	stxp ASCII_COLOR ASCII_COLOR_DARKGREEN = ASCII_COLOR_Dark_green;
+	stxp ASCII_COLOR ASCII_COLOR_DARKCYAN = ASCII_COLOR_Dark_cyan;
+	stxp ASCII_COLOR ASCII_COLOR_DARKRED = ASCII_COLOR_Dark_red;
+	stxp ASCII_COLOR ASCII_COLOR_DARKMAGENTA = ASCII_COLOR_Dark_magenta;
+	stxp ASCII_COLOR ASCII_COLOR_DARKYELLOW = ASCII_COLOR_Dark_yellow;
+	stxp ASCII_COLOR ASCII_COLOR_LIGHTGREY = ASCII_COLOR_Light_grey;
+	stxp ASCII_COLOR ASCII_COLOR_DARKGREY = ASCII_COLOR_Dark_grey;
+	stxp ASCII_COLOR ASCII_COLOR_BLUE = ASCII_COLOR_Blue;
+	stxp ASCII_COLOR ASCII_COLOR_GREEN = ASCII_COLOR_Green;
+	stxp ASCII_COLOR ASCII_COLOR_CYAN = ASCII_COLOR_Cyan;
+	stxp ASCII_COLOR ASCII_COLOR_RED = ASCII_COLOR_Red;
+	stxp ASCII_COLOR ASCII_COLOR_MAGENTA = ASCII_COLOR_Magenta;
+	stxp ASCII_COLOR ASCII_COLOR_YELLOW = ASCII_COLOR_Yellow;
+	stxp ASCII_COLOR ASCII_COLOR_WHITE = ASCII_COLOR_White;
+	stxp ASCII_COLOR ASCII_COLOR_COUNT = ASCII_COLOR_Count;
 
 	// Swaps the background color and the font color.
-	inxp	ASCII_COLOR			ascii_color_invert		(const ASCII_COLOR color)				{ return ASCII_COLOR(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
+	inxp	ASCII_COLOR			ascii_color_invert		(cnst ASCII_COLOR color)				{ return ASCII_COLOR(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
 }
 
 // BLINK	128

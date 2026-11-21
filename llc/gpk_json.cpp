@@ -5,6 +5,7 @@
 #include "gpk_file.h"
 #include "gpk_parse.h"
 #include "gpk_math.h"
+#include "gpk_string_compose.h"
 
 GPK_USING_TYPEINT();
 
@@ -23,7 +24,7 @@ gpk::err_t			gpk::jsonMapToFields
 	for(u2_t iField = 0; iField < fields.size(); ++iField) {
 		cnst gpk::SJSONFieldBinding	& fieldToAdd			= fields[iField];
 		if(fieldToAdd.Field.size() && fieldToAdd.Field == fieldMaps[iMap].Key) {
-			gpk_necs(indicesOfFields.push_back(iField));
+			if_fail_fe(indicesOfFields.push_back(iField));
 			break;
 		}
 	}
@@ -41,39 +42,39 @@ gpk::err_t			gpk::jsonFieldsToMap
 		for(u2_t iMap = 0; iMap < fieldMaps.size(); ++iMap) {
 			cnst gpk::SJSONFieldBinding	& fieldToAdd			= fields[iField];
 			if(fieldToAdd.Field.size() && fieldToAdd.Field == fieldMaps[iMap].Key) {
-				gpk_necs(indicesOfMaps.push_back(iMap));
+				if_fail_fe(indicesOfMaps.push_back(iMap));
 				bNotAdded				= false;
 				break;
 			}
 		}
 		if(bNotAdded)
-			gpk_necs(indicesOfMaps.push_back(-1));
+			if_fail_fe(indicesOfMaps.push_back(-1));
 	}
 	rtrn indicesOfMaps.size();
 }
 
 gpk::err_t			gpk::jsonFileRead			(gpk::SJSONFile & file, gpk::vcsc_c & filename) {
 	json_info_printf("Loading json file: %s.", filename.begin());
-	gpk_necall(gpk::fileToMemory(filename, file.Bytes), "Failed to load file: '%s'", filename.begin());
+	if_fail_fef(gpk::fileToMemory(filename, file.Bytes), "Failed to load file: '%s'", filename.begin());
 	rtrn gpk::jsonParse(file.Reader, file.Bytes);
 }
 
 gpk::err_t			gpk::jsonArraySplit			(cnst gpk::SJSONNode & jsonArrayToSplit, cnst gpk::view<vcsc_t> & jsonViews, u2_c blockSize, gpk::aobj<gpk::apod<sc_t>> & outputJsons)		{
 	u2_c				remainder					= jsonArrayToSplit.Children.size() % blockSize;
 	u2_c				countParts					= jsonArrayToSplit.Children.size() / blockSize + one_if(remainder);
-	gpk_necs(outputJsons.resize(countParts));
+	if_fail_fe(outputJsons.resize(countParts));
 	u2_t					iSourceRecord						= 0;
 	for(u2_t iPart = 0; iPart < outputJsons.size(); ++iPart) {
 		gpk::apod<sc_t>			& outputJson				= outputJsons[iPart];
-		gpk_necs(outputJson.push_back('['));
+		if_fail_fe(outputJson.push_back('['));
 		for(u2_t iPartRecord = 0, countPartRecords = (remainder && iPart == countParts - 1) ? remainder : blockSize
 			; iPartRecord < countPartRecords
 			; ++iPartRecord) {
-			gpk_necs(gpk::jsonWrite(jsonArrayToSplit.Children[iSourceRecord++], jsonViews, outputJson));;
+			if_fail_fe(gpk::jsonWrite(jsonArrayToSplit.Children[iSourceRecord++], jsonViews, outputJson));;
 			if(iPartRecord < countPartRecords - 1)
-				gpk_necs(outputJson.push_back(','));
+				if_fail_fe(outputJson.push_back(','));
 		}
-		gpk_necs(outputJson.push_back(']'));
+		if_fail_fe(outputJson.push_back(']'));
 	}
 	rtrn 0;
 }
@@ -85,7 +86,7 @@ gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, cnst gpk::view<vcsc_t
 	case gpk::JSON_TYPE_INTEGER		: {
 		sc_t					temp[64]					= {};
 		snprintf(temp, gpk::size(temp) - 2, "%" GPK_FMT_S3, (u3_t)node->Token->Value);
-		gpk_necs(output.append_string(temp));
+		if_fail_fe(append_strings(output, temp));
 	}
 		break;
 	case gpk::JSON_TYPE_DECIMAL		: {
@@ -97,45 +98,45 @@ gpk::err_t			gpk::jsonWrite				(cnst gpk::SJSONNode* node, cnst gpk::view<vcsc_t
 			temp[lenNum] = 0;
 			--lenNum;
 		}
-		gpk_necs(output.append_string(temp));
+		if_fail_fe(append_strings(output, temp));
 	}
 		break;
 	case gpk::JSON_TYPE_BOOLEAN			:
-		gpk_necs(output.append(bool2vcc(node->Token->Value)));
+		if_fail_fe(append_strings(output, b82st(node->Token->Value)));
 		break;
 	case gpk::JSON_TYPE_NULL			:
-		gpk_necs(output.append(jsonViews[node->ObjectIndex]));
+		if_fail_fe(append_strings(output, jsonViews[node->ObjectIndex]));
 		break;
 	case gpk::JSON_TYPE_STRING		:
-		gpk_necs(output.push_back('"'));
-		gpk_necs(output.append(jsonViews[node->ObjectIndex]));
-		gpk_necs(output.push_back('"'));
+		if_fail_fe(output.push_back('"'));
+		if_fail_fe(append_strings(output, jsonViews[node->ObjectIndex]));
+		if_fail_fe(output.push_back('"'));
 		break;
 	case gpk::JSON_TYPE_OBJECT		:
-		gpk_necs(output.push_back('{'));
+		if_fail_fe(output.push_back('{'));
 		for(u2_t iChildren = 0; iChildren < node->Children.size(); iChildren += 2) {
-			gpk_necs(gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output));;
-			gpk_necs(output.push_back(':'));
-			gpk_necs(gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output));;
+			if_fail_fe(gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output));;
+			if_fail_fe(output.push_back(':'));
+			if_fail_fe(gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output));;
 			if(iChildren < node->Children.size() - 2)
-				gpk_necs(output.push_back(','));
+				if_fail_fe(output.push_back(','));
 		}
-		gpk_necs(output.push_back('}'));
+		if_fail_fe(output.push_back('}'));
 		break;
 	case gpk::JSON_TYPE_ARRAY			:
-		gpk_necs(output.push_back('['));
+		if_fail_fe(output.push_back('['));
 		for(u2_t iChildren = 0; iChildren < node->Children.size(); ++iChildren) {
-			gpk_necs(gpk::jsonWrite(node->Children[iChildren], jsonViews, output));;
+			if_fail_fe(gpk::jsonWrite(node->Children[iChildren], jsonViews, output));;
 			if(iChildren < node->Children.size() - 1)
-				gpk_necs(output.push_back(','));
+				if_fail_fe(output.push_back(','));
 		}
-		gpk_necs(output.push_back(']'));
+		if_fail_fe(output.push_back(']'));
 	}
 	rtrn 0;
 }
 
 sttc	gpk::err_t	jsonCloseElement			(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, u2_t indexChar) {
-	ree_if(tokens.size() <= (u2_t)stateReader.IndexCurrentElement, "Invalid parser state. Cannot close element: %" GPK_FMT_S2 ".", stateReader.IndexCurrentElement);
+	if_true_fef(tokens.size() <= (u2_t)stateReader.IndexCurrentElement, "Invalid parser state. Cannot close element: %" GPK_FMT_S2 ".", stateReader.IndexCurrentElement);
 	gpk::SJSONToken			* closing					= 0;
 	closing					= stateReader.CurrentElement; //&object[stateReader.IndexCurrentElement];
 	closing->Span.End		= (u2_t)indexChar + 1;
@@ -153,7 +154,7 @@ sttc	gpk::err_t	jsonCloseElement			(gpk::SJSONReaderState & stateReader, gpk::ap
 
 sttc	gpk::err_t	jsonCloseElement			(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & object, u2_t indexChar, gpk::JSON_TYPE jsonType) {
 	cnst gpk::SJSONToken		* open						= stateReader.CurrentElement; //&object[stateReader.IndexCurrentElement];
-	ree_if(jsonType != open->Type, "Invalid object type: open: %" GPK_FMT_U2 " (%s). closing: %" GPK_FMT_U2 " (%s).", open->Type, gpk::get_value_label(open->Type).begin(), jsonType, gpk::get_value_label(jsonType).begin());
+	if_true_fef(jsonType != open->Type, "Invalid object type: open: %" GPK_FMT_U2 " (%s). closing: %" GPK_FMT_U2 " (%s).", open->Type, gpk::get_value_label(open->Type).begin(), jsonType, gpk::get_value_label(jsonType).begin());
 	rtrn ::jsonCloseElement(stateReader, object, indexChar);
 }
 
@@ -183,7 +184,7 @@ sttc	gpk::err_t	jsonCloseOrDiscardEmptyKOrV	(gpk::SJSONReaderState & stateReader
 	if(tokens[tokens.size() - 1].Type == containerType) {
 		json_info_printf("Discarding empty container element at index %" GPK_FMT_S2 " (%s). Level: %" GPK_FMT_S2 "", tokens.size() - 1, gpk::get_value_label(containerType).begin(), stateReader.NestLevel);
 		stateReader.IndexCurrentElement	= tokens[tokens.size() - 1].ParentIndex;
-		gpk_necs(tokens.pop_back());
+		if_fail_fe(tokens.pop_back());
 		--stateReader.NestLevel;
 		if((u2_t)stateReader.IndexCurrentElement < tokens.size())
 			stateReader.CurrentElement	= &tokens[stateReader.IndexCurrentElement];
@@ -255,12 +256,12 @@ sttc	gpk::err_t	jsonParseStringCharacter	(gpk::SJSONReaderState & stateReader, g
 }
 
 sttc	gpk::err_t	jsonParseKeyword			(gpk::vcsc_c & token, gpk::JSON_TYPE jsonType, gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & object, gpk::vcsc_c & jsonAsString)	{
-	ree_if(token.size() > jsonAsString.size() - stateReader.IndexCurrentChar, "End of stream while parsing token: %s.", token.begin());
-	ree_if(0 != strncmp(token.begin(), &jsonAsString[stateReader.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
+	if_true_fef(token.size() > jsonAsString.size() - stateReader.IndexCurrentChar, "End of stream while parsing token: %s.", token.begin());
+	if_true_fef(0 != strncmp(token.begin(), &jsonAsString[stateReader.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
 	json_info_printf("JSON token found: %s.", token.begin());
 
-	gpk::SJSONToken			boolElement					= {stateReader.IndexCurrentElement, jsonType, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + token.size()}, gpk::vcc2bool(token)};
-	gpk_necall(object.push_back(boolElement), "Failed to push! Out of memory? object count: %" GPK_FMT_U2 ".", object.size());
+	gpk::SJSONToken			boolElement					= {stateReader.IndexCurrentElement, jsonType, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + token.size()}, gpk::st2b8(token)};
+	if_fail_fef(object.push_back(boolElement), "Failed to push! Out of memory? object count: %" GPK_FMT_U2 ".", object.size());
 	stateReader.IndexCurrentChar	+= token.size() - 1;
 	stateReader.CurrentElement		= &object[stateReader.IndexCurrentElement];
 	rtrn 0;
@@ -296,16 +297,16 @@ sttc	gpk::err_t	lengthJsonNumber			(u2_t indexCurrentChar, gpk::vcsc_c & jsonAsS
 //		if(lenDec) {
 //			f3_t						decValue					= 0;
 //			if(absolutePart[0] == '.')
-//				gpk_necs(absolutePart.slice(absolutePart, offsetStart + 1, lenDec - 1));
+//				if_fail_fe(absolutePart.slice(absolutePart, offsetStart + 1, lenDec - 1));
 //			else
-//				gpk_necs(absolutePart.slice(absolutePart, offsetStart, lenDec));
+//				if_fail_fe(absolutePart.slice(absolutePart, offsetStart, lenDec));
 //			cnst gpk::err_t		decCount					= gpk::parseIntegerDecimal(absolutePart, decValue);
 //			if_failed_ve(decCount);
 //			decValue				/= gpk::powui(10, decCount);
 //			json_info_printf("Decimal part: %f.", decValue);
 //			finalValue				+= decValue;
 //		}
-//		memcpy((f3_t*)&output.Value, &finalValue, szof(uint64_t));
+//		memcpy((f3_t*)&output.Value, &finalValue, szof(::gpk::u3_t));
 //	}
 //	else {
 //		json_info_printf("Integer part: %" GPK_FMT_S2 ".", output.Value);
@@ -336,12 +337,12 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 	s2_t					signLength					= parseSign({&jsonAsString[offset], jsonAsString.size() - offset}, isNegative, isFloat);
 	u2_t					index						= offset + signLength;
 	charCurrent			= jsonAsString[index];
-	ree_if(index < jsonAsString.size() && (charCurrent != '0' && (charCurrent < '1' || charCurrent > '9')), "Character '%c' at index %" GPK_FMT_S2 " is not a number.", charCurrent, index);
+	if_true_fef(index < jsonAsString.size() && (charCurrent != '0' && (charCurrent < '1' || charCurrent > '9')), "Character '%c' at index %" GPK_FMT_S2 " is not a number.", charCurrent, index);
 
 	u2_c					sizeNum						= lengthJsonNumber(index, jsonAsString);
 	gpk::SJSONToken			currentElement				= {stateReader.IndexCurrentElement, isFloat ? gpk::JSON_TYPE_DECIMAL : gpk::JSON_TYPE_INTEGER, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + signLength + sizeNum}, {}};
 	gpk::vcsc_t				numString					= {};
-	gpk_necs(jsonAsString.slice(numString, index, sizeNum));
+	if_fail_fe(jsonAsString.slice(numString, index, sizeNum));
 
 	gpk::err_t				intCount					= gpk::parseIntegerDecimal(numString, currentElement.Value = 0);
 	if(isFloat) { // The number begins with a dot and we already skipped it so calculate decimal places for the fractional part.
@@ -349,7 +350,7 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 		if(isNegative) {
 			valuef64 	*= -1;
 		}
-		memcpy(&(currentElement.Value = 0), &valuef64, szof(uint64_t));
+		memcpy(&(currentElement.Value = 0), &valuef64, szof(::gpk::u3_t));
 		json_info_printf("Decimal read: %f.", valuef64);
 	}
 	else { // there is an integer part so we need to check for decimals
@@ -364,19 +365,19 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 			if(lenDec > 0) { // there are leftover digits after the integer part
 				u2_t					offsetStart					= currentElement.Span.Begin + sizeNum - (sizeNum - intCount);
 				f3_t						decValue					= 0;
-				gpk_necs(jsonAsString.slice(numString, offsetStart, lenDec));
+				if_fail_fe(jsonAsString.slice(numString, offsetStart, lenDec));
 				cnst gpk::err_t		decCount					= gpk::parseIntegerDecimal(numString, decValue);
-				rees_if_failed(decCount);
+				if_fail_ve(-1, decCount);
 				decValue				/= gpk::powui(10, decCount);
 				json_info_printf("Decimal part: %f.", decValue);
 				finalValue				+= decValue;
 			}
 			if(isNegative)
 				finalValue *= -1;
-			memcpy(&currentElement.Value, &finalValue, szof(uint64_t));
+			memcpy(&currentElement.Value, &finalValue, szof(::gpk::u3_t));
 		}
 	}
-	gpk_necs(tokens.push_back(currentElement));
+	if_fail_fe(tokens.push_back(currentElement));
 	stateReader.CurrentElement						= &tokens[stateReader.IndexCurrentElement];
 	json_info_printf("Number found: %s. Length: %" GPK_FMT_U2 ". Negative: %s. Float: %s."
 		, gpk::toString({&jsonAsString[index], sizeNum}).begin()
@@ -387,7 +388,7 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 	stateReader.IndexCurrentChar					+= sizeNum + (index - offset) - 1;
 	if(stateReader.IndexCurrentChar + 1 < jsonAsString.size() - 1) {
 		charCurrent										= jsonAsString[stateReader.IndexCurrentChar+1];
-		ree_if(charCurrent != ' '
+		if_true_fef(charCurrent != ' '
 			&& charCurrent != '\t'
 			&& charCurrent != '\n'
 			&& charCurrent != '\r'
@@ -402,7 +403,7 @@ sttc	gpk::err_t	parseJsonNumber				(gpk::SJSONReaderState & stateReader, gpk::ap
 
 sttc	gpk::err_t	jsonCloseContainer			(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, gpk::JSON_TYPE containerType) {
 	gpk::err_t				errVal						= 0;
-	gpk_necall(::jsonCloseOrDiscardEmptyKOrV(stateReader, tokens, (gpk::JSON_TYPE_ARRAY == containerType) ? gpk::JSON_TYPE_VALUE : gpk::JSON_TYPE_KEY), "Failed to close container at index %" GPK_FMT_S2 " (%s).", stateReader.IndexCurrentElement, gpk::get_value_label(containerType).begin());
+	if_fail_fef(::jsonCloseOrDiscardEmptyKOrV(stateReader, tokens, (gpk::JSON_TYPE_ARRAY == containerType) ? gpk::JSON_TYPE_VALUE : gpk::JSON_TYPE_KEY), "Failed to close container at index %" GPK_FMT_S2 " (%s).", stateReader.IndexCurrentElement, gpk::get_value_label(containerType).begin());
 	errVal					= ::jsonCloseElement(stateReader, tokens, stateReader.IndexCurrentChar, containerType);
 	(void)errVal;
 	stateReader.ExpectingSeparator	= false;
@@ -413,7 +414,7 @@ sttc	gpk::err_t	jsonCloseContainer			(gpk::SJSONReaderState & stateReader, gpk::
 
 sttc	gpk::err_t	jsonOpenElement				(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, gpk::JSON_TYPE jsonType, u2_t indexChar) {
 	gpk::SJSONToken			currentElement				= {stateReader.IndexCurrentElement, jsonType, {indexChar, indexChar}, {}};
-	gpk_necs(stateReader.IndexCurrentElement = tokens.push_back(currentElement));
+	if_fail_fe(stateReader.IndexCurrentElement = tokens.push_back(currentElement));
 	stateReader.CurrentElement	= &tokens[stateReader.IndexCurrentElement];
 	gpk::vcsc_c			labelType					= gpk::get_value_label(currentElement.Type);
 	(void)labelType;
@@ -432,7 +433,7 @@ sttc	gpk::err_t	jsonParseDocumentCharacter	(gpk::SJSONReaderState & stateReader,
 		break; 								\
 	}
 
-#define test_first_position()	ree_if(0 == stateReader.CharCurrent, "Character found at invalid position. Index: %" GPK_FMT_U2 ". Character: %c.", stateReader.IndexCurrentChar, stateReader.CharCurrent);
+#define test_first_position()	if_true_fef(0 == stateReader.CharCurrent, "Character found at invalid position. Index: %" GPK_FMT_U2 ". Character: %c.", stateReader.IndexCurrentChar, stateReader.CharCurrent);
 
 	switch(stateReader.CharCurrent) {
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
@@ -526,32 +527,32 @@ gpk::err_t			gpk::jsonParseStep			(gpk::SJSONReader & reader, gpk::vcsc_c & json
 
 gpk::err_t			gpk::jsonTreeRebuild		(gpk::view<gpk::SJSONToken>& in_object, gpk::apobj<gpk::SJSONNode> & out_nodes)								{
 	gpk::apobj<gpk::SJSONNode>	& tree					= out_nodes;
-	gpk_necs(tree.resize(in_object.size()));
+	if_fail_fe(tree.resize(in_object.size()));
 
 	// -- Build all nodes linearly, without assigning the children
 	for(u2_t iObject = 0; iObject < tree.size(); ++iObject) {
 		gpk::pobj<gpk::SJSONNode>	& nodeCurrent		= tree[iObject];
 		if(!nodeCurrent) {
-			rees_if(0 == nodeCurrent.create());
+			if_true_ve(-1, 0 == nodeCurrent.create());
 		}
 		nodeCurrent->Token			= &in_object[iObject];
 		nodeCurrent->Parent			= ((u2_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex	= iObject;
 		nodeCurrent->Children.clear();
 		if(nodeCurrent->Parent)
-			gpk_necs(nodeCurrent->Parent->Children.push_back(nodeCurrent));
+			if_fail_fe(nodeCurrent->Parent->Children.push_back(nodeCurrent));
 	}
 
 	// -- Remove the key/value wrappers from objects.
 	for(u2_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
 		gpk::pobj<gpk::SJSONNode>				& nodeCurrent										= tree[iObject];
-		rees_if(!nodeCurrent);
+		if_true_ve(-1, !nodeCurrent);
 		if( gpk::JSON_TYPE_ARRAY	!= nodeCurrent->Token->Type
 		 && gpk::JSON_TYPE_OBJECT	!= nodeCurrent->Token->Type
 		)
 			continue;
 		gpk::apobj<gpk::SJSONNode>	newChildren;
-		gpk_necs(newChildren.resize(nodeCurrent->Children.size()));
+		if_fail_fe(newChildren.resize(nodeCurrent->Children.size()));
 		for(u2_t iChild = 0, countChild = newChildren.size(); iChild < countChild; ++iChild)
 			newChildren[iChild]						= nodeCurrent->Children[iChild]->Children[0];
 		nodeCurrent->Children					= newChildren;
@@ -564,62 +565,62 @@ gpk::err_t			gpk::jsonTreeRebuild		(gpk::view<gpk::SJSONToken>& in_object, gpk::
 gpk::err_t			gpk::jsonParse				(gpk::SJSONReader & reader, gpk::vcsc_c & jsonAsString, bool buildTree, bool buildViews)	{
 	gpk::SJSONReaderState		& stateReader			= reader.StateRead;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < jsonAsString.size(); ++stateReader.IndexCurrentChar) {
-		gpk_necs(gpk::jsonParseStep(reader, jsonAsString));
+		if_fail_fe(gpk::jsonParseStep(reader, jsonAsString));
 		json_bi_if(reader.StateRead.DoneReading, "%" GPK_FMT_S2 " json characters read.", stateReader.IndexCurrentChar + 1);
 	}
-	ree_if(stateReader.NestLevel, "Nest level: %" GPK_FMT_S2 " (Needs to be zero).", stateReader.NestLevel);
+	if_true_fef(stateReader.NestLevel, "Nest level: %" GPK_FMT_S2 " (Needs to be zero).", stateReader.NestLevel);
 	if(false == buildViews) {
-		gpk_necs(reader.View.resize(1));
+		if_fail_fe(reader.View.resize(1));
 		reader.View[0] = jsonAsString;
 	}
 	else {
-		gpk_necs(reader.View.resize(reader.Token.size()));
+		if_fail_fe(reader.View.resize(reader.Token.size()));
 		for(u2_t iView = 0; iView < reader.View.size(); ++iView) {
 			cnst gpk::SJSONToken		& currentElement									= reader.Token[iView];
-			gpk_necs(jsonAsString.slice(reader.View[iView], currentElement.Span.Begin, currentElement.Span.End - currentElement.Span.Begin));
+			if_fail_fe(jsonAsString.slice(reader.View[iView], currentElement.Span.Begin, currentElement.Span.End - currentElement.Span.Begin));
 		}
 	}	
 	rtrn buildTree ? gpk::jsonTreeRebuild(reader.Token, reader.Tree) : 0;
 }
 
 gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, cnst gpk::view<vcsc_t> & views, gpk::as2_t & indices, gpk::avcsc_t & keys)	{
-	ree_if(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin());
+	if_true_fef(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin());
 	for(u2_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		cnst gpk::SJSONNode		* node					= node_object.Children[iNode];
-		ree_if(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
+		if_true_fef(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
 		gpk::vcsc_c			& view					= views[node->ObjectIndex];
-		gpk_necs(indices.push_back(node->ObjectIndex));
-		gpk_necs(keys	.push_back(view));
+		if_fail_fe(indices.push_back(node->ObjectIndex));
+		if_fail_fe(keys	.push_back(view));
 	}
 	rtrn indices.size();
 }
 
 gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, gpk::as2_t & indices)	{
-	ree_if(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin());
+	if_true_fef(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin());
 	for(u2_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		cnst gpk::SJSONNode		* node						= node_object.Children[iNode];
-		ree_if(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
-		gpk_necs(indices.push_back(node->ObjectIndex));
+		if_true_fef(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
+		if_fail_fe(indices.push_back(node->ObjectIndex));
 	}
 	rtrn indices.size();
 }
 
 gpk::err_t			gpk::jsonObjectKeyList		(cnst gpk::SJSONNode & node_object, cnst gpk::view<vcsc_t> & views, gpk::avcsc_t & keys)	{
-	ree_if(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin());
+	if_true_fef(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin());
 	for(u2_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		cnst gpk::SJSONNode		* node						= node_object.Children[iNode];
-		ree_if(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
+		if_true_fef(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
 		gpk::vcsc_c			& view						= views[node->ObjectIndex];
-		gpk_necs(keys.push_back(view));
+		if_fail_fe(keys.push_back(view));
 	}
 	rtrn keys.size();
 }
 
 gpk::err_t			gpk::jsonObjectValueGet		(cnst gpk::SJSONNode & node_object, cnst gpk::view<vcsc_t> & views, cnst gpk::vcst_t & key)	{
-	ree_if(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key (\"%s\").", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin(), key.begin());
+	if_true_fef(gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only objects are allowed to be accessed by key (\"%s\").", node_object.Token->Type, gpk::get_value_label(node_object.Token->Type).begin(), key.begin());
 	for(u2_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		cnst gpk::SJSONNode		* node						= node_object.Children[iNode];
-		ree_if(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
+		if_true_fef(gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %" GPK_FMT_U2 " (%s). Only string types (%" GPK_FMT_U2 ") can be keys of JSON objects.", node->Token->Type, gpk::get_value_label(node->Token->Type).begin(), gpk::JSON_TYPE_STRING);
 
 		gpk::vcsc_c			& view						= views[node->ObjectIndex];
 		if(key == view)
@@ -629,10 +630,10 @@ gpk::err_t			gpk::jsonObjectValueGet		(cnst gpk::SJSONNode & node_object, cnst g
 }
 
 gpk::err_t			gpk::jsonArrayValueGet		(cnst gpk::SJSONNode & tree, u2_t index)				{
-	ree_if(gpk::JSON_TYPE_ARRAY != tree.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only arrays are allowed to be accessed by index.", tree.Token->Type, gpk::get_value_label(tree.Token->Type).begin());
-	ree_if(index >= tree.Children.size(), "Index out of range: %" GPK_FMT_S2 ". Max index: %" GPK_FMT_S2 ".", index, tree.Children.size() - 1);
+	if_true_fef(gpk::JSON_TYPE_ARRAY != tree.Token->Type, "Invalid node type: %" GPK_FMT_S2 " (%s). Only arrays are allowed to be accessed by index.", tree.Token->Type, gpk::get_value_label(tree.Token->Type).begin());
+	if_true_fef(index >= tree.Children.size(), "Index out of range: %" GPK_FMT_S2 ". Max index: %" GPK_FMT_S2 ".", index, tree.Children.size() - 1);
 	cnst gpk::SJSONNode		* node						= tree.Children[index];	// Get the
-	ree_if(0 == node, "Invalid or corrupt tree. %s", "Nodes cannot be null.");
+	if_true_fef(0 == node, "Invalid or corrupt tree. %s", "Nodes cannot be null.");
 	rtrn node->ObjectIndex;
 }
 
@@ -669,20 +670,20 @@ gpk::err_t			gpk::jsonCompareArray		(cnst gpk::SJSONNode & node, cnst gpk::view<
 //	The conversion is done by subtracting the offset (0x30, 0x37, and 0x57) between the ASCII value of the character and the desired integer value.
 //	Returns codepoint (0x0000..0xFFFF) or -1 in case of an error (e.g. EOF or non-hex character)
 sttc	gpk::err_t	decodeUnicodeEscapeSequence	(gpk::vcsc_t input, u2_t & ret_unicode)		{
-	ree_if(input.size() < 4, "Invalid escape sequence: %s.", input.begin());
+	if_true_fef(input.size() < 4, "Invalid escape sequence: %s.", input.begin());
 	rtrn gpk::parseIntegerHexadecimal(input, ret_unicode);
 }
 
 // this function only makes sense after reading the first `\u`
 gpk::err_t			jsonToCodePoint				(gpk::vcsc_t input, u2_t & unicode)			{
-	gpk_necall(::decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", gpk::toString(input).begin());
+	if_fail_fef(::decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", gpk::string(input).begin());
 	if (unicode < 0xD800 || unicode > 0xDBFF)
 		rtrn 0;
 	// surrogate pairs
-	ree_if(input.size() < 7, "%s", "expecting a \\u token for the second half of the surrogate pair");
-	ree_if(input[4] != '\\' || input[5] == 'u', "%s", "expecting a \\u token for the second half of the surrogate pair");
+	if_true_fef(input.size() < 7, "%s", "expecting a \\u token for the second half of the surrogate pair");
+	if_true_fef(input[4] != '\\' || input[5] == 'u', "%s", "expecting a \\u token for the second half of the surrogate pair");
 	u2_t						surrogatePair;
-	gpk_necall(::decodeUnicodeEscapeSequence({&input[6], 4U}, surrogatePair), "Invalid escape sequence: %s.", gpk::toString(input).begin());
+	if_fail_fef(::decodeUnicodeEscapeSequence({&input[6], 4U}, surrogatePair), "Invalid escape sequence: %s.", gpk::string(input).begin());
 	unicode														= 0x10000 + ((unicode & 0x3FF) << 10) + (surrogatePair & 0x3FF);
 	rtrn 0;
 }
@@ -716,8 +717,8 @@ gpk::err_t	gpk::jsonObjectGetBooleanAsDecimal(cnst SJSONReader & reader, u2_t iN
 //gpk::err_t	gpk::jsonObjectGetStringAsBoolean (cnst SJSONReader & reader, u2_t iNode, b8_t		& value)	{ vcsc_t	string ; jsonObjectGetString (reader, iNode, string ); value = string.size() ? vcc2bool(string) : false; rtrn iNode; }
 //gpk::err_t	gpk::jsonObjectGetStringAsDecimal (cnst SJSONReader & reader, u2_t iNode, f3_t		& value)	{ vcsc_t	string ; jsonObjectGetString (reader, iNode, string ); ::parseJsonNumber(value = string ; rtrn iNode; }
 // 
-//gpk::err_t	gpk::jsonObjectGetAsString	(cnst gpk::SJSONReader & reader, u2_t iNode, vcsc_t		& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_STRING ) rtrn jsonObjectGetString (reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_BOOLEAN) { b8_t boolean = false; gpk_necs(jsonObjectGetBoolean(reader, iNode, boolean)); gpk::bool2char(boolean, value); } rtrn iNode; }
-//gpk::err_t	gpk::jsonObjectGetAsBoolean	(cnst gpk::SJSONReader & reader, u2_t iNode, b8_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_BOOLEAN) rtrn jsonObjectGetBoolean(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_STRING ) { vcsc_t boolean = {}; gpk_necs(jsonObjectGetString(reader, iNode, boolean)); value = gpk::vcc2bool(boolean); }; rtrn iNode; }
+//gpk::err_t	gpk::jsonObjectGetAsString	(cnst gpk::SJSONReader & reader, u2_t iNode, vcsc_t		& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_STRING ) rtrn jsonObjectGetString (reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_BOOLEAN) { b8_t boolean = false; if_fail_fe(jsonObjectGetBoolean(reader, iNode, boolean)); gpk::bool2char(boolean, value); } rtrn iNode; }
+//gpk::err_t	gpk::jsonObjectGetAsBoolean	(cnst gpk::SJSONReader & reader, u2_t iNode, b8_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_BOOLEAN) rtrn jsonObjectGetBoolean(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_STRING ) { vcsc_t boolean = {}; if_fail_fe(jsonObjectGetString(reader, iNode, boolean)); value = gpk::vcc2bool(boolean); }; rtrn iNode; }
 //gpk::err_t	gpk::jsonObjectGetAsInteger	(cnst gpk::SJSONReader & reader, u2_t iNode, s3_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_INTEGER) rtrn jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_DECIMAL) {}; rtrn iNode; }
 //gpk::err_t	gpk::jsonObjectGetAsInteger	(cnst gpk::SJSONReader & reader, u2_t iNode, i32_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_INTEGER) rtrn jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_DECIMAL) {}; rtrn iNode; }
 //gpk::err_t	gpk::jsonObjectGetAsInteger	(cnst gpk::SJSONReader & reader, u2_t iNode, i16_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_INTEGER) rtrn jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_DECIMAL) {}; rtrn iNode; }
@@ -729,7 +730,7 @@ gpk::err_t	gpk::jsonObjectGetBooleanAsDecimal(cnst SJSONReader & reader, u2_t iN
 //gpk::err_t	gpk::jsonObjectGetAsDecimal	(cnst gpk::SJSONReader & reader, u2_t iNode, f3_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_DECIMAL) rtrn jsonObjectGetDecimal(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_INTEGER) {}; rtrn iNode; }
 //gpk::err_t	gpk::jsonObjectGetAsDecimal	(cnst gpk::SJSONReader & reader, u2_t iNode, f2_t	& value)	{ if(reader.Token[iNode].Type == gpk::JSON_TYPE_DECIMAL) rtrn jsonObjectGetDecimal(reader, iNode, value); else if(reader.Token[iNode].Type == gpk::JSON_TYPE_INTEGER) {}; rtrn iNode; }
 
-#define json_rew_if_failed(condition, format, ...) rews_if_failed(condition) /// rew_if_failed
+#define json_rew_if_failed(condition, format, ...) if_fail_ve(-1, condition) /// rew_if_failed
 
 gpk::err_t	gpk::jsonObjectGetAsString	(cnst SJSONReader & reader, u2_t iNode, vcst_c & key, vcsc_t	& value)	{ s2_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %" GPK_FMT_S2 ", key: '%s', node: '%s'.", iNode, toString(key).begin(), toString(reader.View[iNode]).begin()); rtrn jsonObjectGetString (reader, index, value); } 
 gpk::err_t	gpk::jsonObjectGetAsBoolean	(cnst SJSONReader & reader, u2_t iNode, vcst_c & key, b8_t		& value)	{ s2_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %" GPK_FMT_S2 ", key: '%s', node: '%s'.", iNode, toString(key).begin(), toString(reader.View[iNode]).begin()); rtrn jsonObjectGetBoolean(reader, index, value); } 

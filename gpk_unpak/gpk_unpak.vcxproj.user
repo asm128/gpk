@@ -20,5 +20,6 @@
     <LocalDebuggerCommandArguments>modules.gpk .\</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArgumentsHistory>modules.gpk .\|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
 </Project>

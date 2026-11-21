@@ -1,6 +1,8 @@
 #include "gpk_keyval.h"
 #include "gpk_functional.h"
 #include "gpk_log.h"
+#include "gpk_range.h"
+#include "gpk_slice.h"
 
 
 #if defined(GPK_ATMEL)
@@ -15,7 +17,9 @@
 #ifndef GPK_ARRAY_VIEW_H_23627
 #define GPK_ARRAY_VIEW_H_23627
 
-namespace gpk
+#define GPK_VIEW_ARGS(view) (int)view.size(), view.begin() // Parenthesizing the argument does not merely tolerate expressions—it legitimizes and conceals them. Without those parentheses, the macro enforces its intended use.
+
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tpl_t clss view {
@@ -37,43 +41,40 @@ namespace gpk
 
 		tplN2u	inxp			view			(T (&elements)[N])					nxpt	: Data(elements), Count(N)								{}
 		tplN2u	inxp			view			(u2_t elementCount, T (&elements)[N])		: Data(elements), Count(::gpk::min(N, elementCount))	{}
-		inln					view			(T * elements, u2_t elementCount)			: Data(elements), Count(elementCount)					{ gthrow_if(0 == elements && 0 != elementCount, "%" GPK_FMT_U2 " -> 0.", elementCount);	}
+		inxp					view			(T * elements, u2_t elementCount)			: Data(elements), Count(elementCount)					{ if_true_tef(0 == elements && 0 != elementCount, "%" GPK_FMT_U2 " -> 0.", elementCount);	}
 
 		// Operators
 		inxp	oper			view<TCnst>		()									csnx	{ rtrn {Data, Count}; }
-		T&						oper[]			(u2_t index)								{
+		inxp T&				oper[]			(u2_t index)								{
 			if_null_te(Data);
 			if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn Data[index];
 		}
-		cnst T&					oper[]			(u2_t index)						cnst	{
+		inxp cnst T&		oper[]			(u2_t index)						cnst	{
 			if_null_te(Data);
 			if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn Data[index];
 		}
-		bool					oper!=			(TCVCs & other)	cnst						{ rtrn  !operator==(other); } // I had to add this for the android build not supporting C++20.
-		bool					oper==			(TCVCs & other)	cnst						{
-			if(this->size() != other.size())
+		tplt<tpnm _tIndex> inxp T&		oper[]			(_tIndex index)						{ rtrn oper[]((u2_t)index); }
+		tplt<tpnm _tIndex> inxp cnst T&	oper[]			(_tIndex index)				cnst	{ rtrn oper[]((u2_t)index); }
+		ndxp	b8_t					oper!=			(TCVCs & other)				cnst	{ rtrn  !oper==(other); } // I had to add this for the android build not supporting C++20.
+		ndxp	b8_t					oper==			(TCVCs & other)				cnst	{
+			if(size() != other.size())
 				rtrn false;
-			if(this->begin() == other.begin())
+			if(begin() == other.begin())
 				rtrn true;
-			rtrn equal(other.begin(), this->begin(), this->size());
+			rtrn ::gpk::equal(other.begin(), begin(), size());
 		}
 		// Methods
-		inxp	u2_t			byte_count		()														csnx	{ rtrn u2_t(Count * sizeof(T));	}
-		inxp	u3_t			bit_count		()														csnx	{ rtrn byte_count() * 8ULL;			}
-		inln	view<sc_t>		c				()														nxpt	{ rtrn {(sc_t*)Data, byte_count()}; }
-		inln	view<u0_t>		u8				()														nxpt	{ rtrn {(u0_t*)Data, byte_count()}; }
-		inxp	view<sc_c>		cc				()														csnx	{ rtrn {(sc_c*)Data, byte_count()}; }
-		inxp	view<u0_c>		u8				()														csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
-		inxp	view<u0_c>		bytes			()														csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
-		inxp	view<u0_c>		cu8				()														csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
-		inxp	u2_c&			size			()														csnx	{ rtrn Count;				}
-		inxp	TCnst*			begin			()														csnx	{ rtrn Data;				}
-		inxp	TCnst*			end				()														csnx	{ rtrn begin() + Count;	}
-		inln	T*				begin			()														nxpt	{ rtrn Data;				}
-		inln	T*				end				()														nxpt	{ rtrn begin() + Count;	}
-		err_t					slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
+		inxp	view<u0_c>		bytes			() 									csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
+		inxp	u2_t			byte_count		()									csnx	{ rtrn u2_t(Count * sizeof(T));	}
+		inxp	u3_t			bit_count		()									csnx	{ rtrn byte_count() * 8ULL;			}
+		inxp	u2_c&			size			()									csnx	{ rtrn Count;				}
+		inxp	TCnst*			begin			()									csnx	{ rtrn Data;				}
+		inxp	TCnst*			end				()									csnx	{ rtrn begin() + Count;	}
+		inxp	T*				begin			()									nxpt	{ rtrn Data;				}
+		inxp	T*				end				()									nxpt	{ rtrn begin() + Count;	}
+		inxp err_t			slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
 			if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
 			u2_c					newSize			= Count - offset;
 			if(count != (u2_t)-1)
@@ -81,7 +82,7 @@ namespace gpk
 			out						= {Data ? &Data[offset] : 0, ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
-		err_t					slice			(TCstV & out, u2_t offset, u2_t count = (u2_t)-1)		cnst	{
+		inxp err_t			slice			(TCstV & out, u2_t offset, u2_t count = (u2_t)-1)		cnst	{
 			if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
 			u2_c					newSize			= Count - offset;
 			if(count != (u2_t)-1)
@@ -89,6 +90,10 @@ namespace gpk
 			out						= {Data ? &Data[offset] : 0, ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
+		inxp err_t			slice			(TV & out, rangeu2_t rangeToSlice)							{ rtrn slice(out, rangeToSlice.Offset, rangeToSlice.Count); }
+		inxp err_t			slice			(TCstV & out, rangeu2_t rangeToSlice)					cnst	{ rtrn slice(out, rangeToSlice.Offset, rangeToSlice.Count); }
+		inxp err_t			slice			(TV & out, sliceu2_t sliceToSlice)							{ rtrn slice(out, sliceToSlice.Begin, sliceToSlice.End - sliceToSlice.Begin); }
+		inxp err_t			slice			(TCstV & out, sliceu2_t sliceToSlice)					cnst	{ rtrn slice(out, sliceToSlice.Begin, sliceToSlice.End - sliceToSlice.Begin); }
 		err_t					revert			()																{
 			u2_c					lastElement		= Count - 1;
 			for(u2_t i = 0, swapCount = Count / 2; i < swapCount; ++i) {
@@ -113,7 +118,49 @@ namespace gpk
 
 		err_t					find			(cnst FBool<T&>		& funcForEach	, u2_t offset = 0)											{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
 		err_t					find			(cnst FBool<TCnst&>	& funcForEach	, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
-		err_t					find			(cnst T				& value			, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(Data[offset] == value) rtrn (err_t)offset; rtrn -1; }
+		inxp	err_t					find			(cnst T				& value			, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(Data[offset] == value) rtrn (err_t)offset; rtrn -1; }
+		err_t					find			(TCstV sequence, u2_t offset = 0)										cnst	{
+			if(sequence.size() > Count || offset > Count - sequence.size())
+				rtrn -1;
+			if(0 == sequence.size())
+				rtrn offset;
+			for(u2_t iOffset = offset, offsetStop = Count - sequence.size() + 1; iOffset < offsetStop; ++iOffset) {
+				b8_t					equal			= true;
+				for(u2_t iSequence = 0; iSequence < sequence.size(); ++iSequence)
+					if(sequence[iSequence] != Data[iOffset + iSequence]) {
+						equal					= false;
+						break;
+					}
+				if(equal)
+					rtrn iOffset;
+			}
+			rtrn -1;
+		}
+		err_t					rfind			(cnst T & value, u2_t offset = 0)										cnst	{
+			if(offset >= Count)
+				rtrn -1;
+			for(u2_t iOffset = Count - 1 - offset; iOffset < Count; --iOffset)
+				if(Data[iOffset] == value)
+					rtrn iOffset;
+			rtrn -1;
+		}
+		err_t					rfind			(TCstV sequence, u2_t offset = 0)										cnst	{
+			if(sequence.size() > Count || offset > Count - sequence.size())
+				rtrn -1;
+			if(0 == sequence.size())
+				rtrn Count - offset;
+			for(u2_t iOffset = Count - sequence.size() - offset; iOffset < Count; --iOffset) {
+				b8_t					equal			= true;
+				for(u2_t iSequence = 0; iSequence < sequence.size(); ++iSequence)
+					if(sequence[iSequence] != Data[iOffset + iSequence]) {
+						equal					= false;
+						break;
+					}
+				if(equal)
+					rtrn iOffset;
+			}
+			rtrn -1;
+		}
 
 		tplt<tpnm _tMax> err_t	max				(_tMax & maxFound, cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)	cnst	{
 			if_true_fef(offset >= Count, GPK_FMT_GE_U2, offset, Count);
@@ -145,229 +192,111 @@ namespace gpk
 		tplt<tpnm _tMax> err_t	min				(cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)						cnst	{ _tMax minFound = {}; rtrn min(minFound, funcComparand, offset); }
 	}; // view<>
 
-	tplTusng	view_array	= view<T>;
 	tplTusng	view1d		= view<T>;
 	tplTusng	v1			= view<T>;
 
 	tplTnsix	u2_t		size			(cnst view<T> & viewToTest)														nxpt	{ rtrn viewToTest.size();		}
 	tplTnsix	u2_t		byte_count		(cnst view<T> & viewToTest)														nxpt	{ rtrn viewToTest.byte_count();	}
+	tplt<tpnm T>
+	inxp	b8_t		is_any_of		(cnst T & valueToTest, view<cnst T> collection)						nxpt	{ rtrn 0 <= collection.find(valueToTest); }
 
 #pragma pack(pop)
 
-	tydf	view<b8_t>	vb8_t;
-	tydf	view<uc_t>	vuc_t, vuc, vuchar;
-	tydf	view<sc_t>	vsc_t, vc, vchar;
-	tydf	view<u0_t>	vu0_t, vu8;
-	tydf	view<u1_t>	vu1_t, vu16;
-	tydf	view<u2_t>	vu2_t, vu32;
-	tydf	view<u3_t>	vu3_t, vu64;
-	tydf	view<s0_t>	vs0_t, vi8;
-	tydf	view<s1_t>	vs1_t, vi16;
-	tydf	view<s2_t>	vs2_t, vi32;
-	tydf	view<s3_t>	vs3_t, vi64;
-	tydf	view<f2_t>	vf2_t, vf32;
-	tydf	view<f3_t>	vf3_t, vf64;
-
-	tydf	view<b8_c>	vcb8_t;
-	tydf	view<uc_c>	vcuc_t, vcuc, vcuchar;
-	tydf	view<sc_c>	vcsc_t, vcsc_t, vcchar;
-	tydf	view<u0_c>	vcu0_t, vcu0_t;
-	tydf	view<u1_c>	vcu1_t, vcu16;
-	tydf	view<u2_c>	vcu2_t, vcu32;
-	tydf	view<u3_c>	vcu3_t, vcu64;
-	tydf	view<s0_c>	vcs0_t, vcs0_t;
-	tydf	view<s1_c>	vcs1_t, vci16;
-	tydf	view<s2_c>	vcs2_t, vci32;
-	tydf	view<s3_c>	vcs3_t, vci64;
-	tydf	view<f2_c>	vcf2_t, vcf32;
-	tydf	view<f3_c>	vcf3_t, vcf64;
-
-	tdcs	 vb8_t 	vb8_c;
-	tdcs	 vuc_t 	vuc_c;
-	tdcs	 vsc_t 	vsc_c;
-	tdcs	 vu0_t 	vu0_c;
-	tdcs	 vu1_t 	vu1_c;
-	tdcs	 vu2_t 	vu2_c;
-	tdcs	 vu3_t 	vu3_c;
-	tdcs	 vs0_t 	vs0_c;
-	tdcs	 vs1_t 	vs1_c;
-	tdcs	 vs2_t 	vs2_c;
-	tdcs	 vs3_t 	vs3_c;
-	tdcs	 vf2_t 	vf2_c;
-	tdcs	 vf3_t 	vf3_c;
-
-	tdcs	 vcb8_t vcb8_c;
-	tdcs	 vcuc_t vcuc_c;
-	tdcs	 vcsc_t vcsc_c;
-	tdcs	 vcu0_t vcu0_c;
-	tdcs	 vcu1_t vcu1_c;
-	tdcs	 vcu2_t vcu2_c;
-	tdcs	 vcu3_t vcu3_c;
-	tdcs	 vcs0_t vcs0_c;
-	tdcs	 vcs1_t vcs1_c;
-	tdcs	 vcs2_t vcs2_c;
-	tdcs	 vcs3_t vcs3_c;
-	tdcs	 vcf2_t vcf2_c;
-	tdcs	 vcf3_t vcf3_c;
-// Use this to initialize a constexpr vcs from a string literal
-#define GPK_CXS(constexpr_string_literal) ::gpk::vcsc_t{szof(constexpr_string_literal) - 1U, constexpr_string_literal}
-	tydf	view<vuc_t>	vvuc_t;
-	tydf	view<vsc_t>	vvsc_t;
-	tydf	view<vu0_t>	vvu0_t;
-	tydf	view<vu1_t>	vvu1_t;
-	tydf	view<vu2_t>	vvu2_t;
-	tydf	view<vu3_t>	vvu3_t;
-	tydf	view<vs0_t>	vvs0_t;
-	tydf	view<vs1_t>	vvs1_t;
-	tydf	view<vs2_t>	vvs2_t;
-	tydf	view<vs3_t>	vvs3_t;
-	tydf	view<vf2_t>	vvf2_t;
-	tydf	view<vf3_t>	vvf3_t;
-	tydf	view<vuc_c>	vcvuc_t;
-	tydf	view<vsc_c>	vcvsc_t;
-	tydf	view<vu0_c>	vcvu0_t;
-	tydf	view<vu1_c>	vcvu1_t;
-	tydf	view<vu2_c>	vcvu2_t;
-	tydf	view<vu3_c>	vcvu3_t;
-	tydf	view<vs0_c>	vcvs0_t;
-	tydf	view<vs1_c>	vcvs1_t;
-	tydf	view<vs2_c>	vcvs2_t;
-	tydf	view<vs3_c>	vcvs3_t;
-	tydf	view<vf2_c>	vcvf2_t;
-	tydf	view<vf3_c>	vcvf3_t;
-	tdcs	vvuc_t	vvuc_c;
-	tdcs	vvsc_t	vvsc_c;
-	tdcs	vvu0_t	vvu0_c;
-	tdcs	vvu1_t	vvu1_c;
-	tdcs	vvu2_t	vvu2_c;
-	tdcs	vvu3_t	vvu3_c;
-	tdcs	vvs0_t	vvs0_c;
-	tdcs	vvs1_t	vvs1_c;
-	tdcs	vvs2_t	vvs2_c;
-	tdcs	vvs3_t	vvs3_c;
-	tdcs	vvf2_t	vvf2_c;
-	tdcs	vvf3_t	vvf3_c;
-	tdcs	vcvuc_t	vcvuc_c;
-	tdcs	vcvsc_t	vcvsc_c;
-	tdcs	vcvu0_t	vcvu0_c;
-	tdcs	vcvu1_t	vcvu1_c;
-	tdcs	vcvu2_t	vcvu2_c;
-	tdcs	vcvu3_t	vcvu3_c;
-	tdcs	vcvs0_t	vcvs0_c;
-	tdcs	vcvs1_t	vcvs1_c;
-	tdcs	vcvs2_t	vcvs2_c;
-	tdcs	vcvs3_t	vcvs3_c;
-	tdcs	vcvf2_t	vcvf2_c;
-	tdcs	vcvf3_t	vcvf3_c;
-
-	stxp	vcsc_t	VCC_NULL		= {4, "null"};
-	stxp	vcsc_t	VCC_TRUE		= {4, "true"};
-	stxp	vcsc_t	VCC_FALSE		= {5, "false"};
-
-	nsix	vcsc_t	bool2vcc		(bool b)							{ rtrn b ? VCC_TRUE : VCC_FALSE; }
-	nsix	sc_c*	bool2char		(bool b)							{ rtrn b ? VCC_TRUE.begin() : VCC_FALSE.begin(); }
-	nsix	u0_t	bool2u8			(bool b)							{ rtrn b ? 1 : 0; }
-	nsix	u0_t	bool2i8			(bool b)							{ rtrn b ? 1 : 0; }
-	stin	sc_c*	bool2char		(bool b, vcsc_t & output)	{ rtrn (output = b ? VCC_TRUE : VCC_FALSE).begin(); }
-	stin	bool	vcc2bool		(vcsc_t b)					{ rtrn b.size() && b != VCC_FALSE; }
-
-	struct view_string : view<sc_t> {
-		inxp			view_string				()											= dflt;
-		inxp			view_string				(vsc_c & other)						nxpt	: view(other)							{}
-		tplN2u			view_string				(sc_t (&storage)[N])				nxpt	: view(storage)							{ Count = (u2_t)strnlen(storage, (u2_t)N);							}
-		tplN2u			view_string				(sc_t (&storage)[N], u2_t length)			: view(storage, length)					{ if(length == (u2_t)-1) Count = (u2_t)strnlen(storage, (u2_t)N);	}
-						view_string				(sc_t * storage, u2_t length)				: view(storage, length)					{ Count = (length == (u2_t)-1) ? (u2_t)strlen(storage) : length;		}
-
-		inxp	sc_c*	begin					()	csnx	{ rtrn (Data && Count) ? Data : ""; }
-		inxp	sc_c*	end						()	csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
-		ndin	oper	sc_c* 					()  csnx	{ rtrn begin(); }
-		inln	sc_t*	begin					()	nxpt	{ rtrn Data; }
-		inln	sc_t*	end						()	nxpt	{ rtrn begin() + Count; }
-		ndin	oper	sc_t* 					()  nxpt	{ rtrn begin(); }
-	};
-	struct view_const_string : view<sc_c> {
-		inxp			view_const_string		()											: view(0, "") 							{}
-		inxp			view_const_string		(vcsc_c & other)					nxpt	: view(other)							{}
-		tplN2u			view_const_string		(sc_c (&storage)[N])				nxpt	: view(storage)							{ Count = (u2_t)strnlen(storage, (u2_t)N);							}
-		tplN2u			view_const_string		(sc_c (&storage)[N], u2_t length)			: view(storage, length)					{ if(length == (u2_t)-1) Count = (u2_t)strnlen(storage, (u2_t)N);	}
-						view_const_string		(sc_c * storage, u2_t length)				: view(storage ? storage : "", length)	{ if(length == (u2_t)-1) Count = (u2_t)strlen(begin());					}
-
-		inxp	sc_c*	begin					()	csnx	{ rtrn (Data && Count) ? Data : ""; }
-		inxp	sc_c*	end						()	csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
-		ndin	oper	sc_c* 					()  csnx	{ rtrn begin(); }
-	};
-
-	tydf	view_string			vstr_t, vs;
-	tydf	view_const_string	vcst_t, vcs;
-	tdcs	vstr_t				vstr_c;
-	tdcs	vcst_t				vcst_c;
-
-
-	stin			vs		str				(vs & arg)				{ rtrn arg; }
-	stin			vcst_t	str				(cnst vs & arg)			{ rtrn arg.cc(); }
-	stin			vcst_t	str				(cnst vcst_t & arg)		{ rtrn arg; }
-	stin			vs		str				(vsc_t arg)				{ rtrn arg; }
-	stin			vcst_t	str				(vcsc_t arg)			{ rtrn arg; }
-	tplN2usinx		vs		str				(sc_t (&arg)[N])		{ rtrn arg; }
-	tplN2usinx		vcst_t	str				(sc_c (&arg)[N])		{ rtrn arg; }
-	sinx			vcst_t	str				(cnst bool arg)			{ rtrn arg ? VCC_TRUE : VCC_FALSE; }
+	tydf	view<b8_t>	vb8_t;	tdcs	 vb8_t 	vb8_c;
+	tydf	view<uc_t>	vuc_t;	tdcs	 vuc_t 	vuc_c;
+	tydf	view<sc_t>	vsc_t;	tdcs	 vsc_t 	vsc_c;
+	tydf	view<u0_t>	vu0_t;	tdcs	 vu0_t 	vu0_c;
+	tydf	view<u1_t>	vu1_t;	tdcs	 vu1_t 	vu1_c;
+	tydf	view<u2_t>	vu2_t;	tdcs	 vu2_t 	vu2_c;
+	tydf	view<u3_t>	vu3_t;	tdcs	 vu3_t 	vu3_c;
+	tydf	view<s0_t>	vs0_t;	tdcs	 vs0_t 	vs0_c;
+	tydf	view<s1_t>	vs1_t;	tdcs	 vs1_t 	vs1_c;
+	tydf	view<s2_t>	vs2_t;	tdcs	 vs2_t 	vs2_c;
+	tydf	view<s3_t>	vs3_t;	tdcs	 vs3_t 	vs3_c;
+	tydf	view<f2_t>	vf2_t;	tdcs	 vf2_t 	vf2_c;
+	tydf	view<f3_t>	vf3_t;	tdcs	 vf3_t 	vf3_c;
+	
+	tydf	view<b8_c>	vcb8_t;	tdcs	vcb8_t	vcb8_c;
+	tydf	view<uc_c>	vcuc_t;	tdcs	vcuc_t	vcuc_c;
+	tydf	view<sc_c>	vcsc_t;	tdcs	vcsc_t	vcsc_c;
+	tydf	view<u0_c>	vcu0_t;	tdcs	vcu0_t	vcu0_c;
+	tydf	view<u1_c>	vcu1_t;	tdcs	vcu1_t	vcu1_c;
+	tydf	view<u2_c>	vcu2_t;	tdcs	vcu2_t	vcu2_c;
+	tydf	view<u3_c>	vcu3_t;	tdcs	vcu3_t	vcu3_c;
+	tydf	view<s0_c>	vcs0_t;	tdcs	vcs0_t	vcs0_c;
+	tydf	view<s1_c>	vcs1_t;	tdcs	vcs1_t	vcs1_c;
+	tydf	view<s2_c>	vcs2_t;	tdcs	vcs2_t	vcs2_c;
+	tydf	view<s3_c>	vcs3_t;	tdcs	vcs3_t	vcs3_c;
+	tydf	view<f2_c>	vcf2_t;	tdcs	vcf2_t	vcf2_c;
+	tydf	view<f3_c>	vcf3_t;	tdcs	vcf3_t	vcf3_c;
+	
+	tydf	view<vuc_t>	vvuc_t ;	tdcs	vvuc_t	vvuc_c;
+	tydf	view<vsc_t>	vvsc_t ;	tdcs	vvsc_t	vvsc_c;
+	tydf	view<vu0_t>	vvu0_t ;	tdcs	vvu0_t	vvu0_c;
+	tydf	view<vu1_t>	vvu1_t ;	tdcs	vvu1_t	vvu1_c;
+	tydf	view<vu2_t>	vvu2_t ;	tdcs	vvu2_t	vvu2_c;
+	tydf	view<vu3_t>	vvu3_t ;	tdcs	vvu3_t	vvu3_c;
+	tydf	view<vs0_t>	vvs0_t ;	tdcs	vvs0_t	vvs0_c;
+	tydf	view<vs1_t>	vvs1_t ;	tdcs	vvs1_t	vvs1_c;
+	tydf	view<vs2_t>	vvs2_t ;	tdcs	vvs2_t	vvs2_c;
+	tydf	view<vs3_t>	vvs3_t ;	tdcs	vvs3_t	vvs3_c;
+	tydf	view<vf2_t>	vvf2_t ;	tdcs	vvf2_t	vvf2_c;
+	tydf	view<vf3_t>	vvf3_t ;	tdcs	vvf3_t	vvf3_c;
+	tydf	view<vuc_c>	vcvuc_t;	tdcs	vcvuc_t	vcvuc_c;
+	tydf	view<vsc_c>	vcvsc_t;	tdcs	vcvsc_t	vcvsc_c;
+	tydf	view<vu0_c>	vcvu0_t;	tdcs	vcvu0_t	vcvu0_c;
+	tydf	view<vu1_c>	vcvu1_t;	tdcs	vcvu1_t	vcvu1_c;
+	tydf	view<vu2_c>	vcvu2_t;	tdcs	vcvu2_t	vcvu2_c;
+	tydf	view<vu3_c>	vcvu3_t;	tdcs	vcvu3_t	vcvu3_c;
+	tydf	view<vs0_c>	vcvs0_t;	tdcs	vcvs0_t	vcvs0_c;
+	tydf	view<vs1_c>	vcvs1_t;	tdcs	vcvs1_t	vcvs1_c;
+	tydf	view<vs2_c>	vcvs2_t;	tdcs	vcvs2_t	vcvs2_c;
+	tydf	view<vs3_c>	vcvs3_t;	tdcs	vcvs3_t	vcvs3_c;
+	tydf	view<vf2_c>	vcvf2_t;	tdcs	vcvf2_t	vcvf2_c;
+	tydf	view<vf3_c>	vcvf3_t;	tdcs	vcvf3_t	vcvf3_c;
 	//
-	tplTnsix		vcst_t	get_type_namev	()									nxpt	{ rtrn GPK_CXS("unknown"); }
-	tplTnsix		sc_c*	get_type_namep	()									nxpt	{ rtrn get_type_namev<T>().begin(); }
+	stxp	vcsc_t		SPACE_CHARACTERS	= " \t\b\f\n\r";
+	stxp	vcsc_t		TRIM_CHARACTERS		= SPACE_CHARACTERS;
+	tplt<tpnm T>
+	inxp	b8_t	is_space_character	(cnst T & character, view<cnst T> spaceCharacters = SPACE_CHARACTERS)	nxpt	{ rtrn is_any_of(character, spaceCharacters); }
 
-#define GDEFINE_TYPE_NAME_STR(typeIdentifier)																										\
-			nsix	::gpk::vcst_t	get_type_namev					(typeIdentifier &)	nxpt	{ rtrn GPK_CXS(#typeIdentifier); }					\
-	tplt<>	ndix	::gpk::vcst_t	get_type_namev<typeIdentifier>	()					nxpt	{ rtrn GPK_CXS(#typeIdentifier); }					\
-			nsix	::gpk::sc_c*	get_type_namep					(typeIdentifier &)	nxpt	{ rtrn get_type_namev<typeIdentifier>().begin(); }	\
-	tplt<>	ndix	::gpk::sc_c*	get_type_namep<typeIdentifier>	()					nxpt	{ rtrn get_type_namev<typeIdentifier>().begin(); }
-	GDEFINE_TYPE_NAME_STR(b8_t);
-	GDEFINE_TYPE_NAME_STR(sc_t);
-	GDEFINE_TYPE_NAME_STR(u0_t);
-	GDEFINE_TYPE_NAME_STR(u1_t);
-	GDEFINE_TYPE_NAME_STR(u2_t);
-	GDEFINE_TYPE_NAME_STR(u3_t);
-	GDEFINE_TYPE_NAME_STR(s0_t);
-	GDEFINE_TYPE_NAME_STR(s1_t);
-	GDEFINE_TYPE_NAME_STR(s2_t);
-	GDEFINE_TYPE_NAME_STR(s3_t);
-	GDEFINE_TYPE_NAME_STR(f2_t);
-	GDEFINE_TYPE_NAME_STR(f3_t);
-	GDEFINE_TYPE_NAME_STR(b8_c);
-	GDEFINE_TYPE_NAME_STR(sc_c);
-	GDEFINE_TYPE_NAME_STR(u0_c);
-	GDEFINE_TYPE_NAME_STR(u1_c);
-	GDEFINE_TYPE_NAME_STR(u2_c);
-	GDEFINE_TYPE_NAME_STR(u3_c);
-	GDEFINE_TYPE_NAME_STR(s0_c);
-	GDEFINE_TYPE_NAME_STR(s1_c);
-	GDEFINE_TYPE_NAME_STR(s2_c);
-	GDEFINE_TYPE_NAME_STR(s3_c);
-	GDEFINE_TYPE_NAME_STR(f2_c);
-	GDEFINE_TYPE_NAME_STR(f3_c);
-	//
-
-	tydf	view_string			vstr_t, vs;
-	tydf	view_const_string	vcst_t, vcs;
-	tdcs	vstr_t				vstr_c;
-	tdcs	vcst_t				vcst_c;
-	tplt<tpnm _tVal>						using kvvcst_t	= kv<vcst_t, _tVal>;
-
-
-	stxp	vcsc_t		TRIM_CHARACTERS		= " \t\b\n\r";
-
-	err_t			rtrim				(vcsc_t & trimmed, cnst vcsc_t & original, cnst vcsc_t & characters = TRIM_CHARACTERS);
-	err_t			ltrim				(vcsc_t & trimmed, cnst vcsc_t & original, cnst vcsc_t & characters = TRIM_CHARACTERS);
-	err_t			trim				(vcsc_t & trimmed, cnst vcsc_t & original, cnst vcsc_t & characters = TRIM_CHARACTERS);
+	sinx	err_t	rtrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS) {
+		u2_t count = 0;
+		while(count < original.size() && 0 <= characters.find(original[original.size() - 1 - count]))
+			++count;
+		trimmed = {original.begin(), original.size() - count};
+		rtrn count;
+	}
+	sinx	err_t	ltrim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS) {
+		u2_t count = 0;
+		while(count < original.size() && 0 <= characters.find(original[count]))
+			++count;
+		trimmed = {original.begin() + count, original.size() - count};
+		rtrn count;
+	}
+	sinx	err_t	trim				(vcsc_t & trimmed, vcsc_t original, vcsc_t characters = TRIM_CHARACTERS) {
+		cnst err_t countLeft = ltrim(trimmed, original, characters);
+		rtrn countLeft + rtrim(trimmed, trimmed, characters);
+	}
+	sinx	rangeu2_t trim			(vcsc_t original, rangeu2_t span, vcsc_t characters = TRIM_CHARACTERS) {
+		if(span.empty())
+			rtrn span;
+		vcsc_t trimmed = {original.begin() + span.Offset, span.Count};
+		ltrim(trimmed, trimmed, characters);
+		cnst u2_t offset = span.Offset + span.Count - trimmed.size();
+		rtrim(trimmed, trimmed, characters);
+		rtrn {offset, trimmed.size()};
+	}
 	stin	err_t	rtrim				(vcsc_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
 	stin	err_t	ltrim				(vcsc_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
 	stin	err_t	trim				(vcsc_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
 
-	stin	err_t	rtrim				(vc & trimmed, cnst vc & original, cnst vcsc_t & characters = TRIM_CHARACTERS)	{ rtrn rtrim	(*(vcsc_t*)&trimmed, *(cnst vcsc_t*)&original, characters); }
-	stin	err_t	ltrim				(vc & trimmed, cnst vc & original, cnst vcsc_t & characters = TRIM_CHARACTERS)	{ rtrn ltrim	(*(vcsc_t*)&trimmed, *(cnst vcsc_t*)&original, characters); }
-	stin	err_t	trim				(vc & trimmed, cnst vc & original, cnst vcsc_t & characters = TRIM_CHARACTERS)	{ rtrn trim	(*(vcsc_t*)&trimmed, *(cnst vcsc_t*)&original, characters); }
-	stin	err_t	rtrim				(vc & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
-	stin	err_t	ltrim				(vc & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
-	stin	err_t	trim				(vc & trimmed) 	{ rtrn trim(trimmed, trimmed); }
+	stin	err_t	rtrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcsc_t result = {}; cnst err_t count = rtrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	ltrim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcsc_t result = {}; cnst err_t count = ltrim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	trim				(vsc_t & trimmed, vsc_t original, vcsc_t characters = TRIM_CHARACTERS)	{ vcsc_t result = {}; cnst err_t count = trim(result, {original.begin(), original.size()}, characters); trimmed = {(sc_t*)result.begin(), result.size()}; rtrn count; }
+	stin	err_t	rtrim				(vsc_t & trimmed) 	{ rtrn rtrim(trimmed, trimmed); }
+	stin	err_t	ltrim				(vsc_t & trimmed) 	{ rtrn ltrim(trimmed, trimmed); }
+	stin	err_t	trim				(vsc_t & trimmed) 	{ rtrn trim(trimmed, trimmed); }
 
 	tplT	err_t	reverse				(view<T> elements)													{
 		u2_c				lastElement			= elements.size() - 1;
@@ -379,89 +308,22 @@ namespace gpk
 		rtrn 0;
 	}
 
-	tplT	err_t	find					(cnst T & valueToFind, cnst view<cnst T> & target, u2_t offset = 0)		{
-		for(u2_t iOffset = offset, offsetStop = target.size(); iOffset < offsetStop; ++iOffset)
-			if(valueToFind == target[iOffset])
-				rtrn (s2_t)iOffset;
-		rtrn -1;
-	}
+	tplTnsix	err_t	find					(cnst T & valueToFind, view<cnst T> target, u2_t offset = 0)		{ rtrn target.find(valueToFind, offset); }
 
-	tplT	err_t	rfind					(cnst T & valueToFind, cnst view<cnst T> & target, s2_t offset = 0)		{
-		for(u2_t iOffset = target.size() - 1 - offset; iOffset < target.size(); --iOffset)
-			if(valueToFind == target[iOffset])
-				rtrn iOffset;
-		rtrn -1;
-	}
+	tplTnsix	err_t	rfind					(cnst T & valueToFind, view<cnst T> target, u2_t offset = 0)		{ rtrn target.rfind(valueToFind, offset); }
 	tplt<tpnm _tKey, tpnm _tVal>
-	err_t	find	(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals) {
-		for(u2_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal)
-			if(keyToFind == keyvals[iKeyVal].Key)
-				rtrn iKeyVal;
-		rtrn -1;
+	nsix		err_t	find					(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals) {
+		rtrn keyvals.find([&](cnst kv<_tKey, _tVal> & keyVal) { rtrn keyToFind == keyVal.Key; });
 	}
-	tplt<tpnm _tKey, tpnm _tVal>
-	err_t	find	(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals, gpk_rmcnst(_tVal) & out_val) {
-		cnst err_t	index	= find(keyToFind, keyvals);
-		out_val				= 0 > index ? gpk_rmcnst(_tVal){} : keyvals[index].Val;
-		rtrn index;
-	}
-	tplT	err_t	find_sequence_obj		(cnst view<T> & sequence, cnst view<T> & target, u2_t offset = 0)	{
-		for(s2_t iOffset = (s2_t)offset, offsetStop = ((s2_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset) {
-			bool								equal					= true;
-			for(u2_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
-				if(sequence[iSequenceElement] != target[iOffset + iSequenceElement]) {
-					equal							= false;
-					break;
-				}
-			}
-			if(equal)
-				rtrn iOffset;
-		}
-		rtrn -1;
-	}
-
-	tplT	err_t					rfind_sequence_obj		(cnst view<T> & sequence, cnst view<T> & target, u2_t offset = 0)	{
-		for(s2_t iOffset = (s2_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset) {
-			bool								equal					= true;
-			for(u2_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
-				if(sequence[iSequenceElement] != target[iOffset + iSequenceElement]) {
-					equal							= false;
-					break;
-				}
-			}
-			if(equal)
-				rtrn iOffset;
-		}
-		rtrn -1;
-	}
-
-	tplT	err_t					find_sequence_pod		(cnst view<T> & sequence, cnst view<T> & target, u2_t offset = 0)	{
-		for(s2_t iOffset = (s2_t)offset, offsetStop = ((s2_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset)
-			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(T)))
-				rtrn iOffset;
-		rtrn -1;
-	}
-
-	tplT	err_t					rfind_sequence_pod		(cnst view<T> & sequence, cnst view<T>& target, u2_t offset = 0)	{
-		for(s2_t iOffset = (s2_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset)
-			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(T)))
-				rtrn iOffset;
-		rtrn -1;
-	}
-
-	stin	err_t					find_string				(cnst vcst_t & toFind, cnst vcsc_t & target, u2_t offset = 0) { rtrn find_sequence_pod (toFind, target, offset); }
-	stin	err_t					rfind_string			(cnst vcst_t & toFind, cnst vcsc_t & target, u2_t offset = 0) { rtrn rfind_sequence_pod(toFind, target, offset); }
-
-	tplT	err_t					split					(tpnm view<T>::TCnst & valueToFind, view<T> & input) {
-		cnst err_t							iValue					= find<gpk_rmcnst(T)>(valueToFind, input);
+	tplT		err_t	split					(tpnm view<T>::TCnst & valueToFind, view<T> & input) {
+		cnst err_t			iValue					= find<gpk_rmcnst(T)>(valueToFind, input);
 		rtrn input.slice(input, 0, (u2_t)iValue);
 	}
-
-	tplT	err_t					split					(tpnm view<T>::TCnst & valueToFind, view<T> original, view<T> & left, view<T> & right) {
-		left							= original;
+	tplT	err_t	split					(tpnm view<T>::TCnst & valueToFind, view<T> original, view<T> & left, view<T> & right) {
+		left			= original;
 		if_fail_fe(split(valueToFind, left));
 		if(left.size() == original.size()) {
-			right							= {};
+			right			= {};
 			rtrn -1;
 		}
 		if_fail_fe(original.slice(right, left.size() + 1));
@@ -469,78 +331,78 @@ namespace gpk
 	}
 
 	tplT requires(false == is_cnst<T>::Value)
-	err_t						split					(tpnm view<T>::TCnst & valueToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
+	err_t			split					(tpnm view<T>::TCnst & valueToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
 		tpnm view<T>::TConstView	constOriginal			= original;
 		rtrn split(valueToFind, constOriginal, left, right);
 	}
 
-	tplT	err_t					splitAt					(tpnm view<T>::TCnst & valueToFind, view<T> original, view<T> & left, view<T> & right) {
-		cnst err_t				iValue					= original.find(valueToFind);
+	tplT	err_t	splitAt					(tpnm view<T>::TCnst & valueToFind, view<T> original, view<T> & left, view<T> & right) {
+		cnst err_t			iValue					= original.find(valueToFind);
 		if(0 > iValue) { // Read until the end unless fragment is found.
-			left							= original;
-			right							= {};
+			left			= original;
+			right			= {};
 		}
 		else {
-			gpk_necs(original.slice(left, 0, (u2_t)iValue));
-			gpk_necs(original.slice(right, iValue, (u2_t)original.size() - iValue));
+			if_fail_fe(original.slice(left, 0, (u2_t)iValue));
+			if_fail_fe(original.slice(right, iValue, (u2_t)original.size() - iValue));
 		}
 		rtrn iValue;
 	}
 
 	tplT requires(false == is_cnst<T>::Value)
-	err_t						splitAt					(tpnm view<T>::TCnst & valueToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
+	err_t			splitAt					(tpnm view<T>::TCnst & valueToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
 		tpnm view<T>::TConstView	constOriginal			= original;
 		rtrn splitAt(valueToFind, constOriginal, left, right);
 	}
 
 	// Returns the index of the start of the sequence if the latter found.
-	tplT	err_t					split					(cnst view<T> & sequenceToFind, view<T> original, view<T> & left, view<T> & right) {
-		cnst err_t				iValue					= find_sequence_pod(sequenceToFind, original);
+	tplT	err_t	split					(cnst view<T> & sequenceToFind, view<T> original, view<T> & left, view<T> & right) {
+		cnst err_t			iValue					= original.find(sequenceToFind);
 		if(0 > iValue) {
-			left							= original;
-			right							= {};
+			left			= original;
+			right			= {};
 		}
 		else {
-			gpk_necs(original.slice(right, iValue + sequenceToFind.size()));
-			gpk_necs(original.slice(left, 0, iValue));
+			if_fail_fe(original.slice(right, iValue + sequenceToFind.size()));
+			if_fail_fe(original.slice(left, 0, iValue));
 		}
 		rtrn iValue;
 	}
 
 	tplT requires(false == is_cnst<T>::Value)
-	err_t						split					(cnst view<T> & sequenceToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
+	err_t			split					(cnst view<T> & sequenceToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
 		tpnm view<T>::TConstView	constSequence			= sequenceToFind;
 		tpnm view<T>::TConstView	constOriginal			= original;
 		rtrn split(constSequence, constOriginal, left, right);
 	}
 
 	tplt<tpnm T>
-	inln	err_t			split					(cnst view<T> & sequenceToFind, view<T> & inputOrLeft, view<T> & right) {
+	inln	err_t	split					(cnst view<T> & sequenceToFind, view<T> & inputOrLeft, view<T> & right) {
 		rtrn split(sequenceToFind, inputOrLeft, inputOrLeft, right);
 	}
 
-	tplT	err_t					splitAt					(cnst view<T> & sequenceToFind, view<T> original, view<T> & left, view<T> & right) {
-		cnst err_t				iValue					= find_sequence_pod(sequenceToFind, original);
+	tplT	err_t	splitAt					(cnst view<T> & sequenceToFind, view<T> original, view<T> & left, view<T> & right) {
+		cnst err_t			iValue					= original.find(sequenceToFind);
 		if(0 > iValue) { // Read until the end unless fragment is found.
 			left							= original;
 			right							= {};
 		}
 		else {
-			gpk_necall(original.slice(left, 0, (u2_t)iValue), "%s", "Invalid slice");
-			gpk_necall(original.slice(right, iValue, (u2_t)original.size() - iValue), "%s", "Invalid slice");
+			if_fail_fef(original.slice(left, 0, (u2_t)iValue), "%s", "Invalid slice");
+			if_fail_fef(original.slice(right, iValue, (u2_t)original.size() - iValue), "%s", "Invalid slice");
 		}
 		rtrn iValue;
 	}
 
 	tplT requires(false == is_cnst<T>::Value)
-	err_t						splitAt					(cnst view<T> & sequenceToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
+	err_t			splitAt					(cnst view<T> & sequenceToFind, view<T> original, tpnm view<T>::TConstView & left, tpnm view<T>::TConstView & right) {
 		tpnm view<T>::TConstView	constSequence			= sequenceToFind;
 		tpnm view<T>::TConstView	constOriginal			= original;
 		rtrn splitAt(constSequence, constOriginal, left, right);
 	}
 
-	tplT	err_t		max						(view<T> input, T ** result) {
-		ree_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
+	tplT	err_t	max						(view<T> input, T ** result) {
+		if_true_fef(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
 		*result				= &input[0];
 		s2_t					iMax					= 0;
 		for(u2_t iElement = 1; iElement < input.size(); ++iElement) {
@@ -552,9 +414,8 @@ namespace gpk
 		}
 		rtrn iMax;
 	}
-
-	tplT	err_t		min						(view<T> input, T ** result) {
-		ree_if(0 == input.size(), "%s", "Cannot get reference to min element of an empty array.");
+	tplT	err_t	min						(view<T> input, T ** result) {
+		if_true_fef(0 == input.size(), "%s", "Cannot get reference to min element of an empty array.");
 		*result				= &input[0];
 		s2_t					iMin					= 0;
 		for(u2_t iElement = 1; iElement < input.size(); ++iElement) {
@@ -566,17 +427,133 @@ namespace gpk
 		}
 		rtrn iMin;
 	}
+	tplT		T&	max						(view<T> elements)		{ T * rmax	{}; if_fail_e(max(elements, &rmax));	rtrn *rmax; }
+	tplT		T&	min						(view<T> elements)		{ T * rmin	{}; if_fail_e(min(elements, &rmin));	rtrn *rmin; }
+	tplT		T	sum						(view<cnst T> elements)	{ T result	{}; for(T element : elements) result += element; rtrn result; }
+	tplTstin	T&	be2le					(T & number)			{ reverse<u0_t>({(u0_t*)&number, sizeof(T)}); rtrn number; }
+	struct view_const_string : vcsc_c {
+		inxp				view_const_string		()										nxpt	= dflt;
+		inxp				view_const_string		(cnst view<sc_c> & other)				nxpt	: view(other)			{}
+		inxp				view_const_string		(sc_c * storage, u2_t length)					: view()	{
+			Data = storage;
+			Count = length;
+			if_true_tef(0 == storage && 0 != length, "%" GPK_FMT_U2 " -> 0.", length);
+			if((u2_t)-1 == length)
+				for(Count = 0; storage[Count]; ++Count) {}
+		}
+		tplN2u		inxp	view_const_string		(sc_c (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{
+			for(Count = 0; Count < ::gpk::min(N, length); ++Count)
+				if(0 == storage[Count])
+					break;
+		}
 
-	tplT		T&	max		(view<T> elements)		{ T * rmax	{}; if_fail_e(max(elements, &rmax));	rtrn *rmax; }
-	tplT		T&	min		(view<T> elements)		{ T * rmin	{}; if_fail_e(min(elements, &rmin));	rtrn *rmin; }
-	tplT		T	sum		(view<cnst T> elements)	{ T result	{}; for(T element : elements) result += element; rtrn result; }
-	tplTstin	T&	be2le	(T & number)			{ reverse<i0u_t>({(i0u_t*)&number, sizeof(T)}); rtrn number; }
+#ifdef GPK_ARDUINO
+#   ifdef GPK_ESP8266
+        ndin		oper	String					()  cnst   { return String(Data); }
+#   else
+        ndin		oper	String					()  cnst   { return String(Data, Count); }
+#   endif
+#endif
+		ndix		b8_t	oper==					(view_const_string other)	csnx	{ rtrn view<sc_c>::oper==(other); }
+		ndix		b8_t	oper!=					(view_const_string other)	csnx	{ rtrn !oper==(other); }
+		tplN2undix	b8_t	oper==					(sc_c (&other)[N])			csnx	{ rtrn view<sc_c>::oper==(view_const_string(other)); }
+		tplN2undix	b8_t	oper!=					(sc_c (&other)[N])			csnx	{ rtrn !oper==(other); }
 
+		ndix		sc_c*	begin					()							csnx	{ rtrn (Data && Count) ? Data : ""; }
+		ndix		sc_c*	end						()							csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
+		ndix		oper	sc_c* 					()							csnx	{ rtrn begin(); }
+	};
+	tydf		view_const_string		vcst_t, vcst_t;
+	tdcs		vcst_t					vcst_c;
+	tydf		view<vcst_t>			vvcst_t;
+	tydf		view<vcst_c>			vcvcst_t;
+	sinx		err_t	trim			(vcst_t & text, vcsc_t trimCharacters = TRIM_CHARACTERS) {
+		vcsc_t trimmed = text;
+		cnst err_t count = trim(trimmed, trimmed, trimCharacters);
+		text = {trimmed.begin(), trimmed.size()};
+		rtrn count;
+	}
 
+	ndsi		err_t	find_string		(vcst_c & toFind, vcst_c & target, u2_t offset = 0) { rtrn target.find(toFind, offset); }
+	ndsi		err_t	rfind_string	(vcst_c & toFind, vcst_c & target, u2_t offset = 0) { rtrn target.rfind(toFind, offset); }
 
-} // namespace
+	nsix		vcst_t	str				(vcst_c & arg)				nxpt	{ rtrn arg; }
+	tplN2unsix	vcst_t	str				(sc_c (&arg)[N])			nxpt	{ rtrn arg; }
 
+	stxp		vcst_t	VCST_NULL		= "null";
+	stxp		vcst_t	VCST_TRUE		= "true";
+	stxp		vcst_t	VCST_FALSE		= "false";
+	nsix		vcst_t	str				(b8_c & arg)				nxpt	{ rtrn arg ? VCST_TRUE : VCST_FALSE; }
+	nsix		vcst_t	b82st			(b8_t b)					nxpt	{ rtrn b ? VCST_TRUE : VCST_FALSE; }
+	nsix		b8_t	st2b8			(vcst_t b)					nxpt	{ rtrn b.size() && b != VCST_FALSE; }
 
+	tplTnsix	vcst_t	get_type_namev	()							nxpt	{ rtrn "unknown"; }
+	tplTnsix	sc_c*	get_type_namep	()							nxpt	{ rtrn get_type_namev<T>().begin(); }
+#define GDEFINE_TYPE_NAME_STR(typeIdentifier)																										\
+			nsix	::gpk::vcst_t	get_type_namev					(typeIdentifier &)	nxpt	{ rtrn #typeIdentifier; }					\
+	tplt<>	ndix	::gpk::vcst_t	get_type_namev<typeIdentifier>	()					nxpt	{ rtrn #typeIdentifier; }					\
+
+	tplt<tpnm _tVal>		usng kvvcst_t	= kv<vcst_t, _tVal>;
+	tplt<tpnm _tKey, tpnm _tVal>
+	err_t			find					(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals, gpk_rmcnst(_tVal) & out_val) {
+		cnst err_t		index						= find(keyToFind, keyvals);
+		out_val		= 0 > index ? gpk_rmcnst(_tVal){} : keyvals[index].Val;
+		rtrn index;
+	}
+	GDEFINE_TYPE_NAME_STR(b8_t);
+	GDEFINE_TYPE_NAME_STR(sc_t);
+	GDEFINE_TYPE_NAME_STR(u0_t);
+	GDEFINE_TYPE_NAME_STR(u1_t);
+	GDEFINE_TYPE_NAME_STR(u2_t);
+	GDEFINE_TYPE_NAME_STR(u3_t);
+	GDEFINE_TYPE_NAME_STR(s1_t);
+	GDEFINE_TYPE_NAME_STR(s2_t);
+	GDEFINE_TYPE_NAME_STR(s3_t);
+	GDEFINE_TYPE_NAME_STR(f2_t);
+	GDEFINE_TYPE_NAME_STR(f3_t);
+	GDEFINE_TYPE_NAME_STR(b8_c);
+	GDEFINE_TYPE_NAME_STR(sc_c);
+	GDEFINE_TYPE_NAME_STR(u0_c);
+	GDEFINE_TYPE_NAME_STR(u1_c);
+	GDEFINE_TYPE_NAME_STR(u2_c);
+	GDEFINE_TYPE_NAME_STR(u3_c);
+	GDEFINE_TYPE_NAME_STR(s1_c);
+	GDEFINE_TYPE_NAME_STR(s2_c);
+	GDEFINE_TYPE_NAME_STR(s3_c);
+	GDEFINE_TYPE_NAME_STR(f2_c);
+	GDEFINE_TYPE_NAME_STR(f3_c);
+
+	struct view_string : view<sc_t> {
+		inxp				view_string			()										nxpt	= dflt;
+		inln				view_string			(cnst view<sc_t> & other)				nxpt	: view(other)			{}
+							view_string			(sc_t * storage, u2_t length)					: view(storage, length)	{ Count = (length == (u2_t)-1) ? (u2_t)strlen(storage) : length; }
+		tplN2u				view_string			(sc_t (&storage)[N], u2_t length = -1)	nxpt	: view(storage)			{
+			for(Count = 0; Count < ::gpk::min(N, length); ++Count)
+				if(0 == storage[Count])
+					break;
+		}
+
+		ndin		oper	vcst_t				()					csnx	{ rtrn {Data, Count}; };
+
+		ndin		b8_t	oper==				(vcst_t other)		csnx	{ rtrn view<sc_t>::oper==(other); }
+		ndin		b8_t	oper!=				(vcst_t other)		csnx	{ rtrn !oper==(other); }
+		tplN2undix	b8_t	oper==				(sc_c (&other)[N])	csnx	{ rtrn view<sc_t>::oper==(view_const_string(other)); }
+		tplN2undix	b8_t	oper!=				(sc_c (&other)[N])	csnx	{ rtrn !oper==(other); }
+
+		ndix		sc_c*	begin				()					csnx	{ rtrn (Data && Count) ? Data : ""; }
+		ndix		sc_c*	end					()					csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
+		ndix		oper	sc_c* 				()					csnx	{ rtrn begin(); }
+		ndin		sc_t*	begin				()					nxpt	{ rtrn Data; }
+		ndin		sc_t*	end					()					nxpt	{ rtrn begin() + Count; }
+		ndin		oper	sc_t* 				()					nxpt	{ rtrn begin(); }
+
+	};
+	tydf	view_string		vstr_t;
+	tdcs	vstr_t			vstr_c;
+	tydf	view<vstr_t>	vvstr_t;
+	tydf	view<vstr_c>	vcvstr_t;
+
+} // nmsp
 
 #define GPK_USING_VIEW()												\
 	usng	::gpk::vb8_t, ::gpk::vb8_c, ::gpk::vcb8_t, ::gpk::vcb8_c	\
@@ -593,7 +570,5 @@ namespace gpk
 		,	::gpk::vf2_t, ::gpk::vf2_c, ::gpk::vcf2_t, ::gpk::vcf2_c	\
 		,	::gpk::vf3_t, ::gpk::vf3_c, ::gpk::vcf3_t, ::gpk::vcf3_c	\
 		,	::gpk::vstr_t, ::gpk::vcst_t, ::gpk::vstr_c, ::gpk::vcst_c
-
-#define  GPK_VIEW_ARGS(view_instance) view_instance.size(), view_instance.begin()
 
 #endif // GPK_ARRAY_VIEW_H_23627

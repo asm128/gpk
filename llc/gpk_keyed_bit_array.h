@@ -4,51 +4,51 @@
 #ifndef KEYED_BIT_ARRAY_H_23627
 #define KEYED_BIT_ARRAY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tKey>
 	struct keyed_bit_array {
-		typedef	_tKey			K;
-		typedef	gpk::vbit<u3_t>	TView;
-		typedef	gpk::vbit<u3_c>	TViewConst;
+		tydf	_tKey			K;
+		tydf	vbit<u3_t>	TView;
+		tydf	vbit<u3_c>	TViewConst;
 
-		::gpk::aau64			Bits;		// One data array per client.
-		::gpk::avcsc_t			FieldNames;	// One for all.
+		aau3_t				Bits;		// One data array per client.
+		aobj<vcst_t>		FieldNames;	// One for all.
 
-		inline	gpk::err_t	GetFieldIndex	(const ::gpk::vcsc_t & fieldName)			const	{ return FieldNames.find(fieldName); }
+		inln	err_t		GetFieldIndex	(vcst_c & fieldName)			cnst	{ return FieldNames.find(fieldName); }
 
-		TViewConst				GetView			(uint32_t client)						const	{ 
-			const ::gpk::au3_t			& data			= Bits[client]; 
-			return {data.begin(), ::gpk::min(FieldNames.size(), data.bit_count())}; 
+		TViewConst			GetView			(u2_t client)						cnst	{ 
+			cnst au3_t				& data			= Bits[client]; 
+			return {data.begin(), ::gpk::min(FieldNames.size(), (u2_t)data.bit_count())}; 
 		}
 
-		TView					GetView			(uint32_t client, bool resize = false)			{ 
-			::gpk::au3_t					& data			= Bits[client]; 
+		TView				GetView			(u2_t client, b8_t resize = false)			{ 
+			au3_t					& data			= Bits[client]; 
 			if(resize && FieldNames.size() > data.bit_count()) 
-				gsthrow_if(data.resize_bits(FieldNames.size())); 
+				if_true_te(data.resize_bits(FieldNames.size())); 
 
-			return {data.begin(), ::gpk::min(FieldNames.size(), data.bit_count())}; 
+			return {data.begin(), ::gpk::min(FieldNames.size(), (u2_t)data.bit_count())}; 
 		}
 
-		gpk::err_t			CreateField		(const ::gpk::vcsc_t & fieldName)					{ 
-			int32_t						fieldIndex;
-			ree_if(::gpk::succeeded(fieldIndex = FieldNames.find(fieldName)), "Duplicated field name at index %i: %.*s", fieldIndex, GPK_VIEW_ARGS(fieldName)); 
+		err_t 				CreateField		(vcst_c & fieldName)					{ 
+			s2_t					fieldIndex;
+			if_true_fef(succeeded(fieldIndex = FieldNames.find(fieldName)), "Duplicated field name at index %i: %.*s", fieldIndex, GPK_VIEW_ARGS(fieldName));
 			return FieldNames.push_back(fieldName);
 		}
 
 		// This function only appends or clears `true` bits. It doesn't clear `false` bits, avoiding to resize the array.
-		gpk::err_t			SetField		(uint32_t client, uint32_t index, bool value)	{ 
-			ree_if(index >= FieldNames.size(), "invalid index: %i", index);
-			::gpk::au3_t					& data			= Bits[client]; 
+		err_t 				SetField		(u2_t client, u2_t index, b8_t value)		{ 
+			if_true_fef(index >= FieldNames.size(), "invalid index: %i", index);
+			au3_t					& data			= Bits[client]; 
 			return (value || data.bit_count() > index) 
 				? GetView(client, value)[index] = value
 				: 0
 				; 
 		}
 
-		gpk::err_t			GetField		(uint32_t client, uint32_t index)		const	{ 
-			ree_if(index >= FieldNames.size(), "invalid index: %i", index);
-			const ::gpk::au3_t			& data			= Bits[client]; 
+		err_t 				GetField		(u2_t client, u2_t index)		cnst		{ 
+			if_true_fef(index >= FieldNames.size(), "invalid index: %i", index);
+			cnst au3_t			& data			= Bits[client]; 
 			return (index < data.bit_count())
 				? TViewConst{data.begin(), data.bit_count()}[index]
 				: 0
@@ -57,6 +57,6 @@ namespace gpk
 
 	};
 
-} // namespace 
+} // nmsp 
 
 #endif // KEYED_BIT_ARRAY_H_23627

@@ -10,8 +10,8 @@ namespace dry
 	struct SGaugeFeeder {
 		::gpk::apod<::gpk::n3f2_t>							Vertices				= {};
 		::gpk::apod<::gpk::tris1_t>							Indices					= {};
-		int16_t												CurrentValue			= 0;
-		int16_t												MaxValue				= 64;
+		::gpk::s1_t												CurrentValue			= 0;
+		::gpk::s1_t												MaxValue				= 64;
 		::gpk::img<::gpk::bgra>								Image					= {};
 
 		stxp	::gpk::rgbaf								COLOR_MIN_DEFAULT		= ::gpk::GREEN;
@@ -19,11 +19,11 @@ namespace dry
 		stxp	::gpk::rgbaf								COLOR_MAX_DEFAULT		= ::gpk::RED;
 		stxp	::gpk::rgbaf								COLOR_BKG_DEFAULT		= ::gpk::BROWN * .5 + ::gpk::DARKBLUE * .5;
 
-		inline	int16_t										SetValue				(float weight)							noexcept	{ return CurrentValue = int16_t(weight * MaxValue); }
-				int16_t										SetValue				(float currentValue, uint32_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
+		inline	::gpk::s1_t										SetValue				(float weight)							noexcept	{ return CurrentValue = ::gpk::s1_t(weight * MaxValue); }
+				::gpk::s1_t										SetValue				(float currentValue, ::gpk::u2_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
 	};
 
-	enum GAUGE : uint8_t
+	enum GAUGE : ::gpk::u0_t
 		{ GAUGE_TEMPERATURE	= 0
 		, GAUGE_VACUUM
 		, GAUGE_HUMIDITY
@@ -35,7 +35,7 @@ namespace dry
 		::gpk::img8bgra			Image					= {};
 	};
 
-	gpk::err_t			gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef32 & gaugeMetrics, int16_t resolution, int16_t width);
+	gpk::err_t			gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef32 & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width);
 	gpk::err_t										gaugeImageUpdate		(::dry::SGaugeFeeder & gauge, ::gpk::grid<::gpk::bgra> target, ::gpk::rgbaf colorMin = ::dry::SGaugeFeeder::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::dry::SGaugeFeeder::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::dry::SGaugeFeeder::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::dry::SGaugeFeeder::COLOR_BKG_DEFAULT, bool radialColor = true);
 	inline	gpk::err_t								gaugeImageUpdate		(::dry::SGaugeFeeder & gauge, ::gpk::rgbaf colorMin = ::dry::SGaugeFeeder::COLOR_MIN_DEFAULT, ::gpk::rgbaf colorMid = ::dry::SGaugeFeeder::COLOR_MID_DEFAULT, ::gpk::rgbaf colorMax = ::dry::SGaugeFeeder::COLOR_MAX_DEFAULT, ::gpk::bgra colorEmpty = ::dry::SGaugeFeeder::COLOR_BKG_DEFAULT, bool radialColor = true) {
 		gauge.Image.Texels.fill({0, 0, 0, 0});

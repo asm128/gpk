@@ -8,25 +8,25 @@
 
 // Splits a file into file.split.## parts.
 int									main							(int , char ** )		{
-	const ::gpk::vcs text = "habia una vez un bru un brujito en gulubu.\r\n";
-	const ::gpk::vcs text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
-	const ::gpk::vcs words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
+	const ::gpk::vcst_t text = "habia una vez un bru un brujito en gulubu.\r\n";
+	const ::gpk::vcst_t text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
+	const ::gpk::vcst_t words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
 	info_printf("%u:%s.", text.size(), text.begin());
-	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
+	for(::gpk::u2_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
 		const ::gpk::vcsc_t word = words[iWord];
 
 		::gpk::vcsc_t left, right;
-		const int32_t iPos = ::gpk::split(word, text, left, right);
+		const ::gpk::s2_t iPos = ::gpk::split(word, text, left, right);
 		info_printf("Word (%u): '%.*s'. Position: %i.", iWord, GPK_VIEW_ARGS(word), iPos);
 		info_printf("Left (%u): '%.*s'. Right(%u): '%.*s'", left.size(), GPK_VIEW_ARGS(left), right.size(), GPK_VIEW_ARGS(right));
 	}
 
 	info_printf("%u:%s.", text1.size(), text1.begin());
-	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
+	for(::gpk::u2_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
 		const ::gpk::vcsc_t word = words[iWord];
 
 		::gpk::vcsc_t left, right;
-		const int32_t iPos = ::gpk::split(word, text1, left, right);
+		const ::gpk::s2_t iPos = ::gpk::split(word, text1, left, right);
 		info_printf("Word (%u): '%.*s'. Position: %i.", iWord, GPK_VIEW_ARGS(word), iPos);
 		info_printf("Left (%u): '%.*s'. Right(%u): '%.*s'", left.size(), GPK_VIEW_ARGS(left), right.size(), GPK_VIEW_ARGS(right));
 	}

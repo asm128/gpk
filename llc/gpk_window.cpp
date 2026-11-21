@@ -1,4 +1,5 @@
 #include "gpk_window.h"
+#include "gpk_system_key.h"
 
 #if defined(GPK_XCB)
 #	include <xcb/xcb_image.h>
@@ -7,11 +8,7 @@
 
 GPK_USING_TYPEINT();
 
-#if defined(GPK_XCB)
-using namespace ::gpk;
-#endif
-
-gpk::err_t			gpk::fullScreenExit			(::gpk::SWindow & window) {
+gpk::err_t 		gpk::fullScreenExit			(::gpk::SWindow & window) {
 	if(false == window.FullScreen)
 		return 0;
 
@@ -26,16 +23,16 @@ gpk::err_t			gpk::fullScreenExit			(::gpk::SWindow & window) {
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 #elif defined(GPK_XCB)
-	const uint32_t values[] = {window.WindowedWindowRect.Left, window.WindowedWindowRect.Top, window.Size.x, window.Size.y};
+	u2_c				values[]					= {window.WindowedWindowRect.Left, window.WindowedWindowRect.Top, window.Size.x, window.Size.y};
 	xcb_configure_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
 	xcb_flush(window.PlatformDetail.Connection);
 #endif // GPK_WINDOWS
-	es_if(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
+	if_true_e(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= false;
 	return 0;
 }
 
-gpk::err_t			gpk::fullScreenEnter		(::gpk::SWindow & window) {
+gpk::err_t 		gpk::fullScreenEnter		(::gpk::SWindow & window) {
 	if(window.FullScreen)
 		return 1;
 
@@ -43,14 +40,14 @@ gpk::err_t			gpk::fullScreenEnter		(::gpk::SWindow & window) {
 	HWND						windowHandle				= window.PlatformDetail.WindowHandle;
 	MONITORINFO					monitor_info				= {sizeof(monitor_info)};
 	RECT						windowsRect					= {};
-	ree_if(FALSE == GetWindowRect(windowHandle, &windowsRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
-	window.WindowedWindowRect.Top		= (uint16_t)windowsRect.top		;
-	window.WindowedWindowRect.Left		= (uint16_t)windowsRect.left	;
-	window.WindowedWindowRect.Right		= (uint16_t)windowsRect.right	;
-	window.WindowedWindowRect.Bottom	= (uint16_t)windowsRect.bottom	;
-	ree_if(FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
+	if_true_fef(FALSE == GetWindowRect(windowHandle, &windowsRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
+	window.WindowedWindowRect.Top		= (u1_t)windowsRect.top		;
+	window.WindowedWindowRect.Left		= (u1_t)windowsRect.left	;
+	window.WindowedWindowRect.Right		= (u1_t)windowsRect.right	;
+	window.WindowedWindowRect.Bottom	= (u1_t)windowsRect.bottom	;
+	if_true_fef(FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
 
-	const DWORD					style						= GetWindowLong(windowHandle, GWL_STYLE);
+	cnst DWORD					style						= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
 	SetWindowPos(windowHandle, HWND_TOP, monitor_info.rcMonitor.left, monitor_info.rcMonitor.top
 		, monitor_info.rcMonitor.right - monitor_info.rcMonitor.left
@@ -59,25 +56,24 @@ gpk::err_t			gpk::fullScreenEnter		(::gpk::SWindow & window) {
 	);
 
 	window.Size				= 
-		{ uint16_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
-		, uint16_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
+		{ u1_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
+		, u1_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
 #elif defined(GPK_XCB)
-	xcb_get_geometry_reply_t * geometry = xcb_get_geometry_reply(window.PlatformDetail.Connection, xcb_get_geometry(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable), 0);
-	if(0 == geometry)
-		return -1;
-	window.WindowedWindowRect.Left = geometry->x;
-	window.WindowedWindowRect.Top = geometry->y;
-	window.WindowedWindowRect.Right = geometry->x + geometry->width;
-	window.WindowedWindowRect.Bottom = geometry->y + geometry->height;
+	xcb_get_geometry_reply_t	* geometry					= xcb_get_geometry_reply(window.PlatformDetail.Connection, xcb_get_geometry(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable), 0);
+	if_null_fe(geometry);
+	window.WindowedWindowRect.Left	= geometry->x;
+	window.WindowedWindowRect.Top	= geometry->y;
+	window.WindowedWindowRect.Right	= geometry->x + geometry->width;
+	window.WindowedWindowRect.Bottom	= geometry->y + geometry->height;
 	free(geometry);
-	xcb_screen_t * screen = xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
-	window.Size = {screen->width_in_pixels, screen->height_in_pixels};
-	const uint32_t values[] = {0, 0, window.Size.x, window.Size.y};
+	xcb_screen_t				* screen					= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
+	window.Size				= {screen->width_in_pixels, screen->height_in_pixels};
+	u2_c				values[]					= {0, 0, window.Size.x, window.Size.y};
 	xcb_configure_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
 	xcb_flush(window.PlatformDetail.Connection);
 #endif // GPK_WINDOWS
-	es_if(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
+	if_true_e(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= true;
 	return 0;
 }
@@ -225,8 +221,8 @@ sttc	u2_t		xcbTextCodePoint		(cnst ::gpk::SWindowPlatformDetail & detail, xkb_ke
 //}
 #endif
 
-gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
-	bool						quit						= false;
+gpk::err_t 		gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
+	b8_t						quit						= false;
 #if defined(GPK_WINDOWS)
 	::MSG						msg							= {};
 	int							counter						= 0;
@@ -242,7 +238,7 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 	while(xcb_generic_event_t * event = xcb_poll_for_event(displayInstance.PlatformDetail.Connection)) {
 		switch(event->response_type & ~0x80) {
 		default					: break;
-		case XCB_EXPOSE			: displayInstance.Repaint = true; rees_if(gpk::failed(eventEnqueueScreenRedraw(displayInstance.EventQueue, 0))); break;
+		case XCB_EXPOSE			: displayInstance.Repaint = true; if_fail_e(eventEnqueueScreenRedraw(displayInstance.EventQueue, 0)); break;
 		case XCB_KEY_PRESS		:
 		case XCB_KEY_RELEASE	: {
 			b8_c				pressed					= XCB_KEY_PRESS == (event->response_type & ~0x80);
@@ -253,27 +249,15 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			u0_c				keyCode						= ::xcbSystemKey(baseKeySym);
 			u2_c				codePoint					= pressed ? ::xcbTextCodePoint(detail, key.detail, keySym) : 0;
 			xkb_state_update_key(detail.XKBState, key.detail, pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
-			if(keyCode) {
-				input.KeyboardCurrent.KeyState[keyCode] = pressed;
-				input.KeyboardCurrent.KeyTime[keyCode] = key.time * .001;
-			}
-			switch(keyCode) {
-			default: break;
-			case SYSTEM_KEY_LShift:
-			case SYSTEM_KEY_RShift: input.KeyboardCurrent.KeyState[SYSTEM_KEY_Shift] = pressed; break;
-			case SYSTEM_KEY_LControl:
-			case SYSTEM_KEY_RControl: input.KeyboardCurrent.KeyState[SYSTEM_KEY_Control] = pressed; break;
-			case SYSTEM_KEY_LMenu:
-			case SYSTEM_KEY_RMenu: input.KeyboardCurrent.KeyState[SYSTEM_KEY_Menu] = pressed; break;
-			}
+			if_fail_e(inputKeyboardStateSet(input, keyCode, pressed, detail.XKBDeviceId, key.time * .001f));
 
 			b8_c			systemKey					= SYSTEM_KEY_Enter == keyCode && input.KeyboardCurrent.KeyState[SYSTEM_KEY_Menu];
-			rees_if(gpk::failed(pressed
+			if_fail_e(pressed
 				? systemKey ? eventEnqueueKeyboardSysDown(displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardDown(displayInstance.EventQueue, keyCode)
 				: systemKey ? eventEnqueueKeyboardSysUp  (displayInstance.EventQueue, keyCode) : eventEnqueueKeyboardUp  (displayInstance.EventQueue, keyCode)
-				));
+				);
 			if(codePoint)
-				rees_if(gpk::failed(eventEnqueueTextChar(displayInstance.EventQueue, codePoint)));
+				if_fail_e(eventEnqueueTextChar(displayInstance.EventQueue, codePoint));
 			//
 			displayInstance.Repaint = true;
 			break;
@@ -283,11 +267,11 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			displayInstance.Repaint = true;
 			if(button.detail == 4 || button.detail == 5) {
 				input.MouseCurrent.Deltas.z = button.detail == 4 ? 1 : -1;
-				rees_if(gpk::failed(eventEnqueueMouseWheel(displayInstance.EventQueue, input.MouseCurrent.Deltas.z)));
+				if_fail_e(eventEnqueueMouseWheel(displayInstance.EventQueue, input.MouseCurrent.Deltas.z));
 			}
 			else if(button.detail && button.detail <= input.MouseCurrent.ButtonState.size()) {
 				input.MouseCurrent.ButtonState[button.detail - 1] = 1;
-				rees_if(gpk::failed(eventEnqueueMouseDown(displayInstance.EventQueue, button.detail - 1)));
+				if_fail_e(eventEnqueueMouseDown(displayInstance.EventQueue, button.detail - 1));
 			}
 			break;
 		}
@@ -296,7 +280,7 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			displayInstance.Repaint = true;
 			if(button.detail && button.detail <= input.MouseCurrent.ButtonState.size() && button.detail != 4 && button.detail != 5) {
 				input.MouseCurrent.ButtonState[button.detail - 1] = 0;
-				rees_if(gpk::failed(eventEnqueueMouseUp(displayInstance.EventQueue, button.detail - 1)));
+				if_fail_e(eventEnqueueMouseUp(displayInstance.EventQueue, button.detail - 1));
 			}
 			break;
 		}
@@ -304,12 +288,11 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			cnst xcb_motion_notify_event_t & motion = *(xcb_motion_notify_event_t*)event;
 			cnst s2_t x = motion.same_screen ? motion.event_x : motion.root_x;
 			cnst s2_t y = motion.same_screen ? motion.event_y : motion.root_y;
-			input.MouseCurrent.Position.x = ::gpk::clamped(x, 0, (s2_t)displayInstance.Size.x);
-			input.MouseCurrent.Position.y = ::gpk::clamped(y, 0, (s2_t)displayInstance.Size.y);
+			input.MouseCurrent.Position = n2s2_t{x, y}.Clamp({}, displayInstance.Size.s2()).s1();
 			input.MouseCurrent.Deltas.x = input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 			input.MouseCurrent.Deltas.y = input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 			displayInstance.Repaint = true;
-			rees_if(gpk::failed(eventEnqueueMousePosition(displayInstance.EventQueue, input.MouseCurrent.Position)));
+			if_fail_e(eventEnqueueMousePosition(displayInstance.EventQueue, input.MouseCurrent.Position));
 			break;
 		}
 		case XCB_CONFIGURE_NOTIFY: {
@@ -319,7 +302,7 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 				displayInstance.PreviousSize = displayInstance.Size;
 				displayInstance.Size = size;
 				displayInstance.Resized = displayInstance.Repaint = true;
-				rees_if(gpk::failed(eventEnqueueScreenResize(displayInstance.EventQueue, size)));
+				if_fail_e(eventEnqueueScreenResize(displayInstance.EventQueue, size));
 			}
 			break;
 		}
@@ -327,11 +310,11 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 			cnst xcb_client_message_event_t & message = *(xcb_client_message_event_t*)event;
 			if(message.data.data32[0] == displayInstance.PlatformDetail.WMDelete) {
 				displayInstance.Closed = quit = true;
-				rees_if(gpk::failed(eventEnqueueScreenClose(displayInstance.EventQueue)));
+				if_fail_e(eventEnqueueScreenClose(displayInstance.EventQueue));
 			}
 			break;
 		}
-		case XCB_DESTROY_NOTIFY	: displayInstance.Closed = quit = true; rees_if(gpk::failed(eventEnqueueScreenDestroy(displayInstance.EventQueue))); break;
+		case XCB_DESTROY_NOTIFY	: displayInstance.Closed = quit = true; if_fail_e(eventEnqueueScreenDestroy(displayInstance.EventQueue)); break;
 		}
 		free(event);
 		if(100 <= ++counter)
@@ -343,30 +326,29 @@ gpk::err_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											
 	return quit ? 1 : 0;
 }
 
-gpk::err_t			gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
+gpk::err_t 		gpk::windowUpdate		(SWindow & displayInstance)											{
 	displayInstance.EventQueue.clear();
 	displayInstance.Resized	= false;
 	displayInstance.Repaint	= false;
-	bool						quit					= false;
+	b8_t						quit					= false;
 #if defined(GPK_WINDOWS)
 	::MSG						msg						= {};
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE))
 		if(1 == windowUpdateTick(displayInstance))
 			quit					= true;
 #elif defined(GPK_XCB)
-	gpk::err_t updateResult = windowUpdateTick(displayInstance);
-	if(gpk::failed(updateResult))
-		return updateResult;
+	err_t updateResult;
+	if_fail_vef(updateResult, updateResult = windowUpdateTick(displayInstance), "updateResult:%" GPK_FMT_U2, updateResult);
 	quit = 1 == updateResult;
 #endif // GPK_WINDOWS
 	return quit ? 1 : 0;
 }
 
 #if defined(GPK_WINDOWS)
-gpk::err_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
-	const uint32_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
-	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1_t();
-	::gpk::n2u1_c				prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
+gpk::err_t 		drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, cnst ::gpk::g8bgra& colorArray)				{
+	u2_c				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
+	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1();
+	::gpk::n2u1_c				prevSize				= {(u1_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (u1_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
 	 || metricsSource.y != offscreenDetail.BitmapInfo.bmiHeader.biHeight
 	 || width  != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
@@ -393,54 +375,54 @@ gpk::err_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenD
 
 		::gpk::SWindowPlatformDetail::TOSWindowNativeTexel		* pixelBits						= 0;
 		offscreenDetail.IntermediateDeviceContext			= ::CreateCompatibleDC(hdc);    // <- note, we're creating, so it needs to be destroyed
-		ree_if(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
+		if_true_fef(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
 		offscreenDetail.PixelBits							= {pixelBits, colorArray.area()};
 	}
-	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
-	const uint32_t lastLine		= metricsSource.y - 1;
-	const ::gpk::bgra									* dest										= colorArray.begin();
-	for(uint32_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
+	u2_c lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
+	u2_c lastLine		= metricsSource.y - 1;
+	cnst ::gpk::bgra									* dest										= colorArray.begin();
+	for(u2_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
 		memcpy(&offscreenDetail.PixelBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
 
 	::HBITMAP									hBmpOld										= (::HBITMAP)::SelectObject(offscreenDetail.IntermediateDeviceContext, offscreenDetail.IntermediateBitmap);    // <- altering state
-	ef_if(FALSE == ::BitBlt(hdc, 0, 0
-		, ::gpk::min(metricsSource.x, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth)
-		, ::gpk::min(metricsSource.y, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight)
+	if_true_ef(FALSE == ::BitBlt(hdc, 0, 0
+		, ::gpk::min(metricsSource.x, (u1_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth)
+		, ::gpk::min(metricsSource.y, (u1_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight)
 		, offscreenDetail.IntermediateDeviceContext, 0, 0, SRCCOPY)
 		, "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it."
 	);
 	//::SetStretchBltMode(hdc, COLORONCOLOR);
-	//e_if(FALSE == ::StretchBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, colorArray.metrics().x, colorArray.metrics().y, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
+	//if_true_e(FALSE == ::StretchBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, colorArray.metrics().x, colorArray.metrics().y, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
 	::SelectObject(hdc, hBmpOld);	// put the old bitmap back in the DC (restore state)
 	return 0;
 }
 #endif // GPK_WINDOWS
 
-gpk::err_t			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::g8bgra& targetToPresent)		{
+gpk::err_t 		gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, cnst ::gpk::g8bgra& targetToPresent)		{
 	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
 	::HWND					windowHandle								= displayInstance.PlatformDetail.WindowHandle;
-	retwarn_gwarn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
+	if_true_vwf(1, 0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
 	::HDC					dc											= ::GetDC(windowHandle);
-	ree_if(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
-	ef_if(failed(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
+	if_true_fef(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
+	if_true_ef(failed(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);
 #elif defined(GPK_XCB)
 	if(false == displayInstance.Repaint)
 		return 0;
-	xcb_screen_t * screen = xcb_setup_roots_iterator(xcb_get_setup(displayInstance.PlatformDetail.Connection)).data;
-	const ::gpk::n2<uint32_t> & metrics = targetToPresent.metrics();
-	xcb_image_t * image = xcb_image_create_native
+	xcb_screen_t				* screen							= xcb_setup_roots_iterator(xcb_get_setup(displayInstance.PlatformDetail.Connection)).data;
+	cnst ::gpk::n2u2_t		& metrics						= targetToPresent.metrics();
+	xcb_image_t				* image							= xcb_image_create_native
 		( displayInstance.PlatformDetail.Connection
-		, metrics.x, metrics.y
+		, metrics.x
+		, metrics.y
 		, XCB_IMAGE_FORMAT_Z_PIXMAP
 		, screen->root_depth
-		, (uint8_t*)targetToPresent.begin()
+		, (u0_t*)targetToPresent.begin()
 		, targetToPresent.size() * sizeof(::gpk::bgra)
-		, (uint8_t*)targetToPresent.begin()
+		, (u0_t*)targetToPresent.begin()
 		);
-	if(0 == image)
-		return -1;
+	if_null_fe(image);
 	xcb_image_put(displayInstance.PlatformDetail.Connection, displayInstance.PlatformDetail.IdDrawable, displayInstance.PlatformDetail.GC, image, 0, 0, 0);
 	image->base = 0;
 	xcb_image_destroy(image);

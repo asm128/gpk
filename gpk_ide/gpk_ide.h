@@ -2,7 +2,8 @@
 #include "gpk_gui.h"
 #include "gpk_gui_control_list.h"
 #include "gpk_gui_inputbox.h"
-#include "gpk_dialog.h"
+#include "gpk_gui_widgets.h"
+#include "gpk_gui_viewport.h"
 #include "gpk_camera.h"
 #include "gpk_matrix.h"
 #include "gpk_scene.h"
@@ -67,8 +68,8 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 	struct SUIRadialGauge {
 		::gpk::apod<::gpk::n3f2_t>		Vertices				= {};
 		::gpk::apod<::gpk::tris1_t>		Indices					= {};
-		int16_t							CurrentValue			= 0;
-		int16_t							MaxValue				= 64;
+		::gpk::s1_t							CurrentValue			= 0;
+		::gpk::s1_t							MaxValue				= 64;
 		::gpk::img<::gpk::bgra>			Image					= {};
 
 		stxp	::gpk::rgbaf			COLOR_MIN_DEFAULT		= ::gpk::GREEN;
@@ -76,8 +77,8 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		stxp	::gpk::rgbaf			COLOR_MAX_DEFAULT		= ::gpk::RED;
 		stxp	::gpk::rgbaf			COLOR_BKG_DEFAULT		= ::gpk::BROWN * .5 + ::gpk::DARKBLUE * .5;
 
-		inline	int16_t				SetValue				(float weight)							noexcept	{ return CurrentValue = int16_t(weight * MaxValue); }
-				int16_t				SetValue				(float currentValue, uint32_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
+		inline	::gpk::s1_t				SetValue				(float weight)							noexcept	{ return CurrentValue = ::gpk::s1_t(weight * MaxValue); }
+				::gpk::s1_t				SetValue				(float currentValue, ::gpk::u2_t maxValue)	noexcept	{ return SetValue(currentValue / maxValue); }
 	};
 
 	struct SApplication {
@@ -94,15 +95,14 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::SInputBox				InputBox						= {};
 
 		::std::mutex					LockViewport					;
-		::gpk::SDialog					DialogMain						= {};
-		::gpk::cid_t					Slider							= -1;
-		::gpk::cid_t					NumericTuner					= -1;
-		::gpk::cid_t					CheckBox						= -1;
-		::gpk::cid_t					Viewport						= -1;
+		::gpk::SSlider					Slider							= {};
+		::gpk::STuner<uint8_t>			NumericTuner					= {};
+		::gpk::SCheckBox				CheckBox						= {};
+		::gpk::SViewport				Viewport						= {};
 		::gpk::cid_t					GaugeControl					= -1;
 		SUIRadialGauge					Gauge							= {};
 		//::gpk::tri3<float>			CubePositions	[12]			= {};
-		::gpk::SModelGeometryIndexed<float, uint8_t>	ModelGeometry;
+		::gpk::SModelGeometryIndexed<float, ::gpk::u0_t>	ModelGeometry;
 
 		::gpk::pobj<::gpk::rtbgra8d32>	Buffer3D;
 		SVertexCache					VertexCache;

@@ -102,9 +102,6 @@
     <ClCompile Include="..\llc\gpk_https_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\llc\gpk_i2c.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\llc\gpk_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -135,9 +132,6 @@
     <ClCompile Include="..\llc\gpk_path.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\llc\gpk_platform_error.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\llc\gpk_png.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -154,9 +148,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\llc\gpk_runtime_module.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\llc\gpk_spi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\llc\gpk_stdstring.cpp">
@@ -311,9 +302,6 @@
     <ClInclude Include="..\llc\gpk_enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\llc\gpk_error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\llc\gpk_eval.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -369,9 +357,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_http_client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\llc\gpk_i2c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_image.h">
@@ -446,9 +431,6 @@
     <ClInclude Include="..\llc\gpk_path.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\llc\gpk_platform_error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\llc\gpk_png.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -507,9 +489,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_size.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\llc\gpk_spi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_stdsocket.h">

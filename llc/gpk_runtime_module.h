@@ -13,8 +13,8 @@
 
 using ::gpk::sc_t;
 
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleTitle		, sc_t* outputBuffer, uint8_t* outputBufferLength					);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleVersion	, uint32_t* version													);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleTitle		, sc_t* outputBuffer, ::gpk::u0_t* outputBufferLength					);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleVersion	, ::gpk::u2_t* version													);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCreate	, void** customApplication, ::gpk::SRuntimeValues* runtimeValues	);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleDelete	, void** customApplication											);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleSetup		, void*	 customApplication											);
@@ -49,7 +49,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	gpk::err_t					loadRuntimeModule				(::gpk::SRuntimeModule& loadedModule, const ::gpk::vcs& moduleName);
+	gpk::err_t					loadRuntimeModule				(::gpk::SRuntimeModule& loadedModule, const ::gpk::vcst_t& moduleName);
 }
 
 #endif // GPK_RUNTIME_MODULE_H_23627

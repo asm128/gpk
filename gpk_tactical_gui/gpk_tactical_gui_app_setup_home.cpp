@@ -67,7 +67,7 @@ gpk::err_t						dry::setupScreenHome			(::dry::SApplication & app)	{
 		{ ::dry::SCREEN_CONTROL_HOME_PROGRAM_STOP
 		//, ::dry::SCREEN_CONTROL_HOME_CURRENT_CYCLE_TIME_LABEL
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
+	for(::gpk::u2_t iControl = 0; iControl < ::gpk::size(controlsToHide); ++iControl) {
 		const ::gpk::cid_t								indexControl			= app.Screens.Home.ControlIds[controlsToHide[iControl]];
 		if(indexControl == -1)
 			continue;
@@ -75,5 +75,5 @@ gpk::err_t						dry::setupScreenHome			(::dry::SApplication & app)	{
 	}
 	::dry::updateProgramDisplay(app);
 	::dry::updateCatalogDisplay(app);
-	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1_t());
+	return ::dry::handleResizeScreenHome(app, app.Framework.RootWindow.Size.s1());
 }

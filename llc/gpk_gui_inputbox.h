@@ -10,7 +10,7 @@
 
 namespace gpk
 {
-	gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu1_t & keys);
+	gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, ::gpk::u0_t rowWidth, const ::gpk::vcu0_t & keys);
 	gpk::err_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SInputBox {
@@ -18,14 +18,16 @@ namespace gpk
 		cid_t					IdText				= {};
 		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
 		::gpk::asc_t			Text				= {};
-		uint32_t				MaxLength			= 16;
+		::gpk::u2_t				MaxLength			= 16;
 		bool					Editing				= false;
 
 
-		inline	gpk::err_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
+		inline	gpk::err_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text = text}); }
 		gpk::err_t			Edit				(::gpk::SGUI & gui, bool editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
+			if(Editing)
+				if_fail_fe(::gpk::controlToFront(gui, IdRoot));
 			return one_if(Editing);
 		}
 #ifndef GPK_ATMEL		
@@ -36,7 +38,7 @@ namespace gpk
 
 			cid_t						handledControl;
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
-			gpk_necs(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](::gpk::cid_t iControl) {
+			if_fail_fe(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](::gpk::cid_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
 					return gpk::err_t(handledControl = iControl);
 
@@ -44,15 +46,15 @@ namespace gpk
 			}));
 
 			::gpk::apobj<::gpk::SEventSystem>	sysEvents			= frameEvents;
-			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
+			for(::gpk::u2_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
-				case ::gpk::VK_EVENT_RELEASE:
+				case ::gpk::VK_EVENT_Release:
 					if(Text.size() < MaxLength) {
 						Text.push_back((sc_t)vkEvents[iEvent].ScanCode);
-						::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+						::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text});
 					}
 					break;
-				case ::gpk::VK_EVENT_EDIT:
+				case ::gpk::VK_EVENT_Edit:
 						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Backspace)); } 
 					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Enter	)); } 
 					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Escape	)); } 
@@ -68,7 +70,7 @@ namespace gpk
 						if(Text.size() < MaxLength)
 							if(cev.Data[0] >= 0x20 && cev.Data[0] <= 0x7F) {
 								Text.push_back(cev.Data[0]);
-								::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+								::gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text});
 							}
 						return 0;
 					});
@@ -81,13 +83,13 @@ namespace gpk
 							case ::gpk::SYSTEM_KEY_Enter		: enterKeyPressed = true;	break; 
 							case ::gpk::SYSTEM_KEY_Backspace	: 
 								if(Text.size()) {
-									gpk_necs(Text.pop_back());
-									gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+									if_fail_fe(Text.pop_back());
+									if_fail_fe(gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text})); 
 								}
 								break;
 							case ::gpk::SYSTEM_KEY_Clear		: 
 								Text.clear();				
-								gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+								if_fail_fe(gpk::controlTextSet(gui, IdText, ::gpk::vcst_t{Text})); 
 								break;
 							}
 						}

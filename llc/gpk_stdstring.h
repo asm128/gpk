@@ -1,18 +1,24 @@
 #include "gpk_view.h"
-#include "gpk_safe.h"
 
 #ifndef GPK_STDSTRING_H_23627
 #define GPK_STDSTRING_H_23627
-namespace gpk
-{
-	//sinx	gpk::err_t	toupper		(char input)				{ return input (curByte >= 'A' && curByte <= 'Z') & ~0x20; }
-	//sinx	gpk::err_t	tolower		(char input)				{ return input (curByte >= 'A' && curByte <= 'Z') | 0x20; }
-	sinx	gpk::err_t	toupper		(char & input)				{ return (input >= 'a' && input <= 'z') ? input &= ~0x20U : 0; }
-	sinx	gpk::err_t	tolower		(char & input)				{ return (input >= 'A' && input <= 'Z') ? input |= 0x20U  : 0; }
 
-	gpk::err_t			tolower		(::gpk::view<char> input);
-	gpk::err_t			toupper		(::gpk::view<char> input);
-	gpk::err_t			stoull		(::gpk::vcsc_c & input, uint64_t & output);
+nmsp gpk
+{
+	//sinx err_t		toupper		(sc_t input)		{ return input (curByte >= 'A' && curByte <= 'Z') & ~0x20; }
+	//sinx err_t		tolower		(sc_t input)		{ return input (curByte >= 'A' && curByte <= 'Z') | 0x20; }
+	sinx err_t		toupper		(sc_t & input)		{ return (input >= 'a' && input <= 'z') ? input &= ~0x20U : 0; }
+	sinx err_t		tolower		(sc_t & input)		{ return (input >= 'A' && input <= 'Z') ? input |= 0x20U  : 0; }
+	stin err_t		toupper		(vsc_t input)	{
+		for(::gpk::u2_t iByte = 0, sizeHeader = input.size(); iByte < sizeHeader; ++iByte)
+			toupper(input[iByte]);
+		return 0;
+	}
+	stin err_t		tolower		(vsc_t input)	{
+		for(::gpk::u2_t iByte = 0, sizeHeader = input.size(); iByte < sizeHeader; ++iByte)
+			tolower(input[iByte]);
+		return 0;
+	}
+	err_t			stoull		(vcst_t input, u3_t & output);
 }
 #endif // GPK_STDSTRING_H_23627
-

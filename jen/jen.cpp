@@ -31,7 +31,7 @@ stxp const char input_expression [] = "{people[2].name}'s {properties[selection.
 int main(int argc, char** argv) {
 	::gpk::SCommandLineArgs args;
 	::gpk::SJSONFile file;
-	gpk_necs(gpk::argsParse(args, argc, argv));
+	if_fail_fe(gpk::argsParse(args, argc, argv));
 	if(2 != args.Order.size()) {
 		printf("usage: %s [-f] [json] [-f] [expression]\ninput_json:\n%s\ninput_expression:\n%s\n", argv[0], input_json, input_expression);
 		const ::gpk::vcst_t demoJson = {input_json, sizeof(input_json) - 1};
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 	for(::gpk::u2_t iInput = 0; iInput < 2; ++iInput) {
 		fromFile[iInput] = 1 == args.Order[iInput];
 		if(fromFile[iInput]) {
-			ree_if((args.Options[iOption].Key != ::gpk::vcst_t{"f", 1}) || !args.Options[iOption].Val.size(), "Expected -f followed by a filename.");
+			if_true_fef((args.Options[iOption].Key != ::gpk::vcst_t{"f", 1}) || !args.Options[iOption].Val.size(), "Expected -f followed by a filename.");
 			input[iInput] = args.Options[iOption++].Val;
 		}
 		else
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 	::gpk::SExpressionReader expressionReader = {};
 	if_fail_fe(gpk::expressionReaderParse(expressionReader, input[1]));
 	::gpk::SJSONExpressionSolver results = {};
-	ree_if(-1 == gpk::jsonExpressionResolve(expressionReader, file.Reader, 0, results, output), "Failed to resolve expression.");
+	if_true_fef(-1 == gpk::jsonExpressionResolve(expressionReader, file.Reader, 0, results, output), "Failed to resolve expression.");
 	printf("%.*s\n", GPK_VIEW(output));
 	return 0;
 }

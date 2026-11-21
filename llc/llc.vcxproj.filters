@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -102,6 +102,9 @@
     </Filter>
     <Filter Include="string">
       <UniqueIdentifier>{f8fc180c-c5d2-4bba-ba41-864cb8042745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entity_scene">
+      <UniqueIdentifier>{2393f261-dec6-41ce-9691-f2510297890a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -258,13 +261,13 @@
     <ClInclude Include="gpk_dialog_controls.h">
       <Filter>dialog</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_widgets.h">
+      <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_encoding.h">
       <Filter>encoding</Filter>
     </ClInclude>
     <ClInclude Include="gpk_enum.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_error.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="gpk_eval.h">
@@ -318,10 +321,22 @@
     <ClInclude Include="gpk_gui_control.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_control_table.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_core.h">
+      <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_gui_control_list.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_gui_control_state.h">
+    <ClInclude Include="gpk_gui_control_flag.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_image.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_keyboard.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_desktop.h">
@@ -681,17 +696,8 @@
     <ClInclude Include="gpk_log_core.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_i2c.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_serial.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_spi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_platform_error.h">
-      <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_linear_map_pobj.h">
       <Filter>container</Filter>
@@ -771,13 +777,7 @@
     <ClInclude Include="gpk_event_primitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_keyval_old.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval_view.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval.h">
+    <ClInclude Include="gpk_keyval_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_block_container.h">
@@ -791,6 +791,114 @@
     </ClInclude>
     <ClInclude Include="gpk_args.h">
       <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_celestial_body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_game_stage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_orbit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_planetary_system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rigid_body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_spaceship.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_sun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tile_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_xaudio2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample3DSceneRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleFpsTextRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveBankReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WAVFileReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XAudio2Versions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_d3d.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_d3d_app.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_entity.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_explorer.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_explorer_app_menu.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_file.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_geometry.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_gui.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_orbit.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_planetary_system.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_renderbuffer.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendercolor.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendermesh.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendernode.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendersurface.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_scene.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_shader.h">
+      <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_soundbuffer.h">
+      <Filter>entity_scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -845,6 +953,9 @@
     <ClCompile Include="gpk_dialog.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_gui_widgets.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
     <ClCompile Include="gpk_encoding.cpp">
       <Filter>encoding</Filter>
     </ClCompile>
@@ -873,6 +984,9 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_control_list.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_table.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_desktop.cpp">
@@ -977,12 +1091,6 @@
     <ClCompile Include="gpk_scene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_i2c.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_spi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_string_compose.cpp">
       <Filter>string</Filter>
     </ClCompile>
@@ -991,9 +1099,6 @@
     </ClCompile>
     <ClCompile Include="gpk_broker.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_typeint.cpp">
-      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="gpk_append_css.cpp">
       <Filter>string</Filter>
@@ -1013,10 +1118,7 @@
     <ClCompile Include="gpk_append_tcpip.cpp">
       <Filter>string</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_keyval_old.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Callsite\bundle_galaxy_hell\gpk\llc\gpk_keyval_view.cpp">
+    <ClCompile Include="gpk_keyval_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_crc.cpp">
@@ -1031,6 +1133,60 @@
     <ClCompile Include="gpk_args.cpp">
       <Filter>script</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_celestial_body.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_planetary_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_rigid_body.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_sun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_xaudio2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveBankReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WAVFileReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_collision.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_d3d.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_d3d_app.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_explorer.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_orbit.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_planetary_system.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_renderbuffer.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_scene.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_shader.cpp">
+      <Filter>entity_scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />
@@ -1040,5 +1196,38 @@
     <None Include="gpk_config.json" />
     <None Include="Makefile" />
     <None Include="country_coords.json" />
+    <None Include="deploy_data.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="gpk_solar_system.json" />
+    <None Include="PixelShaderShared.hlsli" />
+    <None Include="PixelShaderShared2D.hlsli" />
+    <None Include="ShaderColors.hlsli" />
+    <None Include="ShaderShared.hlsli" />
+    <None Include="ShaderShared2D.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="psBackgroundMilkyWay.hlsl" />
+    <FxCompile Include="psCylinder.hlsl" />
+    <FxCompile Include="psCylinderIn.hlsl" />
+    <FxCompile Include="psDwarf.hlsl" />
+    <FxCompile Include="psGasGiant.hlsl" />
+    <FxCompile Include="psGravityCenter.hlsl" />
+    <FxCompile Include="psGrid.hlsl" />
+    <FxCompile Include="psGridRuler.hlsl" />
+    <FxCompile Include="psGUI.hlsl" />
+    <FxCompile Include="psHidden.hlsl" />
+    <FxCompile Include="psIceGiant.hlsl" />
+    <FxCompile Include="psMassiveSolid.hlsl" />
+    <FxCompile Include="psOrbit.hlsl" />
+    <FxCompile Include="psSolid.hlsl" />
+    <FxCompile Include="psSphereAxis.hlsl" />
+    <FxCompile Include="psSphereMeridian.hlsl" />
+    <FxCompile Include="psSphereSolid.hlsl" />
+    <FxCompile Include="psSun.hlsl" />
+    <FxCompile Include="psSunfire.hlsl" />
+    <FxCompile Include="psTerrestrial.hlsl" />
+    <FxCompile Include="SampleVertexShader.hlsl" />
+    <FxCompile Include="vsGUI.hlsl" />
   </ItemGroup>
 </Project>

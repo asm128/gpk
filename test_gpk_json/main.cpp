@@ -7,10 +7,10 @@
 #include "gpk_json_expression.h"
 
 ::gpk::err_t								printNode						(::gpk::SJSONNode* node, const ::gpk::vcst_t& testJson)			{
-	const ::gpk::asc_t						viewPrintable					= ::gpk::toString({&testJson[node->Token->Span.Begin], node->Token->Span.End - node->Token->Span.Begin});
+	const ::gpk::asc_t						viewPrintable					= ::gpk::string({&testJson[node->Token->Span.Begin], node->Token->Span.End - node->Token->Span.Begin});
 	const ::gpk::vcst_t						viewTokenType					= ::gpk::get_value_label(node->Token->Type);
 	//info_printf("Entering JSON node type: %u (%s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %s", node->Token->Type, viewTokenType.begin(), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, viewPrintable.begin());
-	for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren)
+	for(::gpk::u2_t iChildren = 0; iChildren < node->Children.size(); ++iChildren)
 		::printNode(node->Children[iChildren], testJson);
 	//info_printf("Exiting JSON node type: %u (%s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %s", node->Token->Type, viewTokenType.begin(), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, viewPrintable.begin());
 	return 0;
@@ -37,7 +37,7 @@
 	info_printf("%s", bleh);
 
 	::gpk::SJSONReader								jsonReader;
-	gpk_necall(::gpk::jsonParse(jsonReader, testJson), "Failed to parse json: '%s'.", testJson.begin());
+	if_fail_fef(::gpk::jsonParse(jsonReader, testJson), "Failed to parse json: '%s'.", testJson.begin());
 
 	info_printf("---------------------------- Linear iteration: %u objects.", jsonReader.Token.size());
 	::gpk::asc_t						outputJson;
@@ -45,7 +45,7 @@
 	::printNode(root, testJson);
 
 	info_printf("---------------------------- Linear iteration: %u objects.", jsonReader.Token.size());
-	for(uint32_t iNode = 0; iNode < jsonReader.Token.size(); ++iNode) {
+	for(::gpk::u2_t iNode = 0; iNode < jsonReader.Token.size(); ++iNode) {
 		const gpk::SJSONToken							& node							= jsonReader.Token[iNode];
 		if( ::gpk::JSON_TYPE_VALUE	== node.Type
 		 || ::gpk::JSON_TYPE_KEY	== node.Type
@@ -53,7 +53,7 @@
 			continue;
 		::gpk::vcst_t						view							= jsonReader.View[iNode];
 		char											bufferFormat [8192]				= {};
-		uint32_t										lenString						= view.size();
+		::gpk::u2_t										lenString						= view.size();
 		sprintf_s(bufferFormat, "Node type: %%u (%%s). Node Span: {%%u, %%u}. Parent index: %%u. Object index: %%u. Text: %%%u.%us", lenString, lenString);
 		info_printf(bufferFormat, node.Type, ::gpk::get_value_label(node.Type).begin(), node.Span.Begin, node.Span.End, node.ParentIndex, iNode, view.begin());
 	}
@@ -63,11 +63,11 @@
 	::gpk::err_t									indexOfFirstObject				= ::gpk::jsonArrayValueGet(*root, 0);
 	::gpk::pobj<::gpk::SJSONNode>				object							= jsonReader.Tree[indexOfFirstObject];
 	::gpk::err_t									indexOfElement					= ::gpk::jsonObjectValueGet(*object, jsonReader.View, test_key);
-	gpk_necall((uint32_t)indexOfElement >= jsonReader.View.size(), "Test key '%s' not found: %i.", test_key.begin(), indexOfElement);
+	if_fail_fef((::gpk::u2_t)indexOfElement >= jsonReader.View.size(), "Test key '%s' not found: %i.", test_key.begin(), indexOfElement);
 	const gpk::SJSONToken							& node							= jsonReader.Token	[indexOfElement];
 	::gpk::vcst_t						view							= jsonReader.View	[indexOfElement - 1];	// get the parent in order to retrieve the view with the surrounding in the case of strings "".
 	char											bufferFormat [8192]				= {};
-	uint32_t										lenString						= view.size();
+	::gpk::u2_t										lenString						= view.size();
 	sprintf_s(bufferFormat, "Found test value {'%%s':%%%u.%us}. Node type: %%u (%%s). Node Span: {%%u, %%u}. Parent index: %%u. Object index: %%u.", lenString, lenString);
 	info_printf(bufferFormat, test_key.begin(), view.begin(), node.Type, ::gpk::get_value_label(node.Type).begin(), node.Span.Begin, node.Span.End, node.ParentIndex, indexOfElement, view.begin());
 	return 0;
@@ -79,7 +79,7 @@
 	const ::gpk::err_t							indexOfFirstObject			= 0;
 	info_printf("Test format:\n%s", format.begin());
 	::gpk::asc_t						formatted;
-	gpk_necall(::gpk::jsonStringFormat(format, jsonReader, indexOfFirstObject, formatted), "%s", "Error formatting string from JSON object.");
+	if_fail_fef(::gpk::jsonStringFormat(format, jsonReader, indexOfFirstObject, formatted), "%s", "Error formatting string from JSON object.");
 	info_printf("Formatted string after jsonStringFormat():\n%s", formatted.begin());
 	return 0;
 }
@@ -89,7 +89,7 @@
 	,	const ::gpk::vcst_t					expression
 	,	const ::gpk::vcst_t					expected
 	) {
-	info_printf("Testing expression: %s", ::gpk::toString(expression).begin());
+	info_printf("Testing expression: %s", ::gpk::string(expression).begin());
 	::gpk::vcsc_t						result;
 	::gpk::asc_t						output;
 	::gpk::SExpressionReader				reader;
@@ -113,8 +113,8 @@
 }
 
 int											main						()	{
-	//gpk_necall(::testJSONReader(), "%s", "Failed to read JSON!");
-	uint32_t										testsSucceeded			= 0;
+	//if_fail_fef(::testJSONReader(), "%s", "Failed to read JSON!");
+	::gpk::u2_t										testsSucceeded			= 0;
 	const ::gpk::vcst_t					inputJson				=
 		"\n{\t \"name\"           : \"Carlos\""
 		"\n\t, \"height\"         : 1.60"
@@ -323,22 +323,22 @@ int											main						()	{
 		};
 
 	info_printf("Input JSON:\n%s", inputJson.begin());
-	gpk_necall(::gpk::jsonParse(jsonReader, inputJson), "Failed to parse json: '%s'.", inputJson.begin());
-	for(uint32_t iTest = 0; iTest < ::gpk::size(resultExpression); ++iTest) {
-		if(::gpk::failed(testJSONExpression(jsonReader, resultExpression[iTest].Val, resultExpression[iTest].Key))) error_printf( "Failed to resolve expression: %s", ::gpk::toString(resultExpression[iTest].Val).begin());
+	if_fail_fef(::gpk::jsonParse(jsonReader, inputJson), "Failed to parse json: '%s'.", inputJson.begin());
+	for(::gpk::u2_t iTest = 0; iTest < ::gpk::size(resultExpression); ++iTest) {
+		if(::gpk::failed(testJSONExpression(jsonReader, resultExpression[iTest].Val, resultExpression[iTest].Key))) error_printf( "Failed to resolve expression: %s", ::gpk::string(resultExpression[iTest].Val).begin());
 		else
 			++testsSucceeded;
 	}
 
 	//::gpk::SJSONFile	fileCases;
 	//::gpk::jsonFileRead(fileCases, "case.json");
-	//for(uint32_t iCase = 0; iCase < (uint32_t)::gpk::jsonArraySize(*fileCases.Reader[0]); ++iCase) {
-	//	const uint32_t			indexMain		= ::gpk::jsonArrayValueGet(*fileCases.Reader[0], iCase);
-	//	const uint32_t			indexResult		= ::gpk::jsonArrayValueGet(*fileCases.Reader[indexMain], 0);
-	//	const uint32_t			indexScript		= ::gpk::jsonArrayValueGet(*fileCases.Reader[indexMain], 1);
+	//for(::gpk::u2_t iCase = 0; iCase < (::gpk::u2_t)::gpk::jsonArraySize(*fileCases.Reader[0]); ++iCase) {
+	//	const ::gpk::u2_t			indexMain		= ::gpk::jsonArrayValueGet(*fileCases.Reader[0], iCase);
+	//	const ::gpk::u2_t			indexResult		= ::gpk::jsonArrayValueGet(*fileCases.Reader[indexMain], 0);
+	//	const ::gpk::u2_t			indexScript		= ::gpk::jsonArrayValueGet(*fileCases.Reader[indexMain], 1);
 	//	const ::gpk::SJSONNode	& nodeResult	= *fileCases.Reader[indexResult];
 	//	const ::gpk::SJSONNode	& nodeScript	= *fileCases.Reader[indexScript];
-	//	gerror_if(::gpk::failed(testJSONExpression(jsonReader, fileCases.Reader.View[nodeScript.ObjectIndex], fileCases.Reader.View[nodeResult.ObjectIndex])), "Failed to resolve expression: %s", ::gpk::toString(fileCases.Reader.View[nodeScript.ObjectIndex]).begin())
+	//	gerror_if(::gpk::failed(testJSONExpression(jsonReader, fileCases.Reader.View[nodeScript.ObjectIndex], fileCases.Reader.View[nodeResult.ObjectIndex])), "Failed to resolve expression: %s", ::gpk::string(fileCases.Reader.View[nodeScript.ObjectIndex]).begin())
 	//	else
 	//		++testsSucceeded;
 	//}

@@ -7,32 +7,32 @@ namespace dry
 {
 #pragma pack(push, 1)
 	struct SSpool {
-		int64_t								UniqueId				= 0;
-		int64_t								TimestampLoaded			= 0;
-		int64_t								TimestampUnloaded		= 0;
-		int64_t								TimestampDryed			= 0;
+		::gpk::s3_t								UniqueId				= 0;
+		::gpk::s3_t								TimestampLoaded			= 0;
+		::gpk::s3_t								TimestampUnloaded		= 0;
+		::gpk::s3_t								TimestampDryed			= 0;
 
-		int16_t								Brand					= -1;
-		int16_t								Material				= -1;
-		int16_t								Color					= -1;
-		int16_t								Notes					= -1;
-		int16_t								Density					= -1;
-		int16_t								Diameter				= -1;
-		int16_t								SpoolSize				= -1;
-		int16_t								MaxDryingTemperature	= -1;
+		::gpk::s1_t								Brand					= -1;
+		::gpk::s1_t								Material				= -1;
+		::gpk::s1_t								Color					= -1;
+		::gpk::s1_t								Notes					= -1;
+		::gpk::s1_t								Density					= -1;
+		::gpk::s1_t								Diameter				= -1;
+		::gpk::s1_t								SpoolSize				= -1;
+		::gpk::s1_t								MaxDryingTemperature	= -1;
 	};
 #pragma pack(pop)
 
 	struct SSpoolData {
-		int64_t								UniqueId				= 0;
+		::gpk::s3_t								UniqueId				= 0;
 		::gpk::vcst_t						Brand					= {};
 		::gpk::vcst_t						Material				= {};
 		::gpk::vcst_t						Color					= {};
 		::gpk::vcst_t						Notes					= {};
 		double								Density					= {};
 		double								Diameter				= {};
-		int32_t								SpoolSize				= {};
-		int8_t								MaxDryingTemperature	= {};
+		::gpk::s2_t								SpoolSize				= {};
+		::gpk::s0_t								MaxDryingTemperature	= {};
 	};
 
 	struct SSpoolCatalog {
@@ -50,8 +50,8 @@ namespace dry
 
 		::gpk::SJSONFile					JSONData				;
 
-		bool								Exists					(int64_t uniqueId) {
-			for(uint32_t iId = 0; iId < FilamentLoaded.size(); ++iId) {
+		bool								Exists					(::gpk::s3_t uniqueId) {
+			for(::gpk::u2_t iId = 0; iId < FilamentLoaded.size(); ++iId) {
 				if(FilamentLoaded[iId].UniqueId == uniqueId)
 					return true;
 			}
@@ -65,9 +65,9 @@ namespace dry
 	gpk::err_t						catalogAdd
 		( ::dry::SSpoolCatalog	& catalog
 		, const SSpoolData		& spoolToAdd
-		, int64_t				timeLoaded
-		, int64_t				timeUnloaded
-		, int64_t				timeDryed
+		, ::gpk::s3_t				timeLoaded
+		, ::gpk::s3_t				timeUnloaded
+		, ::gpk::s3_t				timeDryed
 		, bool					history
 		);
 }

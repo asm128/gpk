@@ -32,7 +32,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbo
 		for(u2_t iSymbol = 0; iSymbol < base; ++iSymbol) {
 			if(symbolList[iSymbol] == sourceChar) {
 				bSymbolProcessed							= true;
-				gpk_necs(stringToParse.push_back(sourceChar));
+				if_fail_fe(stringToParse.push_back(sourceChar));
 				++iChar;
 				++totalCharsProcessed;
 				break;
@@ -42,7 +42,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbo
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	gpk_necs(gpk::reverse(stringToParse));		// we assigned the digits backwards so we need to reverse the string.
+	if_fail_fe(gpk::reverse(stringToParse));		// we assigned the digits backwards so we need to reverse the string.
 	u3_t										number										= 0;
 	totalCharsProcessed							= 0;
 	for(u2_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
@@ -59,7 +59,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbo
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	gpk_safe_assign(number_, number);
+	::gpk::safe_assign(number_, number);
 	return totalCharsProcessed;
 }
 
@@ -79,7 +79,7 @@ gpk::err_t			stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, :
 		}
 		out_types[work_state.IndexCurrentElement].Span.End	= work_state.IndexCurrentChar + 1;
 		work_state.InsideToken						= false;
-		gpk_necs(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_LITERAL, {work_state.IndexCurrentChar + 1, work_state.IndexCurrentChar + 1}}));
+		if_fail_fe(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_LITERAL, {work_state.IndexCurrentChar + 1, work_state.IndexCurrentChar + 1}}));
 		work_state.CurrentElement					= &out_types[work_state.IndexCurrentElement];
 	case '\\'	:
 		if(false == work_state.Escaping) {
@@ -106,7 +106,7 @@ gpk::err_t			stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, 
 			break;	// do nothing if this bracket is escaped
 		out_types[out_types.size() - 1].Span.End	= work_state.IndexCurrentChar;
 		work_state.InsideToken						= true;
-		gpk_necs(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_TOKEN, {work_state.IndexCurrentChar, work_state.IndexCurrentChar}}));
+		if_fail_fe(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_TOKEN, {work_state.IndexCurrentChar, work_state.IndexCurrentChar}}));
 		work_state.CurrentElement					= &out_types[work_state.IndexCurrentElement];
 		// do work
 		break;
@@ -139,7 +139,7 @@ gpk::err_t			gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state
 gpk::err_t			gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralType> & out_types, ::gpk::vcsc_c & in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
-		gpk_necs(gpk::stripLiteralParseStep(stateReading, out_types, in_format));
+		if_fail_fe(gpk::stripLiteralParseStep(stateReading, out_types, in_format));
 	}
 	return 0;
 }
@@ -159,11 +159,11 @@ gpk::err_t			gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcsc_t> & out_views,
 			lenView										= ::gpk::min(in_format.size() - type.Span.Begin, type.Span.End - type.Span.Begin);
 		}
 		if(0 >= lenView) {
-			gpk_necs(out_views.push_back({}));
+			if_fail_fe(out_views.push_back({}));
 			continue;
 		}
 		view										= {&in_format[offsetView], lenView};
-		gpk_necs(out_views.push_back(view));
+		if_fail_fe(out_views.push_back(view));
 	}
 	return 0;
 }
