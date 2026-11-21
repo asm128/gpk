@@ -1,4 +1,4 @@
-#include "gpk_gui_control.h"
+#include "gpk_gui_control_table.h"
 #include "gpk_array.h"
 #include "gpk_png.h"
 
@@ -14,7 +14,6 @@ nmsp dry
     GPK_USING_RECT2();
     GPK_USING_MINMAX2();
 
-    CTTI_ENUM(SCREEN,
     enum SCREEN : u0_t 
         { SCREEN_ROOT           
         , SCREEN_HUD            
@@ -26,7 +25,6 @@ nmsp dry
         , SCREEN_CONFIG         
         , SCREEN_COUNT
         };
-    );
     //GDEFINE_ENUM_VALUE(SCREEN, , 4);
 
     GDEFINE_ENUM_TYPE(SCREEN_CONTROL_MENU, u0_t );
@@ -115,7 +113,6 @@ nmsp dry
         vcst_t                 IconPathOn    ;
         n2b8_t                 AdjustToText  ;
     };
-    CTTI_ENUM(PALETTE,
     enum PALETTE : u1_t
         { PALETTE_MENU_NORMAL                   = 400 + (u0_t)::gpk::GUI_CONTROL_PALETTE_NORMAL                                   
         , PALETTE_MENU_DISABLED                 = PALETTE_MENU_NORMAL + (u0_t)::gpk::GUI_CONTROL_PALETTE_DISABLED             
@@ -163,8 +160,6 @@ nmsp dry
         , PALETTE_OK_OUTDATED                   = PALETTE_OK_NORMAL + (u0_t)::gpk::GUI_CONTROL_PALETTE_OUTDATED                   
         , PALETTE_COUNT                         = 1 + PALETTE_OK_OUTDATED                                                       
         };
-    );
-
 	::gpk::err_t					setupPalettes	(::gpk::SControlColors	& colors );
 	struct SControlImages {
 		::gpk::img8bgra		On	;
