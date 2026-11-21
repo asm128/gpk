@@ -65,7 +65,7 @@ gpk::err_t 			update						(::gme::SApplication & app, b8_t exitSignal)	{
 
 	::gpk::SGUI						& gui						= *framework.GUI;
 	::gpk::acid						controlsToProcess			= {};
-	if(::gpk::guiProcessControls(gui, [&app](::gpk::cid_t idControl) {
+	if(::gpk::controlHandle(gui.Controls, [&app](::gpk::cid_t idControl) {
 		info_printf("Executed %u.", idControl);
 		if(idControl == app.IdExit)
 			return 1;

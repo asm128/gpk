@@ -3,6 +3,9 @@
 #include "gpk_raster_lh.h"
 #include "gpk_grid_copy.h"
 #include "gpk_sphere.h"
+#include "gpk_gui_theme.h"
+
+#include "gpk_gui_control_list.h"
 
 using ::gpk::get_value_namep, ::gpk::get_enum_namep, ::gpk::failed;
 GPK_USING_TYPEINT();
@@ -86,8 +89,8 @@ static	gpk::err_t			uiPlayerSetupHome		(::ghg::SUIPlayer & uiPlayer, ::gpk::pobj
 	playerGUI.Controls.Placement[uiPlayer.InputBox.IdRoot].Align			= playerAlign;
 	playerGUI.Controls.Placement[uiPlayer.InputBox.IdRoot].Area.Offset.x	= 240;
 
-	if_fail_fe(::gpk::controlFontSet(playerGUI, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, 10));
-	if_fail_fe(::gpk::controlTextSet(playerGUI, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, playerName));
+	if_fail_fe(::gpk::controlFontSet(playerGUI.Controls, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, 10));
+	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, playerName));
 	return 0;
 }
 
@@ -131,9 +134,9 @@ static	gpk::err_t	uiPlayerSetupPlay	(::ghg::SUIPlayer & uiPlayer, ::gpk::pobj<::
 		//playerGUI.Controls.Constraints[iOffset + iButton].AttachSizeToText.x	= true;
 	}
 
-	if_fail_fe(::gpk::controlFontSet(playerGUI, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, 10));
-	if_fail_fe(::gpk::controlTextSet(playerGUI, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, pilotName));
-	if_fail_fe(::gpk::controlTextSet(playerGUI, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Score, ""));
+	if_fail_fe(::gpk::controlFontSet(playerGUI.Controls, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, 10));
+	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, pilotName));
+	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Score, ""));
 
 	for(u2_t iOrbiter = 0, countViewports = nShipParts; iOrbiter < countViewports; ++iOrbiter) {
 		s2_t						indexVP				= uiPlayer.ModuleViewports.push_back({});
@@ -141,7 +144,7 @@ static	gpk::err_t	uiPlayerSetupPlay	(::ghg::SUIPlayer & uiPlayer, ::gpk::pobj<::
 		::gpk::controlCreate(playerGUI); // Weapon Load
 		::gpk::controlCreate(playerGUI); // Weapon Type
 		for(u2_t iControl = 0; iControl < 3; ++iControl)
-			::gpk::controlSetParent(playerGUI, ::gpk::cid_t(uiPlayer.ModuleViewports[indexVP]->Viewport + iControl), playerDialog.Root); // Weapon Load
+			::gpk::controlSetParent(playerGUI.Controls, ::gpk::cid_t(uiPlayer.ModuleViewports[indexVP]->Viewport + iControl), playerDialog.Root); // Weapon Load
 
 		::ghg::SUIPlayShipPartViewport	& viewport		= *uiPlayer.ModuleViewports[indexVP];
 		viewport.RenderTargetOrbiter.resize(::MODULE_CAMERA_SIZE);
@@ -154,9 +157,9 @@ static	gpk::err_t	uiPlayerSetupPlay	(::ghg::SUIPlayer & uiPlayer, ::gpk::pobj<::
 			::gpk::SControlImage	& imageOrbiter		= playerGUI.Controls.Images[viewport.Viewport + 0];
 			::gpk::SControlImage	& imageWeaponType	= playerGUI.Controls.Images[viewport.Viewport + 2];
 			::gpk::SControlImage	& imageWeaponLoad	= playerGUI.Controls.Images[viewport.Viewport + 1];
-			imageOrbiter	.Image	= viewport.RenderTargetOrbiter.Color.View;
-			imageWeaponType	.Image	= viewport.RenderTargetWeaponLoad.Color.View;
-			imageWeaponLoad	.Image	= viewport.RenderTargetWeaponType.Color.View;
+			playerGUI.Controls.Views[viewport.Viewport + 0] = viewport.RenderTargetOrbiter.Color.View;
+			playerGUI.Controls.Views[viewport.Viewport + 2] = viewport.RenderTargetWeaponLoad.Color.View;
+			playerGUI.Controls.Views[viewport.Viewport + 1] = viewport.RenderTargetWeaponType.Color.View;
 			imageOrbiter.ImageAlign	= imageWeaponType.ImageAlign = imageWeaponLoad.ImageAlign	= ::gpk::ALIGN_CENTER;
 		}
 
@@ -475,8 +478,8 @@ static	gpk::err_t	uiPlayerUpdateHome	(::ghg::SUIPlayer & uiPlayer, u1_t iPlayer,
 	sprintfScore(uiPlayer.TextScore.Storage, shipScore, nitro);
 	::gpk::SDialog				& playerDialog		= uiPlayer.DialogHome;
 	::gpk::SGUI					& playerGUI			= *playerDialog.GUI;
-	if_fail_fe(::gpk::controlTextSet(playerGUI, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Score, uiPlayer.TextScore.Storage));
-	if_fail_fe(::gpk::controlTextSet(playerGUI, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, playerName));
+	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Score, uiPlayer.TextScore.Storage));
+	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name, playerName));
 	{
 		::gpk::SControlDraw			& controlDraw		= playerGUI.Controls.Draw[playerDialog.Root + 1 + ::ghg::UI_PROFILE_Name];
 		controlDraw.ColorTheme		= s1_t(3 + iPlayer);
@@ -499,8 +502,8 @@ static	gpk::err_t	uiPlayerUpdatePlay	(::ghg::SUIPlayer & uiPlayer, u2_t iPlayer,
 	const ::gpk::SSpaceshipCore		& shipCore			= game.ShipState.SpaceshipManager.ShipCores[iPlayer];
 	sprintfScore(uiPlayer.TextScore.Storage, shipScore, shipCore.Nitro.Value);
 	const ::gpk::rgbaf			shipColor			= (shipCore.Team ? ::gpk::RED : ::gpk::rgbaf(game.Pilots[iPlayer].Color));
-	if_fail_fe(::gpk::controlTextSet(playerGUI, 1 + ::ghg::UI_PILOT_Name	, game.Pilots[iPlayer].Name));
-	if_fail_fe(::gpk::controlTextSet(playerGUI, 1 + ::ghg::UI_PILOT_Score, uiPlayer.TextScore.Storage));
+	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, 1 + ::ghg::UI_PILOT_Name	, game.Pilots[iPlayer].Name));
+	if_fail_fe(::gpk::controlTextSet(playerGUI.Controls, 1 + ::ghg::UI_PILOT_Score, uiPlayer.TextScore.Storage));
 	{
 		::gpk::SControlDraw			& controlDraw		= playerGUI.Controls.Draw[1 + ::ghg::UI_PILOT_Name];
 		controlDraw.ColorTheme	= s1_t(3 + iPlayer);
@@ -515,8 +518,8 @@ static	gpk::err_t	uiPlayerUpdatePlay	(::ghg::SUIPlayer & uiPlayer, u2_t iPlayer,
 		const ::gpk::SSpaceshipOrbiter	& orbiter		= game.ShipState.SpaceshipManager.Orbiters[game.ShipState.SpaceshipManager.ShipParts[iPlayer][iOrbiter]];
 		const ::gpk::SWeapon			& weapon		= game.ShipState.WeaponManager.Weapons[orbiter.Weapon];
 
-		if_fail_fef(::gpk::controlTextSet(playerGUI, viewport.Viewport + 1, ::gpk::get_value_label(weapon.Shot.Type)), "%s", "");
-		if_fail_fef(::gpk::controlTextSet(playerGUI, viewport.Viewport + 2, ::gpk::get_value_label(weapon.Type)), "%s", "");
+		if_fail_fef(::gpk::controlTextSet(playerGUI.Controls, viewport.Viewport + 1, ::gpk::get_value_label(weapon.Shot.Type)), "%s", "");
+		if_fail_fef(::gpk::controlTextSet(playerGUI.Controls, viewport.Viewport + 2, ::gpk::get_value_label(weapon.Type)), "%s", "");
 
 		const float					healthRatio		= (float)::gpk::clamped(orbiter.Health.Weight(), 0.0, 1.0);
 		const float					ratioOverheat	= (orbiter.Health.Value > 0) ? (float)weapon.Trigger.Overheat.WeightClamp() : 0;
@@ -610,9 +613,9 @@ static	gpk::err_t	guiUpdatePlay		(::ghg::SGalaxyHellApp & app) {
 	::gpk::sprintf_s(app.UIPlay.TextLevel.Storage, "Level: %i", game.PlayState.GlobalState.Stage);
 	sprintfTime("Total Time: "	, app.UIPlay.TextTimeReal	.Storage, game.PlayState.GlobalState.UserTime.Played);
 	sprintfTime("Stage Time: "	, app.UIPlay.TextTimeStage	.Storage, game.PlayState.TimeRealStage);
-	::gpk::controlTextSet(gui, 1 + ::ghg::UI_PLAY_Level		, ::gpk::vcst_t{app.UIPlay.TextLevel		.Storage});
-	::gpk::controlTextSet(gui, 1 + ::ghg::UI_PLAY_TimeStage , ::gpk::vcst_t{app.UIPlay.TextTimeStage	.Storage});
-	::gpk::controlTextSet(gui, 1 + ::ghg::UI_PLAY_TimeReal	, ::gpk::vcst_t{app.UIPlay.TextTimeReal	.Storage});
+	::gpk::controlTextSet(gui.Controls, 1 + ::ghg::UI_PLAY_Level		, ::gpk::vcst_t{app.UIPlay.TextLevel		.Storage});
+	::gpk::controlTextSet(gui.Controls, 1 + ::ghg::UI_PLAY_TimeStage , ::gpk::vcst_t{app.UIPlay.TextTimeStage	.Storage});
+	::gpk::controlTextSet(gui.Controls, 1 + ::ghg::UI_PLAY_TimeReal	, ::gpk::vcst_t{app.UIPlay.TextTimeReal	.Storage});
 
 	if(0 == game.ShipState.SpaceshipManager.ShipCores.size())
 		return 0;
@@ -667,11 +670,11 @@ static	gpk::err_t	guiUpdateHome				(::ghg::SGalaxyHellApp & app, ::gpk::vpobj<::
 		);
 
 		::gpk::acid					controlsToProcess			= {};
-		::gpk::guiGetProcessableControls(gui, controlsToProcess);
+		::gpk::controlActions(gui.Controls, controlsToProcess);
 		if(s2_t result = uiPlayer.InputBox.Update(gui, uiPlayer.InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
 			if(result == INT_MAX) {
 				::gpk::vcsc_t					trimmed						= {uiPlayer.InputBox.Text.begin(), ::gpk::min(uiPlayer.InputBox.Text.size(), 16U)};
-				::gpk::trim(trimmed);
+				::gpk::trim(trimmed, trimmed, ::gpk::TRIM_CHARACTERS);
 				if(trimmed.size()) {
 					app.Players[iPlayer].Name	= ::gpk::label(trimmed);
 					if(iPlayer < app.Game.Pilots.size())
@@ -681,7 +684,7 @@ static	gpk::err_t	guiUpdateHome				(::ghg::SGalaxyHellApp & app, ::gpk::vpobj<::
 			}
 		}
 		else {
-			::gpk::guiProcessControls(gui, controlsToProcess, [&](u2_t iControl) {
+			::gpk::controlHandle(gui.Controls, controlsToProcess, [&](u2_t iControl) {
 				u2_t					offsetControl				= dialog.Root + 1;
 				switch(iControl - (offsetControl)) {
 				case ::ghg::UI_PROFILE_Name:
@@ -736,7 +739,7 @@ gpk::err_t			ghg::guiUpdate				(::ghg::SGalaxyHellApp & app, ::gpk::vpobj<::gpk:
 	::gpk::SGUI					& gui						= *dialog.GUI;
 	dialog.Update();
 	::gpk::acid					controlsToProcess			= {};
-	::gpk::guiProcessControls(gui, [&app, &gui, &game, &appState](::gpk::cid_t idControl) {
+	::gpk::controlHandle(gui.Controls, [&app, &gui, &game, &appState](::gpk::cid_t idControl) {
 			idControl = idControl - 1;
 			info_printf("Executed %u.", idControl);
 			switch(appState) {

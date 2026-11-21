@@ -168,7 +168,7 @@ gpk::err_t			gpk::fileFromMemorySecure	(SLoadCache & recycle, vcst_t fileName, v
 		}
 		else {
 			if_fail_fef(arrayDeflate(blockBytes, recycle.Deflated), "Failed to deflate file: %.*s.", (int)fileName.size(), fileName.begin());
-			if_fail_fef(aesEncode(recycle.Deflated, key, AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %.*s.", (int)fileName.size(), fileName.begin());
+			if_fail_fef(aesEncode(recycle.Deflated.bytes(), key, AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %.*s.", (int)fileName.size(), fileName.begin());
 		}
 	}
 	if_fail_fe(crcGenerateAndAppend(recycle.Encrypted));

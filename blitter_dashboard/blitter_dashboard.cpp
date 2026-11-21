@@ -193,13 +193,13 @@ namespace
 
 	::gpk::SGUI	& gui = *app.Framework.GUI;
 	::gpk::acid	controlsToProcess = {};
-	if_fail_fe(::gpk::guiGetProcessableControls(gui, controlsToProcess));
+	if_fail_fe(::gpk::controlActions(gui.Controls, controlsToProcess));
 	if(const ::gpk::s2_t inputResult = app.ConfigInput.Update(gui, app.ConfigInput.VirtualKeyboard, app.Framework.RootWindow.EventQueue, controlsToProcess))
 		if(INT_MAX == inputResult)
 			if_fail_fe(::configurationLoad(app));
 
 	::gpk::err_t commandResult = 0;
-	if_fail_fe(::gpk::guiProcessControls(gui, controlsToProcess, [&app, &commandResult](::gpk::cid_t idControl) {
+	if_fail_fe(::gpk::controlHandle(gui.Controls, controlsToProcess, [&app, &commandResult](::gpk::cid_t idControl) {
 		for(::gpk::u2_t iCommand = 0; iCommand < app.Commands.IdControls.size(); ++iCommand)
 			if(idControl == app.Commands.IdControls[iCommand]) {
 				commandResult = ::dashboardCommand(app, idControl);

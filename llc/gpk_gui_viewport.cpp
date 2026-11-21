@@ -1,184 +1,86 @@
 #include "gpk_gui_viewport.h"
-#include "gpk_gui_widgets.h"
 #include "gpk_label.h"
 
-::gpk::cid_t gpk::viewportCreate(::gpk::SGUI & gui, ::gpk::SViewport & viewport) {
-	::gpk::SControlTable & controlTable = gui.Controls;
-	if_fail_fe(viewport.IdControl = ::gpk::controlCreate(gui));
-	controlTable.Draw[viewport.IdControl].UseNewPalettes = true;
-	controlTable.Draw[viewport.IdControl].FrameOut = true;
-	controlTable.Placement[viewport.IdControl].Margin = {};
-	{
-		::gpk::cid_t idControl;
-		if_fail_fe(viewport.IdControls[VIEWPORT_CONTROL_TARGET] = idControl = ::gpk::controlCreateChild(gui, viewport.IdControl));
-		::gpk::SControlPlacement & control = controlTable.Placement[idControl];
-		control.Area.Offset = {0, 18 + 1};
-		control.Area.Size = {2, 2};
-		control.Margin = {};
-		controlTable.Constraints[idControl].AttachSizeToControl.x = idControl;
-	}
-	{
-		::gpk::cid_t idControl;
-		if_fail_fe(viewport.IdControls[VIEWPORT_CONTROL_TITLE] = idControl = ::gpk::controlCreateChild(gui, viewport.IdControl));
-		::gpk::SControlPlacement & control = controlTable.Placement[idControl];
-		control.Area.Offset = {};
-		control.Area.Size = {2, 18};
-		control.Align = ::gpk::ALIGN_TOP_LEFT;
-		control.Margin.Left = 4;
-		controlTable.Constraints[idControl].AttachSizeToControl.x = idControl;
-		controlTable.Text[idControl].Text = "Viewport";
-	}
-	viewport.Settings.Unfolded = true;
-	return viewport.IdControl;
-}
-
-gpk::err_t			gpk::viewportInitialize	(::gpk::SGUI & gui, ::gpk::SViewport & viewport)			{
-	const ::gpk::n2u0_t			fontCharSize			= gui.Fonts[gui.SelectedFont]->CharSize;
-	::gpk::s1_t						heightTitleBar			= fontCharSize.y + 4;
-	::gpk::u2_t					widthTarget				= 800;
-	const ::gpk::n2f3_t			targetSize				= {(double)widthTarget, widthTarget * (9 / 16.0)};
+gpk::err_t 		gpk::viewportInitialize	(SGUI & gui, SViewport & viewport)			{
+	cnst n2u0_t			fontCharSize			= gui.Fonts[gui.SelectedFont]->CharSize;
+	s1_t						heightTitleBar			= fontCharSize.y + 4;
+	u2_t					widthTarget				= 800;
+	cnst n2f3_t			targetSize				= {(f3_t)widthTarget, widthTarget * (9 / 16.0)};
 
 	//if(-1 == viewport.IdControl)
 	{
-		viewport.IdControl		= ::gpk::controlCreate(gui);
-		//::gpk::SControlMode			& controlMode			= gui.Controls.Modes		[viewport.IdControl];
+		viewport.IdControl		= controlCreate(gui);
+		//SControlMode			& controlMode			= gui.Controls.Modes		[viewport.IdControl];
 		//controlMode.Design		= true;
-		::gpk::SControlPlacement	& control				= gui.Controls.Placement	[viewport.IdControl];
-		control.Align			= ::gpk::ALIGN_TOP_LEFT;
+		SControlPlacement	& control				= gui.Controls.Placement	[viewport.IdControl];
+		control.Align			= ALIGN_TOP_LEFT;
 		control.Border = control.Margin	= {1, 1, 1, 1};
 
-		const ::gpk::u2_t				widthViewport			= (::gpk::u2_t)(targetSize.x + ::gpk::controlNCSpacing(control).x);
-		const ::gpk::u2_t				heightViewport			= (::gpk::u2_t)(targetSize.y + ((::gpk::s3_t)heightTitleBar + ::gpk::controlNCSpacing(control).y));
-		control.Area.Size		= {(::gpk::s1_t)widthViewport, (::gpk::s1_t)heightViewport};
-		for(::gpk::u2_t iElement = 0; iElement < viewport.IdControls.size(); ++iElement) {
-			if_fail_fe(viewport.IdControls[iElement] = ::gpk::controlCreate(gui));
-			::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[viewport.IdControls[iElement]];
+		u2_c				widthViewport			= (u2_t)(targetSize.x + controlNCSpacing(control).x);
+		u2_c				heightViewport			= (u2_t)(targetSize.y + ((s3_t)heightTitleBar + controlNCSpacing(control).y));
+		control.Area.Size		= {(s1_t)widthViewport, (s1_t)heightViewport};
+		for(u2_t iElement = 0; iElement < viewport.IdControls.size(); ++iElement) {
+			if_fail_fe(viewport.IdControls[iElement] = controlCreate(gui));
+			SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[viewport.IdControls[iElement]];
 			controlConstraints.AttachSizeToControl.x	= viewport.IdControls[iElement];
-			if_fail_fef(gpk::controlSetParent(gui, viewport.IdControls[iElement], viewport.IdControl), "iElement: %i, viewport.IdControl: %i", iElement, viewport.IdControl);
+			if_fail_fef(controlSetParent(gui.Controls, viewport.IdControls[iElement], viewport.IdControl), "iElement: %i, viewport.IdControl: %i", iElement, viewport.IdControl);
 		}
-		for(::gpk::u2_t iElement = 0; iElement < VIEWPORT_CONTROL_TITLE; ++iElement) {
+		for(u2_t iElement = 0; iElement < VIEWPORT_CONTROL_TITLE; ++iElement) {
 			gui.Controls.Placement  [viewport.IdControls[iElement]].Area.Size			= {16, 16};
 			gui.Controls.Placement  [viewport.IdControls[iElement]].Area.Offset			= {-2, -2};
 			gui.Controls.Constraints[viewport.IdControls[iElement]].AttachSizeToControl	= {-1, -1};
 		}
 	}
 	{
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_LEFT			]].Align = ::gpk::ALIGN_CENTER_LEFT		;
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_TOP			]].Align = ::gpk::ALIGN_CENTER_TOP		;
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_RIGHT			]].Align = ::gpk::ALIGN_CENTER_RIGHT	;
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_BOTTOM		]].Align = ::gpk::ALIGN_CENTER_BOTTOM	;
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_TOP_LEFT		]].Align = ::gpk::ALIGN_TOP_LEFT		;
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_TOP_RIGHT		]].Align = ::gpk::ALIGN_TOP_RIGHT		;
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_BOTTOM_LEFT	]].Align = ::gpk::ALIGN_BOTTOM_LEFT		;
-		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT	]].Align = ::gpk::ALIGN_BOTTOM_RIGHT	;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_LEFT			]].Align = ALIGN_CENTER_LEFT		;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_TOP			]].Align = ALIGN_CENTER_TOP		;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_RIGHT			]].Align = ALIGN_CENTER_RIGHT	;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_BOTTOM		]].Align = ALIGN_CENTER_BOTTOM	;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_TOP_LEFT		]].Align = ALIGN_TOP_LEFT		;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_TOP_RIGHT		]].Align = ALIGN_TOP_RIGHT		;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_BOTTOM_LEFT	]].Align = ALIGN_BOTTOM_LEFT		;
+		gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT	]].Align = ALIGN_BOTTOM_RIGHT	;
 
 	}
 	{
-		::gpk::SControlPlacement	& control				= gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
-		::gpk::SControlText			& controlText			= gui.Controls.Text		[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
-		control.Area.Size		= {(::gpk::s1_t)heightTitleBar, (::gpk::s1_t)heightTitleBar};
-		control.Align			= ::gpk::ALIGN_TOP_RIGHT;
-		controlText.Text		= {"X", (::gpk::u2_t)1};
-		controlText.Align		= ::gpk::ALIGN_CENTER;
-		::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
+		SControlPlacement	& control				= gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
+		SControlText			& controlText			= gui.Controls.Text		[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
+		control.Area.Size		= {(s1_t)heightTitleBar, (s1_t)heightTitleBar};
+		control.Align			= ALIGN_TOP_RIGHT;
+		controlText.Text		= {"X", (u2_t)1};
+		controlText.Align		= ALIGN_CENTER;
+		SControlConstraints	& controlConstraints	= gui.Controls.Constraints[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
 		controlConstraints.AttachSizeToControl	= {-1, -1};
 	}
 	{
-		::gpk::SControlPlacement	& control				= gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
-		::gpk::SControlText			& controlText			= gui.Controls.Text		[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
+		SControlPlacement	& control				= gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
+		SControlText			& controlText			= gui.Controls.Text		[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
 		control.Area.Size.y		= heightTitleBar;
-		static	::gpk::s2_t				counterVPs				= 0;
+		sttc	s2_t				counterVPs				= 0;
 		++counterVPs;
 		sc_t						buffer [256];
-		const ::gpk::s2_t				titleLen				= snprintf(buffer, ::gpk::size(buffer) - 2, "Viewport #%i", counterVPs);
-		controlText.Text		= {::gpk::label(buffer).begin(), (::gpk::u2_t)titleLen};
-		controlText.Align		= ::gpk::ALIGN_CENTER;
+		cnst s2_t				titleLen				= snprintf(buffer, size(buffer) - 2, "Viewport #%i", counterVPs);
+		controlText.Text		= {label(buffer).begin(), (u2_t)titleLen};
+		controlText.Align		= ALIGN_CENTER;
 		control.Area.Offset.x	= heightTitleBar;
-		control.Align			= ::gpk::ALIGN_TOP_RIGHT;
-		::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
+		control.Align			= ALIGN_TOP_RIGHT;
+		SControlConstraints	& controlConstraints	= gui.Controls.Constraints[viewport.IdControls[VIEWPORT_CONTROL_TITLE]];
 		controlConstraints.DockToControl	= {-1, -1, viewport.IdControls[VIEWPORT_CONTROL_CLOSE], -1};
 	}
 	{
-		::gpk::SControlDraw				& controlDraw		= gui.Controls.Draw		[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
-		::gpk::SControlPlacement		& control			= gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
-		::gpk::SControlText				& controlText		= gui.Controls.Text		[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
-		controlText.Align			= ::gpk::ALIGN_CENTER_TOP;
-		control.Border				= {};
-		control.Margin				= {};
+		SControlDraw				& controlDraw		= gui.Controls.Draw		[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
+		SControlPlacement		& control			= gui.Controls.Placement[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
+		SControlText				& controlText		= gui.Controls.Text		[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
+		controlText.Align			= ALIGN_CENTER_TOP;
+		control.Border				= control.Margin				= {};
 		control.Area.Size			= targetSize.s1();
 		//control.Area.Offset.y		= heightTitleBar;
 		controlDraw.ColorTheme			= 60;
-		::gpk::SControlConstraints		& controlConstraints	= gui.Controls.Constraints[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
+		SControlConstraints		& controlConstraints	= gui.Controls.Constraints[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
 		controlConstraints.DockToControl	= {-1, -1, -1, viewport.IdControls[VIEWPORT_CONTROL_TITLE]};
 		//controlConstraints.AttachSizeToControl	= {-1, viewport.IdControl};
 	}
-	//for(::gpk::u2_t i = 0; i < 2; ++i)
-	//	::gpk::controlUpdateMetricsTopToDown(gui, viewport.IdControl, gui.LastSize, true);
-	return 0;
-}
-
-gpk::err_t gpk::viewportFold(::gpk::SGUI & gui, ::gpk::SViewport & control, bool fold) {
-	if((fold && control.Settings.Unfolded) || (false == control.Settings.Unfolded && false == fold)) {
-		::gpk::SControlTable & controlTable = gui.Controls;
-		::gpk::SControlPlacement & placementMain = controlTable.Placement[control.IdControl];
-		::gpk::SControlPlacement & placementTitle = controlTable.Placement[control.IdControls[VIEWPORT_CONTROL_TITLE]];
-		if(fold && control.Settings.Unfolded)
-			placementMain.Area.Size.y = placementTitle.Area.Size.y + ::gpk::controlNCSpacing(placementMain).y;
-		else if(false == control.Settings.Unfolded && false == fold) {
-			::gpk::SControlPlacement & controlClient = controlTable.Placement[control.IdControls[VIEWPORT_CONTROL_TARGET]];
-			placementMain.Area.Size.y = controlClient.Area.Size.y + placementTitle.Area.Size.y + ::gpk::controlNCSpacing(placementMain).y + 1;
-		}
-		::gpk::SControlState & controlMain = controlTable.States[control.IdControl];
-		if(-1 != controlMain.Parent)
-			if_fail_fe(gpk::controlMetricsInvalidate(gui, controlMain.Parent));
-		else
-			if_fail_fe(gpk::controlMetricsInvalidate(gui, control.IdControl));
-		::gpk::SControlState & stateClient = controlTable.States[control.IdControls[VIEWPORT_CONTROL_TARGET]];
-		stateClient.SetHidden(control.IdControls[VIEWPORT_CONTROL_TARGET], controlTable.EventQueue, fold);
-		control.Settings.Unfolded = !fold;
-	}
-	return one_if(false == control.Settings.Unfolded);
-}
-
-static gpk::err_t viewportDrag(::gpk::SViewport & control, ::gpk::SControlPlacement & controlMain, ::gpk::SGUI & gui, ::gpk::n2<bool> locked, ::gpk::n2s1_t mouseDeltas) {
-	mouseDeltas.InPlaceScale(1 / gui.Zoom.DPI.x, 1 / gui.Zoom.DPI.y);
-	mouseDeltas.InPlaceScale(1 / gui.Zoom.ZoomLevel);
-	control.Settings.Dragging = true;
-	if(false == locked.x)
-		controlMain.Area.Offset.x += ((controlMain.Align & ::gpk::ALIGN_HCENTER) == ::gpk::ALIGN_RIGHT) ? -mouseDeltas.x : mouseDeltas.x;
-	if(false == locked.y)
-		controlMain.Area.Offset.y += ((controlMain.Align & ::gpk::ALIGN_VCENTER) == ::gpk::ALIGN_BOTTOM) ? -mouseDeltas.y : mouseDeltas.y;
-	::gpk::controlMetricsInvalidate(gui, control.IdControl);
-	return 0;
-}
-
-gpk::err_t gpk::viewportUpdate(::gpk::SGUI & gui, ::gpk::SInput & input, ::gpk::SViewport & control) {
-	::gpk::SControlTable & controlTable = gui.Controls;
-	::gpk::SControlPlacement & controlMain = controlTable.Placement[control.IdControl];
-	::gpk::SControlState & controlTitleState = controlTable.States[control.IdControls[VIEWPORT_CONTROL_TITLE]];
-	if(input.ButtonDown(0) && controlTitleState.IsPressed())
-		if_fail_fe(::gpk::controlToFront(gui, control.IdControl));
-	if(controlTitleState.IsPressed()) {
-		const ::gpk::n2<bool> locked = {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
-		if(false == locked.x || false == locked.y) {
-			::gpk::n2s1_t mouseDeltas = (input.MouseCurrent.Position - input.MousePrevious.Position).s1();
-			if(mouseDeltas.x || mouseDeltas.y)
-				if_fail_fe(::viewportDrag(control, controlMain, gui, locked, mouseDeltas));
-		}
-	}
-	else {
-		if(controlTitleState.IsAction() && false == control.Settings.Dragging)
-			if_fail_fe(gpk::viewportFold(gui, control, control.Settings.Unfolded));
-		control.Settings.Dragging = false;
-	}
-	if(control.Settings.Unfolded != control.SettingsOld.Unfolded)
-		if(true == control.Settings.Unfolded) {
-			::gpk::n2s1_t clientFinalSize = {controlMain.Area.Size};
-			clientFinalSize -= ::gpk::controlNCSpacing(controlMain).s1();
-			clientFinalSize.y -= controlTable.Placement[control.IdControls[VIEWPORT_CONTROL_TITLE]].Area.Size.y + 1;
-			::gpk::SControlPlacement & controlClient = controlTable.Placement[control.IdControls[VIEWPORT_CONTROL_TARGET]];
-			controlClient.Area.Size = clientFinalSize;
-		}
-	control.SettingsOld = control.Settings;
+	//for(u2_t i = 0; i < 2; ++i)
+	//	controlUpdateMetricsTopToDown(gui, viewport.IdControl, gui.Controls.LastSize, true);
 	return 0;
 }

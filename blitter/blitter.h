@@ -115,7 +115,7 @@ namespace blt
 
 	err_t			blockFileLoad			(::gpk::SLoadCache & loadCache, ::blt::TNamedBlitterDB & jsonDB, const ::gpk::vcst_t & folder, u2_t  block);
 	err_t			tableFileLoad			(::gpk::SLoadCache & loadCache, ::blt::TNamedBlitterDB & jsonDB, const ::gpk::vcst_t & folder);
-	err_t			configDatabases			(::gpk::aobj<::blt::TNamedBlitterDB> & databases, const ::gpk::SJSONReader & configReader, const s2_t indexConfigNode, const ::gpk::view<const ::gpk::vcst_t> & databasesToLoad, const ::gpk::vcst_t & folder);
+	err_t			configDatabases			(::gpk::aobj<::blt::TNamedBlitterDB> & databases, const ::gpk::SJSONReader & configReader, const s2_t indexConfigNode, ::gpk::view<::gpk::vcst_c> databasesToLoad, const ::gpk::vcst_t & folder);
 
 	err_t			blockWrite				(::blt::SWriteCache & writeCache, const ::gpk::vcst_t & dbFolderName, const ::gpk::vcst_t & dbName, const ::gpk::vcst_t & encryptionKey, ::blt::DATABASE_HOST hostType, const ::gpk::vcu0_t & partBytes, u2_t  iPart);
 

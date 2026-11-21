@@ -117,6 +117,9 @@
     <ClInclude Include="gpk_gltf.h" />
     <ClInclude Include="gpk_grid_color.h" />
     <ClInclude Include="gpk_gui_control.h" />
+    <ClInclude Include="gpk_gui_control_json.h" />
+    <ClInclude Include="gpk_gui_control_json_expression.h" />
+    <ClInclude Include="gpk_gui_control_theme.h" />
     <ClInclude Include="gpk_gui_control_table.h" />
     <ClInclude Include="gpk_gui_core.h" />
     <ClInclude Include="gpk_gui_control_flag.h" />
@@ -197,6 +200,8 @@
     <ClInclude Include="gpk_grid_static.h" />
     <ClInclude Include="gpk_gui.h" />
     <ClInclude Include="gpk_gui_text.h" />
+    <ClInclude Include="gpk_gui_json.h" />
+    <ClInclude Include="gpk_gui_theme.h" />
     <ClInclude Include="gpk_http.h" />
     <ClInclude Include="gpk_http_client.h" />
     <ClInclude Include="gpk_image.h" />
@@ -265,8 +270,6 @@
     <ClInclude Include="gpk_engine_d3d.h" />
     <ClInclude Include="gpk_engine_d3d_app.h" />
     <ClInclude Include="gpk_engine_entity.h" />
-    <ClInclude Include="gpk_engine_explorer.h" />
-    <ClInclude Include="gpk_engine_explorer_app_menu.h" />
     <ClInclude Include="gpk_engine_file.h" />
     <ClInclude Include="gpk_engine_geometry.h" />
     <ClInclude Include="gpk_engine_gui.h" />
@@ -355,6 +358,7 @@
     <ClCompile Include="gpk_framework_module.cpp" />
     <ClCompile Include="gpk_gui_control_list.cpp" />
     <ClCompile Include="gpk_gui_control_table.cpp" />
+    <ClCompile Include="gpk_gui_control_theme.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
@@ -391,7 +395,6 @@
     <ClCompile Include="gpk_engine_collision.cpp" />
     <ClCompile Include="gpk_engine_d3d.cpp" />
     <ClCompile Include="gpk_engine_d3d_app.cpp" />
-    <ClCompile Include="gpk_engine_explorer.cpp" />
     <ClCompile Include="gpk_engine_orbit.cpp" />
     <ClCompile Include="gpk_engine_planetary_system.cpp" />
     <ClCompile Include="gpk_engine_renderbuffer.cpp" />

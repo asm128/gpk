@@ -25,7 +25,7 @@ sttc	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 
 // initialize root gui layout and console input/virtual keyboard
 ::gpk::err_t			lls::setupLLSUI		(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
-	do { if_fail_fe(llsUI.Root = ::gpk::createScreenLayout(gui)); } while(0);
+	do { if_fail_fe(llsUI.Root = ::gpk::controlCreateLayout(gui.Controls)); } while(0);
 	do { if_fail_fe(::setupConsole(gui, llsUI)); } while(0);
 	return 0; 
 }
@@ -41,7 +41,7 @@ sttc	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 		}
 		while(newState >= UI.RootPerState.size()) {	// create layouts for each state as they're required
 			::gpk::cid_t				rootId;
-			do { if_fail_fe(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::createScreenLayout(*GUI, UI.Root))]); } while(0);
+			if_fail_fe(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::controlCreateLayout(GUI->Controls, UI.Root))]); 
 			if_zero_e(GUI->Controls.SetHidden(rootId, true));
 		}
 				
@@ -75,7 +75,7 @@ sttc	::gpk::err_t	processScreenEvent		(::lls::LLSApp & app, cnst ::gpk::SEventVi
 	case ::gpk::EVENT_SCREEN_Close:
 	case ::gpk::EVENT_SCREEN_Deactivate: 
 		if(app.ActiveState != ::lls::APP_STATE_Welcome) 
-			do { if_fail_fe(app.StateSwitch(::lls::APP_STATE_Home)); } while(0);
+			if_fail_fe(app.StateSwitch(::lls::APP_STATE_Home));
 		break;
 	case ::gpk::EVENT_SCREEN_Create:
 	case ::gpk::EVENT_SCREEN_Resize: {
@@ -91,7 +91,7 @@ sttc	::gpk::err_t	processScreenEvent		(::lls::LLSApp & app, cnst ::gpk::SEventVi
 		else 
 			renderTargetWorldSize.x = (uint16_t)(renderTargetWorldSize.y / targetRatioY + .1f);
 		
-		do { if_fail_fe(app.RenderTargetWorld->resize(renderTargetWorldSize)); } while(0);
+		if_fail_fe(app.RenderTargetWorld->resize(renderTargetWorldSize));
 	}
 		break;
 	}
@@ -254,10 +254,10 @@ sttc	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Event
 	if(processInput) { // process console
 		::gpk::SGUI					& gui				= *app.GUI;
 		::gpk::acid					controlsToProcess	= {};
-		do { if_fail_fe(::gpk::guiGetProcessableControls(gui, controlsToProcess)); } while(0);
+		if_fail_fe(::gpk::controlActions(gui.Controls, controlsToProcess)); 
 		if(int32_t result = app.UI.UserInput.Update(gui, app.UI.UserInput.VirtualKeyboard, systemEvents, controlsToProcess)) {
 			if(result == INT_MAX) { // enter key pressed
-				::gpk::vcsc_t					trimmed				= {};
+				::gpk::vcst_t					trimmed				= {};
 				do { if_fail_fe(app.UI.UserInput.Text.slice(trimmed, 0, ::gpk::min(app.UI.UserInput.Text.size(), 128U))); } while(0);
 				do { if_fail_fe(::gpk::trim(trimmed)); } while(0);
 				if(trimmed.size()) {
@@ -274,7 +274,7 @@ sttc	::gpk::err_t	handleLLSEvent		(::lls::LLSApp & app, ::gpk::pobj<::lls::Event
 		//app.Game.Camera.Position.y = (float)sin(app.Game.Global.State.UserTime.Played) * .05f;
 		//app.Game.Camera.Position.RotateY(-secondsElapsed * .05f);
 		//else { // enable editbox if needed
-		//	::gpk::guiProcessControls(gui, controlsToProcess, [&](::gpk::cid_t iControl) {
+		//	::gpk::controlHandle(gui.Controls, controlsToProcess, [&](::gpk::cid_t iControl) {
 		//		//uint32_t					offsetControl				= editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu];
 		//		app.UI.UserInput.SetText(gui, gui.Controls.Text[iControl].Text);
 		//		app.UI.UserInput.Edit(gui, true);

@@ -849,12 +849,6 @@
     <ClInclude Include="gpk_engine_entity.h">
       <Filter>entity_scene</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_explorer.h">
-      <Filter>entity_scene</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_explorer_app_menu.h">
-      <Filter>entity_scene</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_engine_file.h">
       <Filter>entity_scene</Filter>
     </ClInclude>
@@ -934,6 +928,21 @@
       <Filter>encoding</Filter>
     </ClInclude>
     <ClInclude Include="gpk_framework_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_json_expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_theme.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_theme.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1202,9 +1211,6 @@
     <ClCompile Include="gpk_engine_d3d_app.cpp">
       <Filter>entity_scene</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_engine_explorer.cpp">
-      <Filter>entity_scene</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_engine_orbit.cpp">
       <Filter>entity_scene</Filter>
     </ClCompile>
@@ -1255,6 +1261,9 @@
     </ClCompile>
     <ClCompile Include="gpk_string_time.cpp">
       <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_theme.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

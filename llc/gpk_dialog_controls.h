@@ -140,8 +140,8 @@ nmsp gpk
 			vcst_t				valueString;
 			FuncValueFormat	(valueString, value, ValueLimits);
 			FuncGetString	(valueString, ValueCurrent, ValueLimits);
-			if_fail_fe(gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString));
-			if_fail_fe(gpk::controlMetricsInvalidate(*Dialog->GUI, IdGUIControl));
+			if_fail_fe(controlTextSet(Dialog->GUI->Controls, IdGUIControl, valueString));
+			if_fail_fe(controlMetricsInvalidate(Dialog->GUI->Controls, IdGUIControl));
 			return 0;
 		}
 	};

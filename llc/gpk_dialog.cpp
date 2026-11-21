@@ -6,7 +6,7 @@ usns gpk;
 
 gpk::IDialogControl::~IDialogControl		() { 
 	if(-1 != IdGUIControl && DeleteControl && Dialog->GUI) 
-		controlDelete(*Dialog->GUI, IdGUIControl, true); 
+		controlDelete(Dialog->GUI->Controls, IdGUIControl, true); 
 }
 
 sttc s2_t dialogPalettePush				(apod<astatic<bgra, UI_CONTROL_AREA_COUNT>> & palettes, bgra background, bgra client, bgra borderLeft, bgra borderTop, bgra borderRight, bgra borderBottom, bgra textFace) {
@@ -146,7 +146,7 @@ gpk::err_t			gpk::checkBoxUpdate			(SDialogCheckBox	& checkbox)								{
 			}
 		}
 		checkbox.Checked									= !checkbox.Checked;
-		controlTable.ImageViews[checkbox.IdGUIControl]	= (false == checkbox.Checked) ? g8bgra{} : imageCross.View;
+		controlTable.Views[checkbox.IdGUIControl]	= (false == checkbox.Checked) ? g8bgra{} : imageCross.View;
 	}
 	return 0;
 }
@@ -197,9 +197,9 @@ gpk::err_t			gpk::sliderSetValue		(SDialogSlider & slider, s3_t value)				{
 	vcst_t				valueString;
 	if_fail_fe(slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits));
 	if_fail_fe(slider.FuncGetString(valueString, slider.ValueCurrent, slider.ValueLimits));
-	if_fail_fe(controlTextSet(*dialog.GUI, slider.IdGUIControl, valueString));
+	if_fail_fe(controlTextSet(dialog.GUI->Controls, slider.IdGUIControl, valueString));
 	if(updateMetrics)
-		if_fail_fe(controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl));
+		if_fail_fe(controlMetricsInvalidate(dialog.GUI->Controls, slider.IdGUIControl));
 	return 0;
 }
 
@@ -266,7 +266,7 @@ gpk::cid_t			gpk::viewportCreate		(SDialog & dialog) {
 	pobj<SDialogViewport>	viewport;
 	SControlTable		& controlTable			= dialog.GUI->Controls;
 	if_fail_fe(index = dialog.Create(viewport));
-	if_fail_fe(controlSetParent(*dialog.GUI, viewport->IdGUIControl, dialog.Root));
+	if_fail_fe(controlSetParent(dialog.GUI->Controls, viewport->IdGUIControl, dialog.Root));
 	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= false;
 	controlTable.Draw[viewport->IdGUIControl].FrameOut			= true;
 	controlTable.States[viewport->IdGUIControl].Mask			&= ~GUI_CONTROL_FLAG_Hovered;
@@ -351,10 +351,10 @@ gpk::err_t			gpk::viewportFold		(SDialogViewport	& control, b8_t fold)										
 
 		SControlState			& controlMain	= controlTable.States[control.IdGUIControl];
 		if(-1 != controlMain.Parent) {
-			if_fail_fe(controlMetricsInvalidate(gui, controlMain.Parent));
+			if_fail_fe(controlMetricsInvalidate(gui.Controls, controlMain.Parent));
 		}
 		else
-			if_fail_fe(controlMetricsInvalidate(gui, control.IdGUIControl));
+			if_fail_fe(controlMetricsInvalidate(gui.Controls, control.IdGUIControl));
 
 		SControlState		& stateClient			= controlTable.States[control.IdClient];
 		stateClient.SetHidden(control.IdClient, controlTable.EventQueue, fold);
@@ -371,7 +371,7 @@ sttc gpk::err_t viewportDrag		(SDialogViewport	& control, SControlPlacement & co
 		controlMain.Area.Offset.x	+= ((controlMain.Align & ALIGN_HCENTER) == ALIGN_RIGHT) ? -mouseDeltas.x : mouseDeltas.x;
 	if(false == locked.y)
 		controlMain.Area.Offset.y	+= ((controlMain.Align & ALIGN_VCENTER) == ALIGN_BOTTOM) ? -mouseDeltas.y : mouseDeltas.y;
-	controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
+	controlMetricsInvalidate(dialog.GUI->Controls, control.IdGUIControl);
 	return 0;
 }
 
@@ -387,7 +387,7 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 	SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
 	SControlState		& controlResizeState	= controlTable.States[control.IdResizeBottomRight];
 	if(dialog.Input->ButtonDown(0) && controlTitleState.IsPressed())
-		if_fail_e(controlToFront(gui, control.IdGUIControl));
+		if_fail_e(controlToFront(gui.Controls, control.IdGUIControl));
 	if(controlTitleState.IsDragging()) {
 		 n2b8_c		locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
@@ -406,7 +406,7 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 			mouseDeltas.y								= max(mouseDeltas.y, (s1_t)-controlClient.Area.Size.y);
 			controlMain.Area.Size						+= mouseDeltas;
 			controlClient.Area.Size						+= mouseDeltas;
-			if_fail_fe(controlMetricsInvalidate(gui, control.IdGUIControl));
+			if_fail_fe(controlMetricsInvalidate(gui.Controls, control.IdGUIControl));
 		}
 	}
 	else {
@@ -423,9 +423,9 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 			SControlPlacement	& controlClient			= controlTable.Placement[control.IdClient];
 			controlClient.Area.Size	= clientFinalSize;
 		}
-	if(false == controlInvalid(gui, control.IdScrollBarY)) {
+	if(false == controlInvalid(gui.Controls, control.IdScrollBarY)) {
 		if(controlTable.States[control.IdScrollBarY].Parent != control.IdClient)
-			if_fail_e(controlSetParent(gui, control.IdScrollBarY, control.IdClient))
+			if_fail_e(controlSetParent(gui.Controls, control.IdScrollBarY, control.IdClient))
 			//else {
 				SControlPlacement	& placementScroll		= controlTable.Placement[control.IdScrollBarY];
 				placementScroll.Area.Offset							= {};
@@ -438,9 +438,9 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 				controlTable.SetHidden(control.IdScrollBarY, false == control.Settings.ScrollBarY || false == control.Settings.Unfolded);
 			//}
 	}
-	if(false == controlInvalid(gui, control.IdScrollBarX)) {
+	if(false == controlInvalid(gui.Controls, control.IdScrollBarX)) {
 		if(controlTable.States[control.IdScrollBarX].Parent != control.IdClient)
-			if_fail_e(controlSetParent(gui, control.IdScrollBarX, control.IdClient))
+			if_fail_e(controlSetParent(gui.Controls, control.IdScrollBarX, control.IdClient))
 			//else {
 				SControlPlacement	& placementScroll			= controlTable.Placement[control.IdScrollBarX];
 				placementScroll.Area.Offset					= {};
@@ -454,10 +454,10 @@ gpk::err_t	gpk::viewportUpdate		(SDialogViewport	& control)																{
 			//}
 	}
 	if(control.Settings.ScrollBarX != control.SettingsOld.ScrollBarX || control.Settings.ScrollBarY != control.SettingsOld.ScrollBarY) {
-		if(false == controlInvalid(gui, control.IdScrollBarX))
-			if_fail_e(controlMetricsInvalidate(gui, control.IdScrollBarX));
-		if(false == controlInvalid(gui, control.IdScrollBarY))
-			if_fail_e(controlMetricsInvalidate(gui, control.IdScrollBarY));
+		if(false == controlInvalid(gui.Controls, control.IdScrollBarX))
+			if_fail_e(controlMetricsInvalidate(gui.Controls, control.IdScrollBarX));
+		if(false == controlInvalid(gui.Controls, control.IdScrollBarY))
+			if_fail_e(controlMetricsInvalidate(gui.Controls, control.IdScrollBarY));
 	}
 	control.SettingsOld		= control.Settings;
 	return 0;

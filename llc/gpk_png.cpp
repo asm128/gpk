@@ -350,7 +350,7 @@ sttc	gpk::err_t pngScanlineDecode_6_16	(::gpk::gu0_t & out_View, cnst ::gpk::vie
 		cnst ::gpk::au0_t			& scanline				= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		::gpk::v1<cnst ::gpk::rgba16>	viewPixels			= {(cnst ::gpk::rgba16*)scanline.begin(), scanline.size() / 8};
+		::gpk::view<cnst ::gpk::rgba16>	viewPixels			= {(cnst ::gpk::rgba16*)scanline.begin(), scanline.size() / 8};
 		::gpk::vu0_t					scanlineOut				= out_View[iScanline];
 		for(u2_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			::gpk::color_rgba<u1_t>	colorReversed			= viewPixels[iPixel];

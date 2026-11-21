@@ -311,7 +311,7 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 
 	::gpk::SGUI					& gui			= *framework.GUI;
 	::gpk::acid					toProcess		= {};
-	if_fail_fe(::gpk::guiGetProcessableControls(gui, toProcess));
+	if_fail_fe(::gpk::controlActions(gui.Controls, toProcess));
 	const gpk::err_t		inputBoxResult	= app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, toProcess);
 	if_fail_fe(inputBoxResult);
 	if(INT_MAX == inputBoxResult) {
@@ -321,7 +321,7 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	}
 	else if(0 == inputBoxResult) {
 		bool					exitRequested	= false;
-		if_fail_fe(::gpk::guiProcessControls(gui, toProcess, [&app, &gui, &exitRequested](::gpk::cid_t iControl) {
+		if_fail_fe(::gpk::controlHandle(gui.Controls, toProcess, [&app, &gui, &exitRequested](::gpk::cid_t iControl) {
 			if(iControl == app.IdActions[::gme::GUI_EXAMPLE_ACTION_Exit])
 				exitRequested	= true;
 			else if(iControl == app.IdActions[::gme::GUI_EXAMPLE_ACTION_Edit_label])

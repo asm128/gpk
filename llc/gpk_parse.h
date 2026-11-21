@@ -13,7 +13,7 @@ namespace gpk
 	inline	err_t	parseIntegerDecimal			(vcst_c & sourceChars, _tInt & number_)	{ 
 		u3_t				number						= 0; 
 		err_t				countDigits; 
-		if_fail_fe(countDigits = parseArbitraryBaseInteger(10, DIGITS_DECIMAL, sourceChars, &number)); 
+		if_fail_fe(countDigits = parseArbitraryBaseInteger(10, DIGITS_DECIMAL, sourceChars, number)); 
 		number_ = (_tInt)number; 
 		return countDigits; 
 	}
@@ -22,7 +22,7 @@ namespace gpk
 	inline	err_t	parseIntegerHexadecimal		(vcst_c & sourceChars, _tInt & number_)	{ 
 		u3_t				number						= 0; 
 		err_t				countDigits;
-		if_fail_fe(countDigits = parseArbitraryBaseInteger(16, DIGITS_HEX, sourceChars, &number)); 
+		if_fail_fe(countDigits = parseArbitraryBaseInteger(16, DIGITS_HEX, sourceChars, number)); 
 		number_ = (_tInt)number; 
 		return countDigits; 
 	}

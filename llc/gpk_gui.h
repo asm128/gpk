@@ -3,77 +3,92 @@
 #include "gpk_font.h"
 
 #include "gpk_ascii_color.h"
-
 #ifndef GPK_GUI_H_23627
 #define GPK_GUI_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SGUIZoom {
-		::gpk::n2f3_t		DPI					= {1.0, 1.0};
-		::gpk::minmaxf3_t	ZoomLimits			= {0.1, 10.0};
-		double				ZoomLevel			= 1.0;
+		n2f3_t				DPI					= {1.0, 1.0};
+		minmaxf3_t			ZoomLimits			= {0.1, 10.0};
+		f3_t				ZoomLevel			= 1.0;
 
-		bool				operator==			(const ::gpk::SGUIZoom & other)		const	noexcept	{
+		b8_t				oper==				(cnst SGUIZoom & other)		csnx	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inline	bool		operator!=			(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
+		inln	b8_t		oper!=				(cnst SGUIZoom & other)		csnx	{ return !oper==(other); }
 	};
 
-	struct SGUIColors {
-		::gpk::papod<::gpk::bgra>			Palette					= {};
-		::gpk::papod<::gpk::SControlTheme>	ControlThemes			= {};
-
-		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>	
-											DefaultColors			= {};
-
-		::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>>
-											Palettes;
-	};
 
 	struct SGUI {
-		::gpk::n2u1_t						LastSize			= {};
-		::gpk::n2f2_t						CursorPos			= {};
-		::gpk::SControlTable				Controls			= {};
-		::gpk::pobj<::gpk::SGUIColors>		Colors;
+		n2f2_t				CursorPos			= {};
+		SControlTable		Controls			= {};
+		pobj<SControlColors>	Colors;
 		// Font
-		::gpk::apobj<::gpk::SRasterFont>	Fonts				= {};
-
-		::gpk::SGUIZoom						LastZoom			= {};
-		::gpk::SGUIZoom						Zoom				= {};
-		::gpk::u1_t							SelectedFont		= 7;
-		::gpk::u1_t							ThemeDefault		= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
-		::gpk::GUI_COLOR_MODE				ColorModeDefault	= ::gpk::GUI_COLOR_MODE_3D;//::gpk::GUI_COLOR_MODE_DEFAULT;
-		bool								InputModeTouch		= true;
+		apobj<SRasterFont>	Fonts				= {};
+		SGUIZoom			LastZoom			= {};
+		SGUIZoom			Zoom				= {};
+		u1_t				SelectedFont		= 7;
+		u1_t				ThemeDefault		= ASCII_COLOR_Cyan * 16 + 8;
+		GUI_COLOR_MODE		ColorModeDefault	= GUI_COLOR_MODE_3D;//GUI_COLOR_MODE_DEFAULT;
+		b8_t				InputModeTouch		= true;
 	};
 
-	gpk::err_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> in_Events = {});
-	gpk::err_t			guiUpdateMetrics				(::gpk::SGUI & gui, const ::gpk::n2u1_t & targetSize, bool forceUpdate);
-	gpk::err_t			guiDraw							(::gpk::SGUI & gui, ::gpk::g8bgra target);
-	gpk::err_t			guiGetProcessableControls		(const ::gpk::SGUI & gui, ::gpk::acid & controlIndices);
-	gpk::err_t			guiDeselect						(::gpk::SGUI & gui);
-	gpk::err_t			guiSelect						(::gpk::SGUI & gui, cid_t controlToSelect);
+	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
+	err_t				guiUpdate						(SGUI & gui, n2u1_c & targetMetrics); //, vpobj<SEventSystem> in_Events = {});
+	err_t				guiUpdateMetrics				(SGUI & gui, n2u1_c & targetSize, b8_t forceUpdate);
+	err_t				guiSetupDefaults				(SGUI & gui);
+	cid_t 				controlCreate					(SGUI & gui);
+	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
+	err_t				controlDraw						(SGUI & gui, cid_t iControl, g8bgra & target);
+	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, b8_t forceUpdate);
+ 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
+	stin	err_t		guiDraw							(SGUI & gui, g8bgra target)	{
+		for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
+			if(false == controlInvalid(gui.Controls, (cid_t)iControl) && controlInvalid(gui.Controls, gui.Controls.States[iControl].Parent))
+				if_true_e(failed(controlDrawHierarchy(gui, (cid_t)iControl, target)));
+		return 0;
+	}
+	//err_t				controlUpdateMetrics			(SGUI & gui, s2_t iControl, cnst n2<u2_t> & targetSize);
+	stin	cid_t 		controlCreate					(SGUI & gui, cnst FControlInitialize & funcInitialize) {
+		cid_t				iControl;
+		if_fail_fe(iControl = controlCreate(gui));
+		if_true_block_log(error_printf, failed(funcInitialize
+			( gui.Controls.States			[iControl]  
+			, gui.Controls.TextState		[iControl]  
+			, gui.Controls.Identifier		[iControl]
+			, gui.Controls.Constraints		[iControl]  
+			//, gui.Controls.Previous			[iControl]  
+			, gui.Controls.Placement		[iControl]  
+			, gui.Controls.Area				[iControl]  
+			, gui.Controls.Draw				[iControl]  
+			, gui.Controls.Text				[iControl]  
+			, gui.Controls.Images			[iControl]  
+			)), {
+				controlDelete(gui.Controls, iControl);
+				return -1;
+			}
+		);
+		return iControl;
+	}
+	//stin	err_t		controlHidden					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlHidden   (gui.Controls, iControl); }
+	//stin	err_t		controlDisabled					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlDisabled (gui.Controls, iControl); }
+	//stin	err_t		controlInvalid					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlInvalid  (gui.Controls, iControl); }
+	//stin	cid_t		controlParent					(cnst SGUI & gui, cid_t iControl)					{ rtrn controlParent   (gui.Controls, iControl); }
+	//stin	err_t		controlMetricsInvalidate		(SGUI & gui, cid_t iControl)						{ rtrn controlMetricsInvalidate (gui.Controls, iControl); }
+	//stin	err_t		controlDelete					(SGUI & gui, cid_t iControl, b8_t recursive = true)	{ rtrn controlDelete   (gui.Controls, iControl, recursive); }
+	//stin	err_t		controlSetParent				(SGUI & gui, cid_t iControl, cid_t	iParent)		{ rtrn controlSetParent(gui.Controls, iControl, iParent); }
+	//stin	err_t		controlFontSet					(SGUI & gui, cid_t iControl, s1_t	iFont)			{ rtrn controlFontSet  (gui.Controls, iControl, iFont); }
+	//stin	err_t		controlTextSet					(SGUI & gui, cid_t iControl, vcst_t	text)			{ rtrn controlTextSet  (gui.Controls, iControl, text); }
+	//stin	err_t		controlToFront					(SGUI & gui, cid_t iControl)						{ rtrn controlToFront  (gui.Controls, iControl); }
+	//stin	err_t		guiSelect						(SGUI & gui, cid_t controlToSelect)					{ rtrn controlSelect   (gui.Controls, controlToSelect); }
+	//stin	err_t		guiDeselect						(SGUI & gui)										{ rtrn controlDeselect (gui.Controls); }
+	//stin	err_t		guiGetProcessableControls		(cnst SGUI & gui, acid & controlIndices)														{ rtrn controlActions(gui.Controls, controlIndices)	; }		
+	//stin	err_t		guiProcessControls				(cnst SGUI & gui, cnst function<err_t(cid_t iControl)> & funcOnAction)							{ rtrn controlHandle(gui.Controls, funcOnAction)	; }			
+	//stin	err_t		guiProcessControls				(cnst SGUI & gui, vcid controlsToProcess, cnst function<err_t(cid_t iControl)> & funcOnAction)	{ rtrn controlHandle(gui.Controls, controlsToProcess, funcOnAction)	; }		
 
-	gpk::err_t			controlDelete					(::gpk::SGUI & gui, cid_t iControl, bool recursive = true);
-	::gpk::cid_t 			controlCreate					(::gpk::SGUI & gui);
-	::gpk::cid_t			controlCreateChild				(::gpk::SGUI & gui, cid_t iParent);
-	gpk::err_t			controlSetParent				(::gpk::SGUI & gui, cid_t iControl, cid_t iParent);
-	gpk::err_t			controlToFront				(::gpk::SGUI & gui, cid_t iControl);
-	gpk::err_t			controlDrawHierarchy			(::gpk::SGUI & gui, cid_t iControl, ::gpk::g8bgra target);
-	gpk::err_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcst_t & text);
-	gpk::err_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, ::gpk::s1_t iFont);
-	//gpk::err_t			controlUpdateMetrics			(::gpk::SGUI & gui, ::gpk::s2_t iControl, const ::gpk::n2<::gpk::u2_t> & targetSize);
-	gpk::err_t			controlUpdateMetricsTopToDown	(::gpk::SGUI & gui, cid_t iControl, const ::gpk::n2u1_t & targetSize, bool forceUpdate);
-	gpk::err_t			controlMetricsInvalidate		(::gpk::SGUI & gui, cid_t iControl);
-	gpk::err_t			controlHidden					(const ::gpk::SGUI & gui, cid_t iControl);
-	gpk::err_t			controlDisabled					(const ::gpk::SGUI & gui, cid_t iControl);
-	gpk::err_t			controlInvalid					(const ::gpk::SGUI & gui, cid_t iControl);
-
-
-	gpk::err_t			guiProcessControls				(const ::gpk::SGUI & gui, const ::gpk::function<gpk::err_t(::gpk::cid_t iControl)> & funcOnExecute);
-	gpk::err_t			guiProcessControls				(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::gpk::function<gpk::err_t(::gpk::cid_t iControl)> & funcOnExecute);
-} // namespace
+} // nmsp
 
 #endif // GPK_GUI_H_23627

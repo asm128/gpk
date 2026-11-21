@@ -220,7 +220,7 @@ gpk::err_t	gpk::fileToMemory			(vcst_t usfileName, au0_t & fileInMemory, u2_t ma
 	u2_c				maxRead				= (u2_t)min((s3_t)maxSize, fileSize - (s3_t)offset);
 	gpk_fail_if_ne(GPK_FMT_NE_S3, 0, fseek(fp, offset, FSEEK_SET));
 	err_t	result				= 0;
-	if_failed(fileInMemory.resize(maxRead)) {
+	if(::gpk::failed(fileInMemory.resize(maxRead))) {
 		error_printf("File too large? : %llu.", (u3_t)fileSize);
 		result					= -1;
 	}

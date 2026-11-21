@@ -273,7 +273,7 @@ static	s3_t			pushNewBlock
 		loadCache.Deflated.clear();
 		if_true_fef(0 == recordToAdd.Tree.size(), "Invalid json record! %s.", "Forgot to build the reader from the record?")
 		if_fail_fef(::gpk::jsonWrite(recordToAdd[0], recordToAdd.View, loadCache.Deflated), "Failed to write json record! %s", "Invalid format?");
-		if_fail_fe(::gpk::append_strings(newBlock->Bytes, loadCache.Deflated));
+		if_fail_fe(::gpk::append_strings(newBlock->Bytes, loadCache.Deflated.as<sc_c>()));
 		newBlock->Bytes.push_back(']');
 		if_fail_fef(::gpk::jsonParse(newBlock->Reader, newBlock->Bytes), "%s", "Failed to parse new block.");
 		const u2_t 										indexBlock			= database.Val.Blocks.push_back(newBlock);
@@ -302,8 +302,8 @@ static	s3_t			pushNewBlock
 		loadCache.Deflated.clear();
 		if_true_fef(0 == recordToAdd.Tree.size(), "Invalid json record! %s.", "Forgot to build the reader from the record?")
 		if_fail_fef(::gpk::jsonWrite(recordToAdd[0], recordToAdd.View, *(::gpk::string*)&loadCache.Deflated), "Failed to write json record! %s", "Invalid format?");
-		newBlock.Bytes.append(::gpk::vcst_t{(const sc_t*)loadCache.Deflated.begin(), loadCache.Deflated.size()});
-		newBlock.Bytes.push_back(']');
+		if_fail_fe(::gpk::append_strings(newBlock.Bytes, loadCache.Deflated.as<sc_c>()));
+		if_fail_fe(newBlock.Bytes.push_back(']'));
 		if_fail_fef(::gpk::jsonParse(newBlock.Reader, newBlock.Bytes), "%s", "Failed to parse new block.");
 		database.Val.BlockIndices	[idxBlock]			= idNewBlock;
 		database.Val.BlocksOnDisk.push_back(idNewBlock);
@@ -327,7 +327,7 @@ static	s3_t								appendRecord
 	::gpk::SJSONFile									& block				= *database.Blocks[indexBlock];
 	const u2_t 										insertPos			= block.Bytes.size() - 1;
 	const u2_t 										indexOfToken		= block.Reader.Token.size();
-	if_fail_fe(block.Bytes.insert(insertPos, ::gpk::vcst_t{(const sc_t*)loadCache.Deflated.begin(), loadCache.Deflated.size()}));
+	if_fail_fe(block.Bytes.insert(insertPos, loadCache.Deflated.as<sc_c>()));
 	::gpk::SJSONReaderState								& stateReader										= block.Reader.StateRead;
 	block.Reader.Token[0].Span.End					= block.Reader.Token[0].Span.Begin;
 	stateReader.Escaping							= false;
@@ -345,7 +345,8 @@ static	s3_t								appendRecord
 	block.Reader.View.resize(block.Reader.Token.size());
 	for(u2_t  iView = 0; iView < block.Reader.Token.size(); ++iView) {
 		::gpk::SJSONToken												& currentElement									= block.Reader.Token[iView];
-		block.Reader.View[iView]									= ::gpk::vcst_t{&block.Bytes[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin};
+		block.Reader.View[iView]									= ::gpk::vcst_t{(sc_c*)&block.Bytes[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin};
+		if_fail_fe(block.Bytes.slice(block.Reader.View[iView], currentElement.Span.Begin, currentElement.Span.End - currentElement.Span.Begin));
 	}
 	block.Reader.Tree.resize(block.Reader.Token.size());
 	for(u2_t  iToken = indexOfToken; iToken < block.Reader.Token.size(); ++iToken) {

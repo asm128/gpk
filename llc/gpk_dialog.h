@@ -124,16 +124,16 @@ nmsp gpk
 
 			SGUI					& gui			= *GUI;
 			for(u2_t iControl = 0; iControl < Controls.size(); ++iControl) {
-				if(0 == Controls[iControl].get_ref() || controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
+				if(0 == Controls[iControl].get_ref() || controlInvalid(gui.Controls, Controls[iControl]->IdGUIControl)) {
 					if_fail_ef(Controls.remove_unordered(iControl), "iControl=%u", iControl);
 					--iControl;
 					continue;
 				}
 			}
-			if(LastSize != gui.LastSize) {
+			if(LastSize != gui.Controls.LastSize) {
 				for(u2_t iControl = 0; iControl < Controls.size(); ++iControl)
-					if_fail_ef(Controls[iControl]->Resize(gui.LastSize), "iControl=%u, cid_t=%i", iControl, Controls[iControl]->IdGUIControl);
-				LastSize				= gui.LastSize;
+					if_fail_ef(Controls[iControl]->Resize(gui.Controls.LastSize), "iControl=%u, cid_t=%i", iControl, Controls[iControl]->IdGUIControl);
+				LastSize				= gui.Controls.LastSize;
 			}
 			//if(0 != Input)
 			//	if_fail_fef(guiProcessInput(gui, *Input), "%s", "Unknown reason.");

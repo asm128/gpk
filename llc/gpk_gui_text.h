@@ -7,75 +7,75 @@
 #ifndef GPK_GUI_TEXT_H_23627
 #define GPK_GUI_TEXT_H_23627
 
-namespace gpk
+nmsp gpk
 {
-	sinx	gpk::err_t	textLineCalcWidth				(::gpk::n2u0_c & sizeCharCell, ::gpk::vcst_c & text0)		{ return (gpk::err_t)(sizeCharCell.x * text0.size()); }
+	sinx	err_t	textLineCalcWidth				(n2u0_c & sizeCharCell, vcst_c & text0)		{ return (err_t)(sizeCharCell.x * text0.size()); }
 
 	tplt<tpnm _tColor>
-	static	gpk::err_t	textLineDrawFixedSize			(::gpk::grid<_tColor> & target, const ::gpk::grid<_tColor> & viewTextureFont, ::gpk::u1_t characterCellsX, ::gpk::s1_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, ::gpk::vcst_c & text0, const ::gpk::n2s1_t dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		for(::gpk::s2_t iChar = 0, charCount = (::gpk::s2_t)text0.size(); iChar < charCount; ++iChar) {
-			const uc_t					charToDraw						= (uc_t)text0[iChar];
-			::gpk::s1_t						coordTableX						= charToDraw % characterCellsX;
-			::gpk::s1_t						coordTableY						= charToDraw / characterCellsX;
-			const ::gpk::n2s1_t			coordCharTable					= {::gpk::s1_t(coordTableX * sizeCharCell.x), ::gpk::s1_t(coordTableY * sizeCharCell.y)};
-			const ::gpk::rect2s1_t		dstRect0						= {{::gpk::s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
-			const ::gpk::rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
-			if_true_e(failed(::gpk::grid_copy_alpha(target, viewTextureFont, ::gpk::rect2s1_t{dstTextOffset + dstRect0.Offset, dstRect0.Size}, srcRect0.Offset, {0xFF, 0x00, 0xFF, 0xFF})));
-			//if_true_e(failed(::gpk::grid_copy(target, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)));
+	sttc	err_t	textLineDrawFixedSize			(grid<_tColor> & target, cnst grid<_tColor> & viewTextureFont, u1_t characterCellsX, s1_t dstOffsetY, cnst n2u0_t & sizeCharCell, vcst_c & text0, n2s1_c dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		for(s2_t iChar = 0, charCount = (s2_t)text0.size(); iChar < charCount; ++iChar) {
+			cnst uc_t					charToDraw						= (uc_t)text0[iChar];
+			s1_t						coordTableX						= charToDraw % characterCellsX;
+			s1_t						coordTableY						= charToDraw / characterCellsX;
+			n2s1_c			coordCharTable					= {s1_t(coordTableX * sizeCharCell.x), s1_t(coordTableY * sizeCharCell.y)};
+			cnst rect2s1_t		dstRect0						= {{s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
+			cnst rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
+			if_true_e(failed(grid_copy_alpha(target, viewTextureFont, rect2s1_t{dstTextOffset + dstRect0.Offset, dstRect0.Size}, srcRect0.Offset, {0xFF, 0x00, 0xFF, 0xFF})));
+			//if_true_e(failed(grid_copy(target, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)));
 		}
 		return 0;
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	tplt<tpnm _tColor>
-	static	gpk::err_t	textLineDrawFixedSizeLit		(::gpk::grid<_tColor> & target, const ::gpk::view_bit<::gpk::u3_t> & viewTextureFont, const ::gpk::n2u2_t & viewMetrics, ::gpk::u1_t characterCellsX, ::gpk::s1_t dstOffsetY, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcst_t & text0, const ::gpk::n2s1_t dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		::gpk::apod<::gpk::n2u1_t>	dstCoords;
-		for(::gpk::s2_t iChar = 0, charCount = (::gpk::s2_t)text0.size(); iChar < charCount; ++iChar) {
-			const uc_t					charToDraw						= (uc_t)text0[iChar];
-			const ::gpk::s1_t				coordTableX						= charToDraw % characterCellsX;
-			const ::gpk::s1_t				coordTableY						= charToDraw / characterCellsX;
-			const ::gpk::n2s1_t			coordCharTable					= {::gpk::s1_t(coordTableX * sizeCharCell.x), ::gpk::s1_t(coordTableY * sizeCharCell.y)};
-			const ::gpk::rect2s1_t		dstRect0						= {{::gpk::s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
-			const ::gpk::rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
-			//if_true_e(failed(::gpk::grid_copy_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)));
-			if_true_e(failed(::gpk::grid_raster_alpha_bit(target.metrics(), viewTextureFont, viewMetrics, ::gpk::rect2s1_t{dstTextOffset + dstRect0.Offset, sizeCharCell.s1()}, srcRect0.Offset, dstCoords)));
-			//if_true_e(failed(::gpk::grid_raster_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)));
+	sttc	err_t	textLineDrawFixedSizeLit		(grid<_tColor> & target, cnst view_bit<u3_t> & viewTextureFont, cnst n2u2_t & viewMetrics, u1_t characterCellsX, s1_t dstOffsetY, cnst n2u0_t & sizeCharCell, vcst_c & text0, n2s1_c dstTextOffset, cnst _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		apod<n2u1_t>	dstCoords;
+		for(s2_t iChar = 0, charCount = (s2_t)text0.size(); iChar < charCount; ++iChar) {
+			cnst uc_t					charToDraw						= (uc_t)text0[iChar];
+			cnst s1_t				coordTableX						= charToDraw % characterCellsX;
+			cnst s1_t				coordTableY						= charToDraw / characterCellsX;
+			n2s1_c			coordCharTable					= {s1_t(coordTableX * sizeCharCell.x), s1_t(coordTableY * sizeCharCell.y)};
+			cnst rect2s1_t		dstRect0						= {{s1_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.s1()};
+			cnst rect2s1_t		srcRect0						= {coordCharTable, sizeCharCell.s1()};
+			//if_true_e(failed(grid_copy_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)));
+			if_true_e(failed(grid_raster_alpha_bit(target.metrics(), viewTextureFont, viewMetrics, rect2s1_t{dstTextOffset + dstRect0.Offset, sizeCharCell.s1()}, srcRect0.Offset, dstCoords)));
+			//if_true_e(failed(grid_raster_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)));
 		}
-		for(::gpk::u2_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
-			::gpk::drawPixelLight(target, dstCoords[iCoord], color, 0.05f, 0.75);
+		for(u2_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
+			drawPixelLight(target, dstCoords[iCoord], color, 0.05f, 0.75);
 		return 0;
 	}
 
 	tplt<tpnm _tColor>
-	static	gpk::err_t	textLineDrawAlignedFixedSize	(::gpk::grid<_tColor> & targetView, const ::gpk::grid<_tColor> & fontAtlas, ::gpk::u1_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcst_t & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		const ::gpk::n2s1_t			dstTextOffset					= {::gpk::s1_t((targetSize.x >> 1) - (::gpk::textLineCalcWidth(sizeCharCell, text0) >> 1)), };
-		::gpk::u1_t					dstOffsetY						= ::gpk::s1_t(lineOffset * sizeCharCell.y);
-		return ::gpk::textLineDrawFixedSize(targetView, fontAtlas, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset);
+	sttc	err_t	textLineDrawAlignedFixedSize	(grid<_tColor> & targetView, cnst grid<_tColor> & fontAtlas, u1_t lineOffset, n2u1_c & targetSize, cnst n2u0_t & sizeCharCell, vcst_c & text0)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		n2s1_c			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
+		u1_t					dstOffsetY						= s1_t(lineOffset * sizeCharCell.y);
+		return textLineDrawFixedSize(targetView, fontAtlas, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset);
 	}
 
 	tplt<tpnm _tColor>
-	static	gpk::err_t	textLineDrawAlignedFixedSizeLit	(::gpk::grid<_tColor> & targetView, const ::gpk::view_bit<::gpk::u3_t> & fontAtlas, const ::gpk::n2u2_t & viewMetrics, ::gpk::u1_t lineOffset, const ::gpk::n2u1_t & targetSize, const ::gpk::n2u0_t & sizeCharCell, const ::gpk::vcst_t & text0, const _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		const ::gpk::n2s1_t			dstTextOffset					= {::gpk::s1_t((targetSize.x >> 1) - (::gpk::textLineCalcWidth(sizeCharCell, text0) >> 1)), };
-		::gpk::u1_t					dstOffsetY						= ::gpk::s1_t(lineOffset * sizeCharCell.y);
-		return ::gpk::textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);
+	sttc	err_t	textLineDrawAlignedFixedSizeLit	(grid<_tColor> & targetView, cnst view_bit<u3_t> & fontAtlas, cnst n2u2_t & viewMetrics, u1_t lineOffset, n2u1_c & targetSize, cnst n2u0_t & sizeCharCell, vcst_c & text0, cnst _tColor & color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		n2s1_c			dstTextOffset					= {s1_t((targetSize.x >> 1) - (textLineCalcWidth(sizeCharCell, text0) >> 1)), };
+		u1_t					dstOffsetY						= s1_t(lineOffset * sizeCharCell.y);
+		return textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);
 	}
 
 	tplt<tpnm _tColor>
-	static	gpk::err_t	textLineRaster					(const ::gpk::n2u2_t & targetMetrics, const ::gpk::n2u0_t & fontCharSize, const ::gpk::rect2<::gpk::s1_t> & targetRect, const ::gpk::imgmono<_tColor> & fontTexture, ::gpk::vcst_c & textToRaster, ::gpk::apod<::gpk::n2u1_t> & dstCoords)		{
-		const ::gpk::s2_t				charsPerRow						= fontTexture.Pitch / fontCharSize.x;
-		for(::gpk::u2_t iChar = 0, countChars = textToRaster.size(); iChar < countChars; ++iChar) {
-			const uc_t					charToDraw						= (uc_t)textToRaster[iChar];
-			const ::gpk::s2_t				coordTableX						= charToDraw % charsPerRow;
-			const ::gpk::s2_t				coordTableY						= charToDraw / charsPerRow;
-			const ::gpk::n2s2_t			coordCharTable					= {coordTableX * fontCharSize.x, coordTableY * fontCharSize.y};
-			const ::gpk::rect2s2_t		srcRect0						= {coordCharTable, fontCharSize.s2()};
-			::gpk::rect2s2_t				dstRect1						= {{::gpk::s2_t(targetRect.Offset.x + fontCharSize.x * iChar), targetRect.Offset.y}, fontCharSize.s2()};
-			//dstRect1.Size.x		+= ::gpk::min(0, (::gpk::s2_t)targetRect.Offset.x);
-			dstRect1.Size.y			+= ::gpk::min<::gpk::s1_t>(0, targetRect.Offset.y);
-			if_true_e(failed(::gpk::grid_raster_alpha_bit(targetMetrics, fontTexture.View, {::gpk::u2_t(charsPerRow * fontCharSize.x), 256U * fontCharSize.y}, dstRect1, srcRect0.Offset, dstCoords)));
+	sttc	err_t	textLineRaster					(cnst n2u2_t & targetMetrics, cnst n2u0_t & fontCharSize, cnst rect2s1_t & targetRect, cnst imgmono<_tColor> & fontTexture, vcst_c & textToRaster, apod<n2u1_t> & dstCoords)		{
+		cnst s2_t				charsPerRow						= fontTexture.Pitch / fontCharSize.x;
+		for(u2_t iChar = 0, countChars = textToRaster.size(); iChar < countChars; ++iChar) {
+			cnst uc_t					charToDraw						= (uc_t)textToRaster[iChar];
+			cnst s2_t				coordTableX						= charToDraw % charsPerRow;
+			cnst s2_t				coordTableY						= charToDraw / charsPerRow;
+			cnst n2s2_t			coordCharTable					= {coordTableX * fontCharSize.x, coordTableY * fontCharSize.y};
+			cnst rect2s2_t		srcRect0						= {coordCharTable, fontCharSize.s2()};
+			rect2s2_t				dstRect1						= {{s2_t(targetRect.Offset.x + fontCharSize.x * iChar), targetRect.Offset.y}, fontCharSize.s2()};
+			//dstRect1.Size.x		+= min(0, (s2_t)targetRect.Offset.x);
+			dstRect1.Size.y			+= min<s1_t>(0, targetRect.Offset.y);
+			if_true_e(failed(grid_raster_alpha_bit(targetMetrics, fontTexture.View, {u2_t(charsPerRow * fontCharSize.x), 256U * fontCharSize.y}, dstRect1, srcRect0.Offset, dstCoords)));
 		}
 		return 0;
 	}
-} // namespace
+} // nmsp
 
 #endif // GPK_GUI_TEXT_H_23627

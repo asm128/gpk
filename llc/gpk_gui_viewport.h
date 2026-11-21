@@ -3,51 +3,35 @@
 #ifndef GPK_GUI_VIEWPORT_H_23627
 #define GPK_GUI_VIEWPORT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
-	enum VIEWPORT_CONTROL : ::gpk::s0_t
-		{ VIEWPORT_CONTROL_RESIZE_LEFT				= 0
-		, VIEWPORT_CONTROL_RESIZE_TOP
-		, VIEWPORT_CONTROL_RESIZE_RIGHT
-		, VIEWPORT_CONTROL_RESIZE_BOTTOM
-		, VIEWPORT_CONTROL_RESIZE_TOP_LEFT
-		, VIEWPORT_CONTROL_RESIZE_TOP_RIGHT
-		, VIEWPORT_CONTROL_RESIZE_BOTTOM_LEFT
-		, VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT
-		, VIEWPORT_CONTROL_TITLE
-		, VIEWPORT_CONTROL_CLOSE
-		, VIEWPORT_CONTROL_TARGET
-		, VIEWPORT_CONTROL_COUNT
-		};
-
-	enum GUI_CONTROL_TYPE : ::gpk::s0_t
-		{ GUI_CONTROL_TYPE_Viewport					= 0
-		, GUI_CONTROL_TYPE_PaletteGrid
-		, GUI_CONTROL_TYPE_ControlList
-		, GUI_CONTROL_TYPE_COUNT
-		};
-
-	struct SViewportSettings {
-		bool Dragging = false;
-		bool Unfolded = false;
-		bool DisplacementLockX = false;
-		bool DisplacementLockY = false;
-	};
-
+	GDEFINE_ENUM_TYPE(VIEWPORT_CONTROL, s0_t);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_LEFT, 0);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_TOP, 1);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_RIGHT, 2);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_BOTTOM, 3);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_TOP_LEFT, 4);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_TOP_RIGHT, 5);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_BOTTOM_LEFT, 6);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, RESIZE_BOTTOM_RIGHT, 7);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, TITLE, 8);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, CLOSE, 9);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, TARGET, 10);
+	GDEFINE_ENUM_VALUE(VIEWPORT_CONTROL, COUNT, 11);
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_TYPE, s0_t);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_TYPE, Viewport, 0);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_TYPE, PaletteGrid, 1);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_TYPE, ControlList, 2);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_TYPE, COUNT, 3);
 	struct SViewport {
-		cid_t					IdControl			= (::gpk::s2_t)-1;
-		::gpk::astcid<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};
-		cid_t					IdDesktopElement	= (::gpk::s2_t)-1;
+		cid_t					IdControl			= (s2_t)-1;
+		astcid<VIEWPORT_CONTROL_COUNT>	IdControls		= {};
+		cid_t					IdDesktopElement	= (s2_t)-1;
 		GUI_CONTROL_TYPE		ControlType			= (GUI_CONTROL_TYPE)-1;
-		SViewportSettings Settings = {false, true, false, false};
-		SViewportSettings SettingsOld = {};
 	};
 
-	gpk::err_t			viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
-	::gpk::cid_t		viewportCreate			(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
-	gpk::err_t			viewportFold			(::gpk::SGUI & gui, ::gpk::SViewport & viewport, bool fold);
-	gpk::err_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SInput & input, ::gpk::SViewport & viewport);
+	err_t 		viewportInitialize		(SGUI & gui, SViewport & viewport);
 #pragma pack(pop)
 }
 

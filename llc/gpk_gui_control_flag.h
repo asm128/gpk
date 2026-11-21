@@ -1,5 +1,4 @@
 #include "gpk_gui_core.h"
-#include "gpk_enum.h"
 
 #ifndef GPK_GUI_CONTROL_FLAG_H_23627
 #define GPK_GUI_CONTROL_FLAG_H_23627

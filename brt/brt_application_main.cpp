@@ -372,7 +372,7 @@ sttc ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
 	::gpk::SGUI					& gui						= *framework.GUI;
 	::gpk::acid					controlsToProcess			= {};
-	::gpk::guiProcessControls(gui, [&app](::gpk::cid_t iControl) {
+	::gpk::controlHandle(gui.Controls, [&app](::gpk::cid_t iControl) {
 			info_printf("Executed %u.", iControl);
 			if(iControl == (::gpk::cid_t)app.IdExit)
 				return 1;

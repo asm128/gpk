@@ -94,7 +94,7 @@ static	::gpk::err_t		dbFileLoad					(::gpk::SLoadCache & loadCache, ::blt::TName
 		jsonDB.Val.Blocks[idxBlock].create();
 		::gpk::SJSONFile									& dbBlock					= *jsonDB.Val.Blocks[idxBlock];
 		if_fail_fef(::gpk::fileToMemorySecure(loadCache, fileName, jsonDB.Val.EncryptionKey.bytes(), gpk::bit_true(jsonDB.Val.HostType, ::blt::DATABASE_HOST_DEFLATE), dbBlock.Bytes), "Failed to open block file: %.*s.", GPK_VIEW_ARGS(fileName));
-		if_fail_fef(::gpk::jsonParse(dbBlock.Reader, dbBlock.Bytes), "Failed to parse database block file: %.*s.", GPK_VIEW_ARGS(fileName));
+		if_fail_fef(::gpk::jsonParse(dbBlock.Reader, ::gpk::vcst_t{(sc_c*)dbBlock.Bytes.begin(), dbBlock.Bytes.size()}), "Failed to parse database block file: %.*s.", GPK_VIEW_ARGS(fileName));
 		return idxBlock;
 	}
 	else {
@@ -117,7 +117,7 @@ static	::gpk::err_t		dbFileLoad					(::gpk::SLoadCache & loadCache, ::blt::TName
 		dbBlock.Bytes	.clear();
 		dbBlock.Reader	.Reset();
 		if_fail_fef(::gpk::fileToMemorySecure(loadCache, fileName, jsonDB.Val.EncryptionKey.bytes(), gpk::bit_true(jsonDB.Val.HostType, ::blt::DATABASE_HOST_DEFLATE), dbBlock.Bytes), "Failed to open block file: %.*s.", GPK_VIEW_ARGS(fileName));
-		if_fail_fef(::gpk::jsonParse(dbBlock.Reader, dbBlock.Bytes), "Failed to parse database block file: %.*s.", GPK_VIEW_ARGS(fileName));
+		if_fail_fef(::gpk::jsonParse(dbBlock.Reader, ::gpk::vcst_t{(sc_c*)dbBlock.Bytes.begin(), dbBlock.Bytes.size()}), "Failed to parse database block file: %.*s.", GPK_VIEW_ARGS(fileName));
 		dirty[idxBlock]									= true;
 		return idxBlock;
 	}
@@ -163,7 +163,7 @@ static	::gpk::err_t		table_description_load			(::blt::STableDescription & tableD
 	s2_t												indexOfFields					= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"fields"}, configReader, indexOfTable);
 	if_true_vwf(0, ::gpk::failed(indexOfFields), "Fields for table (%.*s) not found in JSON file.", GPK_VIEW_ARGS(tableName));
 	::gpk::aobj<::gpk::vcst_t>			namesOfFields;
-	if_fail_fef(::gpk::jsonObjectKeyList(configReader, indexOfFields, namesOfFields), "Failed to list fields: %s.", "Unknown reason");
+	if_fail_fef(::gpk::jsonObjectKeyList(configReader, indexOfFields, namesOfFields), "indexOfFields: %i.", indexOfFields);
 	tableDesc.Fields.resize(namesOfFields.size());
 	for(u2_t  iKey = 0; iKey < namesOfFields.size(); ++iKey) {
 		::gpk::SJSONFieldBinding							& fieldDesc						= tableDesc.Fields[iKey];
@@ -194,7 +194,7 @@ static	::gpk::err_t		table_description_load			(::blt::STableDescription & tableD
 	return 0;
 }
 
-::gpk::err_t			blt::configDatabases		(::gpk::array_obj<::blt::TNamedBlitterDB> & databases, const ::gpk::SJSONReader & configReader, const s2_t indexConfigNode, const ::gpk::view<const ::gpk::vcst_t> & databasesToLoad, const ::gpk::vcst_t & folder)	{
+::gpk::err_t			blt::configDatabases		(::gpk::array_obj<::blt::TNamedBlitterDB> & databases, const ::gpk::SJSONReader & configReader, const s2_t indexConfigNode,  ::gpk::view<const ::gpk::vcst_t> databasesToLoad, const ::gpk::vcst_t & folder)	{
 	::gpk::vcst_t							jsonResult					= {};
 	const s2_t										indexObjectDatabases		= (-1 == indexConfigNode)
 		? ::gpk::jsonExpressionResolve(::gpk::vcst_t{"application.blitter.database"}, configReader, 0, jsonResult)

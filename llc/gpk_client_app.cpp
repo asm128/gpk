@@ -3,27 +3,27 @@
 #include "gpk_json_expression.h"
 #include "gpk_chrono.h"
 
-::gpk::err_t	gpk::loadClientConfig	(cnst ::gpk::SJSONReader & jsonConfig, s2_t parentNode, ::gpk::vcst_t & remote_ip, ::gpk::vcst_t & remote_port) {
-	if_fail_w(::gpk::jsonExpressionResolve("remote_ip"  , jsonConfig, parentNode, remote_ip));
-	if_fail_w(::gpk::jsonExpressionResolve("remote_port", jsonConfig, parentNode, remote_port));
+gpk::err_t	gpk::loadClientConfig	(cnst SJSONReader & jsonConfig, s2_t parentNode, vcst_t & remote_ip, vcst_t & remote_port) {
+	if_fail_w(jsonExpressionResolve("remote_ip"  , jsonConfig, parentNode, remote_ip));
+	if_fail_w(jsonExpressionResolve("remote_port", jsonConfig, parentNode, remote_port));
 	info_printf("Remote server address '%.*s:%.*s'", GPK_VIEW_ARGS(remote_ip), GPK_VIEW_ARGS(remote_port));
 	return 0;
 }
 
-::gpk::err_t		gpk::setupGUI			(::gpk::SClientUI & clientUI, ::gpk::SGUI & gui)		{
-	if_fail_fe(clientUI.Root = ::gpk::createScreenLayout(gui));
+gpk::err_t		gpk::setupGUI			(SClientUI & clientUI, SGUI & gui)		{
+	if_fail_fe(clientUI.Root = controlCreateLayout(gui));
 
-	stxp	::gpk::n2u1_t	CONTROL_SIZE			= {192, 20};
-	if_fail_fe(gpk::setupControlListWithRoot<::gpk::UI_CLIENT_INPUT>(gui, clientUI.Input, clientUI.Root, CONTROL_SIZE, ::gpk::ALIGN_BOTTOM_RIGHT));
-	if_fail_fe(gpk::setupControlListWithRoot<::gpk::UI_CLIENT_INFO> (gui, clientUI.Info , clientUI.Root, CONTROL_SIZE, ::gpk::ALIGN_TOP_LEFT));
+	stxp	n2u1_t	CONTROL_SIZE			= {192, 20};
+	if_fail_fe(setupControlListWithRoot<UI_CLIENT_INPUT>(gui, clientUI.Input, clientUI.Root, CONTROL_SIZE, ALIGN_BOTTOM_RIGHT));
+	if_fail_fe(setupControlListWithRoot<UI_CLIENT_INFO> (gui, clientUI.Info , clientUI.Root, CONTROL_SIZE, ALIGN_TOP_LEFT));
 	return 0;
 }
 
-::gpk::err_t		gpk::clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui) {
-	if_fail_fe(gpk::tcpipAddress(client.RemoteIp, client.RemotePort, client.SocketClient.AddressConnect));
-	if_fail_fe(gpk::clientConnect(client.SocketClient)); 
+gpk::err_t		gpk::clientConnect		(SClient & client, SGUI & gui) {
+	if_fail_fe(tcpipAddress(client.RemoteIp, client.RemotePort, client.SocketClient.AddressConnect));
+	if_fail_fe(clientConnect(client.SocketClient)); 
 
-	client.ConnectedSince	= ::gpk::timeCurrentInMs() / 1000.0;
+	client.ConnectedSince	= timeCurrentInMs() / 1000.0;
 	{
 		time_t					timeInt					= time(0);
 		tm						timeptr					= {};
@@ -36,7 +36,7 @@
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 		client.UI.TextConnectedSince	= buf;
 	}
-	return ::gpk::controlTextSet(gui, client.UI.Info[::gpk::UI_CLIENT_INFO_ConnectedSince], client.UI.TextConnectedSince);
+	return controlTextSet(gui.Controls, client.UI.Info[UI_CLIENT_INFO_ConnectedSince], client.UI.TextConnectedSince);
 }
 
 gpk::err_t		gpk::processGUIEvent	(SClient & client, SGUI & gui, cnst SEventView<EVENT_GUI_CONTROL> & screenEvent) { 
@@ -75,7 +75,7 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 	u2_t					dots				= timeCurrent() % 4;
 	string					textConnecting		= "Connecting";
 	textConnecting.append(gpk::vcst_t{"...", dots});
-	if_fail_fe(controlTextSet(gui, client.UI.Input[UI_CLIENT_INPUT_Connect]
+	if_fail_fe(controlTextSet(gui.Controls, client.UI.Input[UI_CLIENT_INPUT_Connect]
 		, (client.SocketClient.Connection.State == CONNECTION_STATE_IDLE		) ? vcst_t{"Disconnect"} 
 		: (client.SocketClient.Connection.State == CONNECTION_STATE_HANDSHAKE	) ? vcst_t{textConnecting}
 		: vcst_t{"Connect"}
@@ -86,12 +86,12 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 		cnst s2_t				hours				= int(minutes / 60);
 		cnst s2_t				days				= hours / 24;
 		if(days > 0)
-			::gpk::sprintf_s(buf, "%u day%s %.2i:%.2i:%05.2f", days, days == 1 ? "s" : "", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
+			sprintf_s(buf, "%u day%s %.2i:%.2i:%05.2f", days, days == 1 ? "s" : "", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
 		else
-			::gpk::sprintf_s(buf, "%.2i:%.2i:%05.2f", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
+			sprintf_s(buf, "%.2i:%.2i:%05.2f", hours % 24, minutes % 60, (int(seconds) % 60) + (seconds - int(seconds)));
 
 		client.UI.TextConnected	= buf;
-		if_fail_fe(controlTextSet(gui, client.UI.Info[UI_CLIENT_INFO_Connected], client.UI.TextConnected));
+		if_fail_fe(controlTextSet(gui.Controls, client.UI.Info[UI_CLIENT_INFO_Connected], client.UI.TextConnected));
 	}
 	{
 		time_t						timeInt				= time(NULL);
@@ -104,7 +104,7 @@ gpk::err_t			gpk::updateGUI		(SClient & client, SGUI & gui) {
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 
 		client.UI.TextDateTime	= buf;
-		if_fail_fe(controlTextSet(gui, client.UI.Info[UI_CLIENT_INFO_DateTime], client.UI.TextDateTime));
+		if_fail_fe(controlTextSet(gui.Controls, client.UI.Info[UI_CLIENT_INFO_DateTime], client.UI.TextDateTime));
 	}
 	return 0;
 }

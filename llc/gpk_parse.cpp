@@ -21,7 +21,7 @@ gpk::err_t			gpk::skipToNextCharacter					(u2_t & indexCurrentChar, ::gpk::vcsc_
 	}
 	return 0;
 }
-gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbolList, ::gpk::vcsc_c & sourceChars, u3_t * number_)	{
+gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcst_c & symbolList, ::gpk::vcst_c & sourceChars, u3_t & number_)	{
 	u2_t										totalCharsProcessed							= 0;
 	::gpk::apod<char>								stringToParse								= {};
 	for(u2_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
@@ -57,7 +57,7 @@ gpk::err_t			gpk::parseArbitraryBaseInteger				(u2_t base, ::gpk::vcsc_c & symbo
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	::gpk::safe_assign(number_, number);
+	number_ = number;
 	return totalCharsProcessed;
 }
 

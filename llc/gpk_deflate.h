@@ -41,8 +41,8 @@ nmsp gpk
 	stin	err_t	arrayInflate			(vcs0_t deflated, au0_t & inflated, u2_c chunkSize = INFLATE_DEFAULT_CHUNK_SIZE)	{ rtrn arrayInflate(deflated.bytes(), inflated, chunkSize); }
 	stin	err_t	arrayDeflate			(vcu0_t inflated, as0_t & deflated, u2_c chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE)	{ rtrn arrayDeflate(inflated, *(au0_t*)&deflated, chunkSize); }
 	stin	err_t	arrayInflate			(vcu0_t deflated, as0_t & inflated, u2_c chunkSize = INFLATE_DEFAULT_CHUNK_SIZE)	{ rtrn arrayInflate(deflated, *(au0_t*)&inflated, chunkSize); }
-	stin	err_t	arrayDeflate			(vcs0_t inflated, as0_t & deflated, u2_c chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE)	{ rtrn arrayDeflate(inflated.bytes(), *(au0_t*)&deflated, chunkSize); }
-	stin	err_t	arrayInflate			(vcs0_t deflated, as0_t & inflated, u2_c chunkSize = INFLATE_DEFAULT_CHUNK_SIZE)	{ rtrn arrayInflate(deflated.bytes(), *(au0_t*)&inflated, chunkSize); }
+	stin	err_t	arrayDeflate			(vcst_t inflated, as0_t & deflated, u2_c chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE)	{ rtrn arrayDeflate(inflated.bytes(), *(au0_t*)&deflated, chunkSize); }
+	stin	err_t	arrayInflate			(vcu0_t deflated, string & inflated, u2_c chunkSize = INFLATE_DEFAULT_CHUNK_SIZE)	{ rtrn arrayInflate(deflated.bytes(), *(au0_t*)&inflated, chunkSize); }
 
 	err_t			crcGenerate				(vcu0_t bytes, u3_t & crc);
 	err_t			crcVerifyAndRemove		(au0_t & bytes);

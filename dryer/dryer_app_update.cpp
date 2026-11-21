@@ -210,7 +210,7 @@ static	gpk::err_t				handleGUI				(::dry::SApplication & app) {
 	::gpk::SInput							& input					= *app.Framework.RootWindow.Input;
 	bool									running					= true;
 	::gpk::acid							controlsToProcess		= {};
-	::gpk::guiGetProcessableControls(gui, controlsToProcess);
+	::gpk::controlActions(gui.Controls, controlsToProcess);
 	bool									executed				= false;
 	for(::gpk::u2_t iProcessable = 0, countControls = controlsToProcess.size(); iProcessable < countControls; ++iProcessable) {
 		const ::gpk::cid_t					iControl				= controlsToProcess[iProcessable];

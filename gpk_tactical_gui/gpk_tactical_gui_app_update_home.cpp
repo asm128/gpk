@@ -157,7 +157,7 @@ gpk::err_t						dry::updateCatalogDisplay		(::dry::SApplication & app) {
 		controlText.Text					= "";
 	}
 
-	::dry::handleResizeScreenHome(app, gui.LastSize.s1());
+	::dry::handleResizeScreenHome(app, gui.Controls.LastSize.s1());
 	return 0;
 }
 

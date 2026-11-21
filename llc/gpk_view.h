@@ -66,15 +66,16 @@ nmsp gpk
             rtrn ::gpk::equal(other.begin(), begin(), size());
         }
         // Methods
-        inxp	view<u0_c>	bytes			() 									csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
-        inxp	u2_t		byte_count		()									csnx	{ rtrn u2_t(Count * sizeof(T));	}
-        inxp	u3_t		bit_count		()									csnx	{ rtrn byte_count() * 8ULL;			}
-        inxp	u2_c&		size			()									csnx	{ rtrn Count;				}
-        inxp	TCnst*		begin			()									csnx	{ rtrn Data;				}
-        inxp	TCnst*		end				()									csnx	{ rtrn begin() + Count;	}
-        inxp	T*			begin			()									nxpt	{ rtrn Data;				}
-        inxp	T*			end				()									nxpt	{ rtrn begin() + Count;	}
-        inxp err_t			slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
+        inxp	    view<u0_c>	bytes			() 									csnx	{ rtrn {(u0_c*)Data, byte_count()}; }
+        tplT2 inxp	view<T2>	as	    		() 									csnx	{ rtrn {(T2*)Data, u2_t(byte_count() / sizeof(T2))}; }
+        inxp	    u2_t		byte_count		()									csnx	{ rtrn u2_t(Count * sizeof(T));	}
+        inxp	    u3_t		bit_count		()									csnx	{ rtrn byte_count() * 8ULL;			}
+        inxp	    u2_c&		size			()									csnx	{ rtrn Count;				}
+        inxp	    TCnst*		begin			()									csnx	{ rtrn Data;				}
+        inxp	    TCnst*		end				()									csnx	{ rtrn begin() + Count;	}
+        inxp	    T*			begin			()									nxpt	{ rtrn Data;				}
+        inxp	    T*			end				()									nxpt	{ rtrn begin() + Count;	}
+        inxp        err_t		slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
             if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
             u2_c					newSize			= Count - offset;
             if(count != (u2_t)-1)
@@ -496,16 +497,10 @@ nmsp gpk
     stxp	    vcst_c      SPACE_CHARACTERS    = " \t\n\r\b\f";
     stxp	    vcst_c      TRIM_CHARACTERS	    = SPACE_CHARACTERS;
     tplTnsix	b8_t        is_space    (cnst T & character, view<cnst T> spaceCharacters = SPACE_CHARACTERS)	nxpt	{ rtrn is_any_of(character, spaceCharacters); }
-    sinx    err_t           rtrim       (vcst_t & trimmed, vcst_c & original, vcst_c & characters)      nxpt { vcst_t result = {}; cnst err_c count = rtrim(result, original, characters); trimmed = result; rtrn count; }
-    sinx    err_t           ltrim       (vcst_t & trimmed, vcst_c & original, vcst_c & characters)      nxpt { vcst_t result = {}; cnst err_c count = ltrim(result, original, characters); trimmed = result; rtrn count; }
-    sinx    err_t           trim        (vcst_t & trimmed, vcst_c & original, vcst_c & characters)      nxpt { vcst_t result = {}; cnst err_c count = trim (result, original, characters); trimmed = result; rtrn count; }
     sinx    err_t           rtrim       (vcst_t & trimmed, vcst_c & characters = TRIM_CHARACTERS)       nxpt { rtrn rtrim(trimmed, trimmed, characters); }
     sinx    err_t           ltrim       (vcst_t & trimmed, vcst_c & characters = TRIM_CHARACTERS)       nxpt { rtrn ltrim(trimmed, trimmed, characters); }
     sinx    err_t           trim        (vcst_t & trimmed, vcst_c & characters = TRIM_CHARACTERS)       nxpt { rtrn trim (trimmed, trimmed, characters); }
 
-    sinx    err_t           rtrim       (vstr_t & trimmed, vstr_c & original, vcst_c & characters)      nxpt { vstr_t result = {}; cnst err_c count = rtrim(result, original, characters); trimmed = result; rtrn count; }
-    sinx    err_t           ltrim       (vstr_t & trimmed, vstr_c & original, vcst_c & characters)      nxpt { vstr_t result = {}; cnst err_c count = ltrim(result, original, characters); trimmed = result; rtrn count; }
-    sinx    err_t           trim        (vstr_t & trimmed, vstr_c & original, vcst_c & characters)      nxpt { vstr_t result = {}; cnst err_c count = trim (result, original, characters); trimmed = result; rtrn count; }
     sinx    err_t           rtrim       (vstr_t & trimmed, vcst_c & characters = TRIM_CHARACTERS)       nxpt { rtrn rtrim(trimmed, trimmed, characters); }
     sinx    err_t           ltrim       (vstr_t & trimmed, vcst_c & characters = TRIM_CHARACTERS)       nxpt { rtrn ltrim(trimmed, trimmed, characters); }
     sinx    err_t           trim        (vstr_t & trimmed, vcst_c & characters = TRIM_CHARACTERS)       nxpt { rtrn trim (trimmed, trimmed, characters); }
