@@ -83,16 +83,17 @@ gpk::err_t			gpk::jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst
     }
     rtrn 0;
 }
-
-gpk::err_t      gpk::jsonWrite  (cnst SJSONNode * pRightHandValue,  view<vcst_c> jsonViews, string & output) {
+tplTsttc
+gpk::err_t  jsonWrite  (cnst gpk::SJSONNode * pRightHandValue,  gpk::view<vcst_c> jsonViews, T & output) {
     if(pRightHandValue->Token->Type == gpk::JSON_TYPE_VALUE && pRightHandValue->Children.size())
         pRightHandValue = pRightHandValue->Children[0];
     cnst auto           & node          = *pRightHandValue;
     switch(node.Token->Type) {
-    case gpk::JSON_TYPE_BOOLEAN : if_fail_fe(append_strings(output, b82st(node.Token->Value)         )); break;
-    case gpk::JSON_TYPE_NULL    : if_fail_fe(append_strings(output, jsonViews[node.ObjectIndex]             )); break;
-    case gpk::JSON_TYPE_STRING  : if_fail_fe(append_strings(output, '"', jsonViews[node.ObjectIndex], '"'   )); break;
-    case gpk::JSON_TYPE_INTEGER : if_fail_fe(append_strings(output, str((u3_t)node.Token->Value)            )); break;
+    case gpk::JSON_TYPE_BOOLEAN : if_fail_fe(gpk::append_strings(output, b82st(node.Token->Value)                )); break;
+    case gpk::JSON_TYPE_NULL    : if_fail_fe(gpk::append_strings(output, jsonViews[node.ObjectIndex]             )); break;
+    case gpk::JSON_TYPE_STRING  : if_fail_fe(gpk::append_strings(output, '"', jsonViews[node.ObjectIndex], '"'   )); break;
+    case gpk::JSON_TYPE_DECIMAL : if_fail_fe(gpk::append_strings(output, str((f3_t)node.Token->Value)            )); break;
+    case gpk::JSON_TYPE_INTEGER : if_fail_fe(gpk::append_strings(output, str((u3_t)node.Token->Value)            )); break;
     case gpk::JSON_TYPE_ARRAY			:
         if_fail_fe(output.push_back('['));
         for(u2_t iChildren = 0; iChildren < node.Children.size(); ++iChildren) {
@@ -113,21 +114,11 @@ gpk::err_t      gpk::jsonWrite  (cnst SJSONNode * pRightHandValue,  view<vcst_c>
         }
         if_fail_fe(output.push_back('}'));
         break;
-    case gpk::JSON_TYPE_DECIMAL : {
-        f3_t                f               = 0;
-        memcpy(&f, &node.Token->Value, szof(f3_t));
-        sstring<64>         temp        = {};
-        u2_t                lenNum      = snprintf(temp.Storage, size(temp) - 2, "%.16f", f);
-        while(lenNum > 0 && (temp[lenNum] == 0 || temp[lenNum] == '0')) {
-            temp[lenNum]    = 0;
-            --lenNum;
-        }
-        if_fail_fe(append_strings(output, temp));
-    }
-        break;
     }
     rtrn 0;
 }
+gpk::err_t      gpk::jsonWrite  (cnst SJSONNode * pRightHandValue,  view<vcst_c> jsonViews, string & output) { return ::jsonWrite(pRightHandValue, jsonViews, output); }
+gpk::err_t      gpk::jsonWrite  (cnst SJSONNode * pRightHandValue,  view<vcst_c> jsonViews, au0_t  & output) { return ::jsonWrite(pRightHandValue, jsonViews, output); }
 
 sttc	gpk::err_t	jsonCloseElement			(gpk::SJSONReaderState & stateReader, gpk::apod<gpk::SJSONToken> & tokens, u2_t indexChar) {
     if_true_fef(tokens.size() <= (u2_t)stateReader.IndexCurrentElement, "Invalid parser state. Cannot close element: %" GPK_FMT_S2 ".", stateReader.IndexCurrentElement);

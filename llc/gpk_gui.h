@@ -36,22 +36,28 @@ nmsp gpk
 		b8_t				InputModeTouch		= true;
 	};
 
-	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
-	err_t				guiUpdate						(SGUI & gui, n2u1_c & targetMetrics); //, vpobj<SEventSystem> in_Events = {});
-	err_t				guiUpdateMetrics				(SGUI & gui, n2u1_c & targetSize, b8_t forceUpdate);
-	err_t				guiSetupDefaults				(SGUI & gui);
 	cid_t 				controlCreate					(SGUI & gui);
 	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
-	err_t				controlDraw						(SGUI & gui, cid_t iControl, g8bgra & target);
+	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
 	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, b8_t forceUpdate);
- 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
+	err_t				controlUpdateHierarchy			(SGUI & guigui, cid_t iControl, n2u1_c & targetMetrics);
+	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
+
+	err_t				guiSetupDefaults				(SGUI & gui);
+	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
+	err_t				guiUpdate						(SGUI & gui, n2u1_c & targetMetrics); //, vpobj<SEventSystem> in_Events = {});
+	stin	err_t		guiUpdateMetrics				(SGUI & gui, n2u1_c & targetSize, b8_t forceUpdate) {
+		for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
+			if(controlInvalid(gui.Controls, gui.Controls.States[iControl].Parent) && false == controlInvalid(gui.Controls, (cid_t)iControl))
+				if_fail_fef(controlUpdateMetricsTopToDown(gui, (cid_t)iControl, targetSize, forceUpdate), "iControl:%i", iControl);
+		return 0;
+	}
 	stin	err_t		guiDraw							(SGUI & gui, g8bgra target)	{
 		for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
 			if(false == controlInvalid(gui.Controls, (cid_t)iControl) && controlInvalid(gui.Controls, gui.Controls.States[iControl].Parent))
-				if_true_e(failed(controlDrawHierarchy(gui, (cid_t)iControl, target)));
+				if_fail_ef(controlDrawHierarchy(gui, (cid_t)iControl, target), "iControl:%i", iControl);
 		return 0;
 	}
-	//err_t				controlUpdateMetrics			(SGUI & gui, s2_t iControl, cnst n2<u2_t> & targetSize);
 	stin	cid_t 		controlCreate					(SGUI & gui, cnst FControlInitialize & funcInitialize) {
 		cid_t				iControl;
 		if_fail_fe(iControl = controlCreate(gui));

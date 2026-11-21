@@ -177,9 +177,10 @@ namespace gpk
     tydf kvvcst<SJSONFile>	TKeyValJSONFile;
 
     err_t   jsonFileRead			(SJSONFile & file, vcst_c & filename);
-    err_t   jsonWrite				(cnst SJSONNode * node, view<vcst_c>  jsonViews, string & output);
-    err_t   jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c>  jsonViews, u2_c blockSize, aobj<au0_t>  & outputJsons);
-    err_t   jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c>  jsonViews, u2_c blockSize, aobj<string> & outputJsons);
+    err_t   jsonWrite				(cnst SJSONNode * node, view<vcst_c>  jsonViews, asc_t & output);
+    err_t   jsonWrite				(cnst SJSONNode * node, view<vcst_c>  jsonViews, au0_t & output);
+    //err_t   jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c>  jsonViews, u2_c blockSize, aobj<au0_t>  & outputJsons);
+    //err_t   jsonArraySplit			(cnst SJSONNode & jsonArrayToSplit, view<vcst_c>  jsonViews, u2_c blockSize, aobj<string> & outputJsons);
 
 } // namespace
 
