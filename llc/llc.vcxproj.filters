@@ -786,9 +786,6 @@
     <ClInclude Include="gpk_crc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_file_pack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_args.h">
       <Filter>script</Filter>
     </ClInclude>
@@ -899,6 +896,45 @@
     </ClInclude>
     <ClInclude Include="gpk_engine_soundbuffer.h">
       <Filter>entity_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_bitmap_file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_connection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_connection_ip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ro_gnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ro_rsm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ro_rsw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_socket_client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_socket_server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_client_app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_server_app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_tcpip.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_time.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_file_pack.h">
+      <Filter>encoding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1189,6 +1225,42 @@
     </ClCompile>
     <ClCompile Include="gpk_engine_shader.cpp">
       <Filter>entity_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_bitmap_file.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_connection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_connection_ip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ro_gnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ro_rsm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ro_rsw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_socket_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_socket_server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_client_app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_server_app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_tcpip.cpp">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_time.cpp">
+      <Filter>string</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
