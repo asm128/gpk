@@ -310,6 +310,7 @@
     <ClCompile Include="gpk_voxel_geometry.cpp" />
     <ClCompile Include="gpk_window.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
+    <ClCompile Include="gpk_framework_module.cpp" />
     <ClCompile Include="gpk_gui_control_list.cpp" />
     <ClCompile Include="gpk_gui_control_table.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />

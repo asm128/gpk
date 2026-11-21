@@ -79,9 +79,9 @@ template<typename _tIndex, typename _tValue>
 	return 0;
 }
 
-static gpk::err_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gpk::circlef32 & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
+static gpk::err_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gpk::circlef2_t & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
 	const double				stepUnit						= (1.0 / resolution) * ::gpk::math_2pi;
-	const ::gpk::spheref32		sphereMetrics					= {gaugeMetrics.Radius, {gaugeMetrics.Center.x, gaugeMetrics.Center.y, .5f}};
+	const ::gpk::spheref2_t		sphereMetrics					= {gaugeMetrics.Radius, {gaugeMetrics.Center.x, gaugeMetrics.Center.y, .5f}};
 	const double				finalRadius						= gaugeMetrics.Radius;
 	const double				outerRadius						= finalRadius;
 	const double				innerRadius						= outerRadius - width;
@@ -104,7 +104,7 @@ static gpk::err_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gpk::c
 }
 
 static gpk::err_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra target, ::gpk::rgbaf colorMin, ::gpk::rgbaf colorMid, ::gpk::rgbaf colorMax, ::gpk::bgra colorEmpty, bool radialColor) {
-	static ::gpk::imgu32		dummyDepth;
+	static ::gpk::imgu2_t		dummyDepth;
 	const ::gpk::n3f2_t			center3							= (gauge.Vertices[1] - gauge.Vertices[gauge.Vertices.size() / 2 + 1]) / 2 + gauge.Vertices[gauge.Vertices.size() / 2 + 1];
 	const ::gpk::n2f2_t			center2							= {center3.x, center3.y};
 	const double				radiusLarge						= (center3 - gauge.Vertices[1]).Length();
@@ -115,7 +115,7 @@ static gpk::err_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra 
 	::gpk::apod<::gpk::n2s1_t>	pixelCoords;
 	::gpk::apod<::gpk::trif2_t>	triangleWeights;
 	for(::gpk::u2_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
-		const ::gpk::tri3f32			triangleCoords				= {gauge.Vertices[gauge.Indices[iTriangle].A], gauge.Vertices[gauge.Indices[iTriangle].B], gauge.Vertices[gauge.Indices[iTriangle].C]};
+		const ::gpk::tri3f2_t			triangleCoords				= {gauge.Vertices[gauge.Indices[iTriangle].A], gauge.Vertices[gauge.Indices[iTriangle].B], gauge.Vertices[gauge.Indices[iTriangle].C]};
 		const double					colorFactor					= radialColor ? ::gpk::min(1.0, iTriangle / (double)triangleCount) : gauge.CurrentValue / (float)gauge.MaxValue;
 		::gpk::rgbaf					finalColor;
 		const bool						isEmptyGauge				= ((iTriangle + 2) >> 1) >= (::gpk::u2_t)gauge.CurrentValue * 2;
@@ -141,7 +141,7 @@ static gpk::err_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra 
 	return 0;
 }
 
-static ::gpk::cid_t gaugeCreate(::gpk::SGUI & gui, ::gme::SUIRadialGauge & gauge, ::gpk::cid_t parent, const ::gpk::n2u2_t & imageMetrics, const ::gpk::circlef32 & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
+static ::gpk::cid_t gaugeCreate(::gpk::SGUI & gui, ::gme::SUIRadialGauge & gauge, ::gpk::cid_t parent, const ::gpk::n2u2_t & imageMetrics, const ::gpk::circlef2_t & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
 	const ::gpk::cid_t idControl = ::gpk::controlCreate(gui);
 	if_fail_fe(idControl);
 	if_fail_fe(::gpk::controlSetParent(gui, idControl, parent));
@@ -295,13 +295,13 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 
 gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	static ::gpk::STimer		timer;
-	rvis_if(::gpk::APPLICATION_STATE_EXIT, exitSignal);
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, exitSignal);
 	{
 		::std::lock_guard			lock			(app.LockRender);
 		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
 	}
 	::gpk::SFramework			& framework		= app.Framework;
-	rvis_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
 
 	::gpk::SGUI					& gui			= *framework.GUI;
 	::gpk::acid					toProcess		= {};
@@ -331,7 +331,7 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 				}
 			return 0;
 		}));
-		rvis_if(::gpk::APPLICATION_STATE_EXIT, exitRequested);
+		if_true_vi(::gpk::APPLICATION_STATE_EXIT, exitRequested);
 	}
 
 	if_fail_fe(app.NumericTuner.Update(gui, gui.Controls.EventQueue));
@@ -364,12 +364,12 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 		scene.Projection															= scene.ViewMatrix * scene.Projection;
 		scene.LightPos.Normalize();
 
-		::gpk::m4f32													mViewport									= {};
-		mViewport._11														= 2.0f / offscreenMetrics.x;
-		mViewport._22														= 2.0f / offscreenMetrics.y;
-		mViewport._33														= 1.0f / (float)(nearFar.Max - nearFar.Min);
-		mViewport._43														= (float)(-nearFar.Min * ( 1.0f / (nearFar.Max - nearFar.Min) ));
-		mViewport._44														= 1.0f;
+		::gpk::m4f2_t													mViewport									= {};
+		mViewport(0, 0)														= 2.0f / offscreenMetrics.x;
+		mViewport(1, 1)														= 2.0f / offscreenMetrics.y;
+		mViewport(2, 2)														= 1.0f / (float)(nearFar.Max - nearFar.Min);
+		mViewport(3, 2)														= (float)(-nearFar.Min * ( 1.0f / (nearFar.Max - nearFar.Min) ));
+		mViewport(3, 3)														= 1.0f;
 		scene.Projection													= scene.Projection * mViewport.GetInverse();
 	}
 

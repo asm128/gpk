@@ -971,6 +971,9 @@
     <ClCompile Include="gpk_framework.cpp">
       <Filter>framework</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_framework_module.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
     <ClCompile Include="gpk_geometry.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
