@@ -77,10 +77,10 @@ static	gpk::err_t	displace					(::gpk::SGUI & gui, ::gpk::cid_t iControl, const 
 	return ::gpk::controlMetricsInvalidate(gui, iControl);
 }
 
-static	gpk::err_t	pushToFrontAndDisplace		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::SInput & input)							{
+static	gpk::err_t	pushToFrontAndDisplace		(::gpk::SGUI & gui, ::gpk::cid_t iControl, const ::gpk::n2<double> & mouseDeltas)							{
 	if_fail_fe(::gpk::controlToFront(gui, iControl));
-	if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
-		if_fail_fef(::displace(gui, iControl, {(double)input.MouseCurrent.Deltas.x, (double)input.MouseCurrent.Deltas.y}), "%s", "Unknown issue!");
+	if(mouseDeltas.x || mouseDeltas.y)
+		if_fail_fef(::displace(gui, iControl, mouseDeltas), "%s", "Unknown issue!");
 	return 0;
 }
 
@@ -144,7 +144,7 @@ static	::gpk::s3_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SDesktop & deskt
 	if(gui.Controls.States[vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]].IsAction())
 		::gpk::desktopDeleteViewport(gui, desktop, iViewport);
 	else if(gui.Controls.IsPressed(vp.IdControls[::gpk::VIEWPORT_CONTROL_TITLE]))
-		::pushToFrontAndDisplace(gui, vp.IdControl, input);
+		::pushToFrontAndDisplace(gui, vp.IdControl, {(double)input.MouseCurrent.Deltas.x, (double)input.MouseCurrent.Deltas.y});
 	else if(gui.Controls.IsPressed(vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT])) {
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
 			//::gpk::n2<::gpk::s2_t> nextSize = gui.Controls.Controls[(::gpk::u2_t)vp.IdControl].Area.Size + ::gpk::n2<::gpk::s2_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
