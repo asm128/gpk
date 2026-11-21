@@ -41,7 +41,7 @@ sttc	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 		}
 		while(newState >= UI.RootPerState.size()) {	// create layouts for each state as they're required
 			::gpk::cid_t				rootId;
-			if_fail_fe(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::controlCreateLayout(GUI, UI.Root))]); 
+			if_fail_fe(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::controlCreateLayout(*GUI, UI.Root))]); 
 			if_zero_e(GUI->Controls.SetHidden(rootId, true));
 		}
 				
