@@ -25,8 +25,8 @@ sttc	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 
 // initialize root gui layout and console input/virtual keyboard
 ::gpk::err_t			lls::setupLLSUI		(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
-	do { if_fail_fe(llsUI.Root = ::gpk::controlCreateLayout(gui.Controls)); } while(0);
-	do { if_fail_fe(::setupConsole(gui, llsUI)); } while(0);
+	if_fail_fe(llsUI.Root = ::gpk::controlCreateLayout(gui));
+	if_fail_fe(::setupConsole(gui, llsUI));		
 	return 0; 
 }
 
@@ -41,7 +41,7 @@ sttc	::gpk::err_t	setupConsole			(::gpk::SGUI & gui, ::lls::LLSUI & llsUI) {
 		}
 		while(newState >= UI.RootPerState.size()) {	// create layouts for each state as they're required
 			::gpk::cid_t				rootId;
-			if_fail_fe(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::controlCreateLayout(GUI->Controls, UI.Root))]); 
+			if_fail_fe(rootId = UI.RootPerState[UI.RootPerState.push_back(::gpk::controlCreateLayout(GUI, UI.Root))]); 
 			if_zero_e(GUI->Controls.SetHidden(rootId, true));
 		}
 				
