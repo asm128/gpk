@@ -1,6 +1,6 @@
 #include "dryer_app.h"
 
-static void							timeFormat				(::gpk::vc output)		{
+static void							timeFormat				(::gpk::vsc_t output)		{
 	static constexpr const char				* month_names[]			= {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 	time_t									rawtime					= {};
     time ( &rawtime );
@@ -19,7 +19,7 @@ static	gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, ::gpk:
 	const ::gpk::cid_t						controlIndex			= screen.ControlIds[idControl];
 	::dry::SControlImages					& icons					= screen.ControlIcons[idControl];
 	if(-1 != controlIndex)
-		gui.Controls.Images[controlIndex].Image = isOn ? icons.On.View : icons.Off.View;
+		gui.Controls.ImageViews[controlIndex] = isOn ? icons.On.View : icons.Off.View;
 	return 0;
 }
 

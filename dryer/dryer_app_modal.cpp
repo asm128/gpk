@@ -13,7 +13,7 @@ gpk::err_t						dry::handleResizeScreenModal	(::dry::SApplication & app, ::gpk::
 	return 0;
 }
 
-static	gpk::err_t				modalDisplayScanSpool			(::dry::SApplication & app, ::gpk::view_array<const ::dry::SSpoolData> scanned) {
+static	gpk::err_t				modalDisplayScanSpool			(::dry::SApplication & app, ::gpk::view<const ::dry::SSpoolData> scanned) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
 	gui.Controls.SetUpdated(screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], false);
