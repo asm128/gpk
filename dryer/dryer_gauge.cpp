@@ -3,9 +3,9 @@
 #include "gpk_bitmap_target.h"
 #include "gpk_sphere.h"
 
-gpk::err_t	dry::gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef32 & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
+gpk::err_t	dry::gaugeBuildRadial		(::dry::SGaugeFeeder & gauge, const ::gpk::circlef2_t & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
 	const double				stepUnit		= (1.0 / resolution) * ::gpk::math_2pi;
-	const ::gpk::spheref32	sphereMetrics	= {gaugeMetrics.Radius, {gaugeMetrics.Center.x, gaugeMetrics.Center.y, .5f}};
+	const ::gpk::spheref2_t	sphereMetrics	= {gaugeMetrics.Radius, {gaugeMetrics.Center.x, gaugeMetrics.Center.y, .5f}};
 	const double				outerRadius		= gaugeMetrics.Radius;
 	const double				innerRadius		= outerRadius - width;
 	for(::gpk::s1_t iStep = 0, stepCount = resolution; iStep < stepCount; ++iStep) {
@@ -41,7 +41,7 @@ gpk::err_t	dry::gaugeImageUpdate
 	, ::gpk::bgra colorEmpty
 	, bool radialColor
 	) {
-	static ::gpk::imgu32	dummyDepth;
+	static ::gpk::imgu2_t	dummyDepth;
 	const ::gpk::n3f2_t	center3					= (gauge.Vertices[1] - gauge.Vertices[gauge.Vertices.size() / 2 + 1]) / 2 + gauge.Vertices[gauge.Vertices.size() / 2 + 1];
 	const ::gpk::n2f2_t	center2					= {center3.x, center3.y};
 	const double			radiusLarge				= (center3 - gauge.Vertices[1]).Length();
@@ -52,7 +52,7 @@ gpk::err_t	dry::gaugeImageUpdate
 	::gpk::apod<::gpk::n2s1_t>	pixelCoords;
 	::gpk::apod<::gpk::trif2_t>	triangleWeights;
 	for(::gpk::u2_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
-		const ::gpk::tri3f32	triangleCoords			= {
+		const ::gpk::tri3f2_t	triangleCoords			= {
 			  gauge.Vertices[gauge.Indices[iTriangle].A]
 			, gauge.Vertices[gauge.Indices[iTriangle].B]
 			, gauge.Vertices[gauge.Indices[iTriangle].C]

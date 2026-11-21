@@ -161,7 +161,7 @@ gpk::err_t						dry::updateCatalogDisplay		(::dry::SApplication & app) {
 	return 0;
 }
 
-static	gpk::err_t				formatTimerString				(::gpk::s3_t timeInMilliseconds, ::gpk::vc target) {
+static	gpk::err_t				formatTimerString				(::gpk::s3_t timeInMilliseconds, ::gpk::vstr_t target) {
 	const ::gpk::s3_t							timeInSeconds					= timeInMilliseconds / 1000;
 	const ::gpk::s3_t							timeInMinutes					= timeInSeconds / 60;
 	const ::gpk::u2_t							hours							= (::gpk::u2_t)(timeInMinutes / 60);

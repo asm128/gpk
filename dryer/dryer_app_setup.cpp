@@ -170,7 +170,7 @@ static	gpk::err_t						setupScreens				(::dry::SApplication & app)	{
 
 
 static	gpk::err_t						setupGauge					(::dry::SGaugeFeeder	& feeder, const ::gpk::n2s1_t feederControlSize)	{
-	const ::gpk::circlef32							gaugeMetrics				= {feederControlSize.x / 2.0f - 4, feederControlSize.f2() / 2.0f};
+	const ::gpk::circlef2_t							gaugeMetrics				= {feederControlSize.x / 2.0f - 4, feederControlSize.f2() / 2.0f};
 //#define GAUGE_LOW_RES
 #if defined(GAUGE_LOW_RES)
 	const ::gpk::u2_t									resolution					= 12;
@@ -189,7 +189,7 @@ static	gpk::err_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SG
 	::gpk::SControlPlacement						& control					= gui.Controls.Placement[indexControlFeeder];
 	const ::gpk::n2s1_t								feederControlSize			= control.Area.Size;
 	::setupGauge(feeder, feederControlSize);
-	gui.Controls.Images[indexControlFeeder].Image		= feeder.Image;
+	gui.Controls.ImageViews[indexControlFeeder]		= feeder.Image.View;
 	return 0;
 }
 

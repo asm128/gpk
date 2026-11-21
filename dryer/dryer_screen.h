@@ -72,18 +72,18 @@ namespace dry
 			::gpk::controlSetParent(gui, controlIndex, (controlSetup.IdParent == -1) ? rootControlIndex : screen.ControlIds[controlSetup.IdParent]);
 
 			if((controlSetup.IconPathOff == controlSetup.IconPathOn) && controlSetup.IconPathOn.size()) {
-				if_fail_cef(::gpk::failed(::gpk::pngFileLoad(pngCache, controlSetup.IconPathOff, screen.ControlIcons[controlSetup.Id].Off)), "Failed to load icon: '%s'", controlSetup.IconPathOff.begin());
-				controlImage.Image							= screen.ControlIcons[controlSetup.Id].Off.View;
+				if_fail_cef(::gpk::pngLoadFile(pngCache, controlSetup.IconPathOff, screen.ControlIcons[controlSetup.Id].Off), "Failed to load icon: '%s'", controlSetup.IconPathOff.begin());
+				gui.Controls.ImageViews[controlIndex]							= screen.ControlIcons[controlSetup.Id].Off.View;
 				screen.ControlIcons[controlSetup.Id].On.View	= screen.ControlIcons[controlSetup.Id].Off.View;
 			}
 			else {
 				if(controlSetup.IconPathOn.size()) {
-					if_fail_cef(::gpk::failed(::gpk::pngFileLoad(pngCache, controlSetup.IconPathOn , screen.ControlIcons[controlSetup.Id].On)), "Failed to load icon: '%s'", controlSetup.IconPathOn.begin());
-					controlImage.Image							= screen.ControlIcons[controlSetup.Id].On.View;
+					if_fail_cef(::gpk::pngLoadFile(pngCache, controlSetup.IconPathOn , screen.ControlIcons[controlSetup.Id].On), "Failed to load icon: '%s'", controlSetup.IconPathOn.begin());
+					gui.Controls.ImageViews[controlIndex]							= screen.ControlIcons[controlSetup.Id].On.View;
 				}
 				if(controlSetup.IconPathOff.size()) {
-					if_fail_cef(::gpk::failed(::gpk::pngFileLoad(pngCache, controlSetup.IconPathOff, screen.ControlIcons[controlSetup.Id].Off)), "Failed to load icon: '%s'", controlSetup.IconPathOff.begin());
-					controlImage.Image							= screen.ControlIcons[controlSetup.Id].Off.View;
+					if_fail_cef(::gpk::pngLoadFile(pngCache, controlSetup.IconPathOff, screen.ControlIcons[controlSetup.Id].Off), "Failed to load icon: '%s'", controlSetup.IconPathOff.begin());
+					gui.Controls.ImageViews[controlIndex]							= screen.ControlIcons[controlSetup.Id].Off.View;
 				}
 			}
 		}

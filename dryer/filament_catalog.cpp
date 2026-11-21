@@ -4,6 +4,7 @@
 #include "gpk_file.h"
 #include "gpk_path.h"
 #include "gpk_label.h"
+#include "gpk_string_compose.h"
 #include "gpk_string.h"
 
 #include <ctime>
@@ -96,13 +97,13 @@ static	gpk::err_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catalog, 
 
 gpk::err_t						dry::catalogSave		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename) {
 	::gpk::string							jsonString				= {};
-	jsonString.append_string("{ \"loaded\" : ");
+	::gpk::append_strings(jsonString, "{ \"loaded\" : ");
 	::jsonArrayFromFilamentView(catalog, catalog.FilamentLoaded, jsonString);
 	if(catalog.FilamentHistory.size()) {
-		jsonString.append_string("\n, \"history\" : ");
+		::gpk::append_strings(jsonString, "\n, \"history\" : ");
 		::jsonArrayFromFilamentView(catalog, catalog.FilamentHistory, jsonString);
 	}
-	jsonString.append_string("\n}");
+	::gpk::append_strings(jsonString, "\n}");
 	return ::gpk::fileFromMemory(filename, jsonString);
 }
 
@@ -113,7 +114,7 @@ gpk::err_t						dry::catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t
 	static const	::gpk::vcst_t				keys	[]				= {"loaded", "history"};
 	for(::gpk::u2_t iKey = 0; iKey < ::gpk::size(keys); ++iKey) {
 		const ::gpk::s2_t							indexValue				= ::gpk::jsonObjectValueGet(reader, 0, keys[iKey]);
-		cef_if(0 > indexValue, "'%.*s' node not found in '%s'", keys[iKey].begin(), GPK_VIEW_ARGS(filename)) else {}
+		if_true_cef(0 > indexValue, "'%.*s' node not found in '%s'", keys[iKey].begin(), GPK_VIEW_ARGS(filename)) else {}
 		for(::gpk::u2_t iFilament = 0, countFilaments = ::gpk::jsonArraySize(reader, indexValue); iFilament < countFilaments; ++iFilament) {
 			const ::gpk::s2_t							jsonIndexFilament			= ::gpk::jsonArrayValueGet(*reader[indexValue], iFilament);
 			const ::gpk::s2_t							jsonIndexUniqueId			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unique_id"				);

@@ -60,11 +60,11 @@ gpk::err_t					setup						(::dry::SApplication & app) {
 }
 
 gpk::err_t					update						(::dry::SApplication & app, bool requestedExit) {
-	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, requestedExit, "%s", "Exit requested by system.");
+	if_true_vif(1, requestedExit, "%s", "Exit requested by system.");
 #if defined(GPK_WINDOWS)
-	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
+	if_true_vif(1, 1 == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
 #else
-	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::s3d::frameworkUpdate(app.Framework), "%s", "Exit requested by framework update.");
+	if_true_vif(1, 1 == ::s3d::frameworkUpdate(app.Framework), "%s", "Exit requested by framework update.");
 #endif
 #if defined(GPK_LINUX)
 	if((time(0) - app.TimeLastSerial) > app.SERIAL_TIMEOUT) {
