@@ -170,10 +170,6 @@
     <ClCompile Include="test_llc_array_obj.cpp" />
     <ClCompile Include="test_llc_array_pod.cpp" />
     <ClCompile Include="test_llc_base64.cpp" />
-    <ClCompile Include="test_llc_ctti_enum.cpp" />
-    <ClCompile Include="test_llc_ctti_enum_json.cpp" />
-    <ClCompile Include="test_llc_ctti_stct.cpp" />
-    <ClCompile Include="test_llc_ctti_stct_json.cpp" />
     <ClCompile Include="test_llc_deflate.cpp" />
     <ClCompile Include="test_llc_enum.cpp" />
     <ClCompile Include="test_llc_event.cpp" />
