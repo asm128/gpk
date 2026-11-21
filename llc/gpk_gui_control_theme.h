@@ -7,6 +7,15 @@
 
 nmsp gpk
 {
+   stct SControlColors {
+        papod<bgra>				Palette					= {};
+        papod<SControlTheme>	ControlThemes			= {};
+
+        asts1_t<GUI_CONTROL_PALETTE_COUNT>	DefaultColors			= {};
+
+        apod<asttc<bgra, UI_CONTROL_AREA_COUNT>>
+                                Palettes;
+    };
 	err_t	controlColorsDefault	(SControlColors & output);
 	err_t	controlColorsDefault	(pobj<SControlColors> & output);
 	err_t	controlFontsDefault		(apobj<SRasterFont> & output);

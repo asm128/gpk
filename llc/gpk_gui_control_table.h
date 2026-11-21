@@ -2,6 +2,7 @@
 #include "gpk_gui_control_flag.h"
 #include "gpk_gui_text_flag.h"
 #include "gpk_gui_image_flag.h"
+#include "gpk_gui_control_theme.h"
 
 #include "gpk_font.h"
 #include "gpk_img_color.h"
@@ -84,16 +85,7 @@ nmsp gpk
         if_fail_fe(controlSetParent(controls, iControl, iParent));
         return 0;
     }
-    stct SControlColors {
-        papod<bgra>				Palette					= {};
-        papod<SControlTheme>	ControlThemes			= {};
-
-        asts1_t<GUI_CONTROL_PALETTE_COUNT>	DefaultColors			= {};
-
-        apod<asttc<bgra, UI_CONTROL_AREA_COUNT>>
-                                Palettes;
-    };
-
+ 
 
 	tydf	FError
 		< SControlState			&
