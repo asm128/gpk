@@ -14,7 +14,7 @@ gpk::err_t			gpk::loadServerConfig	(cnst SJSONReader & jsonConfig, s2_t parentNo
 }
 
 gpk::err_t			gpk::setupGUI		(SServerUI & serverUI, SGUI & gui) {
-	if_fail_fe(serverUI.Root = createScreenLayout(gui));
+	if_fail_fe(serverUI.Root = controlCreateLayout(gui));
 
 	stxp	n2u1_t		CONTROL_SIZE		= {192, 20};
 	if_fail_fe(gpk::setupControlListWithRoot<UI_SERVER_INPUT>(gui, serverUI.Input, serverUI.Root, CONTROL_SIZE, ALIGN_BOTTOM_RIGHT));
@@ -37,14 +37,14 @@ gpk::err_t			gpk::serverStart	(SServer & server, SGUI & gui) {
 	sc_t						buf [64]			= {};
 	strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 	server.UI.TextTimeStarted	= vcst_t(buf);
-	return controlTextSet(gui, server.UI.Info[UI_SERVER_INFO_TimeStarted], server.UI.TextTimeStarted);
+	return controlTextSet(gui.Controls, server.UI.Info[UI_SERVER_INFO_TimeStarted], server.UI.TextTimeStarted);
 }
 
 
 sttc	::gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	::gpk::SSocketServer		& udpServer		= server.SocketServer;
-	if_fail_fe(gpk::controlTextSet(gui, server.UI.Input[::gpk::UI_SERVER_INPUT_Stop		], udpServer.Listen ? ::gpk::vcst_t{"Stop"} : ::gpk::vcst_t{"Start"})); 
-	if_fail_fe(gpk::controlTextSet(gui, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcst_t{"Listening"} : ::gpk::vcst_t{"Stopped"})); 
+	if_fail_fe(gpk::controlTextSet(gui.Controls, server.UI.Input[::gpk::UI_SERVER_INPUT_Stop		], udpServer.Listen ? ::gpk::vcst_t{"Stop"} : ::gpk::vcst_t{"Start"})); 
+	if_fail_fe(gpk::controlTextSet(gui.Controls, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcst_t{"Listening"} : ::gpk::vcst_t{"Stopped"})); 
 	sc_t						buf [128]		= {};
 	{	
 		u2_t					clientCount		= 0;
@@ -54,7 +54,7 @@ sttc	::gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 
 		::gpk::sprintf_s(buf, "Clients: %i", clientCount);	
 		server.UI.TextClientCount	= ::gpk::vcst_t(buf);
-		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_ClientCount], server.UI.TextClientCount));
+		if_fail_fe(gpk::controlTextSet(gui.Controls, server.UI.Info[::gpk::UI_SERVER_INFO_ClientCount], server.UI.TextClientCount));
 	}
 	{ // update datetime field
 		time_t						timeInt			= time(0);
@@ -66,7 +66,7 @@ sttc	::gpk::err_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	#endif
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 		server.UI.TextDateTime	= ::gpk::vcst_t(buf);
-		if_fail_fe(gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_DateTime], server.UI.TextDateTime)); 
+		if_fail_fe(gpk::controlTextSet(gui.Controls, server.UI.Info[::gpk::UI_SERVER_INFO_DateTime], server.UI.TextDateTime)); 
 	}
 
 	return 0;
