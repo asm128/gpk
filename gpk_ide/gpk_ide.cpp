@@ -144,7 +144,7 @@ static gpk::err_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra 
 static ::gpk::cid_t gaugeCreate(::gpk::SGUI & gui, ::gme::SUIRadialGauge & gauge, ::gpk::cid_t parent, const ::gpk::n2u2_t & imageMetrics, const ::gpk::circlef2_t & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
 	const ::gpk::cid_t idControl = ::gpk::controlCreate(gui);
 	if_fail_fe(idControl);
-	if_fail_fe(::gpk::controlSetParent(gui, idControl, parent));
+	if_fail_fe(::gpk::controlSetParent(gui.Controls, idControl, parent));
 	if_fail_fe(gauge.Image.resize(imageMetrics));
 	if_fail_fe(::gaugeBuildRadial(gauge, gaugeMetrics, resolution, width));
 	gui.Controls.ImageViews[idControl] = gauge.Image.View;
@@ -208,7 +208,7 @@ static gpk::err_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::
 		gui.Controls.Draw[idControl].ColorMode	= param.ColorMode;
 		gui.Controls.Text[idControl].Align		= param.TextAlign;
 		if_fail_fe(::gpk::controlTextSet(gui, idControl, param.Text));
-		if_fail_fe(::gpk::controlSetParent(gui, idControl, -1 == param.Parent ? -1 : ids[param.Parent]));
+		if_fail_fe(::gpk::controlSetParent(gui.Controls, idControl, -1 == param.Parent ? -1 : ids[param.Parent]));
 	}
 	return 0;
 }
@@ -282,8 +282,8 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 	controlTable.Placement[idLayer].Margin = controlTable.Placement[idLayer].Border = {};
 	controlTable.Constraints[idLayer].AttachSizeToControl = {idLayer, idLayer};
 	controlTable.States[idLayer].Mask &= ~::gpk::GUI_CONTROL_FLAG_Hovered;
-	if_fail_fe(::gpk::controlSetParent(gui, viewport.IdControl, idLayer));
-	if_fail_fe(::gpk::controlSetParent(gui, app.InputBox.IdRoot, idLayer));
+	if_fail_fe(::gpk::controlSetParent(gui.Controls, viewport.IdControl, idLayer));
+	if_fail_fe(::gpk::controlSetParent(gui.Controls, app.InputBox.IdRoot, idLayer));
 	controlTable.Placement	[viewport.IdControl	].Area.Offset			= {320, 128};
 	controlTable.Placement	[viewport.IdControl	].Area.Size				= {640, 480};
 	controlTable.Images		[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]		].ImageInvertY			= true;

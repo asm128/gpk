@@ -132,7 +132,7 @@ gpk::err_t						dry::updateCatalogDisplay		(::dry::SApplication & app) {
 			indexControl						= menuItemControls[iSpool];
 		else {
 			indexControl						= ::gpk::controlCreate(gui);
-			::gpk::controlSetParent(gui, indexControl, indexSpoolList);
+			::gpk::controlSetParent(gui.Controls, indexControl, indexSpoolList);
 		}
 		::gpk::SControlPlacement				& controlFilament				= gui.Controls.Placement[indexControl];
 		::gpk::SControlText						& controlText					= gui.Controls.Text[indexControl];

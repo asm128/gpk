@@ -13,7 +13,7 @@
 //	desktop.Items.ctoken##s.Unused[i##ctoken]	= false;									\
 //	::gpk::S##ctoken	& elementToSetUp	= desktop.Items.ctoken##s[i##ctoken]	= {};	\
 //	if_fail_fe(gpk::utoken##Initialize(gui, elementToSetUp));								\
-//	if_fail_fef(gpk::controlSetParent(gui, elementToSetUp.IdControl, desktop.IdControl), "%I - %I", elementToSetUp.IdControl, desktop.IdControl);
+//	if_fail_fef(gpk::controlSetParent(gui.Controls, elementToSetUp.IdControl, desktop.IdControl), "%I - %I", elementToSetUp.IdControl, desktop.IdControl);
 //
 //gpk::err_t			gpk::desktopDeletePaletteGrid	(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::cid_t iElement) { 
 //	desktop.Items.PaletteGrids.Unused[iElement] = true; 
