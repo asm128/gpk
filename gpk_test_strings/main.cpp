@@ -5,28 +5,31 @@
 
 #include "gpk_log.h"
 #include "gpk_file.h"
+#include "gpk_runtime.h"
+
+using namespace gpk;
 
 // Splits a file into file.split.## parts.
-int									main							(int , char ** )		{
+static ::gpk::err_t					testStringsMain					(::gpk::SRuntimeValues &)	{
 	const ::gpk::vcst_t text = "habia una vez un bru un brujito en gulubu.\r\n";
 	const ::gpk::vcst_t text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
 	const ::gpk::vcst_t words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
-	info_printf("%u:%s.", text.size(), text.begin());
-	for(::gpk::u2_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
+	info_printf("%u:%.*s.", text.size(), GPK_VIEW_ARGS(text));
+	for(u2_t  iWord = 0; iWord < ::gpk::size(words); ++iWord) {
 		const ::gpk::vcsc_t word = words[iWord];
 
 		::gpk::vcsc_t left, right;
-		const ::gpk::s2_t iPos = ::gpk::split(word, text, left, right);
+		const s2_t iPos = ::gpk::split(word, text, left, right);
 		info_printf("Word (%u): '%.*s'. Position: %i.", iWord, GPK_VIEW_ARGS(word), iPos);
 		info_printf("Left (%u): '%.*s'. Right(%u): '%.*s'", left.size(), GPK_VIEW_ARGS(left), right.size(), GPK_VIEW_ARGS(right));
 	}
 
-	info_printf("%u:%s.", text1.size(), text1.begin());
-	for(::gpk::u2_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
+	info_printf("%u:%.*s.", text1.size(), GPK_VIEW_ARGS(text1));
+	for(u2_t  iWord = 0; iWord < ::gpk::size(words); ++iWord) {
 		const ::gpk::vcsc_t word = words[iWord];
 
 		::gpk::vcsc_t left, right;
-		const ::gpk::s2_t iPos = ::gpk::split(word, text1, left, right);
+		const s2_t iPos = ::gpk::split(word, text1, left, right);
 		info_printf("Word (%u): '%.*s'. Position: %i.", iWord, GPK_VIEW_ARGS(word), iPos);
 		info_printf("Left (%u): '%.*s'. Right(%u): '%.*s'", left.size(), GPK_VIEW_ARGS(left), right.size(), GPK_VIEW_ARGS(right));
 	}
@@ -40,3 +43,5 @@ int									main							(int , char ** )		{
 	::gpk::trim (trimmed, text1); info_printf("trimmed (%u): %.*s.", trimmed.size(), GPK_VIEW_ARGS(trimmed));
 	return 0;
 }
+
+GPK_OS_ENTRY_POINT(::testStringsMain);

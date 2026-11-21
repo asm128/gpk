@@ -116,7 +116,7 @@ sttc	gpk::err_t drawBuffers
 	, ::gpk::gc8bgra									surface
 	, cnst ::gpk::SEngineSceneConstants				& constants
 	, cnst ::gpk::SRenderNodeConstants					& nodeConstants
-	, cnst ::std::function<::gpk::TFuncPixelShader>	& ps
+	, cnst ::gpk::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
 	::gpk::atrif2_t				& triangleWeights			= cacheVS.TriangleWeights		;
 	::gpk::a2s1_t				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
@@ -177,7 +177,7 @@ gpk::err_t 		gpk::drawScene
 	constants.VP			= constants.View * constants.Perspective;
 	constants.VPS			= constants.VP * constants.Screen;
 
-	sttc ::std::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
+	sttc ::gpk::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
 	for(u2_t iRenderNode = 0, countNodes = scene.RenderNodes.RenderNodes.size(); iRenderNode < countNodes; ++iRenderNode) {
 		cnst ::gpk::SRenderNodeFlags	& renderNodeFlags		= scene.RenderNodes.Flags[iRenderNode];
 		if(renderNodeFlags.NoDraw)
@@ -201,7 +201,7 @@ gpk::err_t 		gpk::drawScene
 		cnst ::gpk::SRenderMaterial	& material			= skin.Material;
 		u2_c					tex					= skin.Textures[0];
 		cnst ::gpk::SSurface			& surface			= *scene.Graphics->Surfaces[tex];
-		cnst ::std::function<::gpk::TFuncPixelShader>	& fx
+		cnst ::gpk::function<::gpk::TFuncPixelShader>	& fx
 			= (renderNode.Shader >= scene.Graphics->Shaders.size()) ? defaultShader : *scene.Graphics->Shaders[renderNode.Shader];
 
 		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(cnst ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u2()}, constants, transforms, fx);

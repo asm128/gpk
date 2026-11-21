@@ -1,0 +1,48 @@
+#include "gpk_img_color.h"
+#include "gpk_array_ptr.h"
+
+#ifndef GPK_GALAXY_HELL_DRAW_H_293874239874
+#define GPK_GALAXY_HELL_DRAW_H_293874239874
+
+namespace ghg
+{
+
+	typedef ::gpk::rtbgra8d32			TRenderTarget;
+
+	static constexpr ::gpk::bgra		DEBRIS_COLORS[]			=
+		{ {0x80, 0xAF, 0xFF, }
+		, {0x40, 0x80, 0xFF, }
+		, {0x20, 0x80, 0xFF, }
+		, {0x00, 0x00, 0xFF, }
+		};
+
+	struct SGalaxyHellDrawCache {
+		// Used when rastering triangles
+		::gpk::apod<::gpk::n2s1_t>			PixelCoords				;
+		::gpk::apod<::gpk::trif2_t>			PixelVertexWeights		;
+		
+		// Used for pixel shading
+		::gpk::apod<::gpk::n3f2_t>			LightPointsWorld		;
+		::gpk::a8bgra						LightColorsWorld		;
+		::gpk::apod<::gpk::n3f2_t>			LightPointsModel		;
+		::gpk::a8bgra						LightColorsModel		;
+
+		// Gameplay render target. I decided the world will have its own rendertarget to facilitate reuse of the code.
+		::gpk::n2u1_t						RenderTargetMetrics		= {1280, 720};
+		::gpk::pobj<::ghg::TRenderTarget>	RenderTarget			= {};
+
+		gpk::err_t						Clear					() {
+			::gpk::clear
+				( PixelCoords
+				, PixelVertexWeights		
+				, LightPointsWorld		
+				, LightColorsWorld		
+				, LightPointsModel		
+				, LightColorsModel				
+				);
+			return 0;
+		}
+	};
+} // namespace 
+
+#endif // GPK_GALAXY_HELL_DRAW_H_293874239874

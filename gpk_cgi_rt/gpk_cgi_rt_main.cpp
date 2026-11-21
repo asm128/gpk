@@ -4,16 +4,15 @@
 
 #include "gpk_parse.h"
 
-#include <Windows.h>
-//
-//static gpk::err_t								metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::n2<::gpk::s2_t>& output_metrics)												{
-//	::gpk::u2_t												iChar					= 0;
+using nmsp gpk;
+//sttc gpk::err_t 							metrics_split			(cnst view_const_string& input_string, n2<s2_t>& output_metrics)												{
+//	u2_t 												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 //		if('x' == input_string[iChar]) {
-//			::gpk::apod<char>									sx						= {};
-//			::gpk::apod<char>									sy						= {};
-//			sy.append((char*)input_string.begin(), iChar);
-//			sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
+//			asc_t									sx						= {};
+//			asc_t									sy						= {};
+//			sy.append((sc_t*)input_string.begin(), iChar);
+//			sx.append((sc_t*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
 //			try {
 //				output_metrics.x									= ::std::stoi(::std::string{sy.begin(), sy.size()});
 //				output_metrics.y									= ::std::stoi(::std::string{sy.begin(), sy.size()});
@@ -28,24 +27,22 @@
 //	return 0;
 //}
 
-gpk::err_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output){
-	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
-	//char													buffer[4096]					= {};
-	::gpk::SCGIModule										module;
-	::gpk::apod<char>								moduleName						= gpk::toString({framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)});
-	::gpk::loadCGIModule(module, moduleName);
+gpk::err_t 							genHTMLModuleOutput				(SCGIFramework & framework, string & output){
+	//sc_t									buffer[4096]					= {};
+	SCGIModule						module;
+	vcst_t							moduleName						= framework.ModuleName;
+	if_fail_fe(loadCGIModule(module, moduleName));
 	module.Create	(&module.Application, &framework);
 	module.Setup	(module.Application);
 	module.Update	(module.Application, false);
 	module.Render	(module.Application, output);
 	module.Cleanup	(module.Application);
 	module.Delete	(&module.Application);
-	//output.append(buffer, formatForSize(framework.ModuleName, buffer, ::gpk::size(buffer), "<html>\n<body>\n<h1>bootstrapped module: ", "</h1>\n</body>\n</html>"));
-	runtimeValues;
+	//output.append(buffer, formatForSize(framework.ModuleName, buffer, size(buffer), "<html>\n<body>\n<h1>bootstrapped module: ", "</h1>\n</body>\n</html>"));
 	return 0;
 }
 
-stxp	const char						html_script	[]			=
+stxp	::gpk::vcst_c		html_script				=
 	"\n<script>"
 	"\nfunction bootstrap() {"
     "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"
@@ -54,91 +51,91 @@ stxp	const char						html_script	[]			=
 	"\n</script>"
 	;
 
-gpk::err_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
+gpk::err_t 									processKeyVal					(SCGIFramework& framework, gpk::kv<gpk::vcst_t>  keyVal)	{
 	if(0 == keyVal.Key.size())
 		return -1;
 
 	framework.TargetSize								= {123, 456};
 
-		 if(keyVal.Key == ::gpk::vcst_t("w")) ::gpk::parseIntegerDecimal(keyVal.Val, framework.TargetSize.x);
-	else if(keyVal.Key == ::gpk::vcst_t("h")) ::gpk::parseIntegerDecimal(keyVal.Val, framework.TargetSize.y);
+		 if(keyVal.Key == vcst_t("w")) parseIntegerDecimal(keyVal.Val, framework.TargetSize.x);
+	else if(keyVal.Key == vcst_t("h")) parseIntegerDecimal(keyVal.Val, framework.TargetSize.y);
 
-	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) {
-		::gpk::parseIntegerDecimal(keyVal.Val, framework.Bootstrapped);
+	if(keyVal.Val.size() && keyVal.Key.size() == (size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), size("bt") - 1)) {
+		parseIntegerDecimal(keyVal.Val, framework.Bootstrapped);
 	}
-	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), ::gpk::size("m") - 1))
+	if(keyVal.Val.size() && keyVal.Key.size() == (size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), size("m") - 1))
 		framework.ModuleName								= keyVal.Val;
 	return 0;
 }
 
-int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output)										{
-	const ::gpk::SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
+int													cgiBootstrap			(SCGIFramework & framework, string & output)										{
+	cnst SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
+	cnst ::gpk::view<cnst ::gpk::kv<::gpk::vcst_t>>	queryStringKeyVals		= runtimeValues.QueryStringKeyVals;
 	if(framework.Bootstrapped) {
-		::genHTMLModuleOutput(framework, output);
+		if_fail_fe(::genHTMLModuleOutput(framework, output));
 	}
 	else {
-		char													buffer[4096]		= {};
-		output.append(buffer, ::sprintf_s(buffer, "%s",
+		sc_t													buffer[4096]		= {};
+		output.append(buffer, ::gpk::sprintf_s(buffer, "%s",
 			"<html>"
 			"\n<head>"
 		));
-		output.append(buffer, ::sprintf_s(buffer, html_script, framework.ModuleName.size() ? framework.ModuleName.begin() : "test_cgi_module"));
-		output.append(buffer, ::sprintf_s(buffer, "%s",
+		output.append(buffer, ::gpk::sprintf_s(buffer, html_script, framework.ModuleName.size() ? framework.ModuleName.begin() : "test_cgi_module"));
+		output.append(buffer, ::gpk::sprintf_s(buffer, "%s",
 			"\n<link rel=\"stylesheet\" href=\"./page.css\">"
 			"\n</head>"
 		));
-		output.append(buffer, ::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
-		::gpk::view_const_string							querystring;
-		::gpk::find(::gpk::vcst_t{"QUERY_STRING"}, framework.RuntimeValues.QueryStringKeyVals, querystring);
-		if(querystring.size())
-			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
-		const ::gpk::view<::gpk::vcsc_t>		keyvalviews			= runtimeValues.QueryStringElements;
-		for(::gpk::u2_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
-			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
+		output.append(buffer, ::gpk::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
+		output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>Booting %.*s...</h4>", GPK_VIEW_ARGS(framework.ModuleName)));
+		vcst_t							querystring;
+		find("QUERY_STRING", queryStringKeyVals, querystring);
+		if(querystring.size()) {
+			output.append(buffer, ::gpk::sprintf_s(buffer, "\n<h4>QueryString (%u): %.*s</h4>", querystring.size(), GPK_VIEW_ARGS(querystring)));
+		}
+		cnst view<vcst_t>		keyvalviews			= runtimeValues.QueryStringElements;
+		for(u2_t  iChar = 0; iChar < keyvalviews.size(); ++iChar) {
+			output.append(buffer, formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
-			const ::gpk::TKeyValConstChar						& keyval			= runtimeValues.QueryStringKeyVals[iChar];
-			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
-			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
+			cnst kv<vcst_t>						& keyval			= runtimeValues.QueryStringKeyVals[iChar];
+			output.append(buffer, formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
+			output.append(buffer, formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
 		}
 
-		::gpk::vcst_t			contentype	;
-		::gpk::vcst_t			remoteIP	;
-		::gpk::vcst_t			remotePORT	;
-		::gpk::vcst_t			contentLength;
-		::gpk::find(::gpk::vcst_t{"CONTENT_TYPE"	 }, runtimeValues.QueryStringKeyVals, contentype);
-		::gpk::find(::gpk::vcst_t{"REMOTE_IP"	 }, runtimeValues.QueryStringKeyVals, remoteIP	);
-		::gpk::find(::gpk::vcst_t{"REMOTE_PORT"	 }, runtimeValues.QueryStringKeyVals, remotePORT	);
-		::gpk::find(::gpk::vcst_t{"CONTENT_LENGTH"}, runtimeValues.QueryStringKeyVals, contentLength);
-		output.append(buffer, ::gpk::formatForSize({contentLength	.begin(), contentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
-		output.append(buffer, ::gpk::formatForSize({contentype		.begin(), contentype	.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>", (::gpk::u2_t)framework.TargetSize.x, (::gpk::u2_t)framework.TargetSize.y));
+		vcst_t			contentype	;
+		vcst_t			remoteIP	;
+		vcst_t			remotePORT	;
+		vcst_t			contentLength;
+		find("CONTENT_TYPE"		, queryStringKeyVals, contentype	);
+		find("REMOTE_IP"		, queryStringKeyVals, remoteIP		);
+		find("REMOTE_PORT"		, queryStringKeyVals, remotePORT	);
+		find("CONTENT_LENGTH"	, queryStringKeyVals, contentLength	);
+		output.append(buffer, formatForSize({contentLength	.begin(), contentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
+		output.append(buffer, formatForSize({contentype		.begin(), contentype	.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>", (u2_t )framework.TargetSize.x, (u2_t )framework.TargetSize.y));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>IP: %u.%u.%u.%u:%u</h4>"		, GPK_IPV4_EXPAND(framework.RuntimeValues.RemoteIP)));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String IP: %s</h4>"			, remoteIP	.begin()));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String Port: %s</h4>"			, remotePORT.begin()));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String Port: %.*s</h4>"			, GPK_VIEW_ARGS(remotePORT)));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 
 		//int														argc					= __argc;
-		//char													** argv					= __argv;
-		//for(::gpk::s2_t iArg = 0; iArg < argc; ++iArg)
+		//sc_t													** argv					= __argv;
+		//for(s2_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
-			::gpk::apod<char>	content_body			= {};
+			string	content_body			= {};
 			content_body.resize(runtimeValues.Content.Length);
-			::gpk::u2_t			iChar					= 0;
-			char				iArg					= 0;
+			u2_t 			iChar					= 0;
+			sc_t				iArg					= 0;
 			while(iChar < runtimeValues.Content.Length) {
 				int					count					= 0;
 				//memset(content_body.begin(), 0, content_body.size());
 				content_body.resize(0);
-				::gpk::u2_t			iOffset					= iChar;
-				bool				value					= false;
+				u2_t 			iOffset					= iChar;
 				while(iChar < runtimeValues.Content.Length && (iArg = runtimeValues.Content.Body[iChar++])) {
 					if(iArg == '\n') {
 						++count;
 						if(count >= 2) {
-							value			= true;
 							count			= 0;
 							//break;
 						}
@@ -150,35 +147,35 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<ch
 				if(0 == content_body.size())
 					break;
 				content_body.push_back(0);
-				output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (%u:%u/%u:%u): %s</h1>", iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), content_body.begin()));
+				output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (%u:%u/%u:%u): %.*s</h1>", iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), GPK_VIEW_ARGS(content_body)));
 			}
 		}
-		output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %.*s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), GPK_VIEW_ARGS(runtimeValues.Content.Body)));
 		output.append(buffer, ::sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
 	}
 	return 0;
 }
 
-int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, INT nCmdShow)	{
-	hInstance, hPrevInstance, szCmdLine, nCmdShow;
-	::gpk::SCGIFramework									framework;
-	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues, {(const char**)__argv, (::gpk::u2_t)(__argc)});
-	const ::gpk::array_obj<::gpk::vcsc_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
-	for(::gpk::u2_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
+sttc ::gpk::err_t									cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
+	SCGIFramework									framework			= {runtimeValues};
+	if_fail_fe(cgiRuntimeValuesLoad(framework.RuntimeValues));
+	cnst array_obj<vcst_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
+	for(u2_t  iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 
 	printf("%s\r\n\r\n",
 		"Content-Type: text/html"
 		"\nCache-Control: no-store"
 	);
-	::gpk::apod<char>									html;
-	::cgiBootstrap(framework, html);
+	string									html;
+	if_fail_fe(::cgiBootstrap(framework, html));
 	html.push_back('\0');
-	OutputDebugStringA(html.begin());
-	printf("%s", html.begin());
+	printf("%.*s", GPK_VIEW_ARGS(html));
 	::std::putc(0, stdout);
 	return 0;
 }
+
+GPK_OS_ENTRY_POINT(::cgiMain);
 
 // 17070035
 // 0810-122-2666

@@ -18,10 +18,10 @@ IntDir	= ../../obj/$(Platform).$(Configuration)/$(ProjectName)
 OBJDIRS	:= $(patsubst %, $(IntDir), $(ProjectName))
 INCDIR	:= $(patsubst %,-I%,$(IncDir))
 
-CFLAGS	:= -std=c++17 -Wall -Werror -O$(OPT) $(INCDIR) 
+CFLAGS	:= -std=c++20 -Wall -Werror -O$(OPT) $(INCDIR) 
 CC		:= g++
 
-_OBJ	:= $(patsubst %.cpp,%.o,$(wildcard *.cpp)) 
+_OBJ	:= s3d_serial.o
 OBJ		:= $(patsubst %,$(IntDir)/%,$(_OBJ))
 
 $(IntDir)/%.o: %.cpp

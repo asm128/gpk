@@ -1,32 +1,31 @@
 #include "gpk_cgi.h"
 #include "gpk_cgi_module.h"
 #include "gpk_string_helper.h"
-#include "gpk_process.h"
 #include "gpk_json_expression.h"
 #include "gpk_parse.h"
 #include "gpk_file.h"
 #include "gpk_chrono.h"
+#include "gpk_string_compose.h"
 
-#include "gpk_udp_client.h"
 
-static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
-	::gpk::apod<char>				environmentBlock		= {};
+
+#include "gpk_socket_client.h"
+
+sttc gpk::err_t		cgiBootstrap	(cnst ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::string & output)										{
 	{	// Prepare CGI environment and request content packet to save to disk.
-		if_fail_fe(gpk::environmentBlockFromEnviron(environmentBlock));
-		char filename[1024] = {};
-		sprintf_s(filename, "la_betty_criminal_at_%llu.jpg", ::gpk::timeCurrent());
+		::gpk::string filename;
+		if_fail_fe(::gpk::append_strings(filename, "la_betty_criminal_at_", ::gpk::str(::gpk::timeCurrent()), ".jpg"));
 		if_fail_fe(::gpk::fileFromMemory(filename, runtimeValues.Content.Body));
 	}
-	if_fail_fe(output.append_string("{\"code\":200, \"message\": \"OK\"}"));
+	if_fail_fe(::gpk::append_strings(output, "{\"code\":200, \"message\": \"OK\"}"));
 	return 0;
 }
 
-static	int				cgiMain				(int argc, char** argv, char**envv)	{
-	(void)(envv);
-	::gpk::SCGIRuntimeValues	runtimeValues;
-	if_fail_fef(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (::gpk::u2_t)argc}), "%s", "Failed to load cgi runtime values.");
-	::gpk::apod<char>			html;
-	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
+sttc gpk::err_t		cgiMain				(::gpk::SRuntimeValues & runtimeValues)	{
+	::gpk::SCGIRuntimeValues	cgiRuntimeValues(runtimeValues);
+	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
+	::gpk::string			html;
+	if(::gpk::failed(::cgiBootstrap(cgiRuntimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"
 			"\r\n\r\n"
@@ -41,7 +40,7 @@ static	int				cgiMain				(int argc, char** argv, char**envv)	{
 			"\r\n\r\n"
 		);
 		html.push_back('\0');
-		printf("%s", html.begin());
+		printf("%.*s", GPK_VIEW_ARGS(html));
 #ifdef GPK_WINDOWS
 		OutputDebugStringA(html.begin());
 #endif
@@ -49,21 +48,5 @@ static	int				cgiMain				(int argc, char** argv, char**envv)	{
 	return 0;
 }
 
-int				main				(int argc, char** argv, char**envv)	{
-	return ::cgiMain(argc, argv, envv);
-}
-
-#ifdef GPK_WINDOWS
-#include <Windows.h>
-
-int WINAPI		WinMain
-	(	_In_		HINSTANCE	hInstance
-	,	_In_opt_	HINSTANCE	hPrevInstance
-	,	_In_		LPSTR		lpCmdLine
-	,	_In_		int			nShowCmd
-	) {
-	(void)hInstance, (void)hPrevInstance, (void)lpCmdLine, (void)nShowCmd;
-	return ::cgiMain(__argc, __argv, environ);
-}
-#endif
+GPK_OS_ENTRY_POINT(::cgiMain);
 // https://articulo.mercadolibre.com.ar/MLA-800947708-lora-sx1276-esp32-bt-wifi-kit-desarrollo-con-display-arduino-_JM
