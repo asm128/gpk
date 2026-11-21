@@ -38,15 +38,14 @@ nmsp gpk
 
 	cid_t 				controlCreate					(SGUI & gui);
 	cid_t				controlCreateChild				(SGUI & gui, cid_t iParent);
-	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
 	err_t				controlUpdateMetricsTopToDown	(SGUI & gui, cid_t iControl, cnst n2u1_t & targetSize, b8_t forceUpdate);
 	err_t				controlUpdateHierarchy			(SGUI & guigui, cid_t iControl, n2u1_c & targetMetrics);
 	err_t				controlDrawHierarchy			(SGUI & gui, cid_t iControl, g8bgra target);
-	err_t				guiControlDraw					(SGUI & gui, cid_t iControl, g8bgra & target);
 
 	err_t				guiSetupDefaults				(SGUI & gui);
 	err_t				guiProcessInput					(SGUI & gui, cnst SInput & input, vpobj<SEventSystem> in_Events = {});
 	err_t				guiUpdate						(SGUI & gui, n2u1_c & targetMetrics); //, vpobj<SEventSystem> in_Events = {});
+	err_t				guiControlDraw					(SGUI & gui, cid_t iControl, g8bgra & target);
 	stin	err_t		guiUpdateMetrics				(SGUI & gui, n2u1_c & targetSize, b8_t forceUpdate) {
 		for(u2_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
 			if(controlInvalid(gui.Controls, gui.Controls.States[iControl].Parent) && false == controlInvalid(gui.Controls, (cid_t)iControl))

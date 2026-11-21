@@ -34,7 +34,7 @@ namespace
 
 	static ::gpk::err_t statusSet(::blt::SBlitterDashboard & app, ::gpk::vcst_t text) {
 		app.StatusText = text;
-		return ::gpk::controlTextSet(*app.Framework.GUI, app.IdStatus, app.StatusText);
+		return ::gpk::controlTextSet(app.Framework.GUI->Controls, app.IdStatus, app.StatusText);
 	}
 
 	static ::gpk::err_t databaseRowsUpdate(::blt::SBlitterDashboard & app) {
@@ -66,7 +66,7 @@ namespace
 				if_fail_fe(::gpk::controlListPush(gui, app.DatabaseRows, app.DatabaseRowText[iRow]));
 			}
 			else {
-				if_fail_fe(::gpk::controlTextSet(gui, app.DatabaseRows.IdControls[iRow], app.DatabaseRowText[iRow]));
+				if_fail_fe(::gpk::controlTextSet(gui.Controls, app.DatabaseRows.IdControls[iRow], app.DatabaseRowText[iRow]));
 			}
 			gui.Controls.SetHidden(app.DatabaseRows.IdControls[iRow], false);
 		}
@@ -147,7 +147,7 @@ namespace
 	if_fail_fe(app.IdTitle = ::gpk::controlCreate(gui));
 	controls.Placement[app.IdTitle].Area		= {{24, 18}, {480, 24}};
 	controls.Text[app.IdTitle].Align			= ::gpk::ALIGN_CENTER_LEFT;
-	if_fail_fe(::gpk::controlTextSet(gui, app.IdTitle, "BLITTER DASHBOARD"));
+	if_fail_fe(::gpk::controlTextSet(gui.Controls, app.IdTitle, "BLITTER DASHBOARD"));
 
 	if_fail_fe(::gpk::controlListInitialize(gui, app.Commands));
 	app.Commands.Orientation					= ::gpk::DIRECTION_RIGHT;
@@ -164,13 +164,13 @@ namespace
 	controls.Placement[viewport->IdGUIControl].Area.Size	= {1180, 360};
 	controls.Placement[viewport->IdGUIControl].Area.Offset	= {0, 116};
 	controls.Placement[viewport->IdGUIControl].Align		= ::gpk::ALIGN_CENTER_TOP;
-	if_fail_fe(::gpk::controlTextSet(gui, viewport->IdTitle, "DATABASE STATE"));
+	if_fail_fe(::gpk::controlTextSet(gui.Controls, viewport->IdTitle, "DATABASE STATE"));
 
 	if_fail_fe(::gpk::controlListInitialize(gui, app.DatabaseRows));
 	app.DatabaseRows.Orientation					= ::gpk::DIRECTION_DOWN;
 	controls.Placement[app.DatabaseRows.IdControl].Area.Offset = {8, 8};
 	controls.Placement[app.DatabaseRows.IdControl].Area.Size.x = 1120;
-	if_fail_fe(::gpk::controlSetParent(gui, app.DatabaseRows.IdControl, viewport->IdClient));
+	if_fail_fe(::gpk::controlSetParent(gui.Controls, app.DatabaseRows.IdControl, viewport->IdClient));
 
 	if_fail_fe(::gpk::inputBoxCreate(app.ConfigInput, gui));
 	app.ConfigInput.MaxLength					= 1024;
