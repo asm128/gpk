@@ -129,7 +129,7 @@ sttc gpk::err_t	clientUIUpdate		(::lls::LLSClient & app, ::gpk::vpobj<::gpk::SEv
 		::gpk::SGUI				& gui					= *dialog.GUI;
 		::gpk::guiProcessInput(gui, *dialog.Input, systemEvents);
 		gui.Controls.SetHidden(dialog.Root, false);
-		do { if_fail_fef(::uiPlayerUpdateHome(uiPlayer, (uint16_t)iPlayer, app.Game.Players[iPlayer].Name, app.Game.Players[iPlayer].Color), "iPlayer: %u", iPlayer);
+		if_fail_fef(::uiPlayerUpdateHome(uiPlayer, (uint16_t)iPlayer, app.Game.Players[iPlayer].Name, app.Game.Players[iPlayer].Color), "iPlayer: %u", iPlayer);
 
 		::gpk::acid				controlsToProcess	= {};
 		if_fail_fe(::gpk::controlActions(gui.Controls, controlsToProcess));
