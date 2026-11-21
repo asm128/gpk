@@ -6,6 +6,14 @@
 
 nmsp gpk
 {
+	stin		err_t	append_string			(au0_t & output, vcst_t arg)		{ rtrn output.append(arg.as<u0_c>()); }
+	tplTstin	err_t	append_string			(au0_t & output, view<cnst T> arg)	{ rtrn output.append(vcst_t{arg}.as<u0_c>()); }
+	stin		err_t	append_string			(au0_t & output, sc_c arg)			{ rtrn output.push_back((u0_t)arg); }
+	tpl_vtArgs	err_t	append_strings			(au0_t & output, _tArgs&&... args)	{ 
+		err_t					err			= 0;
+		err_c					results[]	= {err = (failed(err) ? -1 : append_string(output, args))..., 0}; 
+		rtrn failed(err) ? err : sum(vcs2_t{results}); 
+	}
 	stin		err_t	append_string			(asc_t & output, vcst_t arg)		{ rtrn output.append(arg); }
 	tplTstin	err_t	append_string			(asc_t & output, view<cnst T> arg)	{ rtrn output.append(vcst_t{arg}); }
 	stin		err_t	append_string			(asc_t & output, sc_c arg)			{ rtrn output.push_back(arg); }
