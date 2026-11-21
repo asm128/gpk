@@ -10,12 +10,12 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SRSMFace {
-		int16_t									Vertices[3]			;	// Vertex indices?
-		int16_t									UVs		[3]			;	// UVs indices?
-		int16_t									IndexTextureIndex	;	// texture index index
-		int16_t									todo1				;	//
-		int32_t									TwoSided			;	//
-		int32_t									SmoothGroup			;	//
+		::gpk::s1_t									Vertices[3]			;	// Vertex indices?
+		::gpk::s1_t									UVs		[3]			;	// UVs indices?
+		::gpk::s1_t									IndexTextureIndex	;	// texture index index
+		::gpk::s1_t									todo1				;	//
+		::gpk::s2_t									TwoSided			;	//
+		::gpk::s2_t									SmoothGroup			;	//
 	};
 
 	struct SRSMNodeTransform {
@@ -31,7 +31,7 @@ namespace gpk
 
 	struct SRSMFrameRotation {
 		int										Time;
-		::gpk::quatf32							Orientation;
+		::gpk::quatf2_t							Orientation;
 	};
 
 	struct SRSMFramePosition {
@@ -40,7 +40,7 @@ namespace gpk
 	};
 
 	struct SRSMTexCoord {
-		uint32_t								Unknown;
+		::gpk::u2_t								Unknown;
 		::gpk::n2f2_t							UV;
 	};
 #pragma pack(pop)
@@ -57,30 +57,30 @@ namespace gpk
 	};
 
 	struct SRSMFileContents {
-		uint32_t								AnimLength;
-		uint32_t								ShadeType;
-		uint8_t									Alpha;
+		::gpk::u2_t								AnimLength;
+		::gpk::u2_t								ShadeType;
+		::gpk::u0_t									Alpha;
 		sc_t									Unknown[16];
 		::gpk::aobj<::gpk::astsc_t<40>>	TextureNames;
 		sc_t									RootNodeName[40];
 		::gpk::aobj<::gpk::SRSMNode>			Nodes;
 	};
-	gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vu8	& input);
+	gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vu0_t	& input);
 	gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, FILE				* input);
-	gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input);
+	gpk::err_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vcst_t	& input);
 
 	struct SModelNodeRSM {
 		::gpk::apod<::gpk::n3f2_t>				Normals			;
 		::gpk::apod<::gpk::n3f2_t>				Vertices		;
 		::gpk::apod<::gpk::n2f2_t>				UVs				;
 		::gpk::apod<::gpk::triu2_t>				VertexIndices	;
-		int32_t									TextureIndex	;
-		int32_t									RSMNodeIndex	;
+		::gpk::s2_t									TextureIndex	;
+		::gpk::s2_t									RSMNodeIndex	;
 		//::gpk::as2_t					SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
 	struct SModelHierarchyNodeRSM {
-		int32_t									IdParent		;
+		::gpk::s2_t									IdParent		;
 		::gpk::as2_t								IdChildren		;
 	};
 

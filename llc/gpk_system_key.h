@@ -3,9 +3,9 @@
 #ifndef GPK_SYSTEM_KEY_H_23627
 #define GPK_SYSTEM_KEY_H_23627
 
-namespace gpk
+nmsp gpk
 {
-	GDEFINE_ENUM_TYPE (SYSTEM_KEY, uint8_t);
+	GDEFINE_ENUM_TYPE (SYSTEM_KEY, u0_t);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, LButton                         , 0x01); 
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, RButton                         , 0x02); 
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Cancel                          , 0x03); 
@@ -200,6 +200,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Hangul                          , 0x15);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Hanja                           , 0x19);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_FJ_jisho                    , 0x92);
-} // namespace
+} // nmsp
 
 #endif // GPK_SYSTEM_KEY_H_23627

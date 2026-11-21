@@ -1,13 +1,13 @@
 #include "gpk_tactical_gui_app.h"
 
 static const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> tacticalMenuItems[] =
-	{ {::dry::TACTICAL_SECTION_START_MISSION	, ::gpk::vcs{"Start Mission"}}
-	, {::dry::TACTICAL_SECTION_SET_UP_SQUAD		, ::gpk::vcs{"Set Up Squad"}}
-	, {::dry::TACTICAL_SECTION_LABS				, ::gpk::vcs{"Visit Labs"}}
-	, {::dry::TACTICAL_SECTION_UPGRADE_CENTER	, ::gpk::vcs{"Upgrade Center"}}
-	, {::dry::TACTICAL_SECTION_FACTORY			, ::gpk::vcs{"Factory"}}
-	, {::dry::TACTICAL_SECTION_BUY_AND_SELL		, ::gpk::vcs{"Buy / Sell"}}
-	, {::dry::TACTICAL_SECTION_MEMORIAL			, ::gpk::vcs{"Memorial"}}
+	{ {::dry::TACTICAL_SECTION_START_MISSION	, ::gpk::vcst_t{"Start Mission"}}
+	, {::dry::TACTICAL_SECTION_SET_UP_SQUAD		, ::gpk::vcst_t{"Set Up Squad"}}
+	, {::dry::TACTICAL_SECTION_LABS				, ::gpk::vcst_t{"Visit Labs"}}
+	, {::dry::TACTICAL_SECTION_UPGRADE_CENTER	, ::gpk::vcst_t{"Upgrade Center"}}
+	, {::dry::TACTICAL_SECTION_FACTORY			, ::gpk::vcst_t{"Factory"}}
+	, {::dry::TACTICAL_SECTION_BUY_AND_SELL		, ::gpk::vcst_t{"Buy / Sell"}}
+	, {::dry::TACTICAL_SECTION_MEMORIAL			, ::gpk::vcst_t{"Memorial"}}
 	};
 
 static gpk::err_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vcsc_t (&lines)[5]) {
@@ -69,32 +69,32 @@ static gpk::err_t tacticalDetails(::dry::TACTICAL_SECTION section, ::gpk::vcsc_t
 gpk::err_t dry::updateScreenTactical(::dry::SApplication & app) {
 	::gpk::SGUI & gui = *app.Framework.GUI;
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
-	const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> & selected = ::tacticalMenuItems[(uint32_t)screen.SectionSelected];
-	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_TITLE], selected.Text), "%s", "Failed to set tactical detail title.");
+	const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> & selected = ::tacticalMenuItems[(::gpk::u2_t)screen.SectionSelected];
+	if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_TITLE], selected.Text), "%s", "Failed to set tactical detail title.");
 	::gpk::vcsc_t detailLines[5] = {};
 	::tacticalDetails(screen.SectionSelected, detailLines);
-	for(uint32_t iLine = 0; iLine < ::gpk::size(detailLines); ++iLine)
-		gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_LINE_0 + iLine], detailLines[iLine]), "line: %u", iLine);
+	for(::gpk::u2_t iLine = 0; iLine < ::gpk::size(detailLines); ++iLine)
+		if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_LINE_0 + iLine], detailLines[iLine]), "line: %u", iLine);
 
-	const int32_t productionLength = snprintf(screen.ProductionText.begin(), screen.ProductionText.size(), "%i%%", screen.ProductionBudget);
-	const int32_t researchLength = snprintf(screen.ResearchText.begin(), screen.ResearchText.size(), "%i%%", screen.ResearchBudget);
-	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_VALUE], {screen.ProductionText.begin(), (uint32_t)productionLength}), "%s", "Failed to set production allocation.");
-	gpk_necall(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_VALUE], {screen.ResearchText.begin(), (uint32_t)researchLength}), "%s", "Failed to set research allocation.");
+	const ::gpk::s2_t productionLength = snprintf(screen.ProductionText.begin(), screen.ProductionText.size(), "%i%%", screen.ProductionBudget);
+	const ::gpk::s2_t researchLength = snprintf(screen.ResearchText.begin(), screen.ResearchText.size(), "%i%%", screen.ResearchBudget);
+	if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_VALUE], {screen.ProductionText.begin(), (::gpk::u2_t)productionLength}), "%s", "Failed to set production allocation.");
+	if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_VALUE], {screen.ResearchText.begin(), (::gpk::u2_t)researchLength}), "%s", "Failed to set research allocation.");
 	app.Framework.RootWindow.Repaint = true;
 	return 0;
 }
 
-gpk::err_t dry::handleControlTactical(::dry::SApplication & app, int32_t idControl) {
+gpk::err_t dry::handleControlTactical(::dry::SApplication & app, ::gpk::s2_t idControl) {
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
-	for(uint32_t iItem = 0; iItem < ::gpk::size(::tacticalMenuItems); ++iItem)
+	for(::gpk::u2_t iItem = 0; iItem < ::gpk::size(::tacticalMenuItems); ++iItem)
 		if(screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_START_MISSION + iItem] == idControl) {
 			screen.SectionSelected = ::tacticalMenuItems[iItem].Value;
-			for(uint32_t iMenu = 0; iMenu < ::gpk::size(::tacticalMenuItems); ++iMenu)
+			for(::gpk::u2_t iMenu = 0; iMenu < ::gpk::size(::tacticalMenuItems); ++iMenu)
 				app.Framework.GUI->Controls.SetSelected(screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_START_MISSION + iMenu], iMenu == iItem);
 			return ::dry::updateScreenTactical(app);
 		}
 
-	switch((uint32_t)idControl) {
+	switch((::gpk::u2_t)idControl) {
 	case ::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_DECREASE: screen.ProductionBudget = ::gpk::max(0, screen.ProductionBudget - 5); break;
 	case ::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_INCREASE: screen.ProductionBudget = ::gpk::min(100, screen.ProductionBudget + 5); break;
 	case ::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_DECREASE: screen.ResearchBudget = ::gpk::max(0, screen.ResearchBudget - 5); break;
@@ -107,19 +107,19 @@ gpk::err_t dry::handleControlTactical(::dry::SApplication & app, int32_t idContr
 gpk::err_t dry::handleResizeScreenTactical(::dry::SApplication & app, ::gpk::n2s1_t newSize) {
 	::gpk::SControlTable & controls = app.Framework.GUI->Controls;
 	const ::dry::SScreenTactical & screen = app.Screens.Tactical;
-	const int16_t heightMenu = (-1 == app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]) ? 0 : controls.Placement[app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]].Area.Size.y;
-	const int16_t heightHUD = controls.Placement[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG]].Area.Size.y;
-	const int16_t finalHeight = int16_t(newSize.y - heightHUD - heightMenu);
-	const int16_t menuWidth = 216;
-	const int16_t contentX = int16_t(menuWidth + 8);
-	const int16_t contentWidth = int16_t(newSize.x - contentX - 8);
-	const int16_t balanceHeight = 128;
+	const ::gpk::s1_t heightMenu = (-1 == app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]) ? 0 : controls.Placement[app.Screens.Menu.ControlIds[::dry::SCREEN_CONTROL_MENU_DIALOG]].Area.Size.y;
+	const ::gpk::s1_t heightHUD = controls.Placement[app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_DIALOG]].Area.Size.y;
+	const ::gpk::s1_t finalHeight = ::gpk::s1_t(newSize.y - heightHUD - heightMenu);
+	const ::gpk::s1_t menuWidth = 216;
+	const ::gpk::s1_t contentX = ::gpk::s1_t(menuWidth + 8);
+	const ::gpk::s1_t contentWidth = ::gpk::s1_t(newSize.x - contentX - 8);
+	const ::gpk::s1_t balanceHeight = 128;
 
 	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DIALOG]].Area = {{0, heightHUD}, {newSize.x, finalHeight}};
-	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_TITLE]].Area.Size.x = int16_t(newSize.x - 8);
-	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_GROUP]].Area.Size.y = int16_t(finalHeight - 64);
-	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_GROUP]].Area = {{contentX, 56}, {contentWidth, int16_t(finalHeight - 56 - balanceHeight - 8)}};
-	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_BALANCE_GROUP]].Area = {{contentX, int16_t(finalHeight - balanceHeight)}, {contentWidth, balanceHeight}};
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_TITLE]].Area.Size.x = ::gpk::s1_t(newSize.x - 8);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_GROUP]].Area.Size.y = ::gpk::s1_t(finalHeight - 64);
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_GROUP]].Area = {{contentX, 56}, {contentWidth, ::gpk::s1_t(finalHeight - 56 - balanceHeight - 8)}};
+	controls.Placement[screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_BALANCE_GROUP]].Area = {{contentX, ::gpk::s1_t(finalHeight - balanceHeight)}, {contentWidth, balanceHeight}};
 
 	const ::dry::SCREEN_CONTROL_TACTICAL stretchControls[] =
 		{ ::dry::SCREEN_CONTROL_TACTICAL_DETAIL_TITLE
@@ -130,9 +130,9 @@ gpk::err_t dry::handleResizeScreenTactical(::dry::SApplication & app, ::gpk::n2s
 		, ::dry::SCREEN_CONTROL_TACTICAL_DETAIL_LINE_4
 		, ::dry::SCREEN_CONTROL_TACTICAL_BALANCE_TITLE
 		};
-	for(uint32_t iControl = 0; iControl < ::gpk::size(stretchControls); ++iControl)
-		controls.Placement[screen.ControlIds[stretchControls[iControl]]].Area.Size.x = int16_t(contentWidth - 16);
-	for(uint32_t iControl = 0; iControl < ::dry::SCREEN_CONTROL_TACTICAL_COUNT; ++iControl)
+	for(::gpk::u2_t iControl = 0; iControl < ::gpk::size(stretchControls); ++iControl)
+		controls.Placement[screen.ControlIds[stretchControls[iControl]]].Area.Size.x = ::gpk::s1_t(contentWidth - 16);
+	for(::gpk::u2_t iControl = 0; iControl < ::dry::SCREEN_CONTROL_TACTICAL_COUNT; ++iControl)
 		if(screen.ControlIds[iControl] != -1)
 			controls.SetUpdated(screen.ControlIds[iControl], false);
 	return 0;

@@ -6,33 +6,33 @@
 #ifndef GPK_PLANETARY_SYSTEM_H_23701
 #define GPK_PLANETARY_SYSTEM_H_23701
 
-namespace gpk
+nmsp gpk
 {
-	typedef	::gpk::lmpod<::gpk::vcsc_t, ::gpk::SCelestialBody>	SCelestialBodyMap;
+	tydf	lmpod<vcst_t, SCelestialBody>	SCelestialBodyMap;
 
 	struct SPlanetarySystem {
-		::gpk::SCelestialBodyMap			Body;
-		::gpk::apod<::gpk::CELESTIAL_BODY>	Type;
-		::gpk::as2_t						Parent;
+		SCelestialBodyMap			Body;
+		apod<CELESTIAL_BODY>	Type;
+		as2_t							Parent;
 
-		gpk::err_t				Save			(::gpk::au0_t & output)	const	{ 
-			gpk_necs(Body.Save(output));
-			gpk_necs(gpk::saveView(output, Type));
-			gpk_necs(gpk::saveView(output, Parent));
+		err_t				Save			(au0_t & output)	cnst	{ 
+			if_fail_fe(Body.Save(output));
+			if_fail_fe(gpk::saveView(output, Type));
+			if_fail_fe(gpk::saveView(output, Parent));
 			return 0;
 		}
 
-		gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
-			gpk_necs(Body.Load(input));
-			gpk_necs(gpk::loadView(input, Type));
-			gpk_necs(gpk::loadView(input, Parent));
+		err_t				Load			(vcu0_t & input)	{ 
+			if_fail_fe(Body.Load(input));
+			if_fail_fe(gpk::loadView(input, Type));
+			if_fail_fe(gpk::loadView(input, Parent));
 			return 0;
 		}
 	};
 
-	gpk::err_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, const ::gpk::SJSONReader & jsonData);
-	gpk::err_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcsc_t jsonFilePath);
-} // namespace
+	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, cnst SJSONReader & jsonData);
+	err_t			planetarySystemSetup	(SPlanetarySystem & planetarySystem, vcst_t jsonFilePath);
+} // nmsp
 
 #endif // GPK_PLANETARY_SYSTEM_H_23701
 

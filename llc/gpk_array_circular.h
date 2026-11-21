@@ -5,105 +5,105 @@
 #ifndef GPK_ARRAY_CIRCULAR_H
 #define GPK_ARRAY_CIRCULAR_H
 
-namespace gpk
+nmsp gpk
 {
 
-	tplt<tpnm _tPOD, uint32_t mAx>
+	tplt<tpnm _tPOD, u2_t mAx>
 	struct array_circular : private astatic<_tPOD, mAx> {
 	protected:
-		typedef	_tPOD			_t;
-		uint32_t				Offset	= 0;
-		uint32_t				Count	= 0;
+		tydf	_tPOD			_t;
+		u2_t				Offset	= 0;
+		u2_t				Count	= 0;
 
-		using astatic<_t, mAx>	::Storage;
-		using astatic<_t, mAx>	::size;
-		using astatic<_t, mAx>	::slice;
+		usng astatic<_t, mAx>	::Storage;
+		usng astatic<_t, mAx>	::size;
+		usng astatic<_t, mAx>	::slice;
 	public:
-		typedef	_tPOD			T;
-		typedef	astatic<T, mAx>	TAStatic;
+		tydf	_tPOD			T;
+		tydf	astatic<T, mAx>	TAStatic;
 
-		using TAStatic			::array_static;
+		usng TAStatic			::array_static;
 
-		gpk::err_t			next			(T & output)	{
-			rews_if(0 == Count);
+		err_t 		next			(T & output)	{
+			if_true_vw(-1, 0 == Count);
 			output = Storage[Offset % mAx];
 			if(size() == ++Offset)
 				Offset = 0;
 			return Count -= 1;
 		}
 
-		gpk::err_t			push_back		(const T & output)	{
-			rees_if(0 == free());
+		err_t 		push_back		(cnst T & output)	{
+			if_true_fe(0 == free());
 			Storage[(Offset + Count) % mAx] = output;
 			return Count += 1;
 		}
 
-		template<uint32_t _nBatch>
-		gpk::err_t			append			(const T (&output)[_nBatch])	{
-			rees_if(Count + _nBatch > free());
+		tplt<u2_t _nBatch>
+		err_t 		append			(cnst T (&output)[_nBatch])	{
+			if_true_fe(Count + _nBatch > free());
 			Storage[(Offset + Count) % mAx] = output;
 			return Count += 1;
 		}
 
-		gpk::err_t			left			()	const	noexcept	{ return min(Count, size() - Offset); } // left side, first part
-		gpk::err_t			right			()	const	noexcept	{ return max((gpk::err_t)0, (gpk::err_t)Count - left()); } // right side, second part
+		err_t 		left			()	csnx	{ return min(Count, size() - Offset); } // left side, first part
+		err_t 		right			()	csnx	{ return max((err_t)0, (err_t)Count - left()); } // right side, second part
 
-		inline	gpk::err_t	left			(::gpk::view<const T> & _left)	const	noexcept	{ return slice(_left , Offset, left()); }
-		inline	gpk::err_t	right			(::gpk::view<const T> & _right)	const	noexcept	{ return slice(_right, 0, right()); }
+		inln	err_t left			(view<cnst T> & _left)	csnx	{ return slice(_left , Offset, left()); }
+		inln	err_t right			(view<cnst T> & _right)	csnx	{ return slice(_right, 0, right()); }
 
-		gpk::err_t			pair			(::gpk::view<const T> & _left, ::gpk::view<const T> & _right)	const	noexcept	{
-			gpk_necs(left(_left));
-			gpk_necs(right(_right));
+		err_t 		pair			(view<cnst T> & _left, view<cnst T> & _right)	csnx	{
+			if_fail_fe(left(_left));
+			if_fail_fe(right(_right));
 			return _left.size() + _right.size(); 
 		} 
 
-		inxp	gpk::err_t	free			()	const	noexcept	{ return size() - Count; }
-		inxp	gpk::err_t	used			()	const	noexcept	{ return Count; }
-		inxp	gpk::err_t	byte_count		()	const	noexcept	{ return Count * sizeof(T); }
+		inxp	err_t free			()	csnx	{ return size() - Count; }
+		inxp	err_t used			()	csnx	{ return Count; }
+		inxp	err_t byte_count	()	csnx	{ return Count * szof(T); }
 
-//		gpk::err_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<int(T *, uint32_t)> & funcRead) {
+//		err_t 		read			(cnst function<int()> & funcRemaining, cnst function<int(T *, u2_t)> & funcRead) {
 //			return 0;	
 //		}	
-		gpk::err_t			read			(const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
-			const uint32_t			stop			= mAx - Count;
-			int32_t					readCount		= 0; 
+		err_t 		read			(cnst function<int()> & funcRemaining, cnst function<T()> & funcNext) {
+			u2_c			stop			= mAx - Count;
+			s2_t					readCount		= 0; 
 			while(readCount < stop)
-			switch(const err_t funcRemainingResult = funcRemaining()) {
+			switch(cnst err_t funcRemainingResult = funcRemaining()) {
 			case 0:
 				return readCount;
 			default:
-				rve_if_failed(-readCount, funcRemainingResult, "%" GPK_FMT_I32 ":%" GPK_FMT_I32, readCount, funcRemainingResult);
-				rve_if_failed(-readCount, push_back(funcNext()), "%" GPK_FMT_I32, readCount);
+				if_fail_vef(-readCount, funcRemainingResult, "%" GPK_FMT_S2 ":%" GPK_FMT_S2, readCount, funcRemainingResult);
+				if_fail_vef(-readCount, push_back(funcNext()), "%" GPK_FMT_S2, readCount);
 				++readCount;
 			}
 			return readCount;
 		}
 
-		gpk::err_t			read		(uint32_t countToRead, const ::gpk::function<int()> & funcRemaining, const ::gpk::function<T()> & funcNext) {
-			const uint32_t			stop			= ::gpk::min(countToRead, mAx - Count);
-			for(int32_t readCount = 0; readCount < stop; ++readCount) {
-				rve_if(-readCount, 0 >= funcRemaining(), "%" GPK_FMT_I32 " < %" GPK_FMT_I32, readCount, countToRead);
-				rve_if_failed(-readCount, push_back(funcNext()), "%" GPK_FMT_I32, readCount);
+		err_t 		read		(u2_t countToRead, cnst function<int()> & funcRemaining, cnst function<T()> & funcNext) {
+			u2_c			stop			= min(countToRead, mAx - Count);
+			for(s2_t readCount = 0; readCount < stop; ++readCount) {
+				if_true_vef(-readCount, 0 >= funcRemaining(), "%" GPK_FMT_S2 " < %" GPK_FMT_S2, readCount, countToRead);
+				if_fail_vef(-readCount, push_back(funcNext()), "%" GPK_FMT_S2, readCount);
 			}
 			return stop;
 		}
 	};
 
-	tplt<tpnm T, uint32_t _maxCount> using acir			= ::gpk::array_circular<T, _maxCount>;
-	tplt<tpnm T, uint32_t _maxCount> using acircular	= ::gpk::acir<T, _maxCount>;
+	tplt<tpnm T, u2_t _maxCount> usng acir			= array_circular<T, _maxCount>;
+	tplt<tpnm T, u2_t _maxCount> usng acircular	= acir<T, _maxCount>;
 	
-	tplt<uint32_t _maxCount>	using acirc		= ::gpk::acir<sc_t     , _maxCount>; tplt<uint32_t _maxCount>	using acirchar	= ::gpk::acir<sc_t    , _maxCount>;
-	tplt<uint32_t _maxCount>	using aciruc 	= ::gpk::acir<uc_t  , _maxCount>; tplt<uint32_t _maxCount>	using aciruchar	= ::gpk::acir<uc_t , _maxCount>;
-	tplt<uint32_t _maxCount>	using aciru8 	= ::gpk::acir<uint8_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciru16	= ::gpk::acir<uint16_t , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciru32	= ::gpk::acir<uint32_t , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciru64	= ::gpk::acir<uint64_t , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri8 	= ::gpk::acir<int8_t   , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri16	= ::gpk::acir<int16_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri32	= ::gpk::acir<int32_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using aciri64	= ::gpk::acir<int64_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using acirf32	= ::gpk::acir<f2_t, _maxCount>; 
-	tplt<uint32_t _maxCount>	using acirf64	= ::gpk::acir<f3_t, _maxCount>; 
-} // namespace 
+	tplt<u2_t _maxCount>	usng acirsc_t	= acir<sc_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciruc_t	= acir<uc_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru0_t 	= acir<u0_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru1_t	= acir<u1_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru2_t	= acir<u2_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng aciru3_t	= acir<u3_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs0_t	= acir<s0_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs1_t	= acir<s1_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs2_t	= acir<s2_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirs3_t	= acir<s3_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirf2_t	= acir<f2_t, _maxCount>;
+	tplt<u2_t _maxCount>	usng acirf3_t	= acir<f3_t, _maxCount>;
+} // nmsp 
 
 #endif // GPK_ARRAY_CIRCULAR_H

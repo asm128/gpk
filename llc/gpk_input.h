@@ -1,33 +1,48 @@
 #include "gpk_array_pod.h"
 #include "gpk_n3.h"
 #include "gpk_array_static.h"
+#include "gpk_system_key.h"
 
 #ifndef GPK_INPUT_H_23627
 #define GPK_INPUT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 // TODO: REDO (this is heavily outdated and I think it should be heavily improved)
 #pragma pack(push, 1)
 	struct SInputJoystick {
 		::gpk::n2s1_t				Position			= {};
 		::gpk::n3s1_t				Deltas				= {};
-		uint32_t					ButtonState			= 0;
+		u2_t					ButtonState			= 0;
 	};
 	struct SInputMouse {
 		::gpk::n2s1_t				Position			= {};
 		::gpk::n3s1_t				Deltas				= {};
-		::gpk::astu8 <32>			ButtonState			= {};
-		::gpk::astf64<32>			ButtonTime			= {};
-		::gpk::asti64<32>			ButtonStrength		= {};
+		::gpk::astu0_t <32>			ButtonState			= {};
+		::gpk::astf3_t<32>			ButtonTime			= {};
+		::gpk::asts3_t<32>			ButtonStrength		= {};
 	};
 
 	struct SInputKeyboard {
-		::gpk::astu8 <256>			KeyState			= {};
-		::gpk::astf64<256>			KeyTime				= {};
-		::gpk::asti64<256>			KeyStrength			= {};
+		::gpk::astu0_t <256>			KeyState			= {};
+		::gpk::astf3_t<256>			KeyTime				= {};
+		::gpk::asts3_t<256>			KeyStrength			= {};
 	};
 #pragma pack(pop)
+	stin	void	inputKeyboardStateSet	(SInputKeyboard & state, u0_t keyCode, b8_t pressed) {
+		if(keyCode)
+			state.KeyState[keyCode] = pressed;
+		switch(keyCode) {
+		default: break;
+		case ::gpk::SYSTEM_KEY_LShift:
+		case ::gpk::SYSTEM_KEY_RShift	: state.KeyState[::gpk::SYSTEM_KEY_Shift] = pressed; break;
+		case ::gpk::SYSTEM_KEY_LControl:
+		case ::gpk::SYSTEM_KEY_RControl	: state.KeyState[::gpk::SYSTEM_KEY_Control] = pressed; break;
+		case ::gpk::SYSTEM_KEY_LMenu:
+		case ::gpk::SYSTEM_KEY_RMenu		: state.KeyState[::gpk::SYSTEM_KEY_Menu] = pressed; break;
+		}
+	}
+
 	struct SInput {
 		::gpk::apod<SInputKeyboard>	StateKeyboard		= {};
 		::gpk::apod<SInputMouse>	StateMouse			= {};
@@ -42,11 +57,23 @@ namespace gpk
 		SInputMouse					MousePrevious		= {};
 		SInputMouse					MouseCurrent		= {};
 
-		bool						ButtonUp			(uint8_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
-		bool						ButtonDown			(uint8_t buttonIndex)	const	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
-		bool						KeyUp				(uint8_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
-		bool						KeyDown				(uint8_t keyIndex	)	const	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
+		b8_t						ButtonUp			(u0_t buttonIndex)	cnst	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
+		b8_t						ButtonDown			(u0_t buttonIndex)	cnst	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
+		b8_t						KeyUp				(u0_t keyIndex	)	cnst	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
+		b8_t						KeyDown				(u0_t keyIndex	)	cnst	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
 	};
-} // namespace
+	stin	err_t	inputKeyboardStateSet	(SInput & input, u0_t keyCode, b8_t pressed, s2_t deviceId, f2_t timeStamp = {}) {
+		::gpk::inputKeyboardStateSet(input.KeyboardCurrent, keyCode, pressed);
+		if(0 > deviceId)
+			return 0;
+		u2_c	deviceIndex	= (u2_t)deviceId;
+		if(input.StateKeyboard.size() <= deviceIndex) {
+			if_fail_fe(::gpk::resize(deviceIndex + 1, input.StateKeyboard, input.TimeStampKeyboard));
+		}
+		::gpk::inputKeyboardStateSet(input.StateKeyboard[deviceIndex], keyCode, pressed);
+		input.TimeStampKeyboard[deviceIndex] = timeStamp;
+		return 0;
+	}
+} // nmsp
 
 #endif // GPK_INPUT_H_23627

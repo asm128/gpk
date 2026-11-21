@@ -21,26 +21,26 @@ gpk::err_t				pngToFont
 	, const ::gpk::n2u2_t		fontCharSize
 	, bool						negateBit
 	) {
-	const uint32_t					ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
+	const ::gpk::u2_t					ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
 	verticalAtlas.resize(::gpk::n2u2_t{fontCharSize.x, fontCharSize.y * 256});
-	for(uint32_t iChar = 0; iChar < 256; ++iChar) {
-		const uint32_t												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
-		const uint32_t												dstOffsetY				= iChar * fontCharSize.y;
-		for(uint32_t y = 0; y < fontCharSize.y; ++y) {
-			for(uint32_t x = 0; x < fontCharSize.x; ++x) {
-				const uint32_t											srcOffsetX				= iChar % ROW_WIDTH * fontCharSize.x;
-				const uint32_t											dstOffsetX				= 0;
+	for(::gpk::u2_t iChar = 0; iChar < 256; ++iChar) {
+		const ::gpk::u2_t												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
+		const ::gpk::u2_t												dstOffsetY				= iChar * fontCharSize.y;
+		for(::gpk::u2_t y = 0; y < fontCharSize.y; ++y) {
+			for(::gpk::u2_t x = 0; x < fontCharSize.x; ++x) {
+				const ::gpk::u2_t											srcOffsetX				= iChar % ROW_WIDTH * fontCharSize.x;
+				const ::gpk::u2_t											dstOffsetX				= 0;
 				const ::gpk::SColorBGRA									& srcColor				= imageCache.View[srcOffsetY + y][srcOffsetX + x];
 				verticalAtlas.View[dstOffsetY + y][dstOffsetX + x]	= srcColor;
 			}
 		}
 	}
-	const ::gpk::n2<uint32_t>								& textureFontMetrics	= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
-	gpk_necall(fontTexture.resize(textureFontMetrics), "%s", "");
-	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
-	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
+	const ::gpk::n2<::gpk::u2_t>								& textureFontMetrics	= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
+	if_fail_fef(fontTexture.resize(textureFontMetrics), "%s", "");
+	for(::gpk::u2_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
+	for(::gpk::u2_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
 		const ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];//app.TextureFont.View[y][x];
-		const uint32_t												linearIndex				= y * textureFontMetrics.x + x;
+		const ::gpk::u2_t												linearIndex				= y * textureFontMetrics.x + x;
 		fontTexture.View[linearIndex]
 			=	0 != srcColor.r
 			||	0 != srcColor.g
@@ -51,10 +51,10 @@ gpk::err_t				pngToFont
 	}
 
 	::gpk::au0_t	encoded;
-	::gpk::base64Encode({(const uint8_t*)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
+	::gpk::base64Encode({(const ::gpk::u0_t*)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
 	FILE						* fp = 0;
 	const int nul = 0;
-	fopen_s(&fp, ::gpk::toString(filenameOutput).begin(), "wb");
+	fopen_s(&fp, ::gpk::string(filenameOutput).begin(), "wb");
 	fwrite(encoded.begin(), 1, encoded.size(), fp);
 	fwrite(&nul, 1, 1, fp);
 	fclose(fp);
@@ -64,7 +64,7 @@ gpk::err_t				pngToFont
 int						main					() {
 	::gpk::aobj<::gpk::string>	fontFiles				= {};
 	::gpk::vcst_t				pathToSearch			= {"../gpk_data/fonts/cp437"};
-	gpk_necall(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
+	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
 	::gpk::SPNGData				pngCache				= {};
 	::gpk::img8bgra				imageCache				= {};
 	::gpk::img8bgra				imageFixed				= {};
@@ -72,12 +72,12 @@ int						main					() {
 	::gpk::imgmonou64			fontTexture				= {};
 	::gpk::string				filenameOutput			= {};
 	::gpk::vcst_t				extension				= {};
-	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
+	for(::gpk::u2_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
 		::gpk::vcst_t				filenameInput			= fontFiles[iFile];
 		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%.*s'", GPK_VIEW_ARGS(filenameInput));
 		::gpk::string			lowercaseExtension		= extension;
 		::gpk::tolower(lowercaseExtension);
-		if(lowercaseExtension != ::gpk::vcs{".png"})
+		if(lowercaseExtension != ::gpk::vcst_t{".png"})
 			continue;
 		cef_if(::gpk::failed(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
 		filenameOutput			= filenameInput;
@@ -90,10 +90,10 @@ int						main					() {
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], fontCharSize.x);
 		::gpk::parseIntegerDecimal(splitFontMetrics[1], fontCharSize.y);
 		imageFixed.resize(imageCache.metrics());
-		for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
-		for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {
-			const uint32_t				offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
-			const uint32_t				dstX					= offsetX + (x % fontCharSize.x);
+		for(::gpk::u2_t y = 0; y < imageFixed.metrics().y; ++y)
+		for(::gpk::u2_t x = 0; x < imageFixed.metrics().x; ++x) {
+			const ::gpk::u2_t				offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
+			const ::gpk::u2_t				dstX					= offsetX + (x % fontCharSize.x);
 			::gpk::bgra					& dstPixel				= imageFixed[y][x];
 			dstPixel				= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
 		}

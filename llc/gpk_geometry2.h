@@ -6,7 +6,7 @@
 namespace gpk
 {
 #ifdef GPK_ATMEL
-	enum SHAPE_2D_TYPE : uint8_t
+	enum SHAPE_2D_TYPE : u0_t 
 		{ SHAPE_2D_TYPE_Custom		= 0
 		, SHAPE_2D_TYPE_Point		= 1
 		, SHAPE_2D_TYPE_Line		= 2
@@ -16,7 +16,7 @@ namespace gpk
 		, SHAPE_2D_TYPE_Ring		= 6
 		};
 #else
-	GDEFINE_ENUM_TYPE(SHAPE_2D_TYPE, uint8_t);
+	GDEFINE_ENUM_TYPE(SHAPE_2D_TYPE, u0_t );
 	GDEFINE_ENUM_VALUE(SHAPE_2D_TYPE, Custom	, 0);
 	GDEFINE_ENUM_VALUE(SHAPE_2D_TYPE, Point		, 1);
 	GDEFINE_ENUM_VALUE(SHAPE_2D_TYPE, Line		, 2);

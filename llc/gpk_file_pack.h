@@ -1,5 +1,4 @@
 #include "gpk_enum.h"
-#include "gpk_string.h"
 
 #ifndef GPK_FILE_PACK_H
 #define GPK_FILE_PACK_H

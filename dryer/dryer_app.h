@@ -17,7 +17,7 @@
 
 namespace dry
 {
-	GDEFINE_ENUM_TYPE(SCREEN, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN, ROOT									, 0);
 	GDEFINE_ENUM_VALUE(SCREEN, HUD									, 1);
 	GDEFINE_ENUM_VALUE(SCREEN, MENU									, 2);
@@ -29,7 +29,7 @@ namespace dry
 	GDEFINE_ENUM_VALUE(SCREEN, CONFIG								, 8);
 	GDEFINE_ENUM_VALUE(SCREEN, COUNT								, 9);
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_MENU, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_MENU, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MENU, DIALOG					, 0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MENU, HOME					, 1);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MENU, LOAD_FILAMENT			, 2);
@@ -37,7 +37,7 @@ namespace dry
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MENU, CONFIG					, 4);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MENU, COUNT					, 5);
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_HUD, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_HUD, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HUD, DIALOG					, 0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HUD, CALENDAR					, 1);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HUD, DOOR						, 2);
@@ -47,7 +47,7 @@ namespace dry
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HUD, SERIAL					, 6);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_HUD, COUNT					, 7);
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_MODAL, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_MODAL, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MODAL, DIALOG					, 0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MODAL, CLOSE					, 1);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MODAL, YES					, 2);
@@ -59,11 +59,11 @@ namespace dry
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MODAL, ICON_STOP				, 8);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_MODAL, COUNT					, 9);
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_LOAD_FILAMENT, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_LOAD_FILAMENT, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_LOAD_FILAMENT, DIALOG			, 0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_LOAD_FILAMENT, COUNT			, 1);
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_SPOOL_INFO, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_SPOOL_INFO, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_SPOOL_INFO, DIALOG			,  0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_SPOOL_INFO, TITLE				,  1);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_SPOOL_INFO, LABEL_BRAND		,  2);
@@ -82,11 +82,11 @@ namespace dry
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_SPOOL_INFO, VALUE_SPOOL_SIZE	, 15);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_SPOOL_INFO, COUNT				, 16);
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_INFO, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_INFO, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_INFO, DIALOG					, 0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_INFO, COUNT					, 1);
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_CONFIG, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_CONFIG, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_CONFIG, DIALOG				, 0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_CONFIG, COUNT					, 1);
 
@@ -98,7 +98,7 @@ namespace dry
 	struct SScreenInfo				: public ::dry::SScreen<::dry::SCREEN_CONTROL_INFO_COUNT			> {};
 	struct SScreenConfig			: public ::dry::SScreen<::dry::SCREEN_CONTROL_CONFIG_COUNT			> {};
 
-	GDEFINE_ENUM_TYPE(MODAL, uint8_t);
+	GDEFINE_ENUM_TYPE(MODAL, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(MODAL, CLOSE_DOOR		, 0);
 	GDEFINE_ENUM_VALUE(MODAL, SCAN_SPOOL		, 1);
 	GDEFINE_ENUM_VALUE(MODAL, DRYING_COMPLETE	, 2);
@@ -153,10 +153,10 @@ namespace dry
 		::std::thread						SerialThread			= {};
 		//
 		::gpk::refcount_t					ThreadClients			= 0;
-		uint64_t							TimeLastSerial			= {}; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
-		static constexpr	uint64_t		SERIAL_TIMEOUT			= 10; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
+		::gpk::u3_t							TimeLastSerial			= {}; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
+		static constexpr	::gpk::u3_t		SERIAL_TIMEOUT			= 10; // these work as watchdog in case serial driver hangs and the thread gets blocked by an io call forever.
 
-		static constexpr	uint32_t		MAX_HUMIDITY			= 100;
+		static constexpr	::gpk::u2_t		MAX_HUMIDITY			= 100;
 
 											SApplication			(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues) {}
 	};
@@ -181,11 +181,11 @@ namespace dry
 	static inline gpk::err_t		updateScreenConfig			(::dry::SApplication & /*app*/) { return 0; }
 
 	// ----
-	gpk::err_t						handleControlHome			(::dry::SApplication & app, int32_t idControl);
+	gpk::err_t						handleControlHome			(::dry::SApplication & app, ::gpk::s2_t idControl);
 	// TODO: Nothing to do here yet
-	static inline gpk::err_t		handleControlInfo			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
-	static inline gpk::err_t		handleControlLoadFilament	(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
-	static inline gpk::err_t		handleControlConfig			(::dry::SApplication & /*app*/, int32_t /*idControl*/) { return 0; }
+	static inline gpk::err_t		handleControlInfo			(::dry::SApplication & /*app*/, ::gpk::s2_t /*idControl*/) { return 0; }
+	static inline gpk::err_t		handleControlLoadFilament	(::dry::SApplication & /*app*/, ::gpk::s2_t /*idControl*/) { return 0; }
+	static inline gpk::err_t		handleControlConfig			(::dry::SApplication & /*app*/, ::gpk::s2_t /*idControl*/) { return 0; }
 
 	// ---- Resize handlers
 	gpk::err_t						handleResizeScreenHUD		(::dry::SApplication & app, ::gpk::n2s1_t newSIze);

@@ -57,10 +57,10 @@ stxp	const ::gpk::tri3<float>						modelNormalVectors		[12]						=
 
 template<typename _tIndex, typename _tValue>
 					gpk::err_t									indexValues									(const ::gpk::view<const _tValue> & in_values, ::gpk::array_pod<_tIndex> & out_indices, ::gpk::array_pod<_tValue> & out_values, ::gpk::array_pod<_tIndex> & out_remap){
-	for(uint32_t iValue = 0; iValue < in_values.size(); ++iValue) {
+	for(::gpk::u2_t iValue = 0; iValue < in_values.size(); ++iValue) {
 		bool																	bFound										= false;
 		const _tValue															& in_value									= in_values[iValue];
-		for(uint32_t iValueIndexed = 0; iValueIndexed < out_values.size(); ++iValueIndexed) {
+		for(::gpk::u2_t iValueIndexed = 0; iValueIndexed < out_values.size(); ++iValueIndexed) {
 			const _tValue															& out_value									= out_values[iValueIndexed];
 			if(in_value == out_value) {
 				bFound																= true;
@@ -70,8 +70,8 @@ template<typename _tIndex, typename _tValue>
 			}
 		}
 		if(false == bFound) {
-			int32_t																	newIndex;
-			gpk_necall(newIndex = out_values.push_back(in_value), "%s", "Out of memory?");
+			::gpk::s2_t																	newIndex;
+			if_fail_fef(newIndex = out_values.push_back(in_value), "%s", "Out of memory?");
 			out_indices	.push_back((_tIndex)newIndex);
 			out_remap	.push_back((_tIndex)iValue);
 		}
@@ -79,26 +79,26 @@ template<typename _tIndex, typename _tValue>
 	return 0;
 }
 
-static gpk::err_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gpk::circlef32 & gaugeMetrics, int16_t resolution, int16_t width) {
+static gpk::err_t gaugeBuildRadial(::gme::SUIRadialGauge & gauge, const ::gpk::circlef32 & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
 	const double				stepUnit						= (1.0 / resolution) * ::gpk::math_2pi;
 	const ::gpk::spheref32		sphereMetrics					= {gaugeMetrics.Radius, {gaugeMetrics.Center.x, gaugeMetrics.Center.y, .5f}};
 	const double				finalRadius						= gaugeMetrics.Radius;
 	const double				outerRadius						= finalRadius;
 	const double				innerRadius						= outerRadius - width;
-	for(int16_t iStep = 0, stepCount = resolution; iStep < stepCount; ++iStep) {
+	for(::gpk::s1_t iStep = 0, stepCount = resolution; iStep < stepCount; ++iStep) {
 		::gpk::SSinCos				sinCos							= {sin(iStep * stepUnit), -cos(iStep * stepUnit)};
 		const ::gpk::n3f3_t			relativePosSmall				= {sinCos.Sin * innerRadius, sinCos.Cos * innerRadius};
 		const ::gpk::n3f3_t			relativePos						= {sinCos.Sin * outerRadius, sinCos.Cos * outerRadius};
-		gauge.Vertices.push_back(sphereMetrics.Center + relativePosSmall.f2_t());
-		gauge.Vertices.push_back(sphereMetrics.Center + relativePos.f2_t());
+		gauge.Vertices.push_back(sphereMetrics.Center + relativePosSmall.f2());
+		gauge.Vertices.push_back(sphereMetrics.Center + relativePos.f2());
 	}
-	for(int16_t iStep = 0, stepCount = (int16_t)(resolution * 2) - 3; iStep < stepCount; ++iStep) {
-		gauge.Indices.push_back({int16_t(0 + iStep), int16_t(1 + iStep), int16_t(2 + iStep)});
-		gauge.Indices.push_back({int16_t(1 + iStep), int16_t(3 + iStep), int16_t(2 + iStep)});
+	for(::gpk::s1_t iStep = 0, stepCount = (::gpk::s1_t)(resolution * 2) - 3; iStep < stepCount; ++iStep) {
+		gauge.Indices.push_back({::gpk::s1_t(0 + iStep), ::gpk::s1_t(1 + iStep), ::gpk::s1_t(2 + iStep)});
+		gauge.Indices.push_back({::gpk::s1_t(1 + iStep), ::gpk::s1_t(3 + iStep), ::gpk::s1_t(2 + iStep)});
 	}
-	const int16_t				iStep							= int16_t(gauge.Vertices.size() - 2);
-	gauge.Indices.push_back({int16_t(0 + iStep), int16_t(1 + iStep), 0});
-	gauge.Indices.push_back({int16_t(1 + iStep), 1, 0});
+	const ::gpk::s1_t				iStep							= ::gpk::s1_t(gauge.Vertices.size() - 2);
+	gauge.Indices.push_back({::gpk::s1_t(0 + iStep), ::gpk::s1_t(1 + iStep), 0});
+	gauge.Indices.push_back({::gpk::s1_t(1 + iStep), 1, 0});
 	gauge.MaxValue			= resolution;
 	return 0;
 }
@@ -114,11 +114,11 @@ static gpk::err_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra 
 	dummyDepth.resize(target.metrics(), 0xFFFFFFFFU);
 	::gpk::apod<::gpk::n2s1_t>	pixelCoords;
 	::gpk::apod<::gpk::trif2_t>	triangleWeights;
-	for(uint32_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
+	for(::gpk::u2_t iTriangle = 0, triangleCount = gauge.Indices.size(); iTriangle < triangleCount; ++iTriangle) {
 		const ::gpk::tri3f32			triangleCoords				= {gauge.Vertices[gauge.Indices[iTriangle].A], gauge.Vertices[gauge.Indices[iTriangle].B], gauge.Vertices[gauge.Indices[iTriangle].C]};
 		const double					colorFactor					= radialColor ? ::gpk::min(1.0, iTriangle / (double)triangleCount) : gauge.CurrentValue / (float)gauge.MaxValue;
 		::gpk::rgbaf					finalColor;
-		const bool						isEmptyGauge				= ((iTriangle + 2) >> 1) >= (uint32_t)gauge.CurrentValue * 2;
+		const bool						isEmptyGauge				= ((iTriangle + 2) >> 1) >= (::gpk::u2_t)gauge.CurrentValue * 2;
 		finalColor					= isEmptyGauge
 			? ::gpk::rgbaf(colorEmpty)
 			: (colorFactor < .5)
@@ -127,27 +127,27 @@ static gpk::err_t gaugeImageUpdate(::gme::SUIRadialGauge & gauge, ::gpk::g8bgra 
 		finalColor.Clamp();
 		pixelCoords.clear();
 		::gpk::drawTriangle(target.metrics(), triangleCoords, pixelCoords, triangleWeights, dummyDepth);
-		for(uint32_t iPixelCoords = 0; iPixelCoords < pixelCoords.size(); ++iPixelCoords) {
+		for(::gpk::u2_t iPixelCoords = 0; iPixelCoords < pixelCoords.size(); ++iPixelCoords) {
 			const ::gpk::n2s1_t		pixelCoord					= pixelCoords[iPixelCoords];
-			const ::gpk::n2f2_t		floatCoord					= pixelCoord.f2_t();
+			const ::gpk::n2f2_t		floatCoord					= pixelCoord.f2();
 			const double				distanceFromCenter			= (floatCoord - center2).Length();
 			const double				distanceFromRadiusCenter	= fabs(distanceFromCenter - radiusCenter) / radiusHalfWidth;
 			finalColor.a				= (float)(1.f - distanceFromRadiusCenter);
 			::gpk::bgra					& targetPixel				= target[pixelCoord.y][pixelCoord.x];
 			targetPixel					= ::gpk::interpolate_linear(::gpk::rgbaf{targetPixel}, finalColor, finalColor.a);
-			targetPixel.a				= uint8_t(finalColor.a * 255);
+			targetPixel.a				= ::gpk::u0_t(finalColor.a * 255);
 		}
 	}
 	return 0;
 }
 
-static ::gpk::cid_t gaugeCreate(::gpk::SGUI & gui, ::gme::SUIRadialGauge & gauge, ::gpk::cid_t parent, const ::gpk::n2u2_t & imageMetrics, const ::gpk::circlef32 & gaugeMetrics, int16_t resolution, int16_t width) {
+static ::gpk::cid_t gaugeCreate(::gpk::SGUI & gui, ::gme::SUIRadialGauge & gauge, ::gpk::cid_t parent, const ::gpk::n2u2_t & imageMetrics, const ::gpk::circlef32 & gaugeMetrics, ::gpk::s1_t resolution, ::gpk::s1_t width) {
 	const ::gpk::cid_t idControl = ::gpk::controlCreate(gui);
-	gpk_necs(idControl);
-	gpk_necs(::gpk::controlSetParent(gui, idControl, parent));
-	gpk_necs(gauge.Image.resize(imageMetrics));
-	gpk_necs(::gaugeBuildRadial(gauge, gaugeMetrics, resolution, width));
-	gui.Controls.Images[idControl].Image = gauge.Image.View;
+	if_fail_fe(idControl);
+	if_fail_fe(::gpk::controlSetParent(gui, idControl, parent));
+	if_fail_fe(gauge.Image.resize(imageMetrics));
+	if_fail_fe(::gaugeBuildRadial(gauge, gaugeMetrics, resolution, width));
+	gui.Controls.ImageViews[idControl] = gauge.Image.View;
 	gui.Controls.Images[idControl].ImageAlign = ::gpk::ALIGN_CENTER;
 	gui.Controls.Draw[idControl].NoClient = true;
 	gui.Controls.Draw[idControl].NoBorder = true;
@@ -158,9 +158,9 @@ template<typename _tId>
 struct SControlParams {
 	_tId							Id;
 	::gpk::cid_t					Parent;
-	::gpk::rect2i16					Area;
-	::gpk::rectu16					Border;
-	::gpk::rectu16					Margin;
+	::gpk::rect2s1_t					Area;
+	::gpk::rectu1_t					Border;
+	::gpk::rectu1_t					Margin;
 	::gpk::ALIGN					Align;
 	::gpk::vcst_t					Text;
 	::gpk::ALIGN					TextAlign;
@@ -193,12 +193,12 @@ static const SControlParams<::gme::GUI_EXAMPLE_CONTROL> controlList[] =
 	};
 
 template<typename _tId>
-static gpk::err_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::view<const SControlParams<_tId>> params, uint32_t idCount) {
-	gpk_necs(ids.resize(idCount));
-	for(uint32_t iControl = 0; iControl < params.size(); ++iControl) {
+static gpk::err_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::view<const SControlParams<_tId>> params, ::gpk::u2_t idCount) {
+	if_fail_fe(ids.resize(idCount));
+	for(::gpk::u2_t iControl = 0; iControl < params.size(); ++iControl) {
 		const SControlParams<_tId>	& param	= params[iControl];
 		const ::gpk::cid_t	idControl	= ::gpk::controlCreate(gui);
-		gpk_necs(idControl);
+		if_fail_fe(idControl);
 		ids[param.Id]						= idControl;
 		::gpk::SControlPlacement	& placement	= gui.Controls.Placement[idControl];
 		placement.Area						= param.Area;
@@ -207,8 +207,8 @@ static gpk::err_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::
 		placement.Align						= param.Align;
 		gui.Controls.Draw[idControl].ColorMode	= param.ColorMode;
 		gui.Controls.Text[idControl].Align		= param.TextAlign;
-		gpk_necs(::gpk::controlTextSet(gui, idControl, param.Text));
-		gpk_necs(::gpk::controlSetParent(gui, idControl, -1 == param.Parent ? -1 : ids[param.Parent]));
+		if_fail_fe(::gpk::controlTextSet(gui, idControl, param.Text));
+		if_fail_fe(::gpk::controlSetParent(gui, idControl, -1 == param.Parent ? -1 : ids[param.Parent]));
 	}
 	return 0;
 }
@@ -216,8 +216,8 @@ static gpk::err_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::
 template<typename _tValue>
 static gpk::err_t guiCreateControlList(::gpk::SGUI & gui, ::gpk::view<const SMenuItem<_tValue>> items, ::gpk::cid_t parent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN align, ::gpk::acid & ids) {
 	::gpk::aobj<::gpk::vcsc_t>	labels;
-	gpk_necs(labels.resize(items.size()));
-	for(uint32_t iItem = 0; iItem < labels.size(); ++iItem)
+	if_fail_fe(labels.resize(items.size()));
+	for(::gpk::u2_t iItem = 0; iItem < labels.size(); ++iItem)
 		labels[iItem] = items[iItem].Text;
 	return ::gpk::guiCreateControlList(gui, labels, parent, buttonSize, offset, align, ::gpk::ALIGN_CENTER, ids);
 }
@@ -228,21 +228,21 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 	::gpk::SFramework				& framework									= app.Framework;
 	::gpk::SWindow					& mainWindow								= framework.RootWindow;
 	framework.RootWindow.Size												= {1280, 720};
-	es_if(::gpk::failed(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)));
+	if_true_e(::gpk::failed(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)));
 	::gpk::SGUI						& gui										= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_LIGHTGREY * 16;
-	gpk_necs(::gpk::guiCreateControlList<::gme::GUI_EXAMPLE_ACTION>(gui, -1, {160, 24}, {16, -24}, ::gpk::ALIGN_CENTER_LEFT, ::gpk::ALIGN_CENTER, app.IdActions));
-	gpk_necs(::gpk::inputBoxCreate(app.InputBox, gui));
+	if_fail_fe(::gpk::guiCreateControlList<::gme::GUI_EXAMPLE_ACTION>(gui, -1, {160, 24}, {16, -24}, ::gpk::ALIGN_CENTER_LEFT, ::gpk::ALIGN_CENTER, app.IdActions));
+	if_fail_fe(::gpk::inputBoxCreate(app.InputBox, gui));
 	gui.Controls.Placement[app.InputBox.IdRoot].Align						= ::gpk::ALIGN_CENTER_BOTTOM;
-	gpk_necs(app.InputBox.SetText(gui, "Viewport"));
-	gpk_necs(app.InputBox.Edit(gui, false));
+	if_fail_fe(app.InputBox.SetText(gui, "Viewport"));
+	if_fail_fe(app.InputBox.Edit(gui, false));
 
-	gpk_necs(::buildControlTree<::gme::GUI_EXAMPLE_CONTROL>(gui, app.IdControls, {controlList, ::gpk::size(controlList)}, ::gme::GUI_EXAMPLE_CONTROL_COUNT));
-	gpk_necs(::guiCreateControlList<::gme::GUI_EXAMPLE_KLIB_ACTION>(gui, {klibMenuItems, ::gpk::size(klibMenuItems)}, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Klib_panel], {208, 20}, {8, 24}, ::gpk::ALIGN_TOP_LEFT, app.IdKlibActions));
+	if_fail_fe(::buildControlTree<::gme::GUI_EXAMPLE_CONTROL>(gui, app.IdControls, {controlList, ::gpk::size(controlList)}, ::gme::GUI_EXAMPLE_CONTROL_COUNT));
+	if_fail_fe(::guiCreateControlList<::gme::GUI_EXAMPLE_KLIB_ACTION>(gui, {klibMenuItems, ::gpk::size(klibMenuItems)}, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Klib_panel], {208, 20}, {8, 24}, ::gpk::ALIGN_TOP_LEFT, app.IdKlibActions));
 
 	::gpk::STuner<uint8_t> & tuner = app.NumericTuner;
-	gpk_necs(::gpk::tunerCreate(gui, tuner));
+	if_fail_fe(::gpk::tunerCreate(gui, tuner));
 	tuner.ValueLimits.Min										= 100;
 	tuner.ValueLimits.Max										= 200;
 	::gpk::SControlTable											 & controlTable								= gui.Controls;
@@ -252,7 +252,7 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 	tuner.SetValue(gui, 0);
 
 	::gpk::SSlider & slider = app.Slider;
-	gpk_necs(::gpk::sliderCreate(gui, slider));
+	if_fail_fe(::gpk::sliderCreate(gui, slider));
 	slider.ValueLimits.Min										= 0;
 	slider.ValueLimits.Max										= 255;
 	controlTable.Placement[slider.IdControl].Area.Offset	= {128, 128};
@@ -261,31 +261,31 @@ gpk::err_t			setup		(::gme::SApplication & app)						{
 	slider.ValueCurrent										= 192;
 
 	app.GaugeControl											= ::gaugeCreate(gui, app.Gauge, -1, {112, 112}, {48, {56, 56}}, 32, 12);
-	gpk_necs(app.GaugeControl);
+	if_fail_fe(app.GaugeControl);
 	controlTable.Placement[app.GaugeControl].Area				= {{16, 64}, {112, 112}};
 
 	::gpk::SCheckBox & checkbox = app.CheckBox;
-	gpk_necs(::gpk::checkBoxCreate(gui, checkbox));
+	if_fail_fe(::gpk::checkBoxCreate(gui, checkbox));
 	controlTable.Placement[checkbox.IdControl].Area.Offset			= {128, 256};
 
 	::gpk::SViewport & viewport = app.Viewport;
-	gpk_necs(::gpk::viewportCreate(gui, viewport));
+	if_fail_fe(::gpk::viewportCreate(gui, viewport));
 	const ::gpk::cid_t idLayer = ::gpk::controlCreate(gui);
-	gpk_necs(idLayer);
+	if_fail_fe(idLayer);
 	controlTable.Draw[idLayer].NoClient = controlTable.Draw[idLayer].NoBorder = true;
 	controlTable.Placement[idLayer].Margin = controlTable.Placement[idLayer].Border = {};
 	controlTable.Constraints[idLayer].AttachSizeToControl = {idLayer, idLayer};
 	controlTable.States[idLayer].Mask &= ~::gpk::GUI_CONTROL_FLAG_Hovered;
-	gpk_necs(::gpk::controlSetParent(gui, viewport.IdControl, idLayer));
-	gpk_necs(::gpk::controlSetParent(gui, app.InputBox.IdRoot, idLayer));
+	if_fail_fe(::gpk::controlSetParent(gui, viewport.IdControl, idLayer));
+	if_fail_fe(::gpk::controlSetParent(gui, app.InputBox.IdRoot, idLayer));
 	controlTable.Placement	[viewport.IdControl	].Area.Offset			= {320, 128};
 	controlTable.Placement	[viewport.IdControl	].Area.Size				= {640, 480};
 	controlTable.Images		[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]		].ImageInvertY			= true;
 
 	stxp const ::gpk::n3f2_t							cubeCenter									= {0.5f, 0.5f, 0.5f};
-	::gpk::array_pod<uint8_t>												& remap										= app.ModelGeometry.PositionRemap;
+	::gpk::array_pod<::gpk::u0_t>												& remap										= app.ModelGeometry.PositionRemap;
 	::indexValues({&modelPositionsVertices[0].A, ::gpk::size(modelPositionsVertices) * 3}, app.ModelGeometry.Positions.Indices, app.ModelGeometry.Positions.Values, remap);
-	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {
+	for(::gpk::u2_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {
 		::gpk::n3f2_t													& vertexToTransform					= app.ModelGeometry.Positions.Values[iVertex];
 		vertexToTransform													-= cubeCenter;
 	}
@@ -305,17 +305,17 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 
 	::gpk::SGUI					& gui			= *framework.GUI;
 	::gpk::acid					toProcess		= {};
-	gpk_necs(::gpk::guiGetProcessableControls(gui, toProcess));
+	if_fail_fe(::gpk::guiGetProcessableControls(gui, toProcess));
 	const gpk::err_t		inputBoxResult	= app.InputBox.Update(gui, app.InputBox.VirtualKeyboard, framework.RootWindow.EventQueue, toProcess);
-	gpk_necs(inputBoxResult);
+	if_fail_fe(inputBoxResult);
 	if(INT_MAX == inputBoxResult) {
 		::gpk::SViewport & viewport = app.Viewport;
-		gpk_necs(::gpk::controlTextSet(gui, viewport.IdControls[::gpk::VIEWPORT_CONTROL_TITLE], ::gpk::vcs{app.InputBox.Text}));
-		gpk_necs(app.InputBox.Edit(gui, false));
+		if_fail_fe(::gpk::controlTextSet(gui, viewport.IdControls[::gpk::VIEWPORT_CONTROL_TITLE], ::gpk::vcst_t{app.InputBox.Text}));
+		if_fail_fe(app.InputBox.Edit(gui, false));
 	}
 	else if(0 == inputBoxResult) {
 		bool					exitRequested	= false;
-		gpk_necs(::gpk::guiProcessControls(gui, toProcess, [&app, &gui, &exitRequested](::gpk::cid_t iControl) {
+		if_fail_fe(::gpk::guiProcessControls(gui, toProcess, [&app, &gui, &exitRequested](::gpk::cid_t iControl) {
 			if(iControl == app.IdActions[::gme::GUI_EXAMPLE_ACTION_Exit])
 				exitRequested	= true;
 			else if(iControl == app.IdActions[::gme::GUI_EXAMPLE_ACTION_Edit_label])
@@ -324,7 +324,7 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 				::gpk::SViewport & viewport = app.Viewport;
 				return ::gpk::viewportFold(gui, viewport, viewport.Settings.Unfolded);
 			}
-			for(uint32_t iItem = 0; iItem < app.IdKlibActions.size(); ++iItem)
+			for(::gpk::u2_t iItem = 0; iItem < app.IdKlibActions.size(); ++iItem)
 				if(iControl == app.IdKlibActions[iItem]) {
 					const SMenuItem<::gme::GUI_EXAMPLE_KLIB_ACTION> & item = klibMenuItems[iItem];
 					return ::gpk::controlTextSet(gui, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Klib_selection], ::gme::GUI_EXAMPLE_KLIB_ACTION_Exit == item.ReturnValue ? ::gpk::vcst_t{"WELCOME COMMANDER"} : ::gpk::vcst_t{item.Text});
@@ -334,14 +334,14 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 		rvis_if(::gpk::APPLICATION_STATE_EXIT, exitRequested);
 	}
 
-	gpk_necs(app.NumericTuner.Update(gui, gui.Controls.EventQueue));
-	gpk_necs(::gpk::sliderUpdate(gui, *framework.RootWindow.Input, app.Slider));
-	gpk_necs(::gpk::checkBoxUpdate(gui, app.CheckBox));
-	gpk_necs(::gpk::viewportUpdate(gui, *framework.RootWindow.Input, app.Viewport));
+	if_fail_fe(app.NumericTuner.Update(gui, gui.Controls.EventQueue));
+	if_fail_fe(::gpk::sliderUpdate(gui, *framework.RootWindow.Input, app.Slider));
+	if_fail_fe(::gpk::checkBoxUpdate(gui, app.CheckBox));
+	if_fail_fe(::gpk::viewportUpdate(gui, *framework.RootWindow.Input, app.Viewport));
 	::gpk::SSlider & slider = app.Slider;
 	app.Gauge.SetValue((float)slider.ValueCurrent, (uint32_t)slider.ValueLimits.Max);
 	memset(app.Gauge.Image.View.begin(), 0, app.Gauge.Image.View.byte_count());
-	gpk_necs(::gaugeImageUpdate(app.Gauge, app.Gauge.Image.View, ::gpk::RED, ::gpk::YELLOW, ::gpk::LIGHTGREEN, ::gme::SUIRadialGauge::COLOR_BKG_DEFAULT, false));
+	if_fail_fe(::gaugeImageUpdate(app.Gauge, app.Gauge.Image.View, ::gpk::RED, ::gpk::YELLOW, ::gpk::LIGHTGREEN, ::gme::SUIRadialGauge::COLOR_BKG_DEFAULT, false));
 
 	//------------------------------------------------
 	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
@@ -394,7 +394,7 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 
 	::gpk::array_pod<::gpk::tri3<float>>								& triangle3dList							= app.VertexCache.Triangle3dTransformed	;
 	::gpk::array_pod<::gpk::bgra>										& triangle3dColorList						= app.VertexCache.Triangle3dColorList	;
-	const uint32_t															countTriangles								= app.ModelGeometry.Positions.Indices.size() / 3;
+	const ::gpk::u2_t															countTriangles								= app.ModelGeometry.Positions.Indices.size() / 3;
 	triangle3dList		.resize(countTriangles);
 	triangle3dColorList	.resize(countTriangles * 3);
 	::gpk::m4<float>													projection									;
@@ -406,7 +406,7 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 	}
 
 	::gpk::n3f2_t													& lightPos									= app.Scene.LightPos;
-	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) {
+	for(::gpk::u2_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) {
 		::gpk::tri3<float>												& transformedTriangle						= triangle3dList[iTriangle];
 		transformedTriangle													=
 			{ app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 0]]
@@ -415,51 +415,51 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 			};
 		::gpk::transform(transformedTriangle, projection);
 	}
-	::gpk::array_pod<::gpk::tri2<int32_t>>							triangle2dList								= {};
+	::gpk::array_pod<::gpk::tri2<::gpk::s2_t>>							triangle2dList								= {};
 	triangle2dList.resize(countTriangles);
-	const ::gpk::n2<int32_t>											screenCenter								= {(int32_t)offscreenMetrics.x / 2, (int32_t)offscreenMetrics.y / 2};
-	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) { // Maybe the scale
+	const ::gpk::n2<::gpk::s2_t>											screenCenter								= {(::gpk::s2_t)offscreenMetrics.x / 2, (::gpk::s2_t)offscreenMetrics.y / 2};
+	for(::gpk::u2_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) { // Maybe the scale
 		::gpk::tri3<float>												& transformedTriangle3D						= triangle3dList[iTriangle];
-		::gpk::tri2<int32_t>												& transformedTriangle2D						= triangle2dList[iTriangle];
-		transformedTriangle2D.A												= {(int32_t)transformedTriangle3D.A.x, (int32_t)transformedTriangle3D.A.y};
-		transformedTriangle2D.B												= {(int32_t)transformedTriangle3D.B.x, (int32_t)transformedTriangle3D.B.y};
-		transformedTriangle2D.C												= {(int32_t)transformedTriangle3D.C.x, (int32_t)transformedTriangle3D.C.y};
+		::gpk::tri2<::gpk::s2_t>												& transformedTriangle2D						= triangle2dList[iTriangle];
+		transformedTriangle2D.A												= {(::gpk::s2_t)transformedTriangle3D.A.x, (::gpk::s2_t)transformedTriangle3D.A.y};
+		transformedTriangle2D.B												= {(::gpk::s2_t)transformedTriangle3D.B.x, (::gpk::s2_t)transformedTriangle3D.B.y};
+		transformedTriangle2D.C												= {(::gpk::s2_t)transformedTriangle3D.C.x, (::gpk::s2_t)transformedTriangle3D.C.y};
 		::gpk::translate(transformedTriangle2D, screenCenter);
 
 	}
 
 	::gpk::view<::gpk::n3f2_t>								normals										= {(::gpk::n3f2_t*)app.ModelGeometry.NormalsVertex.Values.begin(), app.ModelGeometry.NormalsVertex.Values.size() * 3};
-	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Indices.size(); ++iVertex) {
+	for(::gpk::u2_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Indices.size(); ++iVertex) {
 		double																	lightFactor									= normals[iVertex].Dot(lightPos);
 		triangle3dColorList[iVertex]										= (::gpk::RED * lightFactor).Clamp();
 	}
-	::gpk::array_pod<::gpk::n2<int16_t>>								wireframePixelCoords;
-	::gpk::array_pod<::gpk::n2<int16_t>>								trianglePixelCoords;
+	::gpk::array_pod<::gpk::n2<::gpk::s1_t>>								wireframePixelCoords;
+	::gpk::array_pod<::gpk::n2<::gpk::s1_t>>								trianglePixelCoords;
 	::gpk::n3f2_t													cameraFront										= (camera.Target - camera.Position).Normalize();
 	::gpk::array_pod<::gpk::tri<float>>								triangleWeights;
 
-	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
+	for(::gpk::u2_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
 		double																	lightFactor									= normals[iTriangle * 3].Dot(cameraFront);
 		if(lightFactor > 0)
 			continue;
-		//es_if(::gpk::failed(::gpk::drawTriangle(buffer3d->Color.View, triangle3dColorList[iTriangle], triangle2dList[iTriangle])));
+		//if_true_e(::gpk::failed(::gpk::drawTriangle(buffer3d->Color.View, triangle3dColorList[iTriangle], triangle2dList[iTriangle])));
 		trianglePixelCoords.clear();
 		::gpk::tri3<float>												transformedTriangle3D						= {};
 		transformedTriangle3D.A												= {(float)triangle2dList[iTriangle].A.x, (float)triangle2dList[iTriangle].A.y, triangle3dList[iTriangle].A.z};
 		transformedTriangle3D.B												= {(float)triangle2dList[iTriangle].B.x, (float)triangle2dList[iTriangle].B.y, triangle3dList[iTriangle].B.z};
 		transformedTriangle3D.C												= {(float)triangle2dList[iTriangle].C.x, (float)triangle2dList[iTriangle].C.y, triangle3dList[iTriangle].C.z};
-		es_if(::gpk::failed(::gpk::drawTriangle(offscreenMetrics.Cast<uint32_t>(), transformedTriangle3D, trianglePixelCoords, triangleWeights, buffer3d->DepthStencil.View)));
-		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord)
+		if_true_e(::gpk::failed(::gpk::drawTriangle(offscreenMetrics.Cast<::gpk::u2_t>(), transformedTriangle3D, trianglePixelCoords, triangleWeights, buffer3d->DepthStencil.View)));
+		for(::gpk::u2_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord)
 			buffer3d->Color.View[trianglePixelCoords[iCoord].y][trianglePixelCoords[iCoord].x] = triangle3dColorList[iTriangle * 3];
 
-		::gpk::drawLine(offscreenMetrics, ::gpk::line2<int32_t>{triangle2dList[iTriangle].A, triangle2dList[iTriangle].B}, wireframePixelCoords);
-		::gpk::drawLine(offscreenMetrics, ::gpk::line2<int32_t>{triangle2dList[iTriangle].B, triangle2dList[iTriangle].C}, wireframePixelCoords);
-		::gpk::drawLine(offscreenMetrics, ::gpk::line2<int32_t>{triangle2dList[iTriangle].C, triangle2dList[iTriangle].A}, wireframePixelCoords);
+		::gpk::drawLine(offscreenMetrics, ::gpk::line2<::gpk::s2_t>{triangle2dList[iTriangle].A, triangle2dList[iTriangle].B}, wireframePixelCoords);
+		::gpk::drawLine(offscreenMetrics, ::gpk::line2<::gpk::s2_t>{triangle2dList[iTriangle].B, triangle2dList[iTriangle].C}, wireframePixelCoords);
+		::gpk::drawLine(offscreenMetrics, ::gpk::line2<::gpk::s2_t>{triangle2dList[iTriangle].C, triangle2dList[iTriangle].A}, wireframePixelCoords);
 	}
-	for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
+	for(::gpk::u2_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
 		::gpk::drawPixelLight(buffer3d->Color.View, wireframePixelCoords[iCoord], (::gpk::bgra)::gpk::GREEN, 0.05f, 1.5);
 
-	gui.Controls.Images[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Image						= buffer3d->Color.View;
+	gui.Controls.ImageViews[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]]						= buffer3d->Color.View;
 
 	// ---
 	::gpk::pobj<::gpk::rtbgra8d32>	target;

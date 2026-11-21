@@ -3,25 +3,25 @@
 #ifndef GPK_PTR_POD_H_23627
 #define GPK_PTR_POD_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tplt<tpnm _tPOD>
-	class ppod : public ::gpk::pnco<_tPOD> {
+	class ppod : public pnco<_tPOD> {
 	public:
-		typedef _tPOD			T;
-		typedef	::gpk::pnco<T>	TNCOPtr;
-		typedef	::gpk::gref<T>	TRef;
+		tydf _tPOD			T;
+		tydf	pnco<T>	TNCOPtr;
+		tydf	gref<T>	TRef;
 
-		using	TNCOPtr			::Reference;
+		usng	TNCOPtr			::Reference;
 								
-		inline	const T*		operator->	()		const	noexcept	{ return Reference->Instance;														}
-		inline	T*				operator->	()				noexcept	{ return (0 == Reference) ? ::gpk::ref_allocate(&Reference) : Reference->Instance;	}
+		inln	cnst T*			oper->	()												csnx	{ return Reference->Instance;														}
+		inln	T*				oper->	()												nxpt	{ return (0 == Reference) ? ref_allocate(Reference) : Reference->Instance;	}
 
 		tplt<tpnm... _tArgsConstructor>
-		inline	T*				create		(_tArgsConstructor &&... argsConstructor)	noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
-		inline	T*				allocate	()											noexcept	{ return ::gpk::ref_allocate(&Reference);											}
+		inln	T*				create		(_tArgsConstructor &&... argsConstructor)	nxpt		{ return ref_create(Reference, argsConstructor...);		}
+		inln	T*				allocate	()											nxpt		{ return ref_allocate(Reference);						}
 	};
-	tplt<tpnm T> using pp	= ::gpk::ppod<T>;
-} // namespace
+	tplt<tpnm T> usng	pp	= ppod<T>;
+} // nmsp
 
 #endif // GPK_PTR_POD_H_23627

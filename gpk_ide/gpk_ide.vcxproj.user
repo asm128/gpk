@@ -24,5 +24,6 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommand>$(OutDir)grt.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments>$(ProjectName)</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArgumentsHistory>gpk_ide|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
 </Project>

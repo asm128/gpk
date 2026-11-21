@@ -1,62 +1,71 @@
 #include "gpk_array_pod.h"
-
-#include "gpk_keyval_old.h"
-
 #include "gpk_view_serialize.h"
 
 #ifndef GPK_APOD_SERIALIZE_H_23627
 #define GPK_APOD_SERIALIZE_H_23627
 
-namespace gpk
+nmsp gpk
 {
-	tplt<tpnm TOutput, tpnm T, u0_t widthField>
-	err_t					savePacked					(TOutput & output, cnst packed_uint<T, widthField> & packedInput) {
-		u2_c						offset						= output.size();
-		if_fail_fe(output.resize(offset + packedInput.ValueWidth()));
-		memcpy(&output[offset], &packedInput, packedInput.ValueWidth());
-		return packedInput.ValueWidth();
-	}
+    tplt<tpnm TOutput, tpnm T, u0_t widthField = uint_width_field_size<T>()>
+    err_t					savePacked					(TOutput & output, cnst T & input) {
+        cnst packed_uint<T, widthField>	packedInput					= input;
+        u2_c						offset						= output.size();
+        if_fail_fe(output.resize(offset + packedInput.ValueWidth()));
+        memcpy(&output[offset], &packedInput, packedInput.ValueWidth());
+        return packedInput.ValueWidth();
+    }
 
-	tplT			err_t	saveView					(au0_t & output, cnst view<T> & viewToSerialize)	{
-		cnst packedu32				counterValue				= viewToSerialize.size();
-		if_fail_fe(savePacked(output, counterValue));
-		if_fail_fe(output.append(viewToSerialize.cu8()));
-		return counterValue.ValueWidth() + viewToSerialize.byte_count();
-	}
-	//tplT			err_t	saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
-	//	u2_c						offset				= output.size();
-	//	cnst packedu32				counterValue		= viewToSerialize.size();
-	//	if_fail_fe(output.append(counterValue.tplt cu8<vcu0_t>()));
-	//	for(cnst packed_uint<T> valpkd : viewToSerialize)
-	//		if_fail_fe(output.append(valpkd.tplt cu8<vcu0_t>()));
-	//	return output.size() - offset;
-	//}
-	//tplt<>	inln	err_t	saveView	<u1_t>	(au0_t & output, vu1_c  & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
-	//tplt<>	inln	err_t	saveView	<u2_t>	(au0_t & output, vu2_c  & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
-	//tplt<>	inln	err_t	saveView	<u3_t>	(au0_t & output, vu3_c  & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
-	//tplt<>	inln	err_t	saveView	<u1_c>	(au0_t & output, vcu1_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
-	//tplt<>	inln	err_t	saveView	<u2_c>	(au0_t & output, vcu2_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
-	//tplt<>	inln	err_t	saveView	<u3_c>	(au0_t & output, vcu3_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
+    tplT			err_t	saveView					(au0_t & output, cnst view<T> & viewToSerialize)	{
+        err_t						counterWidth				= 0;
+        if_fail_fe(counterWidth = savePacked(output, viewToSerialize.size()));
+        if_fail_fe(output.append(viewToSerialize.bytes()));
+        return counterWidth + viewToSerialize.byte_count();
+    }
+    //tplT			err_t	saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
+    //	u2_c						offset				= output.size();
+    //	cnst packedu2_t				counterValue		= viewToSerialize.size();
+    //	if_fail_fe(output.append(counterValue.tplt cu8<vcu0_t>()));
+    //	for(cnst packed_uint<T> valpkd : viewToSerialize)
+    //		if_fail_fe(output.append(valpkd.tplt cu8<vcu0_t>()));
+    //	return output.size() - offset;
+    //}
+    //tplt<>	inln	err_t	saveView	<u1_t>	(au0_t & output, vu1_c  & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
+    //tplt<>	inln	err_t	saveView	<u2_t>	(au0_t & output, vu2_c  & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
+    //tplt<>	inln	err_t	saveView	<u3_t>	(au0_t & output, vu3_c  & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
+    //tplt<>	inln	err_t	saveView	<u1_c>	(au0_t & output, vcu1_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
+    //tplt<>	inln	err_t	saveView	<u2_c>	(au0_t & output, vcu2_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
+    //tplt<>	inln	err_t	saveView	<u3_c>	(au0_t & output, vcu3_c & viewToSerialize)			{ return saveUIntView(output, viewToSerialize); }
 
-	tplTstin		err_t	saveView					(as0_t & output, cnst view<T> & headerToWrite)	{ return saveView(*(au0_t*)&output, headerToWrite); }
-	tplT			err_t	savePOD						(au0_t & output, cnst T & input)				{ if_fail_fe(output.append((cnst uint8_t*)&input, szof(T))); return szof(T); }
-	tplTstin		err_t	savePOD						(as0_t & output, cnst T & input)				{ return savePOD(*(au0_t*)&output, input); }
-	tplT			err_t	saveUInt					(au0_t & output, cnst T & input)				{ 
-		cnst packed_uint<T>			packedInput					= input; 
-		return savePacked(output, packedInput); 
-	}
-	tplT			err_t	loadView					(vcu0_t & input, apod<T> & output) { 
-		view<cnst T>				readView					= {}; 
-		err_t						bytesRead					= 0;
-		if_fail_fe(bytesRead = viewRead(readView, input)); 
-		if_fail_fe(input.slice(input, bytesRead));
-		output					= readView;// if_true_fe(output.append(readView)); 
-		return 0;
-	}
-	tplTstin		err_t	loadView					(vcs0_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
-	tplTstin		err_t	loadView					(vcsc_t & input, apod<T> & output)				{ return loadView(*(vcu0_t*)& input, output); }
-
-	err_t					keyValConstStringSerialize	(cnst view<cnst kv<vcsc_t, vcsc_t>> & keyVals, const view<vcsc_c> & keysToSave, au0_t & output);
-} // namespace
+    tplTstin		err_t	saveView					(as0_t & output, cnst view<T> & headerToWrite)	{ return saveView(*(au0_t*)&output, headerToWrite); }
+    tplT			err_t	savePOD						(au0_t & output, cnst T & input)				{ if_fail_fe(output.append((cnst u0_t*)&input, szof(T))); return szof(T); }
+    tplTstin		err_t	savePOD						(as0_t & output, cnst T & input)				{ return savePOD(*(au0_t*)&output, input); }
+    tplt<tpnm TMap, tpnm TSave>
+    err_t					saveMap						(au0_t & output, cnst TMap & map, TSave save) {
+        u2_c						count						= map.size();
+        if_fail_fe(savePOD(output, count));
+        for(u2_t index = 0; index < count; ++index)
+            if_fail_fe(save(output, index, map[index]));
+        return 0;
+    }
+    tplT			err_t	loadView					(vcu0_t & input, apod<T> & output) { 
+        view<cnst T>				readView					= {}; 
+        err_t						bytesRead					= 0;
+        if_fail_fe(bytesRead = viewRead(readView, input)); 
+        if_fail_fe(input.slice(input, bytesRead));
+        output					= readView;// if_true_fe(output.append(readView)); 
+        return 0;
+    }
+    tplTstin    err_t   loadView    (vcs0_t & input, apod<T> & output)			            { return loadView(*(vcu0_t*)& input, output); }
+    tplTstin    err_t   save        (au0_t & output, cnst T & input)                        { if_fail_fe(savePOD(output, input)); }
+    tplTstin    err_t   save        (au0_t & output, cnst view<cnst T> & input)             { if_fail_fe(saveView(output, input)); }
+    tplTstin    err_t   save        (au0_t & output, cnst view<cnst view<T>> & input)       { rtrn input.for_each([&](cnst T & entry){ rtrn saveView(output, entry); }); }
+    tplTstin    err_t   save        (au0_t & output, cnst view<cnst view<cnst T>> & input)  { rtrn input.for_each([&](cnst T & entry){ rtrn saveView(output, entry); }); }
+    tpl_vtArgs  err_t   save        (au0_t & output, _tArgs&&... args)	{ 
+        err_t					    err			= 0;
+        s2_c					    results[]	= {err = (failed(err) ? -1 : save(output, args))..., 0}; 
+        rtrn failed(err) ? err : sum(vcs2_t{results});
+    }
+    //err_t					keyValConstStringSerialize	(view<cnst keyval<vcst_t>> keyVals, view<vcst_c> keysToSave, au0_t & output);
+} // nmsp
 
 #endif // GPK_APOD_SERIALIZE_H_23627

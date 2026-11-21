@@ -7,6 +7,9 @@
 
 namespace gpk
 {
+	stxp vcsc_t VCC_NULL = "null";
+	stxp vcsc_t VCC_FALSE = "false";
+	stxp vcsc_t VCC_TRUE = "true";
 #pragma pack(push, 1)
 #ifdef GPK_ARDUINO
 	tydf  s1_t json_id_t;
@@ -31,7 +34,7 @@ namespace gpk
 		json_id_t				ParentIndex;
 		JSON_TYPE				Type;
 		sliceu2_t				Span;
-		uint64_t				Value;
+		::gpk::u3_t				Value;
 	};
 	stct SJSONNode {
 		SJSONToken				* Token				= 0;
@@ -93,13 +96,13 @@ namespace gpk
 
 
 	// Access functions: Iterate over children looking for keys or values.
-	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)										{ rew_if(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); rees_if(!reader.Tree[iNode]); rtrn jsonArraySize(*reader.Tree[iNode]); }
-	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)										{ rew_if(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); rees_if(!reader.Tree[iNode]); rtrn jsonObjectKeyCount(*reader.Tree[iNode]); }
-	ndsi	err_t	jsonArrayValueGet	(cnst SJSONReader & reader, u2_t iNode, u2_t indexOfValueToGet)				{ rew_if(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); rees_if(!reader.Tree[iNode]); rtrn jsonArrayValueGet(*reader.Tree[iNode], indexOfValueToGet); }
-	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_c & key)						{ rew_if(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); rees_if(!reader.Tree[iNode]); rtrn jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices)					{ rew_if(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); rees_if(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], indices); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, avcsc_t & keys)						{ rew_if(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); rees_if(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, keys); }
-	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, avcsc_t & keys)	{ rew_if(iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); rees_if(!reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, indices, keys); }
+	ndsi	err_t	jsonArraySize		(cnst SJSONReader & reader, u2_t iNode)										{ if_true_vwf(-1, iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_ve(-1, !reader.Tree[iNode]); rtrn jsonArraySize(*reader.Tree[iNode]); }
+	ndsi	err_t	jsonObjectKeyCount	(cnst SJSONReader & reader, u2_t iNode)										{ if_true_vwf(-1, iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_ve(-1, !reader.Tree[iNode]); rtrn jsonObjectKeyCount(*reader.Tree[iNode]); }
+	ndsi	err_t	jsonArrayValueGet	(cnst SJSONReader & reader, u2_t iNode, u2_t indexOfValueToGet)				{ if_true_vwf(-1, iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_ve(-1, !reader.Tree[iNode]); rtrn jsonArrayValueGet(*reader.Tree[iNode], indexOfValueToGet); }
+	ndsi	err_t	jsonObjectValueGet	(cnst SJSONReader & reader, u2_t iNode, vcst_c & key)						{ if_true_vwf(-1, iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_ve(-1, !reader.Tree[iNode]); rtrn jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices)					{ if_true_vwf(-1, iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_ve(-1, !reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], indices); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, avcsc_t & keys)						{ if_true_vwf(-1, iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_ve(-1, !reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, keys); }
+	stin	err_t	jsonObjectKeyList	(cnst SJSONReader & reader, u2_t iNode, as2_t & indices, avcsc_t & keys)	{ if_true_vwf(-1, iNode >= reader.Token.size(), "Invalid node index: %" GPK_FMT_S2 ". Total nodes: %" GPK_FMT_U2, iNode, reader.Token.size()); if_true_ve(-1, !reader.Tree[iNode]); rtrn jsonObjectKeyList(*reader.Tree[iNode], reader.View, indices, keys); }
 
 	ndsi	err_t	jsonCompareArray	(cnst SJSONNode & node, cnst SJSONNode & other, cnst view<vcsc_t> & views)	{ rtrn jsonCompareArray		(node, views, other, views); }
 	ndsi	err_t	jsonCompareObject	(cnst SJSONNode & node, cnst SJSONNode & other, cnst view<vcsc_t> & views)	{ rtrn jsonCompareObject	(node, views, other, views); }
@@ -164,7 +167,7 @@ namespace gpk
 		SJSONReader		Reader					= {};
 	};
 
-	tydf SKeyVal<vcsc_t, SJSONFile>	TKeyValJSONFile;
+	tydf kv<vcsc_t, SJSONFile>	TKeyValJSONFile;
 
 	err_t			jsonFileRead			(SJSONFile & file, vcsc_c & filename);
 	err_t			jsonWrite				(cnst SJSONNode * node, cnst view<vcsc_t> & jsonViews, apod<sc_t> & output);

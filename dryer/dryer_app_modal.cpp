@@ -5,8 +5,8 @@ gpk::err_t						dry::handleResizeScreenModal	(::dry::SApplication & app, ::gpk::
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::gpk::cid_t						indexDialog						= app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG];
 	gui.Controls.Placement[indexDialog].Area.Size	= (::dry::MODAL_SCAN_SPOOL == app.Screens.ModalSelected)
-		? ::gpk::n2s1_t{448, 288} // {int16_t(newSize.x / 5.0f * 3), int16_t(newSize.y / 2.0f * 1)};
-		: ::gpk::n2s1_t{384, 200} // {int16_t(newSize.x / 5.0f * 3), int16_t(newSize.y / 2.0f * 1)};
+		? ::gpk::n2s1_t{448, 288} // {::gpk::s1_t(newSize.x / 5.0f * 3), ::gpk::s1_t(newSize.y / 2.0f * 1)};
+		: ::gpk::n2s1_t{384, 200} // {::gpk::s1_t(newSize.x / 5.0f * 3), ::gpk::s1_t(newSize.y / 2.0f * 1)};
 		;
 
 	gui.Controls.SetUpdated(indexDialog, false);
@@ -90,19 +90,19 @@ gpk::err_t						dry::modalDisplay				(::dry::SApplication & app, ::dry::MODAL mo
 	::dry::modalClose(app);
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	::gpk::vcid							children						= gui.Controls.Children[app.Screens.Modal.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]];
-	for(uint32_t iChild = 0; iChild < children.size(); ++iChild) {
+	for(::gpk::u2_t iChild = 0; iChild < children.size(); ++iChild) {
 		gui.Controls.SetHidden(children[iChild], true);
 	}
 	switch(modal) {
-	case ::dry::MODAL_CLOSE_DOOR		: ::modalDisplayCloseDoor		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1_t()); break;
-	case ::dry::MODAL_DRYING_COMPLETE	: ::modalDisplayDryingCompleted	(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1_t()); break;
-	case ::dry::MODAL_DRYING_STOP		: ::modalDisplayDryingStop		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1_t()); break;
+	case ::dry::MODAL_CLOSE_DOOR		: ::modalDisplayCloseDoor		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1()); break;
+	case ::dry::MODAL_DRYING_COMPLETE	: ::modalDisplayDryingCompleted	(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1()); break;
+	case ::dry::MODAL_DRYING_STOP		: ::modalDisplayDryingStop		(app); app.Screens.ModalEnabled = true; app.Screens.ModalSelected = modal; ::dry::handleResizeScreenModal(app, gui.LastSize.s1()); break;
 	case ::dry::MODAL_SCAN_SPOOL		:
 		::modalDisplayScanSpool(app, app.Scanned);
 		app.Screens.ModalEnabled			= true;
 		app.Screens.ModalSelected			= modal;
-		::dry::handleResizeScreenModal(app, gui.LastSize.s1_t());
-		::dry::handleResizeScreenSpoolInfo(app, gui.LastSize.s1_t());
+		::dry::handleResizeScreenModal(app, gui.LastSize.s1());
+		::dry::handleResizeScreenSpoolInfo(app, gui.LastSize.s1());
 		break;
 	}
 	::gpk::guiUpdateMetrics(gui, gui.LastSize, false);

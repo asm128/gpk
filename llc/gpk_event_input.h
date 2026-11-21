@@ -1,58 +1,62 @@
-#include "gpk_system_event.h"
+#include "gpk_event_system.h"
 #include "gpk_n2.h"
 
 #ifndef GPK_EVENT_INPUT_H_23627
 #define GPK_EVENT_INPUT_H_23627
 
-namespace gpk
+nmsp gpk
 {	
-	GDEFINE_ENUM_TYPE(EVENT_TEXT, uint8_t);
+	GDEFINE_ENUM_TYPE(EVENT_TEXT, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_TEXT, Char		, 0);
 	GDEFINE_ENUM_VALUE(EVENT_TEXT, Position	, 1);
 	GDEFINE_ENUM_VALUE(EVENT_TEXT, Cursor	, 2);
-	stin	gpk::err_t	eventEnqueueTextChar		(::gpk::apobj<::gpk::SEventSystem> & queue, uint32_t utf8)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Text, ::gpk::EVENT_TEXT_Char, utf8); }
+	stin	err_t	eventEnqueueTextChar		(apobj<SEventSystem> & queue, u2_t codePoint) {
+		if(codePoint > 0x10FFFF || (codePoint >= 0xD800 && codePoint <= 0xDFFF))
+			return -1;
+		return eventEnqueueChild(queue, SYSTEM_EVENT_Text, EVENT_TEXT_Char, codePoint);
+	}
 
-	GDEFINE_ENUM_TYPE (EVENT_KEYBOARD, uint8_t);
+	GDEFINE_ENUM_TYPE (EVENT_KEYBOARD, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_KEYBOARD, Up		, 0);
 	GDEFINE_ENUM_VALUE(EVENT_KEYBOARD, Down		, 1);
 	GDEFINE_ENUM_VALUE(EVENT_KEYBOARD, SysUp	, 2);
 	GDEFINE_ENUM_VALUE(EVENT_KEYBOARD, SysDown	, 3);
-	stin	gpk::err_t	eventEnqueueKeyboardUp		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Keyboard, ::gpk::EVENT_KEYBOARD_Up		, key); }
-	stin	gpk::err_t	eventEnqueueKeyboardDown	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Keyboard, ::gpk::EVENT_KEYBOARD_Down	, key); }
-	stin	gpk::err_t	eventEnqueueKeyboardSysUp	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Keyboard, ::gpk::EVENT_KEYBOARD_SysUp	, key); }
-	stin	gpk::err_t	eventEnqueueKeyboardSysDown	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Keyboard, ::gpk::EVENT_KEYBOARD_SysDown, key); }
+	stin	err_t	eventEnqueueKeyboardUp		(apobj<SEventSystem> & queue, u0_t key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD_Up		, key); }
+	stin	err_t	eventEnqueueKeyboardDown	(apobj<SEventSystem> & queue, u0_t key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD_Down	, key); }
+	stin	err_t	eventEnqueueKeyboardSysUp	(apobj<SEventSystem> & queue, u0_t key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD_SysUp	, key); }
+	stin	err_t	eventEnqueueKeyboardSysDown	(apobj<SEventSystem> & queue, u0_t key)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Keyboard, EVENT_KEYBOARD_SysDown, key); }
 
-	GDEFINE_ENUM_TYPE (EVENT_MOUSE, uint8_t);
+	GDEFINE_ENUM_TYPE (EVENT_MOUSE, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Position	, 0);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Up			, 1);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Down		, 2);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, DoubleClick	, 3);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Wheel		, 4);
-	stin	gpk::err_t	eventEnqueueMousePosition	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2s1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Position		, coord ); }
-	stin	gpk::err_t	eventEnqueueMouseUp			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Up			, button); }
-	stin	gpk::err_t	eventEnqueueMouseDown		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Down			, button); }
-	stin	gpk::err_t	eventEnqueueMouseDoubleClick(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_DoubleClick	, button); }
-	stin	gpk::err_t	eventEnqueueMouseWheel		(::gpk::apobj<::gpk::SEventSystem> & queue, int16_t delta )		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Wheel		, delta ); }
+	stin	err_t	eventEnqueueMousePosition	(apobj<SEventSystem> & queue, n2s1_t coord)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Mouse, EVENT_MOUSE_Position		, coord ); }
+	stin	err_t	eventEnqueueMouseUp			(apobj<SEventSystem> & queue, u0_t button)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Mouse, EVENT_MOUSE_Up			, button); }
+	stin	err_t	eventEnqueueMouseDown		(apobj<SEventSystem> & queue, u0_t button)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Mouse, EVENT_MOUSE_Down			, button); }
+	stin	err_t	eventEnqueueMouseDoubleClick(apobj<SEventSystem> & queue, u0_t button)		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Mouse, EVENT_MOUSE_DoubleClick	, button); }
+	stin	err_t	eventEnqueueMouseWheel		(apobj<SEventSystem> & queue, s1_t delta )		{ return eventEnqueueChild(queue, SYSTEM_EVENT_Mouse, EVENT_MOUSE_Wheel		, delta ); }
 
-	GDEFINE_ENUM_TYPE (EVENT_TOUCH, uint8_t);
+	GDEFINE_ENUM_TYPE (EVENT_TOUCH, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, Begin		, 0);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, End			, 1);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, Update		, 2);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, Ownership	, 3);
-	stin	gpk::err_t	eventEnqueueTouchBegin		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Begin	, coord); }
-	stin	gpk::err_t	eventEnqueueTouchEnd		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_End		, coord); }
-	stin	gpk::err_t	eventEnqueueTouchUpdate		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Update	, coord); }
-	stin	gpk::err_t	eventEnqueueTouchOwnership	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Ownership, coord); }
+	stin	err_t	eventEnqueueTouchBegin		(apobj<SEventSystem> & queue, n2u1_t coord)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Touch, EVENT_TOUCH_Begin	, coord); }
+	stin	err_t	eventEnqueueTouchEnd		(apobj<SEventSystem> & queue, n2u1_t coord)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Touch, EVENT_TOUCH_End		, coord); }
+	stin	err_t	eventEnqueueTouchUpdate		(apobj<SEventSystem> & queue, n2u1_t coord)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Touch, EVENT_TOUCH_Update	, coord); }
+	stin	err_t	eventEnqueueTouchOwnership	(apobj<SEventSystem> & queue, n2u1_t coord)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Touch, EVENT_TOUCH_Ownership, coord); }
 
-	GDEFINE_ENUM_TYPE(EVENT_JOYPAD, uint8_t);
+	GDEFINE_ENUM_TYPE(EVENT_JOYPAD, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, Move		, 0);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, Button_up	, 1);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, Button_down, 2);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, ZMove		, 3);
-	stin	gpk::err_t	eventEnqueueJoyPadMove		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2s1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Move		, coord ); }
-	stin	gpk::err_t	eventEnqueueJoyPadZMove		(::gpk::apobj<::gpk::SEventSystem> & queue, uint16_t value)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_ZMove		, value ); }
-	stin	gpk::err_t	eventEnqueueJoyPadUp		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Button_up	, button); }
-	stin	gpk::err_t	eventEnqueueJoyPadDown		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Button_down, button); }
-} // namespace
+	stin	err_t	eventEnqueueJoyPadMove		(apobj<SEventSystem> & queue, n2s1_t coord)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Joypad, EVENT_JOYPAD_Move		, coord ); }
+	stin	err_t	eventEnqueueJoyPadZMove		(apobj<SEventSystem> & queue, u1_t value)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Joypad, EVENT_JOYPAD_ZMove		, value ); }
+	stin	err_t	eventEnqueueJoyPadUp		(apobj<SEventSystem> & queue, u0_t button)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Joypad, EVENT_JOYPAD_Button_up	, button); }
+	stin	err_t	eventEnqueueJoyPadDown		(apobj<SEventSystem> & queue, u0_t button)	{ return eventEnqueueChild(queue, SYSTEM_EVENT_Joypad, EVENT_JOYPAD_Button_down, button); }
+} // nmsp
 
 #endif // GPK_EVENT_INPUT_H_23627

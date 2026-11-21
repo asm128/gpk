@@ -5,9 +5,9 @@
 #ifndef GPK_ENGINE_SOUNDBUFFER_H_23_05_08
 #define GPK_ENGINE_SOUNDBUFFER_H_23_05_08
 
-namespace gpk
+nmsp gpk
 {
-	GDEFINE_ENUM_TYPE(SOUND_BUFFER_MODE, uint8_t);
+	GDEFINE_ENUM_TYPE(SOUND_BUFFER_MODE, u0_t);
 	GDEFINE_ENUM_VALUE(SOUND_BUFFER_MODE, Loop				,   0);
 	GDEFINE_ENUM_VALUE(SOUND_BUFFER_MODE, Discard			,   1);
 	GDEFINE_ENUM_VALUE(SOUND_BUFFER_MODE, Bitfield			, 100);
@@ -23,21 +23,21 @@ namespace gpk
 		SSoundBufferDescription						Desc			= {};
 		::gpk::au0_t									Data			= {};
 
-		gpk::err_t								Save			(::gpk::apod<uint8_t> & output)	const	{ 
-			gpk_necs(gpk::savePOD	(output, Desc));
-			gpk_necs(gpk::saveView(output, Data));
+		gpk::err_t 							Save			(::gpk::apod<u0_t> & output)	cnst	{ 
+			if_fail_fe(gpk::savePOD	(output, Desc));
+			if_fail_fe(gpk::saveView(output, Data));
 			return 0; 
 		}
 
-		gpk::err_t								Load			(::gpk::vcu0_t & input)	{ 
-			gpk_necs(gpk::loadPOD (input, Desc));
-			gpk_necs(gpk::loadView(input, Data));
+		gpk::err_t 							Load			(::gpk::vcu0_t & input)	{ 
+			if_fail_fe(gpk::loadPOD (input, Desc));
+			if_fail_fe(gpk::loadView(input, Data));
 			return 0;
 		}
 	};
 
-	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSoundBuffer>	SSoundBufferManager;
+	tydf	::gpk::gpk_linear_map_pobj<::gpk::SSoundBuffer>	SSoundBufferManager;
 
-} // namespace
+} // nmsp
 
 #endif // GPK_ENGINE_SOUNDBUFFER_H_23_05_08

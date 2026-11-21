@@ -7,12 +7,12 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (UI_CLIENT_INPUT, uint8_t);
+	GDEFINE_ENUM_TYPE (UI_CLIENT_INPUT, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INPUT, Root		, 0);
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INPUT, Exit		, 1);
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INPUT, Connect		, 2);
 
-	GDEFINE_ENUM_TYPE (UI_CLIENT_INFO, uint8_t);
+	GDEFINE_ENUM_TYPE (UI_CLIENT_INFO, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INFO, Root				, 0);
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INFO, DateTime			, 1);
 	GDEFINE_ENUM_VALUE(UI_CLIENT_INFO, ConnectedSince	, 2);
@@ -43,11 +43,11 @@ namespace gpk
 
 							~SClient			()	{
 			if(UDP.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
-				ws_if_failed(::gpk::clientDisconnect(UDP));
+				if_fail_w(::gpk::clientDisconnect(UDP));
 		}
 	};
 
-	gpk::err_t		loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port);
+	gpk::err_t		loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, ::gpk::s2_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port);
 	gpk::err_t		clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui);
 	gpk::err_t		clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui);
 	gpk::err_t		setupGUI			(::gpk::SClientUI & client, ::gpk::SGUI & gui);

@@ -13,7 +13,7 @@ namespace gpk
 	inline	err_t	parseIntegerDecimal				(vcsc_c & sourceChars, _tInt & number_)	{ 
 		u3_t					number							= 0; 
 		err_t				countDigits; 
-		gpk_necs(countDigits = parseArbitraryBaseInteger(10, vcs{"0123456789"}, sourceChars, &number)); 
+		if_fail_fe(countDigits = parseArbitraryBaseInteger(10, vcst_t{"0123456789"}, sourceChars, &number)); 
 		number_ = (_tInt)number; 
 		return countDigits; 
 	}
@@ -22,12 +22,12 @@ namespace gpk
 	inline	err_t	parseIntegerHexadecimal			(vcsc_c & sourceChars, _tInt & number_)	{ 
 		u3_t					number							= 0; 
 		err_t countDigits;
-		gpk_necs(countDigits = parseArbitraryBaseInteger(16, vcs{"0123456789abcdef"}, sourceChars, &number)); 
+		if_fail_fe(countDigits = parseArbitraryBaseInteger(16, vcst_t{"0123456789abcdef"}, sourceChars, &number)); 
 		number_ = (_tInt)number; 
 		return countDigits; 
 	}
 
-	GDEFINE_ENUM_TYPE(STRIP_LITERAL_TYPE, int8_t);
+	GDEFINE_ENUM_TYPE(STRIP_LITERAL_TYPE, ::gpk::s0_t);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, LITERAL	, 0);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, TOKEN	, 1);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, COUNT	, 2);

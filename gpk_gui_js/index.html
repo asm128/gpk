@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GPK GUI JavaScript port</title>
+  <style>
+    html,body{width:100%;height:100%;margin:0;background:#070a0e;color:#d9e7f0;font:14px Consolas,monospace;overflow:hidden}
+    body{display:grid;grid-template-rows:1fr 28px;place-items:center}
+    canvas{display:block;max-width:100vw;max-height:calc(100vh - 28px);width:auto;height:auto;image-rendering:pixelated;box-shadow:0 0 0 1px #253442;background:#0a0e14;touch-action:none}
+    #status{box-sizing:border-box;width:100%;height:28px;padding:6px 10px;background:#101821;color:#8fb3c7}
+  </style>
+</head>
+<body>
+  <canvas id="gui" width="1280" height="720" tabindex="0"></canvas>
+  <div id="status">Ready — literal control tree, metrics, input, palettes, bitmap text and pixel drawing.</div>
+  <script src="gpk.js"></script><script src="gpk_align.js"></script><script src="gpk_input.js"></script><script src="gpk_expression.js"></script><script src="gpk_json_expression.js"></script>
+  <script src="gpk_gui_control_flag.js"></script><script src="gpk_gui_text_flag.js"></script><script src="gpk_gui_control.js"></script><script src="gpk_gui_control_serialize.js"></script>
+  <script src="gpk_font.js"></script><script src="gpk_gui_theme.js"></script><script src="gpk_gui.js"></script><script src="gpk_gui_text.js"></script>
+  <script src="gpk_gui_draw.js"></script><script src="gpk_gui_keyboard.js"></script><script src="gpk_gui_control_list.js"></script>
+  <script src="gpk_gui_system.js"></script><script src="gpk_gui_inputbox.js"></script><script src="gpk_gui_viewport.js"></script>
+  <script src="gpk_gui_host.js"></script><script src="gpk_gui_document.js"></script><script src="gui_type_explorer_document.js"></script><script src="demo.js"></script>
+</body>
+</html>

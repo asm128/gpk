@@ -23,9 +23,9 @@ namespace s3d
 
 						~SSerial		() {
 #if defined(GPK_WINDOWS)
-			gpk_safe_closehandle(Handle);
+			gpk::safe_closehandle(Handle);
 #else
-			gpk_safe_closesocket(Handle);
+			gpk::safe_closesocket(Handle);
 #endif
 		}
 						SSerial			() = default;
@@ -37,8 +37,8 @@ namespace s3d
 	gpk::err_t	serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud);
 	gpk::err_t	serialClose			(::s3d::SSerial & serial);
 	gpk::err_t	serialWrite			(::s3d::SSerial & serial, ::gpk::vcu0_t data);
-	gpk::err_t	serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, uint32_t count, uint32_t timeout);
-	gpk::err_t	serialReadUntil		(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, uint32_t maxCount, uint32_t timeout);
+	gpk::err_t	serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ::gpk::u2_t count, ::gpk::u2_t timeout);
+	gpk::err_t	serialReadUntil		(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, ::gpk::u2_t maxCount, ::gpk::u2_t timeout);
 } // namespace
 
 #endif // S3D_SERIAL_H_239846293487

@@ -1,7 +1,7 @@
 #include "gpk_gui_widgets.h"
 
 ::gpk::cid_t gpk::checkBoxCreate(::gpk::SGUI & gui, ::gpk::SCheckBox & checkbox) {
-	gpk_necs(checkbox.IdControl = ::gpk::controlCreate(gui));
+	if_fail_fe(checkbox.IdControl = ::gpk::controlCreate(gui));
 	gui.Controls.Draw[checkbox.IdControl].UseNewPalettes = false;
 	return checkbox.IdControl;
 }
@@ -12,7 +12,7 @@ gpk::err_t gpk::checkBoxUpdate(::gpk::SGUI & gui, ::gpk::SCheckBox & checkbox) {
 	if(controlTable.IsAction(checkbox.IdControl)) {
 		if(checkbox.ImageCross.Texels.size() < 4) {
 #if !(defined(GPK_ESP32) || defined(GPK_ARDUINO))
-			if_fail_e(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross));
+			if_fail_e(::gpk::pngLoadFile("../gpk_data/images/cross.png", imageCross));
 #endif
 			checkbox.ImageCross.resize(imageCross.metrics());
 			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
@@ -25,15 +25,15 @@ gpk::err_t gpk::checkBoxUpdate(::gpk::SGUI & gui, ::gpk::SCheckBox & checkbox) {
 			}
 		}
 		checkbox.Checked = !checkbox.Checked;
-		controlTable.Images[checkbox.IdControl].Image = (false == checkbox.Checked) ? ::gpk::g8bgra{} : imageCross.View;
+		controlTable.ImageViews[checkbox.IdControl] = (false == checkbox.Checked) ? ::gpk::g8bgra{} : imageCross.View;
 	}
 	return 0;
 }
 
 ::gpk::cid_t gpk::sliderCreate(::gpk::SGUI & gui, ::gpk::SSlider & slider) {
-	gpk_necs(slider.IdControl = ::gpk::controlCreate(gui));
+	if_fail_fe(slider.IdControl = ::gpk::controlCreate(gui));
 	gui.Controls.Draw[slider.IdControl].UseNewPalettes = false;
-	gpk_necs(slider.IdButton = ::gpk::controlCreateChild(gui, slider.IdControl));
+	if_fail_fe(slider.IdButton = ::gpk::controlCreateChild(gui, slider.IdControl));
 	::gpk::SControlTable & controlTable = gui.Controls;
 	controlTable.Placement[slider.IdControl].Margin = {};
 	controlTable.Placement[slider.IdButton].Area.Size = {16, 16};
@@ -54,7 +54,7 @@ gpk::err_t gpk::sliderSetValue(::gpk::SGUI & gui, ::gpk::SSlider & slider, int64
 	const double proportion = (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 	::gpk::SControlPlacement & controlButton = controlTable.Placement[slider.IdButton];
 	::gpk::SControlPlacement & controlSlider = controlTable.Placement[slider.IdControl];
-	::gpk::n2f3_t ncSpacing = ::gpk::controlNCSpacing(controlSlider).f3_t();
+	::gpk::n2f3_t ncSpacing = ::gpk::controlNCSpacing(controlSlider).f3();
 	if(slider.Vertical)
 		controlButton.Area.Offset.y = int16_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
 	else
@@ -69,11 +69,11 @@ gpk::err_t gpk::sliderSetValue(::gpk::SGUI & gui, ::gpk::SSlider & slider, int64
 		buttonConstraints.AttachSizeToControl.y = slider.IdButton;
 	}
 	::gpk::vcsc_t valueString;
-	gpk_necs(slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits));
-	gpk_necs(slider.FuncGetString(valueString, slider.ValueCurrent, slider.ValueLimits));
-	gpk_necs(gpk::controlTextSet(gui, slider.IdControl, valueString));
+	if_fail_fe(slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits));
+	if_fail_fe(slider.FuncGetString(valueString, slider.ValueCurrent, slider.ValueLimits));
+	if_fail_fe(gpk::controlTextSet(gui, slider.IdControl, valueString));
 	if(updateMetrics)
-		gpk_necs(gpk::controlMetricsInvalidate(gui, slider.IdControl));
+		if_fail_fe(gpk::controlMetricsInvalidate(gui, slider.IdControl));
 	return 0;
 }
 
@@ -82,15 +82,15 @@ gpk::err_t gpk::sliderUpdate(::gpk::SGUI & gui, ::gpk::SInput & input, ::gpk::SS
 	const int64_t valueRange = slider.ValueLimits.Max - slider.ValueLimits.Min;
 	if(controlTable.States[slider.IdButton].IsPressed()) {
 		if(input.MouseCurrent.Position != input.MousePrevious.Position) {
-			const ::gpk::n2f3_t controlSliderPos = controlTable.Area[slider.IdControl].Client.Global.Offset.f3_t();
-			const ::gpk::n2f3_t controlSliderSize = controlTable.Area[slider.IdControl].Client.Global.Size.f3_t();
-			::gpk::n2f3_t effectiveSize = controlSliderSize - (controlTable.Placement[slider.IdButton].Area.Size).f3_t();
-			::gpk::n2f3_t currentValue = input.MouseCurrent.Position.f3_t();
+			const ::gpk::n2f3_t controlSliderPos = controlTable.Area[slider.IdControl].Client.Global.Offset.f3();
+			const ::gpk::n2f3_t controlSliderSize = controlTable.Area[slider.IdControl].Client.Global.Size.f3();
+			::gpk::n2f3_t effectiveSize = controlSliderSize - (controlTable.Placement[slider.IdButton].Area.Size).f3();
+			::gpk::n2f3_t currentValue = input.MouseCurrent.Position.f3();
 			const ::gpk::n2f3_t valueUnit = {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
-			currentValue -= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f3_t() / 2.0;
+			currentValue -= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f3() / 2.0;
 			currentValue.x *= valueUnit.x;
 			currentValue.y *= valueUnit.y;
-			gpk_necs(gpk::sliderSetValue(gui, slider, (int64_t)((slider.Vertical ? currentValue.y : currentValue.x) * valueRange + slider.ValueLimits.Min)));
+			if_fail_fe(gpk::sliderSetValue(gui, slider, (int64_t)((slider.Vertical ? currentValue.y : currentValue.x) * valueRange + slider.ValueLimits.Min)));
 		}
 	}
 	else if(input.ButtonDown(0) && controlTable.States[slider.IdControl].IsPressed()) {
@@ -98,11 +98,11 @@ gpk::err_t gpk::sliderUpdate(::gpk::SGUI & gui, ::gpk::SInput & input, ::gpk::SS
 		const ::gpk::n2<int16_t> & controlButtonPosition = controlTable.Area[slider.IdButton].Total.Global.Offset;
 		if(slider.Vertical) {
 			const int64_t finalValue = slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
-			gpk_necs(gpk::sliderSetValue(gui, slider, finalValue));
+			if_fail_fe(gpk::sliderSetValue(gui, slider, finalValue));
 		}
 		else {
 			const int64_t finalValue = slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
-			gpk_necs(gpk::sliderSetValue(gui, slider, finalValue));
+			if_fail_fe(gpk::sliderSetValue(gui, slider, finalValue));
 		}
 	}
 	return 0;

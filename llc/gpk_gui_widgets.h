@@ -9,7 +9,7 @@ namespace gpk {
 		cid_t IdControl = -1;
 		bool Checked = false;
 		::gpk::img<::gpk::bgra> ImageCrossBGRA = {};
-		::gpk::imgmonou64 ImageCross = {};
+		::gpk::imgmonou3_t ImageCross = {};
 	};
 
 	struct SSlider {
@@ -20,9 +20,9 @@ namespace gpk {
 		::gpk::minmax<int64_t> ValueLimits = {0, 100};
 		int64_t ValueCurrent = -1;
 		sc_t ValueString[64] = {};
-		TCallback FuncValueFormat = [](::gpk::vcsc_t & format, int64_t, const ::gpk::minmax<int64_t> &) mutable { format = ::gpk::vcs("%lli"); return 0; };
+		TCallback FuncValueFormat = [](::gpk::vcsc_t & format, int64_t, const ::gpk::minmax<int64_t> &) mutable { format = ::gpk::vcst_t("%lli"); return 0; };
 		TCallback FuncGetString = [this](::gpk::vcsc_t & inouts, int64_t value, const ::gpk::minmax<int64_t> &) {
-			inouts = {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)};
+			inouts = {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, inouts.begin(), value)};
 			return 0;
 		};
 	};
@@ -36,9 +36,9 @@ namespace gpk {
 		::gpk::minmax<_tValue> ValueLimits = {0, 0x7F};
 		_tValue ValueCurrent = 0;
 		sc_t ValueString[64] = {};
-		TCallback FuncValueFormat = [this](::gpk::vcsc_t & format, _tValue, const ::gpk::minmax<_tValue> &) mutable { format = ::gpk::vcs("%lli"); return 0; };
+		TCallback FuncValueFormat = [this](::gpk::vcsc_t & format, _tValue, const ::gpk::minmax<_tValue> &) mutable { format = ::gpk::vcst_t("%lli"); return 0; };
 		TCallback FuncGetString = [this](::gpk::vcsc_t & inouts, _tValue value, const ::gpk::minmax<_tValue> &) {
-			inouts = {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)};
+			inouts = {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, inouts.begin(), value)};
 			return 0;
 		};
 
@@ -51,8 +51,8 @@ namespace gpk {
 			::gpk::vcsc_t valueString;
 			FuncValueFormat(valueString, value, ValueLimits);
 			FuncGetString(valueString, ValueCurrent, ValueLimits);
-			gpk_necs(gpk::controlTextSet(gui, IdControl, valueString));
-			gpk_necs(gpk::controlMetricsInvalidate(gui, IdControl));
+			if_fail_fe(gpk::controlTextSet(gui, IdControl, valueString));
+			if_fail_fe(gpk::controlMetricsInvalidate(gui, IdControl));
 			return 0;
 		}
 
@@ -82,10 +82,10 @@ namespace gpk {
 
 	tplt<tpnm _tValue>
 	::gpk::cid_t tunerCreate(::gpk::SGUI & gui, ::gpk::STuner<_tValue> & tuner) {
-		gpk_necs(tuner.IdControl = ::gpk::controlCreate(gui));
+		if_fail_fe(tuner.IdControl = ::gpk::controlCreate(gui));
 		gui.Controls.Draw[tuner.IdControl].UseNewPalettes = false;
-		gpk_necs(tuner.IdDecrease = ::gpk::controlCreateChild(gui, tuner.IdControl));
-		gpk_necs(tuner.IdIncrease = ::gpk::controlCreateChild(gui, tuner.IdControl));
+		if_fail_fe(tuner.IdDecrease = ::gpk::controlCreateChild(gui, tuner.IdControl));
+		if_fail_fe(tuner.IdIncrease = ::gpk::controlCreateChild(gui, tuner.IdControl));
 		::gpk::SControlTable & controlTable = gui.Controls;
 		controlTable.Placement[tuner.IdControl].Margin = {};
 		for(int32_t iControl = tuner.IdDecrease; iControl < tuner.IdIncrease + 1; ++iControl) {
@@ -96,7 +96,7 @@ namespace gpk {
 			controlTable.Draw[iControl].ColorMode = ::gpk::GUI_COLOR_MODE_3D;
 			controlTable.Constraints[iControl].AttachSizeToControl.y = (::gpk::cid_t)iControl;
 		}
-		gpk_necs(tuner.SetValue(gui, tuner.ValueCurrent));
+		if_fail_fe(tuner.SetValue(gui, tuner.ValueCurrent));
 		controlTable.Text[tuner.IdControl].Align = ::gpk::ALIGN_CENTER;
 		return tuner.IdControl;
 	}

@@ -4,10 +4,10 @@
 #ifndef GPK_WEB_CGI
 #define GPK_WEB_CGI
 
-namespace gpk
+nmsp gpk
 {
-	gpk::err_t				querystring_split			(::gpk::vcsc_c & input_string, ::gpk::aobj<::gpk::vcsc_t> & output_views);
-	gpk::err_t				writeCGIEnvironToFile		(::gpk::view<const ::gpk::kv<vcsc_t, vcsc_t>> environViews);
-} // namespace
+	err_t				querystring_split			(vcst_t input_string, aobj<vcst_t> & output_views);
+	err_t				writeCGIEnvironToFile		(view<cnst kv<vcst_t>> environViews);
+} // nmsp
 
 #endif // GPK_WEB_CGI

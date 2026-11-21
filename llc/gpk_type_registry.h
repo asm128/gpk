@@ -3,21 +3,21 @@
 #ifndef GPK_TYPE_REGISTRY_H_23627
 #define GPK_TYPE_REGISTRY_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct STypeRegistry {
-		::gpk::avcsc_t				Names;
+		::gpk::aobj<vcst_t>				Names;
 		::gpk::au2_t				MemberCount;
 
-		static	STypeRegistry&	GetGlobalInstance	()	noexcept	{
-			static STypeRegistry		instance;
+		sttc	STypeRegistry&	GetGlobalInstance	()	nxpt	{
+			sttc STypeRegistry		instance;
 			return instance;
 		}
 	};
 
 	tplt<tpnm _t>
 	struct STypeRegistrator {
-		operator				int					()	{ return 0; }
+		oper				int					()	{ return 0; }
 
 								STypeRegistrator	()	{
 			::gpk::STypeRegistry		& typeRegistry		= ::gpk::STypeRegistry::GetGlobalInstance();
@@ -30,17 +30,17 @@ namespace gpk
 
 #define GPK_END_POD(_structName)																									\
 	public:																															\
-		sinx	::gpk::vcsc_t	gpk_type_name			()		noexcept	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
-		sinx	uint32_t		gpk_type_name_len		()		noexcept	{ return ::gpk::size(#_structName) - 1; }					\
+		sinx	::gpk::vcst_t	gpk_type_name			()		nxpt	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
+		sinx	u2_t		gpk_type_name_len		()		nxpt	{ return ::gpk::size(#_structName) - 1; }					\
 	};																																\
-	static	const int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
+	sttc	cnst int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
 
 #define GPK_STRUCT_MEMBER_DESC_NAME(_name)	_gpk_dsc_##_name
 
 #define GPK_STRUCT_MEMBER(_type, _name, ...)																			\
 	struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																			\
-		sinx	::gpk::vcsc_t	gpk_member_type_name	()		noexcept	{ return {::gpk::size(#_type) - 1, #_type}; }	\
-		sinx	::gpk::vcsc_t	gpk_member_name			()		noexcept	{ return {::gpk::size(#_name) - 1, #_name}; }	\
+		sinx	::gpk::vcst_t	gpk_member_type_name	()		nxpt	{ return {::gpk::size(#_type) - 1, #_type}; }	\
+		sinx	::gpk::vcst_t	gpk_member_name			()		nxpt	{ return {::gpk::size(#_name) - 1, #_name}; }	\
 	};																													\
 	_type				_name
 }

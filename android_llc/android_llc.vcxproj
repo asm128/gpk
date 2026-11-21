@@ -67,7 +67,6 @@
     <ClCompile Include="..\llc\gpk_gui_viewport.cpp" />
     <ClCompile Include="..\llc\gpk_https_client.cpp" />
     <ClCompile Include="..\llc\gpk_http_client.cpp" />
-    <ClCompile Include="..\llc\gpk_i2c.cpp" />
     <ClCompile Include="..\llc\gpk_json.cpp" />
     <ClCompile Include="..\llc\gpk_json_expression.cpp" />
     <ClCompile Include="..\llc\gpk_keyval.cpp" />
@@ -78,7 +77,6 @@
     <ClCompile Include="..\llc\gpk_parse.cpp" />
     <ClCompile Include="..\llc\gpk_particle.cpp" />
     <ClCompile Include="..\llc\gpk_path.cpp" />
-    <ClCompile Include="..\llc\gpk_platform_error.cpp" />
     <ClCompile Include="..\llc\gpk_png.cpp" />
     <ClCompile Include="..\llc\gpk_png_write.cpp" />
     <ClCompile Include="..\llc\gpk_process.cpp" />
@@ -86,7 +84,6 @@
     <ClCompile Include="..\llc\gpk_rsa.cpp" />
     <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
     <ClCompile Include="..\llc\gpk_scene.cpp" />
-    <ClCompile Include="..\llc\gpk_spi.cpp" />
     <ClCompile Include="..\llc\gpk_stdstring.cpp" />
     <ClCompile Include="..\llc\gpk_stl.cpp" />
     <ClCompile Include="..\llc\gpk_string_helper.cpp" />
@@ -144,7 +141,6 @@
     <ClInclude Include="..\llc\gpk_dialog_controls.h" />
     <ClInclude Include="..\llc\gpk_encoding.h" />
     <ClInclude Include="..\llc\gpk_enum.h" />
-    <ClInclude Include="..\llc\gpk_error.h" />
     <ClInclude Include="..\llc\gpk_eval.h" />
     <ClInclude Include="..\llc\gpk_event.h" />
     <ClInclude Include="..\llc\gpk_expression.h" />
@@ -164,7 +160,6 @@
     <ClInclude Include="..\llc\gpk_gui_text.h" />
     <ClInclude Include="..\llc\gpk_http.h" />
     <ClInclude Include="..\llc\gpk_http_client.h" />
-    <ClInclude Include="..\llc\gpk_i2c.h" />
     <ClInclude Include="..\llc\gpk_image.h" />
     <ClInclude Include="..\llc\gpk_input.h" />
     <ClInclude Include="..\llc\gpk_io.h" />
@@ -189,7 +184,6 @@
     <ClInclude Include="..\llc\gpk_parse.h" />
     <ClInclude Include="..\llc\gpk_particle.h" />
     <ClInclude Include="..\llc\gpk_path.h" />
-    <ClInclude Include="..\llc\gpk_platform_error.h" />
     <ClInclude Include="..\llc\gpk_png.h" />
     <ClInclude Include="..\llc\gpk_process.h" />
     <ClInclude Include="..\llc\gpk_ptr_nco.h" />
@@ -210,7 +204,6 @@
     <ClInclude Include="..\llc\gpk_safe.h" />
     <ClInclude Include="..\llc\gpk_scene.h" />
     <ClInclude Include="..\llc\gpk_size.h" />
-    <ClInclude Include="..\llc\gpk_spi.h" />
     <ClInclude Include="..\llc\gpk_stdsocket.h" />
     <ClInclude Include="..\llc\gpk_stdstring.h" />
     <ClInclude Include="..\llc\gpk_stl.h" />

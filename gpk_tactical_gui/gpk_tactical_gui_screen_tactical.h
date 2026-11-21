@@ -6,7 +6,7 @@
 
 namespace dry
 {
-	GDEFINE_ENUM_TYPE(TACTICAL_SECTION, uint8_t);
+	GDEFINE_ENUM_TYPE(TACTICAL_SECTION, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(TACTICAL_SECTION, START_MISSION	, 0);
 	GDEFINE_ENUM_VALUE(TACTICAL_SECTION, SET_UP_SQUAD	, 1);
 	GDEFINE_ENUM_VALUE(TACTICAL_SECTION, LABS			, 2);
@@ -22,7 +22,7 @@ namespace dry
 		::gpk::vcsc_t	Text	= {};
 	};
 
-	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_TACTICAL, uint8_t);
+	GDEFINE_ENUM_TYPE(SCREEN_CONTROL_TACTICAL, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_TACTICAL, DIALOG				,  0);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_TACTICAL, TITLE				,  1);
 	GDEFINE_ENUM_VALUE(SCREEN_CONTROL_TACTICAL, MENU_GROUP			,  2);
@@ -55,8 +55,8 @@ namespace dry
 
 	struct SScreenTactical : public ::dry::SScreen<::dry::SCREEN_CONTROL_TACTICAL_COUNT> {
 		::dry::TACTICAL_SECTION	SectionSelected	= ::dry::TACTICAL_SECTION_START_MISSION;
-		int32_t					ProductionBudget	= 50;
-		int32_t					ResearchBudget		= 50;
+		::gpk::s2_t					ProductionBudget	= 50;
+		::gpk::s2_t					ResearchBudget		= 50;
 		::gpk::array_static<::gpk::sc_t, 32>	ProductionText	= {};
 		::gpk::array_static<::gpk::sc_t, 32>	ResearchText	= {};
 	};

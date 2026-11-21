@@ -15,18 +15,18 @@
 
 gpk::err_t			s3d::serialClose		(::s3d::SSerial & serial) {
 #if defined(GPK_WINDOWS)
-	gpk_safe_closehandle(serial.Handle);
+	gpk::safe_closehandle(serial.Handle);
 #else
-	gpk_safe_closesocket(serial.Handle);
+	gpk::safe_closesocket(serial.Handle);
 #endif
 	serial.Connected		= false;
 	return 0;
 }
 
 gpk::err_t			s3d::serialWrite		(::s3d::SSerial & serial, ::gpk::vcu0_t data) {
-	rnw_if(data.size() == 0, "%s", "Zero bytes specified to be written");
-	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
-	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
+	if_zero_vw(0, data.size());
+	if_true_fef(false == serial.Connected, "%s", "Serial port is closed.");
+	if_true_fef(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
 #if !defined(GPK_WINDOWS)
 	int							sentBytes				= write(serial.Handle, data.begin(), data.size());
 #else
@@ -58,18 +58,18 @@ gpk::err_t			s3d::serialWrite		(::s3d::SSerial & serial, ::gpk::vcu0_t data) {
         return -1;
     }
 #endif
-	ree_if(((uint32_t)sentBytes) != data.size(), "%i bytes written. Expected: %u", sentBytes, data.size());
+	if_true_fef(((::gpk::u2_t)sentBytes) != data.size(), "%i bytes written. Expected: %u", sentBytes, data.size());
 	return sentBytes;
 }
 
-gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, uint32_t count, uint32_t timeout) {
-	rnw_if(count == 0, "%s", "Zero bytes specified to be read");
-	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
-	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
-	uint32_t					totalBytesRead		= 0;
+gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ::gpk::u2_t count, ::gpk::u2_t timeout) {
+	if_zero_vw(0, count);
+	if_true_fef(false == serial.Connected, "%s", "Serial port is closed.");
+	if_true_fef(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
+	::gpk::u2_t					totalBytesRead		= 0;
 	::gpk::STimer				timerTimeout;
-	uint64_t					timeElapsed				= 0;
-	const uint64_t				timeoutInMicroseconds	= timeout * 1000;
+	::gpk::u3_t					timeElapsed				= 0;
+	const ::gpk::u3_t				timeoutInMicroseconds	= timeout * 1000;
 	do {
 		timerTimeout.Frame();
 		timeElapsed				+= timerTimeout.LastTimeMicroseconds;
@@ -80,7 +80,7 @@ gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ui
 		int							rtcd					= tcdrain(serial.Handle);
 		printf("Waiting until UART buffer clears: %i\n", rtcd);
 		int							readBytes				= read(serial.Handle, &byte, 1);  // read a char at a time
-		ree_if(-1 == readBytes, "%s", "couldn't read");
+		if_true_fef(-1 == readBytes, "%s", "couldn't read");
 #else
 		DWORD						readBytes				= (DWORD)0;
 		//unsigned int				toRead					= 0;
@@ -90,7 +90,7 @@ gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ui
 			::gpk::sleep(5);
 			continue;
 		}
-		ree_if(0 == ReadFile(serial.Handle, &byte, 1, &readBytes, NULL), "%s", "couldn't read");
+		if_true_fef(0 == ReadFile(serial.Handle, &byte, 1, &readBytes, NULL), "%s", "couldn't read");
 #endif
 		if(0 == readBytes) {
 			::gpk::sleep(5);
@@ -102,14 +102,14 @@ gpk::err_t			s3d::serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ui
 	return totalBytesRead;
 }
 
-gpk::err_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, uint32_t maxCount, uint32_t timeout) {
-	rnw_if(maxCount == 0, "%s", "Zero bytes specified to be read");
-	ree_if(false == serial.Connected, "%s", "Serial port is closed.");
-	ree_if(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
-	uint32_t					totalBytesRead			= 0;
+gpk::err_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, ::gpk::u2_t maxCount, ::gpk::u2_t timeout) {
+	if_zero_vw(0, maxCount);
+	if_true_fef(false == serial.Connected, "%s", "Serial port is closed.");
+	if_true_fef(INVALID_HANDLE_VALUE == serial.Handle, "%s", "Handle is invalid.");
+	::gpk::u2_t					totalBytesRead			= 0;
 	::gpk::STimer				timerTimeout;
-	uint64_t					timeElapsed				= 0;
-	const uint64_t				timeoutInMicroseconds	= timeout * 1000;
+	::gpk::u3_t					timeElapsed				= 0;
+	const ::gpk::u3_t				timeoutInMicroseconds	= timeout * 1000;
 	do {
 		timerTimeout.Frame();
 		timeElapsed				+= timerTimeout.LastTimeMicroseconds;
@@ -118,7 +118,7 @@ gpk::err_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data,
 		char						byte					= {};
 #if !defined(GPK_WINDOWS)
 		int							readBytes				= read(serial.Handle, &byte, 1);  // read a char at a time
-		ree_if(-1 == readBytes, "%s", "couldn't read");
+		if_true_fef(-1 == readBytes, "%s", "couldn't read");
 #else
 		DWORD						readBytes				= (DWORD)0;
 		ClearCommError(serial.Handle, &serial.Errors, &serial.Status);
@@ -126,7 +126,7 @@ gpk::err_t			s3d::serialReadUntil	(::s3d::SSerial & serial, ::gpk::au0_t & data,
 			::gpk::sleep(5);
 			continue;
 		}
-		ree_if(0 == ReadFile(serial.Handle, &byte, 1, &readBytes, NULL), "%s", "couldn't read");
+		if_true_fef(0 == ReadFile(serial.Handle, &byte, 1, &readBytes, NULL), "%s", "couldn't read");
 #endif
 		if(0 == readBytes) {
 			::gpk::sleep(5);
@@ -144,9 +144,9 @@ gpk::err_t			s3d::serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName,
 #if !defined(GPK_WINDOWS)
 	gpk_safe_closesocket(serial.Handle);
 	termios						toptions				= {};
-	//int							fd						= open(::gpk::toString(portName).begin(), O_RDWR | O_NOCTTY | O_NDELAY);
+	//int							fd						= open(::gpk::string(portName).begin(), O_RDWR | O_NOCTTY | O_NDELAY);
 	int							fd						= open(::gpk::string(portName).begin(), O_RDWR | O_NOCTTY);
-	ree_if(fd == -1, "Unable to open port '%s'", ::gpk::string(portName).begin());
+	if_true_fef(fd == -1, "Unable to open port '%s'", ::gpk::string(portName).begin());
 	if (tcgetattr(fd, &toptions) < 0) {
 		 error_printf("%s", "Couldn't get term attributes.");
 		 close(fd);
@@ -185,11 +185,11 @@ gpk::err_t			s3d::serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName,
 	if_fail_fef(tcsetattr(fd, TCSANOW, &toptions), "%s", "Couldn't set term attributes");
 	serial.Handle			= fd;
 #else
-	gpk_safe_closehandle(serial.Handle);
+	gpk::safe_closehandle(serial.Handle);
 	DWORD								dwDesiredAccess			= GENERIC_READ | GENERIC_WRITE;
 	serial.Handle					= CreateFileA(portName.begin(), dwDesiredAccess, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (serial.Handle == INVALID_HANDLE_VALUE) {
-		ree_if(GetLastError() == ERROR_FILE_NOT_FOUND, "%.*s not available.", GPK_VIEW_ARGS(portName))
+		if_true_fef(GetLastError() == ERROR_FILE_NOT_FOUND, "%.*s not available.", GPK_VIEW_ARGS(portName))
 		else
 			error_printf("Failed to open serial port. %s", "Unknown error.");
 		return -1;
@@ -197,23 +197,23 @@ gpk::err_t			s3d::serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName,
 
 	DCB									dcb					= {0};
 
-	ree_if(0 == GetCommState(serial.Handle, &dcb), "%s", "Failed to get current serial parameters");
+	if_true_fef(0 == GetCommState(serial.Handle, &dcb), "%s", "Failed to get current serial parameters");
 	dcb.BaudRate					= baud;
 	dcb.ByteSize					= 8;
 	dcb.StopBits					= ONESTOPBIT;
 	dcb.Parity						= NOPARITY;
 	dcb.fDtrControl					= DTR_CONTROL_ENABLE; //Setting the DTR to Control_Enable ensures that the Arduino is properly
-	ree_if(0 == SetCommState(serial.Handle, &dcb), "%s", "Failed to set serial port parameters.");
+	if_true_fef(0 == SetCommState(serial.Handle, &dcb), "%s", "Failed to set serial port parameters.");
 
 	// Set up timeouts
 	COMMTIMEOUTS						commTimeouts		= {};
-	ree_if(0 == GetCommTimeouts(serial.Handle, &commTimeouts), "%s", "Windows error!");
+	if_true_fef(0 == GetCommTimeouts(serial.Handle, &commTimeouts), "%s", "Windows error!");
 	commTimeouts.ReadIntervalTimeout			= 100;
 	commTimeouts.ReadTotalTimeoutMultiplier		= 1;
 	commTimeouts.ReadTotalTimeoutConstant		= 100;
 	commTimeouts.WriteTotalTimeoutMultiplier	= 1;
 	commTimeouts.WriteTotalTimeoutConstant		= 100;
-	ree_if(0 == SetCommTimeouts(serial.Handle, &commTimeouts), "%s", "Windows error!");
+	if_true_fef(0 == SetCommTimeouts(serial.Handle, &commTimeouts), "%s", "Windows error!");
 	PurgeComm(serial.Handle, PURGE_RXCLEAR | PURGE_TXCLEAR);
 #endif
 	serial.Connected				= true;

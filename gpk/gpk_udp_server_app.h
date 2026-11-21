@@ -7,14 +7,14 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (UI_SERVER_INPUT, uint8_t);
+	GDEFINE_ENUM_TYPE (UI_SERVER_INPUT, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INPUT, Root			, 0);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INPUT, Exit			, 1);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INPUT, Restart			, 2);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INPUT, Disconnect		, 3);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INPUT, Stop			, 4);
 
-	GDEFINE_ENUM_TYPE (UI_SERVER_INFO, uint8_t);
+	GDEFINE_ENUM_TYPE (UI_SERVER_INFO, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INFO, Root				, 0);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INFO, DateTime			, 1);
 	GDEFINE_ENUM_VALUE(UI_SERVER_INFO, Listening		, 2);
@@ -33,7 +33,7 @@ namespace gpk
 	struct SServer {
 		gpk::SUDPServer				UDP;
 
-		gpk::ao<gpk::TUDPQueue>		QueueReceived;
+		gpk::aobj<gpk::TUDPQueue>	QueueReceived;
 		gpk::apobj<gpk::TQueueSend>	QueueToSend;	// A queue for each client
 
 		::gpk::vcst_t				Adapter				= "0";	// default
@@ -44,7 +44,7 @@ namespace gpk
 		double						ListeningSince		= {};
 	};
 
-	gpk::err_t			loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter);
+	gpk::err_t			loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, ::gpk::s2_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter);
 	gpk::err_t			serverStart			(::gpk::SServer & server, ::gpk::SGUI & gui);
 	gpk::err_t			serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui);
 	gpk::err_t			setupGUI			(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui);
@@ -54,15 +54,15 @@ namespace gpk
 	gpk::err_t			processUDPEvents
 		( ::gpk::vcpobj<SServer>	servers
 		, _tState					& state
-		, const ::std::function<gpk::err_t(uint32_t iServer, uint32_t iClient, _tState &, const _tEvent &)>	
+		, const ::std::function<gpk::err_t(::gpk::u2_t iServer, ::gpk::u2_t iClient, _tState &, const _tEvent &)>	
 										& funcProcessServerRequest
 		) {
-		for(uint32_t iServer = 0; iServer < servers.size(); ++iServer) {
-			const ::std::function<gpk::err_t(uint32_t iClient, _tState &, const _tEvent &)>	
-										funcProcessRequest		= [iServer, funcProcessServerRequest](uint32_t iClient, _tState & customState, const _tEvent & customEvent) {
+		for(::gpk::u2_t iServer = 0; iServer < servers.size(); ++iServer) {
+			const ::std::function<gpk::err_t(::gpk::u2_t iClient, _tState &, const _tEvent &)>	
+										funcProcessRequest		= [iServer, funcProcessServerRequest](::gpk::u2_t iClient, _tState & customState, const _tEvent & customEvent) {
 				return funcProcessServerRequest(iServer, iClient, customState, customEvent);
 			};
-			gpk_necs(gpk::processUDPEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));
+			if_fail_fe(gpk::processUDPEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));
 		}
 		return 0;
 	}

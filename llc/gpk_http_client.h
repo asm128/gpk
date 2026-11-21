@@ -4,45 +4,45 @@
 #ifndef GPK_HTTP_CLIENT_H_23627
 #define GPK_HTTP_CLIENT_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SHTTPResponse {
-		::gpk::apod<sc_t>						Body;
-		::gpk::apod<sc_t>						HeaderData;
-		::gpk::aobj<::gpk::kv<vcsc_t, vcsc_t>>	Headers;
+		string				Body;
+		string				HeaderData;
+		aobj<kv<vcst_t>>	Headers;
 	};
 
-	gpk::err_t					httpClientRequest
-		(	const ::gpk::SIPv4End			& remoteAddress
-		,	::gpk::HTTP_METHOD			method
-		,	const ::gpk::vcst_t			& hostName
-		,	const ::gpk::vcst_t			& path
-		,	const ::gpk::vcst_t			& contentType
-		,	const ::gpk::vcsc_t			& body
-		,	::gpk::apod<sc_t>			& out_received
+	err_t				httpClientRequest
+		(	cnst SIPv4End	& remoteAddress
+		,	HTTP_METHOD		method
+		,	vcst_t			hostName
+		,	vcst_t			path
+		,	vcst_t			contentType
+		,	vcst_t			body
+		,	string			& out_received
 		);
 
-	gpk::err_t					httpClientRequest
-		(	const ::gpk::SIPv4End			& remoteAddress
-		,	::gpk::HTTP_METHOD			method
-		,	const ::gpk::vcst_t			& hostName
-		,	const ::gpk::vcst_t			& path
-		,	const ::gpk::vcst_t			& contentType
-		,	const ::gpk::vcsc_t			& body
-		,	::gpk::SHTTPResponse		& out_received
+	err_t				httpClientRequest
+		(	cnst SIPv4End	& remoteAddress
+		,	HTTP_METHOD		method
+		,	vcst_t			hostName
+		,	vcst_t			path
+		,	vcst_t			contentType
+		,	vcst_t			body
+		,	SHTTPResponse	& out_received
 		);
 
-	//gpk::err_t					httpsClientRequest
-	//	(	const ::gpk::SIPv4End			& remoteAddress
-	//	,	::gpk::HTTP_METHOD			method
-	//	,	const ::gpk::vcs			& hostName
-	//	,	const ::gpk::vcs			& path
-	//	,	const ::gpk::vcs			& contentType
-	//	,	const ::gpk::vcsc_t			& body
-	//	,	::gpk::apod<sc_t>			& out_received
+	//err_t					httpsClientRequest
+	//	(	cnst SIPv4End			& remoteAddress
+	//	,	HTTP_METHOD			method
+	//	,	vcst_c			& hostName
+	//	,	vcst_c			& path
+	//	,	vcst_c			& contentType
+	//	,	vcst_c			& body
+	//	,	apod<sc_t>			& out_received
 	//	);
 
-	gpk::err_t					urlDecode	(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded);
+	err_t					urlDecode	(vcst_t urlToDecode, string & decoded);
 
 }
 

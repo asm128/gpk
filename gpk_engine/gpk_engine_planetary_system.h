@@ -6,33 +6,33 @@
 #ifndef GPK_ENGINE_PLANETARY_SYSTEM_H_23701
 #define GPK_ENGINE_PLANETARY_SYSTEM_H_23701
 
-namespace gpk
+nmsp gpk
 {
 	struct SPlanetarySystemEntityMap {
-		::gpk::aeid				GravityCenters	;
-		::gpk::aeid				Orbits			;
-		::gpk::aeid				Bodies			;
-		::gpk::aeid				Cameras			;
-		::gpk::eid_t			Camera			= ::gpk::EID_INVALID;
-		::gpk::eid_t			Background		= ::gpk::EID_INVALID;
+		aeid		GravityCenters	;
+		aeid		Orbits			;
+		aeid		Bodies			;
+		aeid		Cameras			;
+		eid_t		Camera			= EID_INVALID;
+		eid_t		Background		= EID_INVALID;
 
-		gpk::err_t			Save			(::gpk::au0_t & output)	const	{ 
-			gpk_necs(gpk::saveView(output, GravityCenters	));
-			gpk_necs(gpk::saveView(output, Orbits			));
-			gpk_necs(gpk::saveView(output, Bodies			));
-			gpk_necs(gpk::saveView(output, Cameras		));
-			gpk_necs(gpk::savePOD (output, Camera			));
-			gpk_necs(gpk::savePOD (output, Background		));
+		err_t		Save			(au0_t & output)	cnst	{ 
+			if_fail_fe(saveView(output, GravityCenters	));
+			if_fail_fe(saveView(output, Orbits			));
+			if_fail_fe(saveView(output, Bodies			));
+			if_fail_fe(saveView(output, Cameras		));
+			if_fail_fe(savePOD (output, Camera			));
+			if_fail_fe(savePOD (output, Background		));
 			return 0;
 		}
 
-		gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(gpk::loadView(input, GravityCenters	));
-			gpk_necs(gpk::loadView(input, Orbits			));
-			gpk_necs(gpk::loadView(input, Bodies			));
-			gpk_necs(gpk::loadView(input, Cameras			));
-			gpk_necs(gpk::loadPOD (input, Camera			));
-			gpk_necs(gpk::loadPOD (input, Background		));
+		err_t		Load			(vcu0_t & input)	{ 
+			if_fail_fe(loadView(input, GravityCenters	));
+			if_fail_fe(loadView(input, Orbits			));
+			if_fail_fe(loadView(input, Bodies			));
+			if_fail_fe(loadView(input, Cameras			));
+			if_fail_fe(loadPOD (input, Camera			));
+			if_fail_fe(loadPOD (input, Background		));
 			return 0;
 		}
 	};
@@ -41,24 +41,24 @@ namespace gpk
 		SPlanetarySystem			PlanetarySystem;
 		SPlanetarySystemEntityMap	EntityMap;
 
-		gpk::err_t				Save			(::gpk::au0_t & output)	const	{ 
-			gpk_necs(PlanetarySystem.Save(output));
-			gpk_necs(EntityMap.Save(output));
+		err_t		Save			(au0_t & output)	cnst	{ 
+			if_fail_fe(PlanetarySystem.Save(output));
+			if_fail_fe(EntityMap.Save(output));
 			return 0;
 		}
 
-		gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
-			gpk_necs(PlanetarySystem.Load(input));
-			gpk_necs(EntityMap.Load(input));
+		err_t		Load			(vcu0_t & input)	{ 
+			if_fail_fe(PlanetarySystem.Load(input));
+			if_fail_fe(EntityMap.Load(input));
 			return 0;
 		}
 	};
 
-	gpk::err_t			planetarySystemReset			(const ::gpk::SPlanetarySystem & solarSystem, const ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine, const ::gpk::vc8bgra & colors);
-	gpk::err_t			planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine);
-	gpk::err_t			planetarySystemSetup			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine); 
-	gpk::err_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData);
-	gpk::err_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcsc_t jsonFilePath);
-} // namespace
+	err_t		planetarySystemReset			(cnst SPlanetarySystem & solarSystem, cnst SPlanetarySystemEntityMap & entityMap, SEngine & engine, vc8bgra colors);
+	err_t		planetarySystemCreateEntities	(cnst SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine);
+	err_t		planetarySystemSetup			(cnst SPlanetarySystem & solarSystem, SPlanetarySystemEntityMap & entityMap, SEngine & engine); 
+	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, cnst SJSONReader & jsonData);
+	err_t		planetarySystemSetup			(SEnginePlanetarySystem & planetarySystem, SEngine & engine, vcst_t jsonFilePath);
+} // nmsp
 
 #endif // GPK_ENGINE_PLANETARY_SYSTEM_H_23701

@@ -1,16 +1,16 @@
 #include "gpk_tcpip.h"
-#include "gpk_array_pod.h"
+#include "gpk_string.h"
 
 #ifndef GPK_APOD_TCPIP_H
 #define GPK_APOD_TCPIP_H
 
-namespace gpk
+nmsp gpk
 {
-	gpk::err_t		appendString		(::gpk::asc_t & output, gpk::SIPv4 ip, char separator = '.');
-	gpk::err_t		appendBraced		(::gpk::asc_t & output, gpk::SIPv4 ip, char separator = ',');
-	gpk::err_t		appendQuoted		(::gpk::asc_t & output, gpk::SIPv4 ip, char separator = '.');
-	gpk::err_t		appendBracedPrefixed(::gpk::asc_t & output, gpk::SIPv4 ip, bool usePrefix, char prefix = ',', char ip_separator = ',');
-	gpk::err_t		appendQuotedPrefixed(::gpk::asc_t & output, gpk::SIPv4 ip, bool usePrefix, char prefix = ',', char ip_separator = '.');
-} // namespace
+	err_t 	appendString		(string & output, SIPv4 ip, sc_t separator = '.');
+	err_t 	appendBraced		(string & output, SIPv4 ip, sc_t separator = ',');
+	err_t 	appendQuoted		(string & output, SIPv4 ip, sc_t separator = '.');
+	err_t 	appendBracedPrefixed(string & output, SIPv4 ip, b8_t usePrefix, sc_t prefix = ',', sc_t ip_separator = ',');
+	err_t 	appendQuotedPrefixed(string & output, SIPv4 ip, b8_t usePrefix, sc_t prefix = ',', sc_t ip_separator = '.');
+} // nmsp
 
 #endif // GPK_APOD_TCPIP_H

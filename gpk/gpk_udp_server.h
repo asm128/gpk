@@ -10,12 +10,12 @@ namespace gpk
 		::gpk::apobj<::gpk::SUDPConnection>	Clients;
 		::std::mutex						Mutex;
 		::gpk::SIPv4End						Address								= {};
-		int16_t								AdapterIndex;
+		::gpk::s1_t								AdapterIndex;
 		bool								Listen								= false;
-		int32_t								Timeout								= 3000000;	// Kill clients timeout
+		::gpk::s2_t								Timeout								= 3000000;	// Kill clients timeout
 	};
 
-	gpk::err_t						serverStart							(::gpk::SUDPServer& serverInstance, uint16_t port, int16_t adapterIndex = 0);
+	gpk::err_t						serverStart							(::gpk::SUDPServer& serverInstance, ::gpk::u1_t port, ::gpk::s1_t adapterIndex = 0);
 	gpk::err_t						serverStop							(::gpk::SUDPServer& serverInstance);
 	gpk::err_t						serverPayloadCollect				(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>> & receivedMessages);
 

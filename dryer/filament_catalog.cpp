@@ -11,29 +11,29 @@
 gpk::err_t						dry::catalogAdd
 		( ::dry::SSpoolCatalog		& catalog
 		, const ::dry::SSpoolData	& spoolData
-		, int64_t					timeLoaded
-		, int64_t					timeUnloaded
-		, int64_t					timeDryed
+		, ::gpk::s3_t					timeLoaded
+		, ::gpk::s3_t					timeUnloaded
+		, ::gpk::s3_t					timeDryed
 		, bool						history
 		) {
 	::dry::SSpool							newFilament			= {};
 	newFilament.UniqueId				= spoolData.UniqueId;
-	newFilament.Brand					= (int16_t)::gpk::find(spoolData.Brand					, ::gpk::view<::gpk::vcst_c>{catalog.Brand		});
-	newFilament.Material				= (int16_t)::gpk::find(spoolData.Material				, ::gpk::view<::gpk::vcst_c>{catalog.Material	});
-	newFilament.Color					= (int16_t)::gpk::find(spoolData.Color					, ::gpk::view<::gpk::vcst_c>{catalog.Color		});
-	newFilament.Notes					= (int16_t)::gpk::find(spoolData.Notes					, ::gpk::view<::gpk::vcst_c>{catalog.Notes		});
-	newFilament.Density					= (int16_t)::gpk::find(spoolData.Density				, ::gpk::view<::gpk::f3_c>{catalog.Density	});
-	newFilament.Diameter				= (int16_t)::gpk::find(spoolData.Diameter				, ::gpk::view<::gpk::f3_c>{catalog.Diameter	});
-	newFilament.SpoolSize				= (int16_t)::gpk::find(spoolData.SpoolSize				, ::gpk::view<::gpk::s2_c>{catalog.SpoolSize	});
-	newFilament.MaxDryingTemperature	= (int16_t)::gpk::find(spoolData.MaxDryingTemperature	, ::gpk::view<::gpk::s0_c>{catalog.MaxDryingTemperature	});
-	if(-1 == newFilament.Brand					) newFilament.Brand					= (int16_t)catalog.Brand				.push_back(::gpk::label(spoolData.Brand		));
-	if(-1 == newFilament.Material				) newFilament.Material				= (int16_t)catalog.Material				.push_back(::gpk::label(spoolData.Material	));
-	if(-1 == newFilament.Color					) newFilament.Color					= (int16_t)catalog.Color				.push_back(::gpk::label(spoolData.Color		));
-	if(-1 == newFilament.Notes					) newFilament.Notes					= (int16_t)catalog.Notes				.push_back(::gpk::label(spoolData.Notes		));
-	if(-1 == newFilament.Density				) newFilament.Density				= (int16_t)catalog.Density				.push_back(spoolData.Density				);
-	if(-1 == newFilament.Diameter				) newFilament.Diameter				= (int16_t)catalog.Diameter				.push_back(spoolData.Diameter				);
-	if(-1 == newFilament.SpoolSize				) newFilament.SpoolSize				= (int16_t)catalog.SpoolSize			.push_back(spoolData.SpoolSize				);
-	if(-1 == newFilament.MaxDryingTemperature	) newFilament.MaxDryingTemperature	= (int16_t)catalog.MaxDryingTemperature	.push_back(spoolData.MaxDryingTemperature	);
+	newFilament.Brand					= (::gpk::s1_t)::gpk::find(spoolData.Brand					, ::gpk::view<::gpk::vcst_c>{catalog.Brand		});
+	newFilament.Material				= (::gpk::s1_t)::gpk::find(spoolData.Material				, ::gpk::view<::gpk::vcst_c>{catalog.Material	});
+	newFilament.Color					= (::gpk::s1_t)::gpk::find(spoolData.Color					, ::gpk::view<::gpk::vcst_c>{catalog.Color		});
+	newFilament.Notes					= (::gpk::s1_t)::gpk::find(spoolData.Notes					, ::gpk::view<::gpk::vcst_c>{catalog.Notes		});
+	newFilament.Density					= (::gpk::s1_t)::gpk::find(spoolData.Density				, ::gpk::view<::gpk::f3_c>{catalog.Density	});
+	newFilament.Diameter				= (::gpk::s1_t)::gpk::find(spoolData.Diameter				, ::gpk::view<::gpk::f3_c>{catalog.Diameter	});
+	newFilament.SpoolSize				= (::gpk::s1_t)::gpk::find(spoolData.SpoolSize				, ::gpk::view<::gpk::s2_c>{catalog.SpoolSize	});
+	newFilament.MaxDryingTemperature	= (::gpk::s1_t)::gpk::find(spoolData.MaxDryingTemperature	, ::gpk::view<::gpk::s0_c>{catalog.MaxDryingTemperature	});
+	if(-1 == newFilament.Brand					) newFilament.Brand					= (::gpk::s1_t)catalog.Brand				.push_back(::gpk::label(spoolData.Brand		));
+	if(-1 == newFilament.Material				) newFilament.Material				= (::gpk::s1_t)catalog.Material				.push_back(::gpk::label(spoolData.Material	));
+	if(-1 == newFilament.Color					) newFilament.Color					= (::gpk::s1_t)catalog.Color				.push_back(::gpk::label(spoolData.Color		));
+	if(-1 == newFilament.Notes					) newFilament.Notes					= (::gpk::s1_t)catalog.Notes				.push_back(::gpk::label(spoolData.Notes		));
+	if(-1 == newFilament.Density				) newFilament.Density				= (::gpk::s1_t)catalog.Density				.push_back(spoolData.Density				);
+	if(-1 == newFilament.Diameter				) newFilament.Diameter				= (::gpk::s1_t)catalog.Diameter				.push_back(spoolData.Diameter				);
+	if(-1 == newFilament.SpoolSize				) newFilament.SpoolSize				= (::gpk::s1_t)catalog.SpoolSize			.push_back(spoolData.SpoolSize				);
+	if(-1 == newFilament.MaxDryingTemperature	) newFilament.MaxDryingTemperature	= (::gpk::s1_t)catalog.MaxDryingTemperature	.push_back(spoolData.MaxDryingTemperature	);
 	newFilament.TimestampLoaded			= timeLoaded;
 	newFilament.TimestampUnloaded		= timeUnloaded;
 	newFilament.TimestampDryed			= timeDryed;
@@ -43,7 +43,7 @@ gpk::err_t						dry::catalogAdd
 		;
 }
 
-gpk::err_t						dry::catalogRemove		(::dry::SSpoolCatalog & catalog, int32_t index) {
+gpk::err_t						dry::catalogRemove		(::dry::SSpoolCatalog & catalog, ::gpk::s2_t index) {
 	::dry::SSpool							oldFilament			= catalog.FilamentLoaded[index];
 	oldFilament.TimestampUnloaded		= time(0);
 	catalog.FilamentHistory.push_back(oldFilament);
@@ -53,10 +53,10 @@ gpk::err_t						dry::catalogRemove		(::dry::SSpoolCatalog & catalog, int32_t ind
 static	gpk::err_t				jsonArrayFromFilamentView	(::dry::SSpoolCatalog & catalog, ::gpk::view<const ::dry::SSpool> filaments, ::gpk::string & output) {
 	output.push_back('[');
 	::gpk::string				bufferFormat				= {};
-	for(uint32_t iFilament = 0; iFilament < filaments.size(); ++iFilament) {
+	for(::gpk::u2_t iFilament = 0; iFilament < filaments.size(); ++iFilament) {
 		::dry::SSpool							filament					= filaments[iFilament];
 		bufferFormat.resize(1024 * 16);
-		int32_t									newSize						= sprintf_s(bufferFormat.Data, bufferFormat.size(),
+		::gpk::s2_t									newSize						= sprintf_s(bufferFormat.Data, bufferFormat.size(),
 			"\n\t{ \"unique_id\"             : %llu"
 			"\n\t, \"brand\"                 : \"%s\""
 			"\n\t, \"material\"              : \"%s\""
@@ -107,27 +107,27 @@ gpk::err_t						dry::catalogSave		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t
 }
 
 gpk::err_t						dry::catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t filename) {
-	gpk_necall(::gpk::jsonFileRead(catalog.JSONData, filename), "Failed to load filament catalog file: '%.*s'.", GPK_VIEW_ARGS(filename));
+	if_fail_fef(::gpk::jsonFileRead(catalog.JSONData, filename), "Failed to load filament catalog file: '%.*s'.", GPK_VIEW_ARGS(filename));
 	const ::gpk::SJSONReader				& reader				= catalog.JSONData.Reader;
-	const int32_t							indexHistory			= ::gpk::jsonObjectValueGet(reader, 0, "history");
-	static const	::gpk::vcs				keys	[]				= {"loaded", "history"};
-	for(uint32_t iKey = 0; iKey < ::gpk::size(keys); ++iKey) {
-		const int32_t							indexValue				= ::gpk::jsonObjectValueGet(reader, 0, keys[iKey]);
+	const ::gpk::s2_t							indexHistory			= ::gpk::jsonObjectValueGet(reader, 0, "history");
+	static const	::gpk::vcst_t				keys	[]				= {"loaded", "history"};
+	for(::gpk::u2_t iKey = 0; iKey < ::gpk::size(keys); ++iKey) {
+		const ::gpk::s2_t							indexValue				= ::gpk::jsonObjectValueGet(reader, 0, keys[iKey]);
 		cef_if(0 > indexValue, "'%.*s' node not found in '%s'", keys[iKey].begin(), GPK_VIEW_ARGS(filename)) else {}
-		for(uint32_t iFilament = 0, countFilaments = ::gpk::jsonArraySize(reader, indexValue); iFilament < countFilaments; ++iFilament) {
-			const int32_t							jsonIndexFilament			= ::gpk::jsonArrayValueGet(*reader[indexValue], iFilament);
-			const int32_t							jsonIndexUniqueId			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unique_id"				);
-			const int32_t							jsonIndexBrand				= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "brand"					);
-			const int32_t							jsonIndexMaterial			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "material"				);
-			const int32_t							jsonIndexColour				= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "color"					);
-			const int32_t							jsonIndexNotes				= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "notes"					);
-			const int32_t							jsonIndexDensity			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "density"				);
-			const int32_t							jsonIndexDiameter			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "diameter"				);
-			const int32_t							jsonIndexSpoolSize			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "spool_size"				);
-			const int32_t							jsonIndexMaxDryingTemp		= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "max_drying_temperature"	);
-			const int32_t							jsonIndexTimestampLoaded	= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "loaded"					);
-			const int32_t							jsonIndexTimestampUnloaded	= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unloaded"				);
-			const int32_t							jsonIndexTimestampDried		= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "dried"					);
+		for(::gpk::u2_t iFilament = 0, countFilaments = ::gpk::jsonArraySize(reader, indexValue); iFilament < countFilaments; ++iFilament) {
+			const ::gpk::s2_t							jsonIndexFilament			= ::gpk::jsonArrayValueGet(*reader[indexValue], iFilament);
+			const ::gpk::s2_t							jsonIndexUniqueId			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unique_id"				);
+			const ::gpk::s2_t							jsonIndexBrand				= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "brand"					);
+			const ::gpk::s2_t							jsonIndexMaterial			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "material"				);
+			const ::gpk::s2_t							jsonIndexColour				= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "color"					);
+			const ::gpk::s2_t							jsonIndexNotes				= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "notes"					);
+			const ::gpk::s2_t							jsonIndexDensity			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "density"				);
+			const ::gpk::s2_t							jsonIndexDiameter			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "diameter"				);
+			const ::gpk::s2_t							jsonIndexSpoolSize			= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "spool_size"				);
+			const ::gpk::s2_t							jsonIndexMaxDryingTemp		= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "max_drying_temperature"	);
+			const ::gpk::s2_t							jsonIndexTimestampLoaded	= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "loaded"					);
+			const ::gpk::s2_t							jsonIndexTimestampUnloaded	= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "unloaded"				);
+			const ::gpk::s2_t							jsonIndexTimestampDried		= ::gpk::jsonObjectValueGet(reader, jsonIndexFilament, "dried"					);
 			if(-1 != jsonIndexUniqueId			)	info_printf("Found filament property '%.*s': %s"	, "unique_id"	, GPK_VIEW_ARGS(reader.View	[jsonIndexBrand		]));
 			if(-1 != jsonIndexBrand				)	info_printf("Found filament property '%.*s': %s"	, "brand"		, GPK_VIEW_ARGS(reader.View	[jsonIndexBrand		]));
 			if(-1 != jsonIndexMaterial			)	info_printf("Found filament property '%.*s': %s"	, "material"	, GPK_VIEW_ARGS(reader.View	[jsonIndexMaterial	]));
@@ -146,13 +146,13 @@ gpk::err_t						dry::catalogLoad		(::dry::SSpoolCatalog & catalog, ::gpk::vcst_t
 			spoolData.Color						= (-1 == jsonIndexColour	) ? ::gpk::vcst_t{}	: reader.View[jsonIndexColour	];
 			spoolData.Notes						= (-1 == jsonIndexNotes		) ? ::gpk::vcst_t{}	: reader.View[jsonIndexNotes	];
 			if(-1 != jsonIndexDensity	)
-				memcpy(&spoolData.Density, &reader.Token[jsonIndexDensity	].Value, sizeof(uint64_t));
+				memcpy(&spoolData.Density, &reader.Token[jsonIndexDensity	].Value, sizeof(::gpk::u3_t));
 			if(-1 != jsonIndexDiameter	)
-				memcpy(&spoolData.Diameter, &reader.Token[jsonIndexDiameter	].Value, sizeof(uint64_t));
-			spoolData.UniqueId					= (-1 == jsonIndexUniqueId			) ? 0 : (int32_t)reader.Token[jsonIndexUniqueId		].Value;
-			spoolData.SpoolSize					= (-1 == jsonIndexSpoolSize			) ? 0 : (int32_t)reader.Token[jsonIndexSpoolSize	].Value;
-			spoolData.MaxDryingTemperature		= (-1 == jsonIndexMaxDryingTemp		) ? 0 : (int8_t	)reader.Token[jsonIndexMaxDryingTemp].Value;
-			const int32_t							indexFilament				= ::dry::catalogAdd(catalog
+				memcpy(&spoolData.Diameter, &reader.Token[jsonIndexDiameter	].Value, sizeof(::gpk::u3_t));
+			spoolData.UniqueId					= (-1 == jsonIndexUniqueId			) ? 0 : (::gpk::s2_t)reader.Token[jsonIndexUniqueId		].Value;
+			spoolData.SpoolSize					= (-1 == jsonIndexSpoolSize			) ? 0 : (::gpk::s2_t)reader.Token[jsonIndexSpoolSize	].Value;
+			spoolData.MaxDryingTemperature		= (-1 == jsonIndexMaxDryingTemp		) ? 0 : (::gpk::s0_t	)reader.Token[jsonIndexMaxDryingTemp].Value;
+			const ::gpk::s2_t							indexFilament				= ::dry::catalogAdd(catalog
 				, spoolData
 				, (-1 == jsonIndexTimestampLoaded	) ? 0 : reader.Token[jsonIndexTimestampLoaded	].Value
 				, (-1 == jsonIndexTimestampUnloaded	) ? 0 : reader.Token[jsonIndexTimestampUnloaded	].Value

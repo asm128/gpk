@@ -10,15 +10,15 @@ static gpk::err_t		create_window	(xcb_connection_t * connection, xcb_screen_t * 
 	xcb_create_pixmap(connection, screen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, screen->root, window.Size.x, window.Size.y);
 	{	// create graphics context
 		window.PlatformDetail.GC		= xcb_generate_id(connection);
-		const uint32_t						mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-		const uint32_t						values[3]	= {screen->black_pixel, screen->white_pixel, 0};
+		const ::gpk::u2_t						mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+		const ::gpk::u2_t						values[3]	= {screen->black_pixel, screen->white_pixel, 0};
 		xcb_create_gc(connection, window.PlatformDetail.GC, screen->root, mask, values);
 	}
 
 	{	// create the window
 		window.PlatformDetail.IdDrawable			= xcb_generate_id(connection);
-		const uint32_t					mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
-		const uint32_t					values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
+		const ::gpk::u2_t					mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
+		const ::gpk::u2_t					values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
 			, XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY
 			| XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_KEY_PRESS  | XCB_EVENT_MASK_KEY_RELEASE | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION
 		};
@@ -38,11 +38,11 @@ static gpk::err_t		create_window	(xcb_connection_t * connection, xcb_screen_t * 
 	}
 	{	// context for filling with white
 		xcb_gcontext_t				fill		= xcb_generate_id(connection);
-		const uint32_t				mask		= XCB_GC_FOREGROUND;
-		const uint32_t				values[2]	= {0xFF00FF,};
+		const ::gpk::u2_t				mask		= XCB_GC_FOREGROUND;
+		const ::gpk::u2_t				values[2]	= {0xFF00FF,};
 		xcb_create_gc(connection, fill, window.PlatformDetail.IdDrawableBackPixmap, mask, values);
 
-		const xcb_rectangle_t		r1			= {0, 0, (uint16_t)window.Size.x, (uint16_t)window.Size.y};
+		const xcb_rectangle_t		r1			= {0, 0, (::gpk::u1_t)window.Size.x, (::gpk::u1_t)window.Size.y};
 		xcb_poly_fill_rectangle(connection, window.PlatformDetail.IdDrawableBackPixmap, fill, 1, &r1);
 		xcb_free_gc(connection, fill);
 	}
@@ -61,22 +61,22 @@ gpk::err_t				s3d::mainWindowCreate				(::s3d::SXCBFramework & framework) { (voi
 
 gpk::err_t				s3d::frameworkUpdate				(::s3d::SXCBFramework & framework) {
 #ifndef GPK_WINDOWS
-	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, ::gpk::u2_t>>
 										& guiRenderTarget			= framework.MainDisplayOffscreen;
-	const ::gpk::n2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+	const ::gpk::n2<::gpk::u2_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 	::gpk::SInput						& input						= *framework.Input;
 	if(framework.MainDisplay.Repaint) {
 		const xcb_image_format_t			format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
-		const ::gpk::n2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+		const ::gpk::n2<::gpk::u2_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 		xcb_image_t							* image						= xcb_image_create_native
 			( framework.PlatformDetail.XCBConnection
 			, guiRenderTargetMetrics.x
 			, guiRenderTargetMetrics.y
 			, format
 			, framework.PlatformDetail.XCBScreen->root_depth
-			, (uint8_t*)guiRenderTarget->Color.View.begin()
+			, (::gpk::u0_t*)guiRenderTarget->Color.View.begin()
 			, guiRenderTarget->Color.View.size() * 4
-			, (uint8_t*)guiRenderTarget->Color.View.begin()
+			, (::gpk::u0_t*)guiRenderTarget->Color.View.begin()
 			);
 		xcb_image_put(framework.PlatformDetail.XCBConnection, framework.MainDisplay.PlatformDetail.IdDrawable, framework.MainDisplay.PlatformDetail.GC, image, 0, 0, 0);
 		image->base						= 0;
@@ -101,10 +101,10 @@ gpk::err_t				s3d::frameworkUpdate				(::s3d::SXCBFramework & framework) {
 		case XCB_BUTTON_RELEASE	: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Up"	, iev->detail); input.MouseCurrent   .ButtonState[iev->detail - 1] = 0; break;	}
 		case XCB_MOTION_NOTIFY	: {
 			xcb_motion_notify_event_t			* mev				= (xcb_motion_notify_event_t*)ev;
-			int32_t								xPos				= mev->same_screen ? mev->event_x : mev->root_x;
-			int32_t								yPos				= mev->same_screen ? mev->event_y : mev->root_y;
-			input.MouseCurrent.Position.x	= ::gpk::clamp(xPos, 0, (int32_t)guiRenderTargetMetrics.x);
-			input.MouseCurrent.Position.y	= ::gpk::clamp(yPos, 0, (int32_t)guiRenderTargetMetrics.y);
+			::gpk::s2_t								xPos				= mev->same_screen ? mev->event_x : mev->root_x;
+			::gpk::s2_t								yPos				= mev->same_screen ? mev->event_y : mev->root_y;
+			input.MouseCurrent.Position.x	= ::gpk::clamp(xPos, 0, (::gpk::s2_t)guiRenderTargetMetrics.x);
+			input.MouseCurrent.Position.y	= ::gpk::clamp(yPos, 0, (::gpk::s2_t)guiRenderTargetMetrics.y);
 			input.MouseCurrent.Deltas.x		= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 			input.MouseCurrent.Deltas.y		= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 			info_printf("Mouse position: %i, %i", input.MouseCurrent.Position.x, input.MouseCurrent.Position.y);
