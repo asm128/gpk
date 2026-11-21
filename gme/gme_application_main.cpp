@@ -1,0 +1,78 @@
+#include "gme_application_main.h"
+#include "gpk_bitmap_file.h"
+
+//#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
+#include "gpk_app_impl.h"
+
+using namespace gpk;
+
+GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
+
+			gpk::err_t 										cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.RootWindow); }
+			gpk::err_t 										setup						(::gme::SApplication & app)						{
+	::gpk::STimer															timer;
+	::gpk::SFramework														& framework					= app.Framework;
+	::gpk::SWindow															& mainWindow				= framework.RootWindow;
+	if_fail_fe(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
+	::gpk::SGUI																& gui						= *framework.GUI;
+	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
+	gui.ThemeDefault													= ::gpk::ASCII_COLOR_Dark_green * 16 + 7;
+	app.IdExit															= ::gpk::controlCreate(gui);
+	::gpk::SControlPlacement												& controlExit				= gui.Controls.Placement[app.IdExit];
+	controlExit.Area													= {{0, 0}, {64, 20}};
+	controlExit.Border													= {10, 10, 10, 10};
+	controlExit.Margin													= {1, 1, 1, 1};
+	controlExit.Align													= ::gpk::ALIGN_BOTTOM_RIGHT;
+	::gpk::SControlText														& controlText				= gui.Controls.Text[app.IdExit];
+	controlText.Text													= "Exit";
+	controlText.Align													= ::gpk::ALIGN_CENTER;
+	::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdExit];
+	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
+	::gpk::controlSetParent(gui, app.IdExit, -1);
+	timer.Frame();
+	info_printf("Setup time: %f.", (f2_t)timer.LastTimeSeconds);
+	return 0;
+}
+
+gpk::err_t 			draw			(::gme::SApplication & app)						{
+	//::gpk::STimer															timer;
+	app;
+	::gpk::pobj<::gpk::rtbgra8d32>	target;
+	target.create();
+	target->resize(app.Framework.RootWindow.Size, ::gpk::SColorBGRA{}, 0xFFFFFFFF);
+	{
+		::std::lock_guard				lock					(app.LockGUI);
+		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
+	}
+	{
+		::std::lock_guard				lock					(app.LockRender);
+		app.Offscreen				= target;
+	}
+	//timer.Frame();
+	//info_printf("Draw time: %f.", (f2_t)timer.LastTimeSeconds);
+	return 0;
+}
+
+gpk::err_t 			update						(::gme::SApplication & app, b8_t exitSignal)	{
+	//::gpk::STimer					timer;
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, exitSignal);
+	{
+		::std::lock_guard				lock					(app.LockRender);
+		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
+	}
+	::gpk::SFramework				& framework					= app.Framework;
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
+
+	::gpk::SGUI						& gui						= *framework.GUI;
+	::gpk::acid						controlsToProcess			= {};
+	if(::gpk::guiProcessControls(gui, [&app](::gpk::cid_t idControl) {
+		info_printf("Executed %u.", idControl);
+		if(idControl == app.IdExit)
+			return 1;
+		return 0;
+	})) 
+		return 1;
+	//timer.Frame();
+	//info_printf("Update time: %f.", (f2_t)timer.LastTimeSeconds);
+	return 0;
+}

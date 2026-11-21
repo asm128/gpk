@@ -7,29 +7,30 @@
 
 namespace s3d
 {
+	usns gpk;
 	struct SXCBFramework {
-		::gpk::SRuntimeValues											& RuntimeValues;
-		::gpk::SFrameworkDetail											PlatformDetail			= {};
-		::gpk::SWindow													MainDisplay				= {};
-		::gpk::STimer													Timer					= {};
-		::gpk::prtbgra8d32												MainDisplayOffscreen	= {};
-		::gpk::pobj<::gpk::SInput>										Input					= {};
-		::gpk::pobj<::gpk::SGUI>										GUI						= {};
-#if !defined(GPK_WINDOWS)
-		::s3d::SXCBTextureManager											TextureManager			= {};
+		SRuntimeValues				& RuntimeValues;
+		SFrameworkDetail			PlatformDetail			= {};
+		SWindow						MainDisplay				= {};
+		STimer						Timer					= {};
+		pobj<rt<SColorBGRA, u2_t>>	MainDisplayOffscreen	= {};
+		pobj<SInput>				Input					= {};
+		pobj<SGUI>					GUI						= {};
+#ifndef GPK_WINDOWS
+		SXCBTextureManager			TextureManager			= {};
 #endif
-																			SXCBFramework			(const SXCBFramework&)	noexcept = delete;
-		SXCBFramework&														operator =				(const SXCBFramework&)	noexcept = delete;
+									SXCBFramework			(const SXCBFramework&)	noexcept = delete;
+		SXCBFramework&				operator =				(const SXCBFramework&)	noexcept = delete;
 
-																			SXCBFramework			(::gpk::SRuntimeValues& runtimeValues)	: RuntimeValues(runtimeValues) {
+									SXCBFramework			(::gpk::SRuntimeValues& runtimeValues)	: RuntimeValues(runtimeValues) {
 			MainDisplayOffscreen.create();
 			Input.create();
 			GUI.create();
 		}
 	};
 
-	gpk::err_t				mainWindowCreate			(::s3d::SXCBFramework & framework);
-	gpk::err_t				frameworkUpdate				(::s3d::SXCBFramework & framework);
+	::gpk::err_t				mainWindowCreate			(::s3d::SXCBFramework & framework);
+	::gpk::err_t				frameworkUpdate				(::s3d::SXCBFramework & framework);
 
 } // namespace
 

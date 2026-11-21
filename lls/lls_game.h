@@ -1,0 +1,70 @@
+#include "gpk_game.h"
+
+#include "lls_world_view.h"
+
+#include "gpk_engine_planetary_system.h"
+
+#ifndef SSIEGE_GAME_H
+#define SSIEGE_GAME_H
+
+namespace lls
+{
+#pragma pack(push, 1)
+#pragma pack(pop)
+	//GDEFINE_ENUM_TYPE(SCENE_TYPE, uint8_t);Likely not needed
+	//GDEFINE_ENUM_VALUE(SCENE_TYPE, OuterSpace	, 0);
+	//GDEFINE_ENUM_VALUE(SCENE_TYPE, Planetary	, 1);
+	//GDEFINE_ENUM_VALUE(SCENE_TYPE, Submarine	, 2);
+	//struct SGameObject {
+	//	int16_t							Definition			=  0;
+	//	int16_t							Modifier			=  0;
+	//	int16_t							Level				=  1;
+	//	int16_t							Owner				= -1;
+	//};
+
+	struct LLSGame {
+		::gpk::SGame					Global				= {};
+		::gpk::SEnginePlanetarySystem	SolarSystem			= {};
+		::lls::SWorldView				World				= {};
+		::gpk::SCamera					Camera				= {};
+
+		::gpk::eid_t					Controlled			= ::gpk::EID_INVALID;
+		::gpk::aobj<::gpk::SPlayer>		Players;
+
+		::gpk::eid_t					ShipCore			= ::gpk::EID_INVALID;
+		::gpk::eid_t					ShipRing			= ::gpk::EID_INVALID;
+		::gpk::aeid						ShipEngines			= {};
+		::gpk::aeid						ShipWeapons			= {};
+
+		::gpk::SEngine					Engine				= {};
+
+		::gpk::err_t					Save				(::gpk::au0_t & output)	cnst	{ 
+			do { if_fail_fe(Global.Save(output)); } while(0);
+			do { if_fail_fe(SolarSystem.Save(output)); } while(0);
+			do { if_fail_fe(World.Save(output)); } while(0);
+			do { if_fail_fe(Engine.Save(output)); } while(0);
+			return 0;
+		}
+
+		::gpk::err_t					Load				(::gpk::vcu0_t & input)	{ 
+			do { if_fail_fe(Global.Load(input)); } while(0);
+			do { if_fail_fe(SolarSystem.Load(input)); } while(0);
+			do { if_fail_fe(World.Load(input)); } while(0);
+			do { if_fail_fe(Engine.Load(input)); } while(0);
+			return 0;
+		}
+
+	};
+
+	::gpk::err_t					llsGameSetup		(::lls::LLSGame & world);
+	::gpk::err_t					llsGameUpdate	(::lls::LLSGame & world, ::gpk::vpobj<::lls::EventLLS> inputEvents, ::gpk::apobj<::lls::EventLLS> & outputEvents, double secondsElapsed);
+	::gpk::err_t					llsGameDraw		(::lls::LLSGame & world
+		, ::gpk::rtbgra8d32			& backBuffer
+		, cnst ::gpk::n3f2_t		& cameraPosition
+		, cnst ::gpk::n3f2_t		& cameraTarget
+		, cnst ::gpk::n3f2_t		& cameraUp = {0, 1, 0}
+		, cnst ::gpk::minmaxf2_t	& nearFar = {.1f, 10000.f}
+		);
+} // namespace
+
+#endif // SSIEGE_GAME_H

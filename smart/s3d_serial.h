@@ -1,4 +1,5 @@
 #include "gpk_array.h"
+#include "gpk_stdsocket.h"
 
 #if defined(GPK_WINDOWS)
 #	include <windows.h>
@@ -8,6 +9,8 @@
 
 #ifndef S3D_SERIAL_H_239846293487
 #define S3D_SERIAL_H_239846293487
+
+usns gpk;
 
 namespace s3d
 {
@@ -19,7 +22,7 @@ namespace s3d
 #else
 		int				Handle			= -1;
 #endif
-		bool			Connected		= false;
+		b8_t			Connected		= false;
 
 						~SSerial		() {
 #if defined(GPK_WINDOWS)
@@ -29,16 +32,19 @@ namespace s3d
 #endif
 		}
 						SSerial			() = default;
-						SSerial			(const SSerial&) = delete;
-		SSerial&		operator =		(const SSerial&) = delete;
+						SSerial			(cnst SSerial&) = delete;
+		SSerial&		operator =		(cnst SSerial&) = delete;
 
 	};
 
-	gpk::err_t	serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud);
-	gpk::err_t	serialClose			(::s3d::SSerial & serial);
-	gpk::err_t	serialWrite			(::s3d::SSerial & serial, ::gpk::vcu0_t data);
-	gpk::err_t	serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, ::gpk::u2_t count, ::gpk::u2_t timeout);
-	gpk::err_t	serialReadUntil		(::s3d::SSerial & serial, ::gpk::au0_t & data, char stopByte, ::gpk::u2_t maxCount, ::gpk::u2_t timeout);
+	::gpk::err_t	serialOpen			(::s3d::SSerial & serial, ::gpk::vcst_t portName, int baud);
+	::gpk::err_t	serialClose			(::s3d::SSerial & serial);
+	::gpk::err_t	serialWrite			(::s3d::SSerial & serial, ::gpk::vcu0_t data);
+	::gpk::err_t	serialWrite			(::s3d::SSerial & serial, ::gpk::vcst_t data);
+	::gpk::err_t	serialRead			(::s3d::SSerial & serial, ::gpk::au0_t & data, u2_t  count, u2_t  timeout);
+	::gpk::err_t	serialReadUntil		(::s3d::SSerial & serial, ::gpk::au0_t & data, u0_t stopByte, u2_t  maxCount, u2_t  timeout);
+	::gpk::err_t	serialRead			(::s3d::SSerial & serial, ::gpk::asc_t & data, u2_t  count, u2_t  timeout);
+	::gpk::err_t	serialReadUntil		(::s3d::SSerial & serial, ::gpk::asc_t & data, sc_t stopByte, u2_t  maxCount, u2_t  timeout);
 } // namespace
 
 #endif // S3D_SERIAL_H_239846293487

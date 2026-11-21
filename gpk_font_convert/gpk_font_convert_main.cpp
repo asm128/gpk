@@ -1,0 +1,111 @@
+#include "gpk_png.h"
+#include "gpk_base64.h"
+#include "gpk_parse.h"
+#include "gpk_path.h"
+#include "gpk_img_color.h"
+
+#include "gpk_stdstring.h"
+#include "gpk_file.h"
+#include "gpk_string.h"
+#include "gpk_runtime.h"
+#include "gpk_string_compose.h"
+
+using namespace gpk;
+
+::gpk::err_t				pngToFont
+	( ::gpk::img8bgra			& imageCache
+	, ::gpk::img8bgra			& verticalAtlas
+	, ::gpk::imgmonou3_t			& fontTexture
+	, ::gpk::vcst_t				filenameOutput
+	, cnst ::gpk::n2u2_t		fontCharSize
+	, b8_t						negateBit
+	) {
+	u2_c 					ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
+	verticalAtlas.resize(::gpk::n2u2_t{fontCharSize.x, fontCharSize.y * 256});
+	for(u2_t  iChar = 0; iChar < 256; ++iChar) {
+		u2_c 												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
+		u2_c 												dstOffsetY				= iChar * fontCharSize.y;
+		for(u2_t  y = 0; y < fontCharSize.y; ++y) {
+			for(u2_t  x = 0; x < fontCharSize.x; ++x) {
+				u2_c 											srcOffsetX				= iChar % ROW_WIDTH * fontCharSize.x;
+				u2_c 											dstOffsetX				= 0;
+				cnst ::gpk::SColorBGRA									& srcColor				= imageCache.View[srcOffsetY + y][srcOffsetX + x];
+				verticalAtlas.View[dstOffsetY + y][dstOffsetX + x]	= srcColor;
+			}
+		}
+	}
+	cnst ::gpk::n2u2_t									& textureFontMetrics	= verticalAtlas.View.metrics();
+	if_fail_fef(fontTexture.resize(textureFontMetrics), "%s", "");
+	for(u2_t  y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
+	for(u2_t  x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
+		cnst ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];
+		u2_c 												linearIndex				= y * textureFontMetrics.x + x;
+		fontTexture.View[linearIndex]
+			=	0 != srcColor.r
+			||	0 != srcColor.g
+			||	0 != srcColor.b
+			;
+		if(negateBit)
+			fontTexture.View[linearIndex] = !fontTexture.View[linearIndex];
+	}
+
+	::gpk::au0_t	encoded;
+	::gpk::base64Encode({(cnst u0_t *)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
+	FILE						* fp = 0;
+	cnst int nul = 0;
+	if_fail_fe(gpk::fopen_s(fp, filenameOutput, "wb"));
+	fwrite(encoded.begin(), 1, encoded.size(), fp);
+	fwrite(&nul, 1, 1, fp);
+	fclose(fp);
+	return 0;
+}
+
+sttc ::gpk::err_t		fontConvertMain			(::gpk::SRuntimeValues &) {
+	::gpk::aobj<::gpk::string>	fontFiles				= {};
+	::gpk::vcst_t					pathToSearch			= {"../gpk_data/fonts/cp437"};
+	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
+	::gpk::SPNGData				pngCache				= {};
+	::gpk::img8bgra				imageCache				= {};
+	::gpk::img8bgra				imageFixed				= {};
+	::gpk::img8bgra				verticalAtlas			= {};
+	::gpk::imgmonou3_t			fontTexture				= {};
+	::gpk::string				filenameOutput			= {};
+	::gpk::vcst_t				extension				= {};
+	for(u2_t  iFile = 0; iFile < fontFiles.size(); ++iFile) {
+		::gpk::vcst_t				filenameInput			= fontFiles[iFile];
+		if_fail_cif(filenameInput.slice(extension, filenameInput.size() - 4, 4), "Skipping '%.*s'", GPK_VIEW_ARGS(filenameInput));
+		::gpk::string			lowercaseExtension		= extension;
+		::gpk::tolower(lowercaseExtension);
+		if(lowercaseExtension != ".png")
+			continue;
+		if_fail_ce(::gpk::pngLoadFile(pngCache, filenameInput, imageCache));
+		filenameOutput			= filenameInput;
+		::gpk::append_strings(filenameOutput, "fix.png");
+		::gpk::aobj<::gpk::vcst_t>		splitFileName;
+		::gpk::split(filenameInput, '_', splitFileName);
+		::gpk::aobj<::gpk::vcst_t>		splitFontMetrics;
+		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
+		::gpk::n2u2_t				fontCharSize			= {};
+		::gpk::parseIntegerDecimal(splitFontMetrics[0], fontCharSize.x);
+		::gpk::parseIntegerDecimal(splitFontMetrics[1], fontCharSize.y);
+		imageFixed.resize(imageCache.metrics());
+		for(u2_t  y = 0; y < imageFixed.metrics().y; ++y)
+		for(u2_t  x = 0; x < imageFixed.metrics().x; ++x) {
+			u2_c 				offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
+			u2_c 				dstX					= offsetX + (x % fontCharSize.x);
+			::gpk::bgra					& dstPixel				= imageFixed[y][x];
+			dstPixel				= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
+		}
+		::gpk::au0_t					pngBytes;
+		::gpk::pngFileWrite(imageFixed, pngBytes);
+		::gpk::fileFromMemory(filenameOutput, pngBytes);
+
+		filenameOutput[filenameOutput.size() - 3]		= 'b';
+		filenameOutput[filenameOutput.size() - 2]		= '6';
+		filenameOutput[filenameOutput.size() - 1]		= '4';
+		::pngToFont(imageFixed, verticalAtlas, fontTexture, filenameOutput, fontCharSize, false);
+	}
+	return 0;
+}
+
+GPK_OS_ENTRY_POINT(::fontConvertMain);

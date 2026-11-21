@@ -3,7 +3,7 @@
 #define GPK_WARNING_PRINTF_ENABLED
 #define GPK_INFO_PRINTF_ENABLED
 
-#include "gpk_deflate.h"
+#include "gpk_file_pack.h"
 
 int										main						(int argc, char ** argv)	{
 	if_true_fef(2 > argc, "Usage:\n\t%s [input folder name] [output file name (optional)]", argv[0]);

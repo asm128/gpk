@@ -134,9 +134,8 @@ gpk::err_t			gpk::httpClientRequest
         }
         break;
     }
-    if_true_fef(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address))
-	else
-		info_printf("Connected to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
+    if_true_fef(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
+	info_printf("Connected to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
 
 	sc_t										strAddress	[INET6_ADDRSTRLEN]	= {};
     inet_ntop(currentServinfo->ai_family, get_in_addr((struct sockaddr *)currentServinfo->ai_addr), strAddress, ::gpk::size(strAddress));

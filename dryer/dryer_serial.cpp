@@ -84,7 +84,7 @@ static	gpk::err_t				processStatusArg		(::dry::SApplication & app, ::gpk::SJSONR
 		else {
 			double									value			= 0;
 			memcpy(&value, &jsonReader[1]->Token->Value, sizeof(double));
-			app.Dryer.State.Vacuum				= (float)fabs(value);
+			app.Dryer.State.Vacuum				= (float)gpk::fabs(value);
 		}
 		break;
 	case 'H':

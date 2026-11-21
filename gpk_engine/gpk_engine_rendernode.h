@@ -1,5 +1,6 @@
 #include "gpk_engine_rendercolor.h"
 #include "gpk_array_ptr.h"
+#include "gpk_apod_serialize.h"
 #include "gpk_matrix.h"
 #include "gpk_matrix2.h"
 #include "gpk_matrix3.h"
@@ -99,15 +100,15 @@ nmsp gpk
 				if_fail_fef(gpk::saveView(output, Lights	[iEntity] ? ::gpk::v1<cnst ::gpk::SLight >{*Lights	[iEntity]} : ::gpk::v1<cnst ::gpk::SLight >{}), "iEntity: %i", iEntity);
 				if_fail_fef(gpk::saveView(output, Cameras	[iEntity] ? ::gpk::v1<cnst ::gpk::SCamera>{*Cameras[iEntity]} : ::gpk::v1<cnst ::gpk::SCamera>{}), "iEntity: %i", iEntity);
 			}
-			if_fail_fe(output.append({(cnst u0_t*)&LightsDirectional.size(), 4}));
+			if_fail_fe(gpk::savePacked(output, LightsDirectional.size()));
 			for(u2_t iEntity = 0; iEntity < LightsDirectional.size(); ++iEntity)
 				if_fail_fef(gpk::saveView(output, LightsDirectional[iEntity] ? ::gpk::v1<cnst ::gpk::SLightDirectional>{*LightsDirectional[iEntity]} : ::gpk::v1<cnst ::gpk::SLightDirectional>{}), "iEntity: %i", iEntity);
 
-			if_fail_fe(output.append({(cnst u0_t*)&LightsPoint.size(), 4}));
+			if_fail_fe(gpk::savePacked(output, LightsPoint.size()));
 			for(u2_t iEntity = 0; iEntity < LightsPoint.size(); ++iEntity)
 				if_fail_fef(gpk::saveView(output, LightsPoint[iEntity] ? ::gpk::v1<cnst ::gpk::SLightPoint>{*LightsPoint[iEntity]} : ::gpk::v1<cnst ::gpk::SLightPoint>{}), "iEntity: %i", iEntity);
 
-			if_fail_fe(output.append({(cnst u0_t*)&LightsSpot.size(), 4}));
+			if_fail_fe(gpk::savePacked(output, LightsSpot.size()));
 			for(u2_t iEntity = 0; iEntity < LightsSpot.size(); ++iEntity)
 				if_fail_fef(gpk::saveView(output, LightsSpot[iEntity] ? ::gpk::v1<cnst ::gpk::SLightSpot>{*LightsSpot[iEntity]} : ::gpk::v1<cnst ::gpk::SLightSpot>{}), "iEntity: %i", iEntity);
 
@@ -120,8 +121,7 @@ nmsp gpk
 			if_fail_fe(gpk::loadView(input, Flags			));
 			if_fail_fe(gpk::loadView(input, Transforms		));
 			if_fail_fe(gpk::loadView(input, BaseTransforms	));
-			if_fail_fef(Lights	.resize(RenderNodes.size()), "size: %i", RenderNodes.size());
-			if_fail_fef(Cameras	.resize(RenderNodes.size()), "size: %i", RenderNodes.size());
+			if_fail_fef(gpk::resize(RenderNodes.size(), Lights, Cameras), "size: %i", RenderNodes.size());
 			for(u2_t iEntity = 0; iEntity < RenderNodes.size(); ++iEntity) {
 				if(!Lights	[iEntity]) 
 					if_true_vef(-1, 0 == Lights	[iEntity].create(), "iEntity: %i", iEntity);
@@ -131,24 +131,25 @@ nmsp gpk
 				if_fail_fef(gpk::loadView(input, *Cameras	[iEntity]), "iEntity: %i", iEntity);
 			}
 
-			if_fail_fe(LightsDirectional.resize(*(u2_t*)input.begin()));
-			input								= {input.begin() + sizeof(u2_t), input.size() - 4};
+			u2_t								lightArrayCount		= 0;
+			if_fail_fe(gpk::loadPacked(input, lightArrayCount));
+			if_fail_fe(LightsDirectional.resize(lightArrayCount));
 			for(u2_t iEntity = 0; iEntity < LightsDirectional.size(); ++iEntity) {
 				if(!LightsDirectional[iEntity])
 					if_true_vef(-1, 0 == LightsDirectional[iEntity].create(), "iEntity: %i", iEntity);
 				if_fail_fef(gpk::loadView(input, *LightsDirectional[iEntity]), "iEntity: %i", iEntity);
 			}
 
-			if_fail_fe(LightsPoint.resize(*(u2_t*)input.begin()));
-			input								= {input.begin() + sizeof(u2_t), input.size() - 4};
+			if_fail_fe(gpk::loadPacked(input, lightArrayCount));
+			if_fail_fe(LightsPoint.resize(lightArrayCount));
 			for(u2_t iEntity = 0; iEntity < LightsPoint.size(); ++iEntity) {
 				if(!LightsPoint[iEntity])
 					if_true_vef(-1, 0 == LightsPoint[iEntity].create(), "iEntity: %i", iEntity);
 				if_fail_fef(gpk::loadView(input, *LightsPoint[iEntity]), "iEntity: %i", iEntity);
 			}
 
-			if_fail_fe(LightsSpot.resize(*(u2_t*)input.begin()));
-			input								= {input.begin() + sizeof(u2_t), input.size() - 4};
+			if_fail_fe(gpk::loadPacked(input, lightArrayCount));
+			if_fail_fe(LightsSpot.resize(lightArrayCount));
 			for(u2_t iEntity = 0; iEntity < LightsSpot.size(); ++iEntity) {
 				if(!LightsSpot[iEntity])
 					if_true_vef(-1, 0 == LightsSpot[iEntity].create(), "iEntity: %i", iEntity);
@@ -157,21 +158,22 @@ nmsp gpk
 			return 0;
 		}
 		gpk::err_t 					Create		()	{
-			if_fail_fe(Transforms		.push_back({}));
-			if_fail_fe(BaseTransforms	.push_back({}));
-			if_fail_fe(Lights			.push_back({}));
-			if_fail_fe(Cameras		.push_back({}));
-			if_fail_fe(Flags			.push_back({}));
-			return RenderNodes.push_back({(u2_t)-1});
+			u2_c								newIndex			= RenderNodes.size();
+			if_fail_fe(gpk::resize_obj(newIndex + 1, Transforms, BaseTransforms, Lights, Cameras, Flags, RenderNodes));
+			return newIndex;
 		}
 
 		gpk::err_t 					Clone		(u2_t iNode)	{
-			if_fail_fe(Transforms		.push_back(::gpk::SRenderNodeConstants					{Transforms		[iNode]}));
-			if_fail_fe(BaseTransforms	.push_back(::gpk::SRenderNodeConstants					{BaseTransforms	[iNode]}));
-			if_fail_fe(Lights			.push_back(::gpk::pobj<::gpk::apod<::gpk::SLight	>>	{Lights			[iNode]}));
-			if_fail_fe(Cameras		.push_back(::gpk::pobj<::gpk::apod<::gpk::SCamera	>>	{Cameras		[iNode]}));
-			if_fail_fe(Flags			.push_back(::gpk::SRenderNodeFlags						{Flags			[iNode]}));
-			return RenderNodes.push_back(::gpk::SRenderNode{RenderNodes	[iNode]});
+			if_true_fef(iNode >= RenderNodes.size(), GPK_FMT_GE_U2, iNode, RenderNodes.size());
+			u2_c								newIndex			= RenderNodes.size();
+			if_fail_fe(gpk::resize_obj(newIndex + 1, Transforms, BaseTransforms, Lights, Cameras, Flags, RenderNodes));
+			Transforms		[newIndex]		= Transforms		[iNode];
+			BaseTransforms	[newIndex]		= BaseTransforms	[iNode];
+			Lights			[newIndex]		= Lights			[iNode];
+			Cameras			[newIndex]		= Cameras		[iNode];
+			Flags			[newIndex]		= Flags			[iNode];
+			RenderNodes		[newIndex]		= RenderNodes		[iNode];
+			return newIndex;
 		}
 
 		gpk::err_t 					Delete		(u2_t indexNode)	{
