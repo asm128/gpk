@@ -14,7 +14,7 @@ gpk::err_t			gpk::loadServerConfig	(cnst SJSONReader & jsonConfig, s2_t parentNo
 }
 
 gpk::err_t			gpk::setupGUI		(SServerUI & serverUI, SGUI & gui) {
-	if_fail_fe(serverUI.Root = createScreenLayout(gui));
+	if_fail_fe(serverUI.Root = controlCreateLayout(gui));
 
 	stxp	n2u1_t		CONTROL_SIZE		= {192, 20};
 	if_fail_fe(gpk::setupControlListWithRoot<UI_SERVER_INPUT>(gui, serverUI.Input, serverUI.Root, CONTROL_SIZE, ALIGN_BOTTOM_RIGHT));

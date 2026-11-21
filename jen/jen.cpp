@@ -26,7 +26,7 @@ stxp const char input_json [] = R"jenjson(
         },
 ]
 )jenjson";
-stxp const char input_expression [] = "{people[2].name}'s {properties[selection.index].name}: {people[2].property.{properties[selection.index].name}}";
+stxp const char input_expression [] = "{people['2'].name}'s {properties[selection.index].name}: {people['2'].property.(properties[selection.index].name)}";
 
 int main(int argc, char** argv) {
 	::gpk::SCommandLineArgs args;
@@ -39,8 +39,10 @@ int main(int argc, char** argv) {
 		if_fail_fe(gpk::jsonParse(file.Reader, demoJson));
 		::gpk::err_t demoRoot = {};
 		if_fail_fe(demoRoot = gpk::jsonArrayValueGet(file.Reader, 0, 0));
+		::gpk::SJSONReader demoReader = {};
+		if_fail_fe(gpk::jsonParse(demoReader, file.Reader.View[demoRoot]));
 		::gpk::asc_t demoResult = {};
-		if_fail_fe(gpk::jsonStringFormat(demoExpression, file.Reader, demoRoot, demoResult));
+		if_fail_fe(gpk::jsonStringFormat(demoExpression, demoReader, 0, demoResult));
 		printf("result:\n%.*s\n", GPK_VIEW(demoResult));
 		return argc == 1 ? 0 : -1;
 	}
@@ -50,7 +52,7 @@ int main(int argc, char** argv) {
 	for(::gpk::u2_t iInput = 0; iInput < 2; ++iInput) {
 		fromFile[iInput] = 1 == args.Order[iInput];
 		if(fromFile[iInput]) {
-			if_true_fef((args.Options[iOption].Key != ::gpk::vcst_t{"f", 1}) || !args.Options[iOption].Val.size(), "Expected -f followed by a filename.");
+			if_true_fef((args.Options[iOption].Key != ::gpk::vcst_t{"f", 1}) || !args.Options[iOption].Val.size(), "%s", "Expected -f followed by a filename.");
 			input[iInput] = args.Options[iOption++].Val;
 		}
 		else
@@ -67,11 +69,8 @@ int main(int argc, char** argv) {
 		if_fail_fe(gpk::fileToMemory(input[1], expressionBytes));
 		if_fail_fe(expressionBytes.slice(input[1], 0));
 	}
-	::gpk::vcsc_t output = {};
-	::gpk::SExpressionReader expressionReader = {};
-	if_fail_fe(gpk::expressionReaderParse(expressionReader, input[1]));
-	::gpk::SJSONExpressionSolver results = {};
-	if_true_fef(-1 == gpk::jsonExpressionResolve(expressionReader, file.Reader, 0, results, output), "Failed to resolve expression.");
+	::gpk::asc_t output = {};
+	if_fail_fe(gpk::jsonStringFormat(input[1], file.Reader, 0, output));
 	printf("%.*s\n", GPK_VIEW(output));
 	return 0;
 }

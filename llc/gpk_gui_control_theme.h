@@ -1,4 +1,5 @@
 #include "gpk_gui_control.h"
+#include "gpk_gui_control_table.h"
 #include "gpk_font.h"
 
 #ifndef GPK_GUI_CONTROL_THEME_H
