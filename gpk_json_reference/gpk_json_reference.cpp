@@ -1,8 +1,11 @@
-#define GPK_STDOUT_LOG_ENABLED
 #include "gpk_json_expression.h"
 #include "gpk_parse.h"
 
 static constexpr char exampleJSON[] = R"({"name":"Ada","age":37,"active":true,"ratio":1.5,"items":[10,20]})";
+
+GPK_USING_TYPEINT();
+GPK_USING_VIEW();
+GPK_USING_AOBJ();
 
 static void printSection(const char* title) {
 	printf("\n  %s\n  ------------------------------------------------------------\n", title);
@@ -12,7 +15,7 @@ static gpk::err_t demoJSONSteps(const gpk::vcsc_t json) {
 	gpk::SJSONReader reader = {};
 	for(reader.StateRead.IndexCurrentChar = 0; reader.StateRead.IndexCurrentChar < json.size(); ++reader.StateRead.IndexCurrentChar)
 		if_fail_fe(gpk::jsonParseStep(reader, json));
-	if_true_fef(reader.StateRead.NestLevel, "JSON nesting did not close.");
+	if_true_fef(reader.StateRead.NestLevel, "If nesting level is not zero, it means there is still document to parse. In this case, the nesting level is:%i.",reader.StateRead.NestLevel);
 	printf("  jsonParseStep       : %u tokens\n", reader.Token.size());
 	return 0;
 }
@@ -42,7 +45,7 @@ static gpk::err_t demoJSONAccess(const gpk::SJSONReader& reader) {
 static gpk::err_t demoJSONNavigation(const gpk::SJSONReader& reader) {
 	gpk::err_t keys = {};
 	if_fail_fe(keys = gpk::jsonObjectKeyCount(reader, 0));
-	gpk::avcsc_t names = {};
+	gpk::aobj<::gpk::vcst_t> names = {};
 	if_fail_fe(gpk::jsonObjectKeyList(reader, 0, names));
 	printf("  object keys         : %i (%u listed)\n", keys, names.size());
 	for(gpk::u2_t i = 0; i < names.size(); ++i)
@@ -50,15 +53,15 @@ static gpk::err_t demoJSONNavigation(const gpk::SJSONReader& reader) {
 	gpk::as2_t keyIndices = {};
 	if_fail_fe(gpk::jsonObjectKeyList(reader, 0, keyIndices));
 	gpk::as2_t bothIndices = {};
-	gpk::avcsc_t bothNames = {};
+	gpk::aobj<vcst_t> bothNames = {};
 	if_fail_fe(gpk::jsonObjectKeyList(reader, 0, bothIndices, bothNames));
 	printf("  key index overloads : %u, %u\n", keyIndices.size(), bothIndices.size());
 	gpk::as2_t nodeIndices = {};
-	gpk::avcsc_t nodeNames = {};
+	gpk::aobj<vcst_t> nodeNames = {};
 	if_fail_fe(gpk::jsonObjectKeyList(*reader.Tree[0], nodeIndices));
 	if_fail_fe(gpk::jsonObjectKeyList(*reader.Tree[0], reader.View, nodeNames));
 	gpk::as2_t nodeBothIndices = {};
-	gpk::avcsc_t nodeBothNames = {};
+	gpk::aobj<vcst_t> nodeBothNames = {};
 	if_fail_fe(gpk::jsonObjectKeyList(*reader.Tree[0], reader.View, nodeBothIndices, nodeBothNames));
 	printf("  node key overloads  : %u, %u, %u\n", nodeIndices.size(), nodeNames.size(), nodeBothNames.size());
 	gpk::err_t nameIndex = {};
