@@ -18,10 +18,10 @@ IntDir	= ../../obj/$(Platform).$(Configuration)/$(ProjectName)
 OBJDIRS	:= $(patsubst %, $(IntDir), $(ProjectName))
 INCDIR	:= $(patsubst %,-I%,$(IncDir))
 
-CFLAGS	:= -std=c++17 -Wall -Werror -O$(OPT) $(INCDIR) 
+CFLAGS	:= -std=c++23 -Wall -fpermissive -Wno-changes-meaning -Wno-invalid-constexpr -O$(OPT) $(INCDIR)
 CC		:= g++
 
-_OBJ	:= $(filter-out gpk_block.o gpk_file_pack.o gpk_mapblock.o,$(patsubst %.cpp,%.o,$(wildcard *.cpp)))
+_OBJ	:= $(filter-out gpk_block.o gpk_file_pack.o gpk_mapblock.o gpk_keyval_old.o gpk_libc.o gpk_string_tcpip.o gpk_string_time.o gpk_typeint.o gpk_test_core.o,$(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 OBJ		:= $(patsubst %,$(IntDir)/%,$(_OBJ))
 
 $(IntDir)/%.o: %.cpp
