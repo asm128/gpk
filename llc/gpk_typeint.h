@@ -13,7 +13,8 @@
 nmsp gpk
 {
 	tydf	bool							b8_t;
-	tydf	char							sc_t, s0_t;
+	tydf	char							sc_t;
+	tydf	signed char						s0_t;
 	tydf	unsd char						uc_t, u0_t;
 	tydf	short							s1_t;
 	tydf	unsd short						u1_t;

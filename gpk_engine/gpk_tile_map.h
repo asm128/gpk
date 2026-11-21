@@ -11,10 +11,10 @@
 
 namespace gpk
 {
-	typedef	uint64_t				tileid_t;
+	typedef	::gpk::u3_t				tileid_t;
 	typedef	::gpk::img<tileid_t>	tilegrid;
 
-	GDEFINE_ENUM_TYPE (TILE_FLAG, uint8_t);
+	GDEFINE_ENUM_TYPE (TILE_FLAG, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(TILE_FLAG, Walk, 1);
 	GDEFINE_ENUM_VALUE(TILE_FLAG, Shot, 2);
 
@@ -23,21 +23,21 @@ namespace gpk
 		::gpk::tilegrid			Tiles;
 
 		gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(gpk::saveView (output, Flags)); 
-			gpk_necs(gpk::saveImage(output, Tiles.View)); 
+			if_fail_fe(gpk::saveView (output, Flags)); 
+			if_fail_fe(gpk::saveImage(output, Tiles.View)); 
 			return 0;
 		}
 
 		gpk::err_t			Load				(::gpk::vcu0_t & input)	{ 
-			gpk_necs(gpk::loadView (input, Flags )); 
-			gpk_necs(gpk::loadImage(input, Tiles)); 
+			if_fail_fe(gpk::loadView (input, Flags )); 
+			if_fail_fe(gpk::loadImage(input, Tiles)); 
 			return 0;
 		}
 	};
 
 #pragma pack(push, 1)
 	struct STileMapSetup {
-		uint64_t				Seed				= ::gpk::noise1DBase(::gpk::timeCurrentInUs());
+		::gpk::u3_t				Seed				= ::gpk::noise1DBase(::gpk::timeCurrentInUs());
 		::gpk::n2u0_t				BlockSize			= {255, 255};
 		::gpk::n2u1_t			WorldSize			= {255, 255};	// in blocks
 	};
@@ -50,29 +50,29 @@ namespace gpk
 		::gpk::apobj<STileBlock>	Blocks;	// 
 	
 		gpk::err_t			Save				(::gpk::au0_t & output)	const	{ 
-			gpk_necs(gpk::savePOD (output, Config)); 
-			gpk_necs(gpk::saveView(output, Coords)); 
-			gpk_necs(gpk::saveView(output, Stamps)); 
-			gpk_necs(gpk::savePOD (output, Blocks.size())); 
-			for(uint32_t iMap = 0; iMap < Blocks.size(); ++iMap) {
-				gpk_necs(Blocks[iMap] ? Blocks[iMap]->Save(output) : STileBlock{}.Save(output));
+			if_fail_fe(gpk::savePOD (output, Config)); 
+			if_fail_fe(gpk::saveView(output, Coords)); 
+			if_fail_fe(gpk::saveView(output, Stamps)); 
+			if_fail_fe(gpk::savePOD (output, Blocks.size())); 
+			for(::gpk::u2_t iMap = 0; iMap < Blocks.size(); ++iMap) {
+				if_fail_fe(Blocks[iMap] ? Blocks[iMap]->Save(output) : STileBlock{}.Save(output));
 			}
 			return 0; 
 		}
 		gpk::err_t			Load				(::gpk::vcu0_t & input) { 
-			gpk_necs(gpk::loadPOD (input, Config)); 
-			gpk_necs(gpk::loadView(input, Coords)); 
-			gpk_necs(gpk::loadView(input, Stamps)); 
-			uint32_t					blockCount			= {};
-			gpk_necs(gpk::loadPOD (input, blockCount)); 
-			gpk_necs(Blocks.reserve(blockCount));
-			for(uint32_t iMap = 0; iMap < blockCount; ++iMap) {
+			if_fail_fe(gpk::loadPOD (input, Config)); 
+			if_fail_fe(gpk::loadView(input, Coords)); 
+			if_fail_fe(gpk::loadView(input, Stamps)); 
+			::gpk::u2_t					blockCount			= {};
+			if_fail_fe(gpk::loadPOD (input, blockCount)); 
+			if_fail_fe(Blocks.reserve(blockCount));
+			for(::gpk::u2_t iMap = 0; iMap < blockCount; ++iMap) {
 				::gpk::pobj<STileBlock>		block;
-				gpk_necs(block->Load(input));
+				if_fail_fe(block->Load(input));
 				if(0 == block->Tiles.size())
 					block.clear();
 
-				gpk_necs(Blocks.push_back(block));
+				if_fail_fe(Blocks.push_back(block));
 			}
 			return 0; 
 		}

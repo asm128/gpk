@@ -61,7 +61,6 @@
 #include "gpk_http.h"
 #include "gpk_http_client.h"
 #include "gpk_scene.h"
-#include "gpk_i2c.h"
 #include "gpk_view.h"
 #include "gpk_camera.h"
 #include "gpk_io.h"

@@ -4,25 +4,25 @@
 #ifndef GPK_IMG_SERIALIZE_H_23627
 #define GPK_IMG_SERIALIZE_H_23627
 
-namespace gpk 
+nmsp gpk 
 {
 	tplt<tpnm TPod>
-	gpk::err_t				saveImage					(::gpk::au0_t & output, const ::gpk::grid<TPod> & input) {
-		gpk_necs(gpk::savePOD(output, input.metrics())); 
-		gpk_necs(gpk::saveView(output, ::gpk::view<const TPod>{input.begin(), input.size()})); 
+	gpk::err_t 			saveImage					(::gpk::au0_t & output, cnst ::gpk::grid<TPod> & input) {
+		if_fail_fe(gpk::savePOD(output, input.metrics())); 
+		if_fail_fe(gpk::saveView(output, ::gpk::view<cnst TPod>{input.begin(), input.size()})); 
 		return 0;
 	}
 
 	tplt<tpnm TPod>
-	gpk::err_t				loadImage					(::gpk::vcu0_t & input, ::gpk::img<TPod> & output) {
+	gpk::err_t 			loadImage					(::gpk::vcu0_t & input, ::gpk::img<TPod> & output) {
 		output.Texels.clear();
 		::gpk::n2u2_t					metrics						= {};
-		gpk_necs(gpk::loadPOD(input, metrics));
-		gpk_necs(gpk::loadView(input, output.Texels)); 
+		if_fail_fe(gpk::loadPOD(input, metrics));
+		if_fail_fe(gpk::loadView(input, output.Texels)); 
 		output.View					= {output.Texels.begin(), metrics};
 		return 0;
 	}
 
-} // namespace
+} // nmsp
 
 #endif // GPK_IMG_SERIALIZE_H_23627

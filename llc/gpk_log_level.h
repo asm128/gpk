@@ -22,7 +22,7 @@ namespace gpk
 #ifndef GPK_ATMEL
 	tplt<u2_t fmtLen, tpnm... TArgs>
 	sttc	void	_gpk_debug_printf				(s0_t severity, sc_c * path, u2_t line, sc_c * function, sc_c (&format)[fmtLen], cnst TArgs... args)	{
-		debug_print_prefix((int8_t)severity, path, line, function);
+		debug_print_prefix((::gpk::s0_t)severity, path, line, function);
 #else
 	tplt<tpnm... TArgs>
 	sttc	void	_gpk_debug_printf				(sc_c * function, cnst __FlashStringHelper * format, cnst TArgs... args)			{
@@ -160,12 +160,6 @@ namespace gpk
 #define gpk_hrcall(hr_call)				do { gpk_rv_hrcall (-1, hr_call)				; } while(0)		// HRESULT call.
 #define gpk_hrecall(hr_call, ...)		do { gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	; } while(0)		// HRESULT call.
 
-#define gpk_necs(gpkl_call)					do { cnst auto _grr_rslt_val = gpkl_call; if(0 > gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 "", #gpkl_call, _grr_rslt_val); return -1; } } while(0) // Non-		propagable error call string.
-#ifdef GPK_WINDOWS
-#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, __VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
-#else
-#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, ##__VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
-#endif
 
 #ifndef gthrow_if
 #	define gsthrow_if(condition)	if_true_log_and_throw(error_printf, (condition))
@@ -249,7 +243,7 @@ namespace gpk
 #define if_true_log_and_return_info(condition)						if_true_log_and_return			(info_printf   , (condition))
 #define if_true_log_and_return_verbose(condition)					if_true_log_and_return			(verbose_printf, (condition))
 #define if_fail_log_and_return_always(condition)					if_fail_log_and_return			(always_printf , (condition))
-#define if_fail_log_and_return_error(condition)						if_fail_log_and_return			(error_printf  , (condition))
+#define if_fail_log_and_return_error(condition)						do { if_fail_log_and_return(error_printf, (condition)); } while(0)
 #define if_fail_log_and_return_warning(condition)					if_fail_log_and_return			(warning_printf, (condition))
 #define if_fail_log_and_return_info(condition)						if_fail_log_and_return			(info_printf   , (condition))
 #define if_fail_log_and_return_verbose(condition)					if_fail_log_and_return			(verbose_printf, (condition))
@@ -279,7 +273,7 @@ namespace gpk
 #define if_true_log_and_fail_info(condition)						if_true_log_and_fail(info_printf   , (condition))
 #define if_true_log_and_fail_verbose(condition)						if_true_log_and_fail(verbose_printf, (condition))
 #define if_fail_log_and_fail_always(condition)						if_fail_log_and_fail(always_printf , (condition))
-#define if_fail_log_and_fail_error(condition)						if_fail_log_and_fail(error_printf  , (condition))
+#define if_fail_log_and_fail_error(condition)						do { if_fail_log_and_fail(error_printf, (condition)); } while(0)
 #define if_fail_log_and_fail_warning(condition)						if_fail_log_and_fail(warning_printf, (condition))
 #define if_fail_log_and_fail_info(condition)						if_fail_log_and_fail(info_printf   , (condition))
 #define if_fail_log_and_fail_verbose(condition)						if_fail_log_and_fail(verbose_printf, (condition))
@@ -775,7 +769,7 @@ namespace gpk
 #define i_if_null  if_null_i
 #define v_if_null  if_null_v
 #define af_if      if_true_af
-#define ef_if      if_true_ef
+#define if_true_ef      if_true_ef
 #define wf_if      if_true_wf
 #define if_if      if_true_if
 #define vf_if      if_true_vf

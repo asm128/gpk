@@ -3,49 +3,67 @@
 #ifndef GPK_RECT2_H
 #define GPK_RECT2_H
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)
 	tplt<tpnm T>
 	struct rect2 {
-		::gpk::n2<T>			Offset, Size;
+		n2<T>			Offset, Size;
 
 		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
-		tplt <tpnm _t>
-		inxp	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
+		tpl_t	
+		inxp	rect2<_t>	Cast		()	csnx	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
 
-		inxp	rect2<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
-		inxp	rect2<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
-		inxp	rect2<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
-		inxp	rect2<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
-		inxp	rect2<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
-		inxp	rect2<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
-		inxp	rect2<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
-		inxp	rect2<int64_t>	s3_t			()	const	noexcept	{ return Cast<int64_t	>(); }
-		inxp	rect2<float>	f2_t			()	const	noexcept	{ return Cast<float		>(); }
-		inxp	rect2<double>	f3_t			()	const	noexcept	{ return Cast<double	>(); }
+		inxp	rect2<uc_t>	uc			()	csnx	{ return Cast<uc_t>(); }
+		inxp	rect2<sc_t>	sc			()	csnx	{ return Cast<sc_t>(); }
+		inxp	rect2<u0_t>	u0			()	csnx	{ return Cast<u0_t>(); }
+		inxp	rect2<u1_t>	u1			()	csnx	{ return Cast<u1_t>(); }
+		inxp	rect2<u2_t>	u2			()	csnx	{ return Cast<u2_t>(); }
+		inxp	rect2<u3_t>	u3			()	csnx	{ return Cast<u3_t>(); }
+		inxp	rect2<s0_t>	s0			()	csnx	{ return Cast<s0_t>(); }
+		inxp	rect2<s1_t>	s1			()	csnx	{ return Cast<s1_t>(); }
+		inxp	rect2<s2_t>	s2			()	csnx	{ return Cast<s2_t>(); }
+		inxp	rect2<s3_t>	s3			()	csnx	{ return Cast<s3_t>(); }
+		inxp	rect2<f2_t>	f2			()	csnx	{ return Cast<f2_t>(); }
+		inxp	rect2<f3_t>	f3			()	csnx	{ return Cast<f3_t>(); }
 
-		inline	::gpk::n2<T>	Limit		()	const	noexcept	{ return Offset + Size; }
+		inln	n2<T>		Limit		()	csnx	{ return Offset + Size; }
 	};
-	typedef rect2<float>	rect2f32, rect2f;
-	typedef rect2<double>	rect2f64, rect2d;
-	typedef rect2<uint8_t>	rect2u8;
-	typedef rect2<uint16_t>	rect2u16;
-	typedef rect2<uint32_t>	rect2u32;
-	typedef rect2<uint64_t>	rect2u64;
-	typedef rect2<int8_t>	rect2i8;
-	typedef rect2<int16_t>	rect2i16;
-	typedef rect2<int32_t>	rect2i32;
-	typedef rect2<int64_t>	rect2i64;
+	tydf rect2<uc_t>	rect2uc_t;	tydf	cnst rect2uc_t	rect2uc_c;	
+	tydf rect2<sc_t>	rect2sc_t;	tydf	cnst rect2sc_t	rect2sc_c;	
+	tydf rect2<u0_t>	rect2u0_t;	tydf	cnst rect2u0_t	rect2u0_c;	
+	tydf rect2<u1_t>	rect2u1_t;	tydf	cnst rect2u1_t	rect2u1_c;	
+	tydf rect2<u2_t>	rect2u2_t;	tydf	cnst rect2u2_t	rect2u2_c;	
+	tydf rect2<u3_t>	rect2u3_t;	tydf	cnst rect2u3_t	rect2u3_c;	
+	tydf rect2<s0_t>	rect2s0_t;	tydf	cnst rect2s0_t	rect2s0_c;	
+	tydf rect2<s1_t>	rect2s1_t;	tydf	cnst rect2s1_t	rect2s1_c;	
+	tydf rect2<s2_t>	rect2s2_t;	tydf	cnst rect2s2_t	rect2s2_c;	
+	tydf rect2<s3_t>	rect2s3_t;	tydf	cnst rect2s3_t	rect2s3_c;	
+	tydf rect2<f2_t>	rect2f2_t;	tydf	cnst rect2f2_t	rect2f2_c;	
+	tydf rect2<f3_t>	rect2f3_t;	tydf	cnst rect2f3_t	rect2f3_c;	
+
 #pragma pack(pop)
 
 	tplt<tpnm T>
-	stxp	bool	in_range	(const ::gpk::n2<T>& pointToTest, const ::gpk::rect2<T>& area)	noexcept	{
-		return	::gpk::in_range(pointToTest.x, area.Offset.x, (T)(area.Offset.x + area.Size.x))
-			&&	::gpk::in_range(pointToTest.y, area.Offset.y, (T)(area.Offset.y + area.Size.y))
+	stxp	b8_t	in_range	(cnst n2<T>& pointToTest, cnst rect2<T>& area)	nxpt	{
+		return	in_range(pointToTest.x, area.Offset.x, (T)(area.Offset.x + area.Size.x))
+			&&	in_range(pointToTest.y, area.Offset.y, (T)(area.Offset.y + area.Size.y))
 			;
 	}
-} // namespace
+} // nmsp
 
+#define GPK_USING_RECT2()					\
+    usng  ::gpk::rect2uc_t, ::gpk::rect2uc_c \
+        , ::gpk::rect2sc_t, ::gpk::rect2sc_c \
+        , ::gpk::rect2u0_t, ::gpk::rect2u0_c \
+        , ::gpk::rect2u1_t, ::gpk::rect2u1_c \
+        , ::gpk::rect2u2_t, ::gpk::rect2u2_c \
+        , ::gpk::rect2u3_t, ::gpk::rect2u3_c \
+        , ::gpk::rect2s0_t, ::gpk::rect2s0_c \
+        , ::gpk::rect2s1_t, ::gpk::rect2s1_c \
+        , ::gpk::rect2s2_t, ::gpk::rect2s2_c \
+        , ::gpk::rect2s3_t, ::gpk::rect2s3_c \
+        , ::gpk::rect2f2_t, ::gpk::rect2f2_c \
+        , ::gpk::rect2f3_t, ::gpk::rect2f3_c 
 #endif // GPK_RECT2_H

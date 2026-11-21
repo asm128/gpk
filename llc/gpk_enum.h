@@ -2,6 +2,7 @@
 // Ogarnd - Copyright (c) 2016-2024
 #include "gpk_array_pod.h"
 #include "gpk_array_obj.h"
+#include "gpk_string.h"
 
 #ifndef GPK_ENUM_H_23627
 #define GPK_ENUM_H_23627
@@ -11,10 +12,10 @@
 namespace gpk
 {
 	//stxp	vcst_c		UNDEFINED_ENUM_TYPE_STR					= GPK_CXS("Undefined enumeration type.");
-	stxp	vcst_c		INVALID_ENUM_VALUE_STR		= GPK_CXS("INVALID");
-	stxp	vcst_c		UNDEFINED_ENUM_VALUE_STR	= GPK_CXS("Undefined enumeration value.");
-	stxp	vcst_c		UNRESOLVED_ENUM_LABEL_STR	= GPK_CXS("Unresolved enumeration value name.");
-	stxp	vcst_c		UNRESOLVED_ENUM_NAME_STR	= GPK_CXS("Enum definition name not set.");
+	stxp	vcst_c		INVALID_ENUM_VALUE_STR		= {"INVALID"};
+	stxp	vcst_c		UNDEFINED_ENUM_VALUE_STR	= {"Undefined enumeration value."};
+	stxp	vcst_c		UNRESOLVED_ENUM_LABEL_STR	= {"Unresolved enumeration value name."};
+	stxp	vcst_c		UNRESOLVED_ENUM_NAME_STR	= {"Enum definition name not set."};
 
 	// This tplt is intended to store the name of an enumeration, the values of such enumeration and a string representing each value.
 	// The implementation separates names from values for improving search speed by reducing the memory usage when performing searches for names/values.
@@ -44,7 +45,7 @@ namespace gpk
 			return INVALID_VALUE;
 		}
 		err_t				get_value				(::gpk::vcsc_c & name, T & value)		const			{
-			for(uint32_t i=0, count = Names.size(); i<count; ++i)
+			for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i)
 				if(name == Names[i]) {
 					value				= Values[i];
 					return 0;
@@ -54,7 +55,7 @@ namespace gpk
 			return -1;
 		}
 		err_t				get_value				(const char* name, T & value)				const			{
-			for(uint32_t i=0, count = Names.size(); i<count; ++i)
+			for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i)
 				if(0 == ::strcmp(name, Names[i].begin())) {
 					value				= Values[i];
 					return 0;
@@ -64,14 +65,14 @@ namespace gpk
 			return -1;
 		}
 		T					get_value				(::gpk::vcsc_c & name)					const			{
-			for(uint32_t i=0, count = Names.size(); i<count; ++i) {
+			for(::gpk::u2_t i=0, count = Names.size(); i<count; ++i) {
 				if(name == Names[i])
 					return Values[i];
 			}
 			enum_printf("Enumeration value not found! Name: %.*s.", GPK_VIEW_ARGS(name));
 			return INVALID_VALUE;
 		}
-		err_t				get_value_by_index		(uint32_t index, T & value)					const			{
+		err_t				get_value_by_index		(::gpk::u2_t index, T & value)					const			{
 			if(index < Values.size()) {
 				value				= Values[index];
 				return 0;
@@ -80,11 +81,11 @@ namespace gpk
 			value				= INVALID_VALUE;
 			return -1;
 		}
-		T					get_value_by_index		(uint32_t index)					const			{
+		T					get_value_by_index		(::gpk::u2_t index)					const			{
 			retval_gwarn_if(INVALID_VALUE, index >= Values.size(), "Enumeration index out of range! Index: 0x%" GPK_FMT_U2 ".", index);
 			return Values[index];
 		}
-		err_t				get_label_by_index		(uint32_t index, ::gpk::vcsc_t & value)		const			{
+		err_t				get_label_by_index		(::gpk::u2_t index, ::gpk::vcsc_t & value)		const			{
 			if(index < Names.size()) {
 				value				= Names[index];
 				return 0;
@@ -93,122 +94,122 @@ namespace gpk
 			enum_printf("Enumeration index out of range! Index: 0x%" GPK_FMT_U2 ".", index);
 			return -1;
 		}
-		::gpk::vcsc_t			get_label_by_index		(uint32_t index)					const			{
+		::gpk::vcsc_t			get_label_by_index		(::gpk::u2_t index)					const			{
 			if(index < Names.size())
 				return Names[index];
 			enum_printf("Enumeration index out of range! Index: 0x%" GPK_FMT_U2 ".", index);
 			return ::gpk::UNDEFINED_ENUM_VALUE_STR;
 		}
-		err_t				get_value_index			(::gpk::vcsc_c & name, int32_t & index)	const			{
-			for(uint32_t i=0, count = Names.size(); i < count; ++i)
+		err_t				get_value_index			(::gpk::vcsc_c & name, ::gpk::s2_t & index)	const			{
+			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
 				if(name == Names[i]) {
-					index				= (int32_t)i;
+					index				= (::gpk::s2_t)i;
 					return index;
 				}
 			enum_printf("Enumeration value not found! Name: %s.", name.begin());
 			return index				= -1;
 		}
-		int32_t				get_value_index			(::gpk::vcsc_c & name)					const			{
-			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
+		::gpk::s2_t				get_value_index			(::gpk::vcsc_c & name)					const			{
+			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
 				if(name == Names[i])
-					return (int32_t)i;
+					return (::gpk::s2_t)i;
 			}
 			enum_printf("Enumeration value not found! Name: %s.", name.begin());
 			return -1;
 		}
-		err_t				get_value_index			(const T & value, int32_t & index)		const			{
-			for(uint32_t i=0, count = Names.size(); i < count; ++i)
+		err_t				get_value_index			(const T & value, ::gpk::s2_t & index)		const			{
+			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i)
 				if(value == Values[i]) {
-					index					= (int32_t)i;
+					index					= (::gpk::s2_t)i;
 					return 0;
 				}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (::gpk::u3_t)value);
 			return index					= -1;
 		}
-		int32_t				get_value_index			(const T & value)				const			{
-			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
+		::gpk::s2_t				get_value_index			(const T & value)				const			{
+			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
 				if(value == Values[i])
-					return (int32_t)i;
+					return (::gpk::s2_t)i;
 			}
-			enum_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: %llX.", (::gpk::u3_t)value);
 			return -1;
 		}
 		err_t				get_value_label			(const T & value, ::gpk::vcsc_t & name)	const			{
-			for(uint32_t i=0, count = Values.size(); i < count; ++i)
+			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i)
 				if(value == Values[i]) {
 					name				= Names[i];
 					return 0;
 				}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (::gpk::u3_t)value);
 			name				= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
 		err_t				get_value_desc			(const T & value, ::gpk::vcsc_t & name)	const			{
-			for(uint32_t i=0, count = Values.size(); i < count; ++i)
+			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i)
 				if(value == Values[i]) {
 					name				= Descriptions[i];
 					return 0;
 				}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (::gpk::u3_t)value);
 			name				= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
 		::gpk::vcsc_c&	get_value_label			(const T & value)				const			{
-			for(uint32_t i=0, count = Values.size(); i < count; ++i) {
+			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i) {
 				if(value == Values[i])
 					return Names[i];
 			}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (::gpk::u3_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 		::gpk::vcsc_c&	get_value_desc			(const T & value)				const			{
-			for(uint32_t i=0, count = Values.size(); i < count; ++i) {
+			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i) {
 				if(value == Values[i])
 					return Descriptions[i];
 			}
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (::gpk::u3_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 		err_t				add_value				(const T & value, ::gpk::vcsc_c & name, ::gpk::vcsc_c & title, ::gpk::vcsc_c & description)	{
-			for(uint32_t i=0, count = Values.size(); i < count; ++i)
+			for(::gpk::u2_t i=0, count = Values.size(); i < count; ++i)
 				if(Values[i] == value) {
-					rww_if(name != Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
+					if_true_fwf(name != Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
 				, Name		.begin()
-				, (uint64_t)value
+				, (::gpk::u3_t)value
 				, Names[i]	.begin()
 				, name		.begin()
 				);
 					return 0;	// Found same name and value combination. This is normal when values are defined as static const.
 				}
-			uint32_t				newIndex				= Values.push_back(value);
-			gpk_necs(newIndex);
-			gpk_necs(Names.push_back(name));
-			gpk_necs(Titles.push_back(title));
-			gpk_necs(Descriptions.push_back(description));
+			::gpk::u2_t				newIndex				= Values.push_back(value);
+			if_fail_fe(newIndex);
+			if_fail_fe(Names.push_back(name));
+			if_fail_fe(Titles.push_back(title));
+			if_fail_fe(Descriptions.push_back(description));
 			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s."
 				, Name.begin()
-				, (uint32_t)newIndex
-				, (uint64_t)value
+				, (::gpk::u2_t)newIndex
+				, (::gpk::u3_t)value
 				, name.begin()
 				);
 			return newIndex;
 		}
 		err_t				add_value_auto			(::gpk::vcsc_c & name, ::gpk::vcsc_c & title, ::gpk::vcsc_c & description)	{
-			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
-				ree_if(name == Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
+			for(::gpk::u2_t i=0, count = Names.size(); i < count; ++i) {
+				if_true_fef(name == Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
 					, Name		.begin()
-					, (uint64_t)Values[i]
+					, (::gpk::u3_t)Values[i]
 					, Names[i]	.begin()
 					, name		.begin()
 					);
 			}
 			const T					value					= (T)Values.size();
-			uint32_t				newIndex				= Values.push_back(value);
-			gpk_necs(newIndex);
-			gpk_necs(Names.push_back(name));
-			gpk_necs(Titles.push_back(title));
-			gpk_necs(Descriptions.push_back(description));
-			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s.", Name.begin(), (uint32_t)newIndex, (uint64_t)value, name.begin());
+			::gpk::u2_t				newIndex				= Values.push_back(value);
+			if_fail_fe(newIndex);
+			if_fail_fe(Names.push_back(name));
+			if_fail_fe(Titles.push_back(title));
+			if_fail_fe(Descriptions.push_back(description));
+			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s.", Name.begin(), (::gpk::u2_t)newIndex, (::gpk::u3_t)value, name.begin());
 			return newIndex;
 		}
 	};
@@ -249,7 +250,7 @@ namespace gpk
 		::gpk::camelCase(uncased, camelCased);
 		return ::gpk::get_enum<TEnum>().get_value(camelCased);
 	}
-	tplt<tpnm TEnum>	ndsi	uint32_t		get_value_count		()							nxpt	{ return ::gpk::get_enum<TEnum>().Values.size(); }
+	tplt<tpnm TEnum>	ndsi	::gpk::u2_t		get_value_count		()							nxpt	{ return ::gpk::get_enum<TEnum>().Values.size(); }
 	tplt<tpnm TEnum>	ndsi	::gpk::vcsc_c&	get_value_label		(const TEnum & statusBit)			{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit); }
 	tplt<tpnm TEnum>	ndsi	::gpk::vcsc_c&	get_value_namev		(const TEnum & statusBit)			{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit); }
 	tplt<tpnm TEnum>	ndsi	sc_c*			get_value_namep		(const TEnum & statusBit)			{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit).begin(); }
@@ -258,7 +259,7 @@ namespace gpk
 	tplt<tpnm TEnum>	ndsi	::gpk::avcsc_c&	get_value_labels	()							nxpt	{ return ::gpk::get_enum<TEnum>().Names; }
 	tplt<tpnm TEnum>	ndsi	::gpk::avcsc_c&	get_value_names		()							nxpt	{ return ::gpk::get_enum<TEnum>().Names; }
 	tplt<tpnm TEnum>	ndsi	::gpk::avcsc_c&	get_value_descs		()							nxpt	{ return ::gpk::get_enum<TEnum>().Names; }
-	tplt<tpnm TEnum>	ndsi	int32_t			get_value_index		(const TEnum & statusBit)			{ return ::gpk::get_enum<TEnum>().get_value_index(statusBit); }
+	tplt<tpnm TEnum>	ndsi	::gpk::s2_t			get_value_index		(const TEnum & statusBit)			{ return ::gpk::get_enum<TEnum>().get_value_index(statusBit); }
 	tplt<tpnm TEnum>	ndsi	::gpk::vcsc_c&	get_enum_namev		()							nxpt	{ return ::gpk::get_enum<TEnum>().Name;			}
 	tplt<tpnm TEnum>	ndsi	::gpk::vcsc_c&	get_enum_namev		(const TEnum & )			nxpt	{ return ::gpk::get_enum<TEnum>().Name;			}
 	tplt<tpnm TEnum>	ndsi	sc_c*			get_enum_namep		()							nxpt	{ return ::gpk::get_enum<TEnum>().Name.begin();	}
@@ -363,7 +364,7 @@ namespace gpk
 #define GPK_ENUM_BEGIN(EnumName, IntType)																							\
 	struct EnumName {																												\
 		IntType									Value; 																				\
-		stxp	vcst_c							Name	= GPK_CXS(#EnumName);														\
+		stxp	vcst_c							Name	= {#EnumName};														\
 																																	\
 		inxp									EnumName(IntType value = -1)		: Value(value) {}								\
 																																	\
@@ -379,16 +380,16 @@ namespace gpk
 		::gpk::vcsc_c & 						getEnumName		()		cnst nxpt		{ return Name; }							\
 		::gpk::vcsc_c & 						getValueName	()				cnst	{ return getValueName(Value); }				\
 		::gpk::vcsc_c & 						getValueName	(IntType value)	cnst	{											\
-			for(uint32_t i=0, count = ::gpk::size(Values); i < count; ++i) {														\
+			for(::gpk::u2_t i=0, count = ::gpk::size(Values); i < count; ++i) {														\
 				if(value == Values[i].Value)																						\
 					return Values[i].Name;																							\
 			}																														\
-			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);											\
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (::gpk::u3_t)value);											\
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;																				\
 		}																															\
 		stxp 	::gpk::SGPKEnumValue<IntType> 	Values	[]	= {
 
-#define GPK_ENUM_VALUE(ValueName, IntegerValue) { IntegerValue, GPK_CXS(#ValueName) },
+#define GPK_ENUM_VALUE(ValueName, IntegerValue) { IntegerValue, {#ValueName} },
 
 #define GPK_ENUM_END() \
 			};	\
@@ -397,82 +398,82 @@ namespace gpk
 namespace gpk
 {
 //#ifdef GPK_ESP8266
-// 	GPK_ENUM_BEGIN	(RESULT, int8_t)
-//	GPK_ENUM_VALUE	(Ok                , int8_t(::gpk::OS_OK                ))
-//	GPK_ENUM_VALUE	(Error             , int8_t(::gpk::OS_ERROR             ))
-//	GPK_ENUM_VALUE	(Busy              , int8_t(::gpk::OS_BUSY              ))
-//	GPK_ENUM_VALUE	(Timeout           , int8_t(::gpk::OS_TIMEOUT           ))
-//	GPK_ENUM_VALUE	(Full              , int8_t(::gpk::OS_FULL              ))
-//	GPK_ENUM_VALUE	(Empty             , int8_t(::gpk::OS_EMPTY             ))
-//	GPK_ENUM_VALUE	(Overrun           , int8_t(::gpk::OS_OVERRUN           ))
-//	GPK_ENUM_VALUE	(Not_available     , int8_t(::gpk::OS_NOT_AVAILABLE     ))
-//	GPK_ENUM_VALUE	(Not_found         , int8_t(::gpk::OS_NOT_FOUND         ))
-//	GPK_ENUM_VALUE	(Invalid_parameter , int8_t(::gpk::OS_INVALID_PARAMETER ))
-//	GPK_ENUM_VALUE	(Forbidden         , int8_t(::gpk::OS_FORBIDDEN         ))
-//	GPK_ENUM_VALUE	(Restart           , int8_t(::gpk::OS_RESTART           ))
-//	GPK_ENUM_VALUE	(Wake_up           , int8_t(::gpk::OS_WAKE_UP           ))
-//	GPK_ENUM_VALUE	(Sleep             , int8_t(::gpk::OS_SLEEP             ))
-//	GPK_ENUM_VALUE	(Offline           , int8_t(::gpk::OS_OFFLINE           ))
-//	GPK_ENUM_VALUE	(Disconnected      , int8_t(::gpk::OS_DISCONNECTED      ))
-//	GPK_ENUM_VALUE	(Connecting        , int8_t(::gpk::OS_CONNECTING        ))
-//	GPK_ENUM_VALUE	(Connected         , int8_t(::gpk::OS_CONNECTED         ))
-//	GPK_ENUM_VALUE	(Missing_data      , int8_t(::gpk::OS_MISSING_DATA      ))
-//	GPK_ENUM_VALUE	(No_Memory         , int8_t(::gpk::OS_NO_MEMORY         ))
-//	GPK_ENUM_VALUE	(Read              , int8_t(::gpk::OS_READ              ))
-//	GPK_ENUM_VALUE	(Write             , int8_t(::gpk::OS_WRITE             ))
+// 	GPK_ENUM_BEGIN	(RESULT, ::gpk::s0_t)
+//	GPK_ENUM_VALUE	(Ok                , ::gpk::s0_t(::gpk::OS_OK                ))
+//	GPK_ENUM_VALUE	(Error             , ::gpk::s0_t(::gpk::OS_ERROR             ))
+//	GPK_ENUM_VALUE	(Busy              , ::gpk::s0_t(::gpk::OS_BUSY              ))
+//	GPK_ENUM_VALUE	(Timeout           , ::gpk::s0_t(::gpk::OS_TIMEOUT           ))
+//	GPK_ENUM_VALUE	(Full              , ::gpk::s0_t(::gpk::OS_FULL              ))
+//	GPK_ENUM_VALUE	(Empty             , ::gpk::s0_t(::gpk::OS_EMPTY             ))
+//	GPK_ENUM_VALUE	(Overrun           , ::gpk::s0_t(::gpk::OS_OVERRUN           ))
+//	GPK_ENUM_VALUE	(Not_available     , ::gpk::s0_t(::gpk::OS_NOT_AVAILABLE     ))
+//	GPK_ENUM_VALUE	(Not_found         , ::gpk::s0_t(::gpk::OS_NOT_FOUND         ))
+//	GPK_ENUM_VALUE	(Invalid_parameter , ::gpk::s0_t(::gpk::OS_INVALID_PARAMETER ))
+//	GPK_ENUM_VALUE	(Forbidden         , ::gpk::s0_t(::gpk::OS_FORBIDDEN         ))
+//	GPK_ENUM_VALUE	(Restart           , ::gpk::s0_t(::gpk::OS_RESTART           ))
+//	GPK_ENUM_VALUE	(Wake_up           , ::gpk::s0_t(::gpk::OS_WAKE_UP           ))
+//	GPK_ENUM_VALUE	(Sleep             , ::gpk::s0_t(::gpk::OS_SLEEP             ))
+//	GPK_ENUM_VALUE	(Offline           , ::gpk::s0_t(::gpk::OS_OFFLINE           ))
+//	GPK_ENUM_VALUE	(Disconnected      , ::gpk::s0_t(::gpk::OS_DISCONNECTED      ))
+//	GPK_ENUM_VALUE	(Connecting        , ::gpk::s0_t(::gpk::OS_CONNECTING        ))
+//	GPK_ENUM_VALUE	(Connected         , ::gpk::s0_t(::gpk::OS_CONNECTED         ))
+//	GPK_ENUM_VALUE	(Missing_data      , ::gpk::s0_t(::gpk::OS_MISSING_DATA      ))
+//	GPK_ENUM_VALUE	(No_Memory         , ::gpk::s0_t(::gpk::OS_NO_MEMORY         ))
+//	GPK_ENUM_VALUE	(Read              , ::gpk::s0_t(::gpk::OS_READ              ))
+//	GPK_ENUM_VALUE	(Write             , ::gpk::s0_t(::gpk::OS_WRITE             ))
 // 	GPK_ENUM_END	();
 //	
-// 	GPK_ENUM_BEGIN	(COMMAND, int8_t)
-//	GPK_ENUM_VALUE	(Ok                , int8_t(::gpk::OS_OK                ) * -1)
-//	GPK_ENUM_VALUE	(Error             , int8_t(::gpk::OS_ERROR             ) * -1)
-//	GPK_ENUM_VALUE	(Busy              , int8_t(::gpk::OS_BUSY              ) * -1)
-//	GPK_ENUM_VALUE	(Timeout           , int8_t(::gpk::OS_TIMEOUT           ) * -1)
-//	GPK_ENUM_VALUE	(Full              , int8_t(::gpk::OS_FULL              ) * -1)
-//	GPK_ENUM_VALUE	(Empty             , int8_t(::gpk::OS_EMPTY             ) * -1)
-//	GPK_ENUM_VALUE	(Overrun           , int8_t(::gpk::OS_OVERRUN           ) * -1)
-//	GPK_ENUM_VALUE	(Not_available     , int8_t(::gpk::OS_NOT_AVAILABLE     ) * -1)
-//	GPK_ENUM_VALUE	(Not_found         , int8_t(::gpk::OS_NOT_FOUND         ) * -1)
-//	GPK_ENUM_VALUE	(Invalid_parameter , int8_t(::gpk::OS_INVALID_PARAMETER ) * -1)
-//	GPK_ENUM_VALUE	(Forbidden         , int8_t(::gpk::OS_FORBIDDEN         ) * -1)
-//	GPK_ENUM_VALUE	(Restart           , int8_t(::gpk::OS_RESTART           ) * -1)
-//	GPK_ENUM_VALUE	(Wake_up           , int8_t(::gpk::OS_WAKE_UP           ) * -1)
-//	GPK_ENUM_VALUE	(Sleep             , int8_t(::gpk::OS_SLEEP             ) * -1)
-//	GPK_ENUM_VALUE	(Offline           , int8_t(::gpk::OS_OFFLINE           ) * -1)
-//	GPK_ENUM_VALUE	(Disconnected      , int8_t(::gpk::OS_DISCONNECTED      ) * -1)
-//	GPK_ENUM_VALUE	(Connecting        , int8_t(::gpk::OS_CONNECTING        ) * -1)
-//	GPK_ENUM_VALUE	(Connected         , int8_t(::gpk::OS_CONNECTED         ) * -1)
-//	GPK_ENUM_VALUE	(Missing_data      , int8_t(::gpk::OS_MISSING_DATA      ) * -1)
-//	GPK_ENUM_VALUE	(No_Memory         , int8_t(::gpk::OS_NO_MEMORY         ) * -1)
-//	GPK_ENUM_VALUE	(Read              , int8_t(::gpk::OS_READ              ) * -1)
-//	GPK_ENUM_VALUE	(Write             , int8_t(::gpk::OS_WRITE             ) * -1)
+// 	GPK_ENUM_BEGIN	(COMMAND, ::gpk::s0_t)
+//	GPK_ENUM_VALUE	(Ok                , ::gpk::s0_t(::gpk::OS_OK                ) * -1)
+//	GPK_ENUM_VALUE	(Error             , ::gpk::s0_t(::gpk::OS_ERROR             ) * -1)
+//	GPK_ENUM_VALUE	(Busy              , ::gpk::s0_t(::gpk::OS_BUSY              ) * -1)
+//	GPK_ENUM_VALUE	(Timeout           , ::gpk::s0_t(::gpk::OS_TIMEOUT           ) * -1)
+//	GPK_ENUM_VALUE	(Full              , ::gpk::s0_t(::gpk::OS_FULL              ) * -1)
+//	GPK_ENUM_VALUE	(Empty             , ::gpk::s0_t(::gpk::OS_EMPTY             ) * -1)
+//	GPK_ENUM_VALUE	(Overrun           , ::gpk::s0_t(::gpk::OS_OVERRUN           ) * -1)
+//	GPK_ENUM_VALUE	(Not_available     , ::gpk::s0_t(::gpk::OS_NOT_AVAILABLE     ) * -1)
+//	GPK_ENUM_VALUE	(Not_found         , ::gpk::s0_t(::gpk::OS_NOT_FOUND         ) * -1)
+//	GPK_ENUM_VALUE	(Invalid_parameter , ::gpk::s0_t(::gpk::OS_INVALID_PARAMETER ) * -1)
+//	GPK_ENUM_VALUE	(Forbidden         , ::gpk::s0_t(::gpk::OS_FORBIDDEN         ) * -1)
+//	GPK_ENUM_VALUE	(Restart           , ::gpk::s0_t(::gpk::OS_RESTART           ) * -1)
+//	GPK_ENUM_VALUE	(Wake_up           , ::gpk::s0_t(::gpk::OS_WAKE_UP           ) * -1)
+//	GPK_ENUM_VALUE	(Sleep             , ::gpk::s0_t(::gpk::OS_SLEEP             ) * -1)
+//	GPK_ENUM_VALUE	(Offline           , ::gpk::s0_t(::gpk::OS_OFFLINE           ) * -1)
+//	GPK_ENUM_VALUE	(Disconnected      , ::gpk::s0_t(::gpk::OS_DISCONNECTED      ) * -1)
+//	GPK_ENUM_VALUE	(Connecting        , ::gpk::s0_t(::gpk::OS_CONNECTING        ) * -1)
+//	GPK_ENUM_VALUE	(Connected         , ::gpk::s0_t(::gpk::OS_CONNECTED         ) * -1)
+//	GPK_ENUM_VALUE	(Missing_data      , ::gpk::s0_t(::gpk::OS_MISSING_DATA      ) * -1)
+//	GPK_ENUM_VALUE	(No_Memory         , ::gpk::s0_t(::gpk::OS_NO_MEMORY         ) * -1)
+//	GPK_ENUM_VALUE	(Read              , ::gpk::s0_t(::gpk::OS_READ              ) * -1)
+//	GPK_ENUM_VALUE	(Write             , ::gpk::s0_t(::gpk::OS_WRITE             ) * -1)
 // 	GPK_ENUM_END	();
 //	
 //#else // !GPK_ESP8266
- 	GDEFINE_ENUM_TYPE (RESULT, int8_t);
-	GDEFINE_ENUM_VALUE(RESULT, Ok                , int8_t(::gpk::OS_OK                ));
-	GDEFINE_ENUM_VALUE(RESULT, Error             , int8_t(::gpk::OS_ERROR             ));
-	GDEFINE_ENUM_VALUE(RESULT, Busy              , int8_t(::gpk::OS_BUSY              ));
-	GDEFINE_ENUM_VALUE(RESULT, Timeout           , int8_t(::gpk::OS_TIMEOUT           ));
-	GDEFINE_ENUM_VALUE(RESULT, Full              , int8_t(::gpk::OS_FULL              ));
-	GDEFINE_ENUM_VALUE(RESULT, Empty             , int8_t(::gpk::OS_EMPTY             ));
-	GDEFINE_ENUM_VALUE(RESULT, Overrun           , int8_t(::gpk::OS_OVERRUN           ));
-	GDEFINE_ENUM_VALUE(RESULT, Not_available     , int8_t(::gpk::OS_NOT_AVAILABLE     ));
-	GDEFINE_ENUM_VALUE(RESULT, Not_found         , int8_t(::gpk::OS_NOT_FOUND         ));
-	GDEFINE_ENUM_VALUE(RESULT, Invalid_parameter , int8_t(::gpk::OS_INVALID_PARAMETER ));
-	GDEFINE_ENUM_VALUE(RESULT, Forbidden         , int8_t(::gpk::OS_FORBIDDEN         ));
-	GDEFINE_ENUM_VALUE(RESULT, Restart           , int8_t(::gpk::OS_RESTART           ));
-	GDEFINE_ENUM_VALUE(RESULT, Wake_up           , int8_t(::gpk::OS_WAKE_UP           ));
-	GDEFINE_ENUM_VALUE(RESULT, Sleep             , int8_t(::gpk::OS_SLEEP             ));
-	GDEFINE_ENUM_VALUE(RESULT, Offline           , int8_t(::gpk::OS_OFFLINE           ));
-	GDEFINE_ENUM_VALUE(RESULT, Disconnected      , int8_t(::gpk::OS_DISCONNECTED      ));
-	GDEFINE_ENUM_VALUE(RESULT, Connecting        , int8_t(::gpk::OS_CONNECTING        ));
-	GDEFINE_ENUM_VALUE(RESULT, Connected         , int8_t(::gpk::OS_CONNECTED         ));
-	GDEFINE_ENUM_VALUE(RESULT, Missing_data      , int8_t(::gpk::OS_MISSING_DATA      ));
-	GDEFINE_ENUM_VALUE(RESULT, No_Memory         , int8_t(::gpk::OS_NO_MEMORY         ));
-	GDEFINE_ENUM_VALUE(RESULT, Read              , int8_t(::gpk::OS_READ              ));
-	GDEFINE_ENUM_VALUE(RESULT, Write             , int8_t(::gpk::OS_WRITE             ));
+ 	GDEFINE_ENUM_TYPE (RESULT, ::gpk::s0_t);
+	GDEFINE_ENUM_VALUE(RESULT, Ok                ,   0);
+	GDEFINE_ENUM_VALUE(RESULT, Error             ,  -1);
+	GDEFINE_ENUM_VALUE(RESULT, Busy              ,  -2);
+	GDEFINE_ENUM_VALUE(RESULT, Timeout           ,  -3);
+	GDEFINE_ENUM_VALUE(RESULT, Full              ,  -4);
+	GDEFINE_ENUM_VALUE(RESULT, Empty             ,  -5);
+	GDEFINE_ENUM_VALUE(RESULT, Overrun           ,  -6);
+	GDEFINE_ENUM_VALUE(RESULT, Not_available     ,  -7);
+	GDEFINE_ENUM_VALUE(RESULT, Not_found         ,  -8);
+	GDEFINE_ENUM_VALUE(RESULT, Invalid_parameter ,  -9);
+	GDEFINE_ENUM_VALUE(RESULT, Forbidden         , -10);
+	GDEFINE_ENUM_VALUE(RESULT, Restart           , -11);
+	GDEFINE_ENUM_VALUE(RESULT, Wake_up           , -12);
+	GDEFINE_ENUM_VALUE(RESULT, Sleep             , -13);
+	GDEFINE_ENUM_VALUE(RESULT, Offline           , -14);
+	GDEFINE_ENUM_VALUE(RESULT, Disconnected      , -15);
+	GDEFINE_ENUM_VALUE(RESULT, Connecting        , -16);
+	GDEFINE_ENUM_VALUE(RESULT, Connected         , -17);
+	GDEFINE_ENUM_VALUE(RESULT, Missing_data      , -18);
+	GDEFINE_ENUM_VALUE(RESULT, No_Memory         , -19);
+	GDEFINE_ENUM_VALUE(RESULT, Read              , -20);
+	GDEFINE_ENUM_VALUE(RESULT, Write             , -21);
 
- 	GDEFINE_ENUM_TYPE (COMMAND, int8_t);
+ 	GDEFINE_ENUM_TYPE (COMMAND, ::gpk::s0_t);
 	GDEFINE_ENUM_VALUE(COMMAND, Ok                , RESULT_Ok                * -1);
 	GDEFINE_ENUM_VALUE(COMMAND, Error             , RESULT_Error             * -1);
 	GDEFINE_ENUM_VALUE(COMMAND, Busy              , RESULT_Busy              * -1);

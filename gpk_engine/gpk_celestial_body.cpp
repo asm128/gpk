@@ -114,7 +114,7 @@ gpk::err_t			gpk::printCelestialBody	(const ::gpk::SCelestialBody & body, ::gpk:
 	return ::gpk::get_value_camelcased<::gpk::PLANET_TYPE>(bodyType);
 }
 
-gpk::err_t			gpk::loadPlanet		(::gpk::SDetailPlanet & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
+gpk::err_t			gpk::loadPlanet		(::gpk::SDetailPlanet & body, const ::gpk::SJSONReader & jsonData, ::gpk::s2_t jsonIndexStellarBody) { 
 	::gpk::vcsc_t					subtype;
 	ws_if_failed(::gpk::jsonObjectGetAsString (jsonData, jsonIndexStellarBody, "subtype"				, subtype					));
 	body.Subtype			= ::gpk::bodySubtypeFromString(subtype);
@@ -131,7 +131,7 @@ gpk::err_t			gpk::loadPlanet		(::gpk::SDetailPlanet & body, const ::gpk::SJSONRe
 	return 0; 
 }
 
-gpk::err_t			gpk::loadStar		(::gpk::SDetailStar & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
+gpk::err_t			gpk::loadStar		(::gpk::SDetailStar & body, const ::gpk::SJSONReader & jsonData, ::gpk::s2_t jsonIndexStellarBody) { 
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "gm"						, body.Gm					));
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "volume"					, body.Volume				));
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "volumetric_mean_radius"	, body.VolumetricMeanRadius	));
@@ -151,7 +151,7 @@ gpk::err_t			gpk::loadStar		(::gpk::SDetailStar & body, const ::gpk::SJSONReader
 	return 0; 
 }
 
-gpk::err_t			gpk::loadCelestialBody(::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
+gpk::err_t			gpk::loadCelestialBody(::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, ::gpk::s2_t jsonIndexStellarBody) { 
 	ws_if_failed(::gpk::jsonObjectGetAsDecimal(jsonData, jsonIndexStellarBody, "escape_velocity"		, body.EscapeVelocity		));
 	ws_if_failed(::gpk::jsonObjectGetAsDecimal(jsonData, jsonIndexStellarBody, "mass"					, body.Mass					));
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "diameter"				, body.Diameter				));

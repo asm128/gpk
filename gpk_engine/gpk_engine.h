@@ -11,7 +11,7 @@
 namespace gpk 
 {
 	gpk::err_t					updateEntityTransforms			
-		( uint32_t								iEntity
+		( ::gpk::u2_t								iEntity
 		, const ::gpk::SEntity			& entity
 		, const ::gpk::SVirtualEntityManager	& managedEntities	
 		, ::gpk::SRigidBodyIntegrator			& integrator		
@@ -23,21 +23,21 @@ namespace gpk
 		::gpk::SVirtualEntityManager		Entities		;
 		::gpk::SRigidBodyIntegrator			Integrator		;
 
-		::gpk::lmpod<SParamsBox			, uint32_t>	ParamsBox			;
-		::gpk::lmpod<SParamsDisc		, uint32_t>	ParamsDisc			;
-		::gpk::lmpod<SParamsCircle		, uint32_t>	ParamsCircleSide	;
-		::gpk::lmpod<SParamsCylinderWall, uint32_t>	ParamsCylinderWall	;
-		::gpk::lmpod<SParamsCylinderWall, uint32_t>	ParamsCylinder		;
-		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsFigure0		;
-		::gpk::lmpod<SParamsGrid		, uint32_t>	ParamsGrid			;
-		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelixHalf		;
-		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelix			;
-		::gpk::lmpod<SParamsSphere		, uint32_t>	ParamsSphere		;
-		::gpk::lmpod<SParamsTube		, uint32_t>	ParamsTube			;
-		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingSide		;
-		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingFlat		;
+		::gpk::lmpod<SParamsBox			, ::gpk::u2_t>	ParamsBox			;
+		::gpk::lmpod<SParamsDisc		, ::gpk::u2_t>	ParamsDisc			;
+		::gpk::lmpod<SParamsCircle		, ::gpk::u2_t>	ParamsCircleSide	;
+		::gpk::lmpod<SParamsCylinderWall, ::gpk::u2_t>	ParamsCylinderWall	;
+		::gpk::lmpod<SParamsCylinderWall, ::gpk::u2_t>	ParamsCylinder		;
+		::gpk::lmpod<SParamsHelix		, ::gpk::u2_t>	ParamsFigure0		;
+		::gpk::lmpod<SParamsGrid		, ::gpk::u2_t>	ParamsGrid			;
+		::gpk::lmpod<SParamsHelix		, ::gpk::u2_t>	ParamsHelixHalf		;
+		::gpk::lmpod<SParamsHelix		, ::gpk::u2_t>	ParamsHelix			;
+		::gpk::lmpod<SParamsSphere		, ::gpk::u2_t>	ParamsSphere		;
+		::gpk::lmpod<SParamsTube		, ::gpk::u2_t>	ParamsTube			;
+		::gpk::lmpod<SParamsRingSide	, ::gpk::u2_t>	ParamsRingSide		;
+		::gpk::lmpod<SParamsRingSide	, ::gpk::u2_t>	ParamsRingFlat		;
 
-		::gpk::lmpod<::gpk::vcsc_t, uint32_t>	Images			= {};
+		::gpk::lmpod<::gpk::vcsc_t, ::gpk::u2_t>	Images			= {};
 
 		::gpk::SPNGData						PNGCache		= {};
 
@@ -63,26 +63,26 @@ namespace gpk
 		inline	gpk::err_t		SetParent			(::gpk::eid_t idEntity, ::gpk::eid_t idParent)	{ return Entities.SetParent(idEntity, idParent); }
 
 		gpk::err_t				Load				(::gpk::vcu0_t & input)			{
-			gpk_necs(Scene		->Load(input));
-			gpk_necs(Entities	.Load(input));
-			gpk_necs(Integrator	.Load(input));
+			if_fail_fe(Scene		->Load(input));
+			if_fail_fe(Entities	.Load(input));
+			if_fail_fe(Integrator	.Load(input));
 			return 0;
 		}
 
 		gpk::err_t				Save				(::gpk::au0_t & output)	const	{
 			if(Scene)
-				gpk_necs(Scene->Save(output));
+				if_fail_fe(Scene->Save(output));
 			else 
-				gpk_necs(gpk::SEngineScene{}.Save(output));
+				if_fail_fe(gpk::SEngineScene{}.Save(output));
 
-			gpk_necs(Entities	.Save(output));
-			gpk_necs(Integrator	.Save(output));
+			if_fail_fe(Entities	.Save(output));
+			if_fail_fe(Integrator	.Save(output));
 			return 0;
 		}
 
 		gpk::err_t				Update				(double secondsLastFrame)		{
 			Integrator.Integrate(secondsLastFrame);
-			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
+			for(::gpk::u2_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				::gpk::SEntity			& entity			= Entities[iEntity];
 				if(entity.Parent != -1)
 					continue;
@@ -93,19 +93,19 @@ namespace gpk
 		}
 
 		// This function messes up with the Entities array so be careful of not having any references to its contents or it may end up trying to access invalid memory
-		gpk::err_t				Clone				(uint32_t iEntitySource, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+		gpk::err_t				Clone				(::gpk::u2_t iEntitySource, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
 			const ::gpk::SEntity		entitySource		= Entities[iEntitySource];
-			int32_t							iEntityNew			= Entities.Create();
+			::gpk::s2_t							iEntityNew			= Entities.Create();
 			::gpk::SEntity			& entityNew			= Entities[iEntityNew];
 			entityNew.RenderNode		= Scene->Clone(entitySource.RenderNode, cloneSkin, cloneSurfaces, cloneShaders);
-			entityNew.RigidBody			= ((uint32_t)entitySource.RigidBody < Integrator.Flags.size()) ? Integrator.Clone(entitySource.RigidBody) : (uint32_t)-1;
+			entityNew.RigidBody			= ((::gpk::u2_t)entitySource.RigidBody < Integrator.Flags.size()) ? Integrator.Clone(entitySource.RigidBody) : (::gpk::u2_t)-1;
 			entityNew.Parent			= entitySource.Parent;
 
 			const ::gpk::pau32				childrenSource		= Entities.Children[iEntitySource];
 			if(childrenSource && childrenSource->size()) {
 				::gpk::pau32					childrenNew			= Entities.Children[iEntityNew];
-				for(uint32_t iChild = 0; iChild < childrenSource->size(); ++iChild) {
-					uint32_t						entityChild			= Clone((*childrenSource)[iChild], cloneSkin, cloneSurfaces, cloneShaders);
+				for(::gpk::u2_t iChild = 0; iChild < childrenSource->size(); ++iChild) {
+					::gpk::u2_t						entityChild			= Clone((*childrenSource)[iChild], cloneSkin, cloneSurfaces, cloneShaders);
 					Entities[entityChild].Parent= iEntityNew;
 					childrenNew->push_back(entityChild);
 				}
@@ -114,47 +114,47 @@ namespace gpk
 			return iEntityNew;
 		}
 
-		inline	gpk::err_t		SetNodeSize			(uint32_t iEntity, const ::gpk::n3f2_t & size)					{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].NodeSize = size; return 0; }
-		inline	gpk::err_t		SetMeshScale		(uint32_t iEntity, const ::gpk::n3f2_t & scale, bool halfSizes)	{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.Scale(scale, true); 
+		inline	gpk::err_t		SetNodeSize			(::gpk::u2_t iEntity, const ::gpk::n3f2_t & size)					{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].NodeSize = size; return 0; }
+		inline	gpk::err_t		SetMeshScale		(::gpk::u2_t iEntity, const ::gpk::n3f2_t & scale, bool halfSizes)	{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.Scale(scale, true); 
 			if(halfSizes) {
-				gpk_necs(SetHalfSizes(iEntity, scale * .5f));
-				gpk_necs(SetNodeSize(iEntity, scale));
+				if_fail_fe(SetHalfSizes(iEntity, scale * .5f));
+				if_fail_fe(SetNodeSize(iEntity, scale));
 			}
 			return 0; 
 		}
-		inline	gpk::err_t		SetMeshPosition		(uint32_t iEntity, const ::gpk::n3f2_t & position)				{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.SetTranslation(position, false); return 0; }
-		gpk::err_t				SetColorDiffuse		(uint32_t iEntity, const ::gpk::rgbaf & diffuse)				{ Scene->Graphics->Skins[Scene->RenderNodes[GetRenderNode(iEntity)].Skin]->Material.Color.Diffuse = diffuse; return 0; }
-		gpk::err_t				SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcs name) {
-			const uint32_t					iShader				= Scene->RenderNodes[GetRenderNode(iEntity)].Shader;
+		inline	gpk::err_t		SetMeshPosition		(::gpk::u2_t iEntity, const ::gpk::n3f2_t & position)				{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.SetTranslation(position, false); return 0; }
+		gpk::err_t				SetColorDiffuse		(::gpk::u2_t iEntity, const ::gpk::rgbaf & diffuse)				{ Scene->Graphics->Skins[Scene->RenderNodes[GetRenderNode(iEntity)].Skin]->Material.Color.Diffuse = diffuse; return 0; }
+		gpk::err_t				SetShader			(::gpk::u2_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcst_t name) {
+			const ::gpk::u2_t					iShader				= Scene->RenderNodes[GetRenderNode(iEntity)].Shader;
 			Scene->Graphics->Shaders[iShader].create(shader);
 			Scene->Graphics->Shaders.Names[iShader] = name;
 			return 0;
 		}
-		inline	gpk::err_t		IsPhysicsActive		(uint32_t iEntity)										const	{ return Integrator.Active	(Entities[iEntity].RigidBody) ? 1 : 0; }
-		inline	float				GetMass				(uint32_t iEntity)										const	{ return Integrator.GetMass	(Entities[iEntity].RigidBody);	}
+		inline	gpk::err_t		IsPhysicsActive		(::gpk::u2_t iEntity)										const	{ return Integrator.Active	(Entities[iEntity].RigidBody) ? 1 : 0; }
+		inline	float				GetMass				(::gpk::u2_t iEntity)										const	{ return Integrator.GetMass	(Entities[iEntity].RigidBody);	}
 
-		inline	gpk::err_t		InvalidateTransform	(uint32_t iEntity)												{ Integrator.Flags[GetRigidBody(iEntity)].UpdatedTransform = false;		return 0; }
+		inline	gpk::err_t		InvalidateTransform	(::gpk::u2_t iEntity)												{ Integrator.Flags[GetRigidBody(iEntity)].UpdatedTransform = false;		return 0; }
 
-		inline	gpk::err_t		GetPosition			(uint32_t iEntity, ::gpk::n3f2_t & position)				const	{ Integrator.GetPosition	(GetRigidBody(iEntity), position);			return 0; }
-		inline	gpk::err_t		GetVelocity			(uint32_t iEntity, ::gpk::n3f2_t & velocity)				const	{ Integrator.GetVelocity	(GetRigidBody(iEntity), velocity);			return 0; }
-		inline	gpk::err_t		GetAcceleration		(uint32_t iEntity, ::gpk::n3f2_t & acceleration)			const	{ Integrator.GetAcceleration(GetRigidBody(iEntity), acceleration);		return 0; }
-		inline	gpk::err_t		GetRotation			(uint32_t iEntity, ::gpk::n3f2_t & velocity)				const	{ Integrator.GetRotation	(GetRigidBody(iEntity), velocity);			return 0; }
-		inline	gpk::err_t		GetOrientation		(uint32_t iEntity, ::gpk::quatf32 & orientation)		const	{ Integrator.GetOrientation	(GetRigidBody(iEntity), orientation);		return 0; }
-		inline	gpk::err_t		SetPhysicsActive	(uint32_t iEntity, bool active)									{ Integrator.SetActive		(GetRigidBody(iEntity), active);			return 0; }
-		inline	gpk::err_t		SetCollides			(uint32_t iEntity, bool collides)								{ Integrator.SetCollides	(GetRigidBody(iEntity), collides);			return 0; }
-		inline	gpk::err_t		SetHalfSizes		(uint32_t iEntity, const ::gpk::n3f2_t & halfSizes)				{ Integrator.SetHalfSizes	(GetRigidBody(iEntity), halfSizes);			return 0; }
-		inline	gpk::err_t		SetMass				(uint32_t iEntity, float mass)									{ Integrator.SetMass		(GetRigidBody(iEntity), mass);				return 0; }
-		inline	gpk::err_t		SetMassInverse		(uint32_t iEntity, float inverseMass)							{ Integrator.SetMassInverse	(GetRigidBody(iEntity), inverseMass);		return 0; }
-		inline	gpk::err_t		SetPosition			(uint32_t iEntity, const ::gpk::n3f2_t & position)				{ Integrator.SetPosition	(GetRigidBody(iEntity), position);			return 0; }
-		inline	gpk::err_t		SetVelocity			(uint32_t iEntity, const ::gpk::n3f2_t & velocity)				{ Integrator.SetVelocity	(GetRigidBody(iEntity), velocity);			return 0; }
-		inline	gpk::err_t		SetAcceleration		(uint32_t iEntity, const ::gpk::n3f2_t & acceleration)			{ Integrator.SetAcceleration(GetRigidBody(iEntity), acceleration);		return 0; }
-		inline	gpk::err_t		SetRotation			(uint32_t iEntity, const ::gpk::n3f2_t & velocity)				{ Integrator.SetRotation	(GetRigidBody(iEntity), velocity);			return 0; }
-		inline	gpk::err_t		SetOrientation		(uint32_t iEntity, const ::gpk::quatf32 & orientation)			{ Integrator.SetOrientation	(GetRigidBody(iEntity), orientation);		return 0; }
-		inline	gpk::err_t		SetDampingLinear	(uint32_t iEntity, float damping)								{ Integrator.Masses[GetRigidBody(iEntity)].LinearDamping	= damping;	return 0; }
-		inline	gpk::err_t		SetDampingAngular	(uint32_t iEntity, float damping)								{ Integrator.Masses[GetRigidBody(iEntity)].AngularDamping	= damping;	return 0; }
-		gpk::err_t				SetHidden			(uint32_t iEntity, bool hidden)									{ Scene->RenderNodes.Flags[GetRenderNode(iEntity)].NoDraw	= hidden;	return 0; }	
+		inline	gpk::err_t		GetPosition			(::gpk::u2_t iEntity, ::gpk::n3f2_t & position)				const	{ Integrator.GetPosition	(GetRigidBody(iEntity), position);			return 0; }
+		inline	gpk::err_t		GetVelocity			(::gpk::u2_t iEntity, ::gpk::n3f2_t & velocity)				const	{ Integrator.GetVelocity	(GetRigidBody(iEntity), velocity);			return 0; }
+		inline	gpk::err_t		GetAcceleration		(::gpk::u2_t iEntity, ::gpk::n3f2_t & acceleration)			const	{ Integrator.GetAcceleration(GetRigidBody(iEntity), acceleration);		return 0; }
+		inline	gpk::err_t		GetRotation			(::gpk::u2_t iEntity, ::gpk::n3f2_t & velocity)				const	{ Integrator.GetRotation	(GetRigidBody(iEntity), velocity);			return 0; }
+		inline	gpk::err_t		GetOrientation		(::gpk::u2_t iEntity, ::gpk::quatf32 & orientation)		const	{ Integrator.GetOrientation	(GetRigidBody(iEntity), orientation);		return 0; }
+		inline	gpk::err_t		SetPhysicsActive	(::gpk::u2_t iEntity, bool active)									{ Integrator.SetActive		(GetRigidBody(iEntity), active);			return 0; }
+		inline	gpk::err_t		SetCollides			(::gpk::u2_t iEntity, bool collides)								{ Integrator.SetCollides	(GetRigidBody(iEntity), collides);			return 0; }
+		inline	gpk::err_t		SetHalfSizes		(::gpk::u2_t iEntity, const ::gpk::n3f2_t & halfSizes)				{ Integrator.SetHalfSizes	(GetRigidBody(iEntity), halfSizes);			return 0; }
+		inline	gpk::err_t		SetMass				(::gpk::u2_t iEntity, float mass)									{ Integrator.SetMass		(GetRigidBody(iEntity), mass);				return 0; }
+		inline	gpk::err_t		SetMassInverse		(::gpk::u2_t iEntity, float inverseMass)							{ Integrator.SetMassInverse	(GetRigidBody(iEntity), inverseMass);		return 0; }
+		inline	gpk::err_t		SetPosition			(::gpk::u2_t iEntity, const ::gpk::n3f2_t & position)				{ Integrator.SetPosition	(GetRigidBody(iEntity), position);			return 0; }
+		inline	gpk::err_t		SetVelocity			(::gpk::u2_t iEntity, const ::gpk::n3f2_t & velocity)				{ Integrator.SetVelocity	(GetRigidBody(iEntity), velocity);			return 0; }
+		inline	gpk::err_t		SetAcceleration		(::gpk::u2_t iEntity, const ::gpk::n3f2_t & acceleration)			{ Integrator.SetAcceleration(GetRigidBody(iEntity), acceleration);		return 0; }
+		inline	gpk::err_t		SetRotation			(::gpk::u2_t iEntity, const ::gpk::n3f2_t & velocity)				{ Integrator.SetRotation	(GetRigidBody(iEntity), velocity);			return 0; }
+		inline	gpk::err_t		SetOrientation		(::gpk::u2_t iEntity, const ::gpk::quatf32 & orientation)			{ Integrator.SetOrientation	(GetRigidBody(iEntity), orientation);		return 0; }
+		inline	gpk::err_t		SetDampingLinear	(::gpk::u2_t iEntity, float damping)								{ Integrator.Masses[GetRigidBody(iEntity)].LinearDamping	= damping;	return 0; }
+		inline	gpk::err_t		SetDampingAngular	(::gpk::u2_t iEntity, float damping)								{ Integrator.Masses[GetRigidBody(iEntity)].AngularDamping	= damping;	return 0; }
+		gpk::err_t				SetHidden			(::gpk::u2_t iEntity, bool hidden)									{ Scene->RenderNodes.Flags[GetRenderNode(iEntity)].NoDraw	= hidden;	return 0; }	
 
-		gpk::err_t				ToggleHidden		(uint32_t iEntity) {
+		gpk::err_t				ToggleHidden		(::gpk::u2_t iEntity) {
 			::gpk::SRenderNodeFlags			& flags				= Scene->RenderNodes.Flags[GetRenderNode(iEntity)];
 			flags.NoDraw				= !flags.NoDraw;
 			return 0;
@@ -164,19 +164,19 @@ namespace gpk
 		gpk::err_t				CreateCamera		();
 
 
-		gpk::err_t				CreateBox			(const ::gpk::SParamsBox			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 3, "Box"});
-		gpk::err_t				CreateSphere		(const ::gpk::SParamsSphere			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 6, "Sphere"});
-		gpk::err_t				CreateCylinderWall	(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcs entityName = ::gpk::vcsc_t{13, "Cylinder Wall"});
-		gpk::err_t				CreateCylinder		(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 8, "Cylinder"});		
-		gpk::err_t				CreateCircleSide	(const ::gpk::SParamsCircle			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{11, "Circle Side"});
-		gpk::err_t				CreateDisc			(const ::gpk::SParamsDisc			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 4, "Disc"});
-		gpk::err_t				CreateTube			(const ::gpk::SParamsTube			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 4, "Tube"});
-		gpk::err_t				CreateRingSide		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 9, "Ring Side"});
-		gpk::err_t				CreateRingFlat		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 9, "Ring flat"});
-		gpk::err_t				CreateGrid			(const ::gpk::SParamsGrid			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 4, "Grid"});
-		gpk::err_t				CreateHelixHalf		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{10, "Helix half"});
-		gpk::err_t				CreateHelix			(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = ::gpk::vcsc_t{ 5, "Helix"});
-		gpk::err_t				CreateFigure0		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = ::gpk::vcs{"Figure0"});
+		gpk::err_t				CreateBox			(const ::gpk::SParamsBox			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 3, "Box"});
+		gpk::err_t				CreateSphere		(const ::gpk::SParamsSphere			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 6, "Sphere"});
+		gpk::err_t				CreateCylinderWall	(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{13, "Cylinder Wall"});
+		gpk::err_t				CreateCylinder		(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 8, "Cylinder"});		
+		gpk::err_t				CreateCircleSide	(const ::gpk::SParamsCircle			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{11, "Circle Side"});
+		gpk::err_t				CreateDisc			(const ::gpk::SParamsDisc			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 4, "Disc"});
+		gpk::err_t				CreateTube			(const ::gpk::SParamsTube			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 4, "Tube"});
+		gpk::err_t				CreateRingSide		(const ::gpk::SParamsRingSide		& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 9, "Ring Side"});
+		gpk::err_t				CreateRingFlat		(const ::gpk::SParamsRingSide		& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 9, "Ring flat"});
+		gpk::err_t				CreateGrid			(const ::gpk::SParamsGrid			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 4, "Grid"});
+		gpk::err_t				CreateHelixHalf		(const ::gpk::SParamsHelix			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{10, "Helix half"});
+		gpk::err_t				CreateHelix			(const ::gpk::SParamsHelix			& params, ::gpk::vcst_t entityName = ::gpk::vcsc_t{ 5, "Helix"});
+		gpk::err_t				CreateFigure0		(const ::gpk::SParamsHelix			& params, ::gpk::vcst_t entityName = ::gpk::vcst_t{"Figure0"});
 
 		gpk::err_t				CreateImageFromFile	(const ::gpk::vcst_t & fileFolder, const ::gpk::vcst_t & fileName);
 
@@ -188,21 +188,21 @@ namespace gpk
 			, const ::gpk::n3f2_t						halfSizes
 			, bool										createSkin
 			, const _tParams							& params
-			, ::gpk::linear_map_pod<_tParams, uint32_t>	& recycleRenderNodeMap
+			, ::gpk::linear_map_pod<_tParams, ::gpk::u2_t>	& recycleRenderNodeMap
 			, const TGeometryFunc						& funcGeometry
 			) {
-			int32_t							iEntity				= Entities.Create();
+			::gpk::s2_t							iEntity				= Entities.Create();
 			Entities.Names[iEntity]		= name;
 
 			::gpk::SEntity					& entity			= Entities[iEntity];
 			Integrator.BoundingVolumes[entity.RigidBody = Integrator.Create()].HalfSizes = halfSizes;
 
-			int32_t							reuse				= recycleRenderNodeMap.Keys.find([params](const _tParams & value) { return params == value; }, 0);
-			if(recycleRenderNodeMap.size() > (uint32_t)reuse)
+			::gpk::s2_t							reuse				= recycleRenderNodeMap.Keys.find([params](const _tParams & value) { return params == value; }, 0);
+			if(recycleRenderNodeMap.size() > (::gpk::u2_t)reuse)
 				entity.RenderNode		= Scene->Clone(recycleRenderNodeMap.Values[reuse], true, true, true);
 			else {
 				::gpk::SGeometryBuffers			geometry;
-				gpk_necs(funcGeometry(geometry));
+				if_fail_fe(funcGeometry(geometry));
 				entity.RenderNode			= Scene->CreateRenderNode(geometry, name, createSkin);
 				recycleRenderNodeMap.push_back(params, entity.RenderNode);
 			}
@@ -230,8 +230,8 @@ namespace gpk
 
 	struct SContact {
 		double					Time							= {};
-		uint32_t				EntityA							= {};
-		uint32_t				EntityB							= {};
+		::gpk::u2_t				EntityA							= {};
+		::gpk::u2_t				EntityB							= {};
 		::gpk::n3f2_t			CenterDistance					= {};
 		double					DistanceLength					= {};
 		::gpk::SContactResult	Result							= {};

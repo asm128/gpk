@@ -16,7 +16,7 @@ namespace gpk
 		for(u2_t iImage = 0; iImage < images.size(); ++iImage) {
 			::gpk::n2u2_t				offsetMultiplier	= {1, 1};
 			::gpk::n2u2_t				offsetBase			= {0, 0};
-			gpk_necall(gpk::adam7ScaleIndex(iImage, offsetMultiplier, offsetBase), "Invalid Adam7 image? Image index: %i.", iImage);
+			if_fail_fef(gpk::adam7ScaleIndex(iImage, offsetMultiplier, offsetBase), "Invalid Adam7 image? Image index: %i.", iImage);
 			::gpk::img<_tTexel>			& image				= images[iImage];
 			for(u2_t y = 0; y < image.metrics().y; ++y)
 			for(u2_t x = 0; x < image.metrics().x; ++x) {

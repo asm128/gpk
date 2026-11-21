@@ -75,7 +75,7 @@ gpk::err_t			gpk::psGridRuler
 			)	? ::gpk::rgbaf(::gpk::WHITE.rgb(), inPS.Material.Color.Diffuse.a)
 				: inPS.Material.Color.Diffuse
 				;
-		::gpk::rgbaf				diffuse					= diffuseFactor ? ::gpk::rgbaf(((materialColor * (double)diffuseFactor) * ::gpk::max(.65, ::gpk::noise2D(uint32_t(inPS.WeightedUV.x * 10000), uint32_t(inPS.WeightedUV.y * 10000), 10000))).rgb(), materialColor.a) : ::gpk::BLACK;
+		::gpk::rgbaf				diffuse					= diffuseFactor ? ::gpk::rgbaf(((materialColor * (double)diffuseFactor) * ::gpk::max(.65, ::gpk::noise2D(::gpk::u2_t(inPS.WeightedUV.x * 10000), ::gpk::u2_t(inPS.WeightedUV.y * 10000), 10000))).rgb(), materialColor.a) : ::gpk::BLACK;
 		return outputPixel		= diffuse.Clamp();
 	}
 }
@@ -154,8 +154,8 @@ gpk::err_t			gpk::psSphereSolid
 	}
 	else {
 		const ::gpk::n2u2_t			fetchCoord					= 
-			{ (uint32_t)(relativeToCenter.x * 2.f * surfaceSize.x + surfaceSize.x / 2)
-			, (uint32_t)(relativeToCenter.y * 4.f * surfaceSize.y + surfaceSize.y / 2)
+			{ (::gpk::u2_t)(relativeToCenter.x * 2.f * surfaceSize.x + surfaceSize.x / 2)
+			, (::gpk::u2_t)(relativeToCenter.y * 4.f * surfaceSize.y + surfaceSize.y / 2)
 			};
 		const ::gpk::bgra			surfacecolor				= inPS.Surface
 			[fetchCoord.y % surfaceSize.y]
@@ -212,8 +212,8 @@ gpk::err_t			gpk::psSphereMeridian
 	}
 	else {
 		const ::gpk::n2u2_t			fetchCoord				= 
-			{ (uint32_t)(relativeToCenter.x * 2.f * surfaceSize.x + surfaceSize.x / 2)
-			, (uint32_t)(relativeToCenter.y * 4.f * surfaceSize.y + surfaceSize.y / 2)
+			{ (::gpk::u2_t)(relativeToCenter.x * 2.f * surfaceSize.x + surfaceSize.x / 2)
+			, (::gpk::u2_t)(relativeToCenter.y * 4.f * surfaceSize.y + surfaceSize.y / 2)
 			};
 		const ::gpk::bgra			surfacecolor			= inPS.Surface
 			[fetchCoord.y % surfaceSize.y]

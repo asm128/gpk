@@ -18,8 +18,8 @@ namespace gpk
 
 #pragma pack(push, 1)
 	stct SAESLevelProperties {
-		int32_t						KeyLength ;
-		int32_t						KeyExpSize;
+		::gpk::s2_t						KeyLength ;
+		::gpk::s2_t						KeyExpSize;
 	};
 #pragma pack(pop)
 

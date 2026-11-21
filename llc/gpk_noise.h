@@ -3,7 +3,7 @@
 #ifndef GPK_NOISE_H_23627
 #define GPK_NOISE_H_23627
 
-namespace gpk
+nmsp gpk
 {
 
 	stxp	u3_c		NOISE_SEED			= 16381; // 525253
@@ -26,14 +26,14 @@ namespace gpk
 		u3_t				Position			= 0;
 		u3_t				Value				= 0;
 
-		inline	u3_t		Next				()			nxpt	{
+		inln	u3_t		Next				()			nxpt	{
 			u3_t next = Seed + ++Position * 0x9E3779B97F4A7C15ULL;
 			next = (next ^ (next >> 30)) * 0xBF58476D1CE4E5B9ULL;
 			next = (next ^ (next >> 27)) * 0x94D049BB133111EBULL;
 			return Value = next ^ (next >> 31);
 		}
 
-		inline	void		Reset				()			nxpt	{ Reset(Seed); }
+		inln	void		Reset				()			nxpt	{ Reset(Seed); }
 		void				Reset				(u3_t seed)	nxpt	{
 			Seed				= seed;
 			Position			= 0;

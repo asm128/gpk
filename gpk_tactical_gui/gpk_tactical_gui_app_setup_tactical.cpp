@@ -31,13 +31,13 @@ gpk::err_t dry::setupScreenTactical(::dry::SApplication & app) {
 	::dry::setupScreenFromControlParams(gui, app.Screens.RootControlIndex, screen, ::control_list_tactical);
 
 	static const ::gpk::vcsc_t menuLabels[] =
-		{ ::gpk::vcs{"Start Mission"}
-		, ::gpk::vcs{"Set Up Squad"}
-		, ::gpk::vcs{"Visit Labs"}
-		, ::gpk::vcs{"Upgrade Center"}
-		, ::gpk::vcs{"Factory"}
-		, ::gpk::vcs{"Buy / Sell"}
-		, ::gpk::vcs{"Memorial"}
+		{ ::gpk::vcst_t{"Start Mission"}
+		, ::gpk::vcst_t{"Set Up Squad"}
+		, ::gpk::vcst_t{"Visit Labs"}
+		, ::gpk::vcst_t{"Upgrade Center"}
+		, ::gpk::vcst_t{"Factory"}
+		, ::gpk::vcst_t{"Buy / Sell"}
+		, ::gpk::vcst_t{"Memorial"}
 		};
 	::gpk::SControlPlacement menuItemPlacement = {};
 	menuItemPlacement.Align = ::gpk::ALIGN_TOP_LEFT;
@@ -45,10 +45,10 @@ gpk::err_t dry::setupScreenTactical(::dry::SApplication & app) {
 	menuItemPlacement.Border = {2, 2, 2, 2};
 	menuItemPlacement.Margin = {4, 2, 4, 2};
 	::gpk::vcid menuControlIds = {screen.ControlIds.begin() + ::dry::SCREEN_CONTROL_TACTICAL_MENU_START_MISSION, ::dry::TACTICAL_SECTION_COUNT};
-	gpk_necall(::gpk::guiCreateControlList(gui, ::gpk::DIRECTION_DOWN, menuLabels, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_GROUP], menuItemPlacement, ::gpk::ALIGN_CENTER_LEFT, menuControlIds), "%s", "Failed to create tactical command list.");
+	if_fail_fef(::gpk::guiCreateControlList(gui, ::gpk::DIRECTION_DOWN, menuLabels, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_GROUP], menuItemPlacement, ::gpk::ALIGN_CENTER_LEFT, menuControlIds), "%s", "Failed to create tactical command list.");
 
 	gui.Controls.SetHidden(app.Screens.Home.ControlIds[::dry::SCREEN_CONTROL_HOME_DIALOG], true);
 	gui.Controls.SetSelected(screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_MENU_START_MISSION], true);
-	gpk_necall(::dry::updateScreenTactical(app), "%s", "Failed to initialize tactical screen text.");
-	return ::dry::handleResizeScreenTactical(app, app.Framework.RootWindow.Size.s1_t());
+	if_fail_fef(::dry::updateScreenTactical(app), "%s", "Failed to initialize tactical screen text.");
+	return ::dry::handleResizeScreenTactical(app, app.Framework.RootWindow.Size.s1());
 }

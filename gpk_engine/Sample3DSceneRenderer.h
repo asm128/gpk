@@ -36,8 +36,8 @@ namespace gpk
 
 		gpk::err_t							Initialize		(const ::gpk::pobj<DX::D3DDeviceResources> & deviceResources) {
 			DeviceResources							= deviceResources;
-			gpk_necs(CreateDeviceResources(DeviceResources->GetD3DDevice()));
-			gpk_necs(CreateSizeDependentResources(DeviceResources->GetLogicalSize(), DeviceResources->GetOrientationTransform3D()));
+			if_fail_fe(CreateDeviceResources(DeviceResources->GetD3DDevice()));
+			if_fail_fe(CreateSizeDependentResources(DeviceResources->GetLogicalSize(), DeviceResources->GetOrientationTransform3D()));
 			return 0;
 		}
 
@@ -55,7 +55,7 @@ namespace gpk
 			DepthStencilState	.clear();
 		}
 
-		void									Render							(uint32_t iMesh, ::gpk::rangeu2_t indexRange, uint32_t iTexture, uint32_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
+		void									Render							(::gpk::u2_t iMesh, ::gpk::rangeu2_t indexRange, ::gpk::u2_t iTexture, ::gpk::u2_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
 			auto										context							= DeviceResources->GetD3DDeviceContext();
 			context->UpdateSubresource1(ConstantBuffer[0], 0, NULL, &constantBufferModel, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
 			context->UpdateSubresource1(ConstantBuffer[1], 0, NULL, &ConstantBufferScene, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
@@ -150,8 +150,8 @@ namespace gpk
 				::gpk::pcom<ID3D11InputLayout>				inputLayout;
 				::gpk::pcom<ID3D11VertexShader>				vertexShader;
 
-				::gpk::apod<int8_t>							fileVS;
-				gpk_necs(gpk::fileToMemory("SampleVertexShader.cso", fileVS));
+				::gpk::apod<::gpk::s0_t>							fileVS;
+				if_fail_fe(gpk::fileToMemory("SampleVertexShader.cso", fileVS));
 				stxp	D3D11_INPUT_ELEMENT_DESC			vertexDesc []			=
 					{	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					,	{ "NORMAL"	, 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }

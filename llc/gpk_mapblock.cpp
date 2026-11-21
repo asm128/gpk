@@ -1,15 +1,15 @@
 #include "gpk_block.h"
-
-gpk::err_t			gpk::SMapBlock::MapGet					(uint32_t index, ::gpk::vcu0_t & data)				const	{
-	ree_if(index >= Allocator.Views.size(), "Index out of range: %i", index);
+/*
+gpk::err_t 		gpk::SMapBlock::MapGet					(u2_t index, ::gpk::vcu0_t & data)				cnst	{
+	if_true_fef(index >= Allocator.Views.size(), "Index out of range: %i", index);
 	data											= {Allocator.Views[index], Allocator.Counts[index]};
 	return 0;
 }
 
-gpk::err_t			gpk::SMapBlock::MapId					(::gpk::vcu0_c & dataToAdd)						const	{
-	ree_if(0 == dataToAdd.size(), "%s", "Empty data is not allowed");
-	for(uint32_t iMap = 0; iMap < Allocator.Views.size(); ++iMap) {
-		const uint16_t										currentViewLen							= Allocator.Counts[iMap];
+gpk::err_t 		gpk::SMapBlock::MapId					(::gpk::vcu0_c & dataToAdd)						cnst	{
+	if_true_fef(0 == dataToAdd.size(), "%s", "Empty data is not allowed");
+	for(u2_t iMap = 0; iMap < Allocator.Views.size(); ++iMap) {
+		u1_c										currentViewLen							= Allocator.Counts[iMap];
 		if(currentViewLen != dataToAdd.size())
 			continue;
 
@@ -18,3 +18,4 @@ gpk::err_t			gpk::SMapBlock::MapId					(::gpk::vcu0_c & dataToAdd)						const	{
 	}
 	return -1;
 }
+*/

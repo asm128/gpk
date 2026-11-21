@@ -4,39 +4,39 @@
 #ifndef GPK_LINE3_H_23627
 #define GPK_LINE3_H_23627
 
-namespace gpk
+nmsp gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	tplt<tpnm _tDimension>	struct line3 : public line<::gpk::n3<_tDimension>>		{
-		typedef	_tDimension		T;
-		typedef	::gpk::n3<T>	TVertex;
-		using line<TVertex>::	A;
-		using line<TVertex>::	B;
-		using line<TVertex>::	line;
+	tplt<tpnm _tDimension>	struct line3 : public line<n3<_tDimension>>		{
+		tydf	_tDimension		T;
+		tydf	n3<T>	TVertex;
+		usng line<TVertex>::	A;
+		usng line<TVertex>::	B;
+		usng line<TVertex>::	line;
 
 		tplt<tpnm _tOther>
-		line3<_tOther>			Cast				()		const	noexcept		{
+		line3<_tOther>			Cast				()		csnx		{
 			return
 				{ A.tplt Cast<_tOther>()
 				, B.tplt Cast<_tOther>()
 				};
 		}
 	};
-	typedef line3<float>	line3f32, line3f;
-	typedef line3<double>	line3f64, line3d;
-	typedef line3<uint8_t>	line3u8;
-	typedef line3<uint16_t>	line3u16;
-	typedef line3<uint32_t>	line3u32;
-	typedef line3<uint64_t>	line3u64;
-	typedef line3<int8_t>	line3i8;
-	typedef line3<int16_t>	line3i16;
-	typedef line3<int32_t>	line3i32;
-	typedef line3<int64_t>	line3i64;
+	tydf line3<f2_t> line3f2_t; tdcs line3f2_t line3f2_c;
+	tydf line3<f3_t> line3f3_t; tdcs line3f3_t line3f3_c;
+	tydf line3<u0_t> line3u0_t; tdcs line3u0_t line3u0_c;
+	tydf line3<u1_t> line3u1_t; tdcs line3u1_t line3u1_c;
+	tydf line3<u2_t> line3u2_t; tdcs line3u2_t line3u2_c;
+	tydf line3<u3_t> line3u3_t; tdcs line3u3_t line3u3_c;
+	tydf line3<s0_t> line3s0_t; tdcs line3s0_t line3s0_c;
+	tydf line3<s1_t> line3s1_t; tdcs line3s1_t line3s1_c;
+	tydf line3<s2_t> line3s2_t; tdcs line3s2_t line3s2_c;
+	tydf line3<s3_t> line3s3_t; tdcs line3s3_t line3s3_c;
 
-	tplt<tpnm T> stxp	T	orient2d3d	(const ::gpk::line3<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ 
+	tplt<tpnm T> stxp	T	orient2d3d	(cnst line3<T> & segment, cnst n2<T> & point)	nxpt	{ 
 		return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); 
 	}
 #pragma pack(pop)
-} // namespace
+} // nmsp
 
 #endif // GPK_LINE3_H_23627

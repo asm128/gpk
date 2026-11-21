@@ -3,22 +3,22 @@
 #include "gpk_axis.h"
 
 gpk::err_t			gpk::SRigidBodyIntegrator::Load	(::gpk::vcu0_t & input) { 
-	gpk_necs(gpk::loadView(input, Frames			));
-	gpk_necs(gpk::loadView(input, Flags			));
-	gpk_necs(gpk::loadView(input, Forces			));
-	gpk_necs(gpk::loadView(input, Masses			));
-	gpk_necs(gpk::loadView(input, Centers			));
-	gpk_necs(gpk::loadView(input, TransformsLocal	));
+	if_fail_fe(gpk::loadView(input, Frames			));
+	if_fail_fe(gpk::loadView(input, Flags			));
+	if_fail_fe(gpk::loadView(input, Forces			));
+	if_fail_fe(gpk::loadView(input, Masses			));
+	if_fail_fe(gpk::loadView(input, Centers			));
+	if_fail_fe(gpk::loadView(input, TransformsLocal	));
 	return 0;											
 }
 
 gpk::err_t			gpk::SRigidBodyIntegrator::Save	(::gpk::au0_t & output) const { 
-	gpk_necs(gpk::saveView(output, Frames			));
-	gpk_necs(gpk::saveView(output, Flags			));
-	gpk_necs(gpk::saveView(output, Forces			));
-	gpk_necs(gpk::saveView(output, Masses			));
-	gpk_necs(gpk::saveView(output, Centers		));
-	gpk_necs(gpk::saveView(output, TransformsLocal));
+	if_fail_fe(gpk::saveView(output, Frames			));
+	if_fail_fe(gpk::saveView(output, Flags			));
+	if_fail_fe(gpk::saveView(output, Forces			));
+	if_fail_fe(gpk::saveView(output, Masses			));
+	if_fail_fe(gpk::saveView(output, Centers		));
+	if_fail_fe(gpk::saveView(output, TransformsLocal));
 
 	info_printf("Saved %s, %i", "Frames"			, Frames			.size());
 	info_printf("Saved %s, %i", "Flags"				, Flags				.size());

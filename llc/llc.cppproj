@@ -255,9 +255,6 @@
     <Compile Include="gpk_http_client.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="gpk_i2c.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="gpk_image.h">
       <SubType>compile</SubType>
     </Compile>

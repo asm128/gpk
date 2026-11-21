@@ -7,17 +7,17 @@
 
 namespace gpk
 {
-	struct SEditorRigidBody		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorImage			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorMesh			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorScene			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorBuffer		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorSurface		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorPalette		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorControl		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorControlText	{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorLayout		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
-	struct SEditorSettings		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorRigidBody		{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorImage			{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorMesh			{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorScene			{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorBuffer		{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorSurface		{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorPalette		{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorControl		{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorControlText	{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorLayout		{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
+	struct SEditorSettings		{ ::gpk::acid IdControl = {}; ::gpk::s2_t IdEditable = -1; };
 
 
 	struct SEditorProject {

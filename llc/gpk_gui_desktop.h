@@ -9,20 +9,20 @@ namespace gpk
 
 	tplt <tpnm _tElement>
 	struct SRecyclableElementContainer {
-		::gpk::view_bit<uint64_t>	Unused;
+		::gpk::view_bit<::gpk::u3_t>	Unused;
 		::gpk::aobj<_tElement>		Elements;
 		::gpk::au3_t				UnusedData;
 
-		inxp	const _tElement&	operator[]					(uint32_t index)			const				{ return Elements[index]; }
-		inxp	_tElement&			operator[]					(uint32_t index)								{ return Elements[index]; }
+		inxp	const _tElement&	operator[]					(::gpk::u2_t index)			const				{ return Elements[index]; }
+		inxp	_tElement&			operator[]					(::gpk::u2_t index)								{ return Elements[index]; }
 
-		inxp	uint32_t			size						()							const	noexcept	{ return Elements.size(); }
+		inxp	::gpk::u2_t			size						()							const	noexcept	{ return Elements.size(); }
 		gpk::err_t				push_back					(const _tElement & toPush)						{
 			const ::gpk::cid_t				elemIndex					= (::gpk::cid_t)Elements.push_back(toPush);
-			ree_if(failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");
-			stxp	uint32_t				boolContainerElementSize	= sizeof(uint64_t) * ::gpk::BYTE_SIZE;
-			gpk_necs(UnusedData.resize((elemIndex + 1) / boolContainerElementSize + 1));
-			Unused						= {UnusedData.begin(), (uint32_t)(elemIndex + 1)};
+			if_true_fef(failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");
+			stxp	::gpk::u2_t				boolContainerElementSize	= sizeof(::gpk::u3_t) * ::gpk::BYTE_SIZE;
+			if_fail_fe(UnusedData.resize((elemIndex + 1) / boolContainerElementSize + 1));
+			Unused						= {UnusedData.begin(), (::gpk::u2_t)(elemIndex + 1)};
 			Unused[elemIndex]			= false;
 			return elemIndex;
 		}
@@ -50,7 +50,7 @@ namespace gpk
 	gpk::err_t				desktopDeleteViewport		(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::cid_t iElement);
 																							    
 	gpk::err_t				desktopControlListSetParent	(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::cid_t iControlList, ::gpk::cid_t iParentControlList, ::gpk::cid_t iParentListItem);
-	int64_t						desktopUpdate				(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::SInput & input);
+	::gpk::s3_t						desktopUpdate				(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::SInput & input);
 
 } // namespace
 

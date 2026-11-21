@@ -16,16 +16,16 @@ namespace gpk
 		::gpk::as2_t						Parent;
 
 		gpk::err_t				Save			(::gpk::au0_t & output)	const	{ 
-			gpk_necs(Body.Save(output));
-			gpk_necs(gpk::saveView(output, Type));
-			gpk_necs(gpk::saveView(output, Parent));
+			if_fail_fe(Body.Save(output));
+			if_fail_fe(gpk::saveView(output, Type));
+			if_fail_fe(gpk::saveView(output, Parent));
 			return 0;
 		}
 
 		gpk::err_t				Load			(::gpk::vcu0_t & input)	{ 
-			gpk_necs(Body.Load(input));
-			gpk_necs(gpk::loadView(input, Type));
-			gpk_necs(gpk::loadView(input, Parent));
+			if_fail_fe(Body.Load(input));
+			if_fail_fe(gpk::loadView(input, Type));
+			if_fail_fe(gpk::loadView(input, Parent));
 			return 0;
 		}
 	};

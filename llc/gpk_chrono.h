@@ -3,32 +3,29 @@
 #ifndef GPK_CHRONO_H_23627
 #define GPK_CHRONO_H_23627
 
-namespace gpk
+nmsp gpk
 {
-#if defined(GPK_ANDROID) || defined(GPK_LINUX)
-	long long				timeCurrent			();
-	long long				timeCurrentInMs		();
-	long long				timeCurrentInUs		();
-#else
-	int64_t					timeCurrent			();
-	int64_t					timeCurrentInMs		();
-	int64_t					timeCurrentInUs		();
-#endif
+	s3_t	timeCurrent		();
+	s3_t	timeCurrentInMs	();
+	s3_t	timeCurrentInUs	();
 #pragma pack(push, 1)
-	struct STimestamps {	
-		uint64_t				Created				= 0;
-		uint64_t				Loaded				= 0;
-		uint64_t				Modified			= 0;
-		uint64_t				Saved				= 0;
+	stct STimestamps {	
+		u3_t	Make			= 0;
+		u3_t	Load			= 0;
+		u3_t	Save			= 0;
+		u3_t	Send			= 0;
+		u3_t	Read			= 0;
+		u3_t	Sort			= 0;
+		u3_t	Wipe			= 0;
+		u3_t	Quit			= 0;
 	};
-
-	struct SDaylight {
-		uint64_t				TimeOffset		= {};
-		uint32_t				OffsetMinutes	= 90;
-		float					ExtraRatio		= .5;
+	stct SDaylight {	
+		u3_t	TimeOffset		= {};
+		u2_t	OffsetMinutes	= 90;
+		f2_t	ExtraRatio		= .5;
 	};
 #pragma pack(pop)
 
-} // namespace
+} // nmsp
 
 #endif // GPK_CHRONO_H_23627

@@ -3,12 +3,12 @@
 #ifndef	GPK_GLTF_H_23627
 #define	GPK_GLTF_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	struct SGLTFHeader {
-		uint32_t				Magic			= {};
-		uint32_t				Version			= {};
-		uint32_t				Length			= {};
+		u2_t				Magic			= {};
+		u2_t				Version			= {};
+		u2_t				Length			= {};
 	};
 
 	struct SGLTF {
@@ -17,7 +17,7 @@ namespace gpk
 
 	};
 
-	gpk::err_t		gltfLoad		(::gpk::SGeometryBuffers & geometry);
-} // namespace
+	gpk::err_t 	gltfLoad		(::gpk::SGeometryBuffers & geometry);
+} // nmsp
 
 #endif	// GPK_GLTF_H_23627

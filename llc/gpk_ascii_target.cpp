@@ -1,11 +1,7 @@
 #include "gpk_ascii_target.h"
 
-gpk::err_t			gpk::asciiTargetClear							(::gpk::SASCIITarget& console, uint8_t character, uint16_t color)		{
-	uint8_t																* characters									= console.Characters	.Texels.begin();
-	uint16_t															* colors										= console.Colors		.Texels.begin();
-	for(uint32_t iCell = 0; iCell < console.Colors.Texels.size(); ++iCell) {
-		characters	[iCell]												= character;
-		colors		[iCell]												= color;
-	}
+gpk::err_t 		gpk::asciiTargetClear							(::gpk::SASCIITarget& console, u0_t character, u1_t color)		{
+	::gpk::vu0_t{console.Characters.Texels.begin(), console.Colors.Texels.size()}.fill(character);
+	console.Colors.Texels.fill(color);
 	return 0;
 }

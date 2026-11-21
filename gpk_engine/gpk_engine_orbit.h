@@ -29,13 +29,13 @@ namespace gpk
 	stin	gpk::err_t	initOrbiterBody		(const ::gpk::SOrbiter & bodyData, ::gpk::SBodyCenter	& planetCenter, ::gpk::SBodyForces & planetForces, double rotationUnit) {
 		return ::gpk::initOrbiterBody(planetCenter, planetForces, bodyData.Body.AxialTilt, bodyData.Body.RotationPeriod, rotationUnit);
 	}
-	stin	gpk::err_t	initOrbiterOrbit	(const ::gpk::SOrbiter & bodyData, ::gpk::SRigidBodyIntegrator & integrator, int32_t rigidBodyIndex, double rotationUnit) {
+	stin	gpk::err_t	initOrbiterOrbit	(const ::gpk::SOrbiter & bodyData, ::gpk::SRigidBodyIntegrator & integrator, ::gpk::s2_t rigidBodyIndex, double rotationUnit) {
 		return ::gpk::initOrbiterOrbit(integrator.Centers[rigidBodyIndex], integrator.Forces[rigidBodyIndex], bodyData.Orbit.AxialTilt, bodyData.Orbit.RotationPeriod, rotationUnit); 
 	}
-	stin	gpk::err_t	initOrbiterCenter	(const ::gpk::SOrbiter & bodyData, ::gpk::SRigidBodyIntegrator & integrator, int32_t rigidBodyIndex, double distanceScale) {
+	stin	gpk::err_t	initOrbiterCenter	(const ::gpk::SOrbiter & bodyData, ::gpk::SRigidBodyIntegrator & integrator, ::gpk::s2_t rigidBodyIndex, double distanceScale) {
 		return ::gpk::initOrbiterCenter(integrator.Centers[rigidBodyIndex], bodyData.Orbit.AxialTilt, bodyData.Orbit.Radius, distanceScale);
 	}
-	stin	gpk::err_t	initOrbiterBody		(const ::gpk::SOrbiter & bodyData, ::gpk::SRigidBodyIntegrator & integrator, int32_t rigidBodyIndex, double rotationUnit) {
+	stin	gpk::err_t	initOrbiterBody		(const ::gpk::SOrbiter & bodyData, ::gpk::SRigidBodyIntegrator & integrator, ::gpk::s2_t rigidBodyIndex, double rotationUnit) {
 		return ::gpk::initOrbiterOrbit(integrator.Centers[rigidBodyIndex], integrator.Forces[rigidBodyIndex], bodyData.Body.AxialTilt, bodyData.Body.RotationPeriod, rotationUnit);
 	}
 

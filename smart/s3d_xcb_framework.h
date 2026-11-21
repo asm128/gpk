@@ -12,7 +12,7 @@ namespace s3d
 		::gpk::SFrameworkDetail											PlatformDetail			= {};
 		::gpk::SWindow													MainDisplay				= {};
 		::gpk::STimer													Timer					= {};
-		::gpk::pobj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	MainDisplayOffscreen	= {};
+		::gpk::pobj<::gpk::SRenderTarget<::gpk::SColorBGRA, ::gpk::u2_t>>	MainDisplayOffscreen	= {};
 		::gpk::pobj<::gpk::SInput>										Input					= {};
 		::gpk::pobj<::gpk::SGUI>										GUI						= {};
 #if !defined(GPK_WINDOWS)

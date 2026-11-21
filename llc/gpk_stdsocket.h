@@ -1,5 +1,4 @@
 #include "gpk_auto_handler.h"
-#include "gpk_safe.h"
 #include "gpk_tcpip.h"
 
 #ifndef GPK_ATMEL		
@@ -17,38 +16,49 @@
 #define GPK_STDSOCKET_H_23627
 
 #if !defined(GPK_WINDOWS)
-typedef int SOCKET;
+tydf int SOCKET;
 #	ifndef INVALID_SOCKET
 #		define INVALID_SOCKET -1
 #	endif
 #endif
 
-namespace gpk
+nmsp gpk
 {
-	struct auto_socket_close : public ::gpk::auto_handler<SOCKET, INVALID_SOCKET>					{
-		using			TWrapper						::auto_handler;
-		inline											~auto_socket_close					()	noexcept	{ close(); }
-		inline			void							close								()	noexcept	{ gpk_safe_closesocket(Handle); }
+	stin	err_t	safe_closesocket	(SOCKET & handle)	{
+		if(handle != INVALID_SOCKET) {
+#ifdef GPK_WINDOWS
+			closesocket(handle);
+#else
+			::close(handle);
+#endif
+			handle = INVALID_SOCKET;
+		}
+		return 0;
+	}
+	struct auto_socket_close : public auto_handler<SOCKET, INVALID_SOCKET>					{
+		usng		TWrapper						::auto_handler;
+		inln										~auto_socket_close					()	nxpt	{ close(); }
+		inln		void							close								()	nxpt	{ safe_closesocket(Handle); }
 	};
 
-	gpk::err_t			tcpipAddressToSockaddr		(uint8_t a1, uint8_t a2, uint8_t a3, uint8_t a4, uint16_t port, sockaddr_in & sockaddr);
-	gpk::err_t			tcpipAddressToSockaddr		(uint32_t address, uint16_t port, sockaddr_in & sockaddr);
+			err_t	tcpipAddressToSockaddr		(u0_t a1, u0_t a2, u0_t a3, u0_t a4, u1_t port, sockaddr_in & sockaddr);
+			err_t	tcpipAddressToSockaddr		(u2_t address, u1_t port, sockaddr_in & sockaddr);
 
-	gpk::err_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
-	gpk::err_t			tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr, uint32_t & address, uint16_t & port);
-	gpk::err_t			tcpipAddress				(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
+			err_t	tcpipAddressFromSockaddr	(cnst sockaddr_in & sockaddr, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4, u1_t* port);
+			err_t	tcpipAddressFromSockaddr	(cnst sockaddr_in & sockaddr, u2_t & address, u1_t & port);
+			err_t	tcpipAddress				(SOCKET socket, u0_t* a1, u0_t* a2, u0_t* a3, u0_t* a4, u1_t* port);
 
-	stin	gpk::err_t	tcpipAddressToSockaddr		(const ::gpk::SIPv4End & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		
-		( ::gpk::byte_at(addr.IP, 0)
-		, ::gpk::byte_at(addr.IP, 1)
-		, ::gpk::byte_at(addr.IP, 2)
-		, ::gpk::byte_at(addr.IP, 3)
+	stin	err_t	tcpipAddressToSockaddr		(cnst SIPv4End & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		
+		( byte_at(addr.IP, 0)
+		, byte_at(addr.IP, 1)
+		, byte_at(addr.IP, 2)
+		, byte_at(addr.IP, 3)
 		, addr.Port, sockaddr
 		); 
 	}
-	stin	gpk::err_t	tcpipAddressFromSockaddr	(const sockaddr_in& sockaddr, ::gpk::SIPv4End & address)	{ uint8_t addr[4] = {}; gpk_necs(tcpipAddressFromSockaddr	(sockaddr	, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
-	stin	gpk::err_t	tcpipAddress				(SOCKET socket, ::gpk::SIPv4End & address)					{ uint8_t addr[4] = {}; gpk_necs(tcpipAddress				(socket		, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
-} // namespace
+	stin	err_t	tcpipAddressFromSockaddr	(cnst sockaddr_in& sockaddr, SIPv4End & address)	{ u0_t addr[4] = {}; if_fail_fe(tcpipAddressFromSockaddr	(sockaddr	, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
+	stin	err_t	tcpipAddress				(SOCKET socket, SIPv4End & address)					{ u0_t addr[4] = {}; if_fail_fe(tcpipAddress				(socket		, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port)); address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]}; return 0; }
+} // nmsp
 
 
 #endif // GPK_STDSOCKET_H_23627

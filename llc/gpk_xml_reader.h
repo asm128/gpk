@@ -7,7 +7,7 @@
 
 namespace gpk 
 {
-	GDEFINE_ENUM_TYPE(XML_TOKEN, uint8_t);
+	GDEFINE_ENUM_TYPE(XML_TOKEN, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(XML_TOKEN, DOCUMENT		, 0x0);
 	GDEFINE_ENUM_VALUE(XML_TOKEN, PI			, 0x1);
 	GDEFINE_ENUM_VALUE(XML_TOKEN, PI_NAME		, 0x2);
@@ -28,14 +28,14 @@ namespace gpk
 	struct SXMLToken {
 		XML_TOKEN				Type;
 		::gpk::rangeu2_t		Range;
-		int32_t					Parent;	// -1 for root element
+		::gpk::s2_t					Parent;	// -1 for root element
 	};
 
 	struct SXMLReaderState {
-		uint32_t				IndexCurrentChar	= 0;
-		int32_t					IndexCurrentElement	= -1;
+		::gpk::u2_t				IndexCurrentChar	= 0;
+		::gpk::s2_t					IndexCurrentElement	= -1;
 		SXMLToken				* CurrentElement	= 0;
-		uint32_t				NestLevel			= 0;
+		::gpk::u2_t				NestLevel			= 0;
 		sc_t					CharCurrent			= 0;
 		::gpk::apod<SXMLToken>	Token				= {};
 	};

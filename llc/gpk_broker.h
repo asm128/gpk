@@ -3,13 +3,13 @@
 #ifndef GPK_PACKETBROKER_H
 #define GPK_PACKETBROKER_H
 
-namespace gpk
+nmsp gpk
 {
 	stct SPacketQueue { apobj<asc_t> Items;};
 	stct SPacketBroker {
 		::gpk::apobj<SPacketQueue>	Readers;
 		::gpk::apobj<SPacketQueue>	Senders;
 	};
-} // namespace
+} // nmsp
 
 #endif // GPK_PACKETBROKER_H

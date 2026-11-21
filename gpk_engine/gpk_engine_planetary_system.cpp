@@ -13,16 +13,16 @@ GPK_USING_TYPEINT();
 stxp	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 
 gpk::err_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ 
-	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%.*s", GPK_VIEW_ARGS(jsonData.View[0]));	
+	if_fail_fef(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%.*s", GPK_VIEW_ARGS(jsonData.View[0]));	
 	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
 }
 gpk::err_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcsc_t jsonFilePath)				{ 
-	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						
+	if_fail_fef(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						
 	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
 }
 
 gpk::err_t			gpk::planetarySystemSetup(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
-	stxp	uint8_t				MAX_COLORS				= 16;
+	stxp	::gpk::u0_t				MAX_COLORS				= 16;
 	stxp	::gpk::astatic<::gpk::bgra, MAX_COLORS>	PLANET_COLORS	=
 		{ ::gpk::YELLOW
 		, ::gpk::ORANGE
@@ -41,35 +41,35 @@ gpk::err_t			gpk::planetarySystemSetup(const ::gpk::SPlanetarySystem & solarSyst
 		, ::gpk::GREEN
 		, ::gpk::YELLOW
 		};
-	gpk_necs(gpk::planetarySystemCreateEntities(solarSystem, entityMap, engine));
-	gpk_necs(gpk::planetarySystemReset(solarSystem, entityMap, engine, PLANET_COLORS));
+	if_fail_fe(gpk::planetarySystemCreateEntities(solarSystem, entityMap, engine));
+	if_fail_fe(gpk::planetarySystemReset(solarSystem, entityMap, engine, PLANET_COLORS));
 	return 0;
 }
 
 static	gpk::err_t	createOrbiterOrbit	(::gpk::SEngine & engine, const ::gpk::vcst_t shaderName = ::gpk::vcsc_t(5, "psOrbit")) {	// Gravity cemters
 	::gpk::SParamsRingSide		params					= {{}, 32};
-	int32_t						iEntity;
-	gpk_necs(iEntity = engine.CreateRingFlat(params));
-	gpk_necs(engine.SetColorDiffuse	(iEntity, {1.0f, 1.0f, 1.0f, .5}));
-	gpk_necs(engine.SetShader		(iEntity, ::gpk::psGridRuler, shaderName));
+	::gpk::s2_t						iEntity;
+	if_fail_fe(iEntity = engine.CreateRingFlat(params));
+	if_fail_fe(engine.SetColorDiffuse	(iEntity, {1.0f, 1.0f, 1.0f, .5}));
+	if_fail_fe(engine.SetShader		(iEntity, ::gpk::psGridRuler, shaderName));
 	return iEntity;
 }
 
 static	gpk::err_t	createGravityCenter		(::gpk::SEngine & engine, const ::gpk::vcst_t shaderName = ::gpk::vcsc_t(15, "psGravityCenter")) {	// Gravity cemters
 	::gpk::SParamsSphere		params					= {{}, {8, 8}};
-	int32_t						iEntity;
-	gpk_necs(iEntity = engine.CreateSphere(params));
-	gpk_necs(engine.SetColorDiffuse	(iEntity, {.0f, 0.0f, 1.0f, .5f}));
-	gpk_necs(engine.SetShader		(iEntity, ::gpk::psSphereSolid, shaderName));
+	::gpk::s2_t						iEntity;
+	if_fail_fe(iEntity = engine.CreateSphere(params));
+	if_fail_fe(engine.SetColorDiffuse	(iEntity, {.0f, 0.0f, 1.0f, .5f}));
+	if_fail_fe(engine.SetShader		(iEntity, ::gpk::psSphereSolid, shaderName));
 	return iEntity;
 }
 
 static	gpk::err_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::vcst_t shaderName = ::gpk::vcsc_t(5, "psSun")) {	// Gravity cemters
 	::gpk::SParamsSphere		params					= {{}, {32, 32}};
-	int32_t						iEntity;
-	gpk_necs(iEntity = engine.CreateSphere(params));
-	gpk_necs(engine.SetColorDiffuse	(iEntity, {1.0f, 1.0f, 1.0f, 1.0f}));
-	gpk_necs(engine.SetShader		(iEntity, ::gpk::psSphereSolid, shaderName));
+	::gpk::s2_t						iEntity;
+	if_fail_fe(iEntity = engine.CreateSphere(params));
+	if_fail_fe(engine.SetColorDiffuse	(iEntity, {1.0f, 1.0f, 1.0f, 1.0f}));
+	if_fail_fe(engine.SetShader		(iEntity, ::gpk::psSphereSolid, shaderName));
 	return iEntity;
 }
 
@@ -77,55 +77,55 @@ gpk::err_t			gpk::planetarySystemCreateEntities(const ::gpk::SPlanetarySystem & 
 	::gpk::SPNGData				pngCache				= {};
 	stxp vcst_t					fileFolder				= GPK_CXS("../gpk_data/images");
 	::gpk::string				fileName				= {};
-	int32_t						iBackground				= 0;
+	::gpk::s2_t						iBackground				= 0;
 
 	{	// Background sphere map
 		::gpk::SParamsSphere		params					= {{}, {32, 32}, true, 1, 2};
-		gpk_necs(iBackground = engine.CreateSphere(params));
-		gpk_necs(engine.SetColorDiffuse(iBackground, {1.0f, 1.0f, 1.0f, 1.0f}));
-		gpk_necs(engine.SetShader(iBackground, ::gpk::psSphereAxis, "psBackgroundMilkyWay"));
+		if_fail_fe(iBackground = engine.CreateSphere(params));
+		if_fail_fe(engine.SetColorDiffuse(iBackground, {1.0f, 1.0f, 1.0f, 1.0f}));
+		if_fail_fe(engine.SetShader(iBackground, ::gpk::psSphereAxis, "psBackgroundMilkyWay"));
 		::gpk::append_strings(fileName, "black", ".png");
-		int32_t						iImage;
-		gpk_necs(iImage = engine.CreateImageFromFile(fileFolder, fileName));
+		::gpk::s2_t						iImage;
+		if_fail_fe(iImage = engine.CreateImageFromFile(fileFolder, fileName));
 		::gpk::SRenderNode			& renderNode			= engine.Scene->RenderNodes[engine.GetRenderNode(iBackground)];
-		gpk_necs(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
+		if_fail_fe(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
 	}
 
-	gpk_necs(entityMap.GravityCenters.push_back(::createGravityCenter(engine)));
-	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
-		gpk_necs(entityMap.GravityCenters.push_back(engine.Clone(entityMap.GravityCenters[0], true, true, true)));
+	if_fail_fe(entityMap.GravityCenters.push_back(::createGravityCenter(engine)));
+	for(::gpk::u2_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
+		if_fail_fe(entityMap.GravityCenters.push_back(engine.Clone(entityMap.GravityCenters[0], true, true, true)));
 
-	gpk_necs(engine.SetShader(entityMap.GravityCenters[0], ::gpk::psSphereAxis, "psSunfire"));
+	if_fail_fe(engine.SetShader(entityMap.GravityCenters[0], ::gpk::psSphereAxis, "psSunfire"));
 	
-	gpk_necs(entityMap.Bodies.push_back(::createOrbiterBody(engine)));
-	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
-		gpk_necs(entityMap.Bodies.push_back(engine.Clone(entityMap.Bodies[0], true, true, true)));
+	if_fail_fe(entityMap.Bodies.push_back(::createOrbiterBody(engine)));
+	for(::gpk::u2_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
+		if_fail_fe(entityMap.Bodies.push_back(engine.Clone(entityMap.Bodies[0], true, true, true)));
 
-	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
+	for(::gpk::u2_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
 		fileName.clear();
 		::gpk::append_strings(fileName, solarSystem.Body.Keys[iOrbiter], "_color.png");
 
-		int32_t						iImage;
-		gpk_necs(iImage = engine.CreateImageFromFile(fileFolder, fileName));
+		::gpk::s2_t						iImage;
+		if_fail_fe(iImage = engine.CreateImageFromFile(fileFolder, fileName));
 		
 		::gpk::SRenderNode			& renderNode			= engine.Scene->RenderNodes[engine.GetRenderNode(entityMap.Bodies[iOrbiter])];
-		gpk_necs(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
+		if_fail_fe(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
 	}
 
-	gpk_necs(entityMap.Orbits.push_back(::createOrbiterOrbit(engine)));
-	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
-		gpk_necs(entityMap.Orbits.push_back(engine.Clone(entityMap.Orbits[0], true, false, false)));
+	if_fail_fe(entityMap.Orbits.push_back(::createOrbiterOrbit(engine)));
+	for(::gpk::u2_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
+		if_fail_fe(entityMap.Orbits.push_back(engine.Clone(entityMap.Orbits[0], true, false, false)));
 
 	//{	// Rings circles
 	//	::gpk::SParamsRing			params					= {{}, 32};
-	//	gpk_necs(entityMap.Rings.push_back(engine.CreateRingSide(params)));
-	//	gpk_necs(engine.SetColorDiffuse(entityMap.Rings[0], {.0f, 1.0f, 0.0f, .05f}));
-	//	gpk_necs(engine.SetShader(entityMap.Rings[0], ::gpk::psGridRuler, "psOrbit"));
+	//	if_fail_fe(entityMap.Rings.push_back(engine.CreateRingSide(params)));
+	//	if_fail_fe(engine.SetColorDiffuse(entityMap.Rings[0], {.0f, 1.0f, 0.0f, .05f}));
+	//	if_fail_fe(engine.SetShader(entityMap.Rings[0], ::gpk::psGridRuler, "psOrbit"));
 	//}
-	//for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
-	//	gpk_necs(entityMap.Rings.push_back(engine.Clone(entityMap.Rings[0], true, false, false)));
+	//for(::gpk::u2_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
+	//	if_fail_fe(entityMap.Rings.push_back(engine.Clone(entityMap.Rings[0], true, false, false)));
 
-	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
+	for(::gpk::u2_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
 		if(-1 != solarSystem.Parent[iOrbiter])
 			engine.Entities.SetParent(entityMap.Orbits[iOrbiter], entityMap.GravityCenters[solarSystem.Parent[iOrbiter]]);
 
@@ -136,65 +136,65 @@ gpk::err_t			gpk::planetarySystemCreateEntities(const ::gpk::SPlanetarySystem & 
 	return iBackground;
 }
 
-static	gpk::err_t	initOrbit				(::gpk::SEngine & engine, int32_t iOrbiter, int32_t iEntity, double radius, double distanceScale) {
-	gpk_necs(engine.SetPhysicsActive(iEntity, iOrbiter));
-	gpk_necs(engine.SetCollides	(iEntity, false));
+static	gpk::err_t	initOrbit				(::gpk::SEngine & engine, ::gpk::s2_t iOrbiter, ::gpk::s2_t iEntity, double radius, double distanceScale) {
+	if_fail_fe(engine.SetPhysicsActive(iEntity, iOrbiter));
+	if_fail_fe(engine.SetCollides	(iEntity, false));
 
 	::gpk::n3f3_t				scale					= {radius, radius, radius};
 	if(iOrbiter)
 		scale					*= distanceScale * 2;
 	else
 		scale					= {.01f, .01f, .01f};
-	gpk_necs(engine.SetMeshScale(iEntity, ::gpk::n3f3_t{scale.x * 1.001, scale.y, scale.z * 1.001}.f2_t(), true));
-	gpk_necs(engine.SetHidden	(iEntity, false));
+	if_fail_fe(engine.SetMeshScale(iEntity, ::gpk::n3f3_t{scale.x * 1.001, scale.y, scale.z * 1.001}.f2(), true));
+	if_fail_fe(engine.SetHidden	(iEntity, false));
 	return 0;
 }
 
 stxp	::gpk::n3f3_t	SUN_SCALE				= {.00625f, .00625f, .00625f};
 
-static	gpk::err_t	initGravityCenter		(::gpk::SEngine & engine, int32_t iEntity, bool isStar, double diameter, double distanceScale, bool ) {
-	gpk_necs(engine.SetPhysicsActive(iEntity, true));
-	gpk_necs(engine.SetCollides		(iEntity, false));
+static	gpk::err_t	initGravityCenter		(::gpk::SEngine & engine, ::gpk::s2_t iEntity, bool isStar, double diameter, double distanceScale, bool ) {
+	if_fail_fe(engine.SetPhysicsActive(iEntity, true));
+	if_fail_fe(engine.SetCollides		(iEntity, false));
 
 	::gpk::n3f3_t				scale					= {diameter, diameter, diameter};
 	scale					= isStar ? SUN_SCALE : scale * distanceScale;
 	scale					*= 2;
-	gpk_necs(engine.SetMeshScale(iEntity, scale.f2_t(), true));
-	gpk_necs(engine.SetHidden	(iEntity, false));
+	if_fail_fe(engine.SetMeshScale(iEntity, scale.f2(), true));
+	if_fail_fe(engine.SetHidden	(iEntity, false));
 	return 0;
 }
 
-static	gpk::err_t	initBody				(::gpk::SEngine & engine, int32_t iEntity, bool isStar, double diameter, double distanceScale, bool ringSystem) {
-	gpk_necs(engine.SetPhysicsActive(iEntity, false == isStar));
-	gpk_necs(engine.SetCollides		(iEntity, false));
+static	gpk::err_t	initBody				(::gpk::SEngine & engine, ::gpk::s2_t iEntity, bool isStar, double diameter, double distanceScale, bool ringSystem) {
+	if_fail_fe(engine.SetPhysicsActive(iEntity, false == isStar));
+	if_fail_fe(engine.SetCollides		(iEntity, false));
 
 	::gpk::n3f3_t				scale					= {diameter, diameter, diameter};
 	scale					= isStar ? SUN_SCALE : scale * distanceScale;
-	gpk_necs(engine.SetMeshScale(iEntity, scale.f2_t(), true));
+	if_fail_fe(engine.SetMeshScale(iEntity, scale.f2(), true));
 	::gpk::TFuncPixelShader		& ps					= isStar ? ::gpk::psSphereAxis	: ringSystem ? ::gpk::psSphereMeridian	: ::gpk::psSphereSolid		;
-	const ::gpk::vcsc_t			psName					= isStar ? ::gpk::vcs{"psSun"}	: ringSystem ? ::gpk::vcs{"psGasGiant"}	: ::gpk::vcs{"psTerrestrial"};
-	gpk_necs(engine.SetShader	(iEntity, ps, psName));
-	gpk_necs(engine.SetHidden	(iEntity, false));
+	const ::gpk::vcsc_t			psName					= isStar ? ::gpk::vcst_t{"psSun"}	: ringSystem ? ::gpk::vcst_t{"psGasGiant"}	: ::gpk::vcst_t{"psTerrestrial"};
+	if_fail_fe(engine.SetShader	(iEntity, ps, psName));
+	if_fail_fe(engine.SetHidden	(iEntity, false));
 	return 0;
 }
 
-static	gpk::err_t	textureNumber			(::gpk::g8bgra view, uint32_t number, const ::gpk::SRasterFont & font) { 
+static	gpk::err_t	textureNumber			(::gpk::g8bgra view, ::gpk::u2_t number, const ::gpk::SRasterFont & font) { 
 	sc_t						strNumber[4]			= {};
 	sprintf_s(strNumber, "%i", number);
-	const ::gpk::rect2i16		targetRect				= 
-		{ {int16_t(view.metrics().x / 2 - (font.CharSize.x * strlen(strNumber)) / 2), int16_t(view.metrics().y / 2 - font.CharSize.y / 2)}
-		, font.CharSize.s1_t()
+	const ::gpk::rect2s1_t		targetRect				= 
+		{ {::gpk::s1_t(view.metrics().x / 2 - (font.CharSize.x * strlen(strNumber)) / 2), ::gpk::s1_t(view.metrics().y / 2 - font.CharSize.y / 2)}
+		, font.CharSize.s1()
 		};
 	::gpk::apod<::gpk::n2u1_t>	coords;
 	::gpk::textLineRaster(view.metrics(), font.CharSize, targetRect, font.Texture, strNumber, coords);
-	for(uint32_t iCoord = 0; iCoord < coords.size(); ++iCoord) {
+	for(::gpk::u2_t iCoord = 0; iCoord < coords.size(); ++iCoord) {
 		const ::gpk::n2u1_t			coord						= coords[iCoord];
 		view[coord.y][coord.x]	= ::gpk::BLACK;
 	}
 	return 0; 
 }
 
-static	gpk::err_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, int32_t iOrbiter, int32_t iEntity) {
+static	gpk::err_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, ::gpk::s2_t iOrbiter, ::gpk::s2_t iEntity) {
 	const ::gpk::SEntity	& entity				= engine.Entities[iEntity];
 	const ::gpk::SRenderNode	& renderNode			= engine.Scene->RenderNodes[entity.RenderNode];
 	::gpk::SSkin				& skin					= *engine.Scene->Graphics->Skins[renderNode.Skin];
@@ -203,7 +203,7 @@ static	gpk::err_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, int3
 	material.Color.Specular	= ::gpk::GRAY;
 	material.Color.Diffuse	= color;
   	material.Color.Ambient	= color * .1f;
-	::gpk::g8bgra				view					= {(::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u2_t()};
+	::gpk::g8bgra				view					= {(::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u2()};
 	const ::gpk::SRasterFont	& font					= *engine.Scene->Graphics->Fonts.Fonts[8];
 	textureNumber(view, iOrbiter, font);
 	return 0;
@@ -220,35 +220,35 @@ gpk::err_t			gpk::planetarySystemReset
 	const double				distanceScale			= 1.0 / fFurthest * 10;
 	const double				rotationUnit			= 23.9;
 
-	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
+	for(::gpk::u2_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
 		const ::gpk::SCelestialBody	& body					= solarSystem.Body.Values[iOrbiter];
 		const bool					isStar					= solarSystem.Type[iOrbiter] == ::gpk::CELESTIAL_BODY_Star;
 		const bool					isMoon					= solarSystem.Type[iOrbiter] == ::gpk::CELESTIAL_BODY_Moon;
 		stxp	float				moonScale				= 25.f;
 		{
-			const uint32_t				iEntity					= entityMap.Orbits[iOrbiter];
-			gpk_necs(gpk::initOrbiterOrbit(body, engine.Integrator, engine.GetRigidBody(iEntity), 1));
+			const ::gpk::u2_t				iEntity					= entityMap.Orbits[iOrbiter];
+			if_fail_fe(gpk::initOrbiterOrbit(body, engine.Integrator, engine.GetRigidBody(iEntity), 1));
 
 			double						orbitRadius				= body.Orbit.Radius;// + body.Diameter * .0005;
 			if(isMoon)
 				orbitRadius				*= moonScale;
-			gpk_necs(::initOrbit(engine, iOrbiter, iEntity, orbitRadius, distanceScale));
+			if_fail_fe(::initOrbit(engine, iOrbiter, iEntity, orbitRadius, distanceScale));
 		}
 		{
-			const uint32_t				iEntity					= entityMap.GravityCenters[iOrbiter];
-			gpk_necs(gpk::initOrbiterCenter(body, engine.Integrator, engine.GetRigidBody(iEntity), distanceScale * (isMoon ? moonScale : 1)));
-			gpk_necs(::initGravityCenter(engine, iEntity, isStar, body.Diameter, distanceScale * .0001, body.Detail.Planet.RingSystem));
+			const ::gpk::u2_t				iEntity					= entityMap.GravityCenters[iOrbiter];
+			if_fail_fe(gpk::initOrbiterCenter(body, engine.Integrator, engine.GetRigidBody(iEntity), distanceScale * (isMoon ? moonScale : 1)));
+			if_fail_fe(::initGravityCenter(engine, iEntity, isStar, body.Diameter, distanceScale * .0001, body.Detail.Planet.RingSystem));
 		}
 		{
-			const uint32_t				iEntity					= entityMap.Bodies[iOrbiter];
-			gpk_necs(gpk::initOrbiterBody(body, engine.Integrator, engine.GetRigidBody(iEntity), rotationUnit));
-			gpk_necs(::initBody(engine, iEntity, isStar, body.Diameter, distanceScale * .0001 * (isMoon ? moonScale * .05 : 1), body.Detail.Planet.RingSystem));
+			const ::gpk::u2_t				iEntity					= entityMap.Bodies[iOrbiter];
+			if_fail_fe(gpk::initOrbiterBody(body, engine.Integrator, engine.GetRigidBody(iEntity), rotationUnit));
+			if_fail_fe(::initBody(engine, iEntity, isStar, body.Diameter, distanceScale * .0001 * (isMoon ? moonScale * .05 : 1), body.Detail.Planet.RingSystem));
 		}
 		::gpk::rgbaf				color					= colors[iOrbiter];
 		const ::gpk::eid_t			entities[3]				= {entityMap.Orbits[iOrbiter], entityMap.GravityCenters[iOrbiter], entityMap.Bodies[iOrbiter]};
-		for(uint32_t i = 0; i < 3; ++i) {
+		for(::gpk::u2_t i = 0; i < 3; ++i) {
 			color.a					= i ? (i == 2) ? 1 : .25f : .125f;
-			gpk_necs(::initSkin(engine, color, iOrbiter, entities[i]));
+			if_fail_fe(::initSkin(engine, color, iOrbiter, entities[i]));
 		}
 	}
 

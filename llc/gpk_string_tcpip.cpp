@@ -13,7 +13,7 @@ gpk::err_t			gpk::tcpipAddress		(vcst_t strIP, u2_t & address, uint16_t & port) 
 
 gpk::err_t			jsonTcpipAddress		(gpk::vcst_t strIP, gpk::u2_t & ipv4) {
 	gpk::SJSONReader			reader					= {};
-	gpk_necall(gpk::jsonParse(reader, strIP), "Failed to parse ip from string: '%.*s'.", GPK_VIEW_ARGS(strIP));
+	if_fail_fef(gpk::jsonParse(reader, strIP), "Failed to parse ip from string: '%.*s'.", GPK_VIEW_ARGS(strIP));
 	ipv4					= 0;
 	{ int32_t iToken; if_fail_fe(iToken = jsonArrayValueGet(reader, 0, 0)); ipv4 |= gpk::byte_to<gpk::u2_t>((uint8_t)reader[iToken]->Token->Value, 0); }
 	{ int32_t iToken; if_fail_fe(iToken = jsonArrayValueGet(reader, 0, 1)); ipv4 |= gpk::byte_to<gpk::u2_t>((uint8_t)reader[iToken]->Token->Value, 1); }

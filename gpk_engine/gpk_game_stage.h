@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE(MATCH_TYPE, uint8_t);
+	GDEFINE_ENUM_TYPE(MATCH_TYPE, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Free			, 0);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Survival		, 1);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Campaign		, 2);
@@ -14,17 +14,17 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SStageSetup {
-		uint64_t		Seed					= {};
-		uint16_t		Players					= {};
+		::gpk::u3_t		Seed					= {};
+		::gpk::u1_t		Players					= {};
 		MATCH_TYPE		MatchType				= {};
-		uint8_t			Padding1				= {};
-		uint32_t		Padding4				= {};
+		::gpk::u0_t			Padding1				= {};
+		::gpk::u2_t		Padding4				= {};
 	};
 	stxp	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
 
 	struct SStageTime {
-		uint64_t		Started					= {};	// Timestamp
-		uint64_t		Loaded					= {};	// Timestamp
+		::gpk::u3_t		Started					= {};	// Timestamp
+		::gpk::u3_t		Loaded					= {};	// Timestamp
 		double			Played					= {};	// This one represents the real-world time played, incremented on every tick while not paused.
 	};
 

@@ -111,7 +111,7 @@ gpk::err_t			gpk::AUDIO_STATE::InitAudio() {
 	XAUDIO2_VOICE_DETAILS		details			= {};
 	pMasterVoice->GetVoiceDetails(&details);
 
-	rees_if(details.InputChannels > OUTPUTCHANNELS);
+	if_true_ve(-1, details.InputChannels > OUTPUTCHANNELS);
 
 	gpk_hrcall(pMasterVoice->GetChannelMask( &dwChannelMask ));
 
@@ -126,7 +126,7 @@ gpk::err_t			gpk::AUDIO_STATE::InitAudio() {
 	XAUDIO2_DEVICE_DETAILS		details			= {};
 	gpk_hrcall(XAudio2->GetDeviceDetails(0, &details));
 
-	rees_if(details.OutputFormat.Format.nChannels > OUTPUTCHANNELS);
+	if_true_ve(-1, details.OutputFormat.Format.nChannels > OUTPUTCHANNELS);
 
 	nSampleRate				= details.OutputFormat.Format.nSamplesPerSec;
 	SampleRateOriginal		= SampleRateCurrent = details.OutputFormat.Format.nSamplesPerSec;
@@ -243,9 +243,9 @@ gpk::err_t			gpk::AUDIO_STATE::PrepareAudio(::gpk::vcsc_c & wavname) {
 	// Read in the wave file
 	const WAVEFORMATEX			* pwfx				= 0;
 	::gpk::vcu0_t					audioView			= {};
-	gpk_necs(DirectX::LoadWAVAudioFromFile(wavname, WaveData, &pwfx, audioView));
+	if_fail_fe(DirectX::LoadWAVAudioFromFile(wavname, WaveData, &pwfx, audioView));
 
-	ree_if(pwfx->nChannels != INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
+	if_true_fef(pwfx->nChannels != INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
 
 	// Play the wave using a source voice that sends to both the submix and mastering voices
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};
@@ -312,7 +312,7 @@ gpk::err_t			gpk::AUDIO_STATE::UpdateAudio(double fElapsedTime) {
 			emitter.Velocity		= {eVelocity.x, eVelocity.y, eVelocity.z};
 		}
 
-		uint32_t dwCalcFlags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER
+		::gpk::u2_t dwCalcFlags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER
 			| X3DAUDIO_CALCULATE_LPF_DIRECT | X3DAUDIO_CALCULATE_LPF_REVERB
 			| X3DAUDIO_CALCULATE_REVERB;
 
@@ -448,7 +448,7 @@ static	gpk::err_t	enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<
 	unsigned int count = 0;
 	gpk_hrcall(devices->get_Size(&count));
 
-	rees_if(!count);
+	if_true_ve(-1, !count);
 
 	for( unsigned int j = 0; j < count; ++j ) {
 		::gpk::pcom<IDeviceInformation>	deviceInfo;
@@ -516,7 +516,7 @@ static	gpk::err_t	enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::aobj<
 #else // USING_XAUDIO2_7_DIRECTX
 
 	// Enumerating with XAudio 2.7
-	uint32_t						count			= 0;
+	::gpk::u2_t						count			= 0;
 	gpk_hrcall(pXaudio2->GetDeviceCount(&count));
 	if(!count)
 		return S_FALSE;
@@ -550,7 +550,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::vcsc_c & wavname, IXAudio2*	X
 	const WAVEFORMATEX			* pwfx				= 0;
 	::gpk::vcu0_t				audioView			= {};
 	WaveData.create();
-	gpk_hrcall(DirectX::LoadWAVAudioFromFile(::gpk::vcs{strFilePath}, *WaveData, &pwfx, audioView));
+	gpk_hrcall(DirectX::LoadWAVAudioFromFile(::gpk::vcst_t{strFilePath}, *WaveData, &pwfx, audioView));
 
 	// Play the wave using a source voice that sends to both the submix and mastering voices
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};

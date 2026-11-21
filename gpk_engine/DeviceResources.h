@@ -79,8 +79,8 @@ namespace DX
 		DirectX::XMFLOAT4X4						m_orientationTransform3D	= {};
 
 		inline	gpk::err_t					Initialize					()									{
-			gpk_necs(CreateIndependentResources());
-			gpk_necs(CreateDeviceResources());
+			if_fail_fe(CreateIndependentResources());
+			if_fail_fe(CreateDeviceResources());
 			return 0;
 		}
 
@@ -111,7 +111,7 @@ namespace DX
 				if (hr != DXGI_ERROR_DEVICE_REMOVED && hr != DXGI_ERROR_DEVICE_RESET) 
 					gpk_hrcall(hr);
 				else {
-					gpk_necs(HandleDeviceLost());	// If the device was removed for any reason, a new device and swap chain will need to be created.
+					if_fail_fe(HandleDeviceLost());	// If the device was removed for any reason, a new device and swap chain will need to be created.
 					return 0;	// Everything is set up now. Do not continue execution of this method. HandleDeviceLost will reenter this method and correctly set up the new device.
 				}
 			} else {
@@ -131,7 +131,7 @@ namespace DX
 
 				//DXGI_SWAP_CHAIN_FULLSCREEN_DESC			swapChainDescFS				= {0};
 				//MONITORINFO								monitor_info				= {sizeof(monitor_info)};
-				//ree_if(FALSE == GetMonitorInfoA(MonitorFromWindow(m_window, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", m_window);
+				//if_true_fef(FALSE == GetMonitorInfoA(MonitorFromWindow(m_window, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", m_window);
 
 				//swapChainDescFS.Scaling				= DisplayMetrics::SupportHighResolutions ? DXGI_MODE_SCALING_UNSPECIFIED : DXGI_MODE_SCALING_STRETCHED;;
 				//swapChainDescFS.Windowed				= true;
@@ -141,11 +141,11 @@ namespace DX
 				::gpk::pcom<IDXGIAdapter>					dxgiAdapter;
 				::gpk::pcom<IDXGIFactory4>					dxgiFactory;
 				::gpk::pcom<IDXGISwapChain1>				swapChain;
-				gpk_necs(m_d3dDevice.as(&dxgiDevice));
+				if_fail_fe(m_d3dDevice.as(&dxgiDevice));
 				gpk_hrcall(dxgiDevice->GetAdapter(&dxgiAdapter));
 				gpk_hrcall(dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)));
 				gpk_hrcall(dxgiFactory->CreateSwapChainForHwnd(m_d3dDevice, m_window, &swapChainDesc, /*&swapChainDescFS*/0, nullptr, &swapChain));
-				gpk_necs(swapChain.as(m_swapChain));
+				if_fail_fe(swapChain.as(m_swapChain));
 				gpk_hrcall(dxgiDevice->SetMaximumFrameLatency(1));	// Ensure that DXGI does not queue more than one frame at a time. This both reduces latency and ensures that the application will only render after each VSync, minimizing power consumption.
 			}
 	
@@ -281,8 +281,8 @@ namespace DX
 		D2D1::Matrix3x2F						GetOrientationTransform2D	()	const									{ return m_orientationTransform2D; }
 
 		void									RegisterDeviceNotify		(DX::IDeviceNotify * deviceNotify)			{ m_deviceNotify = deviceNotify; }
-		gpk::err_t							SetLogicalSize				(const ::gpk::n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			gpk_necs(CreateSizeDependentResources()); } return 0; } 
-		gpk::err_t							SetCurrentOrientation		(::gpk::GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	gpk_necs(CreateSizeDependentResources()); } return 0; } 
+		gpk::err_t							SetLogicalSize				(const ::gpk::n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			if_fail_fe(CreateSizeDependentResources()); } return 0; } 
+		gpk::err_t							SetCurrentOrientation		(::gpk::GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	if_fail_fe(CreateSizeDependentResources()); } return 0; } 
 		gpk::err_t							SetDpi						(float dpi)									{
 			if (dpi != m_dpi) {
 				m_dpi									= dpi;
@@ -290,7 +290,7 @@ namespace DX
 				GetClientRect(m_window, &rect);
 				m_logicalSize							= {float(rect.right - rect.left), float(rect.bottom - rect.top)};	// When the display DPI changes, the logical size of the window (measured in Dips) also changes and needs to be updated.
 				m_d2dContext->SetDpi(m_dpi, m_dpi);
-				gpk_necs(CreateSizeDependentResources());
+				if_fail_fe(CreateSizeDependentResources());
 			}
 			return 0;
 		}
@@ -298,7 +298,7 @@ namespace DX
 		// Call this method when the app suspends. It provides a hint to the driver that the app is entering an idle state and that temporary buffers can be reclaimed for use by other apps.
 		gpk::err_t							Trim						() {
 			::gpk::pcom<IDXGIDevice3>				dxgiDevice;
-			gpk_necs(m_d3dDevice.as(&dxgiDevice));
+			if_fail_fe(m_d3dDevice.as(&dxgiDevice));
 			dxgiDevice->Trim();
 		}
 
@@ -308,9 +308,9 @@ namespace DX
 			m_swapChain								= nullptr;
 			if (m_deviceNotify) 
 				m_deviceNotify->OnDeviceLost();
-			gpk_necs(CreateDeviceResources());
+			if_fail_fe(CreateDeviceResources());
 			m_d2dContext->SetDpi(m_dpi, m_dpi);
-			gpk_necs(CreateSizeDependentResources());
+			if_fail_fe(CreateSizeDependentResources());
 			if (m_deviceNotify) 
 				m_deviceNotify->OnDeviceRestored();
 
@@ -326,10 +326,10 @@ namespace DX
 			m_nativeOrientation						= ScreenRotation();
 			m_currentOrientation					= ScreenRotation();
 
-			uint32_t									dpi							= GetDpiForWindow(m_window);
+			::gpk::u2_t									dpi							= GetDpiForWindow(m_window);
 			m_dpi									= float(dpi);
 			m_d2dContext->SetDpi(m_dpi, m_dpi);
-			gpk_necs(CreateSizeDependentResources());
+			if_fail_fe(CreateSizeDependentResources());
 			return 0;
 		}
 
@@ -340,7 +340,7 @@ namespace DX
 			m_d3dContext->DiscardView1(m_d3dRenderTargetView, nullptr, 0);	// Discard the contents of the render target. This is a valid operation only when the existing contents will be entirely overwritten. If dirty or scroll rects are used, this call should be removed.
 			m_d3dContext->DiscardView1(m_d3dDepthStencilView, nullptr, 0);	// Discard the contents of the depth stencil.
 			if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-				gpk_necs(HandleDeviceLost());	// If the device was removed either by a disconnection or a driver upgrade, we  must recreate all device resources.
+				if_fail_fe(HandleDeviceLost());	// If the device was removed either by a disconnection or a driver upgrade, we  must recreate all device resources.
 			else 
 				gpk_hrcall(hr);
 			return 0;
@@ -363,7 +363,7 @@ namespace DX
 		// Configures the Direct3D device, and stores handles to it and the device context.
 		gpk::err_t							CreateDeviceResources		() {
 			// This flag adds support for surfaces with a different color channel ordering than the API default. It is required for compatibility with Direct2D.
-			uint32_t									creationFlags				= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+			::gpk::u2_t									creationFlags				= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 		#if defined(_DEBUG)
 			if (DX::SdkLayersAvailable()) // If the project is in a debug build, enable debugging via SDK Layers with this flag.
 				creationFlags							|= D3D11_CREATE_DEVICE_DEBUG;
@@ -387,16 +387,16 @@ namespace DX
 			::gpk::pcom<ID3D11DeviceContext>			context;
 
 			 // If the initialization fails, fall back to the WARP device. For more information on WARP, see: https://go.microsoft.com/fwlink/?LinkId=286690. 
-			if (FAILED(D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, creationFlags, featureLevels, (uint32_t)std::size(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context)))
+			if (FAILED(D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, creationFlags, featureLevels, (::gpk::u2_t)std::size(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context)))
 				gpk_hrcall(D3D11CreateDevice(nullptr,D3D_DRIVER_TYPE_WARP, 0, creationFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &device, &m_d3dFeatureLevel, &context));
 
 			// Store pointers to the Direct3D 11.3 API device and immediate context.
-			gpk_necs(device.as(m_d3dDevice));
-			gpk_necs(context.as(m_d3dContext));
+			if_fail_fe(device.as(m_d3dDevice));
+			if_fail_fe(context.as(m_d3dContext));
 
 			// Create the Direct2D device object and a corresponding context.
 			::gpk::pcom<IDXGIDevice3>					dxgiDevice;
-			gpk_necs(m_d3dDevice.as(dxgiDevice));
+			if_fail_fe(m_d3dDevice.as(dxgiDevice));
 			gpk_hrcall(m_d2dFactory->CreateDevice(dxgiDevice, &m_d2dDevice));
 			gpk_hrcall(m_d2dDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &m_d2dContext));
 			return 0;

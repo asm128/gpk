@@ -1,50 +1,17 @@
 #include "gpk_block.h"
-#include "gpk_json_expression.h"
-#include "gpk_noise.h"
+#include "gpk_log.h"
 
-gpk::err_t			gpk::blockRecordId			(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord)	{
-	idRecord				= ((uint64_t)indices.IdBlock * blockSize + (uint64_t)indices.IndexRecord);
-	return 0;
+gpk::err_t gpk::blockRecordIndices(u3_c idRecord, u2_c blockSize, SRecordMap & indices) nxpt {
+	if_zero_fe(blockSize);
+	cnst u3_t idBlock = idRecord / blockSize;
+	if_true_fef(idBlock > u2_t(-1), "%" GPK_FMT_S3, idBlock);
+	indices = {u2_t(idBlock), u2_t(idRecord % blockSize)};
+	rtrn 0;
 }
-gpk::err_t			gpk::blockRecordIndices		(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
-	const uint64_t				recordCoord					= (uint64_t)(idRecord & 0x000FFFFFFFFFFFFFULL);
-	indices.IdBlock			= (uint32_t)(recordCoord / blockSize);
-	indices.IndexRecord		= (uint32_t)(recordCoord % blockSize);
-	return 0;
-}
-gpk::err_t			gpk::blockRecordPath		(::gpk::apod<sc_t> & fileName, const ::gpk::SRecordMap & indices, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath)	{
-	::gpk::apod<sc_t>			finalPath					= dbPath;
-	gpk_necs(gpk::blockFilePath(finalPath, dbName, dbPath));
-	gpk_necs(gpk::blockFileName(fileName, indices.IdBlock, dbName, finalPath));
-	return 0;
-}
-gpk::err_t			gpk::blockFilePath			(::gpk::apod<sc_t> & finalPath, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
-	finalPath				= dbPath;
-	if(finalPath.size())
-		gpk_necs(finalPath.push_back('/'));
-	gpk_necs(finalPath.append(dbName));
-	return 0;
-}
-gpk::err_t			gpk::blockFileName			(::gpk::apod<sc_t> & fileName, const uint32_t idBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & folderName)	{
-	if(folderName.size()) {
-		gpk_necs(fileName.append(folderName));
-		gpk_necs(fileName.push_back('/'));
-	}
-	gpk_necs(fileName.append_string("db."));
-	gpk_necs(fileName.append(dbName));
 
-	sc_t						temp	[32]				= {};
-	snprintf(temp, ::gpk::size(temp) - 2, ".%u%s", idBlock, EXTENSION_BLOCK_FILE.begin());
-	gpk_necs(fileName.append_string(temp));
-	return 0;
-}
-gpk::err_t			gpk::blockConfigLoad		(::gpk::SBlockConfig & loaded, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig & configDefault)	{
-	if(0 > ::gpk::jsonExpressionResolve(::gpk::vcs{"key"}, reader, iNode, loaded.Key))
-		loaded.Key				= configDefault.Key;
-
-	gpk::err_t				indexJSONBlockSize			= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"blocksize"}, reader, (uint32_t)iNode);
-	gpk::err_t				indexJSONDeflate			= ::gpk::jsonExpressionResolve(::gpk::vcst_t{"deflate"  }, reader, (uint32_t)iNode);
-	loaded.BlockSize		= (0 <= indexJSONBlockSize	) ? (uint32_t)	reader.Token[indexJSONBlockSize	].Value : configDefault.BlockSize;
-	loaded.Deflate			= (0 <= indexJSONDeflate	) ?				reader.Token[indexJSONDeflate	].Value : configDefault.Deflate;
-	return 0;
+gpk::err_t gpk::blockRecordId(cnst SRecordMap & indices, u2_c blockSize, u3_t & idRecord) nxpt {
+	if_zero_fe(blockSize);
+	if_true_fef(indices.IndexRecord >= blockSize, GPK_FMT_GE_S2, indices.IndexRecord, blockSize);
+	idRecord = u3_t(indices.IdBlock) * blockSize + indices.IndexRecord;
+	rtrn 0;
 }

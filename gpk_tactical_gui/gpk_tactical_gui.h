@@ -23,7 +23,7 @@ namespace dry
     //def set_temperature(self, temp):
     //    data = '<TEMP {}>'.format(temp.decode('ascii', 'ignore'))
 	//
-	GDEFINE_ENUM_TYPE(DRYER_EVENT, uint8_t);
+	GDEFINE_ENUM_TYPE(DRYER_EVENT, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(DRYER_EVENT, STARTED					, 0);
 	GDEFINE_ENUM_VALUE(DRYER_EVENT, PRE_PREHEATING_STARTED	, 1);
 	GDEFINE_ENUM_VALUE(DRYER_EVENT, PREHEATING_STARTED		, 2);
@@ -34,7 +34,7 @@ namespace dry
 	GDEFINE_ENUM_VALUE(DRYER_EVENT, DOOR_OPEN				, 7);
 	GDEFINE_ENUM_VALUE(DRYER_EVENT, DOOR_CLOSED				, 8);
 
-	GDEFINE_ENUM_TYPE(DRYER_COMMAND, uint8_t);
+	GDEFINE_ENUM_TYPE(DRYER_COMMAND, ::gpk::u0_t);
 	GDEFINE_ENUM_VALUE(DRYER_COMMAND, NOP					, 0);
 	GDEFINE_ENUM_VALUE(DRYER_COMMAND, PUMP					, 1);
 	GDEFINE_ENUM_VALUE(DRYER_COMMAND, TEMPERATURE			, 2);
@@ -42,7 +42,7 @@ namespace dry
 #pragma pack(push, 1)
 	struct SDryerCommand {
 		DRYER_COMMAND							Command							= {};
-		int8_t									Args							= {};
+		::gpk::s0_t									Args							= {};
 	};
 #pragma pack(pop)
 
@@ -50,29 +50,29 @@ namespace dry
 		float									Temperature						= {};
 		float									Pressure						= {};
 		float									Humidity						= {};
-		uint32_t								Cycle							= {};
+		::gpk::u2_t								Cycle							= {};
 		::gpk::string					 		Error							= {};
 		bool									DoorClosed						= {};
 	};
 
 	struct SDryerProgram {
 		::gpk::vcst_t 							Name							= "undefined";
-		uint32_t								Temperature						= 45;
-		uint32_t								Pressure						= 0;
-		uint32_t								PreHeatingTime					= 0;
-		uint32_t								SubcycleDuration				= 0;
-		uint32_t								Subcycles						= 1;
+		::gpk::u2_t								Temperature						= 45;
+		::gpk::u2_t								Pressure						= 0;
+		::gpk::u2_t								PreHeatingTime					= 0;
+		::gpk::u2_t								SubcycleDuration				= 0;
+		::gpk::u2_t								Subcycles						= 1;
 	};
 
 	struct SDryerState {
-		int64_t									TimeStarted						= 0;
-		int64_t									TimeElapsedCyclePrePreheating	= 0;	// the entire
-		int64_t									TimeElapsedCyclePreheating		= 0;
-		int64_t									TimeElapsedCycleDrying			= 0;
-		int64_t									TimeElapsedTotal				= 0;
-		int64_t									TimeRemaining					= 0;
-		int64_t									DryerTime						= 0;
-		uint32_t								CurrentCycle					= 0;
+		::gpk::s3_t									TimeStarted						= 0;
+		::gpk::s3_t									TimeElapsedCyclePrePreheating	= 0;	// the entire
+		::gpk::s3_t									TimeElapsedCyclePreheating		= 0;
+		::gpk::s3_t									TimeElapsedCycleDrying			= 0;
+		::gpk::s3_t									TimeElapsedTotal				= 0;
+		::gpk::s3_t									TimeRemaining					= 0;
+		::gpk::s3_t									DryerTime						= 0;
+		::gpk::u2_t								CurrentCycle					= 0;
 
 		float									Temperature						= 0;
 		float									Vacuum							= 0;
@@ -98,30 +98,30 @@ namespace dry
 		::gpk::apod<SDryerCommand>				CommandList						= {};
 		::gpk::SJSONFile						ProgramFile						= {};
 		::dry::SDryerProgram					CurrentProgram					= {};
-		int32_t									ProgramSelected					= -1;
+		::gpk::s2_t									ProgramSelected					= -1;
 
 		::gpk::refcount_t						CloseSerialThread				= 0;
 
-		volatile			int32_t				SerialLastTime					= 0;
-		static constexpr	int32_t				SERIAL_TIMEOUT					= 10;
+		volatile			::gpk::s2_t				SerialLastTime					= 0;
+		static constexpr	::gpk::s2_t				SERIAL_TIMEOUT					= 10;
 	};
 
 	gpk::err_t							dryerSetup						(::dry::SDryer & dryer);
-	gpk::err_t							dryerUpdate						(::dry::SDryer & dryer, uint64_t lastTimeMilliseconds);
+	gpk::err_t							dryerUpdate						(::dry::SDryer & dryer, ::gpk::u3_t lastTimeMilliseconds);
 
-	static constexpr uint8_t				DRYER_MIN_TEMPERATURE			= 45;
+	static constexpr ::gpk::u0_t				DRYER_MIN_TEMPERATURE			= 45;
 
-	static constexpr uint32_t				DRYER_MAX_TEMPERATURE			= 83;
-	static constexpr uint32_t				DRYER_MAX_PRESSURE				= 800;
-	static constexpr uint32_t				DRYER_MAX_TIME_PREHEATING		= 60;
-	static constexpr uint32_t				DRYER_MAX_TIME_SUBCYCLE			= 120;
-	static constexpr uint32_t				DRYER_MAX_SUBCYCLES				= 64;
+	static constexpr ::gpk::u2_t				DRYER_MAX_TEMPERATURE			= 83;
+	static constexpr ::gpk::u2_t				DRYER_MAX_PRESSURE				= 800;
+	static constexpr ::gpk::u2_t				DRYER_MAX_TIME_PREHEATING		= 60;
+	static constexpr ::gpk::u2_t				DRYER_MAX_TIME_SUBCYCLE			= 120;
+	static constexpr ::gpk::u2_t				DRYER_MAX_SUBCYCLES				= 64;
 
-	static constexpr uint32_t				DRYER_DEFAULT_TEMPERATURE		= 45;
-	static constexpr uint32_t				DRYER_DEFAULT_PRESSURE			= 600;
-	static constexpr uint32_t				DRYER_DEFAULT_TIME_PREHEATING	= 10;
-	static constexpr uint32_t				DRYER_DEFAULT_TIME_SUBCYCLE		= 40;
-	static constexpr uint32_t				DRYER_DEFAULT_SUBCYCLES			= 3;
+	static constexpr ::gpk::u2_t				DRYER_DEFAULT_TEMPERATURE		= 45;
+	static constexpr ::gpk::u2_t				DRYER_DEFAULT_PRESSURE			= 600;
+	static constexpr ::gpk::u2_t				DRYER_DEFAULT_TIME_PREHEATING	= 10;
+	static constexpr ::gpk::u2_t				DRYER_DEFAULT_TIME_SUBCYCLE		= 40;
+	static constexpr ::gpk::u2_t				DRYER_DEFAULT_SUBCYCLES			= 3;
 } // namespace
 
 #endif // GPK_TACTICAL_GUI_H_0927439821

@@ -2,28 +2,28 @@
 
 gpk::err_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcsc_t jsonFilePath) { 
 	::gpk::SJSONFile			jsonFile					= {};
-	gpk_necs(gpk::jsonFileRead(jsonFile, jsonFilePath));
+	if_fail_fe(gpk::jsonFileRead(jsonFile, jsonFilePath));
 	return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
 }
 
 gpk::err_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, const ::gpk::SJSONReader & jsonData) {
 	::gpk::avcsc_t				stellarBodyNames			= {};
 	::gpk::as2_t					stellarBodyIndices;
-	gpk_necs(gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));
+	if_fail_fe(gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));
 	const ::gpk::view<vcsc_c>	jsonView					= jsonData.View;
 	::gpk::avcsc_t					bodyParentNames;
 
-	int32_t						iFurthest					= 0;
+	::gpk::s2_t						iFurthest					= 0;
 	float						fFurthest					= 0;
 
-	for(uint32_t iPlanet = 0; iPlanet < stellarBodyIndices.size(); ++iPlanet) {
-		const int32_t				jsonIndexStellarBody		= stellarBodyIndices[iPlanet];
-		int32_t						indexProperty;
+	for(::gpk::u2_t iPlanet = 0; iPlanet < stellarBodyIndices.size(); ++iPlanet) {
+		const ::gpk::s2_t				jsonIndexStellarBody		= stellarBodyIndices[iPlanet];
+		::gpk::s2_t						indexProperty;
 
 		if_failed(indexProperty = ::gpk::jsonObjectValueGet(jsonData, jsonIndexStellarBody + 2, "parent")) 
-			gpk_necs(bodyParentNames.push_back({}));
+			if_fail_fe(bodyParentNames.push_back({}));
 		else
-			gpk_necs(bodyParentNames.push_back(::gpk::label(jsonView[indexProperty])));
+			if_fail_fe(bodyParentNames.push_back(::gpk::label(jsonView[indexProperty])));
 		
 		// Load planet properties.
 		cws_if_failed(indexProperty = ::gpk::jsonObjectValueGet(jsonData, jsonIndexStellarBody + 2, "type")); // ?? no type? shouldn't happen
@@ -36,12 +36,12 @@ gpk::err_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, c
 			fFurthest				= bodyProperties.Orbit.Radius;
 			iFurthest				= iPlanet;
 		}
-		gpk_necs(solarSystem.Type.push_back(bodyType));
-		gpk_necs(solarSystem.Body.push_back(::gpk::label(stellarBodyNames[iPlanet]), bodyProperties));
+		if_fail_fe(solarSystem.Type.push_back(bodyType));
+		if_fail_fe(solarSystem.Body.push_back(::gpk::label(stellarBodyNames[iPlanet]), bodyProperties));
 	}
 
-	for(uint32_t iPlanet = 0; iPlanet < solarSystem.Body.Keys.size(); ++iPlanet)
-		gpk_necs(solarSystem.Parent.push_back(solarSystem.Body.Keys.find(bodyParentNames[iPlanet])));
+	for(::gpk::u2_t iPlanet = 0; iPlanet < solarSystem.Body.Keys.size(); ++iPlanet)
+		if_fail_fe(solarSystem.Parent.push_back(solarSystem.Body.Keys.find(bodyParentNames[iPlanet])));
 
 	return iFurthest;
 }

@@ -79,13 +79,13 @@ namespace gpk
 		::gpk::au2_t				Textures;
 
 		gpk::err_t			Save			(::gpk::au0_t & output) const { 
-			gpk_necs(gpk::savePOD(output, Material));
-			gpk_necs(gpk::saveView(output, Textures));
+			if_fail_fe(gpk::savePOD(output, Material));
+			if_fail_fe(gpk::saveView(output, Textures));
 			return 0;
 		}
 		gpk::err_t			Load			(::gpk::vcu0_t & input) {
-			gpk_necs(gpk::loadPOD(input, Material));
-			gpk_necs(gpk::loadView(input, Textures));
+			if_fail_fe(gpk::loadPOD(input, Material));
+			if_fail_fe(gpk::loadView(input, Textures));
 			return 0;
 		}
 	};
@@ -103,21 +103,21 @@ namespace gpk
 		::gpk::SRasterFontManager	Fonts		= {};
 
 		gpk::err_t				Save		(::gpk::au0_t & output)		const	{
-			gpk_necs(Buffers	.Save(output));
-			gpk_necs(Surfaces	.Save(output));
-			gpk_necs(Meshes		.Save(output));
-			gpk_necs(Skins		.Save(output));
-			//gpk_necs(Shaders	.Save(output));
-			//gpk_necs(Fonts	.Save(output));
+			if_fail_fe(Buffers	.Save(output));
+			if_fail_fe(Surfaces	.Save(output));
+			if_fail_fe(Meshes		.Save(output));
+			if_fail_fe(Skins		.Save(output));
+			//if_fail_fe(Shaders	.Save(output));
+			//if_fail_fe(Fonts	.Save(output));
 			return 0;
 		}
 		gpk::err_t				Load		(::gpk::vcu0_t & input) {
-			gpk_necs(Buffers	.Load(input));
-			gpk_necs(Surfaces	.Load(input));
-			gpk_necs(Meshes		.Load(input));
-			gpk_necs(Skins		.Load(input));
-			//gpk_necs(Shaders	.Load(input));
-			//gpk_necs(Fonts	.Load(input));
+			if_fail_fe(Buffers	.Load(input));
+			if_fail_fe(Surfaces	.Load(input));
+			if_fail_fe(Meshes		.Load(input));
+			if_fail_fe(Skins		.Load(input));
+			//if_fail_fe(Shaders	.Load(input));
+			//if_fail_fe(Fonts	.Load(input));
 			return 0;
 		}
 	};
@@ -130,38 +130,38 @@ namespace gpk
 		gpk::err_t					CreateRenderNode		(const ::gpk::SGeometryBuffers & geometry, ::gpk::vcsc_c name, bool createSkin);
 
 		gpk::err_t					Load					(::gpk::vcu0_t & input) {
-			gpk_necs(Graphics		->Load(input));
-			gpk_necs(RenderNodes	 .Load(input));
-			//gpk_necs(RenderCache	 .Load(input));
+			if_fail_fe(Graphics		->Load(input));
+			if_fail_fe(RenderNodes	 .Load(input));
+			//if_fail_fe(RenderCache	 .Load(input));
 			return 0;
 		}
 
 		gpk::err_t					Save					(::gpk::au0_t & output)	const	{
 			if(Graphics) 
-				gpk_necs(Graphics->Save(output));
+				if_fail_fe(Graphics->Save(output));
 			else {
 				SEngineGraphics{}.Save(output);
 			}
-			gpk_necs(RenderNodes.Save(output));
-			//gpk_necs(RenderCache.Save(output));
+			if_fail_fe(RenderNodes.Save(output));
+			//if_fail_fe(RenderCache.Save(output));
 			return 0;
 		}
 
-		gpk::err_t					Clone					(uint32_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
-			const uint32_t						iNewNode				= RenderNodes.Clone(iRenderNode);
-			const uint32_t						idShaderSource			= RenderNodes[iRenderNode].Shader;
+		gpk::err_t					Clone					(::gpk::u2_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+			const ::gpk::u2_t						iNewNode				= RenderNodes.Clone(iRenderNode);
+			const ::gpk::u2_t						idShaderSource			= RenderNodes[iRenderNode].Shader;
 			if(cloneShaders && idShaderSource < Graphics->Shaders.size())
-				gpk_necs(RenderNodes[iNewNode].Shader = Graphics->Shaders.Clone(idShaderSource));
+				if_fail_fe(RenderNodes[iNewNode].Shader = Graphics->Shaders.Clone(idShaderSource));
 
-			const uint32_t						idSkinSource			= RenderNodes[iNewNode].Skin;
+			const ::gpk::u2_t						idSkinSource			= RenderNodes[iNewNode].Skin;
 			if(cloneSkin && idSkinSource < Graphics->Skins.size()) {
-				uint32_t							idSkin;
-				gpk_necs(idSkin = Graphics->Skins.Clone(idSkinSource));
+				::gpk::u2_t							idSkin;
+				if_fail_fe(idSkin = Graphics->Skins.Clone(idSkinSource));
 				RenderNodes[iNewNode].Skin		= idSkin;
 				if(cloneSurfaces) {
 					if(Graphics->Skins[idSkin]) {
 						::gpk::SSkin						& newSkin			= *Graphics->Skins[idSkin];
-						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
+						for(::gpk::u2_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
 							newSkin.Textures[iTexture]			= Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
 						}
 					}

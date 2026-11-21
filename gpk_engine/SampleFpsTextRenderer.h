@@ -31,23 +31,23 @@ namespace gpk
 			// Create device independent resources
 			::gpk::pcom<IDWriteTextFormat>						textFormat						= {};
 			gpk_hrcall(DeviceResources->GetDWriteFactory()->CreateTextFormat(L"Segoe UI", nullptr, DWRITE_FONT_WEIGHT_LIGHT, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 32.0f, L"en-US", &textFormat));
-			gpk_necs(textFormat.as(TextFormat));
+			if_fail_fe(textFormat.as(TextFormat));
 			gpk_hrcall(TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR));
 			gpk_hrcall(DeviceResources->GetD2DFactory()->CreateDrawingStateBlock(&StateBlock));
 			return CreateDeviceResources(DeviceResources->GetD2DDeviceContext());
 		}
 
 		// Updates the text to be displayed.
-		gpk::err_t									Update							(double /*frameSeconds*/, double /*totalSeconds*/, uint32_t framesPerSecond) {
+		gpk::err_t									Update							(double /*frameSeconds*/, double /*totalSeconds*/, ::gpk::u2_t framesPerSecond) {
 			// Update display text.
-			uint32_t											fps								= framesPerSecond;
+			::gpk::u2_t											fps								= framesPerSecond;
 			Text											= (fps > 0) ? std::to_wstring(fps) + L" FPS" : L" - FPS";
 
 			::gpk::pcom<IDWriteTextLayout>						textLayout;
 			constexpr float										w								= 240.0f; // Max width of the input text.
 			constexpr float										h								= 50.0f;// Max height of the input text.
-			gpk_hrcall(DeviceResources->GetDWriteFactory()->CreateTextLayout(Text.c_str(), (uint32_t) Text.length(), TextFormat, w, h, &textLayout));
-			gpk_necs(textLayout.as(TextLayout));
+			gpk_hrcall(DeviceResources->GetDWriteFactory()->CreateTextLayout(Text.c_str(), (::gpk::u2_t) Text.length(), TextFormat, w, h, &textLayout));
+			if_fail_fe(textLayout.as(TextLayout));
 			gpk_hrcall(TextLayout->GetMetrics(&TextMetrics));
 			return 0;
 		}

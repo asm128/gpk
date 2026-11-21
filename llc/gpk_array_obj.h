@@ -1,12 +1,10 @@
 /// Copyright 2010-2024 - ogarnd
 #include "gpk_array_base.h"
 
-#include "gpk_keyval_old.h"
-
 #ifndef GPK_ARRAY_OBJ_H_23627
 #define GPK_ARRAY_OBJ_H_23627
 
-namespace gpk
+nmsp gpk
 {
 	tpl_tstct array_obj : public array_base<_t> {
 		tdfTTCnst(_t);
@@ -17,6 +15,8 @@ namespace gpk
 		usng	array_base<T>		::Data					;
 		usng	array_base<T>		::Size					;
 		usng	array_base<T>		::alloc_with_reserve	;
+		usng	array_base<T>		::find					;
+		usng	array_base<T>		::rfind					;
 
 		inln					~array_obj			()			{ for(u2_t i = 0; i < Count; ++i) Data[i].~T(); }	// dtor
 
@@ -61,7 +61,7 @@ namespace gpk
 			if(newCount > Size) {
 				T							* newData			= 0;
 				u2_c				newSize				= alloc_with_reserve(newCount, newData);
-				ree_if(0 == newData, "newCount: %" GPK_FMT_S2 ", newSize: %" GPK_FMT_S2 "", newCount, newSize);
+				if_true_fef(0 == newData, "newCount: %" GPK_FMT_S2 ", newSize: %" GPK_FMT_S2 "", newCount, newSize);
 				for(u2_t iElement = 0; iElement < Count; ++iElement) {
 					new (&newData[iElement]) T(Data[iElement]);
 					Data[iElement].~T();
@@ -75,7 +75,7 @@ namespace gpk
 		}
 		// Returns the new size of the array.
 		err_t			resize				(u2_t newCount)															nxpt	{
-			gpk_necs(reserve(newCount));
+			if_fail_fe(reserve(newCount));
 			for(; Count < newCount; ++Count)
 				new (&Data[Count]) T{};
 			for(; Count > newCount; --Count)
@@ -84,7 +84,7 @@ namespace gpk
 		}
 		// Returns the new size of the array.
 		err_t			resize				(u2_t newCount, TCnst & newValue)									nxpt	{
-			gpk_necs(reserve(newCount));
+			if_fail_fe(reserve(newCount));
 			for(; Count < newCount; ++Count)
 				new (&Data[Count]) T{newValue};
 			for(; Count > newCount; --Count)
@@ -93,7 +93,7 @@ namespace gpk
 		}
 		// Returns the new size of the array.
 		tpl_vtArgs	err_t	resize				(u2_t newCount, _tArgs&&... constructorArgs)											{
-			gpk_necs(reserve(newCount));
+			if_fail_fe(reserve(newCount));
 			for(; Count < newCount; ++Count)
 				new (&Data[Count]) T{constructorArgs...};
 			for(; Count > newCount; --Count)
@@ -102,13 +102,13 @@ namespace gpk
 		}
 		// Returns the new size of the array
 		inln	err_t	pop_back			()											nxpt	{
-			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
+			if_true_fef(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			Data[--Count].~T();
 			rtrn Count;
 		}
 		// Returns the new size of the array
 		inln	err_t	pop_back			(T & oldValue)								nxpt	{
-			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
+			if_true_fef(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			oldValue				= Data[--Count];
 			Data[Count].~T();
 			rtrn Count;
@@ -116,20 +116,25 @@ namespace gpk
 		// Returns the index of the pushed value or -1 on failure
 		err_t			push_back			(TCnst & newValue)														nxpt	{
 			cnst s2_t				oldSize				= Count;
-			gpk_necs(resize(oldSize + 1, newValue));
+			if_fail_fe(resize(oldSize + 1, newValue));
+			rtrn oldSize;
+		}
+		tpl_vtArgs	err_t	emplace_back		(_tArgs&&... constructorArgs)											{
+			cnst s2_t				oldSize				= Count;
+			if_fail_fe(resize(oldSize + 1, constructorArgs...));
 			rtrn oldSize;
 		}
 		// returns the new array size or -1 if failed.
 		inln	err_t	erase				(TCnst * address)																	{
-			ree_if(0 == Data, "Uninitialized array pointer! Invalid address to erase: %p.", address);
+			if_true_fef(0 == Data, "Uninitialized array pointer! Invalid address to erase: %p.", address);
 			cnst ptrdiff_t		ptrDiff				= ptrdiff_t(address) - (ptrdiff_t)Data;
 			u2_c				index				= (u2_t)(ptrDiff / (ptrdiff_t)szof(T));
-			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+			if_true_fef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn remove(index);
 		}
 		err_t			remove				(u2_t index)																		{
-			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %" GPK_FMT_U2 ".", index);
-			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+			if_true_fef(0 == Data, "Uninitialized array pointer! Invalid index to erase: %" GPK_FMT_U2 ".", index);
+			if_true_fef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			--Count;
 			while(index < Count) {
 				Data[index].~T();							// Destroy old
@@ -141,8 +146,8 @@ namespace gpk
 		}
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
 		err_t			remove_unordered	(u2_t index)																		{
-			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %" GPK_FMT_U2 ".", index);
-			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+			if_true_fef(0 == Data, "Uninitialized array pointer! Invalid index to erase: %" GPK_FMT_U2 ".", index);
+			if_true_fef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			Data[index].~T();							// Destroy old
 			if(1 == Count || index == (Count - 1))
 				--Count;
@@ -159,7 +164,7 @@ namespace gpk
 			if(0 == chainLength)
 				rtrn Count;
 
-			gpk_necs(reserve(Count + chainLength));
+			if_fail_fe(reserve(Count + chainLength));
 			u2_c				iFirst				= Count;
 			for(u2_t i = 0; i < chainLength; ++i)
 				new (&Data[Count++]) T{chainToAppend[i]};
@@ -169,12 +174,12 @@ namespace gpk
 		tpl_nu2	inln	err_t	insert				(u2_t index, TCnst* (&chainToInsert)[_nu2])	nxpt	{ rtrn insert(index, chainToInsert, (u2_t)_nu2); }
 		inln			err_t	insert				(u2_t index, view<TCnst> chainToInsert)		nxpt	{ rtrn insert(index, chainToInsert.begin(), chainToInsert.size()); }
 						err_t	insert				(u2_t index, TCnst & newValue)										nxpt	{
-			ree_if(index > Count, "Invalid index: %" GPK_FMT_U2 ".", index);
+			if_true_fef(index > Count, "Invalid index: %" GPK_FMT_U2 ".", index);
 			u2_c			newCount			= Count + 1;
 			if(Size < newCount) {
 				T				* newData			= 0;
 				u2_c			newSize				= alloc_with_reserve(newCount, newData);
-				rees_if(0 == newData);
+				if_true_fe(0 == newData);
 				for(u2_t i = 0; i < index; ++i) {
 					new (&newData[i]) T(Data[i]);
 					Data[i].~T();
@@ -200,13 +205,13 @@ namespace gpk
 		}
 		// returns the new size of the list or -1 on failure.
 		err_t			insert				(u2_t index, TCnst * chainToInsert, u2_t chainLength)			nxpt	{
-			ree_if(index > Count, "Invalid index: %" GPK_FMT_U2 ".", index);
+			if_true_fef(index > Count, "Invalid index: %" GPK_FMT_U2 ".", index);
 
 			u2_c				newCount			= Count + chainLength;
 			if(Size < newCount) {
 				T					* newData			= 0;
 				u2_c				newSize				= alloc_with_reserve(newCount, newData);
-				rees_if(0 == newData);
+				if_true_fe(0 == newData);
 				for(u2_t i = 0; i < index; ++i) {
 					new (&newData[i]) T(Data[i]);
 					Data[i].~T();
@@ -238,120 +243,76 @@ namespace gpk
 
 	}; // array_obj
 
-	tplT	using aobj		= array_obj<T>; 
-	tplT	using ao		= aobj<T>; 
+	tplTusng	aobj		= array_obj<T>; 
+	tplTusng	aview		= aobj<view<T>>; 
+	tplTusng	aaobj		= aobj<aobj<T>>;									\
 
-	tplT	using aview		= aobj	<view<T>>; 
-	tplT	using av		= aview	<T>; 
+	tydf	aview<uc_t>		avuc_t;		tdcs	avuc_t		avuc_c;
+	tydf	aview<sc_t>		avsc_t;		tdcs	avsc_t		avsc_c;
+	tydf	aview<f2_t>		avf2_t;		tdcs	avf2_t		avf2_c;
+	tydf	aview<f3_t>		avf3_t;		tdcs	avf3_t		avf3_c;
+	tydf	aview<u0_t>		avu0_t;		tdcs	avu0_t		avu0_c;
+	tydf	aview<u1_t>		avu1_t;		tdcs	avu1_t		avu1_c;
+	tydf	aview<u2_t>		avu2_t;		tdcs	avu2_t		avu2_c;
+	tydf	aview<u3_t>		avu3_t;		tdcs	avu3_t		avu3_c;
+	tydf	aview<s0_t>		avs0_t;		tdcs	avs0_t		avs0_c;
+	tydf	aview<s1_t>		avs1_t;		tdcs	avs1_t		avs1_c;
+	tydf	aview<s2_t>		avs2_t;		tdcs	avs2_t		avs2_c;
+	tydf	aview<s3_t>		avs3_t;		tdcs	avs3_t		avs3_c;
+	tydf	aview<uc_c>		avcuc_t;	tdcs	avcuc_t		avcuc_c;
+	tydf	aview<sc_c>		avcsc_t;	tdcs	avcsc_t		avcsc_c;
+	tydf	aview<f2_c>		avcf2_t;	tdcs	avcf2_t		avcf2_c;
+	tydf	aview<f3_c>		avcf3_t;	tdcs	avcf3_t		avcf3_c;
+	tydf	aview<u0_c>		avcu0_t;	tdcs	avcu0_t		avcu0_c;
+	tydf	aview<u1_c>		avcu1_t;	tdcs	avcu1_t		avcu1_c;
+	tydf	aview<u2_c>		avcu2_t;	tdcs	avcu2_t		avcu2_c;
+	tydf	aview<u3_c>		avcu3_t;	tdcs	avcu3_t		avcu3_c;
+	tydf	aview<s0_c>		avcs0_t;	tdcs	avcs0_t		avcs0_c;
+	tydf	aview<s1_c>		avcs1_t;	tdcs	avcs1_t		avcs1_c;
+	tydf	aview<s2_c>		avcs2_t;	tdcs	avcs2_t		avcs2_c;
+	tydf	aview<s3_c>		avcs3_t;	tdcs	avcs3_t		avcs3_c;
 
-	tydf	aview<uc_t>	avuc_t;
-	tydf	aview<sc_t>	avsc_t;
-	tydf	aview<f2_t>	avf2_t;
-	tydf	aview<f3_t>	avf3_t;
-	tydf	aview<u0_t>	avu0_t;
-	tydf	aview<u1_t>	avu1_t;
-	tydf	aview<u2_t>	avu2_t;
-	tydf	aview<u3_t>	avu3_t;
-	tydf	aview<s0_t>	avs0_t;
-	tydf	aview<s1_t>	avs1_t;
-	tydf	aview<s2_t>	avs2_t;
-	tydf	aview<s3_t>	avs3_t;
-	tdcs	avuc_t	avuc_c;
-	tdcs	avsc_t	avsc_c;
-	tdcs	avf2_t	avf2_c;
-	tdcs	avf3_t	avf3_c;
-	tdcs	avu0_t	avu0_c;
-	tdcs	avu1_t	avu1_c;
-	tdcs	avu2_t	avu2_c;
-	tdcs	avu3_t	avu3_c;
-	tdcs	avs0_t	avs0_c;
-	tdcs	avs1_t	avs1_c;
-	tdcs	avs2_t	avs2_c;
-	tdcs	avs3_t	avs3_c;
+	tplt<tpnm T, tpnm TView>	err_t	split			(view<cnst T> target, cnst T & separator, aobj<TView> & output) {
+		for(u2_t begin = 0; begin < target.size();) {
+			err_t			end				= target.find(separator, begin);
+			if(0 > end)
+				end				= target.size();
+			if(begin < (u2_t)end)
+				if_fail_fe(output.push_back({&target[begin], (u2_t)end - begin}));
+			begin				= (u2_t)end + 1;
+		}
+		rtrn output.size();
+	}
+
+	tplt<tpnm T, tpnm TView>	err_t	split			(view<cnst T> target, view<cnst T> separator, aobj<TView> & output) {
+		if_zero_fe(separator.size());
+		for(u2_t begin = 0; begin < target.size();) {
+			err_t			end				= target.find(separator, begin);
+			if(0 > end)
+				end				= target.size();
+			if(begin < (u2_t)end)
+				if_fail_fe(output.push_back({&target[begin], (u2_t)end - begin}));
+			begin				= (u2_t)end + separator.size();
+		}
+		rtrn output.size();
+	}
+
 	
-	tydf	aview<uc_c>	avcuc_t;
-	tydf	aview<sc_c>	avcsc_t;
-	tydf	aview<f2_c>	avcf2_t;
-	tydf	aview<f3_c>	avcf3_t;
-	tydf	aview<u0_c>	avcu0_t;
-	tydf	aview<u1_c>	avcu1_t;
-	tydf	aview<u2_c>	avcu2_t;
-	tydf	aview<u3_c>	avcu3_t;
-	tydf	aview<s0_c>	avcs0_t;
-	tydf	aview<s1_c>	avcs1_t;
-	tydf	aview<s2_c>	avcs2_t;
-	tydf	aview<s3_c>	avcs3_t;
-	tdcs	avcuc_t	avcuc_c;
-	tdcs	avcsc_t	avcsc_c;
-	tdcs	avcf2_t	avcf2_c;
-	tdcs	avcf3_t	avcf3_c;
-	tdcs	avcu0_t	avcu0_c;
-	tdcs	avcu1_t	avcu1_c;
-	tdcs	avcu2_t	avcu2_c;
-	tdcs	avcu3_t	avcu3_c;
-	tdcs	avcs0_t	avcs0_c;
-	tdcs	avcs1_t	avcs1_c;
-	tdcs	avcs2_t	avcs2_c;
-	tdcs	avcs3_t	avcs3_c;
-
-
-	tplT	err_t							split					(cnst view<cnst T> & target, cnst T & separator, aobj<view<cnst T>> & split)	{
-		u2_t									lastOffset				= 0;
-		for(u2_t iChar = 0; iChar < target.size(); ++iChar) {
-			if(target[iChar] == separator) {
-				cnst view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
-				++iChar;
-				gpk_necs(split.push_back(newView));
-				lastOffset								= iChar;
-			}
-		}
-		if(lastOffset < target.size())
-			gpk_necs(split.push_back({&target[lastOffset], target.size() - lastOffset}));
-		rtrn (s2_t)split.size();
-	}
-
-	tplT	err_t							split					(cnst view<cnst T> & target, cnst view<cnst T>& separators, aobj<view<cnst T>> & split)	{
-		u2_t									lastOffset				= 0;
-		for(u2_t iChar = 0; iChar < target.size(); ++iChar) {
-			for(u2_t iSeparator = 0; iSeparator < separators.size(); ++iSeparator) {
-				if(target[iChar] == separators[iSeparator]) {
-					cnst view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
-					++iChar;
-					gpk_necs(split.push_back(newView));
-					lastOffset								= iChar;
-				}
-			}
-		}
-		if(lastOffset < target.size())
-			gpk_necs(split.push_back({&target[lastOffset], target.size() - lastOffset}));
-		rtrn (s2_t)split.size();
-	}
-
-	tplT	err_t							split					(cnst vcst_t & target, cnst T & separator, aobj<vcst_t> & split)	{
-		s2_t										lastOffset				= 0;
-		for(s2_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
-			if(target[iChar] == separator) {
-				cnst vcst_t							newView					= {&target[lastOffset], (u2_t)max((s2_t)0, s2_t(iChar - lastOffset))};
-				++iChar;
-				gpk_necs(split.push_back(newView));
-				lastOffset								= iChar;
-			}
-		}
-		if(lastOffset < (s2_t)target.size()) {
-			gpk_necs(split.push_back({&target[lastOffset], target.size() - lastOffset}));
-			//if(split[split.size()-1][] == separator)
-		}
-		rtrn (s2_t)split.size();
-	}
-
-	tydf SKeyVal<vcst_t, aobj<vcst_t>>	TKeyValConstStringArray;
-	//------------------------------------------------------------------------------------------------------------
-	err_t							keyValConstStringDeserialize	(vcu0_c & input, aobj<kv<vcsc_t, vcsc_t>> & output);
-
-	err_t							filterPrefix					(view<vcu0_c> input, vcu0_c prefix, aobj<vcu0_t> & filtered, bool nullIncluded = false);
-	err_t							filterPostfix					(view<vcu0_c> input, vcu0_c prefix, aobj<vcu0_t> & filtered, bool nullIncluded = false);
-	err_t							filterPrefix					(view<vcst_c> input, vcst_c prefix, aobj<vcst_t> & filtered, bool nullIncluded = false);
-	err_t							filterPostfix					(view<vcst_c> input, vcst_c prefix, aobj<vcst_t> & filtered, bool nullIncluded = false);
-
+	err_t			filterPrefix	(view<vcst_c> input, vcst_t prefix, aobj<vcst_t> & filtered, b8_t nullIncluded = false);
+	err_t			filterPostfix	(view<vcst_c> input, vcst_t prefix, aobj<vcst_t> & filtered, b8_t nullIncluded = false);
 }
+
+#define GPK_USING_AOBJ()													\
+	usng	::gpk::avuc_t, ::gpk::avuc_c, ::gpk::avcuc_t, ::gpk::avcuc_c	\
+		,	::gpk::avsc_t, ::gpk::avsc_c, ::gpk::avcsc_t, ::gpk::avcsc_c	\
+		,	::gpk::avf2_t, ::gpk::avf2_c, ::gpk::avcf2_t, ::gpk::avcf2_c	\
+		,	::gpk::avf3_t, ::gpk::avf3_c, ::gpk::avcf3_t, ::gpk::avcf3_c	\
+		,	::gpk::avu0_t, ::gpk::avu0_c, ::gpk::avcu0_t, ::gpk::avcu0_c	\
+		,	::gpk::avu1_t, ::gpk::avu1_c, ::gpk::avcu1_t, ::gpk::avcu1_c	\
+		,	::gpk::avu2_t, ::gpk::avu2_c, ::gpk::avcu2_t, ::gpk::avcu2_c	\
+		,	::gpk::avu3_t, ::gpk::avu3_c, ::gpk::avcu3_t, ::gpk::avcu3_c	\
+		,	::gpk::avs0_t, ::gpk::avs0_c, ::gpk::avcs0_t, ::gpk::avcs0_c	\
+		,	::gpk::avs1_t, ::gpk::avs1_c, ::gpk::avcs1_t, ::gpk::avcs1_c	\
+		,	::gpk::avs2_t, ::gpk::avs2_c, ::gpk::avcs2_t, ::gpk::avcs2_c	\
+		,	::gpk::avs3_t, ::gpk::avs3_c, ::gpk::avcs3_t, ::gpk::avcs3_c
 #endif // GPK_ARRAY_OBJ_H_23627

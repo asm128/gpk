@@ -9,16 +9,16 @@ namespace gpk
 	tydf kv<vcsc_t, vcsc_t>		TKeyValConstChar, TKeyValConstString;
 
 	tplt<tpnm _tKey, tpnm _tVal = _tKey>
-	usng SKeyVal				= keyval<_tKey, _tVal>;
+	usng kv				= keyval<_tKey, _tVal>;
 
-	//tydf		SKeyVal<vcs, vcs> TKeyValConstString;
+	//tydf		kv<vcst_t, vcst_t> TKeyValConstString;
 
 				err_t							token_split						(char valueSeparator, vcst_c & input_string, kv<vcsc_t, vcsc_t>& output_views);
-	inline		err_t							keyval_split					(const vcs& input_string, kv<vcsc_t, vcsc_t>& out_keyval) { return token_split('=', input_string, out_keyval); }
+	inline		err_t							keyval_split					(const vcst_t& input_string, kv<vcsc_t, vcsc_t>& out_keyval) { return token_split('=', input_string, out_keyval); }
 
 	tplt<tpnm _tVal>
-				err_t							find			(const vcs & keyToFind, const view<const SKeyVal<vcsc_t, _tVal>> & keyvals)	{
-		for(uint32_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal) {
+				err_t							find			(const vcst_t & keyToFind, const view<const kv<vcsc_t, _tVal>> & keyvals)	{
+		for(::gpk::u2_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal) {
 			vcsc_c							& keyCurrent					= keyvals[iKeyVal].Key;
 			if(keyToFind == keyCurrent)
 				return iKeyVal;
@@ -27,18 +27,18 @@ namespace gpk
 	}
 
 	tplt<tpnm _tVal>
-				err_t							find			(const vcs & keyToFind, const view<const kv<vcsc_t, vcsc_t>> & keyvals, view<const _tVal>& out_val)		{
+				err_t							find			(const vcst_t & keyToFind, const view<const kv<vcsc_t, vcsc_t>> & keyvals, view<const _tVal>& out_val)		{
 		err_t					index							= find(keyToFind, keyvals);
 		out_val								= (-1 == index) ? view<const _tVal>{} : view<const _tVal>{(const _tVal*)keyvals[index].Val.begin(), keyvals[index].Val.size()};
 		return index;
 	}
 
-				err_t							find			(const vcs & keyToFind, const view<const kv<vcsc_t, vcsc_t>> & keyvals, vcsc_t & out_val);
+				err_t							find			(const vcst_t & keyToFind, const view<const kv<vcsc_t, vcsc_t>> & keyvals, vcsc_t & out_val);
 				err_t							keyValVerify					(const view<kv<vcsc_t, vcsc_t>> & environViews, vcsc_c & keyToVerify, vcsc_c & valueToVerify);
-				err_t							keyvalNumeric					(const vcs & key, const view<const kv<vcsc_t, vcsc_t>> keyVals, uint64_t * outputNumber);
+				err_t							keyvalNumeric					(const vcst_t & key, const view<const kv<vcsc_t, vcsc_t>> keyVals, ::gpk::u3_t * outputNumber);
 	tplt <tpnm _tNumeric>
-				err_t							keyvalNumeric					(const vcs & key, const view<const kv<vcsc_t, vcsc_t>> keyVals, _tNumeric & outputNumber)	{
-		uint64_t												value							= 0;
+				err_t							keyvalNumeric					(const vcst_t & key, const view<const kv<vcsc_t, vcsc_t>> keyVals, _tNumeric & outputNumber)	{
+		::gpk::u3_t												value							= 0;
 		err_t					indexKey						= keyvalNumeric(key, keyVals, &value);
 		if(-1 != indexKey)
 			outputNumber										= *(_tNumeric*)&value;
@@ -47,7 +47,7 @@ namespace gpk
 
 	tplt <tpnm... _tArgs>
 	err_t				keyValVerify					(const view<kv<vcsc_t, vcsc_t>> & environViews, vcsc_c & keyToVerify, const view<vcsc_c>& valueToVerify)	{
-		for(uint32_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
+		for(::gpk::u2_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
 			const err_t			val								= keyValVerify(environViews, keyToVerify, valueToVerify[iKey]);
 			if(-1 != val)
 				return val;

@@ -26,7 +26,7 @@ namespace gpk
 		::gpk::papod<::gpk::bgra>			Palette					= {};
 		::gpk::papod<::gpk::SControlTheme>	ControlThemes			= {};
 
-		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>	
+		::gpk::asts1_t<::gpk::GUI_CONTROL_PALETTE_COUNT>	
 											DefaultColors			= {};
 
 		::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>>
@@ -43,8 +43,8 @@ namespace gpk
 
 		::gpk::SGUIZoom						LastZoom			= {};
 		::gpk::SGUIZoom						Zoom				= {};
-		uint16_t							SelectedFont		= 7;
-		uint16_t							ThemeDefault		= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
+		::gpk::u1_t							SelectedFont		= 7;
+		::gpk::u1_t							ThemeDefault		= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
 		::gpk::GUI_COLOR_MODE				ColorModeDefault	= ::gpk::GUI_COLOR_MODE_3D;//::gpk::GUI_COLOR_MODE_DEFAULT;
 		bool								InputModeTouch		= true;
 	};
@@ -61,9 +61,9 @@ namespace gpk
 	::gpk::cid_t			controlCreateChild				(::gpk::SGUI & gui, cid_t iParent);
 	gpk::err_t			controlSetParent				(::gpk::SGUI & gui, cid_t iControl, cid_t iParent);
 	gpk::err_t			controlDrawHierarchy			(::gpk::SGUI & gui, cid_t iControl, ::gpk::g8bgra target);
-	gpk::err_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcs & text);
-	gpk::err_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, int16_t iFont);
-	//gpk::err_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint32_t> & targetSize);
+	gpk::err_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcst_t & text);
+	gpk::err_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, ::gpk::s1_t iFont);
+	//gpk::err_t			controlUpdateMetrics			(::gpk::SGUI & gui, ::gpk::s2_t iControl, const ::gpk::n2<::gpk::u2_t> & targetSize);
 	gpk::err_t			controlUpdateMetricsTopToDown	(::gpk::SGUI & gui, cid_t iControl, const ::gpk::n2u1_t & targetSize, bool forceUpdate);
 	gpk::err_t			controlMetricsInvalidate		(::gpk::SGUI & gui, cid_t iControl);
 	gpk::err_t			controlHidden					(const ::gpk::SGUI & gui, cid_t iControl);

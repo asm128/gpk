@@ -93,7 +93,6 @@
     <ClInclude Include="gpk_event_primitives.h" />
     <ClInclude Include="gpk_file_pack.h" />
     <ClInclude Include="gpk_gpio.h" />
-    <ClInclude Include="gpk_i2c.h" />
     <ClInclude Include="gpk_keyed_bit_array.h" />
     <ClInclude Include="gpk_keyval_old.h" />
     <ClInclude Include="gpk_lifecycle.h" />

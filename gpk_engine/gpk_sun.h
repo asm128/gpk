@@ -10,7 +10,7 @@ namespace gpk
 	stxp	double	SCALE_DAY_MINUTES_TO_RADIANS	= SCALE_DAY_SECONDS_TO_RADIANS * 60;
 
 	::gpk::n3f2_t	calcSunPosition					();
-	double			calcSunlightFactor				(double daylightRatioExtra = .5, uint32_t daylightOffsetMinutes = 90);
+	double			calcSunlightFactor				(double daylightRatioExtra = .5, ::gpk::u2_t daylightOffsetMinutes = 90);
 } // namespace
 
 #endif // GPK_SUN_H_23627

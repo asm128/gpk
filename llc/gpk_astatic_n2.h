@@ -1,31 +1,29 @@
 /// Copyright 2009-2023 - asm128
-#include "gpk_n2.h"
-#include "gpk_array_static.h"
+#include "llc_n2.h"
+#include "llc_array_static.h"
 
-#ifndef GPK_ASTATIC_N2_H
-#define GPK_ASTATIC_N2_H
+#ifndef LLC_ASTATIC_N2_H
+#define LLC_ASTATIC_N2_H
 
-namespace gpk
+namespace llc
 {
 #pragma pack(push, 1)
-	tplt<tpnm _tDimension, size_t _nSize>	
-	using		ast2		= ::gpk::astatic<::gpk::n2<_tDimension>, _nSize>;
+	tplt<tpnm _tDimension, size_t _nSize>
+	using		ast2		= ::llc::astatic<::llc::n2<_tDimension>, _nSize>;
 
-	tplt<size_t _nSize>	using ast2char	= ::gpk::ast2<char	, _nSize>	;
-	tplt<size_t _nSize>	using ast2uchar	= ::gpk::ast2<uchar	, _nSize>	;
-	tplt<size_t _nSize>	using ast2c		= ::gpk::ast2<char	, _nSize>	;
-	tplt<size_t _nSize>	using ast2uc	= ::gpk::ast2<uchar	, _nSize>	;
-	tplt<size_t _nSize>	using ast2f32	= ::gpk::ast2<f32	, _nSize>	;
-	tplt<size_t _nSize>	using ast2f64	= ::gpk::ast2<f64	, _nSize>	;
-	tplt<size_t _nSize>	using ast2u8	= ::gpk::ast2<u8	, _nSize>	;
-	tplt<size_t _nSize>	using ast2u16	= ::gpk::ast2<u16	, _nSize>	;
-	tplt<size_t _nSize>	using ast2u32	= ::gpk::ast2<u32	, _nSize>	;
-	tplt<size_t _nSize>	using ast2u64	= ::gpk::ast2<u64	, _nSize>	;
-	tplt<size_t _nSize>	using ast2i8	= ::gpk::ast2<i8	, _nSize>	;
-	tplt<size_t _nSize>	using ast2i16	= ::gpk::ast2<i16	, _nSize>	;
-	tplt<size_t _nSize>	using ast2i32	= ::gpk::ast2<i32	, _nSize>	;
-	tplt<size_t _nSize>	using ast2i64	= ::gpk::ast2<i64	, _nSize>	;
+	tplt<size_t _nSize>	using ast2sc_t	= ::llc::ast2<sc_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2uc_t	= ::llc::ast2<uc_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2f2_t	= ::llc::ast2<f2_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2f3_t	= ::llc::ast2<f3_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2u0_t	= ::llc::ast2<u0_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2u1_t	= ::llc::ast2<u1_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2u2_t	= ::llc::ast2<u2_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2u3_t	= ::llc::ast2<u3_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2s0_t	= ::llc::ast2<s0_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2s1_t	= ::llc::ast2<s1_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2s2_t	= ::llc::ast2<s2_t, _nSize>	;
+	tplt<size_t _nSize>	using ast2s3_t	= ::llc::ast2<s3_t, _nSize>	;
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_ASTATIC_N2_H
+#endif // LLC_ASTATIC_N2_H

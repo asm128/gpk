@@ -678,9 +678,6 @@
     <ClInclude Include="gpk_log_core.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_i2c.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_serial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
