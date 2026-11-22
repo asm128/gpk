@@ -28,7 +28,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlText.Align													= ::gpk::ALIGN_CENTER;
 	::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdExit];
 	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
-	::gpk::controlSetParent(gui, app.IdExit, -1);
+	::gpk::controlSetParent(gui.Controls, app.IdExit, -1);
 	timer.Frame();
 	info_printf("Setup time: %f.", (f2_t)timer.LastTimeSeconds);
 	return 0;

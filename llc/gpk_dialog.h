@@ -107,7 +107,7 @@ nmsp gpk
 			Controls[index]->Dialog	= this;
 			u2_c			idGUIControl		= Controls[index]->IdGUIControl = controlCreate(*GUI);
 			memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
-			//if_fail_fef(controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
+			//if_fail_fef(controlSetParent(gui.Controls, idGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;
 		}

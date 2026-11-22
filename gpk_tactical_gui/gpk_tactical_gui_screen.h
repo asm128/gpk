@@ -69,7 +69,7 @@ namespace dry
 			controlDraw.FrameOut							= controlSetup.FrameOut;
 			if(controlSetup.NoHoverEffect)
 				controlState.Mask							= ::gpk::bit_clear(controlState.Mask, ::gpk::GUI_CONTROL_FLAG_Hovered);
-			::gpk::controlSetParent(gui, controlIndex, (controlSetup.IdParent == -1) ? rootControlIndex : screen.ControlIds[controlSetup.IdParent]);
+			::gpk::controlSetParent(gui.Controls, controlIndex, (controlSetup.IdParent == -1) ? rootControlIndex : screen.ControlIds[controlSetup.IdParent]);
 
 			if((controlSetup.IconPathOff == controlSetup.IconPathOn) && controlSetup.IconPathOn.size()) {
 				if_fail_cef(::gpk::pngLoad(pngCache, controlSetup.IconPathOff, screen.ControlIcons[controlSetup.Id].Off), "Failed to load icon: '%s'", controlSetup.IconPathOff.begin());

@@ -47,7 +47,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	::gpk::SControlConstraints	& controlConstraints		= gui.Controls.Constraints[app.IdExit];
 	controlConstraints.AttachSizeToText.y	= app.IdExit;
 	controlConstraints.AttachSizeToText.x	= app.IdExit;
-	::gpk::controlSetParent(gui, app.IdExit, (::gpk::cid_t)-1);
+	::gpk::controlSetParent(gui.Controls, app.IdExit, (::gpk::cid_t)-1);
 	::gpk::tcpipInitialize();
 	u3_t 					port						= 9998;
 	u3_t 					adapter						= 0;

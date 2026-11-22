@@ -245,7 +245,7 @@ nmsp gpk
 
 	tplTusng	aobj		= array_obj<T>; 
 	tplTusng	aview		= aobj<view<T>>; 
-	tplTusng	aaobj		= aobj<aobj<T>>;									\
+	tplTusng	aaobj		= aobj<aobj<T>>;
 
 	tydf	aview<uc_t>		avuc_t;		tdcs	avuc_t		avuc_c;
 	tydf	aview<sc_t>		avsc_t;		tdcs	avsc_t		avsc_c;
