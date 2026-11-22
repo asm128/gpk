@@ -189,7 +189,7 @@ static	gpk::err_t						setupGaugeControl			(::dry::SApplication & app, ::dry::SG
 	::gpk::SControlPlacement						& control					= gui.Controls.Placement[indexControlFeeder];
 	const ::gpk::n2s1_t								feederControlSize			= control.Area.Size;
 	::setupGauge(feeder, feederControlSize);
-	gui.Controls.ImageViews[indexControlFeeder]		= feeder.Image.View;
+	gui.Controls.Views[indexControlFeeder]		= feeder.Image.View;
 	return 0;
 }
 

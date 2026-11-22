@@ -147,7 +147,7 @@ static ::gpk::cid_t gaugeCreate(::gpk::SGUI & gui, ::gme::SUIRadialGauge & gauge
 	if_fail_fe(::gpk::controlSetParent(gui.Controls, idControl, parent));
 	if_fail_fe(gauge.Image.resize(imageMetrics));
 	if_fail_fe(::gaugeBuildRadial(gauge, gaugeMetrics, resolution, width));
-	gui.Controls.ImageViews[idControl] = gauge.Image.View;
+	gui.Controls.Views[idControl] = gauge.Image.View;
 	gui.Controls.Images[idControl].ImageAlign = ::gpk::ALIGN_CENTER;
 	gui.Controls.Draw[idControl].NoClient = true;
 	gui.Controls.Draw[idControl].NoBorder = true;
@@ -465,7 +465,7 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 	for(::gpk::u2_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
 		::gpk::drawPixelLight(buffer3d->Color.View, wireframePixelCoords[iCoord], (::gpk::bgra)::gpk::GREEN, 0.05f, 1.5);
 
-	gui.Controls.ImageViews[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]]						= buffer3d->Color.View;
+	gui.Controls.Views[viewport.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]]						= buffer3d->Color.View;
 
 	// ---
 	::gpk::pobj<::gpk::rtbgra8d32>	target;

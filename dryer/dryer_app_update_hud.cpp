@@ -19,7 +19,7 @@ static	gpk::err_t				updateIcon				(::gpk::SGUI & gui, _tScreen & screen, ::gpk:
 	const ::gpk::cid_t						controlIndex			= screen.ControlIds[idControl];
 	::dry::SControlImages					& icons					= screen.ControlIcons[idControl];
 	if(-1 != controlIndex)
-		gui.Controls.ImageViews[controlIndex] = isOn ? icons.On.View : icons.Off.View;
+		gui.Controls.Views[controlIndex] = isOn ? icons.On.View : icons.Off.View;
 	return 0;
 }
 
