@@ -70,16 +70,16 @@ gpk::err_t dry::updateScreenTactical(::dry::SApplication & app) {
 	::gpk::SGUI & gui = *app.Framework.GUI;
 	::dry::SScreenTactical & screen = app.Screens.Tactical;
 	const ::dry::STacticalMenuItem<::dry::TACTICAL_SECTION> & selected = ::tacticalMenuItems[(::gpk::u2_t)screen.SectionSelected];
-	if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_TITLE], selected.Text), "%s", "Failed to set tactical detail title.");
+	if_fail_fef(::gpk::controlTextSet(gui.Controls, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_TITLE], selected.Text), "%s", "Failed to set tactical detail title.");
 	::gpk::vcsc_t detailLines[5] = {};
 	::tacticalDetails(screen.SectionSelected, detailLines);
 	for(::gpk::u2_t iLine = 0; iLine < ::gpk::size(detailLines); ++iLine)
-		if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_LINE_0 + iLine], detailLines[iLine]), "line: %u", iLine);
+		if_fail_fef(::gpk::controlTextSet(gui.Controls, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_DETAIL_LINE_0 + iLine], detailLines[iLine]), "line: %u", iLine);
 
 	const ::gpk::s2_t productionLength = snprintf(screen.ProductionText.begin(), screen.ProductionText.size(), "%i%%", screen.ProductionBudget);
 	const ::gpk::s2_t researchLength = snprintf(screen.ResearchText.begin(), screen.ResearchText.size(), "%i%%", screen.ResearchBudget);
-	if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_VALUE], {screen.ProductionText.begin(), (::gpk::u2_t)productionLength}), "%s", "Failed to set production allocation.");
-	if_fail_fef(::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_VALUE], {screen.ResearchText.begin(), (::gpk::u2_t)researchLength}), "%s", "Failed to set research allocation.");
+	if_fail_fef(::gpk::controlTextSet(gui.Controls, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_PRODUCTION_VALUE], {screen.ProductionText.begin(), (::gpk::u2_t)productionLength}), "%s", "Failed to set production allocation.");
+	if_fail_fef(::gpk::controlTextSet(gui.Controls, screen.ControlIds[::dry::SCREEN_CONTROL_TACTICAL_RESEARCH_VALUE], {screen.ResearchText.begin(), (::gpk::u2_t)researchLength}), "%s", "Failed to set research allocation.");
 	app.Framework.RootWindow.Repaint = true;
 	return 0;
 }

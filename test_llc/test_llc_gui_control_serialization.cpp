@@ -2,6 +2,7 @@
 #include "gpk_apod_serialize.h"
 #include "test_llc_gui_control_corpus.h"
 #include "test_llc_suites.h"
+#include "gpk_gui_text_flag.h"
 
 static_assert(sizeof(::gpk::SControlState) == 6, "The shared wire format requires the packed SControlState layout.");
 static_assert(sizeof(::gpk::STextState) == 6, "The shared wire format requires the STextState layout.");

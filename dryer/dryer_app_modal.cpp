@@ -30,21 +30,21 @@ static	gpk::err_t				modalDisplayScanSpool			(::dry::SApplication & app, ::gpk::
 	if(0 == scanned.size())
 		return 0;
 	const ::dry::SSpoolData					& lastScanned					= scanned[scanned.size() - 1];
-	::gpk::controlTextSet(gui, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_BRAND	], lastScanned.Brand		);
-	::gpk::controlTextSet(gui, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_MATERIAL	], lastScanned.Material	);
-	::gpk::controlTextSet(gui, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_COLOR	], lastScanned.Color		);
-	::gpk::controlTextSet(gui, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_NOTES	], lastScanned.Notes		);
+	::gpk::controlTextSet(gui.Controls, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_BRAND	], lastScanned.Brand		);
+	::gpk::controlTextSet(gui.Controls, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_MATERIAL	], lastScanned.Material	);
+	::gpk::controlTextSet(gui.Controls, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_COLOR	], lastScanned.Color		);
+	::gpk::controlTextSet(gui.Controls, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_NOTES	], lastScanned.Notes		);
 	char									density[64]						= {};
-	snprintf(density, ::gpk::size(density), "%.2fg/cm\xfd"	, lastScanned.Density	);	::gpk::controlTextSet(gui, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_DENSITY		], ::gpk::label(density));
-	snprintf(density, ::gpk::size(density), "%.2fmm"		, lastScanned.Diameter	);	::gpk::controlTextSet(gui, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_DIAMETER		], ::gpk::label(density));
-	snprintf(density, ::gpk::size(density), "%ig"			, lastScanned.SpoolSize	);	::gpk::controlTextSet(gui, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_SPOOL_SIZE	], ::gpk::label(density));
+	snprintf(density, ::gpk::size(density), "%.2fg/cm\xfd"	, lastScanned.Density	);	::gpk::controlTextSet(gui.Controls, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_DENSITY		], ::gpk::label(density));
+	snprintf(density, ::gpk::size(density), "%.2fmm"		, lastScanned.Diameter	);	::gpk::controlTextSet(gui.Controls, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_DIAMETER		], ::gpk::label(density));
+	snprintf(density, ::gpk::size(density), "%ig"			, lastScanned.SpoolSize	);	::gpk::controlTextSet(gui.Controls, app.Screens.SpoolInfo.ControlIds[::dry::SCREEN_CONTROL_SPOOL_INFO_VALUE_SPOOL_SIZE	], ::gpk::label(density));
 	return 0;
 }
 
 static	gpk::err_t				modalDisplayDryingStop			(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
-	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Stop Drying?");
+	::gpk::controlTextSet(gui.Controls, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Stop Drying?");
 	const ::gpk::cid_t controls[] =
 		{ screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]
 		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_YES]
@@ -60,7 +60,7 @@ static	gpk::err_t				modalDisplayDryingStop			(::dry::SApplication & app) {
 static	gpk::err_t				modalDisplayDryingCompleted		(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
-	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Drying completed successfully!");
+	::gpk::controlTextSet(gui.Controls, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Drying completed successfully!");
 	const ::gpk::cid_t controls[] =
 		{ screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]
 		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE]
@@ -74,7 +74,7 @@ static	gpk::err_t				modalDisplayDryingCompleted		(::dry::SApplication & app) {
 static	gpk::err_t				modalDisplayCloseDoor			(::dry::SApplication & app) {
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	const ::dry::SScreenModal				& screen						= app.Screens.Modal;
-	::gpk::controlTextSet(gui, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Close the door correctly to start drying");
+	::gpk::controlTextSet(gui.Controls, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG], "Close the door correctly to start drying");
 	const ::gpk::cid_t controls[] =
 		{ screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_DIALOG]
 		, screen.ControlIds[::dry::SCREEN_CONTROL_MODAL_CLOSE]

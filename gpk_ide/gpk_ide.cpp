@@ -207,7 +207,7 @@ static gpk::err_t buildControlTree(::gpk::SGUI & gui, ::gpk::acid & ids, ::gpk::
 		placement.Align						= param.Align;
 		gui.Controls.Draw[idControl].ColorMode	= param.ColorMode;
 		gui.Controls.Text[idControl].Align		= param.TextAlign;
-		if_fail_fe(::gpk::controlTextSet(gui, idControl, param.Text));
+		if_fail_fe(::gpk::controlTextSet(gui.Controls, idControl, param.Text));
 		if_fail_fe(::gpk::controlSetParent(gui.Controls, idControl, -1 == param.Parent ? -1 : ids[param.Parent]));
 	}
 	return 0;
@@ -316,7 +316,7 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 	if_fail_fe(inputBoxResult);
 	if(INT_MAX == inputBoxResult) {
 		::gpk::SViewport & viewport = app.Viewport;
-		if_fail_fe(::gpk::controlTextSet(gui, viewport.IdControls[::gpk::VIEWPORT_CONTROL_TITLE], ::gpk::vcst_t{app.InputBox.Text}));
+		if_fail_fe(::gpk::controlTextSet(gui.Controls, viewport.IdControls[::gpk::VIEWPORT_CONTROL_TITLE], ::gpk::vcst_t{app.InputBox.Text}));
 		if_fail_fe(app.InputBox.Edit(gui, false));
 	}
 	else if(0 == inputBoxResult) {
@@ -333,7 +333,7 @@ gpk::err_t			update				(::gme::SApplication & app, bool exitSignal)	{
 			for(::gpk::u2_t iItem = 0; iItem < app.IdKlibActions.size(); ++iItem)
 				if(iControl == app.IdKlibActions[iItem]) {
 					const SMenuItem<::gme::GUI_EXAMPLE_KLIB_ACTION> & item = klibMenuItems[iItem];
-					return ::gpk::controlTextSet(gui, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Klib_selection], ::gme::GUI_EXAMPLE_KLIB_ACTION_Exit == item.ReturnValue ? ::gpk::vcst_t{"WELCOME COMMANDER"} : ::gpk::vcst_t{item.Text});
+					return ::gpk::controlTextSet(gui.Controls, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Klib_selection], ::gme::GUI_EXAMPLE_KLIB_ACTION_Exit == item.ReturnValue ? ::gpk::vcst_t{"WELCOME COMMANDER"} : ::gpk::vcst_t{item.Text});
 				}
 			return 0;
 		}));
@@ -481,6 +481,6 @@ gpk::err_t			draw			(::gme::SApplication & app)							{
 	}
 	timer.Frame();
 	snprintf(app.StringFrameRateRender, ::gpk::size(app.StringFrameRateRender), "Last frame time (render): %fs.", (float)timer.LastTimeSeconds);
-	::gpk::controlTextSet(gui, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Frame_rate_render], app.StringFrameRateRender);
+	::gpk::controlTextSet(gui.Controls, app.IdControls[::gme::GUI_EXAMPLE_CONTROL_Frame_rate_render], app.StringFrameRateRender);
 	return 0;
 }

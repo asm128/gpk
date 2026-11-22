@@ -29,7 +29,7 @@ gpk::err_t						dry::updateScreenHUD	(::dry::SApplication & app) {
 	::timeFormat(bufferTime);
 	if(::gpk::vcst_t{bufferTime} != ::gpk::vcst_t{app.TimeString.Storage}) {
 		::gpk::memcpy_s(app.TimeString.Storage, bufferTime);
-		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_CALENDAR], app.TimeString.Storage)));
+		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui.Controls, app.Screens.HUD.ControlIds[::dry::SCREEN_CONTROL_HUD_CALENDAR], app.TimeString.Storage)));
 	}
 	if_fail_e(::gpk::failed(::updateIcon(gui, app.Screens.HUD , ::dry::SCREEN_CONTROL_HUD_DOOR		, app.Dryer.State.DoorClosed)));
 	if_fail_e(::gpk::failed(::updateIcon(gui, app.Screens.HUD , ::dry::SCREEN_CONTROL_HUD_ETHERNET	, app.Comms.Ethernet		)));

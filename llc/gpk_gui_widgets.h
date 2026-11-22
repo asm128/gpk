@@ -51,7 +51,7 @@ namespace gpk {
 			::gpk::vcsc_t valueString;
 			FuncValueFormat(valueString, value, ValueLimits);
 			FuncGetString(valueString, ValueCurrent, ValueLimits);
-			if_fail_fe(gpk::controlTextSet(gui, IdControl, valueString));
+			if_fail_fe(gpk::controlTextSet(gui.Controls, IdControl, valueString));
 			if_fail_fe(gpk::controlMetricsInvalidate(gui, IdControl));
 			return 0;
 		}

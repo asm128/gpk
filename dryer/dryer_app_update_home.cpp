@@ -68,7 +68,7 @@ gpk::err_t						updateGaugesFromState			(::dry::SApplication & app, bool forceUp
 		::gpk::memcpy_s(screenHome.Strings.DryerTemperature.Storage, bufferTemp);
 		::dry::gaugeImageUpdate(screenHome.GaugeDryerSmall.Gauges[::dry::GAUGE_TEMPERATURE]);
 		app.Framework.RootWindow.Repaint	= true;
-		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYER_SMALL], screenHome.Strings.DryerTemperature.Storage)));
+		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYER_SMALL], screenHome.Strings.DryerTemperature.Storage)));
 	}
 	for(::gpk::u2_t iFeeder = 0; iFeeder < ::gpk::size(screenHome.GaugeFeederSmall); ++iFeeder) {
 		snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, iFeeder ? "%i%%" : "%i mbar", ::gpk::s2_t(iFeeder ? dryerState.Humidity : dryerState.Vacuum));
@@ -78,7 +78,7 @@ gpk::err_t						updateGaugesFromState			(::dry::SApplication & app, bool forceUp
 				, iFeeder ? ::gpk::CYAN	: ::gpk::DARKGRAY
 				, iFeeder ? ::gpk::BLUE	: ::gpk::LIGHTGRAY
 			);
-			if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL + iFeeder], screenHome.Strings.FeederTemperature[iFeeder].Storage)));
+			if_fail_e(::gpk::failed(::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_FEEDER_0_SMALL + iFeeder], screenHome.Strings.FeederTemperature[iFeeder].Storage)));
 			app.Framework.RootWindow.Repaint	= true;
 		}
 	}
@@ -91,7 +91,7 @@ static	gpk::err_t				updateControlIfNeeded			(::dry::SApplication & app, ::gpk::
 	::gpk::SGUI								& gui							= *app.Framework.GUI;
 	if(::gpk::vcst_t{bufferTemp} != ::gpk::vcst_t{storage.Storage}) {
 		::gpk::memcpy_s(storage.Storage, bufferTemp);
-		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[idControl], storage.Storage)));
+		if_fail_e(::gpk::failed(::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[idControl], storage.Storage)));
 		app.Framework.RootWindow.Repaint	= true;
 	}
 	return 0;
@@ -102,7 +102,7 @@ gpk::err_t						dry::updateProgramDisplay		(::dry::SApplication & app) {
 	::dry::SScreenHome						& screenHome					= app.Screens.Home;
 	const ::dry::SDryerProgram				& dryerProgram					= app.Dryer.ProgramList[app.Dryer.ProgramSelected];
 	::gpk::sc_t								bufferTemp	[32]				= {};
-	if_fail_e(::gpk::failed(::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_NAME], dryerProgram.Name)));
+	if_fail_e(::gpk::failed(::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_NAME], dryerProgram.Name)));
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%u\xf8\x43"	, dryerProgram.Temperature		); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramTemperature		, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_TEMPERATURE		);
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%i mbar"		, dryerProgram.Pressure			); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramPressure			, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_PRESSURE			);
 	snprintf(bufferTemp, ::gpk::size(bufferTemp) - 2, "%u min"		, dryerProgram.PreHeatingTime	); ::updateControlIfNeeded(app, bufferTemp, screenHome.Strings.ProgramPreHeatingTime	, ::dry::SCREEN_CONTROL_HOME_PROGRAM_LABEL_VALUE_PRE_HEATING_TIME	);
@@ -204,7 +204,7 @@ gpk::err_t						dry::updateScreenHome			(::dry::SApplication & app) {
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL], true);
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], true);
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], true);
-			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "READY");
+			::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "READY");
 			::dry::updateProgramDisplay(app);
 			app.Framework.RootWindow.Repaint	= true;
 			break;
@@ -218,7 +218,7 @@ gpk::err_t						dry::updateScreenHome			(::dry::SApplication & app) {
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], false);
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL], true);
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], true);
-			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "RAISING TEMPERATURE");
+			::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "RAISING TEMPERATURE");
 			::dry::updateProgramDisplay(app);
 			app.Framework.RootWindow.Repaint	= true;
 			break;
@@ -226,7 +226,7 @@ gpk::err_t						dry::updateScreenHome			(::dry::SApplication & app) {
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], false);
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], true);
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_DRYING_TIME_LABEL], true);
-			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "PREHEATING");
+			::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "PREHEATING");
 			::dry::updateProgramDisplay(app);
 			app.Framework.RootWindow.Repaint	= true;
 			break;
@@ -236,7 +236,7 @@ gpk::err_t						dry::updateScreenHome			(::dry::SApplication & app) {
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PREHEATING_TIME_LABEL], true);
 			gui.Controls.SetDisabled(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PRE_PREHEATING_TIME_LABEL], true);
 			gui.Controls.SetHidden(screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_PROGRAM_START], true);
-			::gpk::controlTextSet(gui, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "DRYING");
+			::gpk::controlTextSet(gui.Controls, screenHome.ControlIds[::dry::SCREEN_CONTROL_HOME_SESSION_STATUS_VALUE], "DRYING");
 			::dry::updateProgramDisplay(app);
 			app.Framework.RootWindow.Repaint	= true;
 			break;
