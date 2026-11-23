@@ -7,12 +7,12 @@
 
 nmsp gpk
 {
-    tplT        err_t	loadPOD			(vcu0_t & input, T & output) { 
+    tplt<tpnm T, tpnm TInput = u0_t> requires(szof(TInput) == 1)
+    err_t       loadPOD            (view<cnst TInput> & input, T & output) {
         if_true_fe(input.byte_count() < szof(T));
-        memcpy(&output, input.begin(), szof(T));
+        memcpy(&output, input.template as<u0_c>().begin(), szof(T));
         rtrn input.slice(input, szof(T));
     }
-    tplTstin    err_t	loadPOD			(vcs0_t  & input, T & output)	{ rtrn loadPOD (input.bytes(), output); }
     //
     tplt<tpnm T, u0_t widthField = uint_width_field_size<T>()>
     err_t				loadPacked		(vcu0_t & input, T & output) {
@@ -51,6 +51,13 @@ nmsp gpk
     }
     tplTstin	err_t	loadView	(vcs0_t & input, view<T> & output) { rtrn loadView(*(vcu0_t*)& input, output); }
     tplTInTOut err_t load(view<cnst TIn> & input, view<TOut> & output) { rtrn loadView(input, output); }
+    tplTInTOut err_t load(view<cnst TIn> & input, TOut & output) { rtrn loadPOD(input, output); }
+    tplTInTArgs requires(sizeof...(TArgs) > 1)
+    err_t load(view<cnst TIn> & input, TArgs &... output) {
+        err_t result = 0;
+        ((result = failed(result) ? result : load(input, output)), ...);
+        rtrn failed(result) ? result : 0;
+    }
     //
     tplTInTOut requires(szof(TIn) == 1 && (false == is_cnst<TIn>::Value || is_cnst<TOut>::Value))
     err_t				viewPascal	(view<TOut> & headerToRead, view<TIn> input)	{

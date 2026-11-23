@@ -162,6 +162,7 @@
 
 #define tplTInTOut		tplt<tnTInTOut>
 #define tplTOutTIn		tplt<tnTOutTIn>
+#define tplTInTArgs		tplt<tpnm TIn, tpnm... TArgs>
 
 #ifdef GPK_WINDOWS
 #	define tplTInTOutArgs(...)	tplt<tnTInTOut, __VA_ARGS__>
