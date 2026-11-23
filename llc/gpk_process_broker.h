@@ -68,6 +68,7 @@ namespace gpk
 		apobj<SProcessBrokerJob>	Jobs;
 	};
 
+	err_t		processBrokerRun		(SProcessBrokerJob & job);
 	err_t		initHandles			(SProcess & process, SProcessHandles & handles);
 	err_t		createChildProcess		(SProcess & process, vu0_t environmentBlock, vcst_t appPath, vsc_t commandLine, b8_t debugMessageBox = false);
 #if defined(GPK_WINDOWS)

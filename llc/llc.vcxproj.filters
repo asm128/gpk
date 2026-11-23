@@ -717,6 +717,9 @@
     <ClInclude Include="gpk_broker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_process_broker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_string.h">
       <Filter>string</Filter>
     </ClInclude>
@@ -1140,6 +1143,9 @@
       <Filter>string</Filter>
     </ClCompile>
     <ClCompile Include="gpk_broker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_process_broker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_append_css.cpp">

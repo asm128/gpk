@@ -2,7 +2,9 @@
 
 #include "gpk_string_compose.h"
 
-#if defined(GPK_LINUX)
+#if defined(GPK_WINDOWS)
+#	include <process.h>
+#elif defined(GPK_LINUX)
 #	include <errno.h>
 #	include <fcntl.h>
 #	include <poll.h>
@@ -168,7 +170,7 @@ sttc ::gpk::err_t	closeOnExec				(int descriptor) {
 	return 0;
 }
 #elif defined(GPK_LINUX)
-::gpk::err_t	gpk::readFromPipe			(SProcess & process, SProcessHandles & handles, au0_t & readBytes) {
+sttc ::gpk::err_t	readFromPipes			(SProcess & process, SProcessHandles & handles, au0_t & readBytes, au0_t * errorBytes) {
 	sttc ::gpk::au0_t chBuf;
 	stxp ::gpk::u2_t BUFSIZE = 1024 * 1024;
 	if_fail_fe(chBuf.resize(BUFSIZE));
@@ -180,10 +182,8 @@ sttc ::gpk::err_t	closeOnExec				(int descriptor) {
 	while(descriptorsOpen) {
 		cnst int pollResult = ::poll(descriptors, 2, -1);
 		if(0 > pollResult) {
-			if(EINTR == errno)
-				continue;
-			error_printf("Failed waiting for child process output. errno: %i.", errno);
-			return -1;
+			if_true_fef(EINTR == errno, ("Failed waiting for child process output. errno: %i.", errno);
+			continue;
 		}
 		for(::gpk::u0_t index = 0; index < 2; ++index) {
 			::pollfd & descriptor = descriptors[index];
@@ -195,19 +195,20 @@ sttc ::gpk::err_t	closeOnExec				(int descriptor) {
 					if_fail_fe(readBytes.append(chBuf.begin(), (::gpk::u2_t)bytesRead));
 					info_printf("Process output: %.*s", (int)bytesRead, chBuf.begin());
 				}
-				else
+				else {
+					if(errorBytes)
+						if_fail_fe(errorBytes->append(chBuf.begin(), (::gpk::u2_t)bytesRead));
 					warning_printf("Process error: %.*s", (int)bytesRead, chBuf.begin());
+				}
 				continue;
 			}
 			if(0 > bytesRead && EINTR == errno)
 				continue;
-			if(0 > bytesRead && EAGAIN != errno && EWOULDBLOCK != errno) {
-				error_printf("Failed reading child process output. errno: %i.", errno);
-				return -1;
-			}
+			if_true_fef(0 > bytesRead && EAGAIN != errno && EWOULDBLOCK != errno, ("Failed reading child process output. errno: %i.", errno);
 			if(0 == bytesRead || descriptor.revents & (POLLHUP | POLLERR | POLLNVAL)) {
-				if(0 == index)
+				if(0 == index) {
 					if_fail_fe(::closeDescriptor(handles.ChildStd_OUT_Read));
+				}
 				else
 					if_fail_fe(::closeDescriptor(handles.ChildStd_ERR_Read));
 				descriptor.fd = -1;
@@ -231,7 +232,123 @@ sttc ::gpk::err_t	closeOnExec				(int descriptor) {
 		warning_printf("exitCode: %u", process.ExitCode);
 	return 0;
 }
+
+::gpk::err_t	gpk::readFromPipe			(SProcess & process, SProcessHandles & handles, au0_t & readBytes) {
+	return ::readFromPipes(process, handles, readBytes, 0);
+}
 #endif
+
+#if defined(GPK_WINDOWS)
+sttc ::gpk::err_t	readFromPipeHandle		(HANDLE pipe, ::gpk::au0_t & readBytes) {
+	stxp	::gpk::u2_t		bufferSize					= 1024 * 1024;
+	::gpk::au0_t				buffer;
+	if_fail_fe(buffer.resize(bufferSize));
+	for(;;) {
+		DWORD						bytesRead					= 0;
+		if(false == (b8_t)::ReadFile(pipe, buffer.begin(), buffer.size(), &bytesRead, 0)) {
+			cnst DWORD				lastError					= ::GetLastError();
+			if_true_bw(ERROR_BROKEN_PIPE == lastError);
+			if_true_fef(true, "Failed to read child process pipe. Windows error: %lu.", lastError);
+		}
+		if_zero_bi(bytesRead);
+		if_fail_fe(readBytes.append(buffer.begin(), bytesRead));
+	}
+	return 0;
+}
+
+sttc void	threadReadError			(void * jobAddress) {
+	::gpk::SProcessBrokerJob	& job						= *(::gpk::SProcessBrokerJob*)jobAddress;
+	job.ErrorResult								= ::readFromPipeHandle(job.IOHandles.ChildStd_ERR_Read, job.ErrorOutput);
+	gpk_sync_increment(job.ErrorDone);
+}
+#endif
+
+sttc ::gpk::err_t	closeBrokerJob			(::gpk::SProcessBrokerJob & job) {
+	::gpk::err_t				result						= 0;
+#if defined(GPK_WINDOWS)
+	safe_closehandle(job.IOHandles.ChildStd_IN_Read	);
+	safe_closehandle(job.IOHandles.ChildStd_IN_Write	);
+	safe_closehandle(job.IOHandles.ChildStd_OUT_Read	);
+	safe_closehandle(job.IOHandles.ChildStd_OUT_Write);
+	safe_closehandle(job.IOHandles.ChildStd_ERR_Read	);
+	safe_closehandle(job.IOHandles.ChildStd_ERR_Write);
+#elif defined(GPK_LINUX)
+	if(0 > ::closeDescriptor(job.IOHandles.ChildStd_IN_Read	)) result = -1;
+	if(0 > ::closeDescriptor(job.IOHandles.ChildStd_IN_Write	)) result = -1;
+	if(0 > ::closeDescriptor(job.IOHandles.ChildStd_OUT_Read	)) result = -1;
+	if(0 > ::closeDescriptor(job.IOHandles.ChildStd_OUT_Write	)) result = -1;
+	if(0 > ::closeDescriptor(job.IOHandles.ChildStd_ERR_Read	)) result = -1;
+	if(0 > ::closeDescriptor(job.IOHandles.ChildStd_ERR_Write	)) result = -1;
+#endif
+	if(0 > ::gpk::closeProcessIO(job.Process))
+		result									= -1;
+	if(0 > ::gpk::closeProcess(job.Process))
+		result									= -1;
+	return result;
+}
+
+::gpk::err_t	gpk::processBrokerRun		(SProcessBrokerJob & job) {
+	job.Response.clear();
+	job.ErrorOutput.clear();
+	job.ErrorDone								= 0;
+	job.ErrorResult							= 0;
+	job.Done									= 0;
+	job.Result								= [&job]() -> ::gpk::err_t {
+		if_fail_fe(::gpk::initHandles(job.Process, job.IOHandles));
+		::gpk::vu0_t				environmentBlock				= job.Request;
+		cnst ::gpk::vcu0_t		packet						= job.Request;
+		cnst ::gpk::err_t	contentOffset				= packet.find(::gpk::vcu0_t{(cnst u0_t*)"\0", 2});
+		if_true_fef(0 > contentOffset, "%s", "Failed to find the CGI environment block terminator.");
+		if_fail_fe(::gpk::createChildProcess(job.Process, environmentBlock, job.CommandLineApp, job.CommandLine));
+		if_fail_fe(::gpk::closeProcessIO(job.Process));
+#if defined(GPK_WINDOWS)
+		job.IOHandles.ChildStd_IN_Read				= INVALID_HANDLE_VALUE;
+		job.IOHandles.ChildStd_OUT_Write			= INVALID_HANDLE_VALUE;
+		job.IOHandles.ChildStd_ERR_Write			= INVALID_HANDLE_VALUE;
+		if((uP_t)-1L == ::_beginthread(::threadReadError, 0, &job)) {
+			job.ErrorResult							= -1;
+			safe_closehandle(job.IOHandles.ChildStd_ERR_Read);
+			gpk_sync_increment(job.ErrorDone);
+		}
+#elif defined(GPK_LINUX)
+		job.IOHandles.ChildStd_IN_Read				= -1;
+		job.IOHandles.ChildStd_OUT_Write			= -1;
+		job.IOHandles.ChildStd_ERR_Write			= -1;
+#endif
+		::gpk::err_t				inputWriteResult				= 0;
+		cnst ::gpk::u2_t		contentBegin					= (u2_t)contentOffset + 2;
+		if(packet.size() > contentBegin) {
+			inputWriteResult						= ::gpk::writeToPipe(job.IOHandles, {&packet[contentBegin], packet.size() - contentBegin});
+#if defined(GPK_WINDOWS)
+			if(0 <= inputWriteResult)
+				job.IOHandles.ChildStd_IN_Write		= INVALID_HANDLE_VALUE;
+#endif
+		}
+		else {
+#if defined(GPK_WINDOWS)
+			safe_closehandle(job.IOHandles.ChildStd_IN_Write);
+#elif defined(GPK_LINUX)
+			if_fail_fe(::closeDescriptor(job.IOHandles.ChildStd_IN_Write));
+#endif
+		}
+#if defined(GPK_WINDOWS)
+		cnst ::gpk::err_t	responseReadResult			= ::readFromPipeHandle(job.IOHandles.ChildStd_OUT_Read, job.Response);
+		while(false == gpk_sync_compare_exchange(job.ErrorDone, 1, 1))
+			::gpk::sleep(1);
+#elif defined(GPK_LINUX)
+		cnst ::gpk::err_t	responseReadResult			= ::readFromPipes(job.Process, job.IOHandles, job.Response, &job.ErrorOutput);
+		job.ErrorResult							= 0;
+		gpk_sync_increment(job.ErrorDone);
+#endif
+		if_fail_fe(inputWriteResult);
+		if_fail_fe(responseReadResult);
+		if_fail_fe(job.ErrorResult);
+		return 0;
+	}();
+	cnst ::gpk::err_t		closeResult					= ::closeBrokerJob(job);
+	gpk_sync_increment(job.Done);
+	return ::gpk::failed(job.Result) ? job.Result : closeResult;
+}
 
 ::gpk::err_t	gpk::initHandles			(SProcess & process, SProcessHandles & handles) {
 #if defined(GPK_WINDOWS)

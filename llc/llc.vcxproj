@@ -74,6 +74,7 @@
     <ClInclude Include="gpk_block_container.h" />
     <ClInclude Include="gpk_block_container_nts.h" />
     <ClInclude Include="gpk_broker.h" />
+    <ClInclude Include="gpk_process_broker.h" />
     <ClInclude Include="gpk_camera.h" />
     <ClInclude Include="gpk_cdn.h" />
     <ClInclude Include="gpk_cerrno.h" />
@@ -325,6 +326,7 @@
     <ClCompile Include="gpk_base64.cpp" />
     <ClCompile Include="gpk_block.cpp" />
     <ClCompile Include="gpk_broker.cpp" />
+    <ClCompile Include="gpk_process_broker.cpp" />
     <ClCompile Include="gpk_cgi.cpp" />
     <ClCompile Include="gpk_cgi_main.cpp" />
     <ClCompile Include="gpk_cgi_module.cpp" />
