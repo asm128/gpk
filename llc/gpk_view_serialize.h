@@ -50,6 +50,7 @@ nmsp gpk
         rtrn 0;
     }
     tplTstin	err_t	loadView	(vcs0_t & input, view<T> & output) { rtrn loadView(*(vcu0_t*)& input, output); }
+    tplTInTOut err_t load(view<cnst TIn> & input, view<TOut> & output) { rtrn loadView(input, output); }
     //
     tplTInTOut requires(szof(TIn) == 1 && (false == is_cnst<TIn>::Value || is_cnst<TOut>::Value))
     err_t				viewPascal	(view<TOut> & headerToRead, view<TIn> input)	{
